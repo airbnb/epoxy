@@ -1,0 +1,130 @@
+/*
+ * Copyright (C) 2016 Airbnb, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.airbnb.epoxy;
+
+import com.squareup.javapoet.AnnotationSpec;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.TypeName;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.type.DeclaredType;
+
+public class AttributeInfo {
+
+  private final List<AnnotationSpec> setterAnnotations = new ArrayList<>();
+  private final List<AnnotationSpec> getterAnnotations = new ArrayList<>();
+  private final String name;
+  private final TypeName type;
+  /** Track whether there is a setter method for this attribute on a super class so that we can call through to super. */
+  private final boolean hasSuperSetter;
+
+  public AttributeInfo(String name, TypeName type, List<? extends AnnotationMirror> annotationMirrors, boolean hasSuperSetter) {
+    this.name = name;
+    this.type = type;
+    this.hasSuperSetter = hasSuperSetter;
+    buildAnnotationLists(annotationMirrors);
+  }
+
+  /**
+   * Keeps track of annotations on the attribute so that they can be used in the generated setter and getter method. Setter and getter annotations are
+   * stored separately since the annotation may not target both method and parameter types.
+   */
+  private void buildAnnotationLists(List<? extends AnnotationMirror> annotationMirrors) {
+    for (AnnotationMirror annotationMirror : annotationMirrors) {
+      if (!annotationMirror.getElementValues().isEmpty()) {
+        // Not supporting annotations with values for now
+        continue;
+      }
+
+      ClassName annotationClass = ClassName.bestGuess(annotationMirror.getAnnotationType().toString());
+      if (annotationClass.equals(ClassName.get(EpoxyAttribute.class))) {
+        // Don't include our own annotation
+        continue;
+      }
+
+      DeclaredType annotationType = annotationMirror.getAnnotationType();
+      Target targetAnnotation = annotationType.asElement().getAnnotation(Target.class);
+      List<ElementType> elementTypes = Arrays.asList(targetAnnotation.value());
+
+      AnnotationSpec annotationSpec = AnnotationSpec.builder(annotationClass).build();
+      if (elementTypes.contains(ElementType.PARAMETER)) {
+        setterAnnotations.add(annotationSpec);
+      }
+
+      if (elementTypes.contains(ElementType.METHOD)) {
+        getterAnnotations.add(annotationSpec);
+      }
+    }
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public TypeName getType() {
+    return type;
+  }
+
+  public List<AnnotationSpec> getSetterAnnotations() {
+    return setterAnnotations;
+  }
+
+  public List<AnnotationSpec> getGetterAnnotations() {
+    return getterAnnotations;
+  }
+
+  public boolean hasSuperSetterMethod() {
+    return hasSuperSetter;
+  }
+
+  @Override
+  public String toString() {
+    return "ModelAttributeData{" +
+        "name='" + name + '\'' +
+        ", type=" + type +
+        '}';
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof AttributeInfo)) {
+      return false;
+    }
+
+    AttributeInfo that = (AttributeInfo) o;
+
+    if (!name.equals(that.name)) {
+      return false;
+    }
+    return type.equals(that.type);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = name.hashCode();
+    result = 31 * result + type.hashCode();
+    return result;
+  }
+}

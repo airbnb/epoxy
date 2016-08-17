@@ -1,0 +1,28 @@
+language: android
+
+android:
+  components:
+    - android-23
+    - extra-android-support
+
+jdk:
+  - oraclejdk8
+
+branches:
+  except:
+    - gh-pages
+
+script: ./gradlew check
+
+sudo: false
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+before_install:
+  - export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
