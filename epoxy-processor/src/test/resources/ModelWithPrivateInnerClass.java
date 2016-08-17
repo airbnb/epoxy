@@ -7,7 +7,7 @@ public class ModelWithPrivateInnerClass extends EpoxyModel<Object> {
     return 0;
   }
 
-  private class Test extends EpoxyModel<Object> {
+  private static class Test extends EpoxyModel<Object> {
     @EpoxyAttribute int value;
 
     @Override

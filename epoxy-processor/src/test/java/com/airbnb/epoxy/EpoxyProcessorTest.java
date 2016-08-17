@@ -188,4 +188,16 @@ public class EpoxyProcessorTest {
         .failsToCompile()
         .withErrorContaining("must extend");
   }
+
+  @Test
+  public void testModelAsInnerClassFails() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelAsInnerClass.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("Nested classes");
+  }
 }
