@@ -118,6 +118,53 @@ public class EpoxyAdapterTest {
   }
 
   @Test
+  public void testShowModels() {
+    TestModel testModel1 = new TestModel();
+    testModel1.hide();
+
+    TestModel testModel2 = new TestModel();
+    testModel2.hide();
+
+    testAdapter.addModels(testModel1, testModel2);
+
+    testAdapter.showModels(testAdapter.models);
+    verify(observer).onItemRangeChanged(0, 1, null);
+    verify(observer).onItemRangeChanged(1, 1, null);
+    assertTrue(testModel1.isShown());
+    assertTrue(testModel2.isShown());
+  }
+
+  @Test
+  public void testShowModelsConditionalTrue() {
+    TestModel testModel1 = new TestModel();
+    testModel1.hide();
+
+    TestModel testModel2 = new TestModel();
+    testModel2.hide();
+
+    testAdapter.addModels(testModel1, testModel2);
+
+    testAdapter.showModels(testAdapter.models, true);
+    verify(observer).onItemRangeChanged(0, 1, null);
+    verify(observer).onItemRangeChanged(1, 1, null);
+    assertTrue(testModel1.isShown());
+    assertTrue(testModel2.isShown());
+  }
+
+  @Test
+  public void testShowModelsConditionalFalse() {
+    TestModel testModel1 = new TestModel();
+    TestModel testModel2 = new TestModel();
+    testAdapter.addModels(testModel1, testModel2);
+
+    testAdapter.showModels(testAdapter.models, false);
+    verify(observer).onItemRangeChanged(0, 1, null);
+    verify(observer).onItemRangeChanged(1, 1, null);
+    assertFalse(testModel1.isShown());
+    assertFalse(testModel2.isShown());
+  }
+
+  @Test
   public void testShowModelNoopIfAlreadyShown() {
     TestModel testModel = new TestModel();
     testAdapter.addModels(testModel);
@@ -135,6 +182,19 @@ public class EpoxyAdapterTest {
     testAdapter.hideModel(testModel);
     verify(observer).onItemRangeChanged(0, 1, null);
     assertFalse(testModel.isShown());
+  }
+
+  @Test
+  public void testHideModels() {
+    TestModel testModel1 = new TestModel();
+    TestModel testModel2 = new TestModel();
+    testAdapter.addModels(testModel1, testModel2);
+
+    testAdapter.hideModels(testAdapter.models);
+    verify(observer).onItemRangeChanged(0, 1, null);
+    verify(observer).onItemRangeChanged(1, 1, null);
+    assertFalse(testModel1.isShown());
+    assertFalse(testModel2.isShown());
   }
 
   @Test

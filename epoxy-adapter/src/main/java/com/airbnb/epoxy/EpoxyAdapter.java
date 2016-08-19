@@ -230,7 +230,7 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
    * retained the same position.
    */
   protected void notifyModelChanged(EpoxyModel<?> model) {
-    int index = models.indexOf(model);
+    int index = getModelPosition(model);
     if (index != -1) {
       notifyItemChanged(index);
     }
@@ -243,7 +243,7 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
   }
 
   protected void insertModelBefore(EpoxyModel<?> modelToInsert, EpoxyModel<?> modelToInsertBefore) {
-    int targetIndex = models.indexOf(modelToInsertBefore);
+    int targetIndex = getModelPosition(modelToInsertBefore);
     if (targetIndex == -1) {
       throw new IllegalStateException("Model is not added: " + modelToInsertBefore);
     }
@@ -253,7 +253,7 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
   }
 
   protected void insertModelAfter(EpoxyModel<?> modelToInsert, EpoxyModel<?> modelToInsertAfter) {
-    int modelIndex = models.indexOf(modelToInsertAfter);
+    int modelIndex = getModelPosition(modelToInsertAfter);
     if (modelIndex == -1) {
       throw new IllegalStateException("Model is not added: " + modelToInsertAfter);
     }
@@ -268,7 +268,7 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
    * nothing.
    */
   protected void removeModel(EpoxyModel<?> model) {
-    int index = models.indexOf(model);
+    int index = getModelPosition(model);
     if (index != -1) {
       models.remove(index);
       notifyItemRemoved(index);
@@ -304,6 +304,18 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
     showModel(model, true);
   }
 
+  protected void showModels(List<EpoxyModel<?>> epoxyModels) {
+    for (EpoxyModel<?> epoxyModel : epoxyModels) {
+      showModel(epoxyModel);
+    }
+  }
+
+  protected void showModels(List<EpoxyModel<?>> epoxyModels, boolean show) {
+    for (EpoxyModel<?> epoxyModel : epoxyModels) {
+      showModel(epoxyModel, show);
+    }
+  }
+
   protected void hideModel(EpoxyModel<?> model) {
     showModel(model, false);
   }
@@ -330,11 +342,26 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
    * @param model Must exists in {@link #models}.
    */
   private List<EpoxyModel<?>> getAllModelsAfter(EpoxyModel<?> model) {
-    int index = models.indexOf(model);
+    int index = getModelPosition(model);
     if (index == -1) {
       throw new IllegalStateException("Model is not added: " + model);
     }
     return models.subList(index + 1, models.size());
+  }
+
+  /**
+   * Finds the position of the given model in the list. Doesn't use indexOf to avoid unnecessary
+   * equals() calls since we're looking for the same object instance.
+   */
+  private int getModelPosition(EpoxyModel<?> model) {
+    int size = models.size();
+    for (int i = 0; i < size; i++) {
+      if (model == models.get(i)) {
+        return i;
+      }
+    }
+
+    return -1;
   }
 
   public SpanSizeLookup getSpanSizeLookup() {
