@@ -15,15 +15,20 @@ import com.airbnb.viewmodeladapter.R;
 import java.util.Collection;
 
 /**
- * Helper for {@link EpoxyAdapter} to store the state of Views in the adapter. This is useful for saving changes due to user input, such as text
- * input or selection, when a view is scrolled off screen or if the adapter needs to be recreated.
+ * Helper for {@link EpoxyAdapter} to store the state of Views in the adapter. This is useful for
+ * saving changes due to user input, such as text input or selection, when a view is scrolled off
+ * screen or if the adapter needs to be recreated.
  * <p/>
- * This saved state is separate from the state represented by a {@link EpoxyModel}, which should represent the more permanent state of the data shown
- * in the view. This class stores transient state that is added to the View after it is bound to a {@link EpoxyModel}. For example, a {@link EpoxyModel}
- * may inflate and bind an EditText and then be responsible for styling it and attaching listeners. If the user then inputs text, scrolls the view
- * offscreen and then scrolls back, this class will preserve the inputted text without the {@link EpoxyModel} needing to be aware of its existence.
+ * This saved state is separate from the state represented by a {@link EpoxyModel}, which should
+ * represent the more permanent state of the data shown in the view. This class stores transient
+ * state that is added to the View after it is bound to a {@link EpoxyModel}. For example, a {@link
+ * EpoxyModel} may inflate and bind an EditText and then be responsible for styling it and attaching
+ * listeners. If the user then inputs text, scrolls the view offscreen and then scrolls back, this
+ * class will preserve the inputted text without the {@link EpoxyModel} needing to be aware of its
+ * existence.
  * <p/>
- * This class relies on the adapter having stable ids, as the state of a view is mapped to the id of the {@link EpoxyModel}.
+ * This class relies on the adapter having stable ids, as the state of a view is mapped to the id of
+ * the {@link EpoxyModel}.
  */
 @SuppressWarnings("WeakerAccess")
 class ViewHolderState extends LongSparseArray<ViewState> implements Parcelable {
@@ -98,7 +103,8 @@ class ViewHolderState extends LongSparseArray<ViewState> implements Parcelable {
   }
 
   /**
-   * If a state was previously saved for this view holder via {@link #save} it will be restored here.
+   * If a state was previously saved for this view holder via {@link #save} it will be restored
+   * here.
    */
   public void restore(EpoxyViewHolder holder) {
     if (!holder.getModel().shouldSaveViewState()) {
@@ -112,7 +118,8 @@ class ViewHolderState extends LongSparseArray<ViewState> implements Parcelable {
   }
 
   /**
-   * A wrapper around a sparse array as a helper to save the state of a view. This also adds parcelable support.
+   * A wrapper around a sparse array as a helper to save the state of a view. This also adds
+   * parcelable support.
    */
   public static class ViewState extends SparseArray<Parcelable> implements Parcelable {
 
@@ -143,8 +150,9 @@ class ViewHolderState extends LongSparseArray<ViewState> implements Parcelable {
     }
 
     /**
-     * If a view hasn't had an id set we need to set a temporary one in order to save state, since a view won't save its state unless it has an id.
-     * The view's id is also the key into the sparse array for its saved state, so the temporary one we choose just needs to be consistent between
+     * If a view hasn't had an id set we need to set a temporary one in order to save state, since a
+     * view won't save its state unless it has an id. The view's id is also the key into the sparse
+     * array for its saved state, so the temporary one we choose just needs to be consistent between
      * saving and restoring state.
      */
     private void setIdIfNoneExists(View view) {

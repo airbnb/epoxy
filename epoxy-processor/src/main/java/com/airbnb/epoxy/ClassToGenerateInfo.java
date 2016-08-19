@@ -34,7 +34,8 @@ public class ClassToGenerateInfo {
   private final List<TypeVariableName> typeVariableNames = new ArrayList<>();
   private final List<ConstructorInfo> constructors = new ArrayList<>();
 
-  public ClassToGenerateInfo(TypeElement originalClassName, ClassName generatedClassName, boolean isOriginalClassAbstract) {
+  public ClassToGenerateInfo(TypeElement originalClassName, ClassName generatedClassName,
+      boolean isOriginalClassAbstract) {
     this.originalClassName = ParameterizedTypeName.get(originalClassName.asType());
     this.originalClassNameWithoutType = ClassName.get(originalClassName);
 
@@ -45,14 +46,17 @@ public class ClassToGenerateInfo {
     // Get information about constructors on the original class so we can duplicate
     // them in the generated class and call through to super with the proper parameters
     for (Element subElement : originalClassName.getEnclosedElements()) {
-      if (subElement.getKind() == ElementKind.CONSTRUCTOR && !subElement.getModifiers().contains(Modifier.PRIVATE)) {
-        List<? extends TypeMirror> params = subElement.asType().accept(constructorVisitor, null);
-        constructors.add(new ConstructorInfo(subElement.getModifiers(), buildConstructorParamList(params)));
+      if (subElement.getKind() == ElementKind.CONSTRUCTOR
+          && !subElement.getModifiers().contains(Modifier.PRIVATE)) {
+        List<? extends TypeMirror> params = subElement.asType().accept(CONSTRUCTOR_VISITOR, null);
+        constructors
+            .add(new ConstructorInfo(subElement.getModifiers(), buildConstructorParamList(params)));
       }
     }
 
     if (!typeVariableNames.isEmpty()) {
-      TypeVariableName[] typeArguments = typeVariableNames.toArray(new TypeVariableName[typeVariableNames.size()]);
+      TypeVariableName[] typeArguments =
+          typeVariableNames.toArray(new TypeVariableName[typeVariableNames.size()]);
       this.parameterizedClassName = ParameterizedTypeName.get(generatedClassName, typeArguments);
     } else {
       this.parameterizedClassName = generatedClassName;
@@ -74,11 +78,12 @@ public class ClassToGenerateInfo {
     return result;
   }
 
-  private static final TypeVisitor<List<? extends TypeMirror>, Void> constructorVisitor = new SimpleTypeVisitor6<List<? extends TypeMirror>, Void>() {
-    public List<? extends TypeMirror> visitExecutable(ExecutableType t, Void v) {
-      return t.getParameterTypes();
-    }
-  };
+  private static final TypeVisitor<List<? extends TypeMirror>, Void> CONSTRUCTOR_VISITOR =
+      new SimpleTypeVisitor6<List<? extends TypeMirror>, Void>() {
+        public List<? extends TypeMirror> visitExecutable(ExecutableType t, Void v) {
+          return t.getParameterTypes();
+        }
+      };
 
   public void addAttribute(AttributeInfo attributeInfo) {
     this.attributeInfo.add(attributeInfo);

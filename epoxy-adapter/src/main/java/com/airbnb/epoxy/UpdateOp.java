@@ -12,15 +12,15 @@ import java.util.List;
 class UpdateOp {
   private static final Pools.Pool<UpdateOp> UPDATE_OP_POOL = new Pools.SimplePool<>(10);
 
-  @IntDef({Add, Remove, Update, Move})
+  @IntDef({ADD, REMOVE, UPDATE, MOVE})
   @Retention(RetentionPolicy.SOURCE)
   @interface Type {
   }
 
-  static final int Add = 0;
-  static final int Remove = 1;
-  static final int Update = 2;
-  static final int Move = 3;
+  static final int ADD = 0;
+  static final int REMOVE = 1;
+  static final int UPDATE = 2;
+  static final int MOVE = 3;
 
   @Type int type;
   int positionStart;
@@ -55,10 +55,10 @@ class UpdateOp {
 
   @Override
   public String toString() {
-    return "UpdateOp{" +
-        "type=" + type +
-        ", positionStart=" + positionStart +
-        ", itemCount=" + itemCount +
-        '}';
+    return "UpdateOp{"
+        + "type=" + type
+        + ", positionStart=" + positionStart
+        + ", itemCount=" + itemCount
+        + '}';
   }
 }

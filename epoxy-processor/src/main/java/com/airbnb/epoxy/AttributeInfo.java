@@ -19,10 +19,14 @@ public class AttributeInfo {
   private final List<AnnotationSpec> getterAnnotations = new ArrayList<>();
   private final String name;
   private final TypeName type;
-  /** Track whether there is a setter method for this attribute on a super class so that we can call through to super. */
+  /**
+   * Track whether there is a setter method for this attribute on a super class so that we can call
+   * through to super.
+   */
   private final boolean hasSuperSetter;
 
-  public AttributeInfo(String name, TypeName type, List<? extends AnnotationMirror> annotationMirrors, boolean hasSuperSetter) {
+  public AttributeInfo(String name, TypeName type,
+      List<? extends AnnotationMirror> annotationMirrors, boolean hasSuperSetter) {
     this.name = name;
     this.type = type;
     this.hasSuperSetter = hasSuperSetter;
@@ -30,8 +34,9 @@ public class AttributeInfo {
   }
 
   /**
-   * Keeps track of annotations on the attribute so that they can be used in the generated setter and getter method. Setter and getter annotations are
-   * stored separately since the annotation may not target both method and parameter types.
+   * Keeps track of annotations on the attribute so that they can be used in the generated setter
+   * and getter method. Setter and getter annotations are stored separately since the annotation may
+   * not target both method and parameter types.
    */
   private void buildAnnotationLists(List<? extends AnnotationMirror> annotationMirrors) {
     for (AnnotationMirror annotationMirror : annotationMirrors) {
@@ -40,7 +45,8 @@ public class AttributeInfo {
         continue;
       }
 
-      ClassName annotationClass = ClassName.bestGuess(annotationMirror.getAnnotationType().toString());
+      ClassName annotationClass =
+          ClassName.bestGuess(annotationMirror.getAnnotationType().toString());
       if (annotationClass.equals(ClassName.get(EpoxyAttribute.class))) {
         // Don't include our own annotation
         continue;
@@ -83,10 +89,10 @@ public class AttributeInfo {
 
   @Override
   public String toString() {
-    return "ModelAttributeData{" +
-        "name='" + name + '\'' +
-        ", type=" + type +
-        '}';
+    return "ModelAttributeData{"
+        + "name='" + name + '\''
+        + ", type=" + type
+        + '}';
   }
 
   @Override

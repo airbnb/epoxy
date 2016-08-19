@@ -159,10 +159,10 @@ public abstract class EpoxyModel<T> {
 
   @Override
   public String toString() {
-    return "EpoxyModel{" +
-        "id=" + id +
-        ", layout=" + layout +
-        ", shown=" + shown +
-        '}';
+    return "EpoxyModel{"
+        + "id=" + id
+        + ", layout=" + layout
+        + ", shown=" + shown
+        + '}';
   }
 }

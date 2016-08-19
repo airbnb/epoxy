@@ -71,8 +71,8 @@ public class SimpleEpoxyModel extends EpoxyModel<View> {
     if (spanCount != that.spanCount) {
       return false;
     }
-    return onClickListener != null ? onClickListener.equals(that.onClickListener) :
-        that.onClickListener == null;
+    return onClickListener != null ? onClickListener.equals(that.onClickListener)
+        : that.onClickListener == null;
   }
 
   @Override

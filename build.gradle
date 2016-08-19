@@ -1,48 +1,68 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    repositories {
-        maven { url 'http://airbnb-maven-proxy.d.musta.ch/nexus/content/groups/public' }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0-beta1'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
-    }
+  repositories {
+    maven { url 'http://airbnb-maven-proxy.d.musta.ch/nexus/content/groups/public' }
+  }
+  dependencies {
+    classpath 'com.android.tools.build:gradle:2.2.0-beta2'
+    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+  }
 }
 
 allprojects {
-    repositories {
-        maven { url 'http://airbnb-maven-proxy.d.musta.ch/nexus/content/groups/public' }
+  repositories {
+    maven { url 'http://airbnb-maven-proxy.d.musta.ch/nexus/content/groups/public' }
+  }
+}
+
+subprojects { project ->
+  apply plugin: 'checkstyle'
+
+  task checkstyle(type: Checkstyle) {
+    configFile rootProject.file('checkstyle.xml')
+    source 'src/main/java'
+    ignoreFailures false
+    showViolations true
+    include '**/*.java'
+
+    classpath = files()
+  }
+
+  afterEvaluate {
+    if (project.tasks.findByName('check')) {
+      check.dependsOn('checkstyle')
     }
+  }
 }
 
 def isCi() {
-    project.hasProperty('CI') && CI.equals('true')
+  project.hasProperty('CI') && CI.equals('true')
 }
 
 def isReleaseBuild() {
-    return VERSION_NAME.contains("SNAPSHOT") == false
+  return VERSION_NAME.contains("SNAPSHOT") == false
 }
 
 def getReleaseRepositoryUrl() {
-    return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL
-            : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+  return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL
+      : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
 }
 
 def getSnapshotRepositoryUrl() {
-    return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL
-            : "https://oss.sonatype.org/content/repositories/snapshots/"
+  return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL
+      : "https://oss.sonatype.org/content/repositories/snapshots/"
 }
 
 def getRepositoryUsername() {
-    return hasProperty('NEXUS_USERNAME') ? NEXUS_USERNAME : ""
+  return hasProperty('NEXUS_USERNAME') ? NEXUS_USERNAME : ""
 }
 
 def getRepositoryPassword() {
-    return hasProperty('NEXUS_PASSWORD') ? NEXUS_PASSWORD : ""
+  return hasProperty('NEXUS_PASSWORD') ? NEXUS_PASSWORD : ""
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.14'
-    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+  gradleVersion = '2.14'
+  distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
