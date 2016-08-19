@@ -305,9 +305,7 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
   }
 
   protected void showModels(List<EpoxyModel<?>> epoxyModels) {
-    for (EpoxyModel<?> epoxyModel : epoxyModels) {
-      showModel(epoxyModel);
-    }
+    showModels(epoxyModels, true);
   }
 
   protected void showModels(List<EpoxyModel<?>> epoxyModels, boolean show) {
@@ -321,9 +319,7 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
   }
 
   protected void hideModels(List<EpoxyModel<?>> epoxyModels) {
-    for (EpoxyModel<?> epoxyModel : epoxyModels) {
-      hideModel(epoxyModel);
-    }
+    showModels(epoxyModels, false);
   }
 
   /**
