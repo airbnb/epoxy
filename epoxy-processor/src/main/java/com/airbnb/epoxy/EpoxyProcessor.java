@@ -62,7 +62,7 @@ import static javax.lang.model.element.Modifier.STATIC;
 @AutoService(Processor.class)
 public class EpoxyProcessor extends AbstractProcessor {
   private static final String GENERATED_CLASS_NAME_SUFFIX = "_";
-  private static TypeMirror EPOXY_MODEL_TYPE;
+  private static TypeMirror epoxyModelType;
 
   private Filer filer;
   private Messager messager;
@@ -75,7 +75,7 @@ public class EpoxyProcessor extends AbstractProcessor {
     filer = processingEnv.getFiler();
     messager = processingEnv.getMessager();
     elementUtils = processingEnv.getElementUtils();
-    EPOXY_MODEL_TYPE = elementUtils.getTypeElement(EpoxyModel.class.getCanonicalName()).asType();
+    epoxyModelType = elementUtils.getTypeElement(EpoxyModel.class.getCanonicalName()).asType();
     typeUtils = processingEnv.getTypeUtils();
   }
 
@@ -115,7 +115,9 @@ public class EpoxyProcessor extends AbstractProcessor {
   }
 
   private void processAttribute(Element attribute,
-      Map<TypeElement, ClassToGenerateInfo> modelClassMap) throws EpoxyProcessorException {
+      Map<TypeElement, ClassToGenerateInfo> modelClassMap)
+      throws EpoxyProcessorException {
+
     validateAccessibleViaGeneratedCode(attribute);
     TypeElement classElement = (TypeElement) attribute.getEnclosingElement();
 
@@ -133,7 +135,7 @@ public class EpoxyProcessor extends AbstractProcessor {
    * Private methods are ignored since the generated subclass can't call super on those.
    */
   private boolean hasSuperMethod(TypeElement classElement, String methodName) {
-    if (!isSubtype(classElement.asType(), EPOXY_MODEL_TYPE)) {
+    if (!isSubtype(classElement.asType(), epoxyModelType)) {
       return false;
     }
 
@@ -146,12 +148,13 @@ public class EpoxyProcessor extends AbstractProcessor {
     }
 
     Element superClass = typeUtils.asElement(classElement.getSuperclass());
-    return (superClass instanceof TypeElement) &&
-        hasSuperMethod((TypeElement) superClass, methodName);
+    return (superClass instanceof TypeElement)
+        && hasSuperMethod((TypeElement) superClass, methodName);
   }
 
   private void validateAccessibleViaGeneratedCode(Element attribute) throws
       EpoxyProcessorException {
+
     TypeElement enclosingElement = (TypeElement) attribute.getEnclosingElement();
 
     // Verify method modifiers.
@@ -191,6 +194,7 @@ public class EpoxyProcessor extends AbstractProcessor {
   private ClassToGenerateInfo getOrCreateTargetClass(
       Map<TypeElement, ClassToGenerateInfo> modelClassMap, TypeElement classElement)
       throws EpoxyProcessorException {
+
     ClassToGenerateInfo classToGenerateInfo = modelClassMap.get(classElement);
 
     boolean isFinal = classElement.getModifiers().contains(Modifier.FINAL);
@@ -199,9 +203,9 @@ public class EpoxyProcessor extends AbstractProcessor {
           EpoxyAttribute.class.getSimpleName(), classElement.getSimpleName());
     }
 
-    if (!isSubtype(classElement.asType(), EPOXY_MODEL_TYPE)) {
+    if (!isSubtype(classElement.asType(), epoxyModelType)) {
       throwError("Class with %s annotations must extend %s (%s)",
-          EpoxyAttribute.class.getSimpleName(), EPOXY_MODEL_TYPE,
+          EpoxyAttribute.class.getSimpleName(), epoxyModelType,
           classElement.getSimpleName());
     }
 
@@ -252,7 +256,8 @@ public class EpoxyProcessor extends AbstractProcessor {
 
   private void generateClassForModel(ClassToGenerateInfo info) throws IOException {
     if (info.isOriginalClassAbstract()) {
-      // Don't extend classes that are abstract. If they don't contain all required methods then our generated class won't compile
+      // Don't extend classes that are abstract. If they don't contain all required
+      // methods then our generated class won't compile
       return;
     }
 
@@ -492,7 +497,8 @@ public class EpoxyProcessor extends AbstractProcessor {
     messager.printMessage(Diagnostic.Kind.ERROR, e.toString());
   }
 
-  private void throwError(String msg, Object... args) throws EpoxyProcessorException {
+  private void throwError(String msg, Object... args)
+      throws EpoxyProcessorException {
     throw new EpoxyProcessorException(String.format(msg, args));
   }
 }

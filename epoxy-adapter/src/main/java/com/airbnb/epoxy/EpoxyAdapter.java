@@ -12,25 +12,28 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Allows you to easily combine different view types in the same adapter, and handles view holder creation, binding, and ids for you. Subclasses just
- * need to add their desired {@link EpoxyModel} objects and the rest is done automatically.
+ * Allows you to easily combine different view types in the same adapter, and handles view holder
+ * creation, binding, and ids for you. Subclasses just need to add their desired {@link EpoxyModel}
+ * objects and the rest is done automatically.
  * <p/>
- * {@link android.support.v7.widget.RecyclerView.Adapter#setHasStableIds(boolean)} is set to true by default, since {@link EpoxyModel} makes it easy to
- * support unique ids. If you don't want to support this then disable it in your base class (not recommended).
+ * {@link android.support.v7.widget.RecyclerView.Adapter#setHasStableIds(boolean)} is set to true by
+ * default, since {@link EpoxyModel} makes it easy to support unique ids. If you don't want to
+ * support this then disable it in your base class (not recommended).
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
   private static final String SAVED_STATE_ARG_VIEW_HOLDERS = "saved_state_view_holders";
 
   /**
-   * Subclasses should modify this list as necessary with the models they want to show. Subclasses are responsible for notifying data changes whenever
-   * this list is changed.
+   * Subclasses should modify this list as necessary with the models they want to show. Subclasses
+   * are responsible for notifying data changes whenever this list is changed.
    */
   protected final List<EpoxyModel<?>> models = new ArrayList<>();
   private int spanCount = 1;
   private final HiddenEpoxyModel hiddenModel = new HiddenEpoxyModel();
   /**
-   * Keeps track of view holders that are currently bound so we can save their state in {@link #onSaveInstanceState(Bundle)}.
+   * Keeps track of view holders that are currently bound so we can save their state in {@link
+   * #onSaveInstanceState(Bundle)}.
    */
   private final BoundViewHolders boundViewHolders = new BoundViewHolders();
   private ViewHolderState viewHolderState = new ViewHolderState();
@@ -63,8 +66,8 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
   }
 
   /**
-   * Enables support for automatically notifying model changes via {@link #notifyModelsChanged()}. If used, this should be called in the constructor,
-   * before any models are changed.
+   * Enables support for automatically notifying model changes via {@link #notifyModelsChanged()}.
+   * If used, this should be called in the constructor, before any models are changed.
    *
    * @see #notifyModelsChanged()
    */
@@ -85,11 +88,14 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
   }
 
   /**
-   * Intelligently notify item changes by comparing the current {@link #models} list against the previous so you don't have to micromanage
-   * notification calls yourself. This may be prohibitively slow for large model lists (in the hundreds), in which case consider doing notification
-   * calls yourself. If you use this, all your view models must implement {@link EpoxyModel#hashCode()} to completely identify their state, so that
-   * changes to a model's content can be detected. Before using this you must enable it with {@link #enableDiffing()}, since keeping track of the
-   * model state adds extra computation time to all other data change notifications.
+   * Intelligently notify item changes by comparing the current {@link #models} list against the
+   * previous so you don't have to micromanage notification calls yourself. This may be
+   * prohibitively slow for large model lists (in the hundreds), in which case consider doing
+   * notification calls yourself. If you use this, all your view models must implement {@link
+   * EpoxyModel#hashCode()} to completely identify their state, so that changes to a model's content
+   * can be detected. Before using this you must enable it with {@link #enableDiffing()}, since
+   * keeping track of the model state adds extra computation time to all other data change
+   * notifications.
    *
    * @see #enableDiffing()
    */
@@ -143,7 +149,8 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
   }
 
   /**
-   * Called immediately after a model is bound to a view holder. Subclasses can override this if they want alerts on when a model is bound.
+   * Called immediately after a model is bound to a view holder. Subclasses can override this if
+   * they want alerts on when a model is bound.
    */
   protected void onModelBound(EpoxyViewHolder holder, EpoxyModel<?> model) {
 
@@ -182,7 +189,8 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
   }
 
   /**
-   * Called immediately after a model is unbound from a view holder. Subclasses can override this if they want alerts on when a model is unbound.
+   * Called immediately after a model is unbound from a view holder. Subclasses can override this if
+   * they want alerts on when a model is unbound.
    */
   protected void onModelUnbound(EpoxyViewHolder holder, EpoxyModel<?> model) {
 
@@ -208,8 +216,8 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
     // is more difficult to update view state once they are bound
     if (boundViewHolders.size() > 0) {
       throw new IllegalStateException(
-          "State cannot be restored once views have been bound. It should be done before adding " +
-              "the adapter to the recycler view.");
+          "State cannot be restored once views have been bound. It should be done before adding "
+              + "the adapter to the recycler view.");
     }
 
     if (inState != null) {
@@ -218,7 +226,8 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
   }
 
   /**
-   * Notify that the given model has had its data changed. It should only be called if the model retained the same position.
+   * Notify that the given model has had its data changed. It should only be called if the model
+   * retained the same position.
    */
   protected void notifyModelChanged(EpoxyModel<?> model) {
     int index = models.indexOf(model);
@@ -255,7 +264,8 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
   }
 
   /**
-   * If the given model exists it is removed and an item removal is notified. Otherwise this does nothing.
+   * If the given model exists it is removed and an item removal is notified. Otherwise this does
+   * nothing.
    */
   protected void removeModel(EpoxyModel<?> model) {
     int index = models.indexOf(model);
@@ -263,12 +273,12 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
       models.remove(index);
       notifyItemRemoved(index);
     }
-
   }
 
   /**
-   * Removes all models after the given model, which must have already been added. An example use case is you want to keep a header but clear
-   * everything else, like in the case of refreshing data.
+   * Removes all models after the given model, which must have already been added. An example use
+   * case is you want to keep a header but clear everything else, like in the case of refreshing
+   * data.
    */
   protected void removeAllAfterModel(EpoxyModel<?> model) {
     List<EpoxyModel<?>> modelsToRemove = getAllModelsAfter(model);
@@ -314,8 +324,8 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
   }
 
   /**
-   * Returns a list of all items in {@link #models} that occur after the given model. Any changes to the returned sublist will be reflected in the
-   * original {@link #models} list.
+   * Returns a list of all items in {@link #models} that occur after the given model. Any changes to
+   * the returned sublist will be reflected in the original {@link #models} list.
    *
    * @param model Must exists in {@link #models}.
    */

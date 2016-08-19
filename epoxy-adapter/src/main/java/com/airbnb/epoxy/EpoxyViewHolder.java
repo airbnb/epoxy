@@ -57,10 +57,10 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
 
   @Override
   public String toString() {
-    return "EpoxyViewHolder{" +
-        "epoxyModel=" + epoxyModel +
-        ", view=" + itemView +
-        ", super=" + super.toString() +
-        '}';
+    return "EpoxyViewHolder{"
+        + "epoxyModel=" + epoxyModel
+        + ", view=" + itemView
+        + ", super=" + super.toString()
+        + '}';
   }
 }

@@ -6,8 +6,9 @@ import android.support.v4.widget.Space;
 import com.airbnb.viewmodeladapter.R;
 
 /**
- * Used by the {@link EpoxyAdapter} as a placeholder for when {@link EpoxyModel#isShown()} is false. Using a zero height and width {@link Space}
- * view, as well as 0 span size, to exclude itself from view.
+ * Used by the {@link EpoxyAdapter} as a placeholder for when {@link EpoxyModel#isShown()} is false.
+ * Using a zero height and width {@link Space} view, as well as 0 span size, to exclude itself from
+ * view.
  */
 class HiddenEpoxyModel extends EpoxyModel<Space> {
   @Override
