@@ -2,6 +2,9 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.Nullable;
+import android.support.v7.util.DiffUtil;
+import android.support.v7.util.DiffUtil.Callback;
+import android.support.v7.util.DiffUtil.DiffResult;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -14,7 +17,7 @@ import java.util.Map;
  * Helper to track changes in the models list.
  */
 class DiffHelper {
-
+  private static boolean USE_DIFF_UTIL = false;
   private ArrayList<ModelState> oldStateList = new ArrayList<>();
   // Using a HashMap instead of a LongSparseArray to
   // have faster look up times at the expense of memory
@@ -130,16 +133,51 @@ class DiffHelper {
     // so we can easily find them by both position and id
     swapCurrentStateToOld();
     buildCurrentState();
-    List<UpdateOp> diff = buildDiff();
+
+    DiffResult diffUtilResult = null;
+    List<UpdateOp> diff = null;
+    if (USE_DIFF_UTIL) {
+      diffUtilResult = DiffUtil.calculateDiff(diffUtilCallback);
+    } else {
+      diff = buildDiff();
+    }
 
     // Send out the proper notify calls for the diff. We remove our
     // observer first so that we don't react to our own notify calls
     adapter.unregisterAdapterDataObserver(observer);
-    notifyChanges(diff);
-    adapter.registerAdapterDataObserver(observer);
 
-    UpdateOp.release(diff);
+    if (USE_DIFF_UTIL) {
+      diffUtilResult.dispatchUpdatesTo(adapter);
+    } else {
+      notifyChanges(diff);
+      UpdateOp.release(diff);
+    }
+
+    adapter.registerAdapterDataObserver(observer);
   }
+
+  private final Callback diffUtilCallback = new Callback() {
+    @Override
+    public int getOldListSize() {
+      return oldStateList.size();
+    }
+
+    @Override
+    public int getNewListSize() {
+      return currentStateList.size();
+    }
+
+    @Override
+    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+      return oldStateList.get(oldItemPosition).id == currentStateList.get(newItemPosition).id;
+    }
+
+    @Override
+    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+      return oldStateList.get(oldItemPosition).hashCode ==
+          currentStateList.get(newItemPosition).hashCode;
+    }
+  };
 
   private void notifyChanges(List<UpdateOp> diff) {
     for (UpdateOp op : diff) {
@@ -212,8 +250,8 @@ class DiffHelper {
     // the change, this way subsequent operations will use the correct, updated positions.
     collectRemovals(result);
     collectInsertions(result);
-    collectChanges(result);
     collectMoves(result);
+    collectChanges(result);
 
     return result;
   }
@@ -340,19 +378,32 @@ class DiffHelper {
 
     for (ModelState newItem : currentStateList) {
       if (newItem.pair == null) {
-        continue;
+        // This item was inserted. However, insertions are done at the item's final position, and
+        // aren't smart about inserting at a different position to take future moves into account.
+        // As the old state list is updated to reflect moves, it needs to also consider insertions
+        // affected by those moves in order for the final change set to be correct
+        if (moveOps.isEmpty()) {
+          // There have been no moves, so the item is still at it's correct position
+          continue;
+        } else {
+          // There have been moves, so the old list needs to take this inserted item
+          // into account. The old list doesn't have this item inserted into it
+          // (for optimization purposes), but we can create a pair for this item to
+          // track its position in the old list and move it back to its final position if necessary
+          newItem.pairWithSelf();
+        }
       }
 
       // We could iterate through only the new list and move each
       // item that is out of place, however in cases such as moving the first item
-      // to the end that strategy would do many moves to move all
-      // items up one, instead of doing one move to move the first item to the end.
+      // to the end, that strategy would do many moves to move all
+      // items up one instead of doing one move to move the first item to the end.
       // To avoid this we compare the old item to the new item at
       // each index and move the one that is farthest from its correct position.
       // We only move on from a new item once its pair is placed in
       // the correct spot. Since we move from start to end, all new items we've
       // already iterated through are guaranteed to have their pair
-      // be already in the righ spot, which won't be affected by future MOVEs.
+      // be already in the right spot, which won't be affected by future MOVEs.
       if (nextOldItem == null) {
         nextOldItem = getNextItemWithPair(oldItemIterator);
 
