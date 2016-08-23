@@ -23,6 +23,11 @@ import static junit.framework.Assert.assertEquals;
 @RunWith(TestRunner.class)
 public class DifferCorrectnessTest {
   private static final boolean SHOW_LOGS = false;
+  /**
+   * If true, will log the time taken on the diff and skip the validation since that takes a long
+   * time for big change sets.
+   */
+  private static final boolean SPEED_RUN = false;
   private final List<TestModel> oldModels = new ArrayList<>();
   private final List<TestModel> newModels = new ArrayList<>();
   private final TestObserver testObserver = new TestObserver(SHOW_LOGS);
@@ -373,14 +378,21 @@ public class DifferCorrectnessTest {
     testObserver.diffedModels = new ArrayList<>(oldModels);
     testObserver.operationCount = 0;
     setModelsOnAdapter(newModels);
+
+    long start = System.currentTimeMillis();
     testAdapter.notifyModelsChanged();
+    long end = System.currentTimeMillis();
 
-    if (expectedOperationCount != -1) {
-      assertEquals("Operation count is incorrect", expectedOperationCount,
-          testObserver.operationCount);
+    if (SPEED_RUN) {
+      System.out.println("Time for diff (ms): " + (end - start));
+    } else {
+      if (expectedOperationCount != -1) {
+        assertEquals("Operation count is incorrect", expectedOperationCount,
+            testObserver.operationCount);
+      }
+
+      checkDiff(testObserver.diffedModels, newModels);
     }
-
-    checkDiff(testObserver.diffedModels, newModels);
   }
 
   private static int randInt(int min, int max, Random rand) {

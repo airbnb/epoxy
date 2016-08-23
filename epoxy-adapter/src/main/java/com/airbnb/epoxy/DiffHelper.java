@@ -246,10 +246,16 @@ class DiffHelper {
     // The general approach is to first search for removals, then additions, and lastly changes.
     // Focusing on one type of operation at a time makes it easy to coalesce batch changes.
     // When we identify an operation and add it to the
-    // result list we update the postions of items in the oldStateList to reflect
+    // result list we update the positions of items in the oldStateList to reflect
     // the change, this way subsequent operations will use the correct, updated positions.
-    collectRemovals(result);
-    collectInsertions(result);
+    int removalCount = collectRemovals(result);
+
+    // Only need to check for insertions if new list is bigger
+    boolean hasInsertions = oldStateList.size() - removalCount != currentStateList.size();
+    if (hasInsertions) {
+      collectInsertions(result);
+    }
+
     collectMoves(result);
     collectChanges(result);
 
@@ -260,8 +266,10 @@ class DiffHelper {
    * Find all removal operations and add them to the result list. The general strategy here is to
    * walk through the {@link #oldStateList} and check for items that don't exist in the new list.
    * Walking through it in order makes it easy to batch adjacent removals.
+   *
+   * @return The number of items removed
    */
-  private void collectRemovals(List<UpdateOp> result) {
+  private int collectRemovals(List<UpdateOp> result) {
     int removalCount = 0;
     UpdateOp lastRemoval = null;
     for (ModelState state : oldStateList) {
@@ -293,6 +301,8 @@ class DiffHelper {
     if (lastRemoval != null) {
       result.add(lastRemoval);
     }
+
+    return removalCount;
   }
 
   /**
