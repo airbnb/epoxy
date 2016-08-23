@@ -16,7 +16,7 @@ branches:
   - gh-pages
 notifications:
   email: false
-script: "./gradlew check"
+script: "./gradlew check --stacktrace"
 before_install:
 - export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
 - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
