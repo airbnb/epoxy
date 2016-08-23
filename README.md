@@ -13,6 +13,10 @@ Epoxy is an Android library for building complex screens in a ReyclerView. It ab
 * [Saving View State](#saved-state)
 * [Grid Support](#grid-support)
 * [Generating Helper Classes For Models](#annotations)
+* [Sample App](/epoxy-sample)
+
+<img align="center" alt="Sample app demo gif" src="https://github.com/airbnb/epoxy/raw/master/epoxy-sample/epoxy_sample_app.gif" width="200" height="354" />
+
 
 ## Basic Usage
 
