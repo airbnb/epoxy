@@ -36,10 +36,7 @@ class ModelState {
   int lastMoveOp;
 
   static ModelState build(EpoxyModel<?> model, int position) {
-    ModelState state = POOL.acquire();
-    if (state == null) {
-      state = new ModelState();
-    }
+    ModelState state = get();
 
     state.lastMoveOp = 0;
     state.pair = null;
@@ -48,6 +45,31 @@ class ModelState {
     state.position = position;
 
     return state;
+  }
+
+  private static ModelState get() {
+    ModelState state = POOL.acquire();
+    if (state == null) {
+      state = new ModelState();
+    }
+    return state;
+  }
+
+  /**
+   * Used for an item inserted into the new list when we need to track moves that effect the
+   * inserted item in the old list.
+   */
+  public void pairWithSelf() {
+    if (pair != null) {
+      throw new IllegalStateException("Already paired.");
+    }
+
+    pair = get();
+    pair.lastMoveOp = 0;
+    pair.id = id;
+    pair.position = position;
+    pair.hashCode = hashCode;
+    pair.pair = this;
   }
 
   static void release(Collection<ModelState> states) {
