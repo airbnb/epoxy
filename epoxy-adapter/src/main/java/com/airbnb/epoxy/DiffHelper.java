@@ -17,7 +17,7 @@ import java.util.Map;
  * Helper to track changes in the models list.
  */
 class DiffHelper {
-  private static boolean USE_DIFF_UTIL = false;
+  private static final boolean USE_DIFF_UTIL = false;
   private ArrayList<ModelState> oldStateList = new ArrayList<>();
   // Using a HashMap instead of a LongSparseArray to
   // have faster look up times at the expense of memory
@@ -174,8 +174,8 @@ class DiffHelper {
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-      return oldStateList.get(oldItemPosition).hashCode ==
-          currentStateList.get(newItemPosition).hashCode;
+      return oldStateList.get(oldItemPosition).hashCode
+          == currentStateList.get(newItemPosition).hashCode;
     }
   };
 
