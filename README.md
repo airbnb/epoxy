@@ -67,7 +67,7 @@ public class PhotoAdapter extends EpoxyAdapter {
     public void addPhotos(Collection<Photo> photos) {
         hideModel(loaderModel);
         for (Photo photo : photos) {
-            addModel(new PhotoModel(photo));
+            insertModelBefore(new PhotoModel(photo), loaderModel);
         }
     }
 }
