@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * A non-abstract version of {@link com.airbnb.epoxy.EpoxyAdapter} with public methods. Use this if
- * you don't want to create your own adapter subclass and instead want to modify the adapter from
- * elsewhere.
+ * A non-abstract version of {@link com.airbnb.epoxy.EpoxyAdapter} that exposed all methods and
+ * models as public. Use this if you don't want to create your own adapter subclass and instead want
+ * to modify the adapter from elsewhere, such as from an activity.
  */
 public class SimpleEpoxyAdapter extends EpoxyAdapter {
 

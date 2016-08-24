@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ModelTestUtils {
-  private static final int DEFAULT_NUM_MODELS = 100;
+  private static final int DEFAULT_NUM_MODELS = 20;
 
   static void changeValues(List<TestModel> models) {
     changeValues(models, 0, models.size());
