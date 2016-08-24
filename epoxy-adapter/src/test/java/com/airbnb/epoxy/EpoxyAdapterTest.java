@@ -32,6 +32,17 @@ public class EpoxyAdapterTest {
   }
 
   @Test
+  public void testAddModel() {
+    testAdapter.addModel(new TestModel());
+    verify(observer).onItemRangeInserted(0, 1);
+    assertEquals(1, testAdapter.models.size());
+
+    testAdapter.addModel(new TestModel());
+    verify(observer).onItemRangeInserted(1, 1);
+    assertEquals(2, testAdapter.models.size());
+  }
+
+  @Test
   public void testAddModels() {
     List<TestModel> list = new ArrayList<>();
     list.add(new TestModel());

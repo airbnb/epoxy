@@ -11,8 +11,8 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 
 /**
- * Tests that changes to the models via notify calls besides {@link EpoxyAdapter#notifyModelsChanged()} will properly update the model state
- * maintained by the differ.
+ * Tests that changes to the models via notify calls besides {@link EpoxyAdapter#notifyModelsChanged()}
+ * will properly update the model state maintained by the differ.
  */
 @Config(sdk = 21, manifest = TestRunner.MANIFEST_PATH)
 @RunWith(TestRunner.class)
