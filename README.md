@@ -91,7 +91,7 @@ Models also allow you to control other aspects of the view, such as the span siz
 
 ## <a name="models-list"/>Modifying the Models List
 
-Subclasses of EpoxyAdapter have access to the `models` field, a `List<ViewModel<?>>` which specifies what models to show and in what order. The list starts off empty, and subclasses should add models to this list, and otherwise modify it as they see fit, in order to build their view. 
+Subclasses of EpoxyAdapter have access to the `models` field, a `List<EpoxyModel<?>>` which specifies what models to show and in what order. The list starts off empty, and subclasses should add models to this list, and otherwise modify it as they see fit, in order to build their view. 
 
 Every time the list is modified you must notify the changes with the standard RecyclerView methods - `notifyDataSetChanged()`, `notifyItemInserted()`, etc. As always with RecyclerView, `notifyDataSetChanged()` should be avoided in favor of more specific methods like `notifyItemInserted()` when possible. 
 
@@ -170,19 +170,19 @@ First, diffing must process all models in your list, and so may affect performan
 
 Second, each diff must recompute each model's hashcode in order to determine item changes. Avoid including unnecessary computation in your hashcodes as that can signicantly slow down the diff.
 
-Third, beware of changing model state unintionally, such as with click listeners. For example, it is common to set a click listener on a model, which would then be set on a view when bound. An easy mistake here is using anonymous inner classes as click listeners, which would affect the model hashcode and require the view to be rebound when the model is updated or recreated. Instead, you can save a listener as a field to reuse with each model so that it does not change the model's hashcode. Another common mistake is modifying model state that affects the hashcode during a model's bind call.
+Third, beware of changing model state unintentionally, such as with click listeners. For example, it is common to set a click listener on a model, which would then be set on a view when bound. An easy mistake here is using anonymous inner classes as click listeners, which would affect the model hashcode and require the view to be rebound when the model is updated or recreated. Instead, you can save a listener as a field to reuse with each model so that it does not change the model's hashcode. Another common mistake is modifying model state that affects the hashcode during a model's bind call.
 
 With these considerations in mind, avoid calling `notifyModelsChanged()` unnecessarily and batch your changes as much as possible. For very long lists of models, or for cases with many item moves, you may prefer to use manual notifications over automatic diffing in order to prevent frame drops. That being said, diffing is fairly fast and we have used it with up to 600 models with neglible performance impact. As always, profile your code and make sure it works for your specific situation. 
 
 ## Binding Models
 
-Epoxy uses the layout resource id provided by `EpoxyModel#getLayout()` to create a view for that model. When `RecyclerView.Adapter#onBindViewHolder(ViewModelHolder holder, int position)` is called, the `EpoxyAdapter` looks up the model at the given position and calls `EpoxyModel#bind(View)` with the inflated view. You may override this bind call in your model to update the view with whatever data you have set in your model.
+Epoxy uses the layout resource id provided by `EpoxyModel#getLayout()` to create a view for that model. When `RecyclerView.Adapter#onBindViewHolder(ViewHolder holder, int position)` is called, the `EpoxyAdapter` looks up the model at the given position and calls `EpoxyModel#bind(View)` with the inflated view. You may override this bind call in your model to update the view with whatever data you have set in your model.
 
 Since RecyclerView reuses views when possible, a view may be bound multiple times. You should make sure that your usage of `EpoxyModel#bind(View)` completely updates the view according to the data in your model.
 
 When the view is recycled, `EpoxyAdapter` will call `EpoxyModel#unbind(View)`, giving you a chance to release any resources associated with the view. This is a good opportunity to clear the view of large or expensive data such as bitmaps.
 
-If the recycler view provided a non empty list of payloads with `onBindViewHolder(ViewModelHolder holder, int position, List<Object> payloads)`, then `EpoxyModel#bind(View, List<Object>)` will be called instead so that the model can be optimized to rebind according to what changed. This can help you prevent unnecessary layout changes if only part of the view changed.
+If the recycler view provided a non empty list of payloads with `onBindViewHolder(ViewHolder holder, int position, List<Object> payloads)`, then `EpoxyModel#bind(View, List<Object>)` will be called instead so that the model can be optimized to rebind according to what changed. This can help you prevent unnecessary layout changes if only part of the view changed.
 
 ## Model IDs
 
