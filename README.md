@@ -27,8 +27,8 @@ We developed Epoxy at Airbnb to simplify the process of working with RecyclerVie
 Gradle is the only supported build configuration, so just add the dependency to your project `build.gradle` file:
 
 ```groovy
-  dependencies {
-    compile 'com.airbnb.android:epoxy:1.1.0'
+dependencies {
+  compile 'com.airbnb.android:epoxy:1.1.0'
 }
 ```
 
@@ -58,18 +58,18 @@ In this example our `PhotoAdapter` starts off showing just a title header and a 
 
 ```java
 public class PhotoAdapter extends EpoxyAdapter {
-    private final LoaderModel loaderModel = new LoaderModel();
+  private final LoaderModel loaderModel = new LoaderModel();
 
-    public PhotoAdapter() {
-        addModels(new HeaderModel("My Photos"), loaderModel);
-    }
+  public PhotoAdapter() {
+    addModels(new HeaderModel("My Photos"), loaderModel);
+  }
 
-    public void addPhotos(Collection<Photo> photos) {
-        hideModel(loaderModel);
-        for (Photo photo : photos) {
-            insertModelBefore(new PhotoModel(photo), loaderModel);
-        }
+  public void addPhotos(Collection<Photo> photos) {
+    hideModel(loaderModel);
+    for (Photo photo : photos) {
+      insertModelBefore(new PhotoModel(photo), loaderModel);
     }
+  }
 }
 ```
 
@@ -81,7 +81,6 @@ For example, the `PhotoModel` in the above example could be created like so
 
 ```java
 public class PhotoModel extends EpoxyModel<PhotoView> {
-
   private final Photo photo;
 
   public PhotoModel(Photo photo) {
@@ -106,9 +105,9 @@ public class PhotoModel extends EpoxyModel<PhotoView> {
 }
 ```
 
-In this case the PhotoModel is typed with `PhotoView`, so the `getDefaultLayout` method must return a layout resource that will inflate into a PhotoView. The file `R.layout.view_model_photo` might look like this
+In this case the `PhotoModel` is typed with `PhotoView`, so the `getDefaultLayout()` method must return a layout resource that will inflate into a `PhotoView`. The file `R.layout.view_model_photo` might look like this
 
-```
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <PhotoView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -116,42 +115,43 @@ In this case the PhotoModel is typed with `PhotoView`, so the `getDefaultLayout`
     android:padding="16dp" />
 ```
 
-Epoxy works well with custom views - in this pattern the model holds the data and passes it to the view, the layout file describes which view to use and how to style it, and the view itself handles displaying the data. This is a bit different from the normal ViewHolder pattern, and allows for a separation of data and view logic.
+Epoxy works well with custom views - in this pattern the model holds the data and passes it to the view, the layout file describes which view to use and how to style it, and the view itself handles displaying the data. This is a bit different from the normal `ViewHolder` pattern, and allows for a separation of data and view logic.
 
 Models also allow you to control other aspects of the view, such as the span size, id, saved state, and whether the view should be shown. Those aspects of models are described in detail below.
 
 ## <a name="models-list"/>Modifying the Models List
 
-Subclasses of EpoxyAdapter have access to the `models` field, a `List<EpoxyModel<?>>` which specifies what models to show and in what order. The list starts off empty, and subclasses should add models to this list, and otherwise modify it as they see fit, in order to build their view. 
+Subclasses of `EpoxyAdapter` have access to the `models` field, a `List<EpoxyModel<?>>` which specifies what models to show and in what order. The list starts off empty, and subclasses should add models to this list, and otherwise modify it as they see fit, in order to build their view. 
 
-Every time the list is modified you must notify the changes with the standard RecyclerView methods - `notifyDataSetChanged()`, `notifyItemInserted()`, etc. As always with RecyclerView, `notifyDataSetChanged()` should be avoided in favor of more specific methods like `notifyItemInserted()` when possible. 
+Every time the list is modified you must notify the changes with the standard `RecyclerView` methods - `notifyDataSetChanged()`, `notifyItemInserted()`, etc. As always with RecyclerView, `notifyDataSetChanged()` should be avoided in favor of more specific methods like `notifyItemInserted()` when possible. 
 
 Helper methods such as `EpoxyAdapter#addModels(EpoxyModel<?>...)` exist that will modify the list and notify the proper change for you. Alternatively, you may choose to leverage Epoxy's [automatic diffing](#diffing) to avoid the overhead of manually notifying item changes.
 
 The example from the [Basic Usage](#basic-usage) section uses these helper methods, but could be changed to instead access the models list directly like so:
+
 ```java
 public class PhotoAdapter extends EpoxyAdapter {
-    private final LoaderModel loaderModel = new LoaderModel();
+  private final LoaderModel loaderModel = new LoaderModel();
 
-    public PhotoAdapter() {
-      models.add(new HeaderModel("My Photos"));
-      models.add(loaderModel);
-      notifyItemRangeInserted(0,2);
-    }
+  public PhotoAdapter() {
+    models.add(new HeaderModel("My Photos"));
+    models.add(loaderModel);
+    notifyItemRangeInserted(0,2);
+  }
 
-    public void addPhotos(Collection<Photo> photos) {
-      for (Photo photo : photos) {
-        int loaderPosition = models.size() - 1;
-        models.add(loaderPosition, photo);
-        notifyItemInserted(loaderPosition);
-      }
+  public void addPhotos(Collection<Photo> photos) {
+    for (Photo photo : photos) {
+      int loaderPosition = models.size() - 1;
+      models.add(loaderPosition, photo);
+      notifyItemInserted(loaderPosition);
     }
   }
+}
 ```
 
 Having direct access to the models list allows complete flexibility in how you arrange and rearrange your models as needed.
 
-Once the models list is modified and the changes notified, EpoxyAdapter will reference the list in order to create and bind the appropriate view for each model.
+Once the models list is modified and the changes notified, `EpoxyAdapter` will reference the list in order to create and bind the appropriate view for each model.
 
 ## <a name="diffing"/>Automatic Diffing
 
@@ -161,7 +161,7 @@ Tracking all of these changes manually is difficult and adds significant overhea
 
 To enable diffing, call `enableDiffing()` in the constructor of your EpoxyAdapter subclass. Then simply call `notifyModelsChanged()` after modifying your models list to let the diffing algorithm figure out what changed. This will dispatch the appropriate calls to insert, remove, change, or move your models, batching as necessary.
 
-For this to work you must leave stable ids set to true (this is [the default](#model-ids)) as well as implement `hashCode()` on your models to completely define the state of the model. This hash is used to detect when data on a model is changed.
+For this to work you must leave stable ids set to `true` (this is [the default](#model-ids)) as well as implement `hashCode()` on your models to completely define the state of the model. This hash is used to detect when data on a model is changed.
 
 You may mix usage of normal notify calls, such as `notifyItemInserted()`, along with `notifyModelsChanged()` when you know specifically what changed, as that will be more efficient than relying on the diffing algorithm.
 
@@ -169,27 +169,26 @@ A common usage pattern of this is to have a method on your adapter that updates 
 
 ```java
 public class MyAdapter extends EpoxyAdapter {
-    private final HeaderModel headerModel = new HeaderModel();
-    private final BodyModel bodyModel = new BodyModel();
-    private final FooterModel footerModel = new FooterModel();
+  private final HeaderModel headerModel = new HeaderModel();
+  private final BodyModel bodyModel = new BodyModel();
+  private final FooterModel footerModel = new FooterModel();
 
-    public MyAdapter() {
-        enableDiffing();
-    
-        addModels(
-            headerModel,
-            bodyModel,
-            footerModel
-        );
-    }
+  public MyAdapter() {
+    enableDiffing();
+  
+    addModels(
+      headerModel,
+      bodyModel,
+      footerModel);
+  }
 
-    public void setData(MyDataClass data) {
-        headerModel.setData(data.headerData());
-        bodyModel.setData(data.bodyData());
-        footerModel.setData(data.footerData());
+  public void setData(MyDataClass data) {
+    headerModel.setData(data.headerData());
+    bodyModel.setData(data.bodyData());
+    footerModel.setData(data.footerData());
 
-        notifyModelsChanged();
-    }
+    notifyModelsChanged();
+  }
 }
 ```
 
@@ -261,7 +260,7 @@ Since a view's state is associated with its model id, the model _must_ have a co
 
 EpoxyAdapter can be used with RecyclerView's `GridLayoutManager` to allow `EpoxyModels` to change their span size. `EpoxyModels` can claim various span sizes by overriding `int getSpanSize(int totalSpanCount, int position, int itemCount)` to vary their span size based on the span count of the layout manager as well as the model's position in the adapter. `EpoxyAdapter.getSpanSizeLookup()` returns a span size lookup object that delegates lookup calls to each EpoxyModel.
 
-```
+```java
 int spanCount = 2;
 GridLayoutManager layoutManager = new GridLayoutManager(getContext(), spanCount);
 epoxyAdapter.setSpanCount(spanCount);
@@ -273,23 +272,24 @@ layoutManager.setSpanSizeLookup(epoxyAdapter.getSpanSizeLookup());
 You can reduce boilerplate in you model classes by using the EpoxyAttribute annotation to generate a subclass of your model with setters, getters, equals, and hashcode.
 
 For example, you may set up a model like this:
+
 ```java
 public class HeaderModel extends EpoxyModel<HeaderView> {
-    @EpoxyAttribute String title;
-    @EpoxyAttribute String subtitle;
-    @EpoxyAttribute String description;
+  @EpoxyAttribute String title;
+  @EpoxyAttribute String subtitle;
+  @EpoxyAttribute String description;
     
-    @LayoutRes
-    public int getDefaultLayout() {
-        return R.layout.view_model_header;
-    }
+  @LayoutRes
+  public int getDefaultLayout() {
+    return R.layout.view_model_header;
+  }
 
-    @Override
-    public void bind(HeaderView view) {
-        view.setTitle(title);
-        view.setSubtitle(subtitle);
-        view.setDescription(description);
-    }
+  @Override
+  public void bind(HeaderView view) {
+    view.setTitle(title);
+    view.setSubtitle(subtitle);
+    view.setDescription(description);
+  }
 }
 ```
 
