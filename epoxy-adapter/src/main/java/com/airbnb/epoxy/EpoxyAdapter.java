@@ -381,10 +381,23 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
     return -1;
   }
 
+  /**
+   * For use with a grid layout manager - use this to get the {@link SpanSizeLookup} for models in
+   * this adapter. This will delegate span look up calls to each model's {@link
+   * EpoxyModel#getSpanSize(int, int, int)}. Make sure to also call {@link #setSpanCount(int)} so
+   * the span count is correct.
+   */
   public SpanSizeLookup getSpanSizeLookup() {
     return spanSizeLookup;
   }
 
+  /**
+   * If you are using a grid layout manager you must call this to set the span count of the grid.
+   * This span count will be passed on to the models so models can choose what span count to be.
+   *
+   * @see #getSpanSizeLookup()
+   * @see EpoxyModel#getSpanSize(int, int, int)
+   */
   public void setSpanCount(int spanCount) {
     this.spanCount = spanCount;
   }

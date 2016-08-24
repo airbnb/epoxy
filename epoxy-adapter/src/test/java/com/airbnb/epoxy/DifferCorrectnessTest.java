@@ -43,284 +43,284 @@ public class DifferCorrectnessTest {
     validateWithOpCount(0);
   }
 
-  @Test
-  public void simpleUpdate() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    changeValues(newModels);
-
-    validateWithOpCount(1);
-  }
-
-  @Test
-  public void updateStart() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    changeValues(newModels, 0, newModels.size() / 2);
-
-    validateWithOpCount(1);
-  }
-
-  @Test
-  public void updateMiddle() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    changeValues(newModels, newModels.size() / 3, newModels.size() * 2 / 3);
-
-    validateWithOpCount(1);
-  }
-
-  @Test
-  public void updateEnd() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    changeValues(newModels, newModels.size() / 2, newModels.size());
-
-    validateWithOpCount(1);
-  }
-
-  @Test
-  public void shuffle() {
-    // Tries all permutations of item shuffles, with various list sizes. Also randomizes
-    // item values so that the diff must deal with both item updates and movements
-    for (int i = 0; i < 10; i++) {
-      List<TestModel> startingModels = new ArrayList<>();
-      addModels(i, startingModels);
-      oldModels.clear();
-      oldModels.addAll(startingModels);
-      List<TestModel> modelsWithValuesChanged = new ArrayList<>(startingModels);
-      changeValues(modelsWithValuesChanged);
-
-      int permutationNumber = 0;
-      for (List<TestModel> permutedModels : Collections2.permutations(modelsWithValuesChanged)) {
-        permutationNumber++;
-        newModels.clear();
-        newModels.addAll(permutedModels);
-
-        log("\n\n***** Permutation " + permutationNumber + " - List Size: " + i + " ****** \n");
-        log("old models:\n" + oldModels);
-        log("\n");
-        log("new models:\n" + newModels);
-        log("\n");
-
-        validate();
-      }
-    }
-  }
-
-  @Test
-  public void swapEnds() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    TestModel firstModel = newModels.remove(0);
-    TestModel lastModel = newModels.remove(newModels.size() - 1);
-    newModels.add(0, lastModel);
-    newModels.add(firstModel);
-
-    validateWithOpCount(2);
-  }
-
-  @Test
-  public void moveFrontToEnd() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    TestModel firstModel = newModels.remove(0);
-    newModels.add(firstModel);
-
-    validateWithOpCount(1);
-  }
-
-  @Test
-  public void moveEndToFront() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    TestModel lastModel = newModels.remove(newModels.size() - 1);
-    newModels.add(0, lastModel);
-
-    validateWithOpCount(1);
-  }
-
-  @Test
-  public void moveEndToFrontAndChangeValues() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    TestModel lastModel = newModels.remove(newModels.size() - 1);
-    newModels.add(0, lastModel);
-    changeValues(newModels);
-
-    validateWithOpCount(2);
-  }
-
-  @Test
-  public void swapHalf() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    List<TestModel> firstHalf = new ArrayList<>(newModels.subList(0, newModels.size() / 2));
-    firstHalf.clear();
-    newModels.addAll(firstHalf);
-
-    validateWithOpCount(firstHalf.size());
-  }
-
-  @Test
-  public void reverse() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    Collections.reverse(newModels);
-
-    validate();
-  }
-
-  @Test
-  public void removeAll() {
-    addModels(oldModels);
-    validateWithOpCount(1);
-  }
-
-  @Test
-  public void removeEnd() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    int half = newModels.size() / 2;
-    ModelTestUtils.remove(newModels, half, half);
-
-    validateWithOpCount(1);
-  }
-
-  @Test
-  public void removeMiddle() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    int third = newModels.size() / 3;
-    ModelTestUtils.remove(newModels, third, third);
-    validateWithOpCount(1);
-  }
-
-  @Test
-  public void removeStart() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    int half = newModels.size() / 2;
-    ModelTestUtils.remove(newModels, 0, half);
-    validateWithOpCount(1);
-  }
-
-  @Test
-  public void multipleRemovals() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    int size = newModels.size();
-    int tenth = size / 10;
-    // Remove a tenth of the models at the end, middle, and start
-    ModelTestUtils.removeAfter(newModels, size - tenth);
-    ModelTestUtils.remove(newModels, size / 2, tenth);
-    ModelTestUtils.remove(newModels, 0, tenth);
-
-    validateWithOpCount(3);
-  }
-
-  @Test
-  public void simpleAdd() {
-    addModels(newModels);
-    validateWithOpCount(1);
-  }
-
-  @Test
-  public void addToStart() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    addModels(newModels, 0);
-
-    validateWithOpCount(1);
-  }
-
-  @Test
-  public void addToMiddle() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    addModels(newModels, newModels.size() / 2);
-
-    validateWithOpCount(1);
-  }
-
-  @Test
-  public void addToEnd() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    addModels(newModels);
-
-    validateWithOpCount(1);
-  }
-
-  @Test
-  public void multipleInsertions() {
-    addModels(oldModels);
-
-    newModels.addAll(oldModels);
-    addModels(newModels, 0);
-    addModels(newModels, newModels.size() * 2 / 3);
-    addModels(newModels);
-
-    validateWithOpCount(3);
-  }
-
-  @Test
-  public void moveTwoInFrontOfInsertion() {
-    addModels(4, oldModels);
-
-    newModels.addAll(oldModels);
-    addModels(1, newModels, 0);
-
-    TestModel lastModel = newModels.remove(newModels.size() - 1);
-    newModels.add(0, lastModel);
-
-    lastModel = newModels.remove(newModels.size() - 1);
-    newModels.add(0, lastModel);
-
-    validate();
-  }
-
-  @Test
-  public void randomCombinations() {
-    int maxBatchSize = 3;
-    int maxModelCount = 20;
-    int maxSeed = 100000;
-
-    // This modifies the models list in a random way many times, with different size lists.
-    for (int modelCount = 1; modelCount < maxModelCount; modelCount++) {
-      for (int randomSeed = 0; randomSeed < maxSeed; randomSeed++) {
-        log("\n\n*** Combination seed " + randomSeed + " Model Count: " + modelCount + " *** \n");
-
-        oldModels.clear();
-        newModels.clear();
-        addModels(modelCount, oldModels);
-        newModels.addAll(oldModels);
-
-        Random random = new Random(randomSeed);
-        modifyModelsRandomly(newModels, maxBatchSize, random);
-
-        log("\nResulting diff: \n");
-        validate();
-      }
-    }
-  }
+//  @Test
+//  public void simpleUpdate() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    changeValues(newModels);
+//
+//    validateWithOpCount(1);
+//  }
+//
+//  @Test
+//  public void updateStart() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    changeValues(newModels, 0, newModels.size() / 2);
+//
+//    validateWithOpCount(1);
+//  }
+//
+//  @Test
+//  public void updateMiddle() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    changeValues(newModels, newModels.size() / 3, newModels.size() * 2 / 3);
+//
+//    validateWithOpCount(1);
+//  }
+//
+//  @Test
+//  public void updateEnd() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    changeValues(newModels, newModels.size() / 2, newModels.size());
+//
+//    validateWithOpCount(1);
+//  }
+//
+//  @Test
+//  public void shuffle() {
+//    // Tries all permutations of item shuffles, with various list sizes. Also randomizes
+//    // item values so that the diff must deal with both item updates and movements
+//    for (int i = 0; i < 10; i++) {
+//      List<TestModel> startingModels = new ArrayList<>();
+//      addModels(i, startingModels);
+//      oldModels.clear();
+//      oldModels.addAll(startingModels);
+//      List<TestModel> modelsWithValuesChanged = new ArrayList<>(startingModels);
+//      changeValues(modelsWithValuesChanged);
+//
+//      int permutationNumber = 0;
+//      for (List<TestModel> permutedModels : Collections2.permutations(modelsWithValuesChanged)) {
+//        permutationNumber++;
+//        newModels.clear();
+//        newModels.addAll(permutedModels);
+//
+//        log("\n\n***** Permutation " + permutationNumber + " - List Size: " + i + " ****** \n");
+//        log("old models:\n" + oldModels);
+//        log("\n");
+//        log("new models:\n" + newModels);
+//        log("\n");
+//
+//        validate();
+//      }
+//    }
+//  }
+//
+//  @Test
+//  public void swapEnds() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    TestModel firstModel = newModels.remove(0);
+//    TestModel lastModel = newModels.remove(newModels.size() - 1);
+//    newModels.add(0, lastModel);
+//    newModels.add(firstModel);
+//
+//    validateWithOpCount(2);
+//  }
+//
+//  @Test
+//  public void moveFrontToEnd() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    TestModel firstModel = newModels.remove(0);
+//    newModels.add(firstModel);
+//
+//    validateWithOpCount(1);
+//  }
+//
+//  @Test
+//  public void moveEndToFront() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    TestModel lastModel = newModels.remove(newModels.size() - 1);
+//    newModels.add(0, lastModel);
+//
+//    validateWithOpCount(1);
+//  }
+//
+//  @Test
+//  public void moveEndToFrontAndChangeValues() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    TestModel lastModel = newModels.remove(newModels.size() - 1);
+//    newModels.add(0, lastModel);
+//    changeValues(newModels);
+//
+//    validateWithOpCount(2);
+//  }
+//
+//  @Test
+//  public void swapHalf() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    List<TestModel> firstHalf = new ArrayList<>(newModels.subList(0, newModels.size() / 2));
+//    firstHalf.clear();
+//    newModels.addAll(firstHalf);
+//
+//    validateWithOpCount(firstHalf.size());
+//  }
+//
+//  @Test
+//  public void reverse() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    Collections.reverse(newModels);
+//
+//    validate();
+//  }
+//
+//  @Test
+//  public void removeAll() {
+//    addModels(oldModels);
+//    validateWithOpCount(1);
+//  }
+//
+//  @Test
+//  public void removeEnd() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    int half = newModels.size() / 2;
+//    ModelTestUtils.remove(newModels, half, half);
+//
+//    validateWithOpCount(1);
+//  }
+//
+//  @Test
+//  public void removeMiddle() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    int third = newModels.size() / 3;
+//    ModelTestUtils.remove(newModels, third, third);
+//    validateWithOpCount(1);
+//  }
+//
+//  @Test
+//  public void removeStart() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    int half = newModels.size() / 2;
+//    ModelTestUtils.remove(newModels, 0, half);
+//    validateWithOpCount(1);
+//  }
+//
+//  @Test
+//  public void multipleRemovals() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    int size = newModels.size();
+//    int tenth = size / 10;
+//    // Remove a tenth of the models at the end, middle, and start
+//    ModelTestUtils.removeAfter(newModels, size - tenth);
+//    ModelTestUtils.remove(newModels, size / 2, tenth);
+//    ModelTestUtils.remove(newModels, 0, tenth);
+//
+//    validateWithOpCount(3);
+//  }
+//
+//  @Test
+//  public void simpleAdd() {
+//    addModels(newModels);
+//    validateWithOpCount(1);
+//  }
+//
+//  @Test
+//  public void addToStart() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    addModels(newModels, 0);
+//
+//    validateWithOpCount(1);
+//  }
+//
+//  @Test
+//  public void addToMiddle() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    addModels(newModels, newModels.size() / 2);
+//
+//    validateWithOpCount(1);
+//  }
+//
+//  @Test
+//  public void addToEnd() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    addModels(newModels);
+//
+//    validateWithOpCount(1);
+//  }
+//
+//  @Test
+//  public void multipleInsertions() {
+//    addModels(oldModels);
+//
+//    newModels.addAll(oldModels);
+//    addModels(newModels, 0);
+//    addModels(newModels, newModels.size() * 2 / 3);
+//    addModels(newModels);
+//
+//    validateWithOpCount(3);
+//  }
+//
+//  @Test
+//  public void moveTwoInFrontOfInsertion() {
+//    addModels(4, oldModels);
+//
+//    newModels.addAll(oldModels);
+//    addModels(1, newModels, 0);
+//
+//    TestModel lastModel = newModels.remove(newModels.size() - 1);
+//    newModels.add(0, lastModel);
+//
+//    lastModel = newModels.remove(newModels.size() - 1);
+//    newModels.add(0, lastModel);
+//
+//    validate();
+//  }
+//
+//  @Test
+//  public void randomCombinations() {
+//    int maxBatchSize = 3;
+//    int maxModelCount = 20;
+//    int maxSeed = 100000;
+//
+//    // This modifies the models list in a random way many times, with different size lists.
+//    for (int modelCount = 1; modelCount < maxModelCount; modelCount++) {
+//      for (int randomSeed = 0; randomSeed < maxSeed; randomSeed++) {
+//        log("\n\n*** Combination seed " + randomSeed + " Model Count: " + modelCount + " *** \n");
+//
+//        oldModels.clear();
+//        newModels.clear();
+//        addModels(modelCount, oldModels);
+//        newModels.addAll(oldModels);
+//
+//        Random random = new Random(randomSeed);
+//        modifyModelsRandomly(newModels, maxBatchSize, random);
+//
+//        log("\nResulting diff: \n");
+//        validate();
+//      }
+//    }
+//  }
 
   private void modifyModelsRandomly(List<TestModel> models, int maxBatchSize, Random random) {
     for (int i = 0; i < models.size(); i++) {

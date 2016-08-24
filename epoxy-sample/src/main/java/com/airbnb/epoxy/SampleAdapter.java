@@ -16,28 +16,33 @@ import java.util.Random;
 class SampleAdapter extends EpoxyAdapter {
   private static final Random RANDOM = new Random();
 
+  // These models are saved as fields so they can easily be shown or hidden as needed
   private final ButtonModel_ clearButton = new ButtonModel_();
   private final ButtonModel_ shuffleButton = new ButtonModel_();
   private final ButtonModel_ changeColorsButton = new ButtonModel_();
 
   SampleAdapter() {
+    // We are going to use automatic diffing, so we just have to enable it first
     enableDiffing();
 
+    // We're using the generated subclasses of our models, which is indicated by the underscore
+    // appended to the class name. These generated classes contain our setter methods, as well as
+    // the hashcode methods that tell the diffing algorithm when a model has changed
     HeaderModel headerModel = new HeaderModel_()
-        .title("Epoxy")
-        .caption("Composing views with ease");
+        .title(R.string.epoxy)
+        .caption(R.string.header_subtitle);
 
     ButtonModel addButton = new ButtonModel_()
-        .text("Add")
+        .text(R.string.button_add)
         .clickListener(onAddClicked);
 
-    clearButton.text("Clear")
+    clearButton.text(R.string.button_clear)
         .clickListener(onClearClicked);
 
-    shuffleButton.text("Shuffle")
+    shuffleButton.text(R.string.button_shuffle)
         .clickListener(onShuffleClicked);
 
-    changeColorsButton.text("Change")
+    changeColorsButton.text(R.string.button_change)
         .clickListener(onChangeColorsClicked);
 
     addModels(

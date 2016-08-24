@@ -1,5 +1,6 @@
 package com.airbnb.epoxy.models;
 
+import android.support.annotation.StringRes;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
@@ -8,7 +9,7 @@ import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.R;
 
 public class ButtonModel extends EpoxyModel<Button> {
-  @EpoxyAttribute String text;
+  @EpoxyAttribute @StringRes int text;
   @EpoxyAttribute OnClickListener clickListener;
 
   @Override

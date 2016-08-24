@@ -9,6 +9,10 @@ import android.util.DisplayMetrics;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * Example activity usage for {@link com.airbnb.epoxy.EpoxyAdapter}. Allows you to create a list of
+ * colored blocks and modify it in different ways.
+ */
 public class MainActivity extends AppCompatActivity {
 
   @BindView(R.id.recycler_view) RecyclerView recyclerView;

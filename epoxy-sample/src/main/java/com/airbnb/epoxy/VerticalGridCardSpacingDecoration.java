@@ -12,6 +12,10 @@ import android.view.View;
 
 import static android.util.TypedValue.COMPLEX_UNIT_DIP;
 
+/**
+ * Modifies item spacing in a recycler view so that items are equally spaced no matter where they
+ * are on the grid.
+ */
 public class VerticalGridCardSpacingDecoration extends ItemDecoration {
   private static final int OUTER_PADDING_DP = 16;
   private static final int INNER_PADDING_DP = 8;

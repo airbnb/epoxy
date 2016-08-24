@@ -1,13 +1,15 @@
 package com.airbnb.epoxy.models;
 
+import android.support.annotation.StringRes;
+
 import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.views.HeaderView;
 
 public class HeaderModel extends EpoxyModel<HeaderView> {
-  @EpoxyAttribute String title;
-  @EpoxyAttribute String caption;
+  @EpoxyAttribute @StringRes int title;
+  @EpoxyAttribute @StringRes int caption;
 
   @Override
   protected int getDefaultLayout() {

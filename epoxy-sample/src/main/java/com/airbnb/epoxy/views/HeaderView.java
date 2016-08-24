@@ -1,6 +1,7 @@
 package com.airbnb.epoxy.views;
 
 import android.content.Context;
+import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,11 +27,11 @@ public class HeaderView extends LinearLayout {
     ButterKnife.bind(this);
   }
 
-  public void setTitle(String title) {
+  public void setTitle(@StringRes int title) {
     this.title.setText(title);
   }
 
-  public void setCaption(String caption) {
+  public void setCaption(@StringRes int caption) {
     this.caption.setText(caption);
   }
 }
