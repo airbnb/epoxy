@@ -238,18 +238,39 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
     }
   }
 
+  /**
+   * Adds the model to the end of the {@link #models} list and notifies that the item was inserted.
+   */
+  protected void addModel(EpoxyModel<?> modelToAdd) {
+    int initialSize = models.size();
+    models.add(modelToAdd);
+    notifyItemRangeInserted(initialSize, 1);
+  }
+
+  /**
+   * Adds the models to the end of the {@link #models} list and notifies that the items were
+   * inserted.
+   */
   protected void addModels(EpoxyModel<?>... modelsToAdd) {
     int initialSize = models.size();
     Collections.addAll(models, modelsToAdd);
     notifyItemRangeInserted(initialSize, modelsToAdd.length);
   }
 
+  /**
+   * Adds the models to the end of the {@link #models} list and notifies that the items were
+   * inserted.
+   */
   protected void addModels(Collection<? extends EpoxyModel<?>> modelsToAdd) {
     int initialSize = models.size();
     models.addAll(modelsToAdd);
     notifyItemRangeInserted(initialSize, modelsToAdd.size());
   }
 
+  /**
+   * Inserts the given model before the other in the {@link #models} list, and notifies that the
+   * item was inserted.
+   */
   protected void insertModelBefore(EpoxyModel<?> modelToInsert, EpoxyModel<?> modelToInsertBefore) {
     int targetIndex = getModelPosition(modelToInsertBefore);
     if (targetIndex == -1) {
@@ -260,6 +281,10 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
     notifyItemInserted(targetIndex);
   }
 
+  /**
+   * Inserts the given model after the other in the {@link #models} list, and notifies that the item
+   * was inserted.
+   */
   protected void insertModelAfter(EpoxyModel<?> modelToInsert, EpoxyModel<?> modelToInsertAfter) {
     int modelIndex = getModelPosition(modelToInsertAfter);
     if (modelIndex == -1) {
@@ -299,6 +324,13 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
     notifyItemRangeRemoved(initialModelCount - numModelsRemoved, numModelsRemoved);
   }
 
+  /**
+   * Sets the visibility of the given model, and notifies that the item changed if the new
+   * visibility is different from the previous.
+   *
+   * @param model The model to show. It should already be added to the {@link #models} list.
+   * @param show  True to show the model, false to hide it.
+   */
   protected void showModel(EpoxyModel<?> model, boolean show) {
     if (model.isShown() == show) {
       return;
@@ -308,44 +340,88 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
     notifyModelChanged(model);
   }
 
+  /**
+   * Shows the given model, and notifies that the item changed if the item wasn't already shown.
+   *
+   * @param model The model to show. It should already be added to the {@link #models} list.
+   */
   protected void showModel(EpoxyModel<?> model) {
     showModel(model, true);
   }
 
+  /**
+   * Shows the given models, and notifies that each item changed if the item wasn't already shown.
+   *
+   * @param models The models to show. They should already be added to the {@link #models} list.
+   */
   protected void showModels(EpoxyModel<?>... models) {
     showModels(Arrays.asList(models));
   }
 
+  /**
+   * Sets the visibility of the given models, and notifies that the items changed if the new
+   * visibility is different from the previous.
+   *
+   * @param models The models to show. They should already be added to the {@link #models} list.
+   * @param show   True to show the models, false to hide them.
+   */
   protected void showModels(boolean show, EpoxyModel<?>... models) {
     showModels(Arrays.asList(models), show);
   }
 
-  protected void showModels(Iterable<EpoxyModel<?>> epoxyModels) {
-    showModels(epoxyModels, true);
+  /**
+   * Shows the given models, and notifies that each item changed if the item wasn't already shown.
+   *
+   * @param models The models to show. They should already be added to the {@link #models} list.
+   */
+  protected void showModels(Iterable<EpoxyModel<?>> models) {
+    showModels(models, true);
   }
 
-  protected void showModels(Iterable<EpoxyModel<?>> epoxyModels, boolean show) {
-    for (EpoxyModel<?> epoxyModel : epoxyModels) {
-      showModel(epoxyModel, show);
+  /**
+   * Sets the visibility of the given models, and notifies that the items changed if the new
+   * visibility is different from the previous.
+   *
+   * @param models The models to show. They should already be added to the {@link #models} list.
+   * @param show   True to show the models, false to hide them.
+   */
+  protected void showModels(Iterable<EpoxyModel<?>> models, boolean show) {
+    for (EpoxyModel<?> model : models) {
+      showModel(model, show);
     }
   }
 
+  /**
+   * Hides the given model, and notifies that the item changed if the item wasn't already hidden.
+   *
+   * @param model The model to hide. This should already be added to the {@link #models} list.
+   */
   protected void hideModel(EpoxyModel<?> model) {
     showModel(model, false);
   }
 
-  protected void hideModels(Iterable<EpoxyModel<?>> epoxyModels) {
-    showModels(epoxyModels, false);
+  /**
+   * Hides the given models, and notifies that each item changed if the item wasn't already hidden.
+   *
+   * @param models The models to hide. They should already be added to the {@link #models} list.
+   */
+  protected void hideModels(Iterable<EpoxyModel<?>> models) {
+    showModels(models, false);
   }
 
+  /**
+   * Hides the given models, and notifies that each item changed if the item wasn't already hidden.
+   *
+   * @param models The models to hide. They should already be added to the {@link #models} list.
+   */
   protected void hideModels(EpoxyModel<?>... models) {
     hideModels(Arrays.asList(models));
   }
 
   /**
-   * Hides all models currently located after the given model.
+   * Hides all models currently located after the given model in the {@link #models} list.
    *
-   * @param model the model after which to hide, must exist
+   * @param model The model after which to hide. It must exist in the {@link #models} list.
    */
   protected void hideAllAfterModel(EpoxyModel<?> model) {
     hideModels(getAllModelsAfter(model));

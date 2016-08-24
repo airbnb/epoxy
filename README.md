@@ -2,6 +2,8 @@
 
 Epoxy is an Android library for building complex screens in a RecyclerView. It abstracts the boilerplate of view holders, item types, item ids, span counts, and more, in order to simplify building screens with multiple view types. Additionally, Epoxy adds support for saving view state and automatic diffing of item changes.
 
+We developed Epoxy at Airbnb to simplify the process of working with RecyclerViews, and to add the missing functionality we needed. We now use Epoxy for most of the main screens in our app and it has improved our developer experience greatly.
+
 * [Installation](#installation)
 * [Basic Usage](#basic-usage)
 * [Epoxy Models](#epoxy-models)
@@ -63,8 +65,9 @@ public class PhotoAdapter extends EpoxyAdapter {
     }
 
     public void addPhotos(Collection<Photo> photos) {
+        hideModel(loaderModel);
         for (Photo photo : photos) {
-            insertModelBefore(new PhotoModel(photo), loaderModel);
+            addModel(new PhotoModel(photo));
         }
     }
 }
@@ -196,11 +199,13 @@ When using diffing there are a few performance pitfalls to be aware of.
 
 First, diffing must process all models in your list, and so may affect performance for cases of more than hundreds of models. The diffing algorithm performs in linear time for most cases, but still must process all models in your list. Item moves are slow however, and in the worse case of shuffling all the models in the list the performance is (n^2)/2. 
 
-Second, each diff must recompute each model's hashcode in order to determine item changes. Avoid including unnecessary computation in your hashcodes as that can signicantly slow down the diff.
+Second, each diff must recompute each model's hashcode in order to determine item changes. Avoid including unnecessary computation in your hash codes as that can significantly slow down the diff.
 
 Third, beware of changing model state unintentionally, such as with click listeners. For example, it is common to set a click listener on a model, which would then be set on a view when bound. An easy mistake here is using anonymous inner classes as click listeners, which would affect the model hashcode and require the view to be rebound when the model is updated or recreated. Instead, you can save a listener as a field to reuse with each model so that it does not change the model's hashcode. Another common mistake is modifying model state that affects the hashcode during a model's bind call.
 
-With these considerations in mind, avoid calling `notifyModelsChanged()` unnecessarily and batch your changes as much as possible. For very long lists of models, or for cases with many item moves, you may prefer to use manual notifications over automatic diffing in order to prevent frame drops. That being said, diffing is fairly fast and we have used it with up to 600 models with neglible performance impact. As always, profile your code and make sure it works for your specific situation. 
+With these considerations in mind, avoid calling `notifyModelsChanged()` unnecessarily and batch your changes as much as possible. For very long lists of models, or for cases with many item moves, you may prefer to use manual notifications over automatic diffing in order to prevent frame drops. That being said, diffing is fairly fast and we have used it with up to 600 models with negligible performance impact. As always, profile your code and make sure it works for your specific situation.
+
+A note about the algorithm - We are using a custom diffing algorithm that we wrote in house. The Android Support Library class `DiffUtil` was released after we completed this work. We continue to use our original algorithm because in our tests it is roughly 35% faster than the DiffUtil. However, it does make some optimizations that use more memory than DiffUtil. We value the speed increase, but in the future may add the option to choose which algorithm you use.
 
 ## Binding Models
 
@@ -226,7 +231,7 @@ The adapter relies on stable ids for saving view state and for automatic diffing
 
 ## Specifying Layouts
 
-The only method that an `EpoxyModel` must implement is `getDefaultLayout`. This method specifies what layout resource should be used by the adapter when creating a view holder for that model. The layout resource id also acts as the view type for the `EpoxyModel`, so that views sharing a layout can be recycled. The type of View inflated by the layout resource should be the parameterized type of the `EpoxyModel`, so that the proper View type is passed to the model's `bind` method.
+The only method that an `EpoxyModel` must implement is `getDefaultLayout`. This method specifies what layout resource should be used by the adapter when creating a view holder for that model. The layout resource id also acts as the view type for the `EpoxyModel`, so that views sharing a layout can be recycled. The type of View inflated by the layout resource should be the parametrized type of the `EpoxyModel`, so that the proper View type is passed to the model's `bind` method.
 
 If you want to dynamically change which layout is used for your model you can call `EpoxyModel#layout(layoutRes)` with the new layout id. This allows you to easily change the style of the view, such as size, padding, etc. This is useful if you want to reuse the same model, but alter the view's style based on where it is used, eg landscape vs portrait or phone vs tablet.
 
@@ -236,7 +241,7 @@ If you want to remove a view from the Recycler View you can either remove its mo
 
 You may hide it by calling `model.hide()` and show it by calling `model.show()`, or use the conditional `model.show(boolean)`.
 
-Hidden models are technically still in the recyclerview, but they are changed to use an empty layout that takes up no space. This means that changing the visibility of a model _must_ be accompanied by an appropriate `notifyItemChanged` call to the adapter.
+Hidden models are technically still in the RecyclerView, but they are changed to use an empty layout that takes up no space. This means that changing the visibility of a model _must_ be accompanied by an appropriate `notifyItemChanged` call to the adapter.
 
 There are helper methods on the adapter, such as `EpoxyAdapter#hideModel(model)`, that will set the model's visibility and then notify the item change for you if the visibility changed.
 
