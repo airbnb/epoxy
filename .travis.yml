@@ -21,7 +21,7 @@ branches:
 notifications:
   email: false
 
-script: "./gradlew clean check --stacktrace --info --debug"
+script: "./gradlew test --stacktrace --info"
 
 sudo: false
 
