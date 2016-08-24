@@ -11,12 +11,17 @@ public class HeaderModel extends EpoxyModel<HeaderView> {
 
   @Override
   protected int getDefaultLayout() {
-    return R.layout.view_model_header;
+    return R.layout.model_header;
   }
 
   @Override
   public void bind(HeaderView view) {
     view.setTitle(title);
     view.setCaption(caption);
+  }
+
+  @Override
+  public int getSpanSize(int totalSpanCount, int position, int itemCount) {
+    return totalSpanCount;
   }
 }

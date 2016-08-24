@@ -9,8 +9,8 @@ buildscript {
     classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
   }
 }
-
 allprojects {
+
   repositories {
     jcenter()
   }
@@ -63,6 +63,6 @@ def getRepositoryPassword() {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '2.14'
+  gradleVersion = '2.14.1'
   distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }

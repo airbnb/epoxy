@@ -1,6 +1,6 @@
 # Epoxy
 
-Epoxy is an Android library for building complex screens in a ReyclerView. It abstracts the boilerplate of view holders, item types, item ids, span counts, and more, in order to simplify building screens with multiple view types. Additionally, Epoxy adds support for saving view state and automatic diffing of item changes, which is not supported by RecyclerView out of the box.
+Epoxy is an Android library for building complex screens in a RecyclerView. It abstracts the boilerplate of view holders, item types, item ids, span counts, and more, in order to simplify building screens with multiple view types. Additionally, Epoxy adds support for saving view state and automatic diffing of item changes.
 
 * [Installation](#installation)
 * [Basic Usage](#basic-usage)

@@ -33,6 +33,24 @@ public class EpoxyAdapterTest {
 
   @Test
   public void testAddModels() {
+    List<TestModel> list = new ArrayList<>();
+    list.add(new TestModel());
+    list.add(new TestModel());
+
+    testAdapter.addModels(list);
+    verify(observer).onItemRangeInserted(0, 2);
+    assertEquals(2, testAdapter.models.size());
+
+    List<TestModel> list2 = new ArrayList<>();
+    list2.add(new TestModel());
+    list2.add(new TestModel());
+    testAdapter.addModels(list2);
+    verify(observer).onItemRangeInserted(2, 2);
+    assertEquals(4, testAdapter.models.size());
+  }
+
+  @Test
+  public void testAddModelsVarArgs() {
     testAdapter.addModels(new TestModel(), new TestModel());
     verify(observer).onItemRangeInserted(0, 2);
     assertEquals(2, testAdapter.models.size());
@@ -135,6 +153,23 @@ public class EpoxyAdapterTest {
   }
 
   @Test
+  public void testShowModelsVarArgs() {
+    TestModel testModel1 = new TestModel();
+    testModel1.hide();
+
+    TestModel testModel2 = new TestModel();
+    testModel2.hide();
+
+    testAdapter.addModels(testModel1, testModel2);
+
+    testAdapter.showModels(testModel1, testModel2);
+    verify(observer).onItemRangeChanged(0, 1, null);
+    verify(observer).onItemRangeChanged(1, 1, null);
+    assertTrue(testModel1.isShown());
+    assertTrue(testModel2.isShown());
+  }
+
+  @Test
   public void testShowModelsConditionalTrue() {
     TestModel testModel1 = new TestModel();
     testModel1.hide();
@@ -152,12 +187,42 @@ public class EpoxyAdapterTest {
   }
 
   @Test
+  public void testShowModelsVarArgsConditionalTrue() {
+    TestModel testModel1 = new TestModel();
+    testModel1.hide();
+
+    TestModel testModel2 = new TestModel();
+    testModel2.hide();
+
+    testAdapter.addModels(testModel1, testModel2);
+
+    testAdapter.showModels(true, testModel1, testModel2);
+    verify(observer).onItemRangeChanged(0, 1, null);
+    verify(observer).onItemRangeChanged(1, 1, null);
+    assertTrue(testModel1.isShown());
+    assertTrue(testModel2.isShown());
+  }
+
+  @Test
   public void testShowModelsConditionalFalse() {
     TestModel testModel1 = new TestModel();
     TestModel testModel2 = new TestModel();
     testAdapter.addModels(testModel1, testModel2);
 
     testAdapter.showModels(testAdapter.models, false);
+    verify(observer).onItemRangeChanged(0, 1, null);
+    verify(observer).onItemRangeChanged(1, 1, null);
+    assertFalse(testModel1.isShown());
+    assertFalse(testModel2.isShown());
+  }
+
+  @Test
+  public void testShowModelsVarArgsConditionalFalse() {
+    TestModel testModel1 = new TestModel();
+    TestModel testModel2 = new TestModel();
+    testAdapter.addModels(testModel1, testModel2);
+
+    testAdapter.showModels(false, testModel1, testModel2);
     verify(observer).onItemRangeChanged(0, 1, null);
     verify(observer).onItemRangeChanged(1, 1, null);
     assertFalse(testModel1.isShown());
@@ -191,6 +256,19 @@ public class EpoxyAdapterTest {
     testAdapter.addModels(testModel1, testModel2);
 
     testAdapter.hideModels(testAdapter.models);
+    verify(observer).onItemRangeChanged(0, 1, null);
+    verify(observer).onItemRangeChanged(1, 1, null);
+    assertFalse(testModel1.isShown());
+    assertFalse(testModel2.isShown());
+  }
+
+  @Test
+  public void testHideModelsVarArgs() {
+    TestModel testModel1 = new TestModel();
+    TestModel testModel2 = new TestModel();
+    testAdapter.addModels(testModel1, testModel2);
+
+    testAdapter.hideModels(testModel1, testModel2);
     verify(observer).onItemRangeChanged(0, 1, null);
     verify(observer).onItemRangeChanged(1, 1, null);
     assertFalse(testModel1.isShown());

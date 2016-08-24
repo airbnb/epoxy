@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,7 +54,7 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
         // removed from the adapter but technically still added
         // to the layout. We've posted a bug report and hopefully can update when the support
         // library fixes this
-        // TODO: (eli_hart 7/1/16) Get link to bug report. I think sean created one
+        // TODO: (eli_hart 8/23/16) Figure out if this has been fixed in new support library
         return 1;
       }
     }
@@ -100,7 +102,7 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
    * @see #enableDiffing()
    */
 
-  public void notifyModelsChanged() {
+  protected void notifyModelsChanged() {
     if (diffHelper == null) {
       throw new IllegalStateException("You must enable diffing before notifying models changed");
     }
@@ -242,6 +244,12 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
     notifyItemRangeInserted(initialSize, modelsToAdd.length);
   }
 
+  protected void addModels(Collection<? extends EpoxyModel<?>> modelsToAdd) {
+    int initialSize = models.size();
+    models.addAll(modelsToAdd);
+    notifyItemRangeInserted(initialSize, modelsToAdd.size());
+  }
+
   protected void insertModelBefore(EpoxyModel<?> modelToInsert, EpoxyModel<?> modelToInsertBefore) {
     int targetIndex = getModelPosition(modelToInsertBefore);
     if (targetIndex == -1) {
@@ -304,11 +312,19 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
     showModel(model, true);
   }
 
-  protected void showModels(List<EpoxyModel<?>> epoxyModels) {
+  protected void showModels(EpoxyModel<?>... models) {
+    showModels(Arrays.asList(models));
+  }
+
+  protected void showModels(boolean show, EpoxyModel<?>... models) {
+    showModels(Arrays.asList(models), show);
+  }
+
+  protected void showModels(Iterable<EpoxyModel<?>> epoxyModels) {
     showModels(epoxyModels, true);
   }
 
-  protected void showModels(List<EpoxyModel<?>> epoxyModels, boolean show) {
+  protected void showModels(Iterable<EpoxyModel<?>> epoxyModels, boolean show) {
     for (EpoxyModel<?> epoxyModel : epoxyModels) {
       showModel(epoxyModel, show);
     }
@@ -318,8 +334,12 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
     showModel(model, false);
   }
 
-  protected void hideModels(List<EpoxyModel<?>> epoxyModels) {
+  protected void hideModels(Iterable<EpoxyModel<?>> epoxyModels) {
     showModels(epoxyModels, false);
+  }
+
+  protected void hideModels(EpoxyModel<?>... models) {
+    hideModels(Arrays.asList(models));
   }
 
   /**
@@ -332,12 +352,13 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
   }
 
   /**
-   * Returns a list of all items in {@link #models} that occur after the given model. Any changes to
-   * the returned sublist will be reflected in the original {@link #models} list.
+   * Returns a sub list of all items in {@link #models} that occur after the given model. This list
+   * is backed by the original models list, any changes to the returned list will be reflected in
+   * the original {@link #models} list.
    *
-   * @param model Must exists in {@link #models}.
+   * @param model Must exist in {@link #models}.
    */
-  private List<EpoxyModel<?>> getAllModelsAfter(EpoxyModel<?> model) {
+  protected List<EpoxyModel<?>> getAllModelsAfter(EpoxyModel<?> model) {
     int index = getModelPosition(model);
     if (index == -1) {
       throw new IllegalStateException("Model is not added: " + model);
@@ -349,7 +370,7 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
    * Finds the position of the given model in the list. Doesn't use indexOf to avoid unnecessary
    * equals() calls since we're looking for the same object instance.
    */
-  private int getModelPosition(EpoxyModel<?> model) {
+  protected int getModelPosition(EpoxyModel<?> model) {
     int size = models.size();
     for (int i = 0; i < size; i++) {
       if (model == models.get(i)) {

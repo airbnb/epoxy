@@ -6,34 +6,25 @@
         android:id="@+id/title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:lineSpacingMultiplier="0.8"
-        android:paddingTop="8dp"
-        android:textSize="32sp"
-        tools:text="Title"/>
+        android:paddingTop="24dp"
+        android:textColor="#000000"
+        android:textSize="38sp"
+        tools:text="Title" />
 
     <TextView
         android:id="@+id/caption_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
+        android:textColor="#000000"
         android:textSize="20sp"
-        tools:text="caption"/>
+        tools:text="caption" />
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:minHeight="16dp" />
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="48dp"
-        android:layout_height="1dp"
-        android:layout_marginLeft="16dp"
-        android:background="#444444" />
+        android:minHeight="24dp" />
 
 </merge>
