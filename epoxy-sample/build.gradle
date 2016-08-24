@@ -1,0 +1,28 @@
+apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+
+android {
+  compileSdkVersion 24
+  buildToolsVersion "24.0.1"
+
+  defaultConfig {
+    applicationId "com.airbnb.android.epoxysample"
+    minSdkVersion 16
+    targetSdkVersion 24
+    versionCode 1
+    versionName "1.0"
+  }
+}
+
+dependencies {
+  compile project(':epoxy-adapter')
+  compile project(':epoxy-model')
+  apt project(':epoxy-processor')
+
+  compile "com.jakewharton:butterknife:8.1.0"
+  apt "com.jakewharton:butterknife-compiler:8.1.0"
+
+  compile 'com.android.support:cardview-v7:24.2.0'
+
+  testCompile 'junit:junit:4.12'
+}

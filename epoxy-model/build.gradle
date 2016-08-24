@@ -1,0 +1,15 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+dependencies {
+  compile 'com.android.support:support-annotations:24.1.1'
+}
+
+checkstyle {
+  configFile rootProject.file('checkstyle.xml')
+  showViolations true
+}
+
+apply from: rootProject.file('gradle/gradle-maven-push.gradle')

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+  <issue id="InvalidPackage" severity="warning" />
+  <!-- https://code.google.com/p/android/issues/detail?id=175532 -->
+  <issue id="WrongConstant" severity="warning" />
+  <issue id="PluralsCandidate" severity="ignore" />
+  <issue id="Typos" severity="ignore" />
+  <issue id="InvalidPackage" severity="ignore" />
+</lint>

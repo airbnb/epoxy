@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Epoxy Sample</string>
+    <string name="epoxy">Epoxy</string>
+    <string name="header_subtitle">Composing views with ease</string>
+    <string name="button_add">Add</string>
+    <string name="button_clear">Clear</string>
+    <string name="button_shuffle">Shuffle</string>
+    <string name="button_change">Change</string>
+</resources>
