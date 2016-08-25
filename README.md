@@ -136,7 +136,7 @@ public class PhotoAdapter extends EpoxyAdapter {
   public PhotoAdapter() {
     models.add(new HeaderModel("My Photos"));
     models.add(loaderModel);
-    notifyItemRangeInserted(0,2);
+    notifyItemRangeInserted(0, 2);
   }
 
   public void addPhotos(Collection<Photo> photos) {
