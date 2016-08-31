@@ -278,6 +278,7 @@ public class HeaderModel extends EpoxyModel<HeaderView> {
   @EpoxyAttribute String title;
   @EpoxyAttribute String subtitle;
   @EpoxyAttribute String description;
+  @EpoxyAttribute(hash=false) View.OnClickListener clickListener;
     
   @LayoutRes
   public int getDefaultLayout() {
@@ -289,6 +290,7 @@ public class HeaderModel extends EpoxyModel<HeaderView> {
     view.setTitle(title);
     view.setSubtitle(subtitle);
     view.setDescription(description);
+    view.setOnClickListener(clickListener);
   }
 }
 ```
@@ -303,6 +305,7 @@ models.add(new HeaderModel_()
 ```
 
 The setters return the model so that they can be used in a builder style. The generated class includes a `hashCode()` implementation for all of the annotated attributes so that the model can be used in [automatic diffing](#diffing).
+Sometimes, you may not want certain fields to be included in your hash code and equals such as a click listener that gets recreated in every bind call. To tell Epoxy to skip that annotation, add `hash=false` to the annotation.
 
 The generated class will always be the name of the original class with an underscore appended at the end. If the original class is abstract then a class will not be generated for it. If a model class is subclassed from other models that also have EpoxyAttributes, the generated class will include all of the super class's attributes. The generated class will duplicate any constructors on the original model class. If the original model class has any method names that match generated setters then the generated method will call super.
 
