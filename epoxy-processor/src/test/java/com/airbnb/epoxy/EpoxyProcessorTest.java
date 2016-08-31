@@ -118,6 +118,21 @@ public class EpoxyProcessorTest {
   }
 
   @Test
+  public void testModelWithoutHash() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithoutHash.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithoutHash_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
   public void testModelWithPrivateAttributeFails() {
     JavaFileObject model = JavaFileObjects
         .forResource("ModelWithPrivateField.java");

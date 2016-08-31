@@ -127,7 +127,8 @@ public class EpoxyProcessor extends AbstractProcessor {
     TypeName type = TypeName.get(attribute.asType());
     boolean hasSuper = hasSuperMethod(classElement, name);
     helperClass.addAttribute(
-        new AttributeInfo(name, type, attribute.getAnnotationMirrors(), hasSuper));
+        new AttributeInfo(name, type, attribute.getAnnotationMirrors(),
+            attribute.getAnnotation(EpoxyAttribute.class), hasSuper));
   }
 
   /**
@@ -337,6 +338,10 @@ public class EpoxyProcessor extends AbstractProcessor {
             helperClass.getOriginalClassNameWithoutType());
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
+      if (!attributeInfo.useInHash()) {
+        continue;
+      }
+
       TypeName type = attributeInfo.getType();
       String name = attributeInfo.getName();
       if (type == FLOAT) {
@@ -385,6 +390,10 @@ public class EpoxyProcessor extends AbstractProcessor {
     }
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
+      if (!attributeInfo.useInHash()) {
+        continue;
+      }
+
       TypeName type = attributeInfo.getType();
       String name = attributeInfo.getName();
 

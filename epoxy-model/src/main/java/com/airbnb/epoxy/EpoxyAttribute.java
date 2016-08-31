@@ -13,4 +13,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.CLASS)
 public @interface EpoxyAttribute {
+  /**
+   * Whether or not to include this attribute in equals and hashCode calculations.
+   *
+   * It may be useful to disable this for objects that get recreated without the underlying data
+   * changing such as a click listener that gets created inline in every bind call.
+   */
+  boolean hash() default true;
 }
