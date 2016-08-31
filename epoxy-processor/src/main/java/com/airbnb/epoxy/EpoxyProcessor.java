@@ -383,6 +383,9 @@ public class EpoxyProcessor extends AbstractProcessor {
         .addStatement("int result = super.hashCode()");
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
+      if (!attributeInfo.useInHash()) {
+        continue;
+      }
       if (attributeInfo.getType() == DOUBLE) {
         builder.addStatement("long temp");
         break;
