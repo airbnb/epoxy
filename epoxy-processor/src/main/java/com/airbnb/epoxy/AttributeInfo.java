@@ -19,6 +19,7 @@ public class AttributeInfo {
   private final List<AnnotationSpec> getterAnnotations = new ArrayList<>();
   private final String name;
   private final TypeName type;
+  private final boolean useInHash;
   /**
    * Track whether there is a setter method for this attribute on a super class so that we can call
    * through to super.
@@ -26,10 +27,12 @@ public class AttributeInfo {
   private final boolean hasSuperSetter;
 
   public AttributeInfo(String name, TypeName type,
-      List<? extends AnnotationMirror> annotationMirrors, boolean hasSuperSetter) {
+      List<? extends AnnotationMirror> annotationMirrors, EpoxyAttribute annotation,
+      boolean hasSuperSetter) {
     this.name = name;
     this.type = type;
     this.hasSuperSetter = hasSuperSetter;
+    useInHash = annotation.hash();
     buildAnnotationLists(annotationMirrors);
   }
 
@@ -73,6 +76,10 @@ public class AttributeInfo {
 
   public TypeName getType() {
     return type;
+  }
+
+  public boolean useInHash() {
+    return useInHash;
   }
 
   public List<AnnotationSpec> getSetterAnnotations() {
