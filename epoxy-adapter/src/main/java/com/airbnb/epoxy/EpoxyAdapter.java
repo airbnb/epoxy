@@ -147,14 +147,14 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
     viewHolderState.restore(holder);
     boundViewHolders.put(holder);
 
-    onModelBound(holder, modelToShow);
+    onModelBound(holder, modelToShow, position);
   }
 
   /**
    * Called immediately after a model is bound to a view holder. Subclasses can override this if
    * they want alerts on when a model is bound.
    */
-  protected void onModelBound(EpoxyViewHolder holder, EpoxyModel<?> model) {
+  protected void onModelBound(EpoxyViewHolder holder, EpoxyModel<?> model, int position) {
 
   }
 
