@@ -214,7 +214,9 @@ class DiffHelper {
   }
 
   private ModelState createStateForPosition(int position) {
-    ModelState state = ModelState.build(adapter.models.get(position), position);
+    EpoxyModel<?> model = adapter.models.get(position);
+    model.addedToAdapter = true;
+    ModelState state = ModelState.build(model, position);
 
     ModelState previousValue = currentStateMap.put(state.id, state);
     if (previousValue != null) {
