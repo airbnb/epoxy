@@ -228,6 +228,8 @@ Using stable ids are highly recommended, but not required. By default the `Epoxy
 
 The adapter relies on stable ids for saving view state and for automatic diffing. You must leave stable ids enabled to use these features. The combination of stable ids and diffing allows for fairly good item animations with no extra work on your part.
 
+Once a model has been added to an adapter its ID can no longer be changed. Doing so will throw an error. This allows the diffing algorithm to make several optimizations to avoid checking for removals, insertions, or moves if none have been made.
+
 ## Specifying Layouts
 
 The only method that an `EpoxyModel` must implement is `getDefaultLayout`. This method specifies what layout resource should be used by the adapter when creating a view holder for that model. The layout resource id also acts as the view type for the `EpoxyModel`, so that views sharing a layout can be recycled. The type of View inflated by the layout resource should be the parameterized type of the `EpoxyModel`, so that the proper View type is passed to the model's `bind` method.

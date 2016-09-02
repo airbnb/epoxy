@@ -3,7 +3,9 @@ package com.airbnb.epoxy;
 import android.support.v7.widget.RecyclerView.AdapterDataObserver;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -22,6 +24,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(TestRunner.class)
 public class EpoxyAdapterTest {
 
+  @Rule public ExpectedException thrown = ExpectedException.none();
   private final TestAdapter testAdapter = new TestAdapter();
   @Mock AdapterDataObserver observer;
 
@@ -305,5 +308,39 @@ public class EpoxyAdapterTest {
     for (int i = 0; i < modelCount; i++) {
       assertEquals(i <= hideIndex, models.get(i).isShown());
     }
+  }
+
+  @Test
+  public void testThrowIfChangeModelIdAfterNotify() {
+    TestModel testModel = new TestModel();
+    testModel.id(100);
+
+    testAdapter.addModel(testModel);
+
+    thrown.expect(IllegalStateException.class);
+    thrown.expectMessage("Cannot change a model's id after it has been added to the adapter");
+    testModel.id(200);
+  }
+
+  @Test
+  public void testAllowSetSameModelIdAfterNotify() {
+    TestModel testModel = new TestModel();
+    testModel.id(100);
+
+    testAdapter.addModel(testModel);
+    testModel.id(100);
+  }
+
+  @Test
+  public void testThrowIfChangeModelIdAfterDiff() {
+    TestModel testModel = new TestModel();
+    testModel.id(100);
+
+    testAdapter.models.add(testModel);
+    testAdapter.notifyModelsChanged();
+
+    thrown.expect(IllegalStateException.class);
+    thrown.expectMessage("Cannot change a model's id after it has been added to the adapter");
+    testModel.id(200);
   }
 }

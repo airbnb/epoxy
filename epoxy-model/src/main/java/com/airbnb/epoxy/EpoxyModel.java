@@ -25,9 +25,11 @@ public abstract class EpoxyModel<T> {
   private long id;
   @LayoutRes private int layout;
   private boolean shown = true;
+  /** Set to true once this model is added to an adapter. */
+  boolean addedToAdapter;
 
   protected EpoxyModel(long id) {
-    this.id = id;
+    id(id);
   }
 
   public EpoxyModel() {
@@ -63,9 +65,15 @@ public abstract class EpoxyModel<T> {
 
   /**
    * Override the default id in cases where the data subject naturally has an id, like an object
-   * from a database.
+   * from a database. This id can only be set before the model is added to the adapter, it is an
+   * error to change the id after that.
    */
   public EpoxyModel<T> id(long id) {
+    if (addedToAdapter && id != this.id) {
+      throw new IllegalStateException(
+          "Cannot change a model's id after it has been added to the adapter.");
+    }
+
     this.id = id;
     return this;
   }
