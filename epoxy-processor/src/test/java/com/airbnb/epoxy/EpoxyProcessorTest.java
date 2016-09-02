@@ -9,6 +9,10 @@ import javax.tools.JavaFileObject;
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 
+/**
+ * These tests cannot be run from Android Studio as it fails to pick up the files in the resources
+ * folder. Run them from the command line (eg ./gradlew test) instead.
+ */
 public class EpoxyProcessorTest {
   @Test
   public void testSimpleModel() {
