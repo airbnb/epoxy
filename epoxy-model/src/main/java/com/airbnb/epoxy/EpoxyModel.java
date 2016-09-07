@@ -109,7 +109,7 @@ public abstract class EpoxyModel<T> {
     if (id != that.id) {
       return false;
     }
-    if (layout != that.layout) {
+    if (getLayout() != that.getLayout()) {
       return false;
     }
     return shown == that.shown;
@@ -118,7 +118,7 @@ public abstract class EpoxyModel<T> {
   @Override
   public int hashCode() {
     int result = (int) (id ^ (id >>> 32));
-    result = 31 * result + layout;
+    result = 31 * result + getLayout();
     result = 31 * result + (shown ? 1 : 0);
     return result;
   }
