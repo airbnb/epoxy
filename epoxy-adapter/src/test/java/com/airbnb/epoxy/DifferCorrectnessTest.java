@@ -164,11 +164,12 @@ public class DifferCorrectnessTest {
     addModels(oldModels);
 
     newModels.addAll(oldModels);
-    List<TestModel> firstHalf = new ArrayList<>(newModels.subList(0, newModels.size() / 2));
+    List<TestModel> firstHalf = newModels.subList(0, newModels.size() / 2);
+    ArrayList<TestModel> firstHalfCopy = new ArrayList<>(firstHalf);
     firstHalf.clear();
-    newModels.addAll(firstHalf);
+    newModels.addAll(firstHalfCopy);
 
-    validateWithOpCount(firstHalf.size());
+    validateWithOpCount(firstHalfCopy.size());
   }
 
   @Test
