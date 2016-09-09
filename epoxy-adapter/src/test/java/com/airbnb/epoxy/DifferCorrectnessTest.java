@@ -4,7 +4,9 @@ import com.google.common.collect.Collections2;
 
 import junit.framework.Assert;
 
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.annotation.Config;
@@ -16,7 +18,9 @@ import java.util.Random;
 
 import static com.airbnb.epoxy.ModelTestUtils.addModels;
 import static com.airbnb.epoxy.ModelTestUtils.changeValues;
+import static com.airbnb.epoxy.ModelTestUtils.convertToTestModels;
 import static com.airbnb.epoxy.ModelTestUtils.remove;
+import static com.airbnb.epoxy.ModelTestUtils.removeModelsAfterPosition;
 import static junit.framework.Assert.assertEquals;
 
 @Config(sdk = 21, manifest = TestRunner.MANIFEST_PATH)
@@ -28,10 +32,30 @@ public class DifferCorrectnessTest {
    * time for big change sets.
    */
   private static final boolean SPEED_RUN = false;
-  private final List<TestModel> oldModels = new ArrayList<>();
-  private final List<TestModel> newModels = new ArrayList<>();
   private final TestObserver testObserver = new TestObserver(SHOW_LOGS);
   private final TestAdapter testAdapter = new TestAdapter();
+  private final List<EpoxyModel<?>> models = testAdapter.models;
+  private static long totalDiffMillis = 0;
+  private static long totalDiffOperations = 0;
+  private static long totalDiffs = 0;
+
+  @BeforeClass
+  public static void beforeClass() {
+    totalDiffMillis = 0;
+    totalDiffOperations = 0;
+    totalDiffs = 0;
+  }
+
+  @AfterClass
+  public static void afterClass() {
+    if (SPEED_RUN) {
+      System.out.println("Total time for all diffs (ms): " + totalDiffMillis);
+      System.out.println("Total operations for diffs: " + totalDiffOperations);
+
+      double avgOperations = ((double) totalDiffOperations / totalDiffs);
+      System.out.println("Average operations per diff: " + avgOperations);
+    }
+  }
 
   @Before
   public void setUp() {
@@ -40,47 +64,43 @@ public class DifferCorrectnessTest {
 
   @Test
   public void noChange() {
-    validateWithOpCount(0);
+    diffAndValidateWithOpCount(0);
   }
 
   @Test
   public void simpleUpdate() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    changeValues(newModels);
-
-    validateWithOpCount(1);
+    changeValues(models);
+    diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void updateStart() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    changeValues(newModels, 0, newModels.size() / 2);
-
-    validateWithOpCount(1);
+    changeValues(models, 0, models.size() / 2);
+    diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void updateMiddle() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    changeValues(newModels, newModels.size() / 3, newModels.size() * 2 / 3);
-
-    validateWithOpCount(1);
+    changeValues(models, models.size() / 3, models.size() * 2 / 3);
+    diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void updateEnd() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    changeValues(newModels, newModels.size() / 2, newModels.size());
-
-    validateWithOpCount(1);
+    changeValues(models, models.size() / 2, models.size());
+    diffAndValidateWithOpCount(1);
   }
 
   @Test
@@ -88,242 +108,253 @@ public class DifferCorrectnessTest {
     // Tries all permutations of item shuffles, with various list sizes. Also randomizes
     // item values so that the diff must deal with both item updates and movements
     for (int i = 0; i < 9; i++) {
-      List<TestModel> startingModels = new ArrayList<>();
-      addModels(i, startingModels);
-      oldModels.clear();
-      oldModels.addAll(startingModels);
-      List<TestModel> modelsWithValuesChanged = new ArrayList<>(startingModels);
-      changeValues(modelsWithValuesChanged);
+      models.clear();
+      addModels(i, models);
+      diffAndValidate();
 
+      List<EpoxyModel<?>> originalModels = new ArrayList<>(models);
       int permutationNumber = 0;
-      for (List<TestModel> permutedModels : Collections2.permutations(modelsWithValuesChanged)) {
+      for (List<EpoxyModel<?>> permutedModels : Collections2.permutations(models)) {
         permutationNumber++;
-        newModels.clear();
-        newModels.addAll(permutedModels);
+
+        // Resetting to the original models each time, otherwise each subsequent permutation is
+        // only a small difference
+        models.clear();
+        models.addAll(originalModels);
+        diffAndValidate();
+
+        models.clear();
+        models.addAll(permutedModels);
+        changeValues(models);
 
         log("\n\n***** Permutation " + permutationNumber + " - List Size: " + i + " ****** \n");
-        log("old models:\n" + oldModels);
+        log("old models:\n" + models);
         log("\n");
-        log("new models:\n" + newModels);
+        log("new models:\n" + models);
         log("\n");
 
-        validate();
+        diffAndValidate();
       }
     }
   }
 
   @Test
   public void swapEnds() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    TestModel firstModel = newModels.remove(0);
-    TestModel lastModel = newModels.remove(newModels.size() - 1);
-    newModels.add(0, lastModel);
-    newModels.add(firstModel);
+    EpoxyModel<?> firstModel = models.remove(0);
+    EpoxyModel<?> lastModel = models.remove(models.size() - 1);
+    models.add(0, lastModel);
+    models.add(firstModel);
 
-    validateWithOpCount(2);
+    diffAndValidateWithOpCount(2);
   }
 
   @Test
   public void moveFrontToEnd() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    TestModel firstModel = newModels.remove(0);
-    newModels.add(firstModel);
+    EpoxyModel<?> firstModel = models.remove(0);
+    models.add(firstModel);
 
-    validateWithOpCount(1);
+    diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void moveEndToFront() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    TestModel lastModel = newModels.remove(newModels.size() - 1);
-    newModels.add(0, lastModel);
+    EpoxyModel<?> lastModel = models.remove(models.size() - 1);
+    models.add(0, lastModel);
 
-    validateWithOpCount(1);
+    diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void moveEndToFrontAndChangeValues() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    TestModel lastModel = newModels.remove(newModels.size() - 1);
-    newModels.add(0, lastModel);
-    changeValues(newModels);
+    EpoxyModel<?> lastModel = models.remove(models.size() - 1);
+    models.add(0, lastModel);
+    changeValues(models);
 
-    validateWithOpCount(2);
+    diffAndValidateWithOpCount(2);
   }
 
   @Test
   public void swapHalf() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    List<TestModel> firstHalf = newModels.subList(0, newModels.size() / 2);
-    ArrayList<TestModel> firstHalfCopy = new ArrayList<>(firstHalf);
+    List<EpoxyModel<?>> firstHalf = models.subList(0, models.size() / 2);
+    ArrayList<EpoxyModel<?>> firstHalfCopy = new ArrayList<>(firstHalf);
     firstHalf.clear();
-    newModels.addAll(firstHalfCopy);
+    models.addAll(firstHalfCopy);
 
-    validateWithOpCount(firstHalfCopy.size());
+    diffAndValidateWithOpCount(firstHalfCopy.size());
   }
 
   @Test
   public void reverse() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    Collections.reverse(newModels);
-
-    validate();
+    Collections.reverse(models);
+    diffAndValidate();
   }
 
   @Test
   public void removeAll() {
-    addModels(oldModels);
-    validateWithOpCount(1);
+    addModels(models);
+    diffAndValidate();
+
+    models.clear();
+    diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void removeEnd() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    int half = newModels.size() / 2;
-    ModelTestUtils.remove(newModels, half, half);
+    int half = models.size() / 2;
+    ModelTestUtils.remove(models, half, half);
 
-    validateWithOpCount(1);
+    diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void removeMiddle() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    int third = newModels.size() / 3;
-    ModelTestUtils.remove(newModels, third, third);
-    validateWithOpCount(1);
+    int third = models.size() / 3;
+    ModelTestUtils.remove(models, third, third);
+    diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void removeStart() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    int half = newModels.size() / 2;
-    ModelTestUtils.remove(newModels, 0, half);
-    validateWithOpCount(1);
+    int half = models.size() / 2;
+    ModelTestUtils.remove(models, 0, half);
+    diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void multipleRemovals() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    int size = newModels.size();
+    int size = models.size();
     int tenth = size / 10;
     // Remove a tenth of the models at the end, middle, and start
-    ModelTestUtils.removeAfter(newModels, size - tenth);
-    ModelTestUtils.remove(newModels, size / 2, tenth);
-    ModelTestUtils.remove(newModels, 0, tenth);
+    ModelTestUtils.removeModelsAfterPosition(models, size - tenth);
+    ModelTestUtils.remove(models, size / 2, tenth);
+    ModelTestUtils.remove(models, 0, tenth);
 
-    validateWithOpCount(3);
+    diffAndValidateWithOpCount(3);
   }
 
   @Test
   public void simpleAdd() {
-    addModels(newModels);
-    validateWithOpCount(1);
+    addModels(models);
+    diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void addToStart() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    addModels(newModels, 0);
-
-    validateWithOpCount(1);
+    addModels(models, 0);
+    diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void addToMiddle() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    addModels(newModels, newModels.size() / 2);
-
-    validateWithOpCount(1);
+    addModels(models, models.size() / 2);
+    diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void addToEnd() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    addModels(newModels);
-
-    validateWithOpCount(1);
+    addModels(models);
+    diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void multipleInsertions() {
-    addModels(oldModels);
+    addModels(models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    addModels(newModels, 0);
-    addModels(newModels, newModels.size() * 2 / 3);
-    addModels(newModels);
+    addModels(models, 0);
+    addModels(models, models.size() * 2 / 3);
+    addModels(models);
 
-    validateWithOpCount(3);
+    diffAndValidateWithOpCount(3);
   }
 
   @Test
   public void moveTwoInFrontOfInsertion() {
-    addModels(4, oldModels);
+    addModels(4, models);
+    diffAndValidate();
 
-    newModels.addAll(oldModels);
-    addModels(1, newModels, 0);
+    addModels(1, models, 0);
 
-    TestModel lastModel = newModels.remove(newModels.size() - 1);
-    newModels.add(0, lastModel);
+    EpoxyModel<?> lastModel = models.remove(models.size() - 1);
+    models.add(0, lastModel);
 
-    lastModel = newModels.remove(newModels.size() - 1);
-    newModels.add(0, lastModel);
+    lastModel = models.remove(models.size() - 1);
+    models.add(0, lastModel);
 
-    validate();
+    diffAndValidate();
   }
 
   @Test
   public void randomCombinations() {
     int maxBatchSize = 3;
     int maxModelCount = 10;
-    int maxSeed = 10000;
+    int maxSeed = 20000;
 
     // This modifies the models list in a random way many times, with different size lists.
     for (int modelCount = 1; modelCount < maxModelCount; modelCount++) {
       for (int randomSeed = 0; randomSeed < maxSeed; randomSeed++) {
         log("\n\n*** Combination seed " + randomSeed + " Model Count: " + modelCount + " *** \n");
 
-        oldModels.clear();
-        newModels.clear();
-        addModels(modelCount, oldModels);
-        newModels.addAll(oldModels);
+        // We keep the list from the previous loop and keep modifying it. This allows us to test
+        // that state is maintained properly between diffs. We just make sure the list size
+        // says the same by adding or removing if necessary
+        int currentModelCount = models.size();
+        if (currentModelCount < modelCount) {
+          addModels(modelCount - currentModelCount, models);
+        } else if (currentModelCount > modelCount) {
+          removeModelsAfterPosition(models, modelCount);
+        }
+        diffAndValidate();
 
         Random random = new Random(randomSeed);
-        modifyModelsRandomly(newModels, maxBatchSize, random);
+        modifyModelsRandomly(models, maxBatchSize, random);
 
         log("\nResulting diff: \n");
-        validate();
+        diffAndValidate();
       }
     }
   }
 
-  private void modifyModelsRandomly(List<TestModel> models, int maxBatchSize, Random random) {
+  private void modifyModelsRandomly(List<EpoxyModel<?>> models, int maxBatchSize, Random random) {
     for (int i = 0; i < models.size(); i++) {
       int batchSize = randInt(1, maxBatchSize, random);
       switch (random.nextInt(4)) {
@@ -352,7 +383,7 @@ public class DifferCorrectnessTest {
         case 3:
           // move
           int targetPosition = random.nextInt(models.size());
-          TestModel currentItem = models.remove(i);
+          EpoxyModel<?> currentItem = models.remove(i);
 
           models.add(targetPosition, currentItem);
           log("Moving " + i + " to " + targetPosition);
@@ -363,36 +394,29 @@ public class DifferCorrectnessTest {
     }
   }
 
-  private void validate() {
-    validateWithOpCount(-1);
+  private void diffAndValidate() {
+    diffAndValidateWithOpCount(-1);
   }
 
-  private void validateWithOpCount(int expectedOperationCount) {
-    setModelsOnAdapter(oldModels);
-
-    log("\nSetting old models\n");
-
-    testAdapter.notifyModelsChanged();
-
-    log("\nRunning diff on new models\n");
-
-    testObserver.diffedModels = new ArrayList<>(oldModels);
+  private void diffAndValidateWithOpCount(int expectedOperationCount) {
     testObserver.operationCount = 0;
-    setModelsOnAdapter(newModels);
 
     long start = System.currentTimeMillis();
     testAdapter.notifyModelsChanged();
     long end = System.currentTimeMillis();
+    totalDiffMillis += (end - start);
+    totalDiffOperations += testObserver.operationCount;
+    totalDiffs++;
 
-    if (SPEED_RUN) {
-      System.out.println("Time for diff (ms): " + (end - start));
-    } else {
+    if (!SPEED_RUN) {
       if (expectedOperationCount != -1) {
         assertEquals("Operation count is incorrect", expectedOperationCount,
             testObserver.operationCount);
       }
 
+      List<TestModel> newModels = convertToTestModels(models);
       checkDiff(testObserver.diffedModels, newModels);
+      testObserver.diffedModels = newModels;
     }
   }
 
@@ -410,11 +434,6 @@ public class DifferCorrectnessTest {
     if (forceShow || SHOW_LOGS) {
       System.out.println(text);
     }
-  }
-
-  private void setModelsOnAdapter(List<TestModel> models) {
-    testAdapter.models.clear();
-    testAdapter.models.addAll(ModelTestUtils.convertList(models));
   }
 
   private void checkDiff(List<TestModel> diffedModels, List<TestModel> newModels) {
