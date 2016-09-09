@@ -12,8 +12,7 @@ public abstract class EpoxyHolder {
    * opportunity to find views by id, and do any other initialization you need. This is called only
    * once for the lifetime of the class.
    *
-   * @param itemView The view this holder should hold. Created by inflating the layout provided by
-   *                 {@link EpoxyModelWithHolder#getLayout()}
+   * @param itemView A view inflated from the layout provided by {@link EpoxyModelWithHolder#getLayout()}
    */
   protected abstract void bindView(View itemView);
 }
