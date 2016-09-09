@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.view.View;
 
@@ -28,6 +29,7 @@ public class SimpleEpoxyModel extends EpoxyModel<View> {
     return this;
   }
 
+  @CallSuper
   @Override
   public void bind(View view) {
     super.bind(view);
@@ -35,6 +37,7 @@ public class SimpleEpoxyModel extends EpoxyModel<View> {
     view.setClickable(onClickListener != null);
   }
 
+  @CallSuper
   @Override
   public void unbind(View view) {
     super.unbind(view);

@@ -12,6 +12,7 @@ import java.util.List;
 public class EpoxyViewHolder extends RecyclerView.ViewHolder {
   @SuppressWarnings("rawtypes") private EpoxyModel epoxyModel;
   private List<Object> payloads;
+  private EpoxyHolder epoxyHolder;
 
   public EpoxyViewHolder(ViewGroup parent, @LayoutRes int layoutId) {
     super(LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false));
@@ -20,21 +21,30 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
   public void bind(@SuppressWarnings("rawtypes") EpoxyModel model, List<Object> payloads) {
     this.payloads = payloads;
 
+    if (epoxyHolder == null && model instanceof EpoxyModelWithHolder) {
+      epoxyHolder = ((EpoxyModelWithHolder) model).createNewHolder();
+      epoxyHolder.bindView(itemView);
+    }
+
     if (payloads.isEmpty()) {
       // noinspection unchecked
-      model.bind(itemView);
+      model.bind(objectToBind());
     } else {
       // noinspection unchecked
-      model.bind(itemView, payloads);
+      model.bind(objectToBind(), payloads);
     }
 
     epoxyModel = model;
   }
 
+  private Object objectToBind() {
+    return epoxyHolder != null ? epoxyHolder : itemView;
+  }
+
   public void unbind() {
     assertBound();
     // noinspection unchecked
-    epoxyModel.unbind(itemView);
+    epoxyModel.unbind(objectToBind());
     epoxyModel = null;
     payloads = null;
   }
