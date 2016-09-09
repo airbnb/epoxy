@@ -43,8 +43,8 @@ buildscript {
 apply plugin: 'android-apt'
 
 dependencies {
-  compile 'com.airbnb.android:epoxy:1.1.0'
-  apt 'com.airbnb.android:epoxy-processor:1.1.0'
+  compile 'com.airbnb.android:epoxy:1.2.0'
+  apt 'com.airbnb.android:epoxy-processor:1.2.0'
 }
 ```
 
