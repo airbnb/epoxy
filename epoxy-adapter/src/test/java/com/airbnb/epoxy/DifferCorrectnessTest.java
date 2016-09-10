@@ -108,13 +108,10 @@ public class DifferCorrectnessTest {
     // Tries all permutations of item shuffles, with various list sizes. Also randomizes
     // item values so that the diff must deal with both item updates and movements
     for (int i = 0; i < 9; i++) {
-      models.clear();
-      addModels(i, models);
-      diffAndValidate();
-
-      List<EpoxyModel<?>> originalModels = new ArrayList<>(models);
+      List<EpoxyModel<?>> originalModels = new ArrayList<>();
+      addModels(i, originalModels);
       int permutationNumber = 0;
-      for (List<EpoxyModel<?>> permutedModels : Collections2.permutations(models)) {
+      for (List<EpoxyModel<?>> permutedModels : Collections2.permutations(originalModels)) {
         permutationNumber++;
 
         // Resetting to the original models each time, otherwise each subsequent permutation is
@@ -327,7 +324,7 @@ public class DifferCorrectnessTest {
   public void randomCombinations() {
     int maxBatchSize = 3;
     int maxModelCount = 10;
-    int maxSeed = 20000;
+    int maxSeed = 50000;
 
     // This modifies the models list in a random way many times, with different size lists.
     for (int modelCount = 1; modelCount < maxModelCount; modelCount++) {
@@ -345,9 +342,7 @@ public class DifferCorrectnessTest {
         }
         diffAndValidate();
 
-        Random random = new Random(randomSeed);
-        modifyModelsRandomly(models, maxBatchSize, random);
-
+        modifyModelsRandomly(models, maxBatchSize, new Random(randomSeed));
         log("\nResulting diff: \n");
         diffAndValidate();
       }
@@ -415,8 +410,8 @@ public class DifferCorrectnessTest {
       }
 
       List<TestModel> newModels = convertToTestModels(models);
-      checkDiff(testObserver.diffedModels, newModels);
-      testObserver.diffedModels = newModels;
+      checkDiff(testObserver.initialModels, testObserver.modelsAfterDiffing, newModels);
+      testObserver.setUpForNextDiff(newModels);
     }
   }
 
@@ -436,17 +431,18 @@ public class DifferCorrectnessTest {
     }
   }
 
-  private void checkDiff(List<TestModel> diffedModels, List<TestModel> newModels) {
-    assertEquals("Diff produces list of different size.", newModels.size(),
-        diffedModels.size());
+  private void checkDiff(List<TestModel> modelsBeforeDiff, List<TestModel> modelsAfterDiff,
+      List<TestModel> actualModels) {
+    assertEquals("Diff produces list of different size.", actualModels.size(),
+        modelsAfterDiff.size());
 
-    for (int i = 0; i < diffedModels.size(); i++) {
-      TestModel model = diffedModels.get(i);
-      final TestModel expected = newModels.get(i);
+    for (int i = 0; i < modelsAfterDiff.size(); i++) {
+      TestModel model = modelsAfterDiff.get(i);
+      final TestModel expected = actualModels.get(i);
 
       if (model == InsertedModel.INSTANCE) {
-        // If the item at this index is indeed new then it shouldn't exist in the old list
-        for (TestModel oldModel : diffedModels) {
+        // If the item at this index is new then it shouldn't exist in the original list
+        for (TestModel oldModel : modelsBeforeDiff) {
           Assert.assertNotSame("The inserted model should not exist in the original list",
               oldModel.id(), expected.id());
         }
@@ -461,6 +457,9 @@ public class DifferCorrectnessTest {
           assertEquals("Models should have same hashcode when not updated",
               expected.hashCode(), model.hashCode());
         }
+
+        // Clear state so the model can be used again in another diff
+        model.updated = false;
       }
     }
   }
