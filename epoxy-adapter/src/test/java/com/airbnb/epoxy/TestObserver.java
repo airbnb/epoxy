@@ -6,12 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 class TestObserver extends AdapterDataObserver {
-  List<TestModel> diffedModels = new ArrayList<>();
+  List<TestModel> modelsAfterDiffing = new ArrayList<>();
+  List<TestModel> initialModels = new ArrayList<>();
   int operationCount = 0;
   private boolean showLogs;
 
   TestObserver(boolean showLogs) {
     this.showLogs = showLogs;
+  }
+
+  public void setUpForNextDiff(List<TestModel> models) {
+    initialModels = new ArrayList<>(models);
+    modelsAfterDiffing = new ArrayList<>(models);
   }
 
   @Override
@@ -20,7 +26,7 @@ class TestObserver extends AdapterDataObserver {
       System.out.println("Item range changed. Start: " + positionStart + " Count: " + itemCount);
     }
     for (int i = positionStart; i < positionStart + itemCount; i++) {
-      diffedModels.get(i).updated = true;
+      modelsAfterDiffing.get(i).updated = true;
     }
     operationCount++;
   }
@@ -35,7 +41,7 @@ class TestObserver extends AdapterDataObserver {
       modelsToAdd.add(InsertedModel.INSTANCE);
     }
 
-    diffedModels.addAll(positionStart, modelsToAdd);
+    modelsAfterDiffing.addAll(positionStart, modelsToAdd);
     operationCount++;
   }
 
@@ -44,7 +50,7 @@ class TestObserver extends AdapterDataObserver {
     if (showLogs) {
       System.out.println("Item range removed. Start: " + positionStart + " Count: " + itemCount);
     }
-    diffedModels.subList(positionStart, positionStart + itemCount).clear();
+    modelsAfterDiffing.subList(positionStart, positionStart + itemCount).clear();
     operationCount++;
   }
 
@@ -53,8 +59,8 @@ class TestObserver extends AdapterDataObserver {
     if (showLogs) {
       System.out.println("Item moved. From: " + fromPosition + " To: " + toPosition);
     }
-    TestModel itemToMove = diffedModels.remove(fromPosition);
-    diffedModels.add(toPosition, itemToMove);
+    TestModel itemToMove = modelsAfterDiffing.remove(fromPosition);
+    modelsAfterDiffing.add(toPosition, itemToMove);
     operationCount++;
   }
 }

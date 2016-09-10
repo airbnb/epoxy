@@ -171,7 +171,7 @@ public class DifferNotifyTest {
 
   private void setModelsOnAdapter() {
     testAdapter.models.clear();
-    testAdapter.models.addAll(ModelTestUtils.convertList(testModels));
+    testAdapter.models.addAll(ModelTestUtils.convertToGenericModels(testModels));
   }
 
   private void assertCorrectness() {
