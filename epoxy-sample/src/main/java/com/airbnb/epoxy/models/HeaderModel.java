@@ -7,6 +7,10 @@ import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.views.HeaderView;
 
+/**
+ * This model shows an example of binding to a specific view type. In this case it is a custom view
+ * we made, but it could also be another single view, like an EditText or Button.
+ */
 public class HeaderModel extends EpoxyModel<HeaderView> {
   @EpoxyAttribute @StringRes int title;
   @EpoxyAttribute @StringRes int caption;
@@ -24,6 +28,7 @@ public class HeaderModel extends EpoxyModel<HeaderView> {
 
   @Override
   public int getSpanSize(int totalSpanCount, int position, int itemCount) {
+    // We want the header to take up all spans so it fills the screen width
     return totalSpanCount;
   }
 }

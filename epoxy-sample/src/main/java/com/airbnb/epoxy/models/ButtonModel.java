@@ -5,10 +5,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.airbnb.epoxy.EpoxyAttribute;
-import com.airbnb.epoxy.EpoxyModel;
+import com.airbnb.epoxy.EpoxyModelWithHolder;
 import com.airbnb.epoxy.R;
+import com.airbnb.epoxy.models.ButtonModel.ButtonHolder;
 
-public class ButtonModel extends EpoxyModel<Button> {
+import butterknife.BindView;
+
+/** This model class gives an example of how to use a view holder pattern with your models. */
+public class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
   @EpoxyAttribute @StringRes int text;
   @EpoxyAttribute OnClickListener clickListener;
 
@@ -18,13 +22,22 @@ public class ButtonModel extends EpoxyModel<Button> {
   }
 
   @Override
-  public void bind(Button button) {
-    button.setText(text);
-    button.setOnClickListener(clickListener);
+  public int getSpanSize(int totalSpanCount, int position, int itemCount) {
+    return totalSpanCount;
   }
 
   @Override
-  public int getSpanSize(int totalSpanCount, int position, int itemCount) {
-    return totalSpanCount;
+  public void bind(ButtonHolder holder) {
+    holder.button.setText(text);
+    holder.button.setOnClickListener(clickListener);
+  }
+
+  @Override
+  protected ButtonHolder createNewHolder() {
+    return new ButtonHolder();
+  }
+
+  static class ButtonHolder extends BaseEpoxyHolder {
+    @BindView(R.id.button) Button button;
   }
 }
