@@ -253,8 +253,11 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
    */
   protected void addModels(EpoxyModel<?>... modelsToAdd) {
     int initialSize = models.size();
+    int numModelsToAdd = modelsToAdd.length;
+
+    ((ArrayList) models).ensureCapacity(initialSize + numModelsToAdd);
     Collections.addAll(models, modelsToAdd);
-    notifyItemRangeInserted(initialSize, modelsToAdd.length);
+    notifyItemRangeInserted(initialSize, numModelsToAdd);
   }
 
   /**
