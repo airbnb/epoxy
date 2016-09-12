@@ -34,7 +34,7 @@ class DiffHelper {
   private final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
     @Override
     public void onChanged() {
-      buildCurrentState();
+      prepareStateForDiff();
     }
 
     @Override
@@ -83,7 +83,6 @@ class DiffHelper {
           currentStateList.subList(positionStart, positionStart + itemCount);
       for (ModelState model : modelsToRemove) {
         currentStateMap.remove(model.id);
-        ModelState.release(model);
       }
       modelsToRemove.clear();
 
@@ -131,8 +130,7 @@ class DiffHelper {
   public void notifyModelChanges() {
     // We use a list of the models as well as a map by their id,
     // so we can easily find them by both position and id
-    swapCurrentStateToOld();
-    buildCurrentState();
+    prepareStateForDiff();
 
     DiffResult diffUtilResult = null;
     List<UpdateOp> diff = null;
@@ -150,7 +148,6 @@ class DiffHelper {
       diffUtilResult.dispatchUpdatesTo(adapter);
     } else {
       notifyChanges(diff);
-      UpdateOp.release(diff);
     }
 
     adapter.registerAdapterDataObserver(observer);
@@ -200,15 +197,29 @@ class DiffHelper {
     }
   }
 
-  private void buildCurrentState() {
-    int size = adapter.models.size();
+  private void prepareStateForDiff() {
+    oldStateList.clear();
+    oldStateMap.clear();
 
-    ModelState.release(currentStateList);
-    currentStateList.clear();
-    currentStateList.ensureCapacity(size);
-    currentStateMap.clear();
+    // Swap the two lists so that we have a copy of the current state to calculate the next diff
+    ArrayList<ModelState> tempList = oldStateList;
+    oldStateList = currentStateList;
+    currentStateList = tempList;
 
-    for (int i = 0; i < size; i++) {
+    Map<Long, ModelState> tempMap = oldStateMap;
+    oldStateMap = currentStateMap;
+    currentStateMap = tempMap;
+
+    // Remove all pairings in the old states so we can tell which of them were removed. The items
+    // that still exist in the new list will be paired when we build the current list state below
+    for (ModelState modelState : oldStateList) {
+      modelState.pair = null;
+    }
+
+    int modelCount = adapter.models.size();
+    currentStateList.ensureCapacity(modelCount);
+
+    for (int i = 0; i < modelCount; i++) {
       currentStateList.add(createStateForPosition(i));
     }
   }
@@ -225,17 +236,6 @@ class DiffHelper {
     }
 
     return state;
-  }
-
-  private void swapCurrentStateToOld() {
-    // Swap the two lists so that we have a copy of the current state to calculate the next diff
-    ArrayList<ModelState> tempList = oldStateList;
-    oldStateList = currentStateList;
-    currentStateList = tempList;
-
-    Map<Long, ModelState> tempMap = oldStateMap;
-    oldStateMap = currentStateMap;
-    currentStateMap = tempMap;
   }
 
   /**
