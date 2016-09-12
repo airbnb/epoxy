@@ -16,6 +16,10 @@ class ModelTestUtils {
     }
   }
 
+  static void changeValue(EpoxyModel<?> model) {
+    ((TestModel) model).randomizeValue();
+  }
+
   static void remove(List models, int start, int count) {
     models.subList(start, start + count).clear();
   }
