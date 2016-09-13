@@ -22,7 +22,7 @@ dependencies {
   compile "com.jakewharton:butterknife:8.1.0"
   apt "com.jakewharton:butterknife-compiler:8.1.0"
 
-  compile 'com.android.support:cardview-v7:24.2.0'
+  compile 'com.android.support:cardview-v7:24.2.1'
 
   testCompile 'junit:junit:4.12'
 }

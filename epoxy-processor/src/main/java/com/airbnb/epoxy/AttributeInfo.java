@@ -26,7 +26,7 @@ public class AttributeInfo {
    */
   private final boolean hasSuperSetter;
 
-  public AttributeInfo(String name, TypeName type,
+  AttributeInfo(String name, TypeName type,
       List<? extends AnnotationMirror> annotationMirrors, EpoxyAttribute annotation,
       boolean hasSuperSetter) {
     this.name = name;
@@ -56,8 +56,13 @@ public class AttributeInfo {
       }
 
       DeclaredType annotationType = annotationMirror.getAnnotationType();
+      // A target may exist on an annotation type to specify where the annotation can
+      // be used, for example fields, methods, or parameters.
       Target targetAnnotation = annotationType.asElement().getAnnotation(Target.class);
-      List<ElementType> elementTypes = Arrays.asList(targetAnnotation.value());
+
+      // Allow all target types if no target was specified on the annotation
+      List<ElementType> elementTypes =
+          Arrays.asList(targetAnnotation == null ? ElementType.values() : targetAnnotation.value());
 
       AnnotationSpec annotationSpec = AnnotationSpec.builder(annotationClass).build();
       if (elementTypes.contains(ElementType.PARAMETER)) {
