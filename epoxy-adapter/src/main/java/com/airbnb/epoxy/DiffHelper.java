@@ -34,7 +34,8 @@ class DiffHelper {
   private final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
     @Override
     public void onChanged() {
-      prepareStateForDiff();
+      throw new UnsupportedOperationException(
+          "Diffing is enabled. You should use notifyModelsChanged instead of notifyDataSetChanged");
     }
 
     @Override

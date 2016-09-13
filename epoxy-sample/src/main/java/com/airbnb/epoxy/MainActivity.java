@@ -38,6 +38,11 @@ public class MainActivity extends AppCompatActivity {
     recyclerView.setHasFixedSize(true);
     recyclerView.addItemDecoration(new VerticalGridCardSpacingDecoration());
     recyclerView.setAdapter(adapter);
+
+    // Many color models are shown on screen at once. The default recycled view pool size is
+    // only 5, so we manually set the pool size to avoid constantly creating new views when
+    // the colors are randomized
+    recyclerView.getRecycledViewPool().setMaxRecycledViews(R.layout.model_color, 50);
   }
 
   private int getSpanCount() {

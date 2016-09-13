@@ -4,10 +4,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.annotation.Config;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import static com.airbnb.epoxy.ModelTestUtils.addModels;
+import static com.airbnb.epoxy.ModelTestUtils.changeValue;
+import static com.airbnb.epoxy.ModelTestUtils.remove;
 import static junit.framework.Assert.assertEquals;
 
 /**
@@ -17,165 +18,149 @@ import static junit.framework.Assert.assertEquals;
 @Config(sdk = 21, manifest = TestRunner.MANIFEST_PATH)
 @RunWith(TestRunner.class)
 public class DifferNotifyTest {
-  private static final int MODEL_COUNT = 20;
+  private static final int INITIAL_MODEL_COUNT = 20;
 
   private static final boolean SHOW_LOGS = false;
-  private final List<TestModel> testModels = new ArrayList<>();
   private final TestObserver testObserver = new TestObserver(SHOW_LOGS);
-  private final TestAdapter testAdapter = new TestAdapter();
+  private final TestAdapter adapter = new TestAdapter();
+  private final List<EpoxyModel<?>> models = adapter.models;
 
-  @Test
+  @Test(expected = UnsupportedOperationException.class)
   public void notifyChange() {
-    addTestModels();
-    assertCorrectness();
-
-    Collections.reverse(testAdapter.models);
-    testAdapter.notifyDataSetChanged();
-    assertCorrectness();
+    adapter.notifyDataSetChanged();
   }
 
   @Test
   public void notifyAddedToEmpty() {
-    // Add to empty
-    ModelTestUtils.addModels(testModels);
-    setModelsOnAdapter();
-    testAdapter.notifyItemRangeInserted(0, testModels.size());
+    addModels(models);
+    adapter.notifyItemRangeInserted(0, models.size());
     assertCorrectness();
   }
 
   @Test
   public void notifyAddedToStart() {
-    addTestModels();
+    addInitialModels();
 
-    ModelTestUtils.addModels(testModels, 0);
-    setModelsOnAdapter();
-    testAdapter.notifyItemRangeInserted(0, testModels.size() - MODEL_COUNT);
+    addModels(models, 0);
+    adapter.notifyItemRangeInserted(0, models.size() - INITIAL_MODEL_COUNT);
     assertCorrectness();
   }
 
   @Test
   public void notifyAddedToEnd() {
-    addTestModels();
+    addInitialModels();
 
-    ModelTestUtils.addModels(testModels, MODEL_COUNT);
-    setModelsOnAdapter();
-    testAdapter.notifyItemRangeInserted(MODEL_COUNT, testModels.size() - MODEL_COUNT);
+    addModels(models, INITIAL_MODEL_COUNT);
+    adapter.notifyItemRangeInserted(INITIAL_MODEL_COUNT, models.size() - INITIAL_MODEL_COUNT);
     assertCorrectness();
   }
 
   @Test
   public void notifyAddedToMiddle() {
-    addTestModels();
+    addInitialModels();
 
-    ModelTestUtils.addModels(testModels, MODEL_COUNT / 2);
-    setModelsOnAdapter();
-    testAdapter.notifyItemRangeInserted(MODEL_COUNT / 2, testModels.size() - MODEL_COUNT);
+    addModels(models, INITIAL_MODEL_COUNT / 2);
+    adapter.notifyItemRangeInserted(INITIAL_MODEL_COUNT / 2, models.size() - INITIAL_MODEL_COUNT);
     assertCorrectness();
   }
 
   @Test
   public void notifyRemoveAll() {
-    addTestModels();
-    testModels.clear();
-    setModelsOnAdapter();
-    testAdapter.notifyItemRangeRemoved(0, MODEL_COUNT);
+    addInitialModels();
+
+    models.clear();
+    adapter.notifyItemRangeRemoved(0, INITIAL_MODEL_COUNT);
     assertCorrectness();
   }
 
   @Test
   public void notifyRemoveStart() {
-    addTestModels();
-    ModelTestUtils.remove(testModels, 0, MODEL_COUNT / 2);
-    setModelsOnAdapter();
-    testAdapter.notifyItemRangeRemoved(0, MODEL_COUNT / 2);
+    addInitialModels();
+
+    remove(models, 0, INITIAL_MODEL_COUNT / 2);
+    adapter.notifyItemRangeRemoved(0, INITIAL_MODEL_COUNT / 2);
     assertCorrectness();
   }
 
   @Test
   public void notifyRemoveMiddle() {
-    addTestModels();
-    ModelTestUtils.remove(testModels, MODEL_COUNT / 3, MODEL_COUNT / 3);
-    setModelsOnAdapter();
-    testAdapter.notifyItemRangeRemoved(MODEL_COUNT / 3, MODEL_COUNT / 3);
+    addInitialModels();
+
+    remove(models, INITIAL_MODEL_COUNT / 3, INITIAL_MODEL_COUNT / 3);
+    adapter.notifyItemRangeRemoved(INITIAL_MODEL_COUNT / 3, INITIAL_MODEL_COUNT / 3);
     assertCorrectness();
   }
 
   @Test
   public void notifyRemoveEnd() {
-    addTestModels();
-    ModelTestUtils.remove(testModels, MODEL_COUNT / 2, MODEL_COUNT / 2);
-    setModelsOnAdapter();
-    testAdapter.notifyItemRangeRemoved(MODEL_COUNT / 2, MODEL_COUNT / 2);
+    addInitialModels();
+
+    remove(models, INITIAL_MODEL_COUNT / 2, INITIAL_MODEL_COUNT / 2);
+    adapter.notifyItemRangeRemoved(INITIAL_MODEL_COUNT / 2, INITIAL_MODEL_COUNT / 2);
     assertCorrectness();
   }
 
   @Test
   public void notifyFrontMovedToEnd() {
-    addTestModels();
-    TestModel modelToMove = testModels.remove(0);
-    testModels.add(modelToMove);
-    setModelsOnAdapter();
-    testAdapter.notifyItemMoved(0, MODEL_COUNT - 1);
+    addInitialModels();
+
+    EpoxyModel<?> modelToMove = models.remove(0);
+    models.add(modelToMove);
+    adapter.notifyItemMoved(0, INITIAL_MODEL_COUNT - 1);
     assertCorrectness();
   }
 
   @Test
   public void notifyEndMovedToFront() {
-    addTestModels();
-    TestModel modelToMove = testModels.remove(MODEL_COUNT - 1);
-    testModels.add(0, modelToMove);
-    setModelsOnAdapter();
-    testAdapter.notifyItemMoved(MODEL_COUNT - 1, 0);
+    addInitialModels();
+
+    EpoxyModel<?> modelToMove = models.remove(INITIAL_MODEL_COUNT - 1);
+    models.add(0, modelToMove);
+    adapter.notifyItemMoved(INITIAL_MODEL_COUNT - 1, 0);
     assertCorrectness();
   }
 
   @Test
   public void notifyMiddleMovedToEnd() {
-    addTestModels();
-    TestModel modelToMove = testModels.remove(MODEL_COUNT / 2);
-    testModels.add(modelToMove);
-    setModelsOnAdapter();
-    testAdapter.notifyItemMoved(MODEL_COUNT / 2, MODEL_COUNT - 1);
+    addInitialModels();
+
+    EpoxyModel<?> modelToMove = models.remove(INITIAL_MODEL_COUNT / 2);
+    models.add(modelToMove);
+    adapter.notifyItemMoved(INITIAL_MODEL_COUNT / 2, INITIAL_MODEL_COUNT - 1);
     assertCorrectness();
   }
 
   @Test
   public void notifyMiddleMovedToFront() {
-    addTestModels();
-    TestModel modelToMove = testModels.remove(MODEL_COUNT / 2);
-    testModels.add(0, modelToMove);
-    setModelsOnAdapter();
-    testAdapter.notifyItemMoved(MODEL_COUNT / 2, 0);
+    addInitialModels();
+
+    EpoxyModel<?> modelToMove = models.remove(INITIAL_MODEL_COUNT / 2);
+    models.add(0, modelToMove);
+    adapter.notifyItemMoved(INITIAL_MODEL_COUNT / 2, 0);
     assertCorrectness();
   }
 
   @Test
   public void notifyValuesUpdated() {
-    addTestModels();
+    addInitialModels();
+
     int numModelsUpdated = 0;
-    for (int i = MODEL_COUNT / 3; i < MODEL_COUNT * 2 / 3; i++) {
-      testModels.get(i).randomizeValue();
+    for (int i = INITIAL_MODEL_COUNT / 3; i < INITIAL_MODEL_COUNT * 2 / 3; i++) {
+      changeValue(models.get(i));
       numModelsUpdated++;
     }
 
-    setModelsOnAdapter();
-    testAdapter.notifyItemRangeChanged(MODEL_COUNT / 3, numModelsUpdated);
+    adapter.notifyItemRangeChanged(INITIAL_MODEL_COUNT / 3, numModelsUpdated);
     assertCorrectness();
   }
 
-  private void addTestModels() {
-    ModelTestUtils.addModels(MODEL_COUNT, testModels);
-    setModelsOnAdapter();
-    testAdapter.notifyDataSetChanged();
-  }
-
-  private void setModelsOnAdapter() {
-    testAdapter.models.clear();
-    testAdapter.models.addAll(ModelTestUtils.convertToGenericModels(testModels));
+  private void addInitialModels() {
+    addModels(INITIAL_MODEL_COUNT, models);
+    adapter.notifyModelsChanged();
   }
 
   private void assertCorrectness() {
-    testAdapter.notifyModelsChanged();
+    adapter.notifyModelsChanged();
     assertEquals("Should not have any operations", 0, testObserver.operationCount);
   }
 }
