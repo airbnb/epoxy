@@ -219,4 +219,19 @@ public class EpoxyProcessorTest {
         .failsToCompile()
         .withErrorContaining("Nested classes");
   }
+
+  @Test
+  public void testModelWithIntDefAnnotation() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithIntDef.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithIntDef_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
 }
