@@ -11,7 +11,7 @@ dependencies {
   testCompile 'com.google.testing.compile:compile-testing:0.6'
 
   compile project(':annotations')
-  compile 'com.android.support:support-annotations:24.1.1'
+  compile 'com.android.support:support-annotations:24.2.1'
   compile 'junit:junit:4.12'
 }
 

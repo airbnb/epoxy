@@ -169,7 +169,7 @@ public abstract class EpoxyModel<T> {
   public String toString() {
     return "EpoxyModel{"
         + "id=" + id
-        + ", layout=" + layout
+        + ", layout=" + getLayout()
         + ", shown=" + shown
         + '}';
   }
