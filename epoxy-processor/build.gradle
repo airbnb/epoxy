@@ -11,7 +11,6 @@ dependencies {
   testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
 
   compile project(':epoxy-model')
-  compile 'com.android.support:support-annotations:24.1.1'
 }
 
 checkstyle {
