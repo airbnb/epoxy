@@ -223,11 +223,11 @@ If the recycler view provided a non empty list of payloads with `onBindViewHolde
 
 The basic usage of [Epoxy Models](#epoxy-models) describes how views are bound to a model. This works well if you use custom views, but for simpler views it can be more convenient to use the traditional view holder pattern.
 
-To use a view holder, create a view holder class that extends `EpoxyHolder`. 
+To get started, first create a view holder class that extends `EpoxyHolder`. 
 
 Then, have your model extend `EpoxyModelWithHolder` instead of the normal `EpoxyModel`. Your model class should be typed with your view holder type instead of the view type.
 
-Your model must implement `createNewHolder()` to create a new view holder when needed. The layout resource provided by your model's `getDefaultLayout()` method will be inflated and passed to your view holder when it is create.
+Your model must implement `createNewHolder()` to create a new view holder. This will be called by the adapter when a new view holder is needed. The layout resource provided by your model's `getDefaultLayout()` method will be inflated and passed to your view holder when it is created.
 
 Here is an example from the [sample app](/epoxy-sample):
 
