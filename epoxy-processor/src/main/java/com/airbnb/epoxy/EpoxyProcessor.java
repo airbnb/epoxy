@@ -163,7 +163,7 @@ public class EpoxyProcessor extends AbstractProcessor {
     Set<Modifier> modifiers = attribute.getModifiers();
     if (modifiers.contains(PRIVATE) || modifiers.contains(STATIC)) {
       throwError(
-          "%s annotations must not be on private, final, or static fields. (class: %s, field: %s)",
+          "%s annotations must not be on private or static fields. (class: %s, field: %s)",
           EpoxyAttribute.class.getSimpleName(),
           enclosingElement.getSimpleName(), attribute.getSimpleName());
     }
