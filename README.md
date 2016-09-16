@@ -211,7 +211,7 @@ A note about the algorithm - We are using a custom diffing algorithm that we wro
 
 Epoxy uses the layout resource id provided by `EpoxyModel#getLayout()` to create a view for that model. When `RecyclerView.Adapter#onBindViewHolder(ViewHolder holder, int position)` is called, the `EpoxyAdapter` looks up the model at the given position and calls `EpoxyModel#bind(View)` with the inflated view. You may override this bind call in your model to update the view with whatever data you have set in your model.
 
-Note, if you are [using view holders](#view-holders) then the view will be passed to your view holder and the view holder will be bound to the model
+Note, if you are [using view holders](#view-holders) then this process is slightly different. Instead, the adapter will pass the inflated view to your view holder and the view holder will be bound to the model.
 
 Since RecyclerView reuses views when possible, a view may be bound multiple times. You should make sure that your usage of `EpoxyModel#bind(View)` completely updates the view according to the data in your model.
 
