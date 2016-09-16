@@ -10,6 +10,7 @@ We developed Epoxy at Airbnb to simplify the process of working with RecyclerVie
 * [Modifying the Models List](#models-list)
 * [Automatic Diffing](#diffing)
 * [Binding Models](#binding-models)
+* [Using View Holders](#view-holders)
 * [Model IDs](#model-ids)
 * [Specifying Layouts](#specifying-layouts)
 * [Hiding Models](#hiding-models)
@@ -115,7 +116,7 @@ In this case the `PhotoModel` is typed with `PhotoView`, so the `getDefaultLayou
     android:padding="16dp" />
 ```
 
-Epoxy works well with custom views - in this pattern the model holds the data and passes it to the view, the layout file describes which view to use and how to style it, and the view itself handles displaying the data. This is a bit different from the normal `ViewHolder` pattern, and allows for a separation of data and view logic.
+Epoxy works well with custom views - in this pattern the model holds the data and passes it to the view, the layout file describes which view to use and how to style it, and the view itself handles displaying the data. Alternatively, you can opt to [use the view holder pattern](#view-holders).
 
 Models also allow you to control other aspects of the view, such as the span size, id, saved state, and whether the view should be shown. Those aspects of models are described in detail below.
 
@@ -210,11 +211,75 @@ A note about the algorithm - We are using a custom diffing algorithm that we wro
 
 Epoxy uses the layout resource id provided by `EpoxyModel#getLayout()` to create a view for that model. When `RecyclerView.Adapter#onBindViewHolder(ViewHolder holder, int position)` is called, the `EpoxyAdapter` looks up the model at the given position and calls `EpoxyModel#bind(View)` with the inflated view. You may override this bind call in your model to update the view with whatever data you have set in your model.
 
+Note, if you are [using view holders](#view-holders) then this process is slightly different. Instead, the adapter will pass the inflated view to your view holder and the view holder will be bound to the model.
+
 Since RecyclerView reuses views when possible, a view may be bound multiple times. You should make sure that your usage of `EpoxyModel#bind(View)` completely updates the view according to the data in your model.
 
 When the view is recycled, `EpoxyAdapter` will call `EpoxyModel#unbind(View)`, giving you a chance to release any resources associated with the view. This is a good opportunity to clear the view of large or expensive data such as bitmaps.
 
 If the recycler view provided a non empty list of payloads with `onBindViewHolder(ViewHolder holder, int position, List<Object> payloads)`, then `EpoxyModel#bind(View, List<Object>)` will be called instead so that the model can be optimized to rebind according to what changed. This can help you prevent unnecessary layout changes if only part of the view changed.
+
+## <a name="view-holders"/>Using View Holders
+
+The basic usage of [Epoxy Models](#epoxy-models) describes how views are bound to a model. This works well if you use custom views, but for simpler views it can be more convenient to use the traditional view holder pattern.
+
+To get started, first create a view holder class that extends `EpoxyHolder`. 
+
+Then, have your model extend `EpoxyModelWithHolder` instead of the normal `EpoxyModel`. Your model class should be typed with your view holder type instead of the view type.
+
+Your model must implement `createNewHolder()` to create a new view holder. This will be called by the adapter when a new view holder is needed. The layout resource provided by your model's `getDefaultLayout()` method will be inflated and passed to your view holder when it is created.
+
+Here is an example from the [sample app](/epoxy-sample):
+
+```java
+public class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
+  @EpoxyAttribute @StringRes int text;
+  @EpoxyAttribute OnClickListener clickListener;
+
+  @Override
+  protected int getDefaultLayout() {
+    return R.layout.model_button;
+  }
+
+  @Override
+  public void bind(ButtonHolder holder) {
+    holder.button.setText(text);
+    holder.button.setOnClickListener(clickListener);
+  }
+
+  @Override
+  protected ButtonHolder createNewHolder() {
+    return new ButtonHolder();
+  }
+
+  static class ButtonHolder extends EpoxyHolder {
+    @BindView(R.id.button) Button button;
+    
+    @Override
+    protected void bindView(View itemView) {
+      ButterKnife.bind(this, itemView);
+    }
+  }
+}
+```
+
+A good pattern is to create a base class that all view holders in your app can extend. Your base class can use [ButterKnife](https://github.com/JakeWharton/butterknife) to bind its view so that subclasses don't explicitly need to.
+
+It terms of our example from above this might look like:
+
+```java
+public abstract class BaseEpoxyHolder extends EpoxyHolder {
+  @CallSuper
+  @Override
+  protected void bindView(View itemView) {
+    ButterKnife.bind(this, itemView);
+  }
+}
+
+static class ButtonHolder extends BaseEpoxyHolder {
+    @BindView(R.id.button) Button button;
+}
+```
 
 ## Model IDs
 
