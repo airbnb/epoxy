@@ -126,9 +126,10 @@ public class EpoxyProcessor extends AbstractProcessor {
     String name = attribute.getSimpleName().toString();
     TypeName type = TypeName.get(attribute.asType());
     boolean hasSuper = hasSuperMethod(classElement, name);
+    boolean hasFinalModifier = attribute.getModifiers().contains(FINAL);
     helperClass.addAttribute(
         new AttributeInfo(name, type, attribute.getAnnotationMirrors(),
-            attribute.getAnnotation(EpoxyAttribute.class), hasSuper));
+            attribute.getAnnotation(EpoxyAttribute.class), hasSuper, hasFinalModifier));
   }
 
   /**
@@ -160,7 +161,7 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     // Verify method modifiers.
     Set<Modifier> modifiers = attribute.getModifiers();
-    if (modifiers.contains(PRIVATE) || modifiers.contains(STATIC) || modifiers.contains(FINAL)) {
+    if (modifiers.contains(PRIVATE) || modifiers.contains(STATIC)) {
       throwError(
           "%s annotations must not be on private, final, or static fields. (class: %s, field: %s)",
           EpoxyAttribute.class.getSimpleName(),
@@ -308,7 +309,9 @@ public class EpoxyProcessor extends AbstractProcessor {
     List<MethodSpec> methods = new ArrayList<>();
 
     for (AttributeInfo data : helperClass.getAttributeInfo()) {
-      methods.add(generateSetter(helperClass, data));
+      if (!data.hasFinalModifier()) {
+        methods.add(generateSetter(helperClass, data));
+      }
       methods.add(generateGetter(data));
     }
 

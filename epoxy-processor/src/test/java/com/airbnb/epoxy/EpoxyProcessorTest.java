@@ -137,6 +137,21 @@ public class EpoxyProcessorTest {
   }
 
   @Test
+  public void testModelWithFinalAttribute() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithFinalField.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithFinalField_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
   public void testModelWithPrivateAttributeFails() {
     JavaFileObject model = JavaFileObjects
         .forResource("ModelWithPrivateField.java");
@@ -146,18 +161,6 @@ public class EpoxyProcessorTest {
         .processedWith(new EpoxyProcessor())
         .failsToCompile()
         .withErrorContaining("private");
-  }
-
-  @Test
-  public void testModelWithFinalAttributeFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithFinalField.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("final");
   }
 
   @Test
