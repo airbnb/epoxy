@@ -229,7 +229,7 @@ Then, have your model extend `EpoxyModelWithHolder` instead of the normal `Epoxy
 
 Your model must implement `createNewHolder()` to create a new view holder when needed. The layout resource provided by your model's `getDefaultLayout()` method will be inflated and passed to your view holder when it is create.
 
-Here is an example from the [sample app](/epoxy-sample) 
+Here is an example from the [sample app](/epoxy-sample):
 
 ```java
 public class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
@@ -263,9 +263,9 @@ public class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
 }
 ```
 
-A good pattern is to create a base class that all view holders in your app can extend. Your base class can use (ButterKnife)[https://github.com/JakeWharton/butterknife] to bind its view so that subclasses don't need to.
+A good pattern is to create a base class that all view holders in your app can extend. Your base class can use [ButterKnife](https://github.com/JakeWharton/butterknife) to bind its view so that subclasses don't explicitly need to.
 
-It terms of our example here that might look like this:
+It terms of our example from above this might look like:
 
 ```java
 public abstract class BaseEpoxyHolder extends EpoxyHolder {
