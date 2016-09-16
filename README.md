@@ -28,7 +28,7 @@ Gradle is the only supported build configuration, so just add the dependency to 
 
 ```groovy
 dependencies {
-  compile 'com.airbnb.android:epoxy:1.2.0'
+  compile 'com.airbnb.android:epoxy:1.3.0'
 }
 ```
 
@@ -43,8 +43,8 @@ buildscript {
 apply plugin: 'android-apt'
 
 dependencies {
-  compile 'com.airbnb.android:epoxy:1.2.0'
-  apt 'com.airbnb.android:epoxy-processor:1.2.0'
+  compile 'com.airbnb.android:epoxy:1.3.0'
+  apt 'com.airbnb.android:epoxy-processor:1.3.0'
 }
 ```
 
