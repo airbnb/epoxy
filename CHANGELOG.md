@@ -1,3 +1,9 @@
+# 1.3.0 (09/15/2016)
+
+* Add support for using the view holder pattern with models. See the readme for more information.
+* Throw an exception if `EpoxyAdapter#notifyDataSetChanged()` is called when diffing is enabled. It doesn't make sense to allow this alongside diffing, and calling this is most likely to be an accidental mixup with `notifyModelsChanged()`.
+* Some performance improvements with the diffing algorithm.
+
 # 1.2.0 (09/07/2016)
 
 * Change signature of `EpoxyAdapter#onModelBound` to include the model position
