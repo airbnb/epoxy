@@ -195,8 +195,7 @@ public class EpoxyProcessorTest {
     assert_().about(javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("final");
+        .failsToCompile();
   }
 
   @Test
