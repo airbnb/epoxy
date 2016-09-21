@@ -134,11 +134,11 @@ class DiffHelper {
     prepareStateForDiff();
 
     DiffResult diffUtilResult = null;
-    List<UpdateOp> diff = null;
+    UpdateOpHelper updateOpHelper = null;
     if (USE_DIFF_UTIL) {
       diffUtilResult = DiffUtil.calculateDiff(diffUtilCallback);
     } else {
-      diff = buildDiff();
+      updateOpHelper = buildDiff();
     }
 
     // Send out the proper notify calls for the diff. We remove our
@@ -148,7 +148,7 @@ class DiffHelper {
     if (USE_DIFF_UTIL) {
       diffUtilResult.dispatchUpdatesTo(adapter);
     } else {
-      notifyChanges(diff);
+      notifyChanges(updateOpHelper.opList);
     }
 
     adapter.registerAdapterDataObserver(observer);
@@ -243,42 +243,39 @@ class DiffHelper {
    * Create a list of operations that define the difference between {@link #oldStateList} and {@link
    * #currentStateList}.
    */
-  private List<UpdateOp> buildDiff() {
-    List<UpdateOp> result = new ArrayList<>();
+  private UpdateOpHelper buildDiff() {
+    UpdateOpHelper updateOpHelper = new UpdateOpHelper();
 
     // The general approach is to first search for removals, then additions, and lastly changes.
     // Focusing on one type of operation at a time makes it easy to coalesce batch changes.
     // When we identify an operation and add it to the
     // result list we update the positions of items in the oldStateList to reflect
     // the change, this way subsequent operations will use the correct, updated positions.
-    int removalCount = collectRemovals(result);
+    collectRemovals(updateOpHelper);
 
     // Only need to check for insertions if new list is bigger
-    boolean hasInsertions = oldStateList.size() - removalCount != currentStateList.size();
+    boolean hasInsertions =
+        oldStateList.size() - updateOpHelper.getNumRemovals() != currentStateList.size();
     if (hasInsertions) {
-      collectInsertions(result);
+      collectInsertions(updateOpHelper);
     }
 
-    collectMoves(result);
-    collectChanges(result);
+    collectMoves(updateOpHelper);
+    collectChanges(updateOpHelper);
 
-    return result;
+    return updateOpHelper;
   }
 
   /**
    * Find all removal operations and add them to the result list. The general strategy here is to
    * walk through the {@link #oldStateList} and check for items that don't exist in the new list.
    * Walking through it in order makes it easy to batch adjacent removals.
-   *
-   * @return The number of items removed
    */
-  private int collectRemovals(List<UpdateOp> result) {
-    int removalCount = 0;
-    UpdateOp lastRemoval = null;
+  private void collectRemovals(UpdateOpHelper helper) {
     for (ModelState state : oldStateList) {
       // Update the position of the item to take into account previous removals,
       // so that future operations will reference the correct position
-      state.position -= removalCount;
+      state.position -= helper.getNumRemovals();
 
       // This is our first time going through the list, so we
       // look up the item with the matching id in the new
@@ -289,23 +286,8 @@ class DiffHelper {
         continue;
       }
 
-      int indexToRemove = state.position;
-      if (lastRemoval != null && lastRemoval.positionStart == indexToRemove) {
-        lastRemoval.itemCount++;
-      } else {
-        if (lastRemoval != null) {
-          result.add(lastRemoval);
-        }
-        lastRemoval = UpdateOp.instance(UpdateOp.REMOVE, indexToRemove);
-      }
-      removalCount++;
+      helper.remove(state.position);
     }
-
-    if (lastRemoval != null) {
-      result.add(lastRemoval);
-    }
-
-    return removalCount;
   }
 
   /**
@@ -313,9 +295,7 @@ class DiffHelper {
    * walk through the {@link #currentStateList} and check for items that don't exist in the old
    * list. Walking through it in order makes it easy to batch adjacent insertions.
    */
-  private void collectInsertions(List<UpdateOp> result) {
-    UpdateOp lastInsertion = null;
-    int insertionCount = 0;
+  private void collectInsertions(UpdateOpHelper helper) {
     Iterator<ModelState> oldItemIterator = oldStateList.iterator();
 
     for (ModelState itemToInsert : currentStateList) {
@@ -323,71 +303,37 @@ class DiffHelper {
         // Update the position of the next item in the old list to take any insertions into account
         ModelState nextOldItem = getNextItemWithPair(oldItemIterator);
         if (nextOldItem != null) {
-          nextOldItem.position += insertionCount;
+          nextOldItem.position += helper.getNumInsertions();
         }
         continue;
       }
 
-      // If the item to insert is adjacent to our last insertion operation we can batch them
-      if (lastInsertion != null
-          && (lastInsertion.positionStart + lastInsertion.itemCount) == itemToInsert.position) {
-        lastInsertion.itemCount++;
-      } else {
-        if (lastInsertion != null) {
-          result.add(lastInsertion);
-        }
-        lastInsertion = UpdateOp.instance(UpdateOp.ADD, itemToInsert.position);
-      }
-
-      insertionCount++;
-    }
-
-    if (lastInsertion != null) {
-      result.add(lastInsertion);
+      helper.add(itemToInsert.position);
     }
   }
 
   /**
    * Check if any items have had their values changed, batching if possible.
    */
-  private void collectChanges(List<UpdateOp> result) {
-    UpdateOp lastUpdateOp = null;
+  private void collectChanges(UpdateOpHelper helper) {
     for (ModelState newItem : currentStateList) {
       if (newItem.pair == null) {
         continue;
       }
 
       if (newItem.pair.hashCode != newItem.hashCode) {
-        if (lastUpdateOp != null
-            && (lastUpdateOp.positionStart + lastUpdateOp.itemCount) == newItem.position) {
-          lastUpdateOp.itemCount++;
-        } else {
-          if (lastUpdateOp != null) {
-            result.add(lastUpdateOp);
-          }
-          lastUpdateOp = UpdateOp.instance(UpdateOp.UPDATE, newItem.position);
-        }
+        helper.update(newItem.position);
       }
-    }
-
-    if (lastUpdateOp != null) {
-      result.add(lastUpdateOp);
     }
   }
 
   /**
    * Check which items have had a position changed. Recyclerview does not support batching these.
    */
-  private void collectMoves(List<UpdateOp> result) {
+  private void collectMoves(UpdateOpHelper helper) {
     // This walks through both the new and old list simultaneous and checks for position changes.
     Iterator<ModelState> oldItemIterator = oldStateList.iterator();
     ModelState nextOldItem = null;
-
-    // We have to be careful to update all item positions in the list when we
-    // do a MOVE. This adds some complexity.
-    // To do this we keep track of all moves and apply them to an item when we
-    // need the up to date position
-    List<UpdateOp> moveOps = new ArrayList<>();
 
     for (ModelState newItem : currentStateList) {
       if (newItem.pair == null) {
@@ -395,7 +341,7 @@ class DiffHelper {
         // aren't smart about inserting at a different position to take future moves into account.
         // As the old state list is updated to reflect moves, it needs to also consider insertions
         // affected by those moves in order for the final change set to be correct
-        if (moveOps.isEmpty()) {
+        if (helper.moves.isEmpty()) {
           // There have been no moves, so the item is still at it's correct position
           continue;
         } else {
@@ -432,8 +378,8 @@ class DiffHelper {
       while (nextOldItem != null) {
         // Make sure the positions are updated to the latest
         // move operations before we calculate the next move
-        updateItemPosition(newItem.pair, moveOps);
-        updateItemPosition(nextOldItem, moveOps);
+        updateItemPosition(newItem.pair, helper.moves);
+        updateItemPosition(nextOldItem, helper.moves);
 
         // The item is the same and its already in the correct place
         if (newItem.id == nextOldItem.id && newItem.position == nextOldItem.position) {
@@ -451,23 +397,17 @@ class DiffHelper {
         }
 
         if (oldItemDistance > newItemDistance) {
-          UpdateOp moveOp =
-              UpdateOp.instance(UpdateOp.MOVE, nextOldItem.position, nextOldItem.pair.position);
-          result.add(moveOp);
-          moveOps.add(moveOp);
+          helper.move(nextOldItem.position, nextOldItem.pair.position);
 
           nextOldItem.position = nextOldItem.pair.position;
-          nextOldItem.lastMoveOp = moveOps.size();
+          nextOldItem.lastMoveOp = helper.getNumMoves();
 
           nextOldItem = getNextItemWithPair(oldItemIterator);
         } else {
-          UpdateOp moveOp =
-              UpdateOp.instance(UpdateOp.MOVE, newItem.pair.position, newItem.position);
-          result.add(moveOp);
-          moveOps.add(moveOp);
+          helper.move(newItem.pair.position, newItem.position);
 
           newItem.pair.position = newItem.position;
-          newItem.pair.lastMoveOp = moveOps.size();
+          newItem.pair.lastMoveOp = helper.getNumMoves();
           break;
         }
       }

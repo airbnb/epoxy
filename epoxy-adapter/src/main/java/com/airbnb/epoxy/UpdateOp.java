@@ -40,6 +40,23 @@ class UpdateOp {
     return instance(type, positionStart, 1);
   }
 
+  /** Returns the index one past the last item in the affected range. */
+  int positionEnd() {
+    return positionStart + itemCount;
+  }
+
+  boolean isAfter(int position) {
+    return position < positionStart;
+  }
+
+  boolean isBefore(int position) {
+    return position >= positionEnd();
+  }
+
+  boolean contains(int position) {
+    return position >= positionStart && position < positionEnd();
+  }
+
   @Override
   public String toString() {
     return "UpdateOp{"

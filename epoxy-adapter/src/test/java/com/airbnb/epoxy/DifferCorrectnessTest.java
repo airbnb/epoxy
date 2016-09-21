@@ -50,6 +50,7 @@ public class DifferCorrectnessTest {
   public static void afterClass() {
     if (SPEED_RUN) {
       System.out.println("Total time for all diffs (ms): " + totalDiffMillis);
+    } else {
       System.out.println("Total operations for diffs: " + totalDiffOperations);
 
       double avgOperations = ((double) totalDiffOperations / totalDiffs);
@@ -59,7 +60,9 @@ public class DifferCorrectnessTest {
 
   @Before
   public void setUp() {
-    testAdapter.registerAdapterDataObserver(testObserver);
+    if (!SPEED_RUN) {
+      testAdapter.registerAdapterDataObserver(testObserver);
+    }
   }
 
   @Test
@@ -324,7 +327,7 @@ public class DifferCorrectnessTest {
   public void randomCombinations() {
     int maxBatchSize = 3;
     int maxModelCount = 10;
-    int maxSeed = 50000;
+    int maxSeed = 75000;
 
     // This modifies the models list in a random way many times, with different size lists.
     for (int modelCount = 1; modelCount < maxModelCount; modelCount++) {
