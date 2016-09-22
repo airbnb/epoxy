@@ -33,6 +33,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -50,6 +51,8 @@ import static com.squareup.javapoet.TypeName.SHORT;
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
+import static javax.lang.model.element.Modifier.PROTECTED;
+import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
 /**
@@ -127,9 +130,19 @@ public class EpoxyProcessor extends AbstractProcessor {
     TypeName type = TypeName.get(attribute.asType());
     boolean hasSuper = hasSuperMethod(classElement, name);
     boolean hasFinalModifier = attribute.getModifiers().contains(FINAL);
+    boolean packagePrivate = isFieldPackagePrivate(attribute);
     helperClass.addAttribute(
         new AttributeInfo(name, type, attribute.getAnnotationMirrors(),
-            attribute.getAnnotation(EpoxyAttribute.class), hasSuper, hasFinalModifier));
+            attribute.getAnnotation(EpoxyAttribute.class), hasSuper, hasFinalModifier,
+            packagePrivate));
+  }
+
+  /**
+   * Checks if the given field has package-private visibility
+   */
+  private boolean isFieldPackagePrivate(Element attribute) {
+    Set<Modifier> modifiers = attribute.getModifiers();
+    return !modifiers.contains(PUBLIC) && !modifiers.contains(PROTECTED);
   }
 
   /**
@@ -245,10 +258,27 @@ public class EpoxyProcessor extends AbstractProcessor {
 
       for (Entry<TypeElement, ClassToGenerateInfo> otherEntry : otherClasses.entrySet()) {
         if (isSubtype(entry.getKey().asType(), otherEntry.getKey().asType())) {
-          entry.getValue().addAttributes(otherEntry.getValue().getAttributeInfo());
+          if (belongToTheSamePackage(entry.getKey(), otherEntry.getKey())) {
+            entry.getValue().addAttributes(otherEntry.getValue().getAttributeInfo());
+          } else {
+            for (AttributeInfo attribute : otherEntry.getValue().getAttributeInfo()) {
+              if (!attribute.isPackagePrivate()) {
+                entry.getValue().addAttribute(attribute);
+              }
+            }
+          }
         }
       }
     }
+  }
+
+  /**
+   * Checks if two classes belong to the same package
+   */
+  private boolean belongToTheSamePackage(TypeElement class1, TypeElement class2) {
+    Name package1 = elementUtils.getPackageOf(class1).getQualifiedName();
+    Name package2 = elementUtils.getPackageOf(class2).getQualifiedName();
+    return package1.equals(package2);
   }
 
   private boolean isSubtype(TypeMirror e1, TypeMirror e2) {
