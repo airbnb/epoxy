@@ -252,7 +252,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithAllFieldTypes that = (ModelWithAllFieldTypes) o;
+    ModelWithAllFieldTypes_ that = (ModelWithAllFieldTypes_) o;
     if (valueInteger != null ? !valueInteger.equals(that.valueInteger) : that.valueInteger != null) {
       return false;
     }

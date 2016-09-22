@@ -70,7 +70,7 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_ extends Model
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithSuperAttributes.SubModelWithSuperAttributes that = (ModelWithSuperAttributes.SubModelWithSuperAttributes) o;
+    ModelWithSuperAttributes$SubModelWithSuperAttributes_ that = (ModelWithSuperAttributes$SubModelWithSuperAttributes_) o;
     if (subValue != that.subValue) {
       return false;
     }

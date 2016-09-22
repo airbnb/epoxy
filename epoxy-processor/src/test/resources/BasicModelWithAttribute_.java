@@ -62,7 +62,7 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute {
     if (!super.equals(o)) {
       return false;
     }
-    BasicModelWithAttribute that = (BasicModelWithAttribute) o;
+    BasicModelWithAttribute_ that = (BasicModelWithAttribute_) o;
     if (value != that.value) {
       return false;
     }

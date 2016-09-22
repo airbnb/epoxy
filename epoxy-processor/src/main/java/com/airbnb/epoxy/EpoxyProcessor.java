@@ -337,8 +337,8 @@ public class EpoxyProcessor extends AbstractProcessor {
         .beginControlFlow("if (!super.equals(o))")
         .addStatement("return false")
         .endControlFlow()
-        .addStatement("$T that = ($T) o", helperClass.getOriginalClassNameWithoutType(),
-            helperClass.getOriginalClassNameWithoutType());
+        .addStatement("$T that = ($T) o", helperClass.getGeneratedName(),
+            helperClass.getGeneratedName());
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
       if (!attributeInfo.useInHash()) {

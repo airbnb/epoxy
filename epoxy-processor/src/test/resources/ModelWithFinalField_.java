@@ -56,7 +56,7 @@ public class ModelWithFinalField_ extends ModelWithFinalField {
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithFinalField that = (ModelWithFinalField) o;
+    ModelWithFinalField_ that = (ModelWithFinalField_) o;
     if (valueInt != that.valueInt) {
       return false;
     }

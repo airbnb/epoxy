@@ -64,7 +64,7 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation {
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithFieldAnnotation that = (ModelWithFieldAnnotation) o;
+    ModelWithFieldAnnotation_ that = (ModelWithFieldAnnotation_) o;
     if (title != null ? !title.equals(that.title) : that.title != null) {
       return false;
     }
