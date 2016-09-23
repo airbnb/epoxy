@@ -82,7 +82,7 @@ public class EpoxyProcessor extends AbstractProcessor {
   @Override
   public Set<String> getSupportedAnnotationTypes() {
     return ImmutableSet.of(EpoxyAttribute.class.getCanonicalName(),
-        EpoxyClass.class.getCanonicalName());
+        EpoxyModelClass.class.getCanonicalName());
   }
 
   @Override
@@ -98,8 +98,8 @@ public class EpoxyProcessor extends AbstractProcessor {
       for (Element attribute : roundEnv.getElementsAnnotatedWith(EpoxyAttribute.class)) {
         processAttribute(attribute, modelClassMap);
       }
-      for (Element clazz : roundEnv.getElementsAnnotatedWith(EpoxyClass.class)) {
-        processClass((TypeElement) clazz, modelClassMap);
+      for (Element clazz : roundEnv.getElementsAnnotatedWith(EpoxyModelClass.class)) {
+        getOrCreateTargetClass(modelClassMap, (TypeElement) clazz);
       }
     } catch (EpoxyProcessorException e) {
       writeError(e);
@@ -134,12 +134,6 @@ public class EpoxyProcessor extends AbstractProcessor {
     helperClass.addAttribute(
         new AttributeInfo(name, type, attribute.getAnnotationMirrors(),
             attribute.getAnnotation(EpoxyAttribute.class), hasSuper, hasFinalModifier));
-  }
-
-  private void processClass(TypeElement classElement,
-      Map<TypeElement, ClassToGenerateInfo> modelClassMap)
-      throws EpoxyProcessorException {
-    getOrCreateTargetClass(modelClassMap, classElement);
   }
 
   /**

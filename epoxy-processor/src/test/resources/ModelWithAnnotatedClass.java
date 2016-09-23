@@ -1,6 +1,6 @@
 package com.airbnb.epoxy;
 
-@EpoxyClass
+@EpoxyModelClass
 public class ModelWithAnnotatedClass extends EpoxyModel<Object> {
 
   @Override

@@ -9,7 +9,7 @@ public class ModelWithAnnotatedClassAndSuperAttributes extends EpoxyModel<Object
     return 0;
   }
 
-  @EpoxyClass
+  @EpoxyModelClass
   public static class SubModelWithAnnotatedClassAndSuperAttributes extends ModelWithAnnotatedClassAndSuperAttributes {
 
   }
