@@ -257,9 +257,11 @@ public class EpoxyProcessorTest {
     JavaFileObject model = JavaFileObjects
         .forResource("ModelWithAnnotatedClassAndSuperAttributes.java");
 
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithAnnotatedClassAndSuperAttributes_.java");
+    JavaFileObject generatedModel = JavaFileObjects
+        .forResource("ModelWithAnnotatedClassAndSuperAttributes_.java");
     JavaFileObject generatedSubClassModel =
-        JavaFileObjects.forResource("ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_.java");
+        JavaFileObjects.forResource("ModelWithAnnotatedClassAndSuperAttributes$SubModel" +
+            "WithAnnotatedClassAndSuperAttributes_.java");
 
     assert_().about(javaSource())
         .that(model)
