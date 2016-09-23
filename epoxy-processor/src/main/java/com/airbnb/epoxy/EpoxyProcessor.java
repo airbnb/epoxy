@@ -4,6 +4,8 @@ import android.support.annotation.LayoutRes;
 
 import com.airbnb.epoxy.ClassToGenerateInfo.ConstructorInfo;
 import com.google.auto.service.AutoService;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
@@ -81,7 +83,8 @@ public class EpoxyProcessor extends AbstractProcessor {
 
   @Override
   public Set<String> getSupportedAnnotationTypes() {
-    return Collections.singleton(EpoxyAttribute.class.getCanonicalName());
+    return ImmutableSet.of(EpoxyAttribute.class.getCanonicalName(),
+        EpoxyClass.class.getCanonicalName());
   }
 
   @Override
@@ -93,12 +96,15 @@ public class EpoxyProcessor extends AbstractProcessor {
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     LinkedHashMap<TypeElement, ClassToGenerateInfo> modelClassMap = new LinkedHashMap<>();
 
-    for (Element attribute : roundEnv.getElementsAnnotatedWith(EpoxyAttribute.class)) {
-      try {
+    try {
+      for (Element attribute : roundEnv.getElementsAnnotatedWith(EpoxyAttribute.class)) {
         processAttribute(attribute, modelClassMap);
-      } catch (EpoxyProcessorException e) {
-        writeError(e);
       }
+      for (Element clazz : roundEnv.getElementsAnnotatedWith(EpoxyClass.class)) {
+        processClass((TypeElement) clazz, modelClassMap);
+      }
+    } catch (EpoxyProcessorException e) {
+      writeError(e);
     }
 
     updateClassesForInheritance(modelClassMap);
@@ -130,6 +136,12 @@ public class EpoxyProcessor extends AbstractProcessor {
     helperClass.addAttribute(
         new AttributeInfo(name, type, attribute.getAnnotationMirrors(),
             attribute.getAnnotation(EpoxyAttribute.class), hasSuper, hasFinalModifier));
+  }
+
+  private void processClass(TypeElement classElement,
+      Map<TypeElement, ClassToGenerateInfo> modelClassMap)
+      throws EpoxyProcessorException {
+    getOrCreateTargetClass(modelClassMap, classElement);
   }
 
   /**

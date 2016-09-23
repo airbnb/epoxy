@@ -236,4 +236,36 @@ public class EpoxyProcessorTest {
         .and()
         .generatesSources(generatedModel);
   }
+
+  @Test
+  public void testModelWithAnnotatedClass() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithAnnotatedClass.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithAnnotatedClass_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void testModelWithAnnotatedClassAndSuperClass() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithAnnotatedClassAndSuperAttributes.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithAnnotatedClassAndSuperAttributes_.java");
+    JavaFileObject generatedSubClassModel =
+        JavaFileObjects.forResource("ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel, generatedSubClassModel);
+  }
 }
