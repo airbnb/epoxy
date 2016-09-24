@@ -69,7 +69,7 @@ public class ModelWithConstructors_ extends ModelWithConstructors {
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithConstructors that = (ModelWithConstructors) o;
+    ModelWithConstructors_ that = (ModelWithConstructors_) o;
     if (valueInt != that.valueInt) {
       return false;
     }

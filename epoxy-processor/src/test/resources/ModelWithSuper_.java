@@ -62,7 +62,7 @@ public class ModelWithSuper_ extends ModelWithSuper {
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithSuper that = (ModelWithSuper) o;
+    ModelWithSuper_ that = (ModelWithSuper_) o;
     if (valueInt != that.valueInt) {
       return false;
     }

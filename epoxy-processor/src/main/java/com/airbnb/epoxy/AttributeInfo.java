@@ -21,6 +21,7 @@ public class AttributeInfo {
   private final TypeName type;
   private final boolean useInHash;
   private final boolean hasFinalModifier;
+  private final boolean packagePrivate;
   /**
    * Track whether there is a setter method for this attribute on a super class so that we can call
    * through to super.
@@ -29,11 +30,12 @@ public class AttributeInfo {
 
   AttributeInfo(String name, TypeName type,
       List<? extends AnnotationMirror> annotationMirrors, EpoxyAttribute annotation,
-      boolean hasSuperSetter, boolean hasFinalModifier) {
+      boolean hasSuperSetter, boolean hasFinalModifier, boolean packagePrivate) {
     this.name = name;
     this.type = type;
     this.hasSuperSetter = hasSuperSetter;
     this.hasFinalModifier = hasFinalModifier;
+    this.packagePrivate = packagePrivate;
     useInHash = annotation.hash();
     buildAnnotationLists(annotationMirrors);
   }
@@ -103,6 +105,10 @@ public class AttributeInfo {
 
   public boolean hasFinalModifier() {
     return hasFinalModifier;
+  }
+
+  public boolean isPackagePrivate() {
+    return packagePrivate;
   }
 
   @Override

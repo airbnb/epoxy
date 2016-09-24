@@ -70,7 +70,7 @@ public class ModelWithoutHash_ extends ModelWithoutHash {
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithoutHash that = (ModelWithoutHash) o;
+    ModelWithoutHash_ that = (ModelWithoutHash_) o;
     if (value != that.value) {
       return false;
     }

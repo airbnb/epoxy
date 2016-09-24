@@ -62,7 +62,7 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> {
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithType that = (ModelWithType) o;
+    ModelWithType_ that = (ModelWithType_) o;
     if (value != that.value) {
       return false;
     }

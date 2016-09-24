@@ -62,7 +62,7 @@ public class ModelWithIntDef_ extends ModelWithIntDef {
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithIntDef that = (ModelWithIntDef) o;
+    ModelWithIntDef_ that = (ModelWithIntDef_) o;
     if (type != that.type) {
       return false;
     }

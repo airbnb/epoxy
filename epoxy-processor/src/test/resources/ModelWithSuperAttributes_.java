@@ -61,7 +61,7 @@ public class ModelWithSuperAttributes_ extends ModelWithSuperAttributes {
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithSuperAttributes that = (ModelWithSuperAttributes) o;
+    ModelWithSuperAttributes_ that = (ModelWithSuperAttributes_) o;
     if (superValue != that.superValue) {
       return false;
     }
