@@ -14,7 +14,7 @@ public class ModelWithType<T extends String> extends EpoxyModel<Object> {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof ModelWithType)) {
+    if (!(o instanceof ModelWithType_)) {
       return false;
     }
     if (!super.equals(o)) {

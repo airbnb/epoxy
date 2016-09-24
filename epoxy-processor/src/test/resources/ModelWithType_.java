@@ -56,7 +56,7 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> {
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelWithType)) {
+    if (!(o instanceof ModelWithType_)) {
       return false;
     }
     if (!super.equals(o)) {

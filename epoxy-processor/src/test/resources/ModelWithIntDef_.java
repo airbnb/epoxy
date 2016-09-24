@@ -56,7 +56,7 @@ public class ModelWithIntDef_ extends ModelWithIntDef {
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelWithIntDef)) {
+    if (!(o instanceof ModelWithIntDef_)) {
       return false;
     }
     if (!super.equals(o)) {

@@ -55,13 +55,15 @@ public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClas
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelWithAnnotatedClassAndSuperAttributes.SubModelWithAnnotatedClassAndSuperAttributes)) {
+    if (!(o instanceof ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_)) {
+
       return false;
     }
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithAnnotatedClassAndSuperAttributes.SubModelWithAnnotatedClassAndSuperAttributes that = (ModelWithAnnotatedClassAndSuperAttributes.SubModelWithAnnotatedClassAndSuperAttributes) o;
+    ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ that =
+        (ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_) o;
     if (superValue != that.superValue) {
       return false;
     }

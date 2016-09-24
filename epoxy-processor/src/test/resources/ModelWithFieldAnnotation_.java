@@ -58,7 +58,7 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation {
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelWithFieldAnnotation)) {
+    if (!(o instanceof ModelWithFieldAnnotation_)) {
       return false;
     }
     if (!super.equals(o)) {

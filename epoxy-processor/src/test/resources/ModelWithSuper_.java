@@ -56,7 +56,7 @@ public class ModelWithSuper_ extends ModelWithSuper {
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelWithSuper)) {
+    if (!(o instanceof ModelWithSuper_)) {
       return false;
     }
     if (!super.equals(o)) {

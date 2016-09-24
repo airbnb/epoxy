@@ -64,13 +64,14 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_ extends Model
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelWithSuperAttributes.SubModelWithSuperAttributes)) {
+    if (!(o instanceof ModelWithSuperAttributes$SubModelWithSuperAttributes_)) {
       return false;
     }
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithSuperAttributes$SubModelWithSuperAttributes_ that = (ModelWithSuperAttributes$SubModelWithSuperAttributes_) o;
+    ModelWithSuperAttributes$SubModelWithSuperAttributes_ that =
+        (ModelWithSuperAttributes$SubModelWithSuperAttributes_) o;
     if (subValue != that.subValue) {
       return false;
     }

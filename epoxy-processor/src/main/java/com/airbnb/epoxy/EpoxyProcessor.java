@@ -146,7 +146,9 @@ public class EpoxyProcessor extends AbstractProcessor {
    */
   private boolean isFieldPackagePrivate(Element attribute) {
     Set<Modifier> modifiers = attribute.getModifiers();
-    return !modifiers.contains(PUBLIC) && !modifiers.contains(PROTECTED);
+    return !modifiers.contains(PUBLIC)
+        && !modifiers.contains(PROTECTED)
+        && !modifiers.contains(PRIVATE);
   }
 
   /**
@@ -252,23 +254,33 @@ public class EpoxyProcessor extends AbstractProcessor {
    * Check each model for super classes that also have attributes. For each super class with
    * attributes we add those attributes to the attributes of the generated class, so that a
    * generated class contains all the attributes of its super classes combined.
+   * <p>
+   * One caveat is that if a sub class is in a different package than its super class we can't
+   * include attributes that are package private, otherwise the generated class won't compile.
    */
   private void updateClassesForInheritance(
-      LinkedHashMap<TypeElement, ClassToGenerateInfo> helperClassMap) {
+      Map<TypeElement, ClassToGenerateInfo> helperClassMap) {
     for (Entry<TypeElement, ClassToGenerateInfo> entry : helperClassMap.entrySet()) {
-      LinkedHashMap<TypeElement, ClassToGenerateInfo> otherClasses =
-          new LinkedHashMap<>(helperClassMap);
-      otherClasses.remove(entry.getKey());
+      TypeElement thisClass = entry.getKey();
+
+      Map<TypeElement, ClassToGenerateInfo> otherClasses = new LinkedHashMap<>(helperClassMap);
+      otherClasses.remove(thisClass);
 
       for (Entry<TypeElement, ClassToGenerateInfo> otherEntry : otherClasses.entrySet()) {
-        if (isSubtype(entry.getKey().asType(), otherEntry.getKey().asType())) {
-          if (belongToTheSamePackage(entry.getKey(), otherEntry.getKey())) {
-            entry.getValue().addAttributes(otherEntry.getValue().getAttributeInfo());
-          } else {
-            for (AttributeInfo attribute : otherEntry.getValue().getAttributeInfo()) {
-              if (!attribute.isPackagePrivate()) {
-                entry.getValue().addAttribute(attribute);
-              }
+        TypeElement otherClass = otherEntry.getKey();
+
+        if (!isSubtype(thisClass, otherClass)) {
+          continue;
+        }
+
+        Set<AttributeInfo> otherAttributes = otherEntry.getValue().getAttributeInfo();
+
+        if (belongToTheSamePackage(thisClass, otherClass)) {
+          entry.getValue().addAttributes(otherAttributes);
+        } else {
+          for (AttributeInfo attribute : otherAttributes) {
+            if (!attribute.isPackagePrivate()) {
+              entry.getValue().addAttribute(attribute);
             }
           }
         }
@@ -283,6 +295,10 @@ public class EpoxyProcessor extends AbstractProcessor {
     Name package1 = elementUtils.getPackageOf(class1).getQualifiedName();
     Name package2 = elementUtils.getPackageOf(class2).getQualifiedName();
     return package1.equals(package2);
+  }
+
+  private boolean isSubtype(TypeElement e1, TypeElement e2) {
+    return isSubtype(e1.asType(), e2.asType());
   }
 
   private boolean isSubtype(TypeMirror e1, TypeMirror e2) {
@@ -365,7 +381,7 @@ public class EpoxyProcessor extends AbstractProcessor {
         .beginControlFlow("if (o == this)")
         .addStatement("return true")
         .endControlFlow()
-        .beginControlFlow("if (!(o instanceof $T))", helperClass.getOriginalClassNameWithoutType())
+        .beginControlFlow("if (!(o instanceof $T))", helperClass.getGeneratedName())
         .addStatement("return false")
         .endControlFlow()
         .beginControlFlow("if (!super.equals(o))")

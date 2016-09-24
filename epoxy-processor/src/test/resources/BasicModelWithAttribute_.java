@@ -56,7 +56,7 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute {
     if (o == this) {
       return true;
     }
-    if (!(o instanceof BasicModelWithAttribute)) {
+    if (!(o instanceof BasicModelWithAttribute_)) {
       return false;
     }
     if (!super.equals(o)) {
