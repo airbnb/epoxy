@@ -4,6 +4,7 @@ import android.support.annotation.LayoutRes;
 
 import com.airbnb.epoxy.ClassToGenerateInfo.ConstructorInfo;
 import com.google.auto.service.AutoService;
+import com.google.common.collect.ImmutableSet;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
@@ -16,7 +17,6 @@ import com.squareup.javapoet.TypeSpec;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +81,8 @@ public class EpoxyProcessor extends AbstractProcessor {
 
   @Override
   public Set<String> getSupportedAnnotationTypes() {
-    return Collections.singleton(EpoxyAttribute.class.getCanonicalName());
+    return ImmutableSet.of(EpoxyAttribute.class.getCanonicalName(),
+        EpoxyModelClass.class.getCanonicalName());
   }
 
   @Override
@@ -93,12 +94,15 @@ public class EpoxyProcessor extends AbstractProcessor {
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     LinkedHashMap<TypeElement, ClassToGenerateInfo> modelClassMap = new LinkedHashMap<>();
 
-    for (Element attribute : roundEnv.getElementsAnnotatedWith(EpoxyAttribute.class)) {
-      try {
+    try {
+      for (Element attribute : roundEnv.getElementsAnnotatedWith(EpoxyAttribute.class)) {
         processAttribute(attribute, modelClassMap);
-      } catch (EpoxyProcessorException e) {
-        writeError(e);
       }
+      for (Element clazz : roundEnv.getElementsAnnotatedWith(EpoxyModelClass.class)) {
+        getOrCreateTargetClass(modelClassMap, (TypeElement) clazz);
+      }
+    } catch (EpoxyProcessorException e) {
+      writeError(e);
     }
 
     updateClassesForInheritance(modelClassMap);
