@@ -15,7 +15,11 @@ class TestObserver extends AdapterDataObserver {
     this.showLogs = showLogs;
   }
 
-  public void setUpForNextDiff(List<TestModel> models) {
+  TestObserver() {
+    this(false);
+  }
+
+  void setUpForNextDiff(List<TestModel> models) {
     initialModels = new ArrayList<>(models);
     modelsAfterDiffing = new ArrayList<>(models);
   }

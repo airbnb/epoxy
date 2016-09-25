@@ -12,7 +12,8 @@ import static com.airbnb.epoxy.ModelTestUtils.remove;
 import static junit.framework.Assert.assertEquals;
 
 /**
- * Tests that changes to the models via notify calls besides {@link EpoxyAdapter#notifyModelsChanged()}
+ * Tests that changes to the models via notify calls besides
+ * {@link EpoxyAdapter#notifyModelsChanged()}
  * will properly update the model state maintained by the differ.
  */
 @Config(sdk = 21, manifest = TestRunner.MANIFEST_PATH)
@@ -160,7 +161,12 @@ public class DifferNotifyTest {
   }
 
   private void assertCorrectness() {
+    testObserver.operationCount = 0;
+
+    adapter.registerAdapterDataObserver(testObserver);
     adapter.notifyModelsChanged();
+    adapter.unregisterAdapterDataObserver(testObserver);
+
     assertEquals("Should not have any operations", 0, testObserver.operationCount);
   }
 }
