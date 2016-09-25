@@ -1,17 +1,25 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+apply from: "$rootDir/blessedDeps.gradle"
 
 android {
-  compileSdkVersion 24
-  buildToolsVersion "24.0.2"
+  compileSdkVersion rootProject.COMPILE_SDK_VERSION
+  buildToolsVersion rootProject.ANDROID_BUILD_TOOLS_VERSION
 
   defaultConfig {
     applicationId "com.airbnb.android.epoxysample"
-    minSdkVersion 16
-    targetSdkVersion 24
+    minSdkVersion rootProject.MIN_SDK_VERSION
+    targetSdkVersion rootProject.TARGET_SDK_VERSION
     versionCode 1
     versionName "1.0"
   }
+}
+
+def deps = rootProject.ext.blessedDeps
+
+/* Forces all transitive deps listed to our version. */
+configurations.all { strategy ->
+  strategy.resolutionStrategy.force deps.androidCardView, deps.junit
 }
 
 dependencies {
@@ -19,10 +27,10 @@ dependencies {
   compile project(':epoxy-model')
   apt project(':epoxy-processor')
 
-  compile "com.jakewharton:butterknife:8.1.0"
-  apt "com.jakewharton:butterknife-compiler:8.1.0"
+  compile deps.butterknifeLibrary
+  apt deps.butterknifeCompiler
 
-  compile 'com.android.support:cardview-v7:24.2.1'
+  compile deps.androidCardView
 
-  testCompile 'junit:junit:4.12'
+  testCompile deps.junit
 }

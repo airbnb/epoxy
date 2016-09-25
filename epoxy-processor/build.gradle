@@ -1,13 +1,20 @@
 apply plugin: 'java'
+apply from: "$rootDir/blessedDeps.gradle"
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = rootProject.COMPILE_SOURCE_COMPATABILITY
+targetCompatibility = rootProject.TARGET_SOURCE_COMPATABILITY
+
+def deps = rootProject.ext.blessedDeps;
+
+configurations.all { strategy ->
+  strategy.resolutionStrategy.force deps.assertj, deps.googleTestingCompile
+}
 
 dependencies {
-  compile 'com.google.auto.service:auto-service:1.0-rc2'
-  compile 'com.squareup:javapoet:1.7.0'
-  testCompile 'org.assertj:assertj-core:1.7.0'
-  testCompile 'com.google.testing.compile:compile-testing:0.9'
+  compile deps.googleAutoService
+  compile deps.squareJavaPoet
+  testCompile deps.assertj
+  testCompile deps.googleTestingCompile
   testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
 
   compile project(':epoxy-model')

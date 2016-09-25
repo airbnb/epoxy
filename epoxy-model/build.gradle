@@ -1,10 +1,12 @@
 apply plugin: 'java'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+apply from: "$rootDir/blessedDeps.gradle"
+
+sourceCompatibility = rootProject.COMPILE_SOURCE_COMPATABILITY
+targetCompatibility = rootProject.TARGET_SOURCE_COMPATABILITY
 
 dependencies {
-  compile 'com.android.support:support-annotations:24.1.1'
+  compile rootProject.blessedDeps.androidAnnotations
 }
 
 checkstyle {
