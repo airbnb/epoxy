@@ -55,13 +55,14 @@ public class ModelWithAnnotatedClassAndSuperAttributes_ extends ModelWithAnnotat
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelWithAnnotatedClassAndSuperAttributes)) {
+    if (!(o instanceof ModelWithAnnotatedClassAndSuperAttributes_)) {
       return false;
     }
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithAnnotatedClassAndSuperAttributes that = (ModelWithAnnotatedClassAndSuperAttributes) o;
+    ModelWithAnnotatedClassAndSuperAttributes_ that =
+        (ModelWithAnnotatedClassAndSuperAttributes_) o;
     if (superValue != that.superValue) {
       return false;
     }

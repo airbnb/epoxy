@@ -246,7 +246,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelWithAllFieldTypes)) {
+    if (!(o instanceof ModelWithAllFieldTypes_)) {
       return false;
     }
     if (!super.equals(o)) {

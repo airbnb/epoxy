@@ -50,7 +50,7 @@ public class ModelWithFinalField_ extends ModelWithFinalField {
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelWithFinalField)) {
+    if (!(o instanceof ModelWithFinalField_)) {
       return false;
     }
     if (!super.equals(o)) {

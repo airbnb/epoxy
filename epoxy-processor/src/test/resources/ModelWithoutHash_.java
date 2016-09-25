@@ -64,7 +64,7 @@ public class ModelWithoutHash_ extends ModelWithoutHash {
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelWithoutHash)) {
+    if (!(o instanceof ModelWithoutHash_)) {
       return false;
     }
     if (!super.equals(o)) {

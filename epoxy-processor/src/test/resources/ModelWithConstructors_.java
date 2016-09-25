@@ -63,7 +63,7 @@ public class ModelWithConstructors_ extends ModelWithConstructors {
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelWithConstructors)) {
+    if (!(o instanceof ModelWithConstructors_)) {
       return false;
     }
     if (!super.equals(o)) {

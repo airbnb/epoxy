@@ -47,13 +47,13 @@ public class ModelWithAnnotatedClass_ extends ModelWithAnnotatedClass {
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelWithAnnotatedClass)) {
+    if (!(o instanceof ModelWithAnnotatedClass_)) {
       return false;
     }
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithAnnotatedClass that = (ModelWithAnnotatedClass) o;
+    ModelWithAnnotatedClass_ that = (ModelWithAnnotatedClass_) o;
     return true;
   }
 
