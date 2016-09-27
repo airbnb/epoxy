@@ -1,18 +1,18 @@
 package com.airbnb.epoxy;
 
+import com.google.common.truth.Truth;
 import com.google.testing.compile.JavaFileObjects;
+import com.google.testing.compile.JavaSourceSubjectFactory;
 
 import org.junit.Test;
 
 import javax.tools.JavaFileObject;
 
-import static com.google.common.truth.Truth.assert_;
-import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
-
 /**
- * These tests cannot be run from Android Studio as it fails to pick up the files in the resources
- * folder. Run them from the command line (eg ./gradlew test) instead.
+ * These processor tests are in their own module since the processor module can't depend on the
+ * android EpoxyAdapter library that contains the EpoxyModel.
  */
+
 public class EpoxyProcessorTest {
   @Test
   public void testSimpleModel() {
@@ -21,7 +21,7 @@ public class EpoxyProcessorTest {
 
     JavaFileObject generatedModel = JavaFileObjects.forResource("BasicModelWithAttribute_.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
@@ -36,7 +36,7 @@ public class EpoxyProcessorTest {
 
     JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithAllFieldTypes_.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
@@ -51,7 +51,7 @@ public class EpoxyProcessorTest {
 
     JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithConstructors_.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
@@ -66,7 +66,7 @@ public class EpoxyProcessorTest {
 
     JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithSuper_.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
@@ -81,7 +81,7 @@ public class EpoxyProcessorTest {
 
     JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithFieldAnnotation_.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
@@ -98,7 +98,7 @@ public class EpoxyProcessorTest {
     JavaFileObject generatedSubClassModel =
         JavaFileObjects.forResource("ModelWithSuperAttributes$SubModelWithSuperAttributes_.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
@@ -113,7 +113,7 @@ public class EpoxyProcessorTest {
 
     JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithType_.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
@@ -128,7 +128,7 @@ public class EpoxyProcessorTest {
 
     JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithoutHash_.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
@@ -143,7 +143,7 @@ public class EpoxyProcessorTest {
 
     JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithFinalField_.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
@@ -156,7 +156,7 @@ public class EpoxyProcessorTest {
     JavaFileObject model = JavaFileObjects
         .forResource("ModelWithPrivateField.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .failsToCompile()
@@ -168,7 +168,7 @@ public class EpoxyProcessorTest {
     JavaFileObject model = JavaFileObjects
         .forResource("ModelWithStaticField.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .failsToCompile()
@@ -180,7 +180,7 @@ public class EpoxyProcessorTest {
     JavaFileObject model = JavaFileObjects
         .forResource("ModelWithPrivateInnerClass.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .failsToCompile()
@@ -192,7 +192,7 @@ public class EpoxyProcessorTest {
     JavaFileObject model = JavaFileObjects
         .forResource("ModelWithFinalClass.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .failsToCompile();
@@ -203,7 +203,7 @@ public class EpoxyProcessorTest {
     JavaFileObject model = JavaFileObjects
         .forResource("ModelWithoutEpoxyExtension.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .failsToCompile()
@@ -215,7 +215,7 @@ public class EpoxyProcessorTest {
     JavaFileObject model = JavaFileObjects
         .forResource("ModelAsInnerClass.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .failsToCompile()
@@ -229,7 +229,7 @@ public class EpoxyProcessorTest {
 
     JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithIntDef_.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
@@ -244,7 +244,7 @@ public class EpoxyProcessorTest {
 
     JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithAnnotatedClass_.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
@@ -263,7 +263,7 @@ public class EpoxyProcessorTest {
         JavaFileObjects.forResource("ModelWithAnnotatedClassAndSuperAttributes$SubModel"
             + "WithAnnotatedClassAndSuperAttributes_.java");
 
-    assert_().about(javaSource())
+    Truth.assert_().about(JavaSourceSubjectFactory.javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()

@@ -1,7 +1,7 @@
 package com.airbnb.epoxy.testpackage;
 
 import com.airbnb.epoxy.EpoxyAttribute;
-import com.airbnb.epoxy.TestModel;
+import com.airbnb.epoxy.ProcessorTestModel;
 
 import org.junit.Test;
 
@@ -19,7 +19,7 @@ public class DifferentPackageTest {
         .subclassValue(1);
   }
 
-  public static class Model extends TestModel {
+  public static class Model extends ProcessorTestModel {
     @EpoxyAttribute int subclassValue;
   }
 }

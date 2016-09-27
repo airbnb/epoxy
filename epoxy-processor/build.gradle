@@ -6,9 +6,6 @@ targetCompatibility = 1.7
 dependencies {
   compile 'com.google.auto.service:auto-service:1.0-rc2'
   compile 'com.squareup:javapoet:1.7.0'
-  testCompile 'org.assertj:assertj-core:1.7.0'
-  testCompile 'com.google.testing.compile:compile-testing:0.9'
-  testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
 
   compile project(':epoxy-annotations')
 }
