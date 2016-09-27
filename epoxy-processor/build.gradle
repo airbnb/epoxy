@@ -10,7 +10,7 @@ dependencies {
   testCompile 'com.google.testing.compile:compile-testing:0.9'
   testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
 
-  compile project(':epoxy-model')
+  compile project(':epoxy-annotations')
 }
 
 checkstyle {
