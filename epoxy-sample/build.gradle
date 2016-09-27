@@ -16,7 +16,7 @@ android {
 
 dependencies {
   compile project(':epoxy-adapter')
-  compile project(':epoxy-model')
+  compile project(':epoxy-annotations')
   apt project(':epoxy-processor')
 
   compile "com.jakewharton:butterknife:8.1.0"
