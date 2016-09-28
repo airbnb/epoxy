@@ -1,7 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.LayoutRes;
-
 import com.airbnb.epoxy.ClassToGenerateInfo.ConstructorInfo;
 import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
@@ -35,6 +33,8 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -65,7 +65,9 @@ import static javax.lang.model.element.Modifier.STATIC;
 @AutoService(Processor.class)
 public class EpoxyProcessor extends AbstractProcessor {
   private static final String GENERATED_CLASS_NAME_SUFFIX = "_";
-  private static TypeMirror epoxyModelType;
+  private static final String EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel<?>";
+  private static final ClassName LAYOUT_RES_ANNOTATION =
+      ClassName.get("android.support.annotation", "LayoutRes");
 
   private Filer filer;
   private Messager messager;
@@ -78,7 +80,6 @@ public class EpoxyProcessor extends AbstractProcessor {
     filer = processingEnv.getFiler();
     messager = processingEnv.getMessager();
     elementUtils = processingEnv.getElementUtils();
-    epoxyModelType = elementUtils.getTypeElement(EpoxyModel.class.getCanonicalName()).asType();
     typeUtils = processingEnv.getTypeUtils();
   }
 
@@ -156,7 +157,7 @@ public class EpoxyProcessor extends AbstractProcessor {
    * Private methods are ignored since the generated subclass can't call super on those.
    */
   private boolean hasSuperMethod(TypeElement classElement, String methodName) {
-    if (!isSubtype(classElement.asType(), epoxyModelType)) {
+    if (!isEpoxyModel(classElement.asType())) {
       return false;
     }
 
@@ -224,9 +225,9 @@ public class EpoxyProcessor extends AbstractProcessor {
           EpoxyAttribute.class.getSimpleName(), classElement.getSimpleName());
     }
 
-    if (!isSubtype(classElement.asType(), epoxyModelType)) {
+    if (!isEpoxyModel(classElement.asType())) {
       throwError("Class with %s annotations must extend %s (%s)",
-          EpoxyAttribute.class.getSimpleName(), epoxyModelType,
+          EpoxyAttribute.class.getSimpleName(), EPOXY_MODEL_TYPE,
           classElement.getSimpleName());
     }
 
@@ -304,6 +305,50 @@ public class EpoxyProcessor extends AbstractProcessor {
   private boolean isSubtype(TypeMirror e1, TypeMirror e2) {
     // We use erasure so that EpoxyModelA is considered a subtype of EpoxyModel<T extends View>
     return typeUtils.isSubtype(e1, typeUtils.erasure(e2));
+  }
+
+  private boolean isEpoxyModel(TypeMirror type) {
+    return isSubtypeOfType(type, EPOXY_MODEL_TYPE);
+  }
+
+  private boolean isSubtypeOfType(TypeMirror typeMirror, String otherType) {
+    if (otherType.equals(typeMirror.toString())) {
+      return true;
+    }
+    if (typeMirror.getKind() != TypeKind.DECLARED) {
+      return false;
+    }
+    DeclaredType declaredType = (DeclaredType) typeMirror;
+    List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
+    if (typeArguments.size() > 0) {
+      StringBuilder typeString = new StringBuilder(declaredType.asElement().toString());
+      typeString.append('<');
+      for (int i = 0; i < typeArguments.size(); i++) {
+        if (i > 0) {
+          typeString.append(',');
+        }
+        typeString.append('?');
+      }
+      typeString.append('>');
+      if (typeString.toString().equals(otherType)) {
+        return true;
+      }
+    }
+    Element element = declaredType.asElement();
+    if (!(element instanceof TypeElement)) {
+      return false;
+    }
+    TypeElement typeElement = (TypeElement) element;
+    TypeMirror superType = typeElement.getSuperclass();
+    if (isSubtypeOfType(superType, otherType)) {
+      return true;
+    }
+    for (TypeMirror interfaceType : typeElement.getInterfaces()) {
+      if (isSubtypeOfType(interfaceType, otherType)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private void generateClassForModel(ClassToGenerateInfo info) throws IOException {
@@ -525,7 +570,8 @@ public class EpoxyProcessor extends AbstractProcessor {
         .returns(helperClass.getParameterizedGeneratedName())
         .addAnnotation(Override.class)
         .addParameter(
-            ParameterSpec.builder(int.class, "layoutRes").addAnnotation(LayoutRes.class).build())
+            ParameterSpec.builder(int.class, "layoutRes").addAnnotation(LAYOUT_RES_ANNOTATION)
+                .build())
         .addStatement("super.layout(layoutRes)")
         .addStatement("return this")
         .build());

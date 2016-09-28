@@ -24,7 +24,7 @@ dependencies {
   compile deps.androidRecyclerView
   compile deps.androidDesignLibrary
   compile deps.androidSupportLibrary
-  compile project(":epoxy-model")
+  compile project(':epoxy-annotations')
 
   testCompile deps.junit
   testCompile deps.googleGuava

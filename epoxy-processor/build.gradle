@@ -1,8 +1,8 @@
 apply plugin: 'java'
 apply from: "$rootDir/blessedDeps.gradle"
 
-sourceCompatibility = rootProject.COMPILE_SOURCE_COMPATABILITY
-targetCompatibility = rootProject.TARGET_SOURCE_COMPATABILITY
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
 
 def deps = rootProject.ext.blessedDeps;
 
@@ -11,13 +11,11 @@ configurations.all { strategy ->
 }
 
 dependencies {
+  compile deps.assertj
   compile deps.googleAutoService
   compile deps.squareJavaPoet
-  testCompile deps.assertj
-  testCompile deps.googleTestingCompile
-  testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
 
-  compile project(':epoxy-model')
+  compile project(':epoxy-annotations')
 }
 
 checkstyle {

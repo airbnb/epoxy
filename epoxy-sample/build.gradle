@@ -24,7 +24,7 @@ configurations.all { strategy ->
 
 dependencies {
   compile project(':epoxy-adapter')
-  compile project(':epoxy-model')
+  compile project(':epoxy-annotations')
   apt project(':epoxy-processor')
 
   compile deps.butterknifeLibrary
