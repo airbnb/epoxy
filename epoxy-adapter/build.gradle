@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply from: "$rootDir/blessedDeps.gradle"
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
@@ -11,25 +10,23 @@ android {
   }
 }
 
-def deps = rootProject.blessedDeps;
-
 configurations.all { strategy ->
-  strategy.resolutionStrategy.force deps.androidAnnotations, deps.androidRecyclerView,
-    deps.androidDesignLibrary, deps.androidSupportLibrary, deps.junit, deps.googleGuava,
-      deps.roboelectric, deps.mockito
+  strategy.resolutionStrategy.force rootProject.deps.androidAnnotations, rootProject.deps.androidRecyclerView,
+      rootProject.deps.androidDesignLibrary, rootProject.deps.androidSupportLibrary, rootProject.deps.junit,
+      rootProject.deps.googleGuava, rootProject.deps.roboelectric, rootProject.deps.mockito
 }
 
 dependencies {
-  compile deps.androidAnnotations
-  compile deps.androidRecyclerView
-  compile deps.androidDesignLibrary
-  compile deps.androidSupportLibrary
+  compile rootProject.deps.androidAnnotations
+  compile rootProject.deps.androidRecyclerView
+  compile rootProject.deps.androidDesignLibrary
+  compile rootProject.deps.androidSupportLibrary
   compile project(':epoxy-annotations')
 
-  testCompile deps.junit
-  testCompile deps.googleGuava
-  testCompile deps.roboelectric
-  testCompile deps.mockito
+  testCompile rootProject.deps.junit
+  testCompile rootProject.deps.googleGuava
+  testCompile rootProject.deps.roboelectric
+  testCompile rootProject.deps.mockito
 }
 
 apply from: rootProject.file('gradle/gradle-maven-push.gradle')

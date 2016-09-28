@@ -6,6 +6,10 @@
  *  As an added bonus, we don't bloat our project build file by abstracting dependencies into its own
  *  gradle file, then applying it back in as necessary.
  */
+
+rootProject.ext.JAVA_SOURCE_VERSION = JavaVersion.VERSION_1_7
+rootProject.ext.JAVA_TARGET_VERSION = JavaVersion.VERSION_1_7
+
 rootProject.ext.TARGET_SDK_VERSION = 24
 rootProject.ext.COMPILE_SDK_VERSION = 24
 rootProject.ext.MIN_SDK_VERSION = 16
@@ -24,7 +28,7 @@ rootProject.ext.JUNIT_VERSION = "4.12"
 rootProject.ext.MOCKITO_VERSION = "1.10.19"
 rootProject.ext.ROBO_ELECTRIC_VERSION = "3.1.2"
 
-rootProject.ext.blessedDeps = [
+rootProject.ext.deps = [
     androidSupportLibrary   : "com.android.support:appcompat-v7:$ANDROID_SUPPORT_LIBS_VERSION",
     androidCardView         : "com.android.support:cardview-v7:$ANDROID_SUPPORT_LIBS_VERSION",
     androidDesignLibrary    : "com.android.support:design:$ANDROID_SUPPORT_LIBS_VERSION",

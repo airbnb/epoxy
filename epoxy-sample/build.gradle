@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
-apply from: "$rootDir/blessedDeps.gradle"
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
@@ -15,11 +14,9 @@ android {
   }
 }
 
-def deps = rootProject.ext.blessedDeps
-
 /* Forces all transitive deps listed to our version. */
 configurations.all { strategy ->
-  strategy.resolutionStrategy.force deps.androidCardView, deps.junit
+  strategy.resolutionStrategy.force rootProject.deps.androidCardView, rootProject.deps.junit
 }
 
 dependencies {
@@ -27,10 +24,10 @@ dependencies {
   compile project(':epoxy-annotations')
   apt project(':epoxy-processor')
 
-  compile deps.butterknifeLibrary
-  apt deps.butterknifeCompiler
+  compile rootProject.deps.butterknifeLibrary
+  apt rootProject.deps.butterknifeCompiler
 
-  compile deps.androidCardView
+  compile rootProject.deps.androidCardView
 
-  testCompile deps.junit
+  testCompile rootProject.deps.junit
 }
