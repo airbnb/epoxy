@@ -2,21 +2,21 @@ apply plugin: 'com.android.library'
 apply from: 'build.workaround-missing-resource.gradle'
 
 android {
-  compileSdkVersion 24
-  buildToolsVersion "24.0.2"
+  compileSdkVersion rootProject.COMPILE_SDK_VERSION
+  buildToolsVersion rootProject.ANDROID_BUILD_TOOLS_VERSION
 
   defaultConfig {
-    minSdkVersion 16
-    targetSdkVersion 24
+    minSdkVersion rootProject.MIN_SDK_VERSION
+    targetSdkVersion rootProject.TARGET_SDK_VERSION
   }
 }
 
 dependencies {
-  testCompile 'junit:junit:4.12'
-  testCompile 'com.google.guava:guava:19.0'
-  testCompile "org.robolectric:robolectric:3.1.2"
-  testCompile 'org.mockito:mockito-core:1.10.19'
-  testCompile 'com.google.testing.compile:compile-testing:0.9'
+  testCompile rootProject.deps.junit
+  testCompile rootProject.deps.googleGuava
+  testCompile rootProject.deps.roboelectric
+  testCompile rootProject.deps.mockito
+  testCompile rootProject.deps.googleTestingCompile
   testCompile files(org.gradle.internal.jvm.Jvm.current().getRuntimeJar())
   testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
   testCompile project(':epoxy-processor')

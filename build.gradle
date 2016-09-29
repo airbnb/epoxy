@@ -17,6 +17,7 @@ allprojects {
 }
 
 subprojects { project ->
+  apply from: "$rootDir/blessedDeps.gradle"
   apply plugin: 'checkstyle'
 
   task checkstyle(type: Checkstyle) {
