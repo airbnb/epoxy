@@ -11,7 +11,12 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
-public class ModelList extends ArrayList<EpoxyModel<?>> {
+/**
+ * Used by our {@link EpoxyAdapter} to track models. It simply wraps ArrayList and notifies an
+ * observer when remove or insertion operations are done on the list. This allows us to optimize
+ * diffing since we have a knowledge of what changed in the list.
+ */
+class ModelList extends ArrayList<EpoxyModel<?>> {
 
   interface ModelListObserver {
     void onItemRangeInserted(int positionStart, int itemCount);
