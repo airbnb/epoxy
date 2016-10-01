@@ -1,0 +1,73 @@
+package com.airbnb.epoxy;
+
+import android.support.annotation.LayoutRes;
+import java.lang.Object;
+import java.lang.Override;
+
+/**
+ * Generated file. Do not modify!
+ */
+public class ModelWithoutSetter_ extends ModelWithoutSetter {
+  public ModelWithoutSetter_() {
+    super();
+  }
+
+  public int value() {
+    return value;
+  }
+
+  @Override
+  public ModelWithoutSetter_ id(long id) {
+    super.id(id);
+    return this;
+  }
+
+  @Override
+  public ModelWithoutSetter_ layout(@LayoutRes int layoutRes) {
+    super.layout(layoutRes);
+    return this;
+  }
+
+  @Override
+  public ModelWithoutSetter_ show() {
+    super.show();
+    return this;
+  }
+
+  @Override
+  public ModelWithoutSetter_ show(boolean show) {
+    super.show(show);
+    return this;
+  }
+
+  @Override
+  public ModelWithoutSetter_ hide() {
+    super.hide();
+    return this;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+    if (!(o instanceof ModelWithoutSetter_)) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    ModelWithoutSetter_ that = (ModelWithoutSetter_) o;
+    if (value != that.value) {
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + value;
+    return result;
+  }
+}

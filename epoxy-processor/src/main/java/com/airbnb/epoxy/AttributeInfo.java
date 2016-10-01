@@ -20,6 +20,7 @@ public class AttributeInfo {
   private final String name;
   private final TypeName type;
   private final boolean useInHash;
+  private final boolean generateSetter;
   private final boolean hasFinalModifier;
   private final boolean packagePrivate;
   /**
@@ -37,6 +38,7 @@ public class AttributeInfo {
     this.hasFinalModifier = hasFinalModifier;
     this.packagePrivate = packagePrivate;
     useInHash = annotation.hash();
+    generateSetter = annotation.setter();
     buildAnnotationLists(annotationMirrors);
   }
 
@@ -89,6 +91,10 @@ public class AttributeInfo {
 
   public boolean useInHash() {
     return useInHash;
+  }
+
+  public boolean generateSetter() {
+    return generateSetter;
   }
 
   public List<AnnotationSpec> getSetterAnnotations() {

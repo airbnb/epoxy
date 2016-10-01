@@ -404,7 +404,7 @@ public class EpoxyProcessor extends AbstractProcessor {
     List<MethodSpec> methods = new ArrayList<>();
 
     for (AttributeInfo data : helperClass.getAttributeInfo()) {
-      if (!data.hasFinalModifier()) {
+      if (data.generateSetter() && !data.hasFinalModifier()) {
         methods.add(generateSetter(helperClass, data));
       }
       methods.add(generateGetter(data));
