@@ -7,7 +7,6 @@ import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,7 +29,7 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
    * Subclasses should modify this list as necessary with the models they want to show. Subclasses
    * are responsible for notifying data changes whenever this list is changed.
    */
-  protected final List<EpoxyModel<?>> models = new ArrayList<>();
+  protected final List<EpoxyModel<?>> models = new ModelList();
   private int spanCount = 1;
   private final HiddenEpoxyModel hiddenModel = new HiddenEpoxyModel();
   /**
@@ -243,7 +242,11 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
    */
   protected void addModel(EpoxyModel<?> modelToAdd) {
     int initialSize = models.size();
+
+    pauseModelListNotifications();
     models.add(modelToAdd);
+    resumeModelListNotifications();
+
     notifyItemRangeInserted(initialSize, 1);
   }
 
@@ -255,8 +258,12 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
     int initialSize = models.size();
     int numModelsToAdd = modelsToAdd.length;
 
-    ((ArrayList) models).ensureCapacity(initialSize + numModelsToAdd);
+    ((ModelList) models).ensureCapacity(initialSize + numModelsToAdd);
+
+    pauseModelListNotifications();
     Collections.addAll(models, modelsToAdd);
+    resumeModelListNotifications();
+
     notifyItemRangeInserted(initialSize, numModelsToAdd);
   }
 
@@ -266,7 +273,11 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
    */
   protected void addModels(Collection<? extends EpoxyModel<?>> modelsToAdd) {
     int initialSize = models.size();
+
+    pauseModelListNotifications();
     models.addAll(modelsToAdd);
+    resumeModelListNotifications();
+
     notifyItemRangeInserted(initialSize, modelsToAdd.size());
   }
 
@@ -280,7 +291,10 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
       throw new IllegalStateException("Model is not added: " + modelToInsertBefore);
     }
 
+    pauseModelListNotifications();
     models.add(targetIndex, modelToInsert);
+    resumeModelListNotifications();
+
     notifyItemInserted(targetIndex);
   }
 
@@ -295,7 +309,10 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
     }
 
     int targetIndex = modelIndex + 1;
+    pauseModelListNotifications();
     models.add(targetIndex, modelToInsert);
+    resumeModelListNotifications();
+
     notifyItemInserted(targetIndex);
   }
 
@@ -306,7 +323,10 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
   protected void removeModel(EpoxyModel<?> model) {
     int index = getModelPosition(model);
     if (index != -1) {
+      pauseModelListNotifications();
       models.remove(index);
+      resumeModelListNotifications();
+
       notifyItemRemoved(index);
     }
   }
@@ -322,7 +342,9 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
     int initialModelCount = models.size();
 
     // This is a sublist, so clearing it will clear the models in the original list
+    pauseModelListNotifications();
     modelsToRemove.clear();
+    resumeModelListNotifications();
 
     notifyItemRangeRemoved(initialModelCount - numModelsRemoved, numModelsRemoved);
   }
@@ -487,5 +509,18 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
 
   public boolean isMultiSpan() {
     return spanCount > 1;
+  }
+
+  /**
+   * We pause the list's notifications when we modify models internally, since we already do the
+   * proper adapter notifications for those modifications. By pausing these list notifications we
+   * prevent the differ having to do work to track them.
+   */
+  private void pauseModelListNotifications() {
+    ((ModelList) models).pauseNotifications();
+  }
+
+  private void resumeModelListNotifications() {
+    ((ModelList) models).resumeNotifications();
   }
 }

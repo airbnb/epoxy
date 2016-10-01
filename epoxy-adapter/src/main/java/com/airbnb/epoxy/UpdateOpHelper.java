@@ -24,6 +24,16 @@ class UpdateOpHelper {
   private int numRemovals;
   private int numRemovalBatches;
 
+  void reset() {
+    opList.clear();
+    moves.clear();
+    lastOp = null;
+    numInsertions = 0;
+    numInsertionBatches = 0;
+    numRemovals = 0;
+    numRemovalBatches = 0;
+  }
+
   void add(int indexToInsert) {
     add(indexToInsert, 1);
   }
@@ -130,8 +140,16 @@ class UpdateOpHelper {
     return numRemovals;
   }
 
+  boolean hasRemovals() {
+    return numRemovals > 0;
+  }
+
   int getNumInsertions() {
     return numInsertions;
+  }
+
+  boolean hasInsertions() {
+    return numInsertions > 0;
   }
 
   int getNumMoves() {

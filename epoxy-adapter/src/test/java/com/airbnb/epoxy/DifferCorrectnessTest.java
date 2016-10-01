@@ -327,7 +327,7 @@ public class DifferCorrectnessTest {
   public void randomCombinations() {
     int maxBatchSize = 3;
     int maxModelCount = 10;
-    int maxSeed = 75000;
+    int maxSeed = 100000;
 
     // This modifies the models list in a random way many times, with different size lists.
     for (int modelCount = 1; modelCount < maxModelCount; modelCount++) {

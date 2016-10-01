@@ -2,9 +2,6 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.Nullable;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.util.DiffUtil.Callback;
-import android.support.v7.util.DiffUtil.DiffResult;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -17,7 +14,6 @@ import java.util.Map;
  * Helper to track changes in the models list.
  */
 class DiffHelper {
-  private static final boolean USE_DIFF_UTIL = false;
   private ArrayList<ModelState> oldStateList = new ArrayList<>();
   // Using a HashMap instead of a LongSparseArray to
   // have faster look up times at the expense of memory
@@ -25,10 +21,22 @@ class DiffHelper {
   private ArrayList<ModelState> currentStateList = new ArrayList<>();
   private Map<Long, ModelState> currentStateMap = new HashMap<>();
   private final EpoxyAdapter adapter;
+  private final DifferModelListObserver modelListObserver = new DifferModelListObserver();
+  /**
+   * Set to true if an end user notifies adapter changes. We track this because our {@link
+   * #modelListObserver} already tracks structural changes and we shouldn't double notify those
+   * changes if the user already manually notified them. This generally shouldn't happen for normal
+   * usage of the adapter, somebody would have to do something like notify an item insertion and
+   * then notify models changed. We expect them to always just notify models changed. We could
+   * automate this by updating the observer to remove operations from its list when it hears they
+   * were notified, but that does not seem worth the effort for this small case.
+   */
+  private boolean notifiedOfStructuralChanges;
 
   DiffHelper(EpoxyAdapter adapter) {
     this.adapter = adapter;
     adapter.registerAdapterDataObserver(observer);
+    ((ModelList) adapter.models).setObserver(modelListObserver);
   }
 
   private final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
@@ -51,6 +59,8 @@ class DiffHelper {
         // no-op
         return;
       }
+
+      notifiedOfStructuralChanges = true;
 
       if (itemCount == 1 || positionStart == currentStateList.size()) {
         for (int i = positionStart; i < positionStart + itemCount; i++) {
@@ -80,6 +90,8 @@ class DiffHelper {
         return;
       }
 
+      notifiedOfStructuralChanges = true;
+
       List<ModelState> modelsToRemove =
           currentStateList.subList(positionStart, positionStart + itemCount);
       for (ModelState model : modelsToRemove) {
@@ -106,6 +118,8 @@ class DiffHelper {
             + "supported. Number of items moved: " + itemCount);
       }
 
+      notifiedOfStructuralChanges = true;
+
       ModelState model = currentStateList.remove(fromPosition);
       model.position = toPosition;
       currentStateList.add(toPosition, model);
@@ -128,57 +142,63 @@ class DiffHelper {
    * Set the current list of models. The diff callbacks will be notified of the changes between the
    * current list and the last list that was set.
    */
-  public void notifyModelChanges() {
-    // We use a list of the models as well as a map by their id,
-    // so we can easily find them by both position and id
-    prepareStateForDiff();
+  void notifyModelChanges() {
+    UpdateOpHelper updateOpHelper = new UpdateOpHelper();
 
-    DiffResult diffUtilResult = null;
-    UpdateOpHelper updateOpHelper = null;
-    if (USE_DIFF_UTIL) {
-      diffUtilResult = DiffUtil.calculateDiff(diffUtilCallback);
+    if (modelListObserver.hasNoChanges()) {
+      updateHashes(updateOpHelper);
+    } else if (!notifiedOfStructuralChanges
+        && (modelListObserver.hasOnlyInsertions() || modelListObserver.hasOnlyRemovals())) {
+      // If the list only had insertions OR removals then nothing could have moved, and the observer
+      // has an accurate record of the removals/insertions. We can use it to update the state list,
+      // and then just need to check for item updates. If the user already notified some of these
+      // changes then we don't know what is left to notify and don't want to duplicate the notify
+      // calls so we do a full diff instead.
+
+      // We don't suspend our own observer for this because they will update the models list
+      // for us to reflect the insertions or removals
+      notifyChanges(modelListObserver);
+      updateHashes(updateOpHelper);
     } else {
-      updateOpHelper = buildDiff();
+      // We need to run a full diff to figure out what changed
+      buildDiff(updateOpHelper);
     }
 
     // Send out the proper notify calls for the diff. We remove our
     // observer first so that we don't react to our own notify calls
     adapter.unregisterAdapterDataObserver(observer);
-
-    if (USE_DIFF_UTIL) {
-      diffUtilResult.dispatchUpdatesTo(adapter);
-    } else {
-      notifyChanges(updateOpHelper.opList);
-    }
-
+    notifyChanges(updateOpHelper);
     adapter.registerAdapterDataObserver(observer);
+
+    modelListObserver.reset();
+    notifiedOfStructuralChanges = false;
   }
 
-  private final Callback diffUtilCallback = new Callback() {
-    @Override
-    public int getOldListSize() {
-      return oldStateList.size();
+  /**
+   * This updates our state list with the current model hashes and collects any update
+   * notifications. Used only when the state list is already up to date with the adapter models.
+   */
+  private void updateHashes(UpdateOpHelper updateOpHelper) {
+    int modelCount = adapter.models.size();
+
+    if (modelCount != currentStateList.size()) {
+      throw new IllegalStateException("State list does not match current models");
     }
 
-    @Override
-    public int getNewListSize() {
-      return currentStateList.size();
-    }
+    for (int i = 0; i < modelCount; i++) {
+      EpoxyModel<?> model = adapter.models.get(i);
+      ModelState state = currentStateList.get(i);
+      int newHash = model.hashCode();
 
-    @Override
-    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-      return oldStateList.get(oldItemPosition).id == currentStateList.get(newItemPosition).id;
+      if (state.hashCode != newHash) {
+        updateOpHelper.update(i);
+        state.hashCode = newHash;
+      }
     }
+  }
 
-    @Override
-    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-      return oldStateList.get(oldItemPosition).hashCode
-          == currentStateList.get(newItemPosition).hashCode;
-    }
-  };
-
-  private void notifyChanges(List<UpdateOp> diff) {
-    for (UpdateOp op : diff) {
+  private void notifyChanges(UpdateOpHelper opHelper) {
+    for (UpdateOp op : opHelper.opList) {
       switch (op.type) {
         case UpdateOp.ADD:
           adapter.notifyItemRangeInserted(op.positionStart, op.itemCount);
@@ -198,7 +218,37 @@ class DiffHelper {
     }
   }
 
+  /**
+   * Create a list of operations that define the difference between {@link #oldStateList} and {@link
+   * #currentStateList}.
+   */
+  private UpdateOpHelper buildDiff(UpdateOpHelper updateOpHelper) {
+    prepareStateForDiff();
+
+    // The general approach is to first search for removals, then additions, and lastly changes.
+    // Focusing on one type of operation at a time makes it easy to coalesce batch changes.
+    // When we identify an operation and add it to the
+    // result list we update the positions of items in the oldStateList to reflect
+    // the change, this way subsequent operations will use the correct, updated positions.
+    collectRemovals(updateOpHelper);
+
+    // Only need to check for insertions if new list is bigger
+    boolean hasInsertions =
+        oldStateList.size() - updateOpHelper.getNumRemovals() != currentStateList.size();
+    if (hasInsertions) {
+      collectInsertions(updateOpHelper);
+    }
+
+    collectMoves(updateOpHelper);
+    collectChanges(updateOpHelper);
+
+    return updateOpHelper;
+  }
+
   private void prepareStateForDiff() {
+    // We use a list of the models as well as a map by their id,
+    // so we can easily find them by both position and id
+
     oldStateList.clear();
     oldStateMap.clear();
 
@@ -237,33 +287,6 @@ class DiffHelper {
     }
 
     return state;
-  }
-
-  /**
-   * Create a list of operations that define the difference between {@link #oldStateList} and {@link
-   * #currentStateList}.
-   */
-  private UpdateOpHelper buildDiff() {
-    UpdateOpHelper updateOpHelper = new UpdateOpHelper();
-
-    // The general approach is to first search for removals, then additions, and lastly changes.
-    // Focusing on one type of operation at a time makes it easy to coalesce batch changes.
-    // When we identify an operation and add it to the
-    // result list we update the positions of items in the oldStateList to reflect
-    // the change, this way subsequent operations will use the correct, updated positions.
-    collectRemovals(updateOpHelper);
-
-    // Only need to check for insertions if new list is bigger
-    boolean hasInsertions =
-        oldStateList.size() - updateOpHelper.getNumRemovals() != currentStateList.size();
-    if (hasInsertions) {
-      collectInsertions(updateOpHelper);
-    }
-
-    collectMoves(updateOpHelper);
-    collectChanges(updateOpHelper);
-
-    return updateOpHelper;
   }
 
   /**
