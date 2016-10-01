@@ -12,19 +12,7 @@ gradle.projectsEvaluated {
 
   variants.each { variant ->
     def variationName = variant.name.capitalize()
-
-    // Get the flavor and also merge flavor groups.
-    def productFlavorNames = variant.productFlavors.collect { it.name.capitalize() }
-    if (productFlavorNames.isEmpty()) {
-      productFlavorNames = [""]
-    }
-    productFlavorNames = productFlavorNames.join('')
-
-    // Base path addition for this specific variant.
-    def variationPath = variant.buildType.name;
-    if (productFlavorNames != null && !productFlavorNames.isEmpty()) {
-      variationPath = uncapitalize(productFlavorNames) + "/${variationPath}"
-    }
+    def variationPath = variant.buildType.name
 
     // Specific copy task for each variant
     def copyTestResourcesTask = project.tasks.create("copyTest${variationName}Resources", Copy)
@@ -32,15 +20,4 @@ gradle.projectsEvaluated {
     copyTestResourcesTask.into("${testClassesPath}/${variationPath}")
     copyTestResourcesTask.execute()
   }
-}
-
-def uncapitalize(String str) {
-  int strLen;
-  if (str == null || (strLen = str.length()) == 0) {
-    return str;
-  }
-  return new StringBuffer(strLen)
-      .append(Character.toLowerCase(str.charAt(0)))
-      .append(str.substring(1))
-      .toString();
 }
