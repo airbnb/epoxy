@@ -271,4 +271,19 @@ public class EpoxyProcessorTest {
         .and()
         .generatesSources(generatedModel, generatedSubClassModel);
   }
+
+  @Test
+  public void testModelWithoutSetter() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithoutSetter.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithoutSetter_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
 }
