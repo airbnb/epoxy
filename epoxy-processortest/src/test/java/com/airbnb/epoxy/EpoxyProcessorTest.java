@@ -286,4 +286,19 @@ public class EpoxyProcessorTest {
         .and()
         .generatesSources(generatedModel);
   }
+
+  @Test
+  public void testModelReturningClassType() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelReturningClassType.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelReturningClassType_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
 }

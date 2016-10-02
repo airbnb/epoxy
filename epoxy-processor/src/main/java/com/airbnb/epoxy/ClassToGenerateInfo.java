@@ -9,7 +9,9 @@ import com.squareup.javapoet.TypeVariableName;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -33,6 +35,7 @@ public class ClassToGenerateInfo {
   private final Set<AttributeInfo> attributeInfo = new HashSet<>();
   private final List<TypeVariableName> typeVariableNames = new ArrayList<>();
   private final List<ConstructorInfo> constructors = new ArrayList<>();
+  private final List<MethodInfo> methodsReturningClassType = new ArrayList<>();
 
   public ClassToGenerateInfo(TypeElement originalClassName, ClassName generatedClassName,
       boolean isOriginalClassAbstract) {
@@ -50,7 +53,22 @@ public class ClassToGenerateInfo {
           && !subElement.getModifiers().contains(Modifier.PRIVATE)) {
         List<? extends TypeMirror> params = subElement.asType().accept(CONSTRUCTOR_VISITOR, null);
         constructors
-            .add(new ConstructorInfo(subElement.getModifiers(), buildConstructorParamList(params)));
+            .add(new ConstructorInfo(subElement.getModifiers(), buildParamList(params)));
+      }
+    }
+
+    // Get information about methods returning class type of the original class so we can
+    // duplicate them in the generated class for chaining purposes
+    for (Element subElement : originalClassName.getEnclosedElements()) {
+      if (subElement.getKind() == ElementKind.METHOD
+          && ((ExecutableType) subElement.asType()).getReturnType()
+            .equals(originalClassName.asType())
+          && !subElement.getModifiers().contains(Modifier.PRIVATE)
+          && !subElement.getModifiers().contains(Modifier.STATIC)) {
+        List<? extends TypeMirror> params = ((ExecutableType) subElement.asType())
+            .getParameterTypes();
+        methodsReturningClassType.add(new MethodInfo(subElement.getSimpleName().toString(),
+            subElement.getModifiers(), buildParamList(params)));
       }
     }
 
@@ -66,7 +84,7 @@ public class ClassToGenerateInfo {
     this.isOriginalClassAbstract = isOriginalClassAbstract;
   }
 
-  private List<ParameterSpec> buildConstructorParamList(List<? extends TypeMirror> params) {
+  private List<ParameterSpec> buildParamList(List<? extends TypeMirror> params) {
     List<ParameterSpec> result = new ArrayList<>();
 
     // We don't know the name of the variable, just the type. So just use generic parameter names
@@ -86,10 +104,12 @@ public class ClassToGenerateInfo {
       };
 
   public void addAttribute(AttributeInfo attributeInfo) {
+    removeMethodIfDuplicatedBySetter(Collections.singletonList(attributeInfo));
     this.attributeInfo.add(attributeInfo);
   }
 
   public void addAttributes(Collection<AttributeInfo> attributeInfo) {
+    removeMethodIfDuplicatedBySetter(attributeInfo);
     this.attributeInfo.addAll(attributeInfo);
   }
 
@@ -103,6 +123,10 @@ public class ClassToGenerateInfo {
 
   public List<ConstructorInfo> getConstructors() {
     return constructors;
+  }
+
+  public List<MethodInfo> getMethodsReturningClassType() {
+    return methodsReturningClassType;
   }
 
   public ClassName getGeneratedName() {
@@ -125,11 +149,35 @@ public class ClassToGenerateInfo {
     return parameterizedClassName;
   }
 
+  private void removeMethodIfDuplicatedBySetter(Collection<AttributeInfo> attributeInfos) {
+    for (AttributeInfo attributeInfo : attributeInfos) {
+      Iterator<MethodInfo> iterator = methodsReturningClassType.iterator();
+      while (iterator.hasNext()) {
+        MethodInfo methodInfo = iterator.next();
+        if (methodInfo.name.equals(attributeInfo.getName())) {
+          iterator.remove();
+        }
+      }
+    }
+  }
+
   public static class ConstructorInfo {
     final Set<Modifier> modifiers;
     final List<ParameterSpec> params;
 
     public ConstructorInfo(Set<Modifier> modifiers, List<ParameterSpec> params) {
+      this.modifiers = modifiers;
+      this.params = params;
+    }
+  }
+
+  public static class MethodInfo {
+    final String name;
+    final Set<Modifier> modifiers;
+    final List<ParameterSpec> params;
+
+    public MethodInfo(String name, Set<Modifier> modifiers, List<ParameterSpec> params) {
+      this.name = name;
       this.modifiers = modifiers;
       this.params = params;
     }
