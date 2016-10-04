@@ -46,31 +46,8 @@ public class ClassToGenerateInfo {
       typeVariableNames.add(TypeVariableName.get(typeParameterElement));
     }
 
-    // Get information about constructors on the original class so we can duplicate
-    // them in the generated class and call through to super with the proper parameters
-    for (Element subElement : originalClassName.getEnclosedElements()) {
-      if (subElement.getKind() == ElementKind.CONSTRUCTOR
-          && !subElement.getModifiers().contains(Modifier.PRIVATE)) {
-        List<? extends TypeMirror> params = subElement.asType().accept(CONSTRUCTOR_VISITOR, null);
-        constructors
-            .add(new ConstructorInfo(subElement.getModifiers(), buildParamList(params)));
-      }
-    }
-
-    // Get information about methods returning class type of the original class so we can
-    // duplicate them in the generated class for chaining purposes
-    for (Element subElement : originalClassName.getEnclosedElements()) {
-      if (subElement.getKind() == ElementKind.METHOD
-          && ((ExecutableType) subElement.asType()).getReturnType()
-            .equals(originalClassName.asType())
-          && !subElement.getModifiers().contains(Modifier.PRIVATE)
-          && !subElement.getModifiers().contains(Modifier.STATIC)) {
-        List<? extends TypeMirror> params = ((ExecutableType) subElement.asType())
-            .getParameterTypes();
-        methodsReturningClassType.add(new MethodInfo(subElement.getSimpleName().toString(),
-            subElement.getModifiers(), buildParamList(params)));
-      }
-    }
+    collectOriginalClassConstructors(originalClassName);
+    collectMethodsReturningClassType(originalClassName);
 
     if (!typeVariableNames.isEmpty()) {
       TypeVariableName[] typeArguments =
@@ -82,6 +59,40 @@ public class ClassToGenerateInfo {
 
     this.generatedClassName = generatedClassName;
     this.isOriginalClassAbstract = isOriginalClassAbstract;
+  }
+
+  /**
+   * Get information about constructors of the original class so we can duplicate
+     them in the generated class and call through to super with the proper parameters
+   */
+  private void collectOriginalClassConstructors(TypeElement originalClass) {
+    for (Element subElement : originalClass.getEnclosedElements()) {
+      if (subElement.getKind() == ElementKind.CONSTRUCTOR
+          && !subElement.getModifiers().contains(Modifier.PRIVATE)) {
+        List<? extends TypeMirror> params = subElement.asType().accept(CONSTRUCTOR_VISITOR, null);
+        constructors
+            .add(new ConstructorInfo(subElement.getModifiers(), buildParamList(params)));
+      }
+    }
+  }
+
+  /**
+   * Get information about methods returning class type of the original class so we can
+   * duplicate them in the generated class for chaining purposes
+   */
+  private void collectMethodsReturningClassType(TypeElement originalClass) {
+    for (Element subElement : originalClass.getEnclosedElements()) {
+      Set<Modifier> modifiers = subElement.getModifiers();
+      if (subElement.getKind() == ElementKind.METHOD
+          && ((ExecutableType) subElement.asType()).getReturnType().equals(originalClass.asType())
+          && !modifiers.contains(Modifier.PRIVATE)
+          && !modifiers.contains(Modifier.STATIC)) {
+        List<? extends TypeMirror> params = ((ExecutableType) subElement.asType())
+            .getParameterTypes();
+        methodsReturningClassType.add(new MethodInfo(subElement.getSimpleName().toString(),
+            modifiers, buildParamList(params)));
+      }
+    }
   }
 
   private List<ParameterSpec> buildParamList(List<? extends TypeMirror> params) {
@@ -104,8 +115,7 @@ public class ClassToGenerateInfo {
       };
 
   public void addAttribute(AttributeInfo attributeInfo) {
-    removeMethodIfDuplicatedBySetter(Collections.singletonList(attributeInfo));
-    this.attributeInfo.add(attributeInfo);
+    addAttributes(Collections.singletonList(attributeInfo));
   }
 
   public void addAttributes(Collection<AttributeInfo> attributeInfo) {
@@ -154,7 +164,10 @@ public class ClassToGenerateInfo {
       Iterator<MethodInfo> iterator = methodsReturningClassType.iterator();
       while (iterator.hasNext()) {
         MethodInfo methodInfo = iterator.next();
-        if (methodInfo.name.equals(attributeInfo.getName())) {
+        if (methodInfo.name.equals(attributeInfo.getName())
+            // checking for overloads
+            && methodInfo.params.size() == 1
+            && methodInfo.params.get(0).type.equals(attributeInfo.getType())) {
           iterator.remove();
         }
       }
