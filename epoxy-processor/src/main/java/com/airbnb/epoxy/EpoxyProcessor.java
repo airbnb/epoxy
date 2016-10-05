@@ -384,15 +384,7 @@ public class EpoxyProcessor extends AbstractProcessor {
           .addParameters(constructorInfo.params);
 
       StringBuilder statementBuilder = new StringBuilder("super(");
-      boolean first = true;
-      for (ParameterSpec param : constructorInfo.params) {
-        if (!first) {
-          statementBuilder.append(", ");
-        }
-        first = false;
-        statementBuilder.append(param.name);
-      }
-      statementBuilder.append(")");
+      generateParams(statementBuilder, constructorInfo.params);
 
       constructors.add(builder
           .addStatement(statementBuilder.toString())
@@ -414,15 +406,7 @@ public class EpoxyProcessor extends AbstractProcessor {
 
       StringBuilder statementBuilder = new StringBuilder(String.format("super.%s(",
           methodInfo.name));
-      boolean first = true;
-      for (ParameterSpec param : methodInfo.params) {
-        if (!first) {
-          statementBuilder.append(", ");
-        }
-        first = false;
-        statementBuilder.append(param.name);
-      }
-      statementBuilder.append(")");
+      generateParams(statementBuilder, methodInfo.params);
 
       methods.add(builder
           .addStatement(statementBuilder.toString())
@@ -431,6 +415,18 @@ public class EpoxyProcessor extends AbstractProcessor {
     }
 
     return methods;
+  }
+
+  private void generateParams(StringBuilder statementBuilder, List<ParameterSpec> params) {
+    boolean first = true;
+    for (ParameterSpec param : params) {
+      if (!first) {
+        statementBuilder.append(", ");
+      }
+      first = false;
+      statementBuilder.append(param.name);
+    }
+    statementBuilder.append(")");
   }
 
   private List<MethodSpec> generateSettersAndGetters(ClassToGenerateInfo helperClass) {
