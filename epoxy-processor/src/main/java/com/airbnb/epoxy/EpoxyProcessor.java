@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import com.airbnb.epoxy.ClassToGenerateInfo.ConstructorInfo;
+import com.airbnb.epoxy.ClassToGenerateInfo.MethodInfo;
 import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.squareup.javapoet.ArrayTypeName;
@@ -364,6 +365,7 @@ public class EpoxyProcessor extends AbstractProcessor {
         .superclass(info.getOriginalClassName())
         .addTypeVariables(info.getTypeVariables())
         .addMethods(generateConstructors(info))
+        .addMethods(generateMethodsReturningClassType(info))
         .addMethods(generateSettersAndGetters(info))
         .build();
 
@@ -382,15 +384,7 @@ public class EpoxyProcessor extends AbstractProcessor {
           .addParameters(constructorInfo.params);
 
       StringBuilder statementBuilder = new StringBuilder("super(");
-      boolean first = true;
-      for (ParameterSpec param : constructorInfo.params) {
-        if (!first) {
-          statementBuilder.append(", ");
-        }
-        first = false;
-        statementBuilder.append(param.name);
-      }
-      statementBuilder.append(")");
+      generateParams(statementBuilder, constructorInfo.params);
 
       constructors.add(builder
           .addStatement(statementBuilder.toString())
@@ -398,6 +392,41 @@ public class EpoxyProcessor extends AbstractProcessor {
     }
 
     return constructors;
+  }
+
+  private Iterable<MethodSpec> generateMethodsReturningClassType(ClassToGenerateInfo info) {
+    List<MethodSpec> methods = new ArrayList<>(info.getMethodsReturningClassType().size());
+
+    for (MethodInfo methodInfo : info.getMethodsReturningClassType()) {
+      Builder builder = MethodSpec.methodBuilder(methodInfo.name)
+          .addModifiers(methodInfo.modifiers)
+          .addParameters(methodInfo.params)
+          .addAnnotation(Override.class)
+          .returns(info.getGeneratedName());
+
+      StringBuilder statementBuilder = new StringBuilder(String.format("super.%s(",
+          methodInfo.name));
+      generateParams(statementBuilder, methodInfo.params);
+
+      methods.add(builder
+          .addStatement(statementBuilder.toString())
+          .addStatement("return this")
+          .build());
+    }
+
+    return methods;
+  }
+
+  private void generateParams(StringBuilder statementBuilder, List<ParameterSpec> params) {
+    boolean first = true;
+    for (ParameterSpec param : params) {
+      if (!first) {
+        statementBuilder.append(", ");
+      }
+      first = false;
+      statementBuilder.append(param.name);
+    }
+    statementBuilder.append(")");
   }
 
   private List<MethodSpec> generateSettersAndGetters(ClassToGenerateInfo helperClass) {
