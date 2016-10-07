@@ -13,8 +13,14 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
   }
 
   @Override
-  public ModelReturningClassType_ classType(int param1) {
-    super.classType(param1);
+  public ModelReturningClassType_ classType(int classType) {
+    super.classType(classType);
+    return this;
+  }
+
+  @Override
+  public ModelReturningClassType_ classType(int param1, int param2) {
+    super.classType(param1, param2);
     return this;
   }
 
