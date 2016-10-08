@@ -89,8 +89,17 @@ public class ClassToGenerateInfo {
           && !modifiers.contains(Modifier.STATIC)) {
         List<? extends TypeMirror> params = ((ExecutableType) subElement.asType())
             .getParameterTypes();
-        methodsReturningClassType.add(new MethodInfo(subElement.getSimpleName().toString(),
-            modifiers, buildParamList(params)));
+        String methodName = subElement.getSimpleName().toString();
+        if (params.size() == 1) {
+          TypeMirror param = params.get(0);
+          ParameterSpec parameterSpec = ParameterSpec.builder(TypeName.get(param),
+              methodName).build();
+          methodsReturningClassType.add(new MethodInfo(methodName, modifiers,
+              Collections.singletonList(parameterSpec)));
+        } else {
+          methodsReturningClassType.add(new MethodInfo(methodName, modifiers,
+              buildParamList(params)));
+        }
       }
     }
   }
