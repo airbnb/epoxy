@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,9 +22,11 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.ExecutableType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVisitor;
 import javax.lang.model.util.SimpleTypeVisitor6;
+import javax.lang.model.util.Types;
 
 public class ClassToGenerateInfo {
 
@@ -35,10 +38,12 @@ public class ClassToGenerateInfo {
   private final Set<AttributeInfo> attributeInfo = new HashSet<>();
   private final List<TypeVariableName> typeVariableNames = new ArrayList<>();
   private final List<ConstructorInfo> constructors = new ArrayList<>();
-  private final List<MethodInfo> methodsReturningClassType = new ArrayList<>();
+  private final Set<MethodInfo> methodsReturningClassType = new LinkedHashSet<>();
+  private final Types typeUtils;
 
-  public ClassToGenerateInfo(TypeElement originalClassName, ClassName generatedClassName,
-      boolean isOriginalClassAbstract) {
+  public ClassToGenerateInfo(Types typeUtils, TypeElement originalClassName,
+      ClassName generatedClassName, boolean isOriginalClassAbstract) {
+    this.typeUtils = typeUtils;
     this.originalClassName = ParameterizedTypeName.get(originalClassName.asType());
     this.originalClassNameWithoutType = ClassName.get(originalClassName);
 
@@ -81,26 +86,33 @@ public class ClassToGenerateInfo {
    * duplicate them in the generated class for chaining purposes
    */
   private void collectMethodsReturningClassType(TypeElement originalClass) {
-    for (Element subElement : originalClass.getEnclosedElements()) {
-      Set<Modifier> modifiers = subElement.getModifiers();
-      if (subElement.getKind() == ElementKind.METHOD
-          && ((ExecutableType) subElement.asType()).getReturnType().equals(originalClass.asType())
-          && !modifiers.contains(Modifier.PRIVATE)
-          && !modifiers.contains(Modifier.STATIC)) {
-        List<? extends TypeMirror> params = ((ExecutableType) subElement.asType())
-            .getParameterTypes();
-        String methodName = subElement.getSimpleName().toString();
-        if (params.size() == 1) {
-          TypeMirror param = params.get(0);
-          ParameterSpec parameterSpec = ParameterSpec.builder(TypeName.get(param),
-              methodName).build();
-          methodsReturningClassType.add(new MethodInfo(methodName, modifiers,
-              Collections.singletonList(parameterSpec)));
-        } else {
-          methodsReturningClassType.add(new MethodInfo(methodName, modifiers,
-              buildParamList(params)));
+    TypeElement clazz = originalClass;
+    while (clazz.getSuperclass().getKind() != TypeKind.NONE) {
+      for (Element subElement : clazz.getEnclosedElements()) {
+        Set<Modifier> modifiers = subElement.getModifiers();
+        if (subElement.getKind() == ElementKind.METHOD
+            && !modifiers.contains(Modifier.PRIVATE)
+            && !modifiers.contains(Modifier.STATIC)) {
+          TypeMirror methodReturnType = ((ExecutableType) subElement.asType()).getReturnType();
+          if (methodReturnType.equals(clazz.asType())
+              || typeUtils.isSubtype(clazz.asType(), methodReturnType)) {
+            List<? extends TypeMirror> params = ((ExecutableType) subElement.asType())
+                .getParameterTypes();
+            String methodName = subElement.getSimpleName().toString();
+            if (params.size() == 1) {
+              TypeMirror param = params.get(0);
+              ParameterSpec parameterSpec = ParameterSpec.builder(TypeName.get(param),
+                  methodName).build();
+              methodsReturningClassType.add(new MethodInfo(methodName, modifiers,
+                  Collections.singletonList(parameterSpec)));
+            } else {
+              methodsReturningClassType.add(new MethodInfo(methodName, modifiers,
+                  buildParamList(params)));
+            }
+          }
         }
       }
+      clazz = (TypeElement) typeUtils.asElement(clazz.getSuperclass());
     }
   }
 
@@ -144,7 +156,7 @@ public class ClassToGenerateInfo {
     return constructors;
   }
 
-  public List<MethodInfo> getMethodsReturningClassType() {
+  public Set<MethodInfo> getMethodsReturningClassType() {
     return methodsReturningClassType;
   }
 
@@ -202,6 +214,34 @@ public class ClassToGenerateInfo {
       this.name = name;
       this.modifiers = modifiers;
       this.params = params;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+
+      MethodInfo that = (MethodInfo) o;
+
+      if (name != null ? !name.equals(that.name) : that.name != null) {
+        return false;
+      }
+      if (modifiers != null ? !modifiers.equals(that.modifiers) : that.modifiers != null) {
+        return false;
+      }
+      return params != null ? params.equals(that.params) : that.params == null;
+    }
+
+    @Override
+    public int hashCode() {
+      int result = name != null ? name.hashCode() : 0;
+      result = 31 * result + (modifiers != null ? modifiers.hashCode() : 0);
+      result = 31 * result + (params != null ? params.hashCode() : 0);
+      return result;
     }
   }
 }
