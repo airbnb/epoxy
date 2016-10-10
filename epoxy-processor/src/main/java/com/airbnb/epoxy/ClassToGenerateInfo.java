@@ -104,13 +104,13 @@ public class ClassToGenerateInfo {
                 .getParameterTypes();
             String methodName = subElement.getSimpleName().toString();
             if (params.size() == 1) {
+              TypeMirror param = params.get(0);
               ParameterSpec parameterSpec;
-              if (methodName.equals(LAYOUT_METHOD)) {
+              if (methodName.equals(LAYOUT_METHOD) && param.getKind() == TypeKind.INT) {
                 parameterSpec = ParameterSpec.builder(int.class, methodName)
                     .addAnnotation(LAYOUT_RES_ANNOTATION)
                     .build();
               } else {
-                TypeMirror param = params.get(0);
                 parameterSpec = ParameterSpec.builder(TypeName.get(param), methodName).build();
               }
               methodsReturningClassType.add(new MethodInfo(methodName, modifiers,
