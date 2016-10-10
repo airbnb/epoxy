@@ -35,8 +35,8 @@ public class ModelWithConstructors_ extends ModelWithConstructors {
   }
 
   @Override
-  public ModelWithConstructors_ layout(@LayoutRes int layoutRes) {
-    super.layout(layoutRes);
+  public ModelWithConstructors_ layout(@LayoutRes int layout) {
+    super.layout(layout);
     return this;
   }
 

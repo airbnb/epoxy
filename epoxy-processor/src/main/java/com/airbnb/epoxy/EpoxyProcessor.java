@@ -67,8 +67,6 @@ import static javax.lang.model.element.Modifier.STATIC;
 public class EpoxyProcessor extends AbstractProcessor {
   private static final String GENERATED_CLASS_NAME_SUFFIX = "_";
   private static final String EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel<?>";
-  private static final ClassName LAYOUT_RES_ANNOTATION =
-      ClassName.get("android.support.annotation", "LayoutRes");
 
   private Filer filer;
   private Messager messager;
@@ -405,7 +403,7 @@ public class EpoxyProcessor extends AbstractProcessor {
           .addModifiers(methodInfo.modifiers)
           .addParameters(methodInfo.params)
           .addAnnotation(Override.class)
-          .returns(info.getGeneratedName());
+          .returns(info.getParameterizedGeneratedName());
 
       StringBuilder statementBuilder = new StringBuilder(String.format("super.%s(",
           methodInfo.name));

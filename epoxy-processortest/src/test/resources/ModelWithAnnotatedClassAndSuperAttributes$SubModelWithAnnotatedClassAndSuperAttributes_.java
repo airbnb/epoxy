@@ -27,8 +27,8 @@ public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClas
   }
 
   @Override
-  public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ layout(@LayoutRes int layoutRes) {
-    super.layout(layoutRes);
+  public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ layout(@LayoutRes int layout) {
+    super.layout(layout);
     return this;
   }
 

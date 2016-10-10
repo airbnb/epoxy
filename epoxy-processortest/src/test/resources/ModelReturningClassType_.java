@@ -12,6 +12,15 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
     super();
   }
 
+  public ModelReturningClassType_ value(int value) {
+    this.value = value;
+    return this;
+  }
+
+  public int value() {
+    return value;
+  }
+
   @Override
   public ModelReturningClassType_ classType(int classType) {
     super.classType(classType);
@@ -24,15 +33,6 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
     return this;
   }
 
-  public ModelReturningClassType_ value(int value) {
-    this.value = value;
-    return this;
-  }
-
-  public int value() {
-    return value;
-  }
-
   @Override
   public ModelReturningClassType_ id(long id) {
     super.id(id);
@@ -40,8 +40,8 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
   }
 
   @Override
-  public ModelReturningClassType_ layout(@LayoutRes int layoutRes) {
-    super.layout(layoutRes);
+  public ModelReturningClassType_ layout(@LayoutRes int layout) {
+    super.layout(layout);
     return this;
   }
 

@@ -36,8 +36,8 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_ extends Model
   }
 
   @Override
-  public ModelWithSuperAttributes$SubModelWithSuperAttributes_ layout(@LayoutRes int layoutRes) {
-    super.layout(layoutRes);
+  public ModelWithSuperAttributes$SubModelWithSuperAttributes_ layout(@LayoutRes int layout) {
+    super.layout(layout);
     return this;
   }
 

@@ -30,6 +30,10 @@ import javax.lang.model.util.Types;
 
 public class ClassToGenerateInfo {
 
+  private static final String LAYOUT_METHOD = "layout";
+  private static final ClassName LAYOUT_RES_ANNOTATION =
+      ClassName.get("android.support.annotation", "LayoutRes");
+
   private final TypeName originalClassName;
   private final TypeName originalClassNameWithoutType;
   private final TypeName parameterizedClassName;
@@ -100,9 +104,15 @@ public class ClassToGenerateInfo {
                 .getParameterTypes();
             String methodName = subElement.getSimpleName().toString();
             if (params.size() == 1) {
-              TypeMirror param = params.get(0);
-              ParameterSpec parameterSpec = ParameterSpec.builder(TypeName.get(param),
-                  methodName).build();
+              ParameterSpec parameterSpec;
+              if (methodName.equals(LAYOUT_METHOD)) {
+                parameterSpec = ParameterSpec.builder(int.class, methodName)
+                    .addAnnotation(LAYOUT_RES_ANNOTATION)
+                    .build();
+              } else {
+                TypeMirror param = params.get(0);
+                parameterSpec = ParameterSpec.builder(TypeName.get(param), methodName).build();
+              }
               methodsReturningClassType.add(new MethodInfo(methodName, modifiers,
                   Collections.singletonList(parameterSpec)));
             } else {
