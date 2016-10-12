@@ -1,5 +1,7 @@
 package com.airbnb.epoxy;
 
+import java.util.List;
+
 public class ModelReturningClassType extends EpoxyModel<Object> {
   @EpoxyAttribute int value;
 
@@ -13,6 +15,10 @@ public class ModelReturningClassType extends EpoxyModel<Object> {
   }
 
   public ModelReturningClassType classType(int param1, int param2) {
+    return this;
+  }
+
+  public ModelReturningClassType list(List<String> list) {
     return this;
   }
 }

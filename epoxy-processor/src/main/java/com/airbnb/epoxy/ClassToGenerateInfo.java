@@ -96,6 +96,7 @@ public class ClassToGenerateInfo {
         Set<Modifier> modifiers = subElement.getModifiers();
         if (subElement.getKind() == ElementKind.METHOD
             && !modifiers.contains(Modifier.PRIVATE)
+            && !modifiers.contains(Modifier.FINAL)
             && !modifiers.contains(Modifier.STATIC)) {
           TypeMirror methodReturnType = ((ExecutableType) subElement.asType()).getReturnType();
           if (methodReturnType.equals(clazz.asType())
@@ -106,6 +107,8 @@ public class ClassToGenerateInfo {
             if (params.size() == 1) {
               TypeMirror param = params.get(0);
               ParameterSpec parameterSpec;
+              // Since we can't properly handle annotations we have to detect layout method
+              // manually to be able to add @LayoutRes annotation to its parameter.
               if (methodName.equals(LAYOUT_METHOD) && param.getKind() == TypeKind.INT) {
                 parameterSpec = ParameterSpec.builder(int.class, methodName)
                     .addAnnotation(LAYOUT_RES_ANNOTATION)

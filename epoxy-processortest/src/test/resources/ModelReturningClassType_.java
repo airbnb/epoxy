@@ -3,6 +3,8 @@ package com.airbnb.epoxy;
 import android.support.annotation.LayoutRes;
 import java.lang.Object;
 import java.lang.Override;
+import java.lang.String;
+import java.util.List;
 
 /**
  * Generated file. Do not modify!
@@ -30,6 +32,12 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
   @Override
   public ModelReturningClassType_ classType(int param1, int param2) {
     super.classType(param1, param2);
+    return this;
+  }
+
+  @Override
+  public ModelReturningClassType_ list(List<String> list) {
+    super.list(list);
     return this;
   }
 
