@@ -28,8 +28,8 @@ public class ModelWithIntDef_ extends ModelWithIntDef {
   }
 
   @Override
-  public ModelWithIntDef_ layout(@LayoutRes int layoutRes) {
-    super.layout(layoutRes);
+  public ModelWithIntDef_ layout(@LayoutRes int layout) {
+    super.layout(layout);
     return this;
   }
 

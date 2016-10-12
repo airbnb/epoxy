@@ -218,8 +218,8 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
   }
 
   @Override
-  public ModelWithAllFieldTypes_ layout(@LayoutRes int layoutRes) {
-    super.layout(layoutRes);
+  public ModelWithAllFieldTypes_ layout(@LayoutRes int layout) {
+    super.layout(layout);
     return this;
   }
 

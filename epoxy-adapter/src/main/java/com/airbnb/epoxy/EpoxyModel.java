@@ -140,13 +140,13 @@ public abstract class EpoxyModel<T> {
     return this;
   }
 
-  public EpoxyModel<T> hide() {
-    shown = false;
+  public EpoxyModel<T> show(boolean show) {
+    shown = show;
     return this;
   }
 
-  public EpoxyModel<T> show(boolean show) {
-    shown = show;
+  public EpoxyModel<T> hide() {
+    shown = false;
     return this;
   }
 

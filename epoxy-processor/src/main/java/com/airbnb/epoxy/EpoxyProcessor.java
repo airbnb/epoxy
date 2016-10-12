@@ -67,8 +67,6 @@ import static javax.lang.model.element.Modifier.STATIC;
 public class EpoxyProcessor extends AbstractProcessor {
   private static final String GENERATED_CLASS_NAME_SUFFIX = "_";
   private static final String EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel<?>";
-  private static final ClassName LAYOUT_RES_ANNOTATION =
-      ClassName.get("android.support.annotation", "LayoutRes");
 
   private Filer filer;
   private Messager messager;
@@ -235,7 +233,8 @@ public class EpoxyProcessor extends AbstractProcessor {
     if (classToGenerateInfo == null) {
       ClassName generatedClassName = getGeneratedClassName(classElement);
       boolean isAbstract = classElement.getModifiers().contains(Modifier.ABSTRACT);
-      classToGenerateInfo = new ClassToGenerateInfo(classElement, generatedClassName, isAbstract);
+      classToGenerateInfo = new ClassToGenerateInfo(typeUtils, classElement, generatedClassName,
+          isAbstract);
       modelClassMap.put(classElement, classToGenerateInfo);
     }
 
@@ -365,8 +364,10 @@ public class EpoxyProcessor extends AbstractProcessor {
         .superclass(info.getOriginalClassName())
         .addTypeVariables(info.getTypeVariables())
         .addMethods(generateConstructors(info))
-        .addMethods(generateMethodsReturningClassType(info))
         .addMethods(generateSettersAndGetters(info))
+        .addMethods(generateMethodsReturningClassType(info))
+        .addMethod(generateEquals(info))
+        .addMethod(generateHashCode(info))
         .build();
 
     JavaFile.builder(info.getGeneratedName().packageName(), generatedClass)
@@ -402,7 +403,7 @@ public class EpoxyProcessor extends AbstractProcessor {
           .addModifiers(methodInfo.modifiers)
           .addParameters(methodInfo.params)
           .addAnnotation(Override.class)
-          .returns(info.getGeneratedName());
+          .returns(info.getParameterizedGeneratedName());
 
       StringBuilder statementBuilder = new StringBuilder(String.format("super.%s(",
           methodInfo.name));
@@ -439,14 +440,10 @@ public class EpoxyProcessor extends AbstractProcessor {
       methods.add(generateGetter(data));
     }
 
-    methods.addAll(buildDefaultSetters(helperClass));
-    methods.add(buildEquals(helperClass));
-    methods.add(buildHashCode(helperClass));
-
     return methods;
   }
 
-  private MethodSpec buildEquals(ClassToGenerateInfo helperClass) {
+  private MethodSpec generateEquals(ClassToGenerateInfo helperClass) {
     Builder builder = MethodSpec.methodBuilder("equals")
         .addAnnotation(Override.class)
         .addModifiers(Modifier.PUBLIC)
@@ -502,7 +499,7 @@ public class EpoxyProcessor extends AbstractProcessor {
         .build();
   }
 
-  private MethodSpec buildHashCode(ClassToGenerateInfo helperClass) {
+  private MethodSpec generateHashCode(ClassToGenerateInfo helperClass) {
     Builder builder = MethodSpec.methodBuilder("hashCode")
         .addAnnotation(Override.class)
         .addModifiers(Modifier.PUBLIC)
@@ -576,61 +573,6 @@ public class EpoxyProcessor extends AbstractProcessor {
     return builder
         .addStatement("return this")
         .build();
-  }
-
-  /**
-   * Include overrides of the setters on the base EpoxyModel class so that calling them returns the
-   * generated class type for use in chaining.
-   */
-  private List<MethodSpec> buildDefaultSetters(ClassToGenerateInfo helperClass) {
-    List<MethodSpec> result = new ArrayList<>();
-
-    result.add(MethodSpec.methodBuilder("id")
-        .addModifiers(Modifier.PUBLIC)
-        .returns(helperClass.getParameterizedGeneratedName())
-        .addAnnotation(Override.class)
-        .addParameter(long.class, "id")
-        .addStatement("super.id(id)")
-        .addStatement("return this")
-        .build());
-
-    result.add(MethodSpec.methodBuilder("layout")
-        .addModifiers(Modifier.PUBLIC)
-        .returns(helperClass.getParameterizedGeneratedName())
-        .addAnnotation(Override.class)
-        .addParameter(
-            ParameterSpec.builder(int.class, "layoutRes").addAnnotation(LAYOUT_RES_ANNOTATION)
-                .build())
-        .addStatement("super.layout(layoutRes)")
-        .addStatement("return this")
-        .build());
-
-    result.add(MethodSpec.methodBuilder("show")
-        .addModifiers(Modifier.PUBLIC)
-        .returns(helperClass.getParameterizedGeneratedName())
-        .addAnnotation(Override.class)
-        .addStatement("super.show()")
-        .addStatement("return this")
-        .build());
-
-    result.add(MethodSpec.methodBuilder("show")
-        .addModifiers(Modifier.PUBLIC)
-        .returns(helperClass.getParameterizedGeneratedName())
-        .addParameter(boolean.class, "show")
-        .addAnnotation(Override.class)
-        .addStatement("super.show(show)")
-        .addStatement("return this")
-        .build());
-
-    result.add(MethodSpec.methodBuilder("hide")
-        .addModifiers(Modifier.PUBLIC)
-        .returns(helperClass.getParameterizedGeneratedName())
-        .addAnnotation(Override.class)
-        .addStatement("super.hide()")
-        .addStatement("return this")
-        .build());
-
-    return result;
   }
 
   private void writeError(Exception e) {

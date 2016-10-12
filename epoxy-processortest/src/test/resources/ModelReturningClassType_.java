@@ -3,6 +3,8 @@ package com.airbnb.epoxy;
 import android.support.annotation.LayoutRes;
 import java.lang.Object;
 import java.lang.Override;
+import java.lang.String;
+import java.util.List;
 
 /**
  * Generated file. Do not modify!
@@ -10,6 +12,15 @@ import java.lang.Override;
 public class ModelReturningClassType_ extends ModelReturningClassType {
   public ModelReturningClassType_() {
     super();
+  }
+
+  public ModelReturningClassType_ value(int value) {
+    this.value = value;
+    return this;
+  }
+
+  public int value() {
+    return value;
   }
 
   @Override
@@ -24,13 +35,10 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
     return this;
   }
 
-  public ModelReturningClassType_ value(int value) {
-    this.value = value;
+  @Override
+  public ModelReturningClassType_ list(List<String> list) {
+    super.list(list);
     return this;
-  }
-
-  public int value() {
-    return value;
   }
 
   @Override
@@ -40,8 +48,8 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
   }
 
   @Override
-  public ModelReturningClassType_ layout(@LayoutRes int layoutRes) {
-    super.layout(layoutRes);
+  public ModelReturningClassType_ layout(@LayoutRes int layout) {
+    super.layout(layout);
     return this;
   }
 

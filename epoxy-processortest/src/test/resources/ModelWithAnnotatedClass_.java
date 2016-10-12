@@ -19,8 +19,8 @@ public class ModelWithAnnotatedClass_ extends ModelWithAnnotatedClass {
   }
 
   @Override
-  public ModelWithAnnotatedClass_ layout(@LayoutRes int layoutRes) {
-    super.layout(layoutRes);
+  public ModelWithAnnotatedClass_ layout(@LayoutRes int layout) {
+    super.layout(layout);
     return this;
   }
 
