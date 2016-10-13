@@ -282,8 +282,11 @@ class DiffHelper {
 
     ModelState previousValue = currentStateMap.put(state.id, state);
     if (previousValue != null) {
-      throw new IllegalStateException(
-          "Duplicate ID for model: " + state + " Original: " + previousValue);
+      int previousPosition = previousValue.position;
+      EpoxyModel<?> previousModel = adapter.models.get(previousPosition);
+      throw new IllegalStateException("Two models have the same ID. ID's must be unique!"
+          + " Model at position " + position + ": " + model
+          + " Model at position " + previousPosition + ": " + previousModel);
     }
 
     return state;
