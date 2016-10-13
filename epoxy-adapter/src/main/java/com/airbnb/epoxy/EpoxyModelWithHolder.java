@@ -7,6 +7,14 @@ import java.util.List;
  * instead of a specific view when binding to your model.
  */
 public abstract class EpoxyModelWithHolder<T extends EpoxyHolder> extends EpoxyModel<T> {
+
+  public EpoxyModelWithHolder() {
+  }
+
+  public EpoxyModelWithHolder(long id) {
+    super(id);
+  }
+
   /** This should return a new instance of your {@link com.airbnb.epoxy.EpoxyHolder} class. */
   protected abstract T createNewHolder();
 
