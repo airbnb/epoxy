@@ -75,4 +75,11 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> {
     result = 31 * result + value;
     return result;
   }
+
+  @Override
+  public String toString() {
+    return "ModelWithType_{" +
+        "value=" + value +
+        "}";
+  }
 }

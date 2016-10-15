@@ -368,6 +368,7 @@ public class EpoxyProcessor extends AbstractProcessor {
         .addMethods(generateMethodsReturningClassType(info))
         .addMethod(generateEquals(info))
         .addMethod(generateHashCode(info))
+        .addMethod(generateToString(info))
         .build();
 
     JavaFile.builder(info.getGeneratedName().packageName(), generatedClass)
@@ -545,6 +546,33 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     return builder
         .addStatement("return result")
+        .build();
+  }
+
+  private MethodSpec generateToString(ClassToGenerateInfo helperClass) {
+    Builder builder = MethodSpec.methodBuilder("toString")
+        .addAnnotation(Override.class)
+        .addModifiers(Modifier.PUBLIC)
+        .returns(String.class);
+
+    StringBuilder sb = new StringBuilder();
+    sb.append(String.format("\"%s{\" +\n", helperClass.getGeneratedName().simpleName()));
+
+    boolean first = true;
+    for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
+      String attributeName = attributeInfo.getName();
+      if (first) {
+        sb.append(String.format("\"%s=\" + %s +\n", attributeName, attributeName));
+        first = false;
+      } else {
+        sb.append(String.format("\", %s=\" + %s +\n", attributeName, attributeName));
+      }
+    }
+
+    sb.append("\"}\"");
+
+    return builder
+        .addStatement("return $L", sb.toString())
         .build();
   }
 

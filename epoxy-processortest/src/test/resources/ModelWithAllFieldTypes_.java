@@ -347,4 +347,31 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
     result = 31 * result + Arrays.hashCode(valueIntArray);
     return result;
   }
+
+  @Override
+  public String toString() {
+    return "ModelWithAllFieldTypes_{" +
+        "valueInteger=" + valueInteger +
+        ", valueShort=" + valueShort +
+        ", valueLong=" + valueLong +
+        ", valueList=" + valueList +
+        ", valueShortWrapper=" + valueShortWrapper +
+        ", valueDouble=" + valueDouble +
+        ", valueChar=" + valueChar +
+        ", valueInt=" + valueInt +
+        ", valueDoubleWrapper=" + valueDoubleWrapper +
+        ", valueFloatWrapper=" + valueFloatWrapper +
+        ", valueBooleanWrapper=" + valueBooleanWrapper +
+        ", valueByteWrapper=" + valueByteWrapper +
+        ", valuebByte=" + valuebByte +
+        ", valueLongWrapper=" + valueLongWrapper +
+        ", valueCharacter=" + valueCharacter +
+        ", valueString=" + valueString +
+        ", valueFloat=" + valueFloat +
+        ", valueBoolean=" + valueBoolean +
+        ", valueObjectArray=" + valueObjectArray +
+        ", valueObject=" + valueObject +
+        ", valueIntArray=" + valueIntArray +
+        "}";
+  }
 }
