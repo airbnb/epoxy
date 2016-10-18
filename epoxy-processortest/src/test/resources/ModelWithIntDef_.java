@@ -3,6 +3,7 @@ package com.airbnb.epoxy.models;
 import android.support.annotation.LayoutRes;
 import java.lang.Object;
 import java.lang.Override;
+import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
@@ -74,5 +75,12 @@ public class ModelWithIntDef_ extends ModelWithIntDef {
     int result = super.hashCode();
     result = 31 * result + type;
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return "ModelWithIntDef_{" +
+        "type=" + type +
+        "}";
   }
 }

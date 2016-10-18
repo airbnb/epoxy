@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import android.support.annotation.LayoutRes;
 import java.lang.Object;
 import java.lang.Override;
+import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
@@ -73,5 +74,12 @@ public class ModelWithSuperAttributes_ extends ModelWithSuperAttributes {
     int result = super.hashCode();
     result = 31 * result + superValue;
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return "ModelWithSuperAttributes_{" +
+        "superValue=" + superValue +
+        "}";
   }
 }

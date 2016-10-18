@@ -95,4 +95,11 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
     result = 31 * result + value;
     return result;
   }
+
+  @Override
+  public String toString() {
+    return "ModelReturningClassType_{" +
+        "value=" + value +
+        "}";
+  }
 }

@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import android.support.annotation.LayoutRes;
 import java.lang.Object;
 import java.lang.Override;
+import java.lang.String;
 
 /**
  * Generated file. Do not modify!
@@ -69,5 +70,12 @@ public class ModelWithoutSetter_ extends ModelWithoutSetter {
     int result = super.hashCode();
     result = 31 * result + value;
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return "ModelWithoutSetter_{" +
+        "value=" + value +
+        "}";
   }
 }
