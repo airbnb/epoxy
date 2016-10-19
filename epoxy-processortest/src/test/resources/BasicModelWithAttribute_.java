@@ -81,6 +81,6 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute {
   public String toString() {
     return "BasicModelWithAttribute_{" +
         "value=" + value +
-        "}";
+        "}" + super.toString();
   }
 }

@@ -81,6 +81,6 @@ public class ModelWithAnnotatedClassAndSuperAttributes_ extends ModelWithAnnotat
   public String toString() {
     return "ModelWithAnnotatedClassAndSuperAttributes_{" +
         "superValue=" + superValue +
-        "}";
+        "}" + super.toString();
   }
 }

@@ -95,6 +95,6 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_ extends Model
     return "ModelWithSuperAttributes$SubModelWithSuperAttributes_{" +
         "subValue=" + subValue +
         ", superValue=" + superValue +
-        "}";
+        "}" + super.toString();
   }
 }

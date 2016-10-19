@@ -67,6 +67,6 @@ public class ModelWithAnnotatedClass_ extends ModelWithAnnotatedClass {
   @Override
   public String toString() {
     return "ModelWithAnnotatedClass_{" +
-        "}";
+        "}" + super.toString();
   }
 }

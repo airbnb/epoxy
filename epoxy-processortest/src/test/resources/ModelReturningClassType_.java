@@ -100,6 +100,6 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
   public String toString() {
     return "ModelReturningClassType_{" +
         "value=" + value +
-        "}";
+        "}" + super.toString();
   }
 }

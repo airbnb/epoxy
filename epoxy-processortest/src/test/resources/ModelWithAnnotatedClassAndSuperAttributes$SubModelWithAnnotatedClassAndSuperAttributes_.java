@@ -82,6 +82,6 @@ public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClas
   public String toString() {
     return "ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_{" +
         "superValue=" + superValue +
-        "}";
+        "}"  + super.toString();
   }
 }

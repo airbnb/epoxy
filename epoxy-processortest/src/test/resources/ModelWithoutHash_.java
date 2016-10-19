@@ -90,6 +90,6 @@ public class ModelWithoutHash_ extends ModelWithoutHash {
     return "ModelWithoutHash_{" +
         "value2=" + value2 +
         ", value=" + value +
-        "}";
+        "}" + super.toString();
   }
 }

@@ -76,6 +76,6 @@ public class ModelWithoutSetter_ extends ModelWithoutSetter {
   public String toString() {
     return "ModelWithoutSetter_{" +
         "value=" + value +
-        "}";
+        "}" + super.toString();
   }
 }
