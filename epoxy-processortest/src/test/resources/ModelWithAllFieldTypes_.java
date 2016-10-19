@@ -372,6 +372,6 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
         ", valueObjectArray=" + valueObjectArray +
         ", valueObject=" + valueObject +
         ", valueIntArray=" + valueIntArray +
-        "}";
+        "}" + super.toString();
   }
 }

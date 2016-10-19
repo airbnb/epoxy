@@ -82,6 +82,6 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation {
   public String toString() {
     return "ModelWithFieldAnnotation_{" +
         "title=" + title +
-        "}";
+        "}" + super.toString();
   }
 }

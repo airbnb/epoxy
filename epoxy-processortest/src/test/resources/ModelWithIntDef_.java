@@ -81,6 +81,6 @@ public class ModelWithIntDef_ extends ModelWithIntDef {
   public String toString() {
     return "ModelWithIntDef_{" +
         "type=" + type +
-        "}";
+        "}" + super.toString();
   }
 }

@@ -88,6 +88,6 @@ public class ModelWithConstructors_ extends ModelWithConstructors {
   public String toString() {
     return "ModelWithConstructors_{" +
         "valueInt=" + valueInt +
-        "}";
+        "}" + super.toString();
   }
 }

@@ -569,7 +569,7 @@ public class EpoxyProcessor extends AbstractProcessor {
       }
     }
 
-    sb.append("\"}\"");
+    sb.append("\"}\" + super.toString()");
 
     return builder
         .addStatement("return $L", sb.toString())

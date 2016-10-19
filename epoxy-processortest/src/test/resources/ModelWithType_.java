@@ -80,6 +80,6 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> {
   public String toString() {
     return "ModelWithType_{" +
         "value=" + value +
-        "}";
+        "}" + super.toString();
   }
 }

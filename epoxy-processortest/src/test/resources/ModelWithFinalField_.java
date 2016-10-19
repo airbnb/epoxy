@@ -75,6 +75,6 @@ public class ModelWithFinalField_ extends ModelWithFinalField {
   public String toString() {
     return "ModelWithFinalField_{" +
         "valueInt=" + valueInt +
-        "}";
+        "}" + super.toString();
   }
 }

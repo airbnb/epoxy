@@ -80,6 +80,6 @@ public class ModelWithSuperAttributes_ extends ModelWithSuperAttributes {
   public String toString() {
     return "ModelWithSuperAttributes_{" +
         "superValue=" + superValue +
-        "}";
+        "}" + super.toString();
   }
 }

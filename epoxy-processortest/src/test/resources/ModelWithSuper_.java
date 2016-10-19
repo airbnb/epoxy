@@ -81,6 +81,6 @@ public class ModelWithSuper_ extends ModelWithSuper {
   public String toString() {
     return "ModelWithSuper_{" +
         "valueInt=" + valueInt +
-        "}";
+        "}" + super.toString();
   }
 }
