@@ -1,9 +1,8 @@
 package com.airbnb.epoxy;
 
-import com.airbnb.epoxy.EpoxyAttribute;
-import com.airbnb.epoxy.EpoxyModel;
+import com.airbnb.epoxy.processortest2.ProcessorTest2Model;
 
-public class ProcessorTestModel extends EpoxyModel<Object> {
+public class ProcessorTestModel extends ProcessorTest2Model {
   @EpoxyAttribute public int publicValue;
   @EpoxyAttribute protected int protectedValue;
   @EpoxyAttribute int packagePrivateValue;

@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply from: 'build.workaround-missing-resource.gradle'
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
@@ -19,9 +18,7 @@ dependencies {
   testCompile rootProject.deps.googleTestingCompile
   testCompile files(org.gradle.internal.jvm.Jvm.current().getRuntimeJar())
   testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
-  testCompile project(':epoxy-processor')
   compile project(':epoxy-annotations')
   compile project(':epoxy-adapter')
   compile project(':epoxy-processor')
-  compile project(':epoxy-processortest2')
 }
