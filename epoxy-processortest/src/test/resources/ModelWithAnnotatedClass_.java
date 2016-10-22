@@ -43,6 +43,9 @@ public class ModelWithAnnotatedClass_ extends ModelWithAnnotatedClass {
     return this;
   }
 
+  public void reset() {
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o == this) {

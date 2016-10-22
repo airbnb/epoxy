@@ -60,6 +60,11 @@ public class ModelWithoutHash_ extends ModelWithoutHash {
     return this;
   }
 
+  public void reset() {
+    this.value2 = 0;
+    this.value = 0;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o == this) {

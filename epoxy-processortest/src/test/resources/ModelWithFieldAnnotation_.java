@@ -53,6 +53,10 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation {
     return this;
   }
 
+  public void reset() {
+    this.title = null;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o == this) {

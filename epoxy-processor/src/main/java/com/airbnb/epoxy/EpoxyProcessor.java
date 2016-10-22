@@ -49,6 +49,7 @@ import static com.squareup.javapoet.TypeName.FLOAT;
 import static com.squareup.javapoet.TypeName.INT;
 import static com.squareup.javapoet.TypeName.LONG;
 import static com.squareup.javapoet.TypeName.SHORT;
+import static com.squareup.javapoet.TypeName.VOID;
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
@@ -366,6 +367,7 @@ public class EpoxyProcessor extends AbstractProcessor {
         .addMethods(generateConstructors(info))
         .addMethods(generateSettersAndGetters(info))
         .addMethods(generateMethodsReturningClassType(info))
+        .addMethod(generateReset(info))
         .addMethod(generateEquals(info))
         .addMethod(generateHashCode(info))
         .addMethod(generateToString(info))
@@ -601,6 +603,36 @@ public class EpoxyProcessor extends AbstractProcessor {
     return builder
         .addStatement("return this")
         .build();
+  }
+
+  private MethodSpec generateReset(ClassToGenerateInfo helperClass) {
+    Builder builder = MethodSpec.methodBuilder("reset")
+        .addModifiers(Modifier.PUBLIC)
+        .returns(VOID);
+
+    for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
+      if (!attributeInfo.hasFinalModifier()) {
+        String attributeName = attributeInfo.getName();
+        TypeName attributeType = attributeInfo.getType();
+        if (attributeType == BOOLEAN) {
+          builder.addStatement("this.$L = false", attributeName);
+        } else if (attributeType == BYTE || attributeType == SHORT || attributeType == INT) {
+          builder.addStatement("this.$L = 0", attributeName);
+        } else if (attributeType == LONG) {
+          builder.addStatement("this.$L = 0L", attributeName);
+        } else if (attributeType == FLOAT) {
+          builder.addStatement("this.$L = 0.0f", attributeName);
+        } else if (attributeType == DOUBLE) {
+          builder.addStatement("this.$L = 0.0d", attributeName);
+        } else if (attributeType == CHAR) {
+          builder.addStatement("this.$L = '\\u0000'", attributeName);
+        } else {
+          builder.addStatement("this.$L = null", attributeName);
+        }
+      }
+    }
+
+    return builder.build();
   }
 
   private void writeError(Exception e) {
