@@ -49,7 +49,6 @@ import static com.squareup.javapoet.TypeName.FLOAT;
 import static com.squareup.javapoet.TypeName.INT;
 import static com.squareup.javapoet.TypeName.LONG;
 import static com.squareup.javapoet.TypeName.SHORT;
-import static com.squareup.javapoet.TypeName.VOID;
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
@@ -608,31 +607,38 @@ public class EpoxyProcessor extends AbstractProcessor {
   private MethodSpec generateReset(ClassToGenerateInfo helperClass) {
     Builder builder = MethodSpec.methodBuilder("reset")
         .addModifiers(Modifier.PUBLIC)
-        .returns(VOID);
+        .returns(helperClass.getParameterizedGeneratedName())
+        .addStatement("layout(getDefaultLayout())\n.show()");
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
       if (!attributeInfo.hasFinalModifier()) {
-        String attributeName = attributeInfo.getName();
-        TypeName attributeType = attributeInfo.getType();
-        if (attributeType == BOOLEAN) {
-          builder.addStatement("this.$L = false", attributeName);
-        } else if (attributeType == BYTE || attributeType == SHORT || attributeType == INT) {
-          builder.addStatement("this.$L = 0", attributeName);
-        } else if (attributeType == LONG) {
-          builder.addStatement("this.$L = 0L", attributeName);
-        } else if (attributeType == FLOAT) {
-          builder.addStatement("this.$L = 0.0f", attributeName);
-        } else if (attributeType == DOUBLE) {
-          builder.addStatement("this.$L = 0.0d", attributeName);
-        } else if (attributeType == CHAR) {
-          builder.addStatement("this.$L = '\\u0000'", attributeName);
-        } else {
-          builder.addStatement("this.$L = null", attributeName);
-        }
+        builder.addStatement("this.$L = $L", attributeInfo.getName(),
+            getDefaultValue(attributeInfo.getType()));
       }
     }
 
-    return builder.build();
+    return builder
+        .addStatement("return this")
+        .build();
+  }
+
+  private String getDefaultValue(TypeName attributeType) {
+    String defaultValue;
+    if (attributeType == BOOLEAN) {
+      defaultValue = "false";
+    } else if (attributeType == BYTE || attributeType == CHAR || attributeType == SHORT
+        || attributeType == INT) {
+      defaultValue = "0";
+    } else if (attributeType == LONG) {
+      defaultValue = "0L";
+    } else if (attributeType == FLOAT) {
+      defaultValue = "0.0f";
+    } else if (attributeType == DOUBLE) {
+      defaultValue = "0.0d";
+    } else {
+      defaultValue = "null";
+    }
+    return defaultValue;
   }
 
   private void writeError(Exception e) {

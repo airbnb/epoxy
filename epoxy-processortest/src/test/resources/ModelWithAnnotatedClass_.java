@@ -43,7 +43,10 @@ public class ModelWithAnnotatedClass_ extends ModelWithAnnotatedClass {
     return this;
   }
 
-  public void reset() {
+  public ModelWithAnnotatedClass_ reset() {
+    layout(getDefaultLayout())
+        .show();
+    return this;
   }
 
   @Override

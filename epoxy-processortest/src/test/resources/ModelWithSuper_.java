@@ -52,8 +52,11 @@ public class ModelWithSuper_ extends ModelWithSuper {
     return this;
   }
 
-  public void reset() {
+  public ModelWithSuper_ reset() {
+    layout(getDefaultLayout())
+        .show();
     this.valueInt = 0;
+    return this;
   }
 
   @Override

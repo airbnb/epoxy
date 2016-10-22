@@ -52,8 +52,11 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute {
     return this;
   }
 
-  public void reset() {
+  public BasicModelWithAttribute_ reset() {
+    layout(getDefaultLayout())
+        .show();
     this.value = 0;
+    return this;
   }
 
   @Override

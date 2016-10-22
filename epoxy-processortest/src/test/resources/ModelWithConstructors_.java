@@ -59,8 +59,11 @@ public class ModelWithConstructors_ extends ModelWithConstructors {
     return this;
   }
 
-  public void reset() {
+  public ModelWithConstructors_ reset() {
+    layout(getDefaultLayout())
+        .show();
     this.valueInt = 0;
+    return this;
   }
 
   @Override

@@ -241,14 +241,16 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
     return this;
   }
 
-  public void reset() {
+  public ModelWithAllFieldTypes_ reset() {
+    layout(getDefaultLayout())
+        .show();
     this.valueInteger = null;
     this.valueShort = 0;
     this.valueLong = 0L;
     this.valueList = null;
     this.valueShortWrapper = null;
     this.valueDouble = 0.0d;
-    this.valueChar = '\u0000';
+    this.valueChar = 0;
     this.valueInt = 0;
     this.valueDoubleWrapper = null;
     this.valueFloatWrapper = null;
@@ -263,6 +265,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
     this.valueObjectArray = null;
     this.valueObject = null;
     this.valueIntArray = null;
+    return this
   }
 
   @Override

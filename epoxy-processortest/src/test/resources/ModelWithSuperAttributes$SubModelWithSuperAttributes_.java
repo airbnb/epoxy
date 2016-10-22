@@ -60,9 +60,12 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_ extends Model
     return this;
   }
 
-  public void reset() {
+  public ModelWithSuperAttributes$SubModelWithSuperAttributes_ reset() {
+    layout(getDefaultLayout())
+        .show();
     this.subValue = 0;
     this.superValue = 0;
+    return this;
   }
 
   @Override

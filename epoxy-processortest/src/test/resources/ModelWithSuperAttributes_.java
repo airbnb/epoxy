@@ -51,8 +51,11 @@ public class ModelWithSuperAttributes_ extends ModelWithSuperAttributes {
     return this;
   }
 
-  public void reset() {
+  public ModelWithSuperAttributes_ reset() {
+    layout(getDefaultLayout())
+        .show();
     this.superValue = 0;
+    return this;
   }
 
   @Override

@@ -51,8 +51,11 @@ public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClas
     return this;
   }
 
-  public void reset() {
+  public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ reset() {
+    layout(getDefaultLayout())
+        .show();
     this.superValue = 0;
+    return this;
   }
 
   @Override

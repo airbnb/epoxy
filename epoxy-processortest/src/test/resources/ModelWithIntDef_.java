@@ -52,8 +52,11 @@ public class ModelWithIntDef_ extends ModelWithIntDef {
     return this;
   }
 
-  public void reset() {
+  public ModelWithIntDef_ reset() {
+    layout(getDefaultLayout())
+        .show();
     this.type = 0;
+    return this;
   }
 
   @Override

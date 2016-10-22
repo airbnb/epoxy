@@ -47,8 +47,11 @@ public class ModelWithoutSetter_ extends ModelWithoutSetter {
     return this;
   }
 
-  public void reset() {
+  public ModelWithoutSetter_ reset() {
+    layout(getDefaultLayout())
+        .show();
     this.value = 0;
+    return this;
   }
 
   @Override

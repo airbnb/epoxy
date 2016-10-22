@@ -51,8 +51,11 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> {
     return this;
   }
 
-  public void reset() {
+  public ModelWithType_<T> reset() {
+    layout(getDefaultLayout())
+        .show();
     this.value = 0;
+    return this;
   }
 
   @Override
