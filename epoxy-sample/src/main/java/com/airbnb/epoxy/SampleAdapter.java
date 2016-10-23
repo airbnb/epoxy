@@ -1,6 +1,8 @@
 package com.airbnb.epoxy;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -21,7 +23,7 @@ class SampleAdapter extends EpoxyAdapter {
   private final ButtonModel_ shuffleButton = new ButtonModel_();
   private final ButtonModel_ changeColorsButton = new ButtonModel_();
 
-  SampleAdapter() {
+  SampleAdapter(Context context) {
     // We are going to use automatic diffing, so we just have to enable it first
     enableDiffing();
 
@@ -34,15 +36,19 @@ class SampleAdapter extends EpoxyAdapter {
 
     ButtonModel addButton = new ButtonModel_()
         .text(R.string.button_add)
+        .backgroundColor(ContextCompat.getColor(context,R.color.green))
         .clickListener(onAddClicked);
 
     clearButton.text(R.string.button_clear)
+        .backgroundColor(ContextCompat.getColor(context,R.color.red))
         .clickListener(onClearClicked);
 
     shuffleButton.text(R.string.button_shuffle)
+        .backgroundColor(ContextCompat.getColor(context,R.color.cyan))
         .clickListener(onShuffleClicked);
 
     changeColorsButton.text(R.string.button_change)
+        .backgroundColor(ContextCompat.getColor(context,R.color.cyan))
         .clickListener(onChangeColorsClicked);
 
     addModels(

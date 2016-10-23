@@ -1,5 +1,6 @@
 package com.airbnb.epoxy.models;
 
+import android.support.annotation.ColorInt;
 import android.support.annotation.StringRes;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -14,7 +15,8 @@ import butterknife.BindView;
 /** This model class gives an example of how to use a view holder pattern with your models. */
 public class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
   @EpoxyAttribute @StringRes int text;
-  @EpoxyAttribute OnClickListener clickListener;
+  @EpoxyAttribute (hash = false) OnClickListener clickListener;
+  @EpoxyAttribute @ColorInt int backgroundColor;
 
   @Override
   protected int getDefaultLayout() {
@@ -29,6 +31,7 @@ public class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
   @Override
   public void bind(ButtonHolder holder) {
     holder.button.setText(text);
+    holder.button.setBackgroundColor(backgroundColor);
     holder.button.setOnClickListener(clickListener);
   }
 
