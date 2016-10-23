@@ -6,4 +6,5 @@
     <string name="button_clear">Clear</string>
     <string name="button_shuffle">Shuffle</string>
     <string name="button_change">Change</string>
+    <string name="text_hint">Enter the text: "epoxy"</string>
 </resources>

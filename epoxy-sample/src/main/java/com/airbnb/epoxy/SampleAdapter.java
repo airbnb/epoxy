@@ -3,19 +3,25 @@ package com.airbnb.epoxy;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.airbnb.epoxy.models.ButtonModel;
 import com.airbnb.epoxy.models.ButtonModel_;
 import com.airbnb.epoxy.models.ColorModel_;
+import com.airbnb.epoxy.models.EditTextModel;
+import com.airbnb.epoxy.models.EditTextModel_;
 import com.airbnb.epoxy.models.HeaderModel;
 import com.airbnb.epoxy.models.HeaderModel_;
 
 import java.util.Collections;
 import java.util.Random;
 
-class SampleAdapter extends EpoxyAdapter {
+public class SampleAdapter extends EpoxyAdapter {
+
+  private static final String LOG_TAG = SampleAdapter.class.getSimpleName();
+
   private static final Random RANDOM = new Random();
 
   // These models are saved as fields so they can easily be shown or hidden as needed
@@ -33,6 +39,10 @@ class SampleAdapter extends EpoxyAdapter {
     HeaderModel headerModel = new HeaderModel_()
         .title(R.string.epoxy)
         .caption(R.string.header_subtitle);
+
+    EditTextModel editTextModel = new EditTextModel_()
+        .editTextListener(editTextListener)
+        .hint(R.string.text_hint);
 
     ButtonModel addButton = new ButtonModel_()
         .text(R.string.button_add)
@@ -53,6 +63,7 @@ class SampleAdapter extends EpoxyAdapter {
 
     addModels(
         headerModel,
+        editTextModel,
         addButton,
         clearButton,
         shuffleButton,
@@ -102,11 +113,23 @@ class SampleAdapter extends EpoxyAdapter {
     }
   };
 
+  EditTextListener editTextListener = new EditTextListener() {
+    @Override
+    public void onTextEntered(String enteredText) {
+      Log.d(LOG_TAG,enteredText);
+    }
+  };
+
   private int randomColor() {
     int r = RANDOM.nextInt(256);
     int g = RANDOM.nextInt(256);
     int b = RANDOM.nextInt(256);
 
     return Color.rgb(r, g, b);
+  }
+
+
+  public interface EditTextListener{
+    void onTextEntered(String enteredText);
   }
 }
