@@ -53,7 +53,7 @@ public class EditTextModel extends EpoxyModelWithHolder<EditTextHolder> {
         // can be set up as fields in the model and set when initialising the model
         String enteredText = editable.toString();
         editTextListener.onTextEntered(enteredText);
-        if(!enteredText.equals("epoxy") && !enteredText.isEmpty()) {
+        if (!enteredText.equals("epoxy") && !enteredText.isEmpty()) {
           holder.textInputEditText.setError("Enter epoxy");
         }
       }

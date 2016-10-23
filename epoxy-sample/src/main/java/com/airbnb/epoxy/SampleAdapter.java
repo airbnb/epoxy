@@ -46,19 +46,19 @@ public class SampleAdapter extends EpoxyAdapter {
 
     ButtonModel addButton = new ButtonModel_()
         .text(R.string.button_add)
-        .backgroundColor(ContextCompat.getColor(context,R.color.green))
+        .backgroundColor(ContextCompat.getColor(context, R.color.green))
         .clickListener(onAddClicked);
 
     clearButton.text(R.string.button_clear)
-        .backgroundColor(ContextCompat.getColor(context,R.color.red))
+        .backgroundColor(ContextCompat.getColor(context, R.color.red))
         .clickListener(onClearClicked);
 
     shuffleButton.text(R.string.button_shuffle)
-        .backgroundColor(ContextCompat.getColor(context,R.color.cyan))
+        .backgroundColor(ContextCompat.getColor(context, R.color.cyan))
         .clickListener(onShuffleClicked);
 
     changeColorsButton.text(R.string.button_change)
-        .backgroundColor(ContextCompat.getColor(context,R.color.cyan))
+        .backgroundColor(ContextCompat.getColor(context, R.color.cyan))
         .clickListener(onChangeColorsClicked);
 
     addModels(
@@ -116,7 +116,7 @@ public class SampleAdapter extends EpoxyAdapter {
   EditTextListener editTextListener = new EditTextListener() {
     @Override
     public void onTextEntered(String enteredText) {
-      Log.d(LOG_TAG,enteredText);
+      Log.d(LOG_TAG, enteredText);
     }
   };
 
@@ -129,7 +129,7 @@ public class SampleAdapter extends EpoxyAdapter {
   }
 
 
-  public interface EditTextListener{
+  public interface EditTextListener {
     void onTextEntered(String enteredText);
   }
 }
