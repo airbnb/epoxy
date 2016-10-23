@@ -606,9 +606,10 @@ public class EpoxyProcessor extends AbstractProcessor {
 
   private MethodSpec generateReset(ClassToGenerateInfo helperClass) {
     Builder builder = MethodSpec.methodBuilder("reset")
+        .addAnnotation(Override.class)
         .addModifiers(Modifier.PUBLIC)
         .returns(helperClass.getParameterizedGeneratedName())
-        .addStatement("layout(getDefaultLayout())\n.show()");
+        .addStatement("super.reset()");
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
       if (!attributeInfo.hasFinalModifier()) {

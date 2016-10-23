@@ -52,9 +52,9 @@ public class ModelWithIntDef_ extends ModelWithIntDef {
     return this;
   }
 
+  @Override
   public ModelWithIntDef_ reset() {
-    layout(getDefaultLayout())
-        .show();
+    super.reset();
     this.type = 0;
     return this;
   }

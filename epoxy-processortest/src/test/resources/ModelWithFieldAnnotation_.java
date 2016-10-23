@@ -53,9 +53,9 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation {
     return this;
   }
 
+  @Override
   public ModelWithFieldAnnotation_ reset() {
-    layout(getDefaultLayout())
-        .show();
+    super.reset();
     this.title = null;
     return this;
   }

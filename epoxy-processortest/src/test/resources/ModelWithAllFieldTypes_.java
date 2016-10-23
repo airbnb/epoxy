@@ -241,9 +241,9 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
     return this;
   }
 
+  @Override
   public ModelWithAllFieldTypes_ reset() {
-    layout(getDefaultLayout())
-        .show();
+    super.reset();
     this.valueInteger = null;
     this.valueShort = 0;
     this.valueLong = 0L;

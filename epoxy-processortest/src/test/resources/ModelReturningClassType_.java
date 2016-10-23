@@ -71,9 +71,9 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
     return this;
   }
 
+  @Override
   public ModelReturningClassType_ reset() {
-    layout(getDefaultLayout())
-        .show();
+    super.reset();
     this.value = 0;
     return this;
   }

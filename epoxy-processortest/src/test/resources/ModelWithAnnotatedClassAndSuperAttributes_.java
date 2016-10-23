@@ -51,9 +51,9 @@ public class ModelWithAnnotatedClassAndSuperAttributes_ extends ModelWithAnnotat
     return this;
   }
 
+  @Override
   public ModelWithAnnotatedClassAndSuperAttributes_ reset() {
-    layout(getDefaultLayout())
-        .show();
+    super.reset();
     this.superValue = 0;
     return this;
   }

@@ -46,9 +46,9 @@ public class ModelWithFinalField_ extends ModelWithFinalField {
     return this;
   }
 
+  @Override
   public ModelWithFinalField_ reset() {
-    layout(getDefaultLayout())
-        .show();
+    super.reset();
     return this;
   }
 

@@ -52,9 +52,9 @@ public class ModelWithSuper_ extends ModelWithSuper {
     return this;
   }
 
+  @Override
   public ModelWithSuper_ reset() {
-    layout(getDefaultLayout())
-        .show();
+    super.reset();
     this.valueInt = 0;
     return this;
   }

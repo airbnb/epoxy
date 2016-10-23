@@ -60,9 +60,9 @@ public class ModelWithoutHash_ extends ModelWithoutHash {
     return this;
   }
 
+  @Override
   public ModelWithoutHash_ reset() {
-    layout(getDefaultLayout())
-        .show();
+    super.reset();
     this.value2 = 0;
     this.value = 0;
     return this;
