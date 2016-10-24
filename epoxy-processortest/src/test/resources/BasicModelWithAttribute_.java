@@ -54,8 +54,8 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute {
 
   @Override
   public BasicModelWithAttribute_ reset() {
-    super.reset();
     this.value = 0;
+    super.reset();
     return this;
   }
 

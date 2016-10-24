@@ -243,7 +243,6 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
 
   @Override
   public ModelWithAllFieldTypes_ reset() {
-    super.reset();
     this.valueInteger = null;
     this.valueShort = 0;
     this.valueLong = 0L;
@@ -265,6 +264,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
     this.valueObjectArray = null;
     this.valueObject = null;
     this.valueIntArray = null;
+    super.reset();
     return this
   }
 

@@ -53,8 +53,8 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> {
 
   @Override
   public ModelWithType_<T> reset() {
-    super.reset();
     this.value = 0;
+    super.reset();
     return this;
   }
 

@@ -55,8 +55,8 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation {
 
   @Override
   public ModelWithFieldAnnotation_ reset() {
-    super.reset();
     this.title = null;
+    super.reset();
     return this;
   }
 

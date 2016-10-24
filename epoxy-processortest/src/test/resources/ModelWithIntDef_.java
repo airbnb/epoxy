@@ -54,8 +54,8 @@ public class ModelWithIntDef_ extends ModelWithIntDef {
 
   @Override
   public ModelWithIntDef_ reset() {
-    super.reset();
     this.type = 0;
+    super.reset();
     return this;
   }
 

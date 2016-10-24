@@ -49,8 +49,8 @@ public class ModelWithoutSetter_ extends ModelWithoutSetter {
 
   @Override
   public ModelWithoutSetter_ reset() {
-    super.reset();
     this.value = 0;
+    super.reset();
     return this;
   }
 

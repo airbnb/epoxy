@@ -54,8 +54,8 @@ public class ModelWithSuper_ extends ModelWithSuper {
 
   @Override
   public ModelWithSuper_ reset() {
-    super.reset();
     this.valueInt = 0;
+    super.reset();
     return this;
   }
 

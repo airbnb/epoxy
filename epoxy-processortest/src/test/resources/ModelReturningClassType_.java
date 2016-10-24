@@ -73,8 +73,8 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
 
   @Override
   public ModelReturningClassType_ reset() {
-    super.reset();
     this.value = 0;
+    super.reset();
     return this;
   }
 

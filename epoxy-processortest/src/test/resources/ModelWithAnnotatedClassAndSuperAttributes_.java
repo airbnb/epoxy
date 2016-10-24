@@ -53,8 +53,8 @@ public class ModelWithAnnotatedClassAndSuperAttributes_ extends ModelWithAnnotat
 
   @Override
   public ModelWithAnnotatedClassAndSuperAttributes_ reset() {
-    super.reset();
     this.superValue = 0;
+    super.reset();
     return this;
   }
 

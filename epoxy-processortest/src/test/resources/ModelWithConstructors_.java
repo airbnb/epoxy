@@ -61,8 +61,8 @@ public class ModelWithConstructors_ extends ModelWithConstructors {
 
   @Override
   public ModelWithConstructors_ reset() {
-    super.reset();
     this.valueInt = 0;
+    super.reset();
     return this;
   }
 

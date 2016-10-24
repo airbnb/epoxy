@@ -608,8 +608,7 @@ public class EpoxyProcessor extends AbstractProcessor {
     Builder builder = MethodSpec.methodBuilder("reset")
         .addAnnotation(Override.class)
         .addModifiers(Modifier.PUBLIC)
-        .returns(helperClass.getParameterizedGeneratedName())
-        .addStatement("super.reset()");
+        .returns(helperClass.getParameterizedGeneratedName());
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
       if (!attributeInfo.hasFinalModifier()) {
@@ -619,27 +618,9 @@ public class EpoxyProcessor extends AbstractProcessor {
     }
 
     return builder
+        .addStatement("super.reset()")
         .addStatement("return this")
         .build();
-  }
-
-  private String getDefaultValue(TypeName attributeType) {
-    String defaultValue;
-    if (attributeType == BOOLEAN) {
-      defaultValue = "false";
-    } else if (attributeType == BYTE || attributeType == CHAR || attributeType == SHORT
-        || attributeType == INT) {
-      defaultValue = "0";
-    } else if (attributeType == LONG) {
-      defaultValue = "0L";
-    } else if (attributeType == FLOAT) {
-      defaultValue = "0.0f";
-    } else if (attributeType == DOUBLE) {
-      defaultValue = "0.0d";
-    } else {
-      defaultValue = "null";
-    }
-    return defaultValue;
   }
 
   private void writeError(Exception e) {
@@ -649,5 +630,22 @@ public class EpoxyProcessor extends AbstractProcessor {
   private void throwError(String msg, Object... args)
       throws EpoxyProcessorException {
     throw new EpoxyProcessorException(String.format(msg, args));
+  }
+
+  private static String getDefaultValue(TypeName attributeType) {
+    if (attributeType == BOOLEAN) {
+      return "false";
+    } else if (attributeType == BYTE || attributeType == CHAR || attributeType == SHORT
+        || attributeType == INT) {
+      return "0";
+    } else if (attributeType == LONG) {
+      return "0L";
+    } else if (attributeType == FLOAT) {
+      return "0.0f";
+    } else if (attributeType == DOUBLE) {
+      return "0.0d";
+    } else {
+      return "null";
+    }
   }
 }

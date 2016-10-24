@@ -53,8 +53,8 @@ public class ModelWithSuperAttributes_ extends ModelWithSuperAttributes {
 
   @Override
   public ModelWithSuperAttributes_ reset() {
-    super.reset();
     this.superValue = 0;
+    super.reset();
     return this;
   }
 

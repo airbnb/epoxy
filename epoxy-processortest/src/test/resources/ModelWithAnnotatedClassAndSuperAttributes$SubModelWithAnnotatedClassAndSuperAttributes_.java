@@ -53,8 +53,8 @@ public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClas
 
   @Override
   public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ reset() {
-    super.reset();
     this.superValue = 0;
+    super.reset();
     return this;
   }
 

@@ -62,9 +62,9 @@ public class ModelWithoutHash_ extends ModelWithoutHash {
 
   @Override
   public ModelWithoutHash_ reset() {
-    super.reset();
     this.value2 = 0;
     this.value = 0;
+    super.reset();
     return this;
   }
 
