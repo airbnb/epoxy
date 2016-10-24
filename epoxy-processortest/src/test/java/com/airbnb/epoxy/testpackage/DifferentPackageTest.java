@@ -9,8 +9,8 @@ import org.junit.Test;
  * A test to check that a model subclass in a different package from its super class does not
  * include package private fields from its super class on its generated model.
  * <p>
- * This also tests that model subclasses in different modules have their attributes included in the
- * generated class too.
+ * This also tests that model superclasses in different modules have their attributes included in
+ * the generated class too.
  */
 public class DifferentPackageTest {
 

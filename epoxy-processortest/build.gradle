@@ -20,8 +20,7 @@ dependencies {
   testCompile files(org.gradle.internal.jvm.Jvm.current().getRuntimeJar())
   testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
   testCompile project(':epoxy-processor')
+  testCompile project(':epoxy-processortest2')
   compile project(':epoxy-annotations')
   compile project(':epoxy-adapter')
-  compile project(':epoxy-processor')
-  compile project(':epoxy-processortest2')
 }
