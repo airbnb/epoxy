@@ -16,6 +16,7 @@ import com.squareup.javapoet.TypeSpec;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,6 +109,7 @@ public class EpoxyProcessor extends AbstractProcessor {
       writeError(e);
     }
 
+    addAttributesFromOtherModules(modelClassMap);
     updateClassesForInheritance(modelClassMap);
 
     for (Entry<TypeElement, ClassToGenerateInfo> modelEntry : modelClassMap.entrySet()) {
@@ -249,6 +251,40 @@ public class EpoxyProcessor extends AbstractProcessor {
         classElement.getQualifiedName().toString().substring(packageLen).replace('.', '$');
 
     return ClassName.get(packageName, className + GENERATED_CLASS_NAME_SUFFIX);
+  }
+
+  /**
+   * Looks for attributes on super classes that weren't included in this processor's coverage. Super
+   * classes are already found if they are in the same module since the processor will pick them up
+   * with the rest of the annotations.
+   */
+  private void addAttributesFromOtherModules(Map<TypeElement, ClassToGenerateInfo> modelClassMap) {
+    // Copy the entries in the original map so we can add new entries to the map while we iterate
+    // through the old entries
+    Set<Entry<TypeElement, ClassToGenerateInfo>> originalEntries =
+        new HashSet<>(modelClassMap.entrySet());
+
+    for (Entry<TypeElement, ClassToGenerateInfo> entry : originalEntries) {
+      TypeMirror superclassType = entry.getKey().getSuperclass();
+
+      while (isEpoxyModel(superclassType)) {
+        TypeElement superclassElement = (TypeElement) typeUtils.asElement(superclassType);
+
+        if (!modelClassMap.keySet().contains(superclassElement)) {
+          for (Element element : superclassElement.getEnclosedElements()) {
+            if (element.getAnnotation(EpoxyAttribute.class) != null) {
+              try {
+                processAttribute(element, modelClassMap);
+              } catch (EpoxyProcessorException e) {
+                writeError(e);
+              }
+            }
+          }
+        }
+
+        superclassType = superclassElement.getSuperclass();
+      }
+    }
   }
 
   /**
