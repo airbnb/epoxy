@@ -53,6 +53,13 @@ public class ModelWithIntDef_ extends ModelWithIntDef {
   }
 
   @Override
+  public ModelWithIntDef_ reset() {
+    this.type = 0;
+    super.reset();
+    return this;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;

@@ -44,6 +44,12 @@ public class ModelWithAnnotatedClass_ extends ModelWithAnnotatedClass {
   }
 
   @Override
+  public ModelWithAnnotatedClass_ reset() {
+    super.reset();
+    return this;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;

@@ -33,6 +33,7 @@ public class ClassToGenerateInfo {
   private static final String LAYOUT_METHOD = "layout";
   private static final ClassName LAYOUT_RES_ANNOTATION =
       ClassName.get("android.support.annotation", "LayoutRes");
+  public static final String RESET_METHOD = "reset";
 
   private final TypeName originalClassName;
   private final TypeName originalClassNameWithoutType;
@@ -104,6 +105,9 @@ public class ClassToGenerateInfo {
             List<? extends TypeMirror> params = ((ExecutableType) subElement.asType())
                 .getParameterTypes();
             String methodName = subElement.getSimpleName().toString();
+            if (methodName.equals(RESET_METHOD) && params.isEmpty()) {
+              continue;
+            }
             if (params.size() == 1) {
               TypeMirror param = params.get(0);
               ParameterSpec parameterSpec;

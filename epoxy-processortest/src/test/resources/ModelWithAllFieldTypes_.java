@@ -242,6 +242,33 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
   }
 
   @Override
+  public ModelWithAllFieldTypes_ reset() {
+    this.valueInteger = null;
+    this.valueShort = 0;
+    this.valueLong = 0L;
+    this.valueList = null;
+    this.valueShortWrapper = null;
+    this.valueDouble = 0.0d;
+    this.valueChar = 0;
+    this.valueInt = 0;
+    this.valueDoubleWrapper = null;
+    this.valueFloatWrapper = null;
+    this.valueBooleanWrapper = null;
+    this.valueByteWrapper = null;
+    this.valuebByte = 0;
+    this.valueLongWrapper = null;
+    this.valueCharacter = null;
+    this.valueString = null;
+    this.valueFloat = 0.0f;
+    this.valueBoolean = false;
+    this.valueObjectArray = null;
+    this.valueObject = null;
+    this.valueIntArray = null;
+    super.reset();
+    return this
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;

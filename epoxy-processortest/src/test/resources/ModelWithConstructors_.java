@@ -60,6 +60,13 @@ public class ModelWithConstructors_ extends ModelWithConstructors {
   }
 
   @Override
+  public ModelWithConstructors_ reset() {
+    this.valueInt = 0;
+    super.reset();
+    return this;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;

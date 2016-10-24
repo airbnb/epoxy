@@ -61,6 +61,14 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_ extends Model
   }
 
   @Override
+  public ModelWithSuperAttributes$SubModelWithSuperAttributes_ reset() {
+    this.subValue = 0;
+    this.superValue = 0;
+    super.reset();
+    return this;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;

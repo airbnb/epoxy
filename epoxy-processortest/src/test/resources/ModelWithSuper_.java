@@ -53,6 +53,13 @@ public class ModelWithSuper_ extends ModelWithSuper {
   }
 
   @Override
+  public ModelWithSuper_ reset() {
+    this.valueInt = 0;
+    super.reset();
+    return this;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;

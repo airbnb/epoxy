@@ -95,6 +95,16 @@ public abstract class EpoxyModel<T> {
     return layout;
   }
 
+  /**
+   * Sets fields of the model to default ones.
+   */
+  public EpoxyModel<T> reset() {
+    layout = 0;
+    shown = true;
+
+    return this;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

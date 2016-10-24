@@ -72,6 +72,13 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
   }
 
   @Override
+  public ModelReturningClassType_ reset() {
+    this.value = 0;
+    super.reset();
+    return this;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;

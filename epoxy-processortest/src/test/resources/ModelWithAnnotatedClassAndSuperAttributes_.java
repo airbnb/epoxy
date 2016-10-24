@@ -52,6 +52,13 @@ public class ModelWithAnnotatedClassAndSuperAttributes_ extends ModelWithAnnotat
   }
 
   @Override
+  public ModelWithAnnotatedClassAndSuperAttributes_ reset() {
+    this.superValue = 0;
+    super.reset();
+    return this;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;

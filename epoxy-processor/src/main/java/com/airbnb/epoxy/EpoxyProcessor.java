@@ -402,6 +402,7 @@ public class EpoxyProcessor extends AbstractProcessor {
         .addMethods(generateConstructors(info))
         .addMethods(generateSettersAndGetters(info))
         .addMethods(generateMethodsReturningClassType(info))
+        .addMethod(generateReset(info))
         .addMethod(generateEquals(info))
         .addMethod(generateHashCode(info))
         .addMethod(generateToString(info))
@@ -639,6 +640,25 @@ public class EpoxyProcessor extends AbstractProcessor {
         .build();
   }
 
+  private MethodSpec generateReset(ClassToGenerateInfo helperClass) {
+    Builder builder = MethodSpec.methodBuilder("reset")
+        .addAnnotation(Override.class)
+        .addModifiers(Modifier.PUBLIC)
+        .returns(helperClass.getParameterizedGeneratedName());
+
+    for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
+      if (!attributeInfo.hasFinalModifier()) {
+        builder.addStatement("this.$L = $L", attributeInfo.getName(),
+            getDefaultValue(attributeInfo.getType()));
+      }
+    }
+
+    return builder
+        .addStatement("super.reset()")
+        .addStatement("return this")
+        .build();
+  }
+
   private void writeError(Exception e) {
     messager.printMessage(Diagnostic.Kind.ERROR, e.toString());
   }
@@ -646,5 +666,22 @@ public class EpoxyProcessor extends AbstractProcessor {
   private void throwError(String msg, Object... args)
       throws EpoxyProcessorException {
     throw new EpoxyProcessorException(String.format(msg, args));
+  }
+
+  private static String getDefaultValue(TypeName attributeType) {
+    if (attributeType == BOOLEAN) {
+      return "false";
+    } else if (attributeType == BYTE || attributeType == CHAR || attributeType == SHORT
+        || attributeType == INT) {
+      return "0";
+    } else if (attributeType == LONG) {
+      return "0L";
+    } else if (attributeType == FLOAT) {
+      return "0.0f";
+    } else if (attributeType == DOUBLE) {
+      return "0.0d";
+    } else {
+      return "null";
+    }
   }
 }

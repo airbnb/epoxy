@@ -47,6 +47,12 @@ public class ModelWithFinalField_ extends ModelWithFinalField {
   }
 
   @Override
+  public ModelWithFinalField_ reset() {
+    super.reset();
+    return this;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;

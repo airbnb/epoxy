@@ -53,6 +53,13 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute {
   }
 
   @Override
+  public BasicModelWithAttribute_ reset() {
+    this.value = 0;
+    super.reset();
+    return this;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;

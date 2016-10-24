@@ -52,6 +52,13 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> {
   }
 
   @Override
+  public ModelWithType_<T> reset() {
+    this.value = 0;
+    super.reset();
+    return this;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (o == this) {
       return true;
