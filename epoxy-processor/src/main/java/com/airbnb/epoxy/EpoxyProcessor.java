@@ -500,33 +500,43 @@ public class EpoxyProcessor extends AbstractProcessor {
             helperClass.getGeneratedName());
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
-      if (!attributeInfo.useInHash()) {
+      TypeName type = attributeInfo.getType();
+
+      if (!attributeInfo.useInHash() && type.isPrimitive()) {
         continue;
       }
 
-      TypeName type = attributeInfo.getType();
       String name = attributeInfo.getName();
-      if (type == FLOAT) {
-        builder.beginControlFlow("if (Float.compare(that.$L, $L) != 0)", name, name)
-            .addStatement("return false")
-            .endControlFlow();
-      } else if (type == DOUBLE) {
-        builder.beginControlFlow("if (Double.compare(that.$L, $L) != 0)", name, name)
-            .addStatement("return false")
-            .endControlFlow();
-      } else if (type.isPrimitive()) {
-        builder.beginControlFlow("if ($L != that.$L)", name, name)
-            .addStatement("return false")
-            .endControlFlow();
-      } else if (type instanceof ArrayTypeName) {
-        builder.beginControlFlow("if (!$T.equals($L, that.$L))", TypeName.get(Arrays.class), name,
-            name)
-            .addStatement("return false")
-            .endControlFlow();
+
+      if (attributeInfo.useInHash()) {
+        if (type == FLOAT) {
+          builder.beginControlFlow("if (Float.compare(that.$L, $L) != 0)", name, name)
+              .addStatement("return false")
+              .endControlFlow();
+        } else if (type == DOUBLE) {
+          builder.beginControlFlow("if (Double.compare(that.$L, $L) != 0)", name, name)
+              .addStatement("return false")
+              .endControlFlow();
+        } else if (type.isPrimitive()) {
+          builder.beginControlFlow("if ($L != that.$L)", name, name)
+              .addStatement("return false")
+              .endControlFlow();
+        } else if (type instanceof ArrayTypeName) {
+          builder.beginControlFlow("if (!$T.equals($L, that.$L))", TypeName.get(Arrays.class), name,
+              name)
+              .addStatement("return false")
+              .endControlFlow();
+        } else {
+          builder
+              .beginControlFlow("if ($L != null ? !$L.equals(that.$L) : that.$L != null)",
+                  name, name, name, name)
+              .addStatement("return false")
+              .endControlFlow();
+        }
       } else {
-        builder
-            .beginControlFlow("if ($L != null ? !$L.equals(that.$L) : that.$L != null)", name, name,
-                name, name)
+        builder.beginControlFlow("if ($L != null && that.$L == null" +
+            " || $L == null && that.$L != null)",
+            name, name, name, name)
             .addStatement("return false")
             .endControlFlow();
       }
@@ -555,29 +565,35 @@ public class EpoxyProcessor extends AbstractProcessor {
     }
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
-      if (!attributeInfo.useInHash()) {
+      TypeName type = attributeInfo.getType();
+
+      if (!attributeInfo.useInHash() && type.isPrimitive()) {
         continue;
       }
 
-      TypeName type = attributeInfo.getType();
       String name = attributeInfo.getName();
 
-      if ((type == BYTE) || (type == CHAR) || (type == SHORT) || (type == INT)) {
-        builder.addStatement("result = 31 * result + $L", name);
-      } else if (type == LONG) {
-        builder.addStatement("result = 31 * result + (int) ($L ^ ($L >>> 32))", name, name);
-      } else if (type == FLOAT) {
-        builder.addStatement("result = 31 * result + ($L != +0.0f ? Float.floatToIntBits($L) : 0)",
-            name, name);
-      } else if (type == DOUBLE) {
-        builder.addStatement("temp = Double.doubleToLongBits($L)", name)
-            .addStatement("result = 31 * result + (int) (temp ^ (temp >>> 32))");
-      } else if (type == BOOLEAN) {
-        builder.addStatement("result = 31 * result + ($L ? 1 : 0)", name);
-      } else if (type instanceof ArrayTypeName) {
-        builder.addStatement("result = 31 * result + Arrays.hashCode($L)", name);
+      if (attributeInfo.useInHash()) {
+        if ((type == BYTE) || (type == CHAR) || (type == SHORT) || (type == INT)) {
+          builder.addStatement("result = 31 * result + $L", name);
+        } else if (type == LONG) {
+          builder.addStatement("result = 31 * result + (int) ($L ^ ($L >>> 32))", name, name);
+        } else if (type == FLOAT) {
+          builder.addStatement("result = 31 * result + ($L != +0.0f " +
+              "? Float.floatToIntBits($L) : 0)", name, name);
+        } else if (type == DOUBLE) {
+          builder.addStatement("temp = Double.doubleToLongBits($L)", name)
+              .addStatement("result = 31 * result + (int) (temp ^ (temp >>> 32))");
+        } else if (type == BOOLEAN) {
+          builder.addStatement("result = 31 * result + ($L ? 1 : 0)", name);
+        } else if (type instanceof ArrayTypeName) {
+          builder.addStatement("result = 31 * result + Arrays.hashCode($L)", name);
+        } else {
+          builder.addStatement("result = 31 * result + ($L != null ? $L.hashCode() : 0)", name,
+              name);
+        }
       } else {
-        builder.addStatement("result = 31 * result + ($L != null ? $L.hashCode() : 0)", name, name);
+        builder.addStatement("result = 31 * result + ($L != null ? 1 : 0)", name);
       }
     }
 
