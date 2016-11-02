@@ -534,8 +534,8 @@ public class EpoxyProcessor extends AbstractProcessor {
               .endControlFlow();
         }
       } else {
-        builder.beginControlFlow("if ($L != null && that.$L == null" +
-            " || $L == null && that.$L != null)",
+        builder.beginControlFlow("if ($L != null && that.$L == null"
+            + " || $L == null && that.$L != null)",
             name, name, name, name)
             .addStatement("return false")
             .endControlFlow();
@@ -579,8 +579,8 @@ public class EpoxyProcessor extends AbstractProcessor {
         } else if (type == LONG) {
           builder.addStatement("result = 31 * result + (int) ($L ^ ($L >>> 32))", name, name);
         } else if (type == FLOAT) {
-          builder.addStatement("result = 31 * result + ($L != +0.0f " +
-              "? Float.floatToIntBits($L) : 0)", name, name);
+          builder.addStatement("result = 31 * result + ($L != +0.0f "
+              + "? Float.floatToIntBits($L) : 0)", name, name);
         } else if (type == DOUBLE) {
           builder.addStatement("temp = Double.doubleToLongBits($L)", name)
               .addStatement("result = 31 * result + (int) (temp ^ (temp >>> 32))");
