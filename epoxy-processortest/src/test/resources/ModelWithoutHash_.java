@@ -30,6 +30,15 @@ public class ModelWithoutHash_ extends ModelWithoutHash {
     return value;
   }
 
+  public ModelWithoutHash_ value3(String value3) {
+    this.value3 = value3;
+    return this;
+  }
+
+  public String value3() {
+    return value3;
+  }
+
   @Override
   public ModelWithoutHash_ id(long id) {
     super.id(id);
@@ -64,6 +73,7 @@ public class ModelWithoutHash_ extends ModelWithoutHash {
   public ModelWithoutHash_ reset() {
     this.value2 = 0;
     this.value = 0;
+    this.value3 = null;
     super.reset();
     return this;
   }
@@ -83,6 +93,9 @@ public class ModelWithoutHash_ extends ModelWithoutHash {
     if (value != that.value) {
       return false;
     }
+    if (value3 != null && that.value3 == null || value3 == null && that.value3 != null) {
+      return false;
+    }
     return true;
   }
 
@@ -90,6 +103,7 @@ public class ModelWithoutHash_ extends ModelWithoutHash {
   public int hashCode() {
     int result = super.hashCode();
     result = 31 * result + value;
+    result = 31 * result + (value3 != null ? 1 : 0);
     return result;
   }
 
@@ -98,6 +112,7 @@ public class ModelWithoutHash_ extends ModelWithoutHash {
     return "ModelWithoutHash_{" +
         "value2=" + value2 +
         ", value=" + value +
+        ", value3=" + value3 +
         "}" + super.toString();
   }
 }
