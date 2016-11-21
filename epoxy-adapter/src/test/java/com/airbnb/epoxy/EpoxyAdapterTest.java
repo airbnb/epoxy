@@ -92,6 +92,17 @@ public class EpoxyAdapterTest {
     checkDifferState();
   }
 
+  @Test
+  public void testNotifyModelChangedWithPayload() {
+    Object payload = new Object();
+    TestModel testModel = new TestModel();
+    testAdapter.addModels(testModel);
+    testAdapter.notifyModelChanged(testModel, payload);
+    verify(observer).onItemRangeChanged(0, 1, payload);
+
+    checkDifferState();
+  }
+
   @Test(expected = IllegalStateException.class)
   public void testInsertModelBeforeThrowsForInvalidModel() {
     testAdapter.insertModelBefore(new TestModel(), new TestModel());
