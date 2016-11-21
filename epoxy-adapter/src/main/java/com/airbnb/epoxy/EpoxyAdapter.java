@@ -246,7 +246,7 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
    * Notify that the given model has had its data changed. It should only be called if the model
    * retained the same position.
    */
-  protected void notifyModelChanged(EpoxyModel<?> model, Object payload) {
+  protected void notifyModelChanged(EpoxyModel<?> model, @Nullable Object payload) {
     int index = getModelPosition(model);
     if (index != -1) {
       notifyItemChanged(index, payload);
