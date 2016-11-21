@@ -146,7 +146,15 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
     viewHolderState.restore(holder);
     boundViewHolders.put(holder);
 
-    onModelBound(holder, modelToShow, position);
+    onModelBound(holder, modelToShow, position, payloads);
+  }
+
+  /**
+   * Called immediately after a model is bound to a view holder. Subclasses can override this if
+   * they want alerts on when a model is bound.
+   */
+  protected void onModelBound(EpoxyViewHolder holder, EpoxyModel<?> model, int position, @Nullable List<Object> payloads) {
+    onModelBound(holder, model, position);
   }
 
   /**
@@ -231,9 +239,17 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
    * retained the same position.
    */
   protected void notifyModelChanged(EpoxyModel<?> model) {
+    notifyModelChanged(model, null);
+  }
+
+  /**
+   * Notify that the given model has had its data changed. It should only be called if the model
+   * retained the same position.
+   */
+  protected void notifyModelChanged(EpoxyModel<?> model, Object payload) {
     int index = getModelPosition(model);
     if (index != -1) {
-      notifyItemChanged(index);
+      notifyItemChanged(index, payload);
     }
   }
 
