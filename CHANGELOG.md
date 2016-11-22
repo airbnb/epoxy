@@ -1,3 +1,11 @@
+# 1.5.0 (11/21/2016)
+
+* Fixes models being used in separate modules
+* Generates a `reset()` method on each model to reset annotated fields to their defaults.
+* Changes `@EpoxyAttribute(hash = false)` to still differentiate between null and non null values in the hashcode implementation
+* Adds a `notifyModelChanged` method to EpoxyAdapter that allows a payload to be specified
+* Generates a `toString()` method on all generated model classes that includes the values of all annotated fields.
+
 # 1.4.0 (10/13/2016)
 
 * Optimizations to the diffing algorithm
