@@ -23,7 +23,7 @@ Epoxy is an Android library for building complex screens in a RecyclerView. It a
 <img alt="Sample app demo gif" src="https://github.com/airbnb/epoxy/raw/master/epoxy-sample/epoxy_sample_app.gif" width="200" height="354" />
 </p>
 
-## Download
+## Installation
 
 Gradle is the only supported build configuration, so just add the dependency to your project `build.gradle` file:
 
