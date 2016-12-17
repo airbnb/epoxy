@@ -18,14 +18,14 @@ import java.util.Set;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.TypeVisitor;
-import javax.lang.model.util.SimpleTypeVisitor6;
 import javax.lang.model.util.Types;
 
 public class ClassToGenerateInfo {
@@ -79,7 +79,7 @@ public class ClassToGenerateInfo {
     for (Element subElement : originalClass.getEnclosedElements()) {
       if (subElement.getKind() == ElementKind.CONSTRUCTOR
           && !subElement.getModifiers().contains(Modifier.PRIVATE)) {
-        List<? extends TypeMirror> params = subElement.asType().accept(CONSTRUCTOR_VISITOR, null);
+        List<? extends VariableElement> params = ((ExecutableElement) subElement).getParameters();
         constructors
             .add(new ConstructorInfo(subElement.getModifiers(), buildParamList(params)));
       }
@@ -102,14 +102,14 @@ public class ClassToGenerateInfo {
           TypeMirror methodReturnType = ((ExecutableType) subElement.asType()).getReturnType();
           if (methodReturnType.equals(clazz.asType())
               || typeUtils.isSubtype(clazz.asType(), methodReturnType)) {
-            List<? extends TypeMirror> params = ((ExecutableType) subElement.asType())
-                .getParameterTypes();
+            List<? extends VariableElement> params =
+                ((ExecutableElement) subElement).getParameters();
             String methodName = subElement.getSimpleName().toString();
             if (methodName.equals(RESET_METHOD) && params.isEmpty()) {
               continue;
             }
             if (params.size() == 1) {
-              TypeMirror param = params.get(0);
+              TypeMirror param = params.get(0).asType();
               ParameterSpec parameterSpec;
               // Since we can't properly handle annotations we have to detect layout method
               // manually to be able to add @LayoutRes annotation to its parameter.
@@ -133,24 +133,18 @@ public class ClassToGenerateInfo {
     }
   }
 
-  private List<ParameterSpec> buildParamList(List<? extends TypeMirror> params) {
+  private List<ParameterSpec> buildParamList(List<? extends VariableElement> params) {
     List<ParameterSpec> result = new ArrayList<>();
 
     // We don't know the name of the variable, just the type. So just use generic parameter names
     int paramCount = 1;
-    for (TypeMirror param : params) {
-      result.add(ParameterSpec.builder(TypeName.get(param), "param" + paramCount).build());
+    for (VariableElement param : params) {
+      result.add(ParameterSpec.builder(TypeName.get(param.asType()),
+          param.getSimpleName().toString()).build());
       paramCount++;
     }
     return result;
   }
-
-  private static final TypeVisitor<List<? extends TypeMirror>, Void> CONSTRUCTOR_VISITOR =
-      new SimpleTypeVisitor6<List<? extends TypeMirror>, Void>() {
-        public List<? extends TypeMirror> visitExecutable(ExecutableType t, Void v) {
-          return t.getParameterTypes();
-        }
-      };
 
   public void addAttribute(AttributeInfo attributeInfo) {
     addAttributes(Collections.singletonList(attributeInfo));
