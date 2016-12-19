@@ -136,13 +136,12 @@ public class ClassToGenerateInfo {
   private List<ParameterSpec> buildParamList(List<? extends VariableElement> params) {
     List<ParameterSpec> result = new ArrayList<>();
 
-    // We don't know the name of the variable, just the type. So just use generic parameter names
-    int paramCount = 1;
     for (VariableElement param : params) {
       result.add(ParameterSpec.builder(TypeName.get(param.asType()),
-          param.getSimpleName().toString()).build());
-      paramCount++;
+          param.getSimpleName().toString())
+          .build());
     }
+
     return result;
   }
 
