@@ -8,12 +8,12 @@ import java.lang.String;
 /**
  * Generated file. Do not modify! */
 public class ModelWithConstructors_ extends ModelWithConstructors {
-  public ModelWithConstructors_(long param1, int param2) {
-    super(param1, param2);
+  public ModelWithConstructors_(long id, int valueInt) {
+    super(id, valueInt);
   }
 
-  public ModelWithConstructors_(int param1) {
-    super(param1);
+  public ModelWithConstructors_(int valueInt) {
+    super(valueInt);
   }
 
   public ModelWithConstructors_() {

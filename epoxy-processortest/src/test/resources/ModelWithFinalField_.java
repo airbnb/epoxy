@@ -8,8 +8,8 @@ import java.lang.String;
 /**
  * Generated file. Do not modify! */
 public class ModelWithFinalField_ extends ModelWithFinalField {
-  public ModelWithFinalField_(long param1, int param2) {
-    super(param1, param2);
+  public ModelWithFinalField_(long id, int valueInt) {
+    super(id, valueInt);
   }
 
   public int valueInt() {
