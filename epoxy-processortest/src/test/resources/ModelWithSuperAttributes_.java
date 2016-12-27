@@ -28,8 +28,8 @@ public class ModelWithSuperAttributes_ extends ModelWithSuperAttributes {
   }
 
   @Override
-  public ModelWithSuperAttributes_ layout(@LayoutRes int layout) {
-    super.layout(layout);
+  public ModelWithSuperAttributes_ layout(@LayoutRes int arg0) {
+    super.layout(arg0);
     return this;
   }
 

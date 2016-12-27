@@ -46,8 +46,8 @@ public class ModelWithoutHash_ extends ModelWithoutHash {
   }
 
   @Override
-  public ModelWithoutHash_ layout(@LayoutRes int layout) {
-    super.layout(layout);
+  public ModelWithoutHash_ layout(@LayoutRes int arg0) {
+    super.layout(arg0);
     return this;
   }
 

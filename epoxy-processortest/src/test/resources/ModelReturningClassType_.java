@@ -48,8 +48,8 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
   }
 
   @Override
-  public ModelReturningClassType_ layout(@LayoutRes int layout) {
-    super.layout(layout);
+  public ModelReturningClassType_ layout(@LayoutRes int arg0) {
+    super.layout(arg0);
     return this;
   }
 

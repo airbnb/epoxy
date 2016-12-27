@@ -28,8 +28,8 @@ public class ModelWithAnnotatedClassAndSuperAttributes_ extends ModelWithAnnotat
   }
 
   @Override
-  public ModelWithAnnotatedClassAndSuperAttributes_ layout(@LayoutRes int layout) {
-    super.layout(layout);
+  public ModelWithAnnotatedClassAndSuperAttributes_ layout(@LayoutRes int arg0) {
+    super.layout(arg0);
     return this;
   }
 

@@ -23,8 +23,8 @@ public class ModelWithFinalField_ extends ModelWithFinalField {
   }
 
   @Override
-  public ModelWithFinalField_ layout(@LayoutRes int layout) {
-    super.layout(layout);
+  public ModelWithFinalField_ layout(@LayoutRes int arg0) {
+    super.layout(arg0);
     return this;
   }
 
