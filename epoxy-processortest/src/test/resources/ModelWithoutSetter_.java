@@ -24,8 +24,8 @@ public class ModelWithoutSetter_ extends ModelWithoutSetter {
   }
 
   @Override
-  public ModelWithoutSetter_ layout(@LayoutRes int layout) {
-    super.layout(layout);
+  public ModelWithoutSetter_ layout(@LayoutRes int arg0) {
+    super.layout(arg0);
     return this;
   }
 

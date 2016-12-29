@@ -29,8 +29,8 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute {
   }
 
   @Override
-  public BasicModelWithAttribute_ layout(@LayoutRes int layout) {
-    super.layout(layout);
+  public BasicModelWithAttribute_ layout(@LayoutRes int arg0) {
+    super.layout(arg0);
     return this;
   }
 

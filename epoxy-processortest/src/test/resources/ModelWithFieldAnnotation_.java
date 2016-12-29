@@ -30,8 +30,8 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation {
   }
 
   @Override
-  public ModelWithFieldAnnotation_ layout(@LayoutRes int layout) {
-    super.layout(layout);
+  public ModelWithFieldAnnotation_ layout(@LayoutRes int arg0) {
+    super.layout(arg0);
     return this;
   }
 

@@ -1,8 +1,10 @@
 
 package com.airbnb.epoxy;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.ParameterSpec.Builder;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeVariableName;
@@ -16,6 +18,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -30,10 +33,7 @@ import javax.lang.model.util.Types;
 
 public class ClassToGenerateInfo {
 
-  private static final String LAYOUT_METHOD = "layout";
-  private static final ClassName LAYOUT_RES_ANNOTATION =
-      ClassName.get("android.support.annotation", "LayoutRes");
-  public static final String RESET_METHOD = "reset";
+  private static final String RESET_METHOD = "reset";
 
   private final TypeName originalClassName;
   private final TypeName originalClassNameWithoutType;
@@ -108,24 +108,8 @@ public class ClassToGenerateInfo {
             if (methodName.equals(RESET_METHOD) && params.isEmpty()) {
               continue;
             }
-            if (params.size() == 1) {
-              TypeMirror param = params.get(0).asType();
-              ParameterSpec parameterSpec;
-              // Since we can't properly handle annotations we have to detect layout method
-              // manually to be able to add @LayoutRes annotation to its parameter.
-              if (methodName.equals(LAYOUT_METHOD) && param.getKind() == TypeKind.INT) {
-                parameterSpec = ParameterSpec.builder(int.class, methodName)
-                    .addAnnotation(LAYOUT_RES_ANNOTATION)
-                    .build();
-              } else {
-                parameterSpec = ParameterSpec.builder(TypeName.get(param), methodName).build();
-              }
-              methodsReturningClassType.add(new MethodInfo(methodName, modifiers,
-                  Collections.singletonList(parameterSpec)));
-            } else {
-              methodsReturningClassType.add(new MethodInfo(methodName, modifiers,
-                  buildParamList(params)));
-            }
+            methodsReturningClassType.add(new MethodInfo(methodName, modifiers,
+                buildParamList(params)));
           }
         }
       }
@@ -137,9 +121,12 @@ public class ClassToGenerateInfo {
     List<ParameterSpec> result = new ArrayList<>();
 
     for (VariableElement param : params) {
-      result.add(ParameterSpec.builder(TypeName.get(param.asType()),
-          param.getSimpleName().toString())
-          .build());
+      Builder builder = ParameterSpec.builder(TypeName.get(param.asType()),
+          param.getSimpleName().toString());
+      for (AnnotationMirror annotation : param.getAnnotationMirrors()) {
+        builder.addAnnotation(AnnotationSpec.get(annotation));
+      }
+      result.add(builder.build());
     }
 
     return result;

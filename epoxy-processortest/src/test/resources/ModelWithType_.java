@@ -28,8 +28,8 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> {
   }
 
   @Override
-  public ModelWithType_<T> layout(@LayoutRes int layout) {
-    super.layout(layout);
+  public ModelWithType_<T> layout(@LayoutRes int arg0) {
+    super.layout(arg0);
     return this;
   }
 

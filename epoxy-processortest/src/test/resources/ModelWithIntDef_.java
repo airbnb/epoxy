@@ -29,8 +29,8 @@ public class ModelWithIntDef_ extends ModelWithIntDef {
   }
 
   @Override
-  public ModelWithIntDef_ layout(@LayoutRes int layout) {
-    super.layout(layout);
+  public ModelWithIntDef_ layout(@LayoutRes int arg0) {
+    super.layout(arg0);
     return this;
   }
 
