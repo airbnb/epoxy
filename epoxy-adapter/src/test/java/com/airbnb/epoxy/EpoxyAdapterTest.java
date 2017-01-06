@@ -152,6 +152,20 @@ public class EpoxyAdapterTest {
   }
 
   @Test
+  public void testRemoveAllModels() {
+    for (int i = 0; i < 10; i++) {
+      TestModel model = new TestModel();
+      testAdapter.addModels(model);
+    }
+
+    testAdapter.removeAllModels();
+    verify(observer).onItemRangeRemoved(0, 10);
+    assertEquals(0, testAdapter.models.size());
+
+    checkDifferState();
+  }
+
+  @Test
   public void testRemoveAllAfterModels() {
     List<TestModel> models = new ArrayList<>();
     for (int i = 0; i < 10; i++) {
