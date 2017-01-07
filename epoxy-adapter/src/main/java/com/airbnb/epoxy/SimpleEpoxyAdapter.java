@@ -60,6 +60,11 @@ public class SimpleEpoxyAdapter extends EpoxyAdapter {
   }
 
   @Override
+  public void removeAllModels() {
+    super.removeAllModels();
+  }
+
+  @Override
   public void removeAllAfterModel(EpoxyModel<?> model) {
     super.removeAllAfterModel(model);
   }

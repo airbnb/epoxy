@@ -349,6 +349,19 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
   }
 
   /**
+   * Removes all models
+   */
+  protected void removeAllModels() {
+    int numModelsRemoved = models.size();
+
+    pauseModelListNotifications();
+    models.clear();
+    resumeModelListNotifications();
+
+    notifyItemRangeRemoved(0, numModelsRemoved);
+  }
+
+  /**
    * Removes all models after the given model, which must have already been added. An example use
    * case is you want to keep a header but clear everything else, like in the case of refreshing
    * data.
