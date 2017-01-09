@@ -35,17 +35,9 @@ dependencies {
 
 Optionally, if you want to use the [attributes for generated helper classes](#annotations) you must also provide the annotation processor as a dependency.
 ```groovy
-buildscript {
-  dependencies {
-    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-  }
-}
-
-apply plugin: 'android-apt'
-
 dependencies {
   compile 'com.airbnb.android:epoxy:1.5.0'
-  apt 'com.airbnb.android:epoxy-processor:1.5.0'
+  annotationProcessor 'com.airbnb.android:epoxy-processor:1.5.0'
 }
 ```
 

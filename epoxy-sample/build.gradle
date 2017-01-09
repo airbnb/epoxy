@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
@@ -22,10 +21,10 @@ configurations.all { strategy ->
 dependencies {
   compile project(':epoxy-adapter')
   compile project(':epoxy-annotations')
-  apt project(':epoxy-processor')
+  annotationProcessor project(':epoxy-processor')
 
   compile rootProject.deps.butterknifeLibrary
-  apt rootProject.deps.butterknifeCompiler
+  annotationProcessor rootProject.deps.butterknifeCompiler
 
   compile rootProject.deps.androidCardView
 
