@@ -5,7 +5,6 @@ buildscript {
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:2.2.3'
-    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
   }
 }
