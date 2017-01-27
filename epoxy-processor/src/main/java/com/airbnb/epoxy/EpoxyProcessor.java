@@ -420,7 +420,8 @@ public class EpoxyProcessor extends AbstractProcessor {
     for (ConstructorInfo constructorInfo : info.getConstructors()) {
       Builder builder = MethodSpec.constructorBuilder()
           .addModifiers(constructorInfo.modifiers)
-          .addParameters(constructorInfo.params);
+          .addParameters(constructorInfo.params)
+          .varargs(constructorInfo.varargs);
 
       StringBuilder statementBuilder = new StringBuilder("super(");
       generateParams(statementBuilder, constructorInfo.params);
@@ -441,6 +442,7 @@ public class EpoxyProcessor extends AbstractProcessor {
           .addModifiers(methodInfo.modifiers)
           .addParameters(methodInfo.params)
           .addAnnotation(Override.class)
+          .varargs(methodInfo.varargs)
           .returns(info.getParameterizedGeneratedName());
 
       StringBuilder statementBuilder = new StringBuilder(String.format("super.%s(",

@@ -79,9 +79,11 @@ public class ClassToGenerateInfo {
     for (Element subElement : originalClass.getEnclosedElements()) {
       if (subElement.getKind() == ElementKind.CONSTRUCTOR
           && !subElement.getModifiers().contains(Modifier.PRIVATE)) {
-        List<? extends VariableElement> params = ((ExecutableElement) subElement).getParameters();
+        ExecutableElement castedSubElement = ((ExecutableElement) subElement);
+        List<? extends VariableElement> params = castedSubElement.getParameters();
         constructors
-            .add(new ConstructorInfo(subElement.getModifiers(), buildParamList(params)));
+            .add(new ConstructorInfo(subElement.getModifiers(), buildParamList(params),
+                castedSubElement.isVarArgs()));
       }
     }
   }
@@ -102,14 +104,14 @@ public class ClassToGenerateInfo {
           TypeMirror methodReturnType = ((ExecutableType) subElement.asType()).getReturnType();
           if (methodReturnType.equals(clazz.asType())
               || typeUtils.isSubtype(clazz.asType(), methodReturnType)) {
-            List<? extends VariableElement> params =
-                ((ExecutableElement) subElement).getParameters();
+            ExecutableElement castedSubElement = ((ExecutableElement) subElement);
+            List<? extends VariableElement> params = castedSubElement.getParameters();
             String methodName = subElement.getSimpleName().toString();
             if (methodName.equals(RESET_METHOD) && params.isEmpty()) {
               continue;
             }
             methodsReturningClassType.add(new MethodInfo(methodName, modifiers,
-                buildParamList(params)));
+                buildParamList(params), castedSubElement.isVarArgs()));
           }
         }
       }
@@ -195,10 +197,12 @@ public class ClassToGenerateInfo {
   public static class ConstructorInfo {
     final Set<Modifier> modifiers;
     final List<ParameterSpec> params;
+    final boolean varargs;
 
-    public ConstructorInfo(Set<Modifier> modifiers, List<ParameterSpec> params) {
+    public ConstructorInfo(Set<Modifier> modifiers, List<ParameterSpec> params, boolean varargs) {
       this.modifiers = modifiers;
       this.params = params;
+      this.varargs = varargs;
     }
   }
 
@@ -206,11 +210,14 @@ public class ClassToGenerateInfo {
     final String name;
     final Set<Modifier> modifiers;
     final List<ParameterSpec> params;
+    final boolean varargs;
 
-    public MethodInfo(String name, Set<Modifier> modifiers, List<ParameterSpec> params) {
+    public MethodInfo(String name, Set<Modifier> modifiers, List<ParameterSpec> params,
+        boolean varargs) {
       this.name = name;
       this.modifiers = modifiers;
       this.params = params;
+      this.varargs = varargs;
     }
 
     @Override
@@ -224,6 +231,9 @@ public class ClassToGenerateInfo {
 
       MethodInfo that = (MethodInfo) o;
 
+      if (varargs != that.varargs) {
+        return false;
+      }
       if (name != null ? !name.equals(that.name) : that.name != null) {
         return false;
       }
@@ -238,6 +248,7 @@ public class ClassToGenerateInfo {
       int result = name != null ? name.hashCode() : 0;
       result = 31 * result + (modifiers != null ? modifiers.hashCode() : 0);
       result = 31 * result + (params != null ? params.hashCode() : 0);
+      result = 31 * result + (varargs ? 1 : 0);
       return result;
     }
   }
