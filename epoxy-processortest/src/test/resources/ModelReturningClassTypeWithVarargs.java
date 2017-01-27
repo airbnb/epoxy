@@ -1,7 +1,5 @@
 package com.airbnb.epoxy;
 
-import java.util.List;
-
 public class ModelReturningClassTypeWithVarargs extends EpoxyModel<Object> {
   @EpoxyAttribute int value;
 

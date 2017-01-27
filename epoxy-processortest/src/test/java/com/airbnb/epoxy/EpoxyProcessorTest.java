@@ -308,7 +308,7 @@ public class EpoxyProcessorTest {
         .forResource("ModelReturningClassTypeWithVarargs.java");
 
     JavaFileObject generatedModel = JavaFileObjects
-        .forResource("ModelReturningClassTypeWithVarArgs_.java");
+        .forResource("ModelReturningClassTypeWithVarargs_.java");
 
     assert_().about(javaSource())
         .that(model)
