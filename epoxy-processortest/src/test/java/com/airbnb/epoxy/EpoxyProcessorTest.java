@@ -301,4 +301,36 @@ public class EpoxyProcessorTest {
         .and()
         .generatesSources(generatedModel);
   }
+
+  @Test
+  public void testModelReturningClassTypeWithVarargs() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelReturningClassTypeWithVarargs.java");
+
+    JavaFileObject generatedModel = JavaFileObjects
+        .forResource("ModelReturningClassTypeWithVarargs_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void testModelWithVarargsConstructors() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithVarargsConstructors.java");
+
+    JavaFileObject generatedModel = JavaFileObjects
+        .forResource("ModelWithVarargsConstructors_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
 }
