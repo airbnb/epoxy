@@ -13,7 +13,7 @@ android {
 configurations.all { strategy ->
   strategy.resolutionStrategy.force rootProject.deps.androidAnnotations, rootProject.deps.androidRecyclerView,
       rootProject.deps.androidDesignLibrary, rootProject.deps.androidSupportLibrary, rootProject.deps.junit,
-      rootProject.deps.googleGuava, rootProject.deps.robolectric, rootProject.deps.mockito
+      rootProject.deps.robolectric, rootProject.deps.mockito
 }
 
 dependencies {
@@ -24,7 +24,6 @@ dependencies {
   compile project(':epoxy-annotations')
 
   testCompile rootProject.deps.junit
-  testCompile rootProject.deps.googleGuava
   testCompile rootProject.deps.robolectric
   testCompile rootProject.deps.mockito
 }

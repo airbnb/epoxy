@@ -23,7 +23,6 @@ rootProject.ext.SQUARE_JAVAPOET_VERSION = "1.8.0"
 
 rootProject.ext.ASSERTJ_VERSION = "1.7.1"
 rootProject.ext.GOOGLE_TESTING_COMPILE_VERSION = "0.10"
-rootProject.ext.GOOGLE_GUAVA_VERSION = "20.0"
 rootProject.ext.JUNIT_VERSION = "4.12"
 rootProject.ext.MOCKITO_VERSION = "2.2.11"
 rootProject.ext.ROBOLECTRIC_VERSION = "3.1.4"
@@ -40,7 +39,6 @@ rootProject.ext.deps = [
     squareJavaPoet          : "com.squareup:javapoet:$SQUARE_JAVAPOET_VERSION",
     assertj                 : "org.assertj:assertj-core:$ASSERTJ_VERSION",
     googleTestingCompile    : "com.google.testing.compile:compile-testing:$GOOGLE_TESTING_COMPILE_VERSION",
-    googleGuava             : "com.google.guava:guava:$GOOGLE_GUAVA_VERSION",
     junit                   : "junit:junit:$JUNIT_VERSION",
     mockito                 : "org.mockito:mockito-core:$MOCKITO_VERSION",
     robolectric            : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION"
