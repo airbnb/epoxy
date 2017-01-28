@@ -1,3 +1,5 @@
+import org.gradle.internal.jvm.Jvm
+
 apply plugin: 'com.android.library'
 apply from: 'build.workaround-missing-resource.gradle'
 
@@ -12,15 +14,9 @@ android {
 }
 
 dependencies {
-  testCompile rootProject.deps.junit
-  testCompile rootProject.deps.googleGuava
-  testCompile rootProject.deps.roboelectric
-  testCompile rootProject.deps.mockito
-  testCompile rootProject.deps.googleTestingCompile
-  testCompile files(org.gradle.internal.jvm.Jvm.current().getRuntimeJar())
-  testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
   testCompile project(':epoxy-processor')
   testCompile project(':epoxy-processortest2')
-  compile project(':epoxy-annotations')
-  compile project(':epoxy-adapter')
+  testCompile files(Jvm.current().getRuntimeJar())
+  testCompile files(Jvm.current().getToolsJar())
+  testCompile rootProject.deps.googleTestingCompile
 }
