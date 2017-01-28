@@ -26,7 +26,7 @@ rootProject.ext.GOOGLE_TESTING_COMPILE_VERSION = "0.10"
 rootProject.ext.GOOGLE_GUAVA_VERSION = "20.0"
 rootProject.ext.JUNIT_VERSION = "4.12"
 rootProject.ext.MOCKITO_VERSION = "2.2.11"
-rootProject.ext.ROBO_ELECTRIC_VERSION = "3.1.4"
+rootProject.ext.ROBOLECTRIC_VERSION = "3.1.4"
 
 rootProject.ext.deps = [
     androidSupportLibrary   : "com.android.support:appcompat-v7:$ANDROID_SUPPORT_LIBS_VERSION",
@@ -43,5 +43,5 @@ rootProject.ext.deps = [
     googleGuava             : "com.google.guava:guava:$GOOGLE_GUAVA_VERSION",
     junit                   : "junit:junit:$JUNIT_VERSION",
     mockito                 : "org.mockito:mockito-core:$MOCKITO_VERSION",
-    roboelectric            : "org.robolectric:robolectric:$ROBO_ELECTRIC_VERSION"
+    robolectric            : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION"
 ]
