@@ -11,14 +11,5 @@ android {
 }
 
 dependencies {
-  testCompile rootProject.deps.junit
-  testCompile rootProject.deps.googleGuava
-  testCompile rootProject.deps.roboelectric
-  testCompile rootProject.deps.mockito
-  testCompile rootProject.deps.googleTestingCompile
-  testCompile files(org.gradle.internal.jvm.Jvm.current().getRuntimeJar())
-  testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
-  compile project(':epoxy-annotations')
   compile project(':epoxy-adapter')
-  compile project(':epoxy-processor')
 }
