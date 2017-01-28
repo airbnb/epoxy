@@ -7,7 +7,6 @@ configurations.all { strategy ->
 }
 
 dependencies {
-  compile deps.assertj
   compile deps.googleAutoService
   compile deps.squareJavaPoet
 
