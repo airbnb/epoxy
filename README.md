@@ -205,9 +205,9 @@ Epoxy uses the layout resource id provided by `EpoxyModel#getLayout()` to create
 
 Note, if you are [using view holders](#view-holders) then this process is slightly different. Instead, the adapter will pass the inflated view to your view holder and the view holder will be bound to the model.
 
-Since RecyclerView reuses views when possible, a view may be bound multiple times. You should make sure that your usage of `EpoxyModel#bind(View)` completely updates the view according to the data in your model.
-
 When the view is recycled, `EpoxyAdapter` will call `EpoxyModel#unbind(View)`, giving you a chance to release any resources associated with the view. This is a good opportunity to clear the view of large or expensive data such as bitmaps.
+
+Since RecyclerView reuses views when possible, a view may be bound multiple times, without `unbind` necessarily being called in between. You should make sure that your usage of `EpoxyModel#bind(View)` completely updates the view according to the data in your model.
 
 If the recycler view provided a non empty list of payloads with `onBindViewHolder(ViewHolder holder, int position, List<Object> payloads)`, then `EpoxyModel#bind(View, List<Object>)` will be called instead so that the model can be optimized to rebind according to what changed. This can help you prevent unnecessary layout changes if only part of the view changed.
 
