@@ -1,7 +1,6 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 
 import java.util.List;
 
@@ -183,7 +182,7 @@ public abstract class EpoxyModel<T> {
    * from the RecyclerView.
    *
    * @return True if the View should be recycled, false otherwise
-   * @see EpoxyAdapter#onFailedToRecycleView(ViewHolder)
+   * @see EpoxyAdapter#onFailedToRecycleView(android.support.v7.widget.RecyclerView.ViewHolder)
    */
   public boolean onFailedToRecycleView(T view) {
     return false;
@@ -192,7 +191,7 @@ public abstract class EpoxyModel<T> {
   /**
    * Called when this model's view is attached to the window.
    *
-   * @see EpoxyAdapter#onViewAttachedToWindow(ViewHolder)
+   * @see EpoxyAdapter#onViewAttachedToWindow(android.support.v7.widget.RecyclerView.ViewHolder)
    */
   public void onViewAttachedToWindow(T view) {
 
@@ -201,7 +200,7 @@ public abstract class EpoxyModel<T> {
   /**
    * Called when this model's view is detached from the the window.
    *
-   * @see EpoxyAdapter#onViewDetachedFromWindow(ViewHolder)
+   * @see EpoxyAdapter#onViewDetachedFromWindow(android.support.v7.widget.RecyclerView.ViewHolder)
    */
   public void onViewDetachedFromWindow(T view) {
 
