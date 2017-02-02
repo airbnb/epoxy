@@ -55,7 +55,16 @@ public abstract class EpoxyModel<T> {
     bind(view);
   }
 
-  /** Subclasses can override this if their view needs to release resources when it's recycled. */
+  /**
+   * Called when the view bound to this model is recycled. Subclasses can override this if their
+   * view should release resources when it's recycled.
+   * <p>
+   * Note that {@link #bind(Object)} can be called multiple times without an unbind call in between
+   * if the view has remained on screen to be reused across item changes. This means that you should
+   * not rely on unbind to clear a view or model's state before bind is called again.
+   *
+   * @see {@link EpoxyAdapter#onViewRecycled(EpoxyViewHolder)}
+   */
   public void unbind(T view) {
   }
 
