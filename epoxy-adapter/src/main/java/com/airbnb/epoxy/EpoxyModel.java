@@ -184,6 +184,37 @@ public abstract class EpoxyModel<T> {
     return false;
   }
 
+  /**
+   * Called if the RecyclerView failed to recycle this model's view. You can take this opportunity
+   * to clear the animation(s) that affect the View's transient state and return <code>true</code>
+   * so that the View can be recycled. Keep in mind that the View in question is already removed
+   * from the RecyclerView.
+   *
+   * @return True if the View should be recycled, false otherwise
+   * @see EpoxyAdapter#onFailedToRecycleView(android.support.v7.widget.RecyclerView.ViewHolder)
+   */
+  public boolean onFailedToRecycleView(T view) {
+    return false;
+  }
+
+  /**
+   * Called when this model's view is attached to the window.
+   *
+   * @see EpoxyAdapter#onViewAttachedToWindow(android.support.v7.widget.RecyclerView.ViewHolder)
+   */
+  public void onViewAttachedToWindow(T view) {
+
+  }
+
+  /**
+   * Called when this model's view is detached from the the window.
+   *
+   * @see EpoxyAdapter#onViewDetachedFromWindow(android.support.v7.widget.RecyclerView.ViewHolder)
+   */
+  public void onViewDetachedFromWindow(T view) {
+
+  }
+
   @Override
   public String toString() {
     return "{" + getClass().getSimpleName()

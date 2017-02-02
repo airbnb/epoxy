@@ -2,6 +2,7 @@
 package com.airbnb.epoxy;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView;
@@ -204,6 +205,27 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
    */
   protected void onModelUnbound(EpoxyViewHolder holder, EpoxyModel<?> model) {
 
+  }
+
+  @CallSuper
+  @Override
+  public boolean onFailedToRecycleView(EpoxyViewHolder holder) {
+    //noinspection unchecked,rawtypes
+    return ((EpoxyModel) holder.getModel()).onFailedToRecycleView(holder.itemView);
+  }
+
+  @CallSuper
+  @Override
+  public void onViewAttachedToWindow(EpoxyViewHolder holder) {
+    //noinspection unchecked,rawtypes
+    ((EpoxyModel) holder.getModel()).onViewAttachedToWindow(holder.itemView);
+  }
+
+  @CallSuper
+  @Override
+  public void onViewDetachedFromWindow(EpoxyViewHolder holder) {
+    //noinspection unchecked,rawtypes
+    ((EpoxyModel) holder.getModel()).onViewDetachedFromWindow(holder.itemView);
   }
 
   public void onSaveInstanceState(Bundle outState) {
