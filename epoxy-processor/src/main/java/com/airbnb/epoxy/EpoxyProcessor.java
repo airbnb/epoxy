@@ -5,7 +5,6 @@ import com.airbnb.epoxy.ClassToGenerateInfo.MethodInfo;
 import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.squareup.javapoet.ArrayTypeName;
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
@@ -35,13 +34,16 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 
+import static com.airbnb.epoxy.ProcessorUtils.EPOXY_MODEL_TYPE;
+import static com.airbnb.epoxy.ProcessorUtils.getEpoxyObjectType;
+import static com.airbnb.epoxy.ProcessorUtils.implementsMethod;
+import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModel;
+import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModelWithHolder;
 import static com.squareup.javapoet.TypeName.BOOLEAN;
 import static com.squareup.javapoet.TypeName.BYTE;
 import static com.squareup.javapoet.TypeName.CHAR;
@@ -66,9 +68,8 @@ import static javax.lang.model.element.Modifier.STATIC;
  */
 @AutoService(Processor.class)
 public class EpoxyProcessor extends AbstractProcessor {
-  private static final String GENERATED_CLASS_NAME_SUFFIX = "_";
-  private static final String EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel<?>";
 
+  public static final String CREATE_NEW_HOLDER_METHOD_NAME = "createNewHolder";
   private Filer filer;
   private Messager messager;
   private Elements elementUtils;
@@ -115,7 +116,7 @@ public class EpoxyProcessor extends AbstractProcessor {
     for (Entry<TypeElement, ClassToGenerateInfo> modelEntry : modelClassMap.entrySet()) {
       try {
         generateClassForModel(modelEntry.getValue());
-      } catch (IOException e) {
+      } catch (IOException | EpoxyProcessorException e) {
         writeError(e);
       }
     }
@@ -233,24 +234,11 @@ public class EpoxyProcessor extends AbstractProcessor {
     }
 
     if (classToGenerateInfo == null) {
-      ClassName generatedClassName = getGeneratedClassName(classElement);
-      boolean isAbstract = classElement.getModifiers().contains(Modifier.ABSTRACT);
-      classToGenerateInfo = new ClassToGenerateInfo(typeUtils, classElement, generatedClassName,
-          isAbstract);
+      classToGenerateInfo = new ClassToGenerateInfo(typeUtils, elementUtils, classElement);
       modelClassMap.put(classElement, classToGenerateInfo);
     }
 
     return classToGenerateInfo;
-  }
-
-  private ClassName getGeneratedClassName(TypeElement classElement) {
-    String packageName = elementUtils.getPackageOf(classElement).getQualifiedName().toString();
-
-    int packageLen = packageName.length() + 1;
-    String className =
-        classElement.getQualifiedName().toString().substring(packageLen).replace('.', '$');
-
-    return ClassName.get(packageName, className + GENERATED_CLASS_NAME_SUFFIX);
   }
 
   /**
@@ -343,54 +331,9 @@ public class EpoxyProcessor extends AbstractProcessor {
     return typeUtils.isSubtype(e1, typeUtils.erasure(e2));
   }
 
-  private boolean isEpoxyModel(TypeMirror type) {
-    return isSubtypeOfType(type, EPOXY_MODEL_TYPE);
-  }
-
-  private boolean isSubtypeOfType(TypeMirror typeMirror, String otherType) {
-    if (otherType.equals(typeMirror.toString())) {
-      return true;
-    }
-    if (typeMirror.getKind() != TypeKind.DECLARED) {
-      return false;
-    }
-    DeclaredType declaredType = (DeclaredType) typeMirror;
-    List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
-    if (typeArguments.size() > 0) {
-      StringBuilder typeString = new StringBuilder(declaredType.asElement().toString());
-      typeString.append('<');
-      for (int i = 0; i < typeArguments.size(); i++) {
-        if (i > 0) {
-          typeString.append(',');
-        }
-        typeString.append('?');
-      }
-      typeString.append('>');
-      if (typeString.toString().equals(otherType)) {
-        return true;
-      }
-    }
-    Element element = declaredType.asElement();
-    if (!(element instanceof TypeElement)) {
-      return false;
-    }
-    TypeElement typeElement = (TypeElement) element;
-    TypeMirror superType = typeElement.getSuperclass();
-    if (isSubtypeOfType(superType, otherType)) {
-      return true;
-    }
-    for (TypeMirror interfaceType : typeElement.getInterfaces()) {
-      if (isSubtypeOfType(interfaceType, otherType)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private void generateClassForModel(ClassToGenerateInfo info) throws IOException {
-    if (info.isOriginalClassAbstract()) {
-      // Don't extend classes that are abstract. If they don't contain all required
-      // methods then our generated class won't compile
+  private void generateClassForModel(ClassToGenerateInfo info)
+      throws IOException, EpoxyProcessorException {
+    if (!info.shouldGenerateSubClass()) {
       return;
     }
 
@@ -402,6 +345,7 @@ public class EpoxyProcessor extends AbstractProcessor {
         .addMethods(generateConstructors(info))
         .addMethods(generateSettersAndGetters(info))
         .addMethods(generateMethodsReturningClassType(info))
+        .addMethods(generateDefaultMethodImplementations(info))
         .addMethod(generateReset(info))
         .addMethod(generateEquals(info))
         .addMethod(generateHashCode(info))
@@ -453,6 +397,44 @@ public class EpoxyProcessor extends AbstractProcessor {
           .addStatement(statementBuilder.toString())
           .addStatement("return this")
           .build());
+    }
+
+    return methods;
+  }
+
+  /**
+   * Generates default implementations of certain model methods if the model is abstract and doesn't
+   * implement them.
+   */
+  private Iterable<MethodSpec> generateDefaultMethodImplementations(ClassToGenerateInfo info)
+      throws EpoxyProcessorException {
+    List<MethodSpec> methods = new ArrayList<>();
+
+    // If the model is a holder and doesn't implement the "createNewHolder" method we can
+    // generate a default implementation by getting the class type and creating a new instance
+    // of it.
+    TypeElement originalClassElement = info.getOriginalClassElement();
+    if (isEpoxyModelWithHolder(originalClassElement)) {
+
+      MethodSpec createHolderMethod = MethodSpec.methodBuilder(CREATE_NEW_HOLDER_METHOD_NAME)
+          .addAnnotation(Override.class)
+          .addModifiers(Modifier.PROTECTED)
+          .build();
+
+      if (!implementsMethod(originalClassElement, createHolderMethod, typeUtils)) {
+        TypeMirror epoxyObjectType = getEpoxyObjectType(originalClassElement, typeUtils);
+
+        if (epoxyObjectType == null) {
+          throwError("Return type for createNewHolder method could not be found");
+        }
+
+        createHolderMethod = createHolderMethod.toBuilder()
+            .returns(TypeName.get(epoxyObjectType))
+            .addStatement("return new $T()", epoxyObjectType)
+            .build();
+
+        methods.add(createHolderMethod);
+      }
     }
 
     return methods;
@@ -537,7 +519,7 @@ public class EpoxyProcessor extends AbstractProcessor {
         }
       } else {
         builder.beginControlFlow("if ($L != null && that.$L == null"
-            + " || $L == null && that.$L != null)",
+                + " || $L == null && that.$L != null)",
             name, name, name, name)
             .addStatement("return false")
             .endControlFlow();

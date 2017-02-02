@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to annotate {@link EpoxyModel} classes in order to generate a
+ * Used to annotate EpoxyModel classes in order to generate a
  * subclass of that model with getters, setters, equals, and hashcode for the annotated fields.
  */
 @Target(ElementType.TYPE)
