@@ -87,6 +87,76 @@ public abstract class EpoxyModel<T> {
     return this;
   }
 
+  /**
+   * Use a string as the model id. Useful for models that don't clearly map to a numerical id. This
+   * is preferable to using {@link String#hashCode()} because that is a 32 bit hash and this is a 64
+   * bit hash, giving better spread and less chance of collision with other ids.
+   * <p>
+   * Since this uses a hashcode method to convert the String to a long there is a very small
+   * chance that you may have a collision with another id. Assuming an even spread of hashcodes, and
+   * several hundred models in the adapter, there would be roughly 1 in 100 trillion chance of a
+   * collision. (http://preshing.com/20110504/hash-collision-probabilities/)
+   *
+   * @see EpoxyModel#hashString64Bit(CharSequence)
+   */
+  public EpoxyModel<T> id(CharSequence key) {
+    id(hashString64Bit(key));
+    return this;
+  }
+
+  /**
+   * Set an id that is namespaced with a string. This is useful when you need to show models of
+   * multiple types, side by side and don't want to risk id collisions.
+   * <p>
+   * Since this uses a hashcode method to convert the String to a long there is a very small chance
+   * that you may have a collision with another id. Assuming an even spread of hashcodes, and
+   * several hundred models in the adapter, there would be roughly 1 in 100 trillion chance of a
+   * collision. (http://preshing.com/20110504/hash-collision-probabilities/)
+   *
+   * @see EpoxyModel#hashString64Bit(CharSequence)
+   * @see EpoxyModel#hashLong64Bit(long)
+   */
+  public EpoxyModel<T> id(CharSequence key, long id) {
+    long result = hashString64Bit(key);
+    result = 31 * result + hashLong64Bit(id);
+    id(result);
+    return this;
+  }
+
+  /**
+   * Hash a long into 64 bits instead of the normal 32. This uses a xor shift implementation to
+   * attempt psuedo randomness so object ids have an even spread for less chance of collisions.
+   * <p>
+   * From http://stackoverflow.com/a/11554034
+   * <p>
+   * http://www.javamex.com/tutorials/random_numbers/xorshift.shtml
+   */
+  private static long hashLong64Bit(long value) {
+    value ^= (value << 21);
+    value ^= (value >>> 35);
+    value ^= (value << 4);
+    return value;
+  }
+
+  /**
+   * Hash a string into 64 bits instead of the normal 32. This allows us to better use strings as a
+   * model id with less chance of collisions. This uses the FNV-1a algorithm for a good mix of speed
+   * and distribution.
+   * <p>
+   * Performance comparisons found at http://stackoverflow.com/a/1660613
+   * <p>
+   * Hash implementation from http://www.isthe.com/chongo/tech/comp/fnv/index.html#FNV-1a
+   */
+  private static long hashString64Bit(CharSequence str) {
+    long result = 0xcbf29ce484222325L;
+    final int len = str.length();
+    for (int i = 0; i < len; i++) {
+      result ^= str.charAt(i);
+      result *= 0x100000001b3L;
+    }
+    return result;
+  }
+
   @LayoutRes
   protected abstract int getDefaultLayout();
 
