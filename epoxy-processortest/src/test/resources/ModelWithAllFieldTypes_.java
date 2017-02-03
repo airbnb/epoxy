@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import android.support.annotation.LayoutRes;
 import java.lang.Boolean;
 import java.lang.Byte;
+import java.lang.CharSequence;
 import java.lang.Character;
 import java.lang.Double;
 import java.lang.Float;
@@ -214,6 +215,18 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
   @Override
   public ModelWithAllFieldTypes_ id(long id) {
     super.id(id);
+    return this;
+  }
+
+  @Override
+  public ModelWithAllFieldTypes_ id(CharSequence key) {
+    super.id(key);
+    return this;
+  }
+
+  @Override
+  public ModelWithAllFieldTypes_ id(CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 

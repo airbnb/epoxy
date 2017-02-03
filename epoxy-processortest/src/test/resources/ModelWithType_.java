@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import java.lang.CharSequence;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
@@ -24,6 +25,18 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> {
   @Override
   public ModelWithType_<T> id(long id) {
     super.id(id);
+    return this;
+  }
+
+  @Override
+  public ModelWithType_<T> id(CharSequence key) {
+    super.id(key);
+    return this;
+  }
+
+  @Override
+  public ModelWithType_<T> id(CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 

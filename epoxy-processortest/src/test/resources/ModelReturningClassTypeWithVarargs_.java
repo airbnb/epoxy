@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import java.lang.CharSequence;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
@@ -37,6 +38,18 @@ public class ModelReturningClassTypeWithVarargs_ extends ModelReturningClassType
   @Override
   public ModelReturningClassTypeWithVarargs_ id(long id) {
     super.id(id);
+    return this;
+  }
+
+  @Override
+  public ModelReturningClassTypeWithVarargs_ id(CharSequence key) {
+    super.id(key);
+    return this;
+  }
+
+  @Override
+  public ModelReturningClassTypeWithVarargs_ id(CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
