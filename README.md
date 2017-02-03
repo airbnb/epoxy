@@ -219,7 +219,7 @@ There are two possible memory leaks if you reuse an adapter with different Recyc
 
 Epoxy holds a reference to every bound view in order to allow state saving. To prevent leaking these, simply make sure the RecyclerView recycles all of its child views when you are done with it. One way to do this is to detach the adapter from the RecyclerView via `recyclerView.setAdapter(null)` (possibly in a fragment's `onDestroyView` method).
 
-The downside to this approach is that the view is immediately cleared, so if you are animating your screen out it will go blank before the animation finishes. A better option that avoids this is to have your LayoutManager recycle its children when the RecyclerView is detached from the window. LinearLayoutManager and GridLayoutManager will do this for you if you enable `setRecycleChildrenOnDetach(true)`.
+The downside to this approach is that the view is immediately cleared, so if you are animating your screen out it will go blank before the animation finishes. A better option that avoids this is to have your `LayoutManager` recycle its children when the RecyclerView is detached from the window. `LinearLayoutManager` and `GridLayoutManager` will do this for you if you enable `setRecycleChildrenOnDetach(true)`.
 
 To automatically apply this you may wish to create a base adapter in your project that extends EpoxyAdapter.
 
