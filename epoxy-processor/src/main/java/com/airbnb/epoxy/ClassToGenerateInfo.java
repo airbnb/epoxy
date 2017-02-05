@@ -29,35 +29,40 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 public class ClassToGenerateInfo {
-
+  private static final String GENERATED_CLASS_NAME_SUFFIX = "_";
   private static final String RESET_METHOD = "reset";
 
+  private final Elements elementUtils;
   private final TypeName originalClassName;
   private final TypeName originalClassNameWithoutType;
+  private final TypeElement originalClassElement;
   private final TypeName parameterizedClassName;
   private final ClassName generatedClassName;
-  private final boolean isOriginalClassAbstract;
+  private final boolean shouldGenerateSubClass;
   private final Set<AttributeInfo> attributeInfo = new HashSet<>();
   private final List<TypeVariableName> typeVariableNames = new ArrayList<>();
   private final List<ConstructorInfo> constructors = new ArrayList<>();
   private final Set<MethodInfo> methodsReturningClassType = new LinkedHashSet<>();
   private final Types typeUtils;
 
-  public ClassToGenerateInfo(Types typeUtils, TypeElement originalClassName,
-      ClassName generatedClassName, boolean isOriginalClassAbstract) {
+  ClassToGenerateInfo(Types typeUtils, Elements elementUtils, TypeElement originalClassElement) {
     this.typeUtils = typeUtils;
-    this.originalClassName = ParameterizedTypeName.get(originalClassName.asType());
-    this.originalClassNameWithoutType = ClassName.get(originalClassName);
+    this.elementUtils = elementUtils;
+    this.originalClassName = ParameterizedTypeName.get(originalClassElement.asType());
+    this.originalClassNameWithoutType = ClassName.get(originalClassElement);
+    this.originalClassElement = originalClassElement;
+    ClassName generatedClassName = getGeneratedClassName(originalClassElement);
 
-    for (TypeParameterElement typeParameterElement : originalClassName.getTypeParameters()) {
+    for (TypeParameterElement typeParameterElement : originalClassElement.getTypeParameters()) {
       typeVariableNames.add(TypeVariableName.get(typeParameterElement));
     }
 
-    collectOriginalClassConstructors(originalClassName);
-    collectMethodsReturningClassType(originalClassName);
+    collectOriginalClassConstructors(originalClassElement);
+    collectMethodsReturningClassType(originalClassElement);
 
     if (!typeVariableNames.isEmpty()) {
       TypeVariableName[] typeArguments =
@@ -68,12 +73,32 @@ public class ClassToGenerateInfo {
     }
 
     this.generatedClassName = generatedClassName;
-    this.isOriginalClassAbstract = isOriginalClassAbstract;
+    this.shouldGenerateSubClass = shouldGenerateSubclass(originalClassElement);
+  }
+
+  private ClassName getGeneratedClassName(TypeElement classElement) {
+    String packageName = elementUtils.getPackageOf(classElement).getQualifiedName().toString();
+
+    int packageLen = packageName.length() + 1;
+    String className =
+        classElement.getQualifiedName().toString().substring(packageLen).replace('.', '$');
+
+    return ClassName.get(packageName, className + GENERATED_CLASS_NAME_SUFFIX);
+  }
+
+  private boolean shouldGenerateSubclass(TypeElement classElement) {
+    boolean hasEpoxyClassAnnotation = classElement.getAnnotation(EpoxyModelClass.class) != null;
+    boolean isAbstract = classElement.getModifiers().contains(Modifier.ABSTRACT);
+
+    // By default we don't extend classes that are abstract; if they don't contain all required
+    // methods then our generated class won't compile. If there is a EpoxyModelClass annotation
+    // though we will always generate the subclass
+    return !isAbstract || hasEpoxyClassAnnotation;
   }
 
   /**
-   * Get information about constructors of the original class so we can duplicate
-     them in the generated class and call through to super with the proper parameters
+   * Get information about constructors of the original class so we can duplicate them in the
+   * generated class and call through to super with the proper parameters
    */
   private void collectOriginalClassConstructors(TypeElement originalClass) {
     for (Element subElement : originalClass.getEnclosedElements()) {
@@ -89,8 +114,8 @@ public class ClassToGenerateInfo {
   }
 
   /**
-   * Get information about methods returning class type of the original class so we can
-   * duplicate them in the generated class for chaining purposes
+   * Get information about methods returning class type of the original class so we can duplicate
+   * them in the generated class for chaining purposes
    */
   private void collectMethodsReturningClassType(TypeElement originalClass) {
     TypeElement clazz = originalClass;
@@ -143,6 +168,10 @@ public class ClassToGenerateInfo {
     this.attributeInfo.addAll(attributeInfo);
   }
 
+  public TypeElement getOriginalClassElement() {
+    return originalClassElement;
+  }
+
   public TypeName getOriginalClassName() {
     return originalClassName;
   }
@@ -167,8 +196,8 @@ public class ClassToGenerateInfo {
     return attributeInfo;
   }
 
-  public boolean isOriginalClassAbstract() {
-    return isOriginalClassAbstract;
+  public boolean shouldGenerateSubClass() {
+    return shouldGenerateSubClass;
   }
 
   public Iterable<TypeVariableName> getTypeVariables() {

@@ -8,6 +8,7 @@ import javax.tools.JavaFileObject;
 
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * These processor tests are in their own module since the processor module can't depend on the
@@ -254,6 +255,44 @@ public class EpoxyProcessorTest {
   }
 
   @Test
+  public void testModelWithAbstractClass() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithAbstractClass.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError();
+
+    // We don't generate subclasses if the model is abstract unless it has a class annotation.
+    boolean modelNotGenerated;
+    try {
+      JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithAbstractClass_.java");
+      modelNotGenerated = false;
+    } catch (IllegalArgumentException e) {
+      modelNotGenerated = true;
+    }
+
+    assertTrue(modelNotGenerated);
+  }
+
+  @Test
+  public void testModelWithAbstractClassAndAnnotation() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithAbstractClassAndAnnotation.java");
+
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("ModelWithAbstractClassAndAnnotation_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
   public void testModelWithAnnotatedClassAndSuperClass() {
     JavaFileObject model = JavaFileObjects
         .forResource("ModelWithAnnotatedClassAndSuperAttributes.java");
@@ -325,6 +364,22 @@ public class EpoxyProcessorTest {
 
     JavaFileObject generatedModel = JavaFileObjects
         .forResource("ModelWithVarargsConstructors_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void testModelWithHolderGeneratesNewHolderMethod() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("AbstractModelWithHolder.java");
+
+    JavaFileObject generatedModel = JavaFileObjects
+        .forResource("AbstractModelWithHolder_.java");
 
     assert_().about(javaSource())
         .that(model)

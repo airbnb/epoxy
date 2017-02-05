@@ -287,10 +287,11 @@ public abstract class EpoxyModel<T> {
 
   @Override
   public String toString() {
-    return "{" + getClass().getSimpleName()
-        + "id=" + id
-        + ", layout=" + getLayout()
-        + ", shown=" + shown
-        + '}';
+    return getClass().getSimpleName() + "{" +
+        "id=" + id +
+        ", layout=" + getLayout() +
+        ", shown=" + shown +
+        ", addedToAdapter=" + addedToAdapter +
+        '}';
   }
 }

@@ -296,9 +296,13 @@ public class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
 }
 ```
 
-A good pattern is to create a base class that all view holders in your app can extend. Your base class can use [ButterKnife](https://github.com/JakeWharton/butterknife) to bind its view so that subclasses don't explicitly need to.
+Alternatively you can allow Epoxy's annotation processor to generate the `createNewHolder` method for you, reducing the boilerplate in your model.
 
-It terms of our example from above this might look like:
+Just leave your model class abstract, annotate it with `@EpoxyClassModel` (see [Generating Helper Classes For Models](#annotations)), and don't implement `createNewHolder`. A subclass will be generated that implements the method for you. This implementation will create a new instance of your Holder class by calling the no argument constructor, which is the same as what is implemented manually in the example above.
+
+Another helpful pattern is to create a base Holder class that all view holders in your app can extend. Your base class can use [ButterKnife](https://github.com/JakeWharton/butterknife) to bind its view so that subclasses don't explicitly need to.
+
+For example your base class may look like this:
 
 ```java
 public abstract class BaseEpoxyHolder extends EpoxyHolder {
@@ -308,9 +312,30 @@ public abstract class BaseEpoxyHolder extends EpoxyHolder {
     ButterKnife.bind(this, itemView);
   }
 }
+```
 
-static class ButtonHolder extends BaseEpoxyHolder {
+Applying these two patterns helps shorten our example model to just:
+
+```java
+@EpoxyModelClass
+public abstract class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
+  @EpoxyAttribute @StringRes int text;
+  @EpoxyAttribute OnClickListener clickListener;
+
+  @Override
+  protected int getDefaultLayout() {
+    return R.layout.model_button;
+  }
+
+  @Override
+  public void bind(ButtonHolder holder) {
+    holder.button.setText(text);
+    holder.button.setOnClickListener(clickListener);
+  }
+
+  static class ButtonHolder extends BaseEpoxyHolder {
     @BindView(R.id.button) Button button;
+  }
 }
 ```
 
@@ -369,7 +394,7 @@ layoutManager.setSpanSizeLookup(epoxyAdapter.getSpanSizeLookup());
 
 ## <a name="annotations"/>Generating helper classes with `@EpoxyAttribute`
 
-You can reduce boilerplate in you model classes by using the EpoxyAttribute annotation to generate a subclass of your model with setters, getters, equals, and hashcode.
+You can reduce boilerplate in your model classes by using the EpoxyAttribute annotation to generate a subclass of your model with setters, getters, equals, hashCode, reset, and toString.
 
 For example, you may set up a model like this:
 
@@ -405,11 +430,19 @@ models.add(new HeaderModel_()
 ```
 
 The setters return the model so that they can be used in a builder style. The generated class includes a `hashCode()` implementation for all of the annotated attributes so that the model can be used in [automatic diffing](#diffing).
-Sometimes, you may not want certain fields to be included in your hash code and equals such as a click listener that gets recreated in every bind call. To tell Epoxy to skip that annotation, add `hash=false` to the annotation.
+Sometimes, you may not want certain fields, such as a click listener, to be included in your hashCode and equals methods since that field may change on every bind call. Add `hash=false` to the annotation to tell Epoxy to skip that field.
 
-The generated class will always be the name of the original class with an underscore appended at the end. If the original class is abstract then a class will not be generated for it. If a model class is subclassed from other models that also have EpoxyAttributes, the generated class will include all of the super class's attributes. The generated class will duplicate any constructors on the original model class. If the original model class has any method names that match generated setters then the generated method will call super.
+The generated class will always be the name of the original class with an underscore appended at the end. If a model class is subclassed from other models that also have EpoxyAttributes, the generated class will include all of the super classes' attributes. The generated class will duplicate any constructors on the original model class. The generated class will also duplicate any methods that have a return type of the model class. The goal of that is to help with chaining calls to methods that exist on the original class. `super` will be called in all of these generated methods.
 
-This is an optional aspect of Epoxy that you may choose not to use, but it can be helpful in reducing the boilerplate in your models.
+If the original class is abstract then a class will not be generated for it by default. However, an `@EpoxyModelClass` annotation may be added on the class to force a subclass to be generated. There are several cases where this may be helful.
+
+1. Having your model class be abstract signals to other developers that the class should not be instantiated directly, and that the generated model should be used instead. This may prevent accidentally instantiating the base class instead of the generated class. For larger projects this can be a good pattern to establish for all models.
+
+2. If a class does not have any `@EpoxyAttribute` annotations itself, but one of its super classes does, it would not normally have a class generated for it. Using `@EpoxyModelClass` on the subclass is the only way to generate a model in that case.
+
+3. If you are using `EpoxyModelWithHolder` (see [Using View Holders](#view-holders)) you can leave the `createNewHolder` method unimplemented and the generated class will contain a default implementation that creates a new holder by calling a no argument constructor of the holder class.
+
+These annotations are an optional aspect of Epoxy that you may choose not to use, but they can be helpful in reducing the boilerplate in your models.
 
 ## License
 
