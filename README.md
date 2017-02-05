@@ -10,7 +10,6 @@ Epoxy is an Android library for building complex screens in a RecyclerView. It a
 * [Modifying the Models List](#models-list)
 * [Automatic Diffing](#diffing)
 * [Binding Models](#binding-models)
-* [Avoiding Memory Leaks](#memory-leaks)
 * [Using View Holders](#view-holders)
 * [Model IDs](#model-ids)
 * [Specifying Layouts](#specifying-layouts)
@@ -212,46 +211,6 @@ Since RecyclerView reuses views when possible, a view may be bound multiple time
 
 If the recycler view provided a non empty list of payloads with `onBindViewHolder(ViewHolder holder, int position, List<Object> payloads)`, then `EpoxyModel#bind(View, List<Object>)` will be called instead so that the model can be optimized to rebind according to what changed. This can help you prevent unnecessary layout changes if only part of the view changed.
 
-## <a name="memory-leaks"/>Avoiding Memory Leaks
-There are two possible memory leaks if you reuse an adapter with different RecyclerViews. A common case of this is creating and saving an adapter as a field in a Fragment's `onCreate` method, and reusing it across multiple view creation/destroy cycles if the fragment is put on the backstack or has its instance retained across rotation.
-
-#### Child Views
-
-Epoxy holds a reference to every bound view in order to allow state saving. To prevent leaking these, simply make sure the RecyclerView recycles all of its child views when you are done with it. One way to do this is to detach the adapter from the RecyclerView via `recyclerView.setAdapter(null)` (possibly in a fragment's `onDestroyView` method).
-
-The downside to this approach is that the view is immediately cleared, so if you are animating your screen out it will go blank before the animation finishes. A better option that avoids this is to have your `LayoutManager` recycle its children when the RecyclerView is detached from the window. `LinearLayoutManager` and `GridLayoutManager` will do this for you if you enable `setRecycleChildrenOnDetach(true)`.
-
-To automatically apply this you may wish to create a base adapter in your project that extends EpoxyAdapter.
-
-```java
-public class BaseAdapter extends EpoxyAdapter {
-
-        @Override
-        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-
-            // This will force all models to be unbound and their views recycled once the RecyclerView is no longer in use. We need this so resources
-            // are properly released, listeners are detached, and views can be returned to view pools (if applicable).
-            if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-                ((LinearLayoutManager) recyclerView.getLayoutManager()).setRecycleChildrenOnDetach(true);
-            }
-        }
-    }
-```
-
-#### Parent View
-
-Another, very similar, issue leaks a reference to the RecyclerView itself. This case is intrinsic to all RecyclerView adapters, not just Epoxy.
-
-The case where this happens is the same as above, when an adapter is kept after the RecyclerView is destroyed. When an adapter is set on a RecyclerView the RecyclerView registers an observer to listen for adapter item changes (`adapter.registerAdapterDataObserver(...)`). This is needed for the RecyclerView to know when adapter items have changed.
-
-This observer is only removed when the adapter is detached from the RecyclerView (eg `recyclerView.setAdapter(null)`). With the common pattern of recreating a view in a fragment it is easy to not do this.
-
-One option to avoid this is to detach your adapter when destroying the RecyclerView. This has the downside of immediately clearing the view as mentioned above.
-
-The other option is to clear the reference to your adapter and create a new one each time you create a new RecyclerView.
-
-It is easy to forget to do this though, and is hard to enforce in the project. I haven't found a better automated solution to this issue. Let me know if you have ideas!
-
 ## <a name="view-holders"/>Using View Holders
 
 The basic usage of [Epoxy Models](#epoxy-models) describes how views are bound to a model. This works well if you use custom views, but for simpler views it can be more convenient to use the traditional view holder pattern.
@@ -369,7 +328,7 @@ layoutManager.setSpanSizeLookup(epoxyAdapter.getSpanSizeLookup());
 
 ## <a name="annotations"/>Generating helper classes with `@EpoxyAttribute`
 
-You can reduce boilerplate in you model classes by using the EpoxyAttribute annotation to generate a subclass of your model with setters, getters, equals, and hashcode.
+You can reduce boilerplate in your model classes by using the EpoxyAttribute annotation to generate a subclass of your model with setters, getters, equals, hashCode, reset, and toString.
 
 For example, you may set up a model like this:
 
@@ -405,11 +364,16 @@ models.add(new HeaderModel_()
 ```
 
 The setters return the model so that they can be used in a builder style. The generated class includes a `hashCode()` implementation for all of the annotated attributes so that the model can be used in [automatic diffing](#diffing).
-Sometimes, you may not want certain fields to be included in your hash code and equals such as a click listener that gets recreated in every bind call. To tell Epoxy to skip that annotation, add `hash=false` to the annotation.
+Sometimes, you may not want certain fields, such as a click listener, to be included in your hashCode and equals methods since that field may be change on every bind call. To tell Epoxy to skip that field, add `hash=false` to the annotation.
 
-The generated class will always be the name of the original class with an underscore appended at the end. If the original class is abstract then a class will not be generated for it. If a model class is subclassed from other models that also have EpoxyAttributes, the generated class will include all of the super class's attributes. The generated class will duplicate any constructors on the original model class. If the original model class has any method names that match generated setters then the generated method will call super.
+The generated class will always be the name of the original class with an underscore appended at the end. If a model class is subclassed from other models that also have EpoxyAttributes, the generated class will include all of the super classes' attributes. The generated class will duplicate any constructors on the original model class. The generated class will also duplicate any methods that have a return type of the model class. The goal of that is to help with chaining calls to methods that exist on the original class. `super` will be called in all of these generated methods.
 
-This is an optional aspect of Epoxy that you may choose not to use, but it can be helpful in reducing the boilerplate in your models.
+If the original class is abstract then a class will not be generated for it by default. However, an `@EpoxyModelClass` annotation may be added on the class to force a subclass to be generated. There are several cases where this may be helful.
+1. Having your model class be abstract signals to other developers that the class should not be instantiated directly, and that the generated model should be instantiated instead. This may prevent accidentally instantiating the base class instead of the generated class. For larger projects this can be a good pattern to use for all models.
+2. If a class does not have any `@EpoxyAttribute` annotations itself, but one of its super classes does, it would not normally have a class generated for it. Using `@EpoxyModelClass` on the subclass is the only way to generate a model in that case.
+3. If you are using `EpoxyModelWithHolder` (see [Using View Holders](#view-holders)) you can leave the `createNewHolder` method unimplemented and the generated class will contain a default implementation to instantiate a new holder with a no argument constructor.
+
+These annotations are an optional aspect of Epoxy that you may choose not to use, but they can be helpful in reducing the boilerplate in your models.
 
 ## License
 
