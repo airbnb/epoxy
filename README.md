@@ -255,7 +255,31 @@ public class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
 }
 ```
 
-A good pattern is to create a base class that all view holders in your app can extend. Your base class can use [ButterKnife](https://github.com/JakeWharton/butterknife) to bind its view so that subclasses don't explicitly need to.
+Alternatively you can leave your model class abstract, annotate it with `@EpoxyClassModel` (see [Generating Helper Classes For Models](#annotations)), and not implement the `createNewHolder`. In this case a subclass will be generated that implements the method for you. This implementation will simply create a new instance of your Holder class by calling the no argument constructor, which is the same as what is implemented manually in the example above. This simplified approach would look like:
+
+
+```java
+  @EpoxyModelClass
+  public abstract class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
+    @EpoxyAttribute @StringRes int text;
+    @EpoxyAttribute OnClickListener clickListener;
+
+    @Override
+    protected int getDefaultLayout() {
+      return R.layout.model_button;
+    }
+
+    @Override
+    public void bind(ButtonHolder holder) {
+      holder.button.setText(text);
+      holder.button.setOnClickListener(clickListener);
+    }
+  }
+```
+  
+
+
+Another good pattern is to create a base Holder class that all view holders in your app can extend. Your base class can use [ButterKnife](https://github.com/JakeWharton/butterknife) to bind its view so that subclasses don't explicitly need to.
 
 It terms of our example from above this might look like:
 
