@@ -369,9 +369,12 @@ Sometimes, you may not want certain fields, such as a click listener, to be incl
 The generated class will always be the name of the original class with an underscore appended at the end. If a model class is subclassed from other models that also have EpoxyAttributes, the generated class will include all of the super classes' attributes. The generated class will duplicate any constructors on the original model class. The generated class will also duplicate any methods that have a return type of the model class. The goal of that is to help with chaining calls to methods that exist on the original class. `super` will be called in all of these generated methods.
 
 If the original class is abstract then a class will not be generated for it by default. However, an `@EpoxyModelClass` annotation may be added on the class to force a subclass to be generated. There are several cases where this may be helful.
-1. Having your model class be abstract signals to other developers that the class should not be instantiated directly, and that the generated model should be instantiated instead. This may prevent accidentally instantiating the base class instead of the generated class. For larger projects this can be a good pattern to use for all models.
+
+1. Having your model class be abstract signals to other developers that the class should not be instantiated directly, and that the generated model should be used instead. This may prevent accidentally instantiating the base class instead of the generated class. For larger projects this can be a good pattern to establish for all models.
+
 2. If a class does not have any `@EpoxyAttribute` annotations itself, but one of its super classes does, it would not normally have a class generated for it. Using `@EpoxyModelClass` on the subclass is the only way to generate a model in that case.
-3. If you are using `EpoxyModelWithHolder` (see [Using View Holders](#view-holders)) you can leave the `createNewHolder` method unimplemented and the generated class will contain a default implementation to instantiate a new holder with a no argument constructor.
+
+3. If you are using `EpoxyModelWithHolder` (see [Using View Holders](#view-holders)) you can leave the `createNewHolder` method unimplemented and the generated class will contain a default implementation that creates a new holder by calling a no argument constructor of the holder class.
 
 These annotations are an optional aspect of Epoxy that you may choose not to use, but they can be helpful in reducing the boilerplate in your models.
 
