@@ -4,6 +4,7 @@ import android.support.annotation.StringRes;
 
 import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyModel;
+import com.airbnb.epoxy.EpoxyModelClass;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.views.HeaderView;
 
@@ -11,14 +12,10 @@ import com.airbnb.epoxy.views.HeaderView;
  * This model shows an example of binding to a specific view type. In this case it is a custom view
  * we made, but it could also be another single view, like an EditText or Button.
  */
-public class HeaderModel extends EpoxyModel<HeaderView> {
+@EpoxyModelClass(R.layout.model_header)
+public abstract class HeaderModel extends EpoxyModel<HeaderView> {
   @EpoxyAttribute @StringRes int title;
   @EpoxyAttribute @StringRes int caption;
-
-  @Override
-  protected int getDefaultLayout() {
-    return R.layout.model_header;
-  }
 
   @Override
   public void bind(HeaderView view) {
