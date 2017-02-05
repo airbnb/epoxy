@@ -298,9 +298,11 @@ public class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
 
 Alternatively you can allow Epoxy's annotation processor to generate the `createNewHolder` method for you, reducing the boilerplate in your model.
 
-Just leave your model class abstract, annotate it with `@EpoxyClassModel` (see [Generating Helper Classes For Models](#annotations)), and don't implement the `createNewHolder`. A subclass will be generated that implements the method for you. This implementation will create a new instance of your Holder class by calling the no argument constructor, which is the same as what is implemented manually in the example above.
+Just leave your model class abstract, annotate it with `@EpoxyClassModel` (see [Generating Helper Classes For Models](#annotations)), and don't implement `createNewHolder`. A subclass will be generated that implements the method for you. This implementation will create a new instance of your Holder class by calling the no argument constructor, which is the same as what is implemented manually in the example above.
 
 Another helpful pattern is to create a base Holder class that all view holders in your app can extend. Your base class can use [ButterKnife](https://github.com/JakeWharton/butterknife) to bind its view so that subclasses don't explicitly need to.
+
+For example your base class may look like this:
 
 ```java
 public abstract class BaseEpoxyHolder extends EpoxyHolder {
@@ -428,7 +430,7 @@ models.add(new HeaderModel_()
 ```
 
 The setters return the model so that they can be used in a builder style. The generated class includes a `hashCode()` implementation for all of the annotated attributes so that the model can be used in [automatic diffing](#diffing).
-Sometimes, you may not want certain fields, such as a click listener, to be included in your hashCode and equals methods since that field may be change on every bind call. To tell Epoxy to skip that field, add `hash=false` to the annotation.
+Sometimes, you may not want certain fields, such as a click listener, to be included in your hashCode and equals methods since that field may change on every bind call. Add `hash=false` to the annotation to tell Epoxy to skip that field.
 
 The generated class will always be the name of the original class with an underscore appended at the end. If a model class is subclassed from other models that also have EpoxyAttributes, the generated class will include all of the super classes' attributes. The generated class will duplicate any constructors on the original model class. The generated class will also duplicate any methods that have a return type of the model class. The goal of that is to help with chaining calls to methods that exist on the original class. `super` will be called in all of these generated methods.
 
