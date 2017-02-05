@@ -13,15 +13,10 @@ import com.airbnb.epoxy.models.ButtonModel.ButtonHolder;
 import butterknife.BindView;
 
 /** This model class gives an example of how to use a view holder pattern with your models. */
-@EpoxyModelClass
+@EpoxyModelClass(R.layout.model_button)
 public abstract class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
   @EpoxyAttribute @StringRes int text;
   @EpoxyAttribute OnClickListener clickListener;
-
-  @Override
-  protected int getDefaultLayout() {
-    return R.layout.model_button;
-  }
 
   @Override
   public int getSpanSize(int totalSpanCount, int position, int itemCount) {
