@@ -482,7 +482,7 @@ public class EpoxyProcessor extends AbstractProcessor {
           originalClassElement.getSimpleName());
     }
 
-    int layoutRes = annotation.value();
+    int layoutRes = annotation.layout();
     if (layoutRes == 0) {
       throwError("Model must specify a valid layout resource in the %s annotation. (class: %s)",
           EpoxyModelClass.class,

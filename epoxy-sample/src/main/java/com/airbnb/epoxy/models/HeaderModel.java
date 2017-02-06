@@ -12,7 +12,7 @@ import com.airbnb.epoxy.views.HeaderView;
  * This model shows an example of binding to a specific view type. In this case it is a custom view
  * we made, but it could also be another single view, like an EditText or Button.
  */
-@EpoxyModelClass(R.layout.model_header)
+@EpoxyModelClass(layout = R.layout.model_header)
 public abstract class HeaderModel extends EpoxyModel<HeaderView> {
   @EpoxyAttribute @StringRes int title;
   @EpoxyAttribute @StringRes int caption;

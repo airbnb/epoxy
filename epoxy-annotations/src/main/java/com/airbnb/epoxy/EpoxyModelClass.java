@@ -20,5 +20,5 @@ public @interface EpoxyModelClass {
    * A layout resource that should be used as the default layout for the model. If you set this you
    * don't have to implement `getDefaultLayout`; it will be generated for you.
    */
-  @LayoutRes int value() default 0;
+  @LayoutRes int layout() default 0;
 }
