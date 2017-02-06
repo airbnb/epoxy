@@ -17,7 +17,7 @@ Epoxy is an Android library for building complex screens in a RecyclerView. It a
 * [Hiding Models](#hiding-models)
 * [Saving View State](#saved-state)
 * [Grid Support](#grid-support)
-* [Generating Helper Classes For Models](#annotations)
+* [Generating Models via Annotations](#annotations)
 * [Sample App](/epoxy-sample)
 
 <p align="center">
@@ -317,15 +317,10 @@ public abstract class BaseEpoxyHolder extends EpoxyHolder {
 Applying these two patterns helps shorten our example model to just:
 
 ```java
-@EpoxyModelClass
+@EpoxyModelClass(layout = R.layout.model_button)
 public abstract class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
   @EpoxyAttribute @StringRes int text;
   @EpoxyAttribute OnClickListener clickListener;
-
-  @Override
-  protected int getDefaultLayout() {
-    return R.layout.model_button;
-  }
 
   @Override
   public void bind(ButtonHolder holder) {
@@ -355,7 +350,7 @@ Once a model has been added to an adapter its ID can no longer be changed. Doing
 
 ## Specifying Layouts
 
-The only method that an `EpoxyModel` must implement is `getDefaultLayout`. This method specifies what layout resource should be used by the adapter when creating a view holder for that model. The layout resource id also acts as the view type for the `EpoxyModel`, so that views sharing a layout can be recycled. The type of View inflated by the layout resource should be the parameterized type of the `EpoxyModel`, so that the proper View type is passed to the model's `bind` method.
+The only method that an `EpoxyModel` must implement is `getDefaultLayout`. This method specifies what layout resource should be used by the adapter when creating a view holder for that model. The layout resource id also acts as the view type for the `EpoxyModel`, so that views sharing a layout can be recycled. The type of View inflated by the layout resource should be the parametrized type of the `EpoxyModel`, so that the proper View type is passed to the model's `bind` method.
 
 If you want to dynamically change which layout is used for your model you can call `EpoxyModel#layout(layoutRes)` with the new layout id. This allows you to easily change the style of the view, such as size, padding, etc. This is useful if you want to reuse the same model, but alter the view's style based on where it is used, eg landscape vs portrait or phone vs tablet.
 
@@ -392,29 +387,23 @@ epoxyAdapter.setSpanCount(spanCount);
 layoutManager.setSpanSizeLookup(epoxyAdapter.getSpanSizeLookup());
 ```
 
-## <a name="annotations"/>Generating helper classes with `@EpoxyAttribute`
+## <a name="annotations"/>Generating Models via Annotations
 
-You can reduce boilerplate in your model classes by using the EpoxyAttribute annotation to generate a subclass of your model with setters, getters, equals, hashCode, reset, and toString.
+You can reduce boilerplate in your model classes by using the `EpoxyModelClass` and `EpoxyAttribute` annotations to generate a subclass of your model.
 
 For example, you may set up a model like this:
 
 ```java
-public class HeaderModel extends EpoxyModel<HeaderView> {
+@EpoxyModelClass(layout = R.layout.view_model_header)
+public abstract class HeaderModel extends EpoxyModel<HeaderView> {
   @EpoxyAttribute String title;
   @EpoxyAttribute String subtitle;
-  @EpoxyAttribute String description;
   @EpoxyAttribute(hash=false) View.OnClickListener clickListener;
-    
-  @LayoutRes
-  public int getDefaultLayout() {
-    return R.layout.view_model_header;
-  }
 
   @Override
   public void bind(HeaderView view) {
     view.setTitle(title);
     view.setSubtitle(subtitle);
-    view.setDescription(description);
     view.setOnClickListener(clickListener);
   }
 }
@@ -425,24 +414,51 @@ A `HeaderModel_.java` class will be generated that subclasses HeaderModel, and y
 ```java
 models.add(new HeaderModel_()
     .title("My title")
-    .subtitle("my subtitle")
-    .description("my description"));
+    .subtitle("My subtitle")
+    .clickListener(headerClickListener);
 ```
 
-The setters return the model so that they can be used in a builder style. The generated class includes a `hashCode()` implementation for all of the annotated attributes so that the model can be used in [automatic diffing](#diffing).
-Sometimes, you may not want certain fields, such as a click listener, to be included in your hashCode and equals methods since that field may change on every bind call. Add `hash=false` to the annotation to tell Epoxy to skip that field.
+The generated class will always be the name of the original class with an underscore appended at the end.
 
-The generated class will always be the name of the original class with an underscore appended at the end. If a model class is subclassed from other models that also have EpoxyAttributes, the generated class will include all of the super classes' attributes. The generated class will duplicate any constructors on the original model class. The generated class will also duplicate any methods that have a return type of the model class. The goal of that is to help with chaining calls to methods that exist on the original class. `super` will be called in all of these generated methods.
+A class will be generated if a model class has either a `EpoxyModelClass` annotation, and/or at least one field annotated with `EpoxyAttribute`. There are cases where you may want only one of these annotations, or both.
 
-If the original class is abstract then a class will not be generated for it by default. However, an `@EpoxyModelClass` annotation may be added on the class to force a subclass to be generated. There are several cases where this may be helful.
+These annotations are optional, but are highly recommended for simplifying your models.
 
-1. Having your model class be abstract signals to other developers that the class should not be instantiated directly, and that the generated model should be used instead. This may prevent accidentally instantiating the base class instead of the generated class. For larger projects this can be a good pattern to establish for all models.
+#### EpoxyAttribute
 
-2. If a class does not have any `@EpoxyAttribute` annotations itself, but one of its super classes does, it would not normally have a class generated for it. Using `@EpoxyModelClass` on the subclass is the only way to generate a model in that case.
+Annotate fields in your model with `EpoxyAttribute` to have a getter and setter generated for them. In addition, all fields annotated with `EpoxyAttribute` will be aggregated to create the following methods:
 
-3. If you are using `EpoxyModelWithHolder` (see [Using View Holders](#view-holders)) you can leave the `createNewHolder` method unimplemented and the generated class will contain a default implementation that creates a new holder by calling a no argument constructor of the holder class.
+1. equals
+2. hashCode
+3. toString
+4. reset (resets each annotated field to its default value)
 
-These annotations are an optional aspect of Epoxy that you may choose not to use, but they can be helpful in reducing the boilerplate in your models.
+This is especially useful when using [automatic diffing](#diffing) so you don't have to manually write a `hashCode` implementation.
+
+The setters return the model so that they can be chained in a builder style.
+
+Sometimes, you may not want an annotated field to be included in your hashCode method. A common case is a callback as an anonymous class that changes each time the model is created; in this situation its function is the same and does not represent a state change in the model. Add `hash=false` to the annotation to tell Epoxy to not use that field's value when calculating hashCode. Instead, hashCode will use a boolean value of true or false depending on whether the field is null or non null. This way the field will only change the model's state if it changes between set and unset.
+
+If a model class is subclassed from other models that also have EpoxyAttributes, the generated class will include all of the super classes' attributes.
+
+The generated class will duplicate any constructors on the original model class.
+
+The generated class will also duplicate any methods on super classes that have a return type of the model class. This allows those method calls to be chained along with methods on the generated class. `super` will be called in all of these generated methods, and the return type is changed to be the generated class.
+
+If the model class is abstract, and only has `EpoxyAttribute` annotations, a generated class will not be created for it. In this case `EpoxyModelClass` will have to be used as well.
+
+#### EpoxyModelClass
+
+A model class annotated with `@EpoxyModelClass` will always have a subclass generated. There are several cases where it may be useful to use this alongside, or instead of, `EpoxyAttribute`.
+
+1. `getDefaultLayout` may be left unimplemented and the default layout resource can instead be specified as a parameter to the `EpoxyModelClass` annotation. The generated model will include a `getDefaultLayout` implementation that returns that value.
+
+2. If you are using `EpoxyModelWithHolder` (see [Using View Holders](#view-holders)) you can leave the `createNewHolder` method unimplemented and the generated class will contain a default implementation that creates a new holder by calling a no argument constructor of the holder class.
+
+3. Having your model class be abstract signals to other developers that the class should not be instantiated directly, and that the generated model should be used instead. This may prevent accidentally instantiating the base class instead of the generated class. For larger projects this can be a good pattern to establish for all models.
+
+4. If a class does not have any `@EpoxyAttribute` annotations itself, but one of its super classes does, it would not normally have a class generated for it. Using `@EpoxyModelClass` on the subclass is the only way to generate a model in that case.
+
 
 ## License
 
