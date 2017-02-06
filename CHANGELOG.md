@@ -1,3 +1,17 @@
+# 1.6.0 (Feb 6, 2017)
+
+* Allow the default layout resource to be specified in the EpoxyModelClass class annotation [(#109)](https://github.com/airbnb/epoxy/pull/109) [(#111)](https://github.com/airbnb/epoxy/pull/111)
+* Allow the `createNewHolder` method to be omitted and generated automatically [(#105)](https://github.com/airbnb/epoxy/pull/105)
+* Generate a subclass for abstract model classes if the EpoxyModelClass annotation is present [(#105)](https://github.com/airbnb/epoxy/pull/105)
+* Allow strings as model ids [(#107)](https://github.com/airbnb/epoxy/pull/107)
+* Add instructions to readme for avoiding memory leaks [(#106)](https://github.com/airbnb/epoxy/pull/106)
+* Add model callbacks for view attached/detached from window, and onFailedToRecycleView [(#104)](https://github.com/airbnb/epoxy/pull/104)
+* Improve documentation on model unbind behavior [(#103)](https://github.com/airbnb/epoxy/pull/103)
+* Fix generated methods from super classes that have var args [(#100)](https://github.com/airbnb/epoxy/pull/100)
+* Remove apt dependency [(#95)](https://github.com/airbnb/epoxy/pull/95)
+* Add `removeAllModels` method to EpoxyAdapter [(#94)](https://github.com/airbnb/epoxy/pull/94)
+* Use actual param names when generating methods from super classes [(#85)](https://github.com/airbnb/epoxy/pull/85)
+
 # 1.5.0 (11/21/2016)
 
 * Fixes models being used in separate modules
