@@ -32,4 +32,19 @@ public abstract class EpoxyModelWithHolder<T extends EpoxyHolder> extends EpoxyM
   public void unbind(T holder) {
     super.unbind(holder);
   }
+
+  @Override
+  public boolean onFailedToRecycleView(T holder) {
+    return super.onFailedToRecycleView(holder);
+  }
+
+  @Override
+  public void onViewAttachedToWindow(T holder) {
+    super.onViewAttachedToWindow(holder);
+  }
+
+  @Override
+  public void onViewDetachedFromWindow(T holder) {
+    super.onViewDetachedFromWindow(holder);
+  }
 }

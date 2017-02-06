@@ -92,8 +92,8 @@ public abstract class EpoxyModel<T> {
    * is preferable to using {@link String#hashCode()} because that is a 32 bit hash and this is a 64
    * bit hash, giving better spread and less chance of collision with other ids.
    * <p>
-   * Since this uses a hashcode method to convert the String to a long there is a very small
-   * chance that you may have a collision with another id. Assuming an even spread of hashcodes, and
+   * Since this uses a hashcode method to convert the String to a long there is a very small chance
+   * that you may have a collision with another id. Assuming an even spread of hashcodes, and
    * several hundred models in the adapter, there would be roughly 1 in 100 trillion chance of a
    * collision. (http://preshing.com/20110504/hash-collision-probabilities/)
    *
@@ -287,11 +287,11 @@ public abstract class EpoxyModel<T> {
 
   @Override
   public String toString() {
-    return getClass().getSimpleName() + "{" +
-        "id=" + id +
-        ", layout=" + getLayout() +
-        ", shown=" + shown +
-        ", addedToAdapter=" + addedToAdapter +
-        '}';
+    return getClass().getSimpleName() + "{"
+        + "id=" + id
+        + ", layout=" + getLayout()
+        + ", shown=" + shown
+        + ", addedToAdapter=" + addedToAdapter
+        + '}';
   }
 }
