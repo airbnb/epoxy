@@ -56,6 +56,9 @@
         <JavaCodeStyleSettings>
           <option name="ANNOTATION_PARAMETER_WRAP" value="1" />
         </JavaCodeStyleSettings>
+        <MarkdownNavigatorCodeStyleSettings>
+          <option name="RIGHT_MARGIN" value="72" />
+        </MarkdownNavigatorCodeStyleSettings>
         <Objective-C-extensions>
           <option name="GENERATE_INSTANCE_VARIABLES_FOR_PROPERTIES" value="ASK" />
           <option name="RELEASE_STYLE" value="IVAR" />
