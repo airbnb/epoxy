@@ -6,6 +6,17 @@ configurations.all { strategy ->
   strategy.resolutionStrategy.force rootProject.deps.assertj, rootProject.deps.googleTestingCompile
 }
 
+// Hack to allow us to use android support library annotations (@LayoutRes) in this project.
+// Since this isn't an android module normally we couldn't access them otherwise.
+// Taken from https://github.com/JakeWharton/butterknife/pull/380
+def logger = new com.android.build.gradle.internal.LoggerWrapper(project.logger)
+def sdkHandler = new com.android.build.gradle.internal.SdkHandler(project, logger)
+for (File file : sdkHandler.sdkLoader.repositories) {
+  repositories.maven {
+    url = file.toURI()
+  }
+}
+
 dependencies {
   compile deps.googleAutoService
   compile deps.squareJavaPoet

@@ -388,4 +388,20 @@ public class EpoxyProcessorTest {
         .and()
         .generatesSources(generatedModel);
   }
+
+  @Test
+  public void testGenerateDefaultLayoutMethod() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("GenerateDefaultLayoutMethod.java");
+
+    JavaFileObject generatedModel = JavaFileObjects
+        .forResource("GenerateDefaultLayoutMethod_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
 }

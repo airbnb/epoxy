@@ -1,5 +1,7 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.LayoutRes;
+
 import com.airbnb.epoxy.ClassToGenerateInfo.ConstructorInfo;
 import com.airbnb.epoxy.ClassToGenerateInfo.MethodInfo;
 import com.google.auto.service.AutoService;
@@ -69,7 +71,9 @@ import static javax.lang.model.element.Modifier.STATIC;
 @AutoService(Processor.class)
 public class EpoxyProcessor extends AbstractProcessor {
 
-  public static final String CREATE_NEW_HOLDER_METHOD_NAME = "createNewHolder";
+  private static final String CREATE_NEW_HOLDER_METHOD_NAME = "createNewHolder";
+  private static final String GET_DEFAULT_LAYOUT_METHOD_NAME = "getDefaultLayout";
+
   private Filer filer;
   private Messager messager;
   private Elements elementUtils;
@@ -408,36 +412,88 @@ public class EpoxyProcessor extends AbstractProcessor {
    */
   private Iterable<MethodSpec> generateDefaultMethodImplementations(ClassToGenerateInfo info)
       throws EpoxyProcessorException {
+
     List<MethodSpec> methods = new ArrayList<>();
-
-    // If the model is a holder and doesn't implement the "createNewHolder" method we can
-    // generate a default implementation by getting the class type and creating a new instance
-    // of it.
     TypeElement originalClassElement = info.getOriginalClassElement();
-    if (isEpoxyModelWithHolder(originalClassElement)) {
 
-      MethodSpec createHolderMethod = MethodSpec.methodBuilder(CREATE_NEW_HOLDER_METHOD_NAME)
-          .addAnnotation(Override.class)
-          .addModifiers(Modifier.PROTECTED)
-          .build();
-
-      if (!implementsMethod(originalClassElement, createHolderMethod, typeUtils)) {
-        TypeMirror epoxyObjectType = getEpoxyObjectType(originalClassElement, typeUtils);
-
-        if (epoxyObjectType == null) {
-          throwError("Return type for createNewHolder method could not be found");
-        }
-
-        createHolderMethod = createHolderMethod.toBuilder()
-            .returns(TypeName.get(epoxyObjectType))
-            .addStatement("return new $T()", epoxyObjectType)
-            .build();
-
-        methods.add(createHolderMethod);
-      }
-    }
+    addCreateHolderMethodIfNeeded(originalClassElement, methods);
+    addDefaultLayoutMethodIfNeeded(originalClassElement, methods);
 
     return methods;
+  }
+
+  /**
+   * If the model is a holder and doesn't implement the "createNewHolder" method we can generate a
+   * default implementation by getting the class type and creating a new instance of it.
+   */
+  private void addCreateHolderMethodIfNeeded(TypeElement originalClassElement,
+      List<MethodSpec> methods) throws EpoxyProcessorException {
+
+    if (!isEpoxyModelWithHolder(originalClassElement)) {
+      return;
+    }
+
+    MethodSpec createHolderMethod = MethodSpec.methodBuilder(CREATE_NEW_HOLDER_METHOD_NAME)
+        .addAnnotation(Override.class)
+        .addModifiers(Modifier.PROTECTED)
+        .build();
+
+    if (implementsMethod(originalClassElement, createHolderMethod, typeUtils)) {
+      return;
+    }
+
+    TypeMirror epoxyObjectType = getEpoxyObjectType(originalClassElement, typeUtils);
+    if (epoxyObjectType == null) {
+      throwError("Return type for createNewHolder method could not be found. (class: %s)",
+          originalClassElement.getSimpleName());
+    }
+
+    createHolderMethod = createHolderMethod.toBuilder()
+        .returns(TypeName.get(epoxyObjectType))
+        .addStatement("return new $T()", epoxyObjectType)
+        .build();
+
+    methods.add(createHolderMethod);
+  }
+
+  /**
+   * If there is no existing implementation of getDefaultLayout we can generate an implementation.
+   * This relies on a layout res being set in the @EpoxyModelClass annotation.
+   */
+  private void addDefaultLayoutMethodIfNeeded(TypeElement originalClassElement,
+      List<MethodSpec> methods) throws EpoxyProcessorException {
+
+    MethodSpec getDefaultLayoutMethod = MethodSpec.methodBuilder(GET_DEFAULT_LAYOUT_METHOD_NAME)
+        .addAnnotation(Override.class)
+        .addAnnotation(LayoutRes.class)
+        .addModifiers(Modifier.PROTECTED)
+        .returns(TypeName.INT)
+        .build();
+
+    if (implementsMethod(originalClassElement, getDefaultLayoutMethod, typeUtils)) {
+      return;
+    }
+
+    EpoxyModelClass annotation = originalClassElement.getAnnotation(EpoxyModelClass.class);
+    if (annotation == null) {
+      throwError("Model must use %s annotation if it does not implement %s. (class: %s)",
+          EpoxyModelClass.class,
+          GET_DEFAULT_LAYOUT_METHOD_NAME,
+          originalClassElement.getSimpleName());
+    }
+
+    int layoutRes = annotation.layout();
+    if (layoutRes == 0) {
+      throwError("Model must specify a valid layout resource in the %s annotation. (class: %s)",
+          EpoxyModelClass.class,
+          originalClassElement.getSimpleName());
+    }
+
+    getDefaultLayoutMethod = getDefaultLayoutMethod.toBuilder()
+        .addStatement("return $L", layoutRes)
+        .build();
+
+    methods.add(getDefaultLayoutMethod);
   }
 
   private void generateParams(StringBuilder statementBuilder, List<ParameterSpec> params) {

@@ -1,13 +1,13 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import java.lang.CharSequence;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
 /**
- * Generated file. Do not modify!
- */
+ * Generated file. Do not modify! */
 public class ModelWithAbstractClassAndAnnotation_ extends ModelWithAbstractClassAndAnnotation {
   public ModelWithAbstractClassAndAnnotation_() {
     super();
@@ -16,6 +16,18 @@ public class ModelWithAbstractClassAndAnnotation_ extends ModelWithAbstractClass
   @Override
   public ModelWithAbstractClassAndAnnotation_ id(long id) {
     super.id(id);
+    return this;
+  }
+
+  @Override
+  public ModelWithAbstractClassAndAnnotation_ id(CharSequence key) {
+    super.id(key);
+    return this;
+  }
+
+  @Override
+  public ModelWithAbstractClassAndAnnotation_ id(CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 

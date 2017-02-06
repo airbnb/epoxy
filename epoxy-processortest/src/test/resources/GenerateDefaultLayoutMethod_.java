@@ -7,13 +7,14 @@ import java.lang.Override;
 import java.lang.String;
 
 /**
- * Generated file. Do not modify! */
-public class AbstractModelWithHolder_ extends AbstractModelWithHolder {
-  public AbstractModelWithHolder_() {
+ * Generated file. Do not modify!
+ */
+public class GenerateDefaultLayoutMethod_ extends GenerateDefaultLayoutMethod {
+  public GenerateDefaultLayoutMethod_() {
     super();
   }
 
-  public AbstractModelWithHolder_ value(int value) {
+  public GenerateDefaultLayoutMethod_ value(int value) {
     this.value = value;
     return this;
   }
@@ -23,54 +24,55 @@ public class AbstractModelWithHolder_ extends AbstractModelWithHolder {
   }
 
   @Override
-  public AbstractModelWithHolder_ id(long id) {
+  public GenerateDefaultLayoutMethod_ id(long id) {
     super.id(id);
     return this;
   }
 
   @Override
-  public AbstractModelWithHolder_ id(CharSequence key) {
+  public GenerateDefaultLayoutMethod_ id(CharSequence key) {
     super.id(key);
     return this;
   }
 
   @Override
-  public AbstractModelWithHolder_ id(CharSequence key, long id) {
+  public GenerateDefaultLayoutMethod_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;
   }
 
   @Override
-  public AbstractModelWithHolder_ layout(@LayoutRes int arg0) {
+  public GenerateDefaultLayoutMethod_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
     return this;
   }
 
   @Override
-  public AbstractModelWithHolder_ show() {
+  public GenerateDefaultLayoutMethod_ show() {
     super.show();
     return this;
   }
 
   @Override
-  public AbstractModelWithHolder_ show(boolean show) {
+  public GenerateDefaultLayoutMethod_ show(boolean show) {
     super.show(show);
     return this;
   }
 
   @Override
-  public AbstractModelWithHolder_ hide() {
+  public GenerateDefaultLayoutMethod_ hide() {
     super.hide();
     return this;
   }
 
   @Override
-  protected AbstractModelWithHolder.Holder createNewHolder() {
-    return new AbstractModelWithHolder.Holder();
+  @LayoutRes
+  protected int getDefaultLayout() {
+    return 1;
   }
 
   @Override
-  public AbstractModelWithHolder_ reset() {
+  public GenerateDefaultLayoutMethod_ reset() {
     this.value = 0;
     super.reset();
     return this;
@@ -81,13 +83,13 @@ public class AbstractModelWithHolder_ extends AbstractModelWithHolder {
     if (o == this) {
       return true;
     }
-    if (!(o instanceof AbstractModelWithHolder_)) {
+    if (!(o instanceof GenerateDefaultLayoutMethod_)) {
       return false;
     }
     if (!super.equals(o)) {
       return false;
     }
-    AbstractModelWithHolder_ that = (AbstractModelWithHolder_) o;
+    GenerateDefaultLayoutMethod_ that = (GenerateDefaultLayoutMethod_) o;
     if (value != that.value) {
       return false;
     }
@@ -103,7 +105,7 @@ public class AbstractModelWithHolder_ extends AbstractModelWithHolder {
 
   @Override
   public String toString() {
-    return "AbstractModelWithHolder_{" +
+    return "GenerateDefaultLayoutMethod_{" +
         "value=" + value +
         "}" + super.toString();
   }
