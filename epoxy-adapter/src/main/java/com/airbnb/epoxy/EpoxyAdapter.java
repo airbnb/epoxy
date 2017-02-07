@@ -211,21 +211,21 @@ public abstract class EpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder>
   @Override
   public boolean onFailedToRecycleView(EpoxyViewHolder holder) {
     //noinspection unchecked,rawtypes
-    return ((EpoxyModel) holder.getModel()).onFailedToRecycleView(holder.itemView);
+    return ((EpoxyModel) holder.getModel()).onFailedToRecycleView(holder.objectToBind());
   }
 
   @CallSuper
   @Override
   public void onViewAttachedToWindow(EpoxyViewHolder holder) {
     //noinspection unchecked,rawtypes
-    ((EpoxyModel) holder.getModel()).onViewAttachedToWindow(holder.itemView);
+    ((EpoxyModel) holder.getModel()).onViewAttachedToWindow(holder.objectToBind());
   }
 
   @CallSuper
   @Override
   public void onViewDetachedFromWindow(EpoxyViewHolder holder) {
     //noinspection unchecked,rawtypes
-    ((EpoxyModel) holder.getModel()).onViewDetachedFromWindow(holder.itemView);
+    ((EpoxyModel) holder.getModel()).onViewDetachedFromWindow(holder.objectToBind());
   }
 
   public void onSaveInstanceState(Bundle outState) {
