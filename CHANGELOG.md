@@ -1,4 +1,4 @@
-# 1.6.0 (Feb 6, 2017)
+# 1.6.1 (Feb 6, 2017)
 
 * Allow the default layout resource to be specified in the EpoxyModelClass class annotation [(#109)](https://github.com/airbnb/epoxy/pull/109) [(#111)](https://github.com/airbnb/epoxy/pull/111)
 * Allow the `createNewHolder` method to be omitted and generated automatically [(#105)](https://github.com/airbnb/epoxy/pull/105)
