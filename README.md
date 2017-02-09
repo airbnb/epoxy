@@ -452,7 +452,7 @@ If the model class is abstract, and only has `EpoxyAttribute` annotations, a gen
 A model class annotated with `@EpoxyModelClass` will always have a subclass generated. There are several cases where it may be useful to use this alongside, or instead of, `EpoxyAttribute`.
 
 1. `getDefaultLayout` may be left unimplemented and the default layout resource can instead be specified as a parameter to the `EpoxyModelClass` annotation. The generated model will include a `getDefaultLayout` implementation that returns that value.
-  * **Note**: This does not currently work in library projects or modules, but support for that is coming soon!
+  * **Note**: This works with library projects, but you'll need to use final layout values in the annotation. I recommend using Butterknife's gradle plugin to generate an R2 class to do this easily.
 
 2. If you are using `EpoxyModelWithHolder` (see [Using View Holders](#view-holders)) you can leave the `createNewHolder` method unimplemented and the generated class will contain a default implementation that creates a new holder by calling a no argument constructor of the holder class.
 
