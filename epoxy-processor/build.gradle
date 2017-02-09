@@ -21,6 +21,9 @@ dependencies {
   compile deps.googleAutoService
   compile deps.squareJavaPoet
 
+  /** Provides the sun javac tools for looking up the R class trees. */
+  compileOnly files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
+
   compile project(':epoxy-annotations')
 }
 

@@ -5,7 +5,6 @@ import android.support.annotation.LayoutRes;
 import com.airbnb.epoxy.ClassToGenerateInfo.ConstructorInfo;
 import com.airbnb.epoxy.ClassToGenerateInfo.MethodInfo;
 import com.google.auto.service.AutoService;
-import com.google.common.collect.ImmutableSet;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -15,10 +14,12 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -79,6 +80,8 @@ public class EpoxyProcessor extends AbstractProcessor {
   private Elements elementUtils;
   private Types typeUtils;
 
+  private ResourceProcessor resourceProcessor;
+
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
     super.init(processingEnv);
@@ -86,12 +89,26 @@ public class EpoxyProcessor extends AbstractProcessor {
     messager = processingEnv.getMessager();
     elementUtils = processingEnv.getElementUtils();
     typeUtils = processingEnv.getTypeUtils();
+
+    resourceProcessor = new ResourceProcessor(processingEnv, elementUtils, typeUtils);
   }
 
   @Override
   public Set<String> getSupportedAnnotationTypes() {
-    return ImmutableSet.of(EpoxyAttribute.class.getCanonicalName(),
-        EpoxyModelClass.class.getCanonicalName());
+    Set<String> types = new LinkedHashSet<>();
+    for (Class<? extends Annotation> annotation : getSupportedAnnotations()) {
+      types.add(annotation.getCanonicalName());
+    }
+    return types;
+  }
+
+  static Set<Class<? extends Annotation>> getSupportedAnnotations() {
+    Set<Class<? extends Annotation>> annotations = new LinkedHashSet<>();
+
+    annotations.add(EpoxyModelClass.class);
+    annotations.add(EpoxyAttribute.class);
+
+    return annotations;
   }
 
   @Override
@@ -101,6 +118,8 @@ public class EpoxyProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    resourceProcessor.processorResources(roundEnv);
+
     LinkedHashMap<TypeElement, ClassToGenerateInfo> modelClassMap = new LinkedHashMap<>();
 
     try {
@@ -489,8 +508,9 @@ public class EpoxyProcessor extends AbstractProcessor {
           originalClassElement.getSimpleName());
     }
 
+    AndroidResource layoutResource = resourceProcessor.getResourceForValue(layoutRes);
     getDefaultLayoutMethod = getDefaultLayoutMethod.toBuilder()
-        .addStatement("return $L", layoutRes)
+        .addStatement("return $L", layoutResource.code)
         .build();
 
     methods.add(getDefaultLayoutMethod);
