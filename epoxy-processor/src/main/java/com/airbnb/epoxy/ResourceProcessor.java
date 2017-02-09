@@ -192,7 +192,8 @@ class ResourceProcessor {
       if ("int".equals(type)) {
         int resourceValue = Integer.valueOf(jcVariableDecl.getInitializer().toString());
         String resourceName = jcVariableDecl.getName().toString();
-        resourceValues.put(resourceValue, new AndroidResource(resourceValue, className, resourceName));
+        resourceValues
+            .put(resourceValue, new AndroidResource(resourceValue, className, resourceName));
       }
     }
   }
