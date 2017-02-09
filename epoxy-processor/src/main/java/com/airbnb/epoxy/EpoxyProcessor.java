@@ -15,6 +15,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.annotation.AnnotationTypeMismatchException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -501,7 +502,18 @@ public class EpoxyProcessor extends AbstractProcessor {
           originalClassElement.getSimpleName());
     }
 
-    int layoutRes = annotation.layout();
+    int layoutRes;
+    try {
+      layoutRes = annotation.layout();
+    } catch (AnnotationTypeMismatchException e) {
+      throwError("Invalid layout value in %s annotation. (class: %s). %s: %s",
+          EpoxyModelClass.class,
+          originalClassElement.getSimpleName(),
+          e.getClass().getSimpleName(),
+          e.getMessage());
+      return;
+    }
+
     if (layoutRes == 0) {
       throwError("Model must specify a valid layout resource in the %s annotation. (class: %s)",
           EpoxyModelClass.class,
