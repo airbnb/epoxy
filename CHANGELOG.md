@@ -1,3 +1,7 @@
+# 1.6.2 (Feb 8, 2017)
+
+* New: Support layout resource annotations in library projects (https://github.com/airbnb/epoxy/pull/116)
+
 # 1.6.1 (Feb 6, 2017)
 
 * Allow the default layout resource to be specified in the EpoxyModelClass class annotation [(#109)](https://github.com/airbnb/epoxy/pull/109) [(#111)](https://github.com/airbnb/epoxy/pull/111)
