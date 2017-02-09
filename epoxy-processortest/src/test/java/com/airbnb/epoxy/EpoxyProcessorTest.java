@@ -404,4 +404,68 @@ public class EpoxyProcessorTest {
         .and()
         .generatesSources(generatedModel);
   }
+
+  @Test
+  public void testGenerateDefaultLayoutMethodFailsIfLayoutNotSpecified() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("GenerateDefaultLayoutMethodNoLayout.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("Model must specify a valid layout resource");
+  }
+
+  @Test
+  public void testGeneratedDefaultMethodWithLayoutSpecifiedInParent() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("GenerateDefaultLayoutMethodParentLayout.java");
+
+    JavaFileObject generatedNoLayoutModel = JavaFileObjects
+        .forResource("GenerateDefaultLayoutMethodParentLayout$NoLayout_.java");
+    JavaFileObject generatedWithLayoutModel =
+        JavaFileObjects.forResource("GenerateDefaultLayoutMethodParentLayout$WithLayout_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedNoLayoutModel, generatedWithLayoutModel);
+
+  }
+
+  @Test
+  public void testGeneratedDefaultMethodWithLayoutSpecifiedInNextParent() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("GenerateDefaultLayoutMethodNextParentLayout.java");
+
+    JavaFileObject generatedNoLayoutModel = JavaFileObjects
+        .forResource("GenerateDefaultLayoutMethodNextParentLayout$NoLayout.java");
+    JavaFileObject generatedStillNoLayoutModel = JavaFileObjects
+        .forResource("GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout.java");
+    JavaFileObject generatedWithLayoutModel =
+        JavaFileObjects.forResource("GenerateDefaultLayoutMethodNextParentLayout$WithLayout.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedNoLayoutModel, generatedStillNoLayoutModel,
+            generatedWithLayoutModel);
+  }
+
+  @Test
+  public void testGeneratedDefaultMethodWithLayoutFailsIfNotSpecifiedInParent() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("GenerateDefaultLayoutMethodParentStillNoLayout.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("Model must specify a valid layout resource");
+  }
 }

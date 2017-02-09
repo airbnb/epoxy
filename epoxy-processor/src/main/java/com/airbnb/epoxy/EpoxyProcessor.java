@@ -493,7 +493,7 @@ public class EpoxyProcessor extends AbstractProcessor {
       return;
     }
 
-    EpoxyModelClass annotation = originalClassElement.getAnnotation(EpoxyModelClass.class);
+    EpoxyModelClass annotation = findClassAnnotation(originalClassElement);
     if (annotation == null) {
       throwError("Model must use %s annotation if it does not implement %s. (class: %s)",
           EpoxyModelClass.class,
@@ -514,6 +514,37 @@ public class EpoxyProcessor extends AbstractProcessor {
         .build();
 
     methods.add(getDefaultLayoutMethod);
+  }
+
+  /**
+   * Looks for {@link EpoxyModelClass} annotation in the original class and his parents.
+   */
+  private EpoxyModelClass findClassAnnotation(TypeElement originalClassElement) {
+    EpoxyModelClass annotation = originalClassElement.getAnnotation(EpoxyModelClass.class);
+    // return annotation from the original class if it satisfies the conditions
+    if (annotation != null && annotation.layout() != 0) {
+      return annotation;
+    }
+
+    // looks for annotation in parent classes
+    TypeMirror superclassType = originalClassElement.getSuperclass();
+    while (isEpoxyModel(superclassType)) {
+      TypeElement superclassElement = (TypeElement) typeUtils.asElement(superclassType);
+      EpoxyModelClass superAnnotation = superclassElement.getAnnotation(EpoxyModelClass.class);
+      // we don't want to override last annotation with absence of it
+      if (superAnnotation != null) {
+        annotation = superAnnotation;
+      }
+      // there might be more classes up in chain which specify layout if current one doesn't
+      if (annotation != null && annotation.layout() != 0) {
+        return annotation;
+      }
+      superclassType = superclassElement.getSuperclass();
+    }
+
+    // last annotation will be returned anyway so we can throw an error to show that layout
+    // wasn't specified
+    return annotation;
   }
 
   private void generateParams(StringBuilder statementBuilder, List<ParameterSpec> params) {
