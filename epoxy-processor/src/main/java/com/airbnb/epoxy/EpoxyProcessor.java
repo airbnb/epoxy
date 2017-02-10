@@ -15,6 +15,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.annotation.AnnotationTypeMismatchException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -493,7 +494,7 @@ public class EpoxyProcessor extends AbstractProcessor {
       return;
     }
 
-    EpoxyModelClass annotation = findClassAnnotation(originalClassElement);
+    EpoxyModelClass annotation = findClassAnnotationWithLayout(originalClassElement);
     if (annotation == null) {
       throwError("Model must use %s annotation if it does not implement %s. (class: %s)",
           EpoxyModelClass.class,
@@ -519,32 +520,36 @@ public class EpoxyProcessor extends AbstractProcessor {
   /**
    * Looks for {@link EpoxyModelClass} annotation in the original class and his parents.
    */
-  private EpoxyModelClass findClassAnnotation(TypeElement originalClassElement) {
-    EpoxyModelClass annotation = originalClassElement.getAnnotation(EpoxyModelClass.class);
-    // return annotation from the original class if it satisfies the conditions
-    if (annotation != null && annotation.layout() != 0) {
-      return annotation;
+  private EpoxyModelClass findClassAnnotationWithLayout(TypeElement classElement)
+      throws EpoxyProcessorException {
+    if (!isEpoxyModel(classElement)) {
+      return null;
     }
 
-    // looks for annotation in parent classes
-    TypeMirror superclassType = originalClassElement.getSuperclass();
-    while (isEpoxyModel(superclassType)) {
-      TypeElement superclassElement = (TypeElement) typeUtils.asElement(superclassType);
-      EpoxyModelClass superAnnotation = superclassElement.getAnnotation(EpoxyModelClass.class);
-      // we don't want to override last annotation with absence of it
-      if (superAnnotation != null) {
-        annotation = superAnnotation;
-      }
-      // there might be more classes up in chain which specify layout if current one doesn't
-      if (annotation != null && annotation.layout() != 0) {
+    EpoxyModelClass annotation = classElement.getAnnotation(EpoxyModelClass.class);
+    if (annotation == null) {
+      return null;
+    }
+
+    try {
+      int layoutRes = annotation.layout();
+      if (layoutRes != 0) {
         return annotation;
       }
-      superclassType = superclassElement.getSuperclass();
+    } catch (AnnotationTypeMismatchException e) {
+      throwError("Invalid layout value in %s annotation. (class: %s). %s: %s",
+          EpoxyModelClass.class,
+          classElement.getSimpleName(),
+          e.getClass().getSimpleName(),
+          e.getMessage());
+      return null;
     }
 
-    // last annotation will be returned anyway so we can throw an error to show that layout
-    // wasn't specified
-    return annotation;
+    TypeElement superclassElement = (TypeElement) typeUtils.asElement(classElement.getSuperclass());
+    EpoxyModelClass annotationOnSuperClass = findClassAnnotationWithLayout(superclassElement);
+
+    // Return the last annotation value we have so the proper error can be thrown if needed
+    return annotationOnSuperClass != null ? annotationOnSuperClass : annotation;
   }
 
   private void generateParams(StringBuilder statementBuilder, List<ParameterSpec> params) {
