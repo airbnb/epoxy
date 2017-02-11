@@ -27,6 +27,10 @@ class ProcessorUtils {
     return isSubtypeOfType(type, EPOXY_MODEL_TYPE);
   }
 
+  static boolean isEpoxyModel(TypeElement type) {
+    return isEpoxyModel(type.asType());
+  }
+
   static boolean isEpoxyModelWithHolder(TypeElement type) {
     return isSubtypeOfType(type.asType(), EPOXY_MODEL_HOLDER_TYPE);
   }

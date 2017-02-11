@@ -494,7 +494,7 @@ public class EpoxyProcessor extends AbstractProcessor {
       return;
     }
 
-    EpoxyModelClass annotation = originalClassElement.getAnnotation(EpoxyModelClass.class);
+    EpoxyModelClass annotation = findClassAnnotationWithLayout(originalClassElement);
     if (annotation == null) {
       throwError("Model must use %s annotation if it does not implement %s. (class: %s)",
           EpoxyModelClass.class,
@@ -526,6 +526,41 @@ public class EpoxyProcessor extends AbstractProcessor {
         .build();
 
     methods.add(getDefaultLayoutMethod);
+  }
+
+  /**
+   * Looks for {@link EpoxyModelClass} annotation in the original class and his parents.
+   */
+  private EpoxyModelClass findClassAnnotationWithLayout(TypeElement classElement)
+      throws EpoxyProcessorException {
+    if (!isEpoxyModel(classElement)) {
+      return null;
+    }
+
+    EpoxyModelClass annotation = classElement.getAnnotation(EpoxyModelClass.class);
+    if (annotation == null) {
+      return null;
+    }
+
+    try {
+      int layoutRes = annotation.layout();
+      if (layoutRes != 0) {
+        return annotation;
+      }
+    } catch (AnnotationTypeMismatchException e) {
+      throwError("Invalid layout value in %s annotation. (class: %s). %s: %s",
+          EpoxyModelClass.class,
+          classElement.getSimpleName(),
+          e.getClass().getSimpleName(),
+          e.getMessage());
+      return null;
+    }
+
+    TypeElement superclassElement = (TypeElement) typeUtils.asElement(classElement.getSuperclass());
+    EpoxyModelClass annotationOnSuperClass = findClassAnnotationWithLayout(superclassElement);
+
+    // Return the last annotation value we have so the proper error can be thrown if needed
+    return annotationOnSuperClass != null ? annotationOnSuperClass : annotation;
   }
 
   private void generateParams(StringBuilder statementBuilder, List<ParameterSpec> params) {
