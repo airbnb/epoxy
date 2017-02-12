@@ -8,6 +8,7 @@
         android:theme="@style/Theme.AppCompat.Light">
         <activity
             android:name=".MainActivity"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
             <intent-filter>

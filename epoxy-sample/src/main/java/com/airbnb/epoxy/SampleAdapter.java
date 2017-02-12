@@ -1,19 +1,27 @@
 package com.airbnb.epoxy;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.airbnb.epoxy.models.ButtonModel;
 import com.airbnb.epoxy.models.ButtonModel_;
 import com.airbnb.epoxy.models.ColorModel_;
+import com.airbnb.epoxy.models.EditTextModel;
+import com.airbnb.epoxy.models.EditTextModel_;
 import com.airbnb.epoxy.models.HeaderModel;
 import com.airbnb.epoxy.models.HeaderModel_;
 
 import java.util.Collections;
 import java.util.Random;
 
-class SampleAdapter extends EpoxyAdapter {
+public class SampleAdapter extends EpoxyAdapter {
+
+  private static final String LOG_TAG = SampleAdapter.class.getSimpleName();
+
   private static final Random RANDOM = new Random();
 
   // These models are saved as fields so they can easily be shown or hidden as needed
@@ -21,7 +29,7 @@ class SampleAdapter extends EpoxyAdapter {
   private final ButtonModel_ shuffleButton = new ButtonModel_();
   private final ButtonModel_ changeColorsButton = new ButtonModel_();
 
-  SampleAdapter() {
+  SampleAdapter(Context context) {
     // We are going to use automatic diffing, so we just have to enable it first
     enableDiffing();
 
@@ -32,21 +40,30 @@ class SampleAdapter extends EpoxyAdapter {
         .title(R.string.epoxy)
         .caption(R.string.header_subtitle);
 
+    EditTextModel editTextModel = new EditTextModel_()
+        .editTextListener(editTextListener)
+        .hint(R.string.text_hint);
+
     ButtonModel addButton = new ButtonModel_()
         .text(R.string.button_add)
+        .backgroundColor(ContextCompat.getColor(context, R.color.green))
         .clickListener(onAddClicked);
 
     clearButton.text(R.string.button_clear)
+        .backgroundColor(ContextCompat.getColor(context, R.color.red))
         .clickListener(onClearClicked);
 
     shuffleButton.text(R.string.button_shuffle)
+        .backgroundColor(ContextCompat.getColor(context, R.color.cyan))
         .clickListener(onShuffleClicked);
 
     changeColorsButton.text(R.string.button_change)
+        .backgroundColor(ContextCompat.getColor(context, R.color.cyan))
         .clickListener(onChangeColorsClicked);
 
     addModels(
         headerModel,
+        editTextModel,
         addButton,
         clearButton,
         shuffleButton,
@@ -96,11 +113,23 @@ class SampleAdapter extends EpoxyAdapter {
     }
   };
 
+  EditTextListener editTextListener = new EditTextListener() {
+    @Override
+    public void onTextEntered(String enteredText) {
+      Log.d(LOG_TAG, enteredText);
+    }
+  };
+
   private int randomColor() {
     int r = RANDOM.nextInt(256);
     int g = RANDOM.nextInt(256);
     int b = RANDOM.nextInt(256);
 
     return Color.rgb(r, g, b);
+  }
+
+
+  public interface EditTextListener {
+    void onTextEntered(String enteredText);
   }
 }

@@ -45,6 +45,9 @@ public class VerticalGridCardSpacingDecoration extends ItemDecoration {
       // Only item in row
       outRect.left = outerPadding;
       outRect.right = outerPadding;
+      // Assign top and bottom padding if there is just one item in the row
+      outRect.top = innerPadding;
+      outRect.bottom = innerPadding;
     } else if (spanIndex == 0) {
       // First item in row
       outRect.left = outerPadding;

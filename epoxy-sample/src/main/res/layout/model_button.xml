@@ -2,4 +2,5 @@
 <Button xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/button"
     android:layout_width="match_parent"
+    android:textColor="@color/white"
     android:layout_height="40dp"/>

@@ -1,5 +1,6 @@
 package com.airbnb.epoxy.models;
 
+import android.support.annotation.ColorInt;
 import android.support.annotation.StringRes;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -16,7 +17,8 @@ import butterknife.BindView;
 @EpoxyModelClass(layout = R.layout.model_button)
 public abstract class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
   @EpoxyAttribute @StringRes int text;
-  @EpoxyAttribute OnClickListener clickListener;
+  @EpoxyAttribute (hash = false) OnClickListener clickListener;
+  @EpoxyAttribute @ColorInt int backgroundColor;
 
   @Override
   public int getSpanSize(int totalSpanCount, int position, int itemCount) {
@@ -26,6 +28,7 @@ public abstract class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
   @Override
   public void bind(ButtonHolder holder) {
     holder.button.setText(text);
+    holder.button.setBackgroundColor(backgroundColor);
     holder.button.setOnClickListener(clickListener);
   }
 
