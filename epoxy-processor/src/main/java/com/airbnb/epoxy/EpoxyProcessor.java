@@ -34,7 +34,6 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
@@ -48,6 +47,7 @@ import static com.airbnb.epoxy.ProcessorUtils.getEpoxyObjectType;
 import static com.airbnb.epoxy.ProcessorUtils.implementsMethod;
 import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModel;
 import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModelWithHolder;
+import static com.airbnb.epoxy.ProcessorUtils.throwError;
 import static com.squareup.javapoet.TypeName.BOOLEAN;
 import static com.squareup.javapoet.TypeName.BYTE;
 import static com.squareup.javapoet.TypeName.CHAR;
@@ -57,10 +57,8 @@ import static com.squareup.javapoet.TypeName.INT;
 import static com.squareup.javapoet.TypeName.LONG;
 import static com.squareup.javapoet.TypeName.SHORT;
 import static javax.lang.model.element.ElementKind.CLASS;
-import static javax.lang.model.element.Modifier.FINAL;
+import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.PRIVATE;
-import static javax.lang.model.element.Modifier.PROTECTED;
-import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
 /**
@@ -82,6 +80,8 @@ public class EpoxyProcessor extends AbstractProcessor {
   private Types typeUtils;
 
   private ResourceProcessor resourceProcessor;
+  private Configuration configuration;
+  private HashCodeValidator hashCodeValidator;
 
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -91,6 +91,7 @@ public class EpoxyProcessor extends AbstractProcessor {
     elementUtils = processingEnv.getElementUtils();
     typeUtils = processingEnv.getTypeUtils();
 
+    hashCodeValidator = new HashCodeValidator(typeUtils);
     resourceProcessor = new ResourceProcessor(processingEnv, elementUtils, typeUtils);
   }
 
@@ -108,6 +109,7 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     annotations.add(EpoxyModelClass.class);
     annotations.add(EpoxyAttribute.class);
+    annotations.add(EpoxyConfig.class);
 
     return annotations;
   }
@@ -119,6 +121,13 @@ public class EpoxyProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    try {
+      configuration = Configuration.create(roundEnv);
+    } catch (EpoxyProcessorException e) {
+      writeError(e);
+      configuration = Configuration.forDefaults();
+    }
+
     resourceProcessor.processorResources(roundEnv);
 
     LinkedHashMap<TypeElement, ClassToGenerateInfo> modelClassMap = new LinkedHashMap<>();
@@ -153,51 +162,17 @@ public class EpoxyProcessor extends AbstractProcessor {
       throws EpoxyProcessorException {
 
     validateAccessibleViaGeneratedCode(attribute);
-    TypeElement classElement = (TypeElement) attribute.getEnclosingElement();
 
+    TypeElement classElement = (TypeElement) attribute.getEnclosingElement();
     ClassToGenerateInfo helperClass = getOrCreateTargetClass(modelClassMap, classElement);
 
-    String name = attribute.getSimpleName().toString();
-    TypeName type = TypeName.get(attribute.asType());
-    boolean hasSuper = hasSuperMethod(classElement, name);
-    boolean hasFinalModifier = attribute.getModifiers().contains(FINAL);
-    boolean packagePrivate = isFieldPackagePrivate(attribute);
-    helperClass.addAttribute(
-        new AttributeInfo(name, type, attribute.getAnnotationMirrors(),
-            attribute.getAnnotation(EpoxyAttribute.class), hasSuper, hasFinalModifier,
-            packagePrivate));
-  }
+    AttributeInfo attributeInfo = new AttributeInfo(attribute, typeUtils);
 
-  /**
-   * Checks if the given field has package-private visibility
-   */
-  private boolean isFieldPackagePrivate(Element attribute) {
-    Set<Modifier> modifiers = attribute.getModifiers();
-    return !modifiers.contains(PUBLIC)
-        && !modifiers.contains(PROTECTED)
-        && !modifiers.contains(PRIVATE);
-  }
-
-  /**
-   * Check if the given class or any of its super classes have a super method with the given name.
-   * Private methods are ignored since the generated subclass can't call super on those.
-   */
-  private boolean hasSuperMethod(TypeElement classElement, String methodName) {
-    if (!isEpoxyModel(classElement.asType())) {
-      return false;
+    if (configuration.requireHashCode && attributeInfo.useInHash()) {
+      hashCodeValidator.validate(attributeInfo);
     }
 
-    for (Element subElement : classElement.getEnclosedElements()) {
-      if (subElement.getKind() == ElementKind.METHOD
-          && !subElement.getModifiers().contains(Modifier.PRIVATE)
-          && subElement.getSimpleName().toString().equals(methodName)) {
-        return true;
-      }
-    }
-
-    Element superClass = typeUtils.asElement(classElement.getSuperclass());
-    return (superClass instanceof TypeElement)
-        && hasSuperMethod((TypeElement) superClass, methodName);
+    helperClass.addAttribute(attributeInfo);
   }
 
   private void validateAccessibleViaGeneratedCode(Element attribute) throws
@@ -255,6 +230,10 @@ public class EpoxyProcessor extends AbstractProcessor {
       throwError("Class with %s annotations must extend %s (%s)",
           EpoxyAttribute.class.getSimpleName(), EPOXY_MODEL_TYPE,
           classElement.getSimpleName());
+    }
+
+    if (configuration.requireAbstractModels && !classElement.getModifiers().contains(ABSTRACT)) {
+      throwError("Epoxy model class must be abstract (%s)", classElement.getSimpleName());
     }
 
     if (classToGenerateInfo == null) {
@@ -784,11 +763,6 @@ public class EpoxyProcessor extends AbstractProcessor {
 
   private void writeError(Exception e) {
     messager.printMessage(Diagnostic.Kind.ERROR, e.toString());
-  }
-
-  private void throwError(String msg, Object... args)
-      throws EpoxyProcessorException {
-    throw new EpoxyProcessorException(String.format(msg, args));
   }
 
   private static String getDefaultValue(TypeName attributeType) {

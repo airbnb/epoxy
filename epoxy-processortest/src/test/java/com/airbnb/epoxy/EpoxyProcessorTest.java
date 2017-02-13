@@ -433,7 +433,6 @@ public class EpoxyProcessorTest {
         .compilesWithoutError()
         .and()
         .generatesSources(generatedNoLayoutModel, generatedWithLayoutModel);
-
   }
 
   @Test
@@ -467,5 +466,151 @@ public class EpoxyProcessorTest {
         .processedWith(new EpoxyProcessor())
         .failsToCompile()
         .withErrorContaining("Model must specify a valid layout resource");
+  }
+
+  @Test
+  public void testConfigDeclaredTwiceFails() {
+    JavaFileObject configClass = JavaFileObjects
+        .forResource("ClassWithTwoConfigs.java");
+
+    assert_().about(javaSource())
+        .that(configClass)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("Epoxy config can only be used once per project");
+  }
+
+  @Test
+  public void testConfigRequireHashCode() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithAttributeWithoutHashCode.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("Attribute does not implement hashCode");
+  }
+
+  @Test
+  public void testConfigRequireHashCodeIterableFails() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelRequiresHashCodeIterableFails.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("Type in Iterable does not implement hashCode");
+  }
+
+  @Test
+  public void testConfigRequireHashCodeIterablePasses() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelRequiresHashCodeIterableSucceeds.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError();
+  }
+
+  @Test
+  public void testConfigRequireHashCodeArrayFails() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelRequiresHashCodeArrayFails.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("Type in array does not implement hashCode");
+  }
+
+  @Test
+  public void testConfigRequireHashCodeArrayPasses() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelRequiresHashCodeArraySucceeds.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError();
+  }
+
+  @Test
+  public void testConfigRequireHashCodeEnumAttributePasses() {
+    // Verify that enum attributes pass the hashcode requirement
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelRequiresHashCodeEnumPasses.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError();
+  }
+
+  @Test
+  public void testConfigRequireHashCodeAutoValueAttributePasses() {
+    // Verify that AutoValue class attributes pass the hashcode requirement
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelRequiresHashCodeAutoValueClassPasses.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError();
+  }
+
+  @Test
+  public void testConfigRequireAbstractModelPassesClassWithAttribute() {
+    // Verify that AutoValue class attributes pass the hashcode requirement
+    JavaFileObject model = JavaFileObjects
+        .forResource("RequireAbstractModelPassesClassWithAttribute.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError();
+  }
+
+  @Test
+  public void testConfigRequireAbstractModelFailsClassWithAttribute() {
+    // Verify that AutoValue class attributes pass the hashcode requirement
+    JavaFileObject model = JavaFileObjects
+        .forResource("RequireAbstractModelFailsClassWithAttribute.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining(
+            "Epoxy model class must be abstract (RequireAbstractModelFailsClassWithAttribute)");
+  }
+
+  @Test
+  public void testConfigRequireAbstractModelPassesEpoxyModelClass() {
+    // Verify that AutoValue class attributes pass the hashcode requirement
+    JavaFileObject model = JavaFileObjects
+        .forResource("RequireAbstractModelPassesEpoxyModelClass.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError();
+  }
+
+  @Test
+  public void testConfigRequireAbstractModelFailsEpoxyModelClass() {
+    // Verify that AutoValue class attributes pass the hashcode requirement
+    JavaFileObject model = JavaFileObjects
+        .forResource("RequireAbstractModelFailsEpoxyModelClass.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining(
+            "Epoxy model class must be abstract (RequireAbstractModelFailsEpoxyModelClass)");
   }
 }

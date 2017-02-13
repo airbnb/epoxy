@@ -9,11 +9,22 @@ import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.util.Types;
 
-public class AttributeInfo {
+import static javax.lang.model.element.Modifier.FINAL;
+import static javax.lang.model.element.Modifier.PRIVATE;
+import static javax.lang.model.element.Modifier.PROTECTED;
+import static javax.lang.model.element.Modifier.PUBLIC;
+
+class AttributeInfo {
 
   private final List<AnnotationSpec> setterAnnotations = new ArrayList<>();
   private final List<AnnotationSpec> getterAnnotations = new ArrayList<>();
@@ -28,18 +39,58 @@ public class AttributeInfo {
    * through to super.
    */
   private final boolean hasSuperSetter;
+  private final Element attributeElement;
+  private final Types typeUtils;
 
-  AttributeInfo(String name, TypeName type,
-      List<? extends AnnotationMirror> annotationMirrors, EpoxyAttribute annotation,
-      boolean hasSuperSetter, boolean hasFinalModifier, boolean packagePrivate) {
-    this.name = name;
-    this.type = type;
-    this.hasSuperSetter = hasSuperSetter;
-    this.hasFinalModifier = hasFinalModifier;
-    this.packagePrivate = packagePrivate;
+  private final TypeElement classElement;
+
+  AttributeInfo(Element attribute, Types typeUtils) {
+    attributeElement = attribute;
+    this.typeUtils = typeUtils;
+    this.name = attribute.getSimpleName().toString();
+    this.type = TypeName.get(attribute.asType());
+
+    classElement = (TypeElement) attribute.getEnclosingElement();
+    this.hasSuperSetter = hasSuperMethod(classElement, name);
+    this.hasFinalModifier = attribute.getModifiers().contains(FINAL);
+    this.packagePrivate = isFieldPackagePrivate(attribute);
+
+    EpoxyAttribute annotation = attribute.getAnnotation(EpoxyAttribute.class);
     useInHash = annotation.hash();
     generateSetter = annotation.setter();
-    buildAnnotationLists(annotationMirrors);
+    buildAnnotationLists(attribute.getAnnotationMirrors());
+  }
+
+  /**
+   * Check if the given class or any of its super classes have a super method with the given name.
+   * Private methods are ignored since the generated subclass can't call super on those.
+   */
+  private boolean hasSuperMethod(TypeElement classElement, String methodName) {
+    if (!ProcessorUtils.isEpoxyModel(classElement.asType())) {
+      return false;
+    }
+
+    for (Element subElement : classElement.getEnclosedElements()) {
+      if (subElement.getKind() == ElementKind.METHOD
+          && !subElement.getModifiers().contains(Modifier.PRIVATE)
+          && subElement.getSimpleName().toString().equals(methodName)) {
+        return true;
+      }
+    }
+
+    Element superClass = typeUtils.asElement(classElement.getSuperclass());
+    return (superClass instanceof TypeElement)
+        && hasSuperMethod((TypeElement) superClass, methodName);
+  }
+
+  /**
+   * Checks if the given field has package-private visibility
+   */
+  private boolean isFieldPackagePrivate(Element attribute) {
+    Set<Modifier> modifiers = attribute.getModifiers();
+    return !modifiers.contains(PUBLIC)
+        && !modifiers.contains(PROTECTED)
+        && !modifiers.contains(PRIVATE);
   }
 
   /**
@@ -81,39 +132,39 @@ public class AttributeInfo {
     }
   }
 
-  public String getName() {
+  String getName() {
     return name;
   }
 
-  public TypeName getType() {
+  TypeName getType() {
     return type;
   }
 
-  public boolean useInHash() {
+  boolean useInHash() {
     return useInHash;
   }
 
-  public boolean generateSetter() {
+  boolean generateSetter() {
     return generateSetter;
   }
 
-  public List<AnnotationSpec> getSetterAnnotations() {
+  List<AnnotationSpec> getSetterAnnotations() {
     return setterAnnotations;
   }
 
-  public List<AnnotationSpec> getGetterAnnotations() {
+  List<AnnotationSpec> getGetterAnnotations() {
     return getterAnnotations;
   }
 
-  public boolean hasSuperSetterMethod() {
+  boolean hasSuperSetterMethod() {
     return hasSuperSetter;
   }
 
-  public boolean hasFinalModifier() {
+  boolean hasFinalModifier() {
     return hasFinalModifier;
   }
 
-  public boolean isPackagePrivate() {
+  boolean isPackagePrivate() {
     return packagePrivate;
   }
 
@@ -147,5 +198,13 @@ public class AttributeInfo {
     int result = name.hashCode();
     result = 31 * result + type.hashCode();
     return result;
+  }
+
+  public Element getAttributeElement() {
+    return attributeElement;
+  }
+
+  public TypeElement getClassElement() {
+    return classElement;
   }
 }
