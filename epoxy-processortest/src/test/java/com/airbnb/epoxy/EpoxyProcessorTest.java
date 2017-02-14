@@ -483,7 +483,7 @@ public class EpoxyProcessorTest {
   @Test
   public void testConfigRequireHashCode() {
     JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithAttributeWithoutHashCode.java");
+        .forResource("ModelRequiresHashCodeFailsBasicObject.java");
 
     assert_().about(javaSource())
         .that(model)

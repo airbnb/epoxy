@@ -1,7 +1,7 @@
 package com.airbnb.epoxy;
 
 @EpoxyConfig(requireHashCode = true)
-public class ModelWithAttributeWithoutHashCode extends EpoxyModel<Object> {
+public class ModelRequiresHashCodeFailsBasicObject extends EpoxyModel<Object> {
 
   public static class ClassWithoutHashCode {
 
