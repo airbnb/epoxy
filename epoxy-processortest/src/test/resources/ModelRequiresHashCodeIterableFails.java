@@ -3,7 +3,7 @@ package com.airbnb.epoxy;
 import java.util.List;
 
 
-@EpoxyConfig(requireHashCode = true)
+@ModuleEpoxyConfig(requireHashCode = true)
 public class ModelRequiresHashCodeIterableFails extends EpoxyModel<Object> {
   @EpoxyAttribute List<Object> clickListener;
 

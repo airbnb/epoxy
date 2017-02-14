@@ -1,6 +1,6 @@
 package com.airbnb.epoxy;
 
-@EpoxyConfig(requireHashCode = true)
+@ModuleEpoxyConfig(requireHashCode = true)
 public class ModelRequiresHashCodeArrayFails extends EpoxyModel<Object> {
   @EpoxyAttribute Object[] clickListener;
 

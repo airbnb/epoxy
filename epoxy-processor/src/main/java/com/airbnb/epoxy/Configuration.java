@@ -8,7 +8,7 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 
 /**
- * Used to process {@link com.airbnb.epoxy.EpoxyConfig} annotations and specify configuration
+ * Used to process {@link ModuleEpoxyConfig} annotations and specify configuration
  * details to the annotation processor
  */
 class Configuration {
@@ -23,14 +23,14 @@ class Configuration {
 
   static Configuration forDefaults() {
     return new Configuration(
-        EpoxyConfig.REQUIRE_HASHCODE_DEFAULT,
-        EpoxyConfig.REQUIRE_ABSTRACT_MODELS
+        ModuleEpoxyConfig.REQUIRE_HASHCODE_DEFAULT,
+        ModuleEpoxyConfig.REQUIRE_ABSTRACT_MODELS
     );
   }
 
   static Configuration create(RoundEnvironment roundEnv) throws EpoxyProcessorException {
     Set<? extends Element> configElements =
-        roundEnv.getElementsAnnotatedWith(EpoxyConfig.class);
+        roundEnv.getElementsAnnotatedWith(ModuleEpoxyConfig.class);
 
     if (configElements.isEmpty()) {
       return forDefaults();
@@ -38,8 +38,8 @@ class Configuration {
 
     validateOnlyOneConfig(configElements);
 
-    EpoxyConfig configAnnotation =
-        configElements.iterator().next().getAnnotation(EpoxyConfig.class);
+    ModuleEpoxyConfig configAnnotation =
+        configElements.iterator().next().getAnnotation(ModuleEpoxyConfig.class);
 
     return new Configuration(
         configAnnotation.requireHashCode(),

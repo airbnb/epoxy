@@ -6,15 +6,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation on any class in your project to specify default behavior for the Epoxy
- * annotation processor for that project. You can only have one instance of this annotation per
- * project.
+ * Use this annotation on any class in your module to specify default behavior for the Epoxy
+ * annotation processor for that module. You can only have one instance of this annotation per
+ * module.
  * <p>
- * If an instance of this annotation is not found in your project then the default values are used.
+ * If an instance of this annotation is not found in a module then the default values are used.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
-public @interface EpoxyConfig {
+public @interface ModuleEpoxyConfig {
   boolean REQUIRE_HASHCODE_DEFAULT = false;
   boolean REQUIRE_ABSTRACT_MODELS = false;
   /**

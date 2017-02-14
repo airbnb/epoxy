@@ -2,7 +2,7 @@ package com.airbnb.epoxy;
 
 import com.google.auto.value.AutoValue;
 
-@EpoxyConfig(requireHashCode = true)
+@ModuleEpoxyConfig(requireHashCode = true)
 public class ModelRequiresHashCodeAutoValueClassPasses extends EpoxyModel<Object> {
 
   @AutoValue

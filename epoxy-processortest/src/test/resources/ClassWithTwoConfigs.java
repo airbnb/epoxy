@@ -1,9 +1,9 @@
 package com.airbnb.epoxy;
 
-@EpoxyConfig
+@ModuleEpoxyConfig
 public class ClassWithTwoConfigs {
 
-  @EpoxyConfig
+  @ModuleEpoxyConfig
   private static class SubClass {
 
   }

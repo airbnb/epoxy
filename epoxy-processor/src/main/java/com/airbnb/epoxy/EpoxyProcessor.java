@@ -109,7 +109,7 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     annotations.add(EpoxyModelClass.class);
     annotations.add(EpoxyAttribute.class);
-    annotations.add(EpoxyConfig.class);
+    annotations.add(ModuleEpoxyConfig.class);
 
     return annotations;
   }
