@@ -16,7 +16,7 @@ import butterknife.BindView;
 @EpoxyModelClass(layout = R.layout.model_button)
 public abstract class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
   @EpoxyAttribute @StringRes int text;
-  @EpoxyAttribute OnClickListener clickListener;
+  @EpoxyAttribute(hash = false) OnClickListener clickListener;
 
   @Override
   public int getSpanSize(int totalSpanCount, int position, int itemCount) {
