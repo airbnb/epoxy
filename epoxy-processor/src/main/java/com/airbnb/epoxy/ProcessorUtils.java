@@ -140,6 +140,9 @@ class ProcessorUtils {
     }
 
     TypeElement superClazz = (TypeElement) typeUtils.asElement(clazz.getSuperclass());
+    if (superClazz == null) {
+      return null;
+    }
     return getMethodOnClass(superClazz, method, typeUtils);
   }
 
