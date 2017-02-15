@@ -1,6 +1,8 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.configtest;
 
-@ModuleEpoxyConfig(requireAbstractModels = true)
+import com.airbnb.epoxy.EpoxyAttribute;
+import com.airbnb.epoxy.EpoxyModel;
+
 public abstract class RequireAbstractModelPassesClassWithAttribute extends EpoxyModel<Object> {
 
   @EpoxyAttribute String value;

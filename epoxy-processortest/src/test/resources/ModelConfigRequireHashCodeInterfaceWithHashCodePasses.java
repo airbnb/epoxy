@@ -1,6 +1,5 @@
 package com.airbnb.epoxy;
 
-@ModuleEpoxyConfig(requireHashCode = true)
 public class ModelConfigRequireHashCodeInterfaceWithHashCodePasses extends EpoxyModel<Object> {
 
   interface MyInterface {

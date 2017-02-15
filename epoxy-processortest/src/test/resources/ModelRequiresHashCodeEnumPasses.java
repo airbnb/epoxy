@@ -1,9 +1,11 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.configtest;
 
-@ModuleEpoxyConfig(requireHashCode = true)
+import com.airbnb.epoxy.EpoxyAttribute;
+import com.airbnb.epoxy.EpoxyModel;
+
 public class ModelRequiresHashCodeEnumPasses extends EpoxyModel<Object> {
 
-  public enum MyEnum{
+  public enum MyEnum {
     Value
   }
 

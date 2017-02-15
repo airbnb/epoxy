@@ -1,8 +1,9 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.configtest;
 
+import com.airbnb.epoxy.EpoxyAttribute;
+import com.airbnb.epoxy.EpoxyModel;
 import com.google.auto.value.AutoValue;
 
-@ModuleEpoxyConfig(requireHashCode = true)
 public class ModelRequiresHashCodeAutoValueClassPasses extends EpoxyModel<Object> {
 
   @AutoValue
