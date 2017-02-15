@@ -563,6 +563,30 @@ public class EpoxyProcessorTest {
   }
 
   @Test
+  public void testConfigRequireHashCodeCharSequencePasses() {
+    // Verify that AutoValue class attributes pass the hashcode requirement
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelConfigRequireHashCodeCharSequencePasses.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError();
+  }
+
+  @Test
+  public void testConfigRequireHashCodeInterfaceWithHashCodePasses() {
+    // Verify that AutoValue class attributes pass the hashcode requirement
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelConfigRequireHashCodeInterfaceWithHashCodePasses.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError();
+  }
+
+  @Test
   public void testConfigRequireAbstractModelPassesClassWithAttribute() {
     // Verify that AutoValue class attributes pass the hashcode requirement
     JavaFileObject model = JavaFileObjects
