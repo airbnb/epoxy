@@ -17,6 +17,7 @@ Epoxy is an Android library for building complex screens in a RecyclerView. It a
 * [Hiding Models](#hiding-models)
 * [Saving View State](#saved-state)
 * [Grid Support](#grid-support)
+* [Configuration](#configuration)
 * [Generating Models via Annotations](#annotations)
 * [Sample App](/epoxy-sample)
 
@@ -30,15 +31,15 @@ Gradle is the only supported build configuration, so just add the dependency to 
 
 ```groovy
 dependencies {
-  compile 'com.airbnb.android:epoxy:1.6.2'
+  compile 'com.airbnb.android:epoxy:1.7.0'
 }
 ```
 
 Optionally, if you want to use the [attributes for generated helper classes](#annotations) you must also provide the annotation processor as a dependency.
 ```groovy
 dependencies {
-  compile 'com.airbnb.android:epoxy:1.6.2'
-  annotationProcessor 'com.airbnb.android:epoxy-processor:1.6.2'
+  compile 'com.airbnb.android:epoxy:1.7.0'
+  annotationProcessor 'com.airbnb.android:epoxy-processor:1.7.0'
 }
 ```
 
@@ -386,6 +387,27 @@ GridLayoutManager layoutManager = new GridLayoutManager(getContext(), spanCount)
 epoxyAdapter.setSpanCount(spanCount);
 layoutManager.setSpanSizeLookup(epoxyAdapter.getSpanSizeLookup());
 ```
+
+## Configuration
+
+Use the `@ModuleEpoxyConfig` annotation to specify module wide configuration options for all models in the module. This is a class annotation which you can put on any class in your module. Using an empty class is a fine pattern.
+
+```java
+@ModuleEpoxyConfig(
+    requireAbstractModels = true,
+    requireHashCode = true
+)
+public final class EpoxyConfig {
+  private EpoxyConfig() {
+  }
+}
+```
+
+These configuration options are used by the annotation processor to enforce model requirements or influence how generated models are created.
+
+This is especially useful for larger projects with many models and/or contributors. In these cases having a standardized pattern for models greatly reduces mistakes in creating and using models.
+
+If a config annotation is not found in the module then the default values are used.
 
 ## <a name="annotations"/>Generating Models via Annotations
 
