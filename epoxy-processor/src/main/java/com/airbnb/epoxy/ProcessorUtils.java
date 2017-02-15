@@ -85,19 +85,12 @@ class ProcessorUtils {
   }
 
   /**
-   * @return True if the clazz (or one of its superclasses except for Object) implements the given
-   * method. Returns false if the method doesn't exist anywhere in the class hierarchy or it is
-   * abstract.
+   * @return True if the clazz (or one of its superclasses) implements the given method. Returns
+   * false if the method doesn't exist anywhere in the class hierarchy or it is abstract.
    */
   static boolean implementsMethod(TypeElement clazz, MethodSpec method, Types typeUtils) {
     ExecutableElement methodOnClass = getMethodOnClass(clazz, method, typeUtils);
     if (methodOnClass == null) {
-      return false;
-    }
-
-    Element implementingClass = methodOnClass.getEnclosingElement();
-    if (implementingClass.getSimpleName().toString().equals("Object")) {
-      // Don't count default implementations on Object class
       return false;
     }
 
