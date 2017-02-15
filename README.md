@@ -390,24 +390,23 @@ layoutManager.setSpanSizeLookup(epoxyAdapter.getSpanSizeLookup());
 
 ## Configuration
 
-Use the `@ModuleEpoxyConfig` annotation to specify module wide configuration options for all models in the module. This is a class annotation which you can put on any class in your module. Using an empty class is a fine pattern.
+Use the `@PackageEpoxyConfig` package annotation to specify configuration options for all models in a package.
 
 ```java
-@ModuleEpoxyConfig(
+@PackageEpoxyConfig(
     requireAbstractModels = true,
     requireHashCode = true
 )
-public final class EpoxyConfig {
-  private EpoxyConfig() {
-  }
-}
+package com.example.app;
+
+import com.airbnb.epoxy.PackageEpoxyConfig;
 ```
 
 These configuration options are used by the annotation processor to enforce model requirements or influence how generated models are created.
 
 This is especially useful for larger projects with many models and/or contributors. In these cases having a standardized pattern for models greatly reduces mistakes in creating and using models.
 
-If a config annotation is not found in the module then the default values are used.
+If a config annotation is not found in a package then the configuration from the nearest parent package will be used. If no parent packages declare a configuration then the default values are used. See the `PackageEpoxyConfig` source for up to date documentation on supported configuration options and their defaults.
 
 ## <a name="annotations"/>Generating Models via Annotations
 
