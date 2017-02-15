@@ -80,8 +80,8 @@ public class EpoxyProcessor extends AbstractProcessor {
   private Types typeUtils;
 
   private ResourceProcessor resourceProcessor;
-  private Configuration configuration;
   private HashCodeValidator hashCodeValidator;
+  private ConfigManager configManager;
 
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -93,6 +93,7 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     hashCodeValidator = new HashCodeValidator(typeUtils);
     resourceProcessor = new ResourceProcessor(processingEnv, elementUtils, typeUtils);
+    configManager = new ConfigManager(elementUtils);
   }
 
   @Override
@@ -109,7 +110,7 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     annotations.add(EpoxyModelClass.class);
     annotations.add(EpoxyAttribute.class);
-    annotations.add(ModuleEpoxyConfig.class);
+    annotations.add(PackageEpoxyConfig.class);
 
     return annotations;
   }
@@ -122,10 +123,9 @@ public class EpoxyProcessor extends AbstractProcessor {
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     try {
-      configuration = Configuration.create(roundEnv);
+      configManager.processConfigurations(roundEnv);
     } catch (EpoxyProcessorException e) {
       writeError(e);
-      configuration = Configuration.forDefaults();
     }
 
     resourceProcessor.processorResources(roundEnv);
@@ -168,7 +168,7 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     AttributeInfo attributeInfo = new AttributeInfo(attribute, typeUtils);
 
-    if (configuration.requireHashCode && attributeInfo.useInHash()) {
+    if (configManager.requiresHashCode(attributeInfo) && attributeInfo.useInHash()) {
       hashCodeValidator.validate(attributeInfo);
     }
 
@@ -232,7 +232,8 @@ public class EpoxyProcessor extends AbstractProcessor {
           classElement.getSimpleName());
     }
 
-    if (configuration.requireAbstractModels && !classElement.getModifiers().contains(ABSTRACT)) {
+    if (configManager.requiresAbstractModels(classElement)
+        && !classElement.getModifiers().contains(ABSTRACT)) {
       throwError("Epoxy model class must be abstract (%s)", classElement.getSimpleName());
     }
 
