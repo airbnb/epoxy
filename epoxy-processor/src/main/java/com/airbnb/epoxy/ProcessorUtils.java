@@ -28,6 +28,10 @@ class ProcessorUtils {
     throw new EpoxyProcessorException(String.format(msg, args));
   }
 
+  static EpoxyProcessorException buildEpoxyException(String msg, Object... args) {
+    return new EpoxyProcessorException(String.format(msg, args));
+  }
+
   static boolean isIterableType(TypeElement element) {
     return isSubtypeOfType(element.asType(), "java.lang.Iterable<?>");
   }

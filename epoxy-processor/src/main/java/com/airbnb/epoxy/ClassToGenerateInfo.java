@@ -281,4 +281,12 @@ public class ClassToGenerateInfo {
       return result;
     }
   }
+
+  @Override
+  public String toString() {
+    return "ClassToGenerateInfo{"
+        + "attributeInfo=" + attributeInfo
+        + ", originalClassElement=" + originalClassElement
+        + '}';
+  }
 }

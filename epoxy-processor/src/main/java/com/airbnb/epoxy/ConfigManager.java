@@ -1,6 +1,8 @@
 package com.airbnb.epoxy;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -10,7 +12,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 
-import static com.airbnb.epoxy.ProcessorUtils.throwError;
+import static com.airbnb.epoxy.ProcessorUtils.buildEpoxyException;
 
 /** Manages configuration settings for different packages. */
 class ConfigManager {
@@ -24,23 +26,28 @@ class ConfigManager {
     this.elementUtils = elementUtils;
   }
 
-  void processConfigurations(RoundEnvironment roundEnv) throws EpoxyProcessorException {
+  List<Exception> processConfigurations(RoundEnvironment roundEnv) {
     configurationMap.clear();
 
     Set<? extends Element> annotatedElements =
         roundEnv.getElementsAnnotatedWith(PackageEpoxyConfig.class);
 
+    List<Exception> errors = new ArrayList<>();
+
     for (Element element : annotatedElements) {
       String packageName = elementUtils.getPackageOf(element).getQualifiedName().toString();
 
       if (configurationMap.containsKey(packageName)) {
-        throwError("Only one Epoxy configuration annotation is allowed per package (%s)",
-            packageName);
+        errors.add(buildEpoxyException(
+            "Only one Epoxy configuration annotation is allowed per package (%s)",
+            packageName));
       }
 
       PackageEpoxyConfig annotation = element.getAnnotation(PackageEpoxyConfig.class);
       configurationMap.put(packageName, PackageConfigSettings.create(annotation));
     }
+
+    return errors;
   }
 
   boolean requiresHashCode(AttributeInfo attributeInfo) {
