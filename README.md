@@ -31,15 +31,15 @@ Gradle is the only supported build configuration, so just add the dependency to 
 
 ```groovy
 dependencies {
-  compile 'com.airbnb.android:epoxy:1.7.3'
+  compile 'com.airbnb.android:epoxy:1.7.4'
 }
 ```
 
 Optionally, if you want to use the [attributes for generated helper classes](#annotations) you must also provide the annotation processor as a dependency.
 ```groovy
 dependencies {
-  compile 'com.airbnb.android:epoxy:1.7.3'
-  annotationProcessor 'com.airbnb.android:epoxy-processor:1.7.3'
+  compile 'com.airbnb.android:epoxy:1.7.4'
+  annotationProcessor 'com.airbnb.android:epoxy-processor:1.7.4'
 }
 ```
 
