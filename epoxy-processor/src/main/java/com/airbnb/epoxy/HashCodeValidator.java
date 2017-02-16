@@ -6,6 +6,7 @@ import com.squareup.javapoet.TypeName;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -17,6 +18,7 @@ import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.ProcessorUtils.getMethodOnClass;
 import static com.airbnb.epoxy.ProcessorUtils.isIterableType;
+import static com.airbnb.epoxy.ProcessorUtils.isSubtypeOfType;
 import static com.airbnb.epoxy.ProcessorUtils.throwError;
 
 /** Validates that an attribute implements hashCode. */
@@ -70,6 +72,10 @@ class HashCodeValidator {
 
     if (isIterableType(clazz)) {
       validateIterableType(declaredType);
+      return;
+    }
+
+    if (isAutoValueType(element)) {
       return;
     }
 
@@ -127,11 +133,26 @@ class HashCodeValidator {
 
   private boolean isWhiteListedType(Element element) {
     for (String whiteListedType : WHITE_LISTED_TYPES) {
-      if (ProcessorUtils.isSubtypeOfType(element.asType(), whiteListedType)) {
+      if (isSubtypeOfType(element.asType(), whiteListedType)) {
         return true;
       }
     }
 
+    return false;
+  }
+
+  /**
+   * Only works for classes in the module since AutoValue has a retention of Source so it is
+   * discarded after compilation.
+   */
+  private boolean isAutoValueType(Element element) {
+    for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
+      DeclaredType annotationType = annotationMirror.getAnnotationType();
+      boolean isAutoValue = isSubtypeOfType(annotationType, "com.google.auto.value.AutoValue");
+      if (isAutoValue) {
+        return true;
+      }
+    }
     return false;
   }
 }

@@ -165,13 +165,16 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     validateAttributesImplementHashCode(modelClassMap.values());
 
-    // We wait until the very end to log errors so that all the generated classes are still created.
-    // Otherwise the compiler error output is clogged with lots of errors from the generated classes
-    // not existing, which makes it hard to see the actual errors.
-    for (Exception loggedException : loggedExceptions) {
-      messager.printMessage(Diagnostic.Kind.ERROR, loggedException.toString());
+    if (roundEnv.processingOver()) {
+
+      // We wait until the very end to log errors so that all the generated classes are still
+      // created.
+      // Otherwise the compiler error output is clogged with lots of errors from the generated
+      // classes  not existing, which makes it hard to see the actual errors.
+      for (Exception loggedException : loggedExceptions) {
+        messager.printMessage(Diagnostic.Kind.ERROR, loggedException.toString());
+      }
     }
-    loggedExceptions.clear();
 
     // Let any other annotation processors use our annotations if they want to
     return false;
