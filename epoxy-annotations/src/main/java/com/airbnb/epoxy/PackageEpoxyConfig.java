@@ -19,7 +19,8 @@ public @interface PackageEpoxyConfig {
   boolean REQUIRE_ABSTRACT_MODELS = false;
   /**
    * If true, all fields marked with {@link com.airbnb.epoxy.EpoxyAttribute} must have a type that
-   * implements hashCode, or the attribute must set hash=false.
+   * implements hashCode (besides the default Object implementation), or the attribute must set
+   * hash=false.
    * <p>
    * Setting this to true is useful for ensuring that all model attributes correctly implement
    * hashCode, or use hash=false (eg for click listeners). It is a common mistake to miss these,
@@ -28,13 +29,12 @@ public @interface PackageEpoxyConfig {
    * The check is done at compile time and compilation will fail if a hashCode validation fails.
    * <p>
    * Since it is done at compile time this can only check the direct type of the field. Interfaces
-   * will fail the check even if an implementation of that interface which does implement hashCode
-   * is used at runtime.
+   * or classes will pass the check if they either have an abstract hashCode method (since it is
+   * assumed that the object at runtime will implement it) or their class hierarchy must have an
+   * implementation of hashCode besides the default Object implementation.
    * <p>
-   * If an attribute is an Iterable or Array then that collection type must implement hashCode.
-   * <p>
-   * If the attribute type is a class that uses Google AutoValue then the hashCode check will
-   * succeed, since it is assumed that a generated subclass of that type will be used.
+   * If an attribute is an Iterable or Array then the type of object in that collection must
+   * implement hashCode.
    */
   boolean requireHashCode() default REQUIRE_HASHCODE_DEFAULT;
   /**
