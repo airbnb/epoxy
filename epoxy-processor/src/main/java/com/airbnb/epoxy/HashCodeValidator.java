@@ -6,7 +6,6 @@ import com.squareup.javapoet.TypeName;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -18,7 +17,6 @@ import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.ProcessorUtils.getMethodOnClass;
 import static com.airbnb.epoxy.ProcessorUtils.isIterableType;
-import static com.airbnb.epoxy.ProcessorUtils.isSubtypeOfType;
 import static com.airbnb.epoxy.ProcessorUtils.throwError;
 
 /** Validates that an attribute implements hashCode. */
@@ -75,10 +73,6 @@ class HashCodeValidator {
       return;
     }
 
-    if (isAutoValueType(element)) {
-      return;
-    }
-
     if (isWhiteListedType(element)) {
       return;
     }
@@ -129,18 +123,6 @@ class HashCodeValidator {
     }
 
     // Assume that the iterable class implements hashCode and just return
-  }
-
-  private boolean isAutoValueType(Element element) {
-    for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
-      DeclaredType annotationType = annotationMirror.getAnnotationType();
-      boolean isAutoValue = isSubtypeOfType(annotationType, "com.google.auto.value.AutoValue");
-      if (isAutoValue) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   private boolean isWhiteListedType(Element element) {

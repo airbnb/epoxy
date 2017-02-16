@@ -18,6 +18,7 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.AnnotationTypeMismatchException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -43,11 +44,11 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 
 import static com.airbnb.epoxy.ProcessorUtils.EPOXY_MODEL_TYPE;
+import static com.airbnb.epoxy.ProcessorUtils.buildEpoxyException;
 import static com.airbnb.epoxy.ProcessorUtils.getEpoxyObjectType;
 import static com.airbnb.epoxy.ProcessorUtils.implementsMethod;
 import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModel;
 import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModelWithHolder;
-import static com.airbnb.epoxy.ProcessorUtils.throwError;
 import static com.squareup.javapoet.TypeName.BOOLEAN;
 import static com.squareup.javapoet.TypeName.BYTE;
 import static com.squareup.javapoet.TypeName.CHAR;
@@ -80,8 +81,8 @@ public class EpoxyProcessor extends AbstractProcessor {
   private Types typeUtils;
 
   private ResourceProcessor resourceProcessor;
-  private HashCodeValidator hashCodeValidator;
   private ConfigManager configManager;
+  private final List<Exception> loggedExceptions = new ArrayList<>();
 
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -91,7 +92,6 @@ public class EpoxyProcessor extends AbstractProcessor {
     elementUtils = processingEnv.getElementUtils();
     typeUtils = processingEnv.getTypeUtils();
 
-    hashCodeValidator = new HashCodeValidator(typeUtils);
     resourceProcessor = new ResourceProcessor(processingEnv, elementUtils, typeUtils);
     configManager = new ConfigManager(elementUtils);
   }
@@ -122,44 +122,80 @@ public class EpoxyProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    try {
-      configManager.processConfigurations(roundEnv);
-    } catch (EpoxyProcessorException e) {
-      writeError(e);
-    }
-
+    logErrors(configManager.processConfigurations(roundEnv));
     resourceProcessor.processorResources(roundEnv);
 
     LinkedHashMap<TypeElement, ClassToGenerateInfo> modelClassMap = new LinkedHashMap<>();
 
-    try {
-      for (Element attribute : roundEnv.getElementsAnnotatedWith(EpoxyAttribute.class)) {
+    for (Element attribute : roundEnv.getElementsAnnotatedWith(EpoxyAttribute.class)) {
+      try {
         processAttribute(attribute, modelClassMap);
+      } catch (Exception e) {
+        logError(e);
       }
-      for (Element clazz : roundEnv.getElementsAnnotatedWith(EpoxyModelClass.class)) {
-        getOrCreateTargetClass(modelClassMap, (TypeElement) clazz);
-      }
-    } catch (EpoxyProcessorException e) {
-      writeError(e);
     }
 
-    addAttributesFromOtherModules(modelClassMap);
-    updateClassesForInheritance(modelClassMap);
+    for (Element clazz : roundEnv.getElementsAnnotatedWith(EpoxyModelClass.class)) {
+      try {
+        getOrCreateTargetClass(modelClassMap, (TypeElement) clazz);
+      } catch (Exception e) {
+        logError(e);
+      }
+    }
+
+    try {
+      addAttributesFromOtherModules(modelClassMap);
+    } catch (Exception e) {
+      logError(e);
+    }
+
+    try {
+      updateClassesForInheritance(modelClassMap);
+    } catch (Exception e) {
+      logError(e);
+    }
 
     for (Entry<TypeElement, ClassToGenerateInfo> modelEntry : modelClassMap.entrySet()) {
       try {
         generateClassForModel(modelEntry.getValue());
-      } catch (IOException | EpoxyProcessorException e) {
-        writeError(e);
+      } catch (Exception e) {
+        logError(e);
       }
     }
 
-    return true;
+    validateAttributesImplementHashCode(modelClassMap.values());
+
+    // We wait until the very end to log errors so that all the generated classes are still created.
+    // Otherwise the compiler error output is clogged with lots of errors from the generated classes
+    // not existing, which makes it hard to see the actual errors.
+    for (Exception loggedException : loggedExceptions) {
+      messager.printMessage(Diagnostic.Kind.ERROR, loggedException.toString());
+    }
+    loggedExceptions.clear();
+
+    // Let any other annotation processors use our annotations if they want to
+    return false;
+  }
+
+  private void validateAttributesImplementHashCode(
+      Collection<ClassToGenerateInfo> generatedClasses) {
+    HashCodeValidator hashCodeValidator = new HashCodeValidator(typeUtils);
+
+    for (ClassToGenerateInfo generatedClass : generatedClasses) {
+      for (AttributeInfo attributeInfo : generatedClass.getAttributeInfo()) {
+        if (configManager.requiresHashCode(attributeInfo) && attributeInfo.useInHash()) {
+          try {
+            hashCodeValidator.validate(attributeInfo);
+          } catch (EpoxyProcessorException e) {
+            logError(e);
+          }
+        }
+      }
+    }
   }
 
   private void processAttribute(Element attribute,
-      Map<TypeElement, ClassToGenerateInfo> modelClassMap)
-      throws EpoxyProcessorException {
+      Map<TypeElement, ClassToGenerateInfo> modelClassMap) {
 
     validateAccessibleViaGeneratedCode(attribute);
 
@@ -168,22 +204,17 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     AttributeInfo attributeInfo = new AttributeInfo(attribute, typeUtils);
 
-    if (configManager.requiresHashCode(attributeInfo) && attributeInfo.useInHash()) {
-      hashCodeValidator.validate(attributeInfo);
-    }
-
     helperClass.addAttribute(attributeInfo);
   }
 
-  private void validateAccessibleViaGeneratedCode(Element attribute) throws
-      EpoxyProcessorException {
+  private void validateAccessibleViaGeneratedCode(Element attribute) {
 
     TypeElement enclosingElement = (TypeElement) attribute.getEnclosingElement();
 
     // Verify method modifiers.
     Set<Modifier> modifiers = attribute.getModifiers();
     if (modifiers.contains(PRIVATE) || modifiers.contains(STATIC)) {
-      throwError(
+      logError(
           "%s annotations must not be on private or static fields. (class: %s, field: %s)",
           EpoxyAttribute.class.getSimpleName(),
           enclosingElement.getSimpleName(), attribute.getSimpleName());
@@ -192,7 +223,7 @@ public class EpoxyProcessor extends AbstractProcessor {
     // Nested classes must be static
     if (enclosingElement.getNestingKind().isNested()) {
       if (!enclosingElement.getModifiers().contains(STATIC)) {
-        throwError(
+        logError(
             "Nested classes with %s annotations must be static. (class: %s, field: %s)",
             EpoxyAttribute.class.getSimpleName(),
             enclosingElement.getSimpleName(), attribute.getSimpleName());
@@ -201,40 +232,39 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     // Verify containing type.
     if (enclosingElement.getKind() != CLASS) {
-      throwError("%s annotations may only be contained in classes. (class: %s, field: %s)",
+      logError("%s annotations may only be contained in classes. (class: %s, field: %s)",
           EpoxyAttribute.class.getSimpleName(),
           enclosingElement.getSimpleName(), attribute.getSimpleName());
     }
 
     // Verify containing class visibility is not private.
     if (enclosingElement.getModifiers().contains(PRIVATE)) {
-      throwError("%s annotations may not be contained in private classes. (class: %s, field: %s)",
+      logError("%s annotations may not be contained in private classes. (class: %s, field: %s)",
           EpoxyAttribute.class.getSimpleName(),
           enclosingElement.getSimpleName(), attribute.getSimpleName());
     }
   }
 
   private ClassToGenerateInfo getOrCreateTargetClass(
-      Map<TypeElement, ClassToGenerateInfo> modelClassMap, TypeElement classElement)
-      throws EpoxyProcessorException {
+      Map<TypeElement, ClassToGenerateInfo> modelClassMap, TypeElement classElement) {
 
     ClassToGenerateInfo classToGenerateInfo = modelClassMap.get(classElement);
 
     boolean isFinal = classElement.getModifiers().contains(Modifier.FINAL);
     if (isFinal) {
-      throwError("Class with %s annotations cannot be final: %s",
+      logError("Class with %s annotations cannot be final: %s",
           EpoxyAttribute.class.getSimpleName(), classElement.getSimpleName());
     }
 
     if (!isEpoxyModel(classElement.asType())) {
-      throwError("Class with %s annotations must extend %s (%s)",
+      logError("Class with %s annotations must extend %s (%s)",
           EpoxyAttribute.class.getSimpleName(), EPOXY_MODEL_TYPE,
           classElement.getSimpleName());
     }
 
     if (configManager.requiresAbstractModels(classElement)
         && !classElement.getModifiers().contains(ABSTRACT)) {
-      throwError("Epoxy model class must be abstract (%s)", classElement.getSimpleName());
+      logError("Epoxy model class must be abstract (%s)", classElement.getSimpleName());
     }
 
     if (classToGenerateInfo == null) {
@@ -265,11 +295,7 @@ public class EpoxyProcessor extends AbstractProcessor {
         if (!modelClassMap.keySet().contains(superclassElement)) {
           for (Element element : superclassElement.getEnclosedElements()) {
             if (element.getAnnotation(EpoxyAttribute.class) != null) {
-              try {
-                processAttribute(element, modelClassMap);
-              } catch (EpoxyProcessorException e) {
-                writeError(e);
-              }
+              processAttribute(element, modelClassMap);
             }
           }
         }
@@ -336,7 +362,7 @@ public class EpoxyProcessor extends AbstractProcessor {
   }
 
   private void generateClassForModel(ClassToGenerateInfo info)
-      throws IOException, EpoxyProcessorException {
+      throws IOException {
     if (!info.shouldGenerateSubClass()) {
       return;
     }
@@ -410,8 +436,7 @@ public class EpoxyProcessor extends AbstractProcessor {
    * Generates default implementations of certain model methods if the model is abstract and doesn't
    * implement them.
    */
-  private Iterable<MethodSpec> generateDefaultMethodImplementations(ClassToGenerateInfo info)
-      throws EpoxyProcessorException {
+  private Iterable<MethodSpec> generateDefaultMethodImplementations(ClassToGenerateInfo info) {
 
     List<MethodSpec> methods = new ArrayList<>();
     TypeElement originalClassElement = info.getOriginalClassElement();
@@ -427,7 +452,7 @@ public class EpoxyProcessor extends AbstractProcessor {
    * default implementation by getting the class type and creating a new instance of it.
    */
   private void addCreateHolderMethodIfNeeded(TypeElement originalClassElement,
-      List<MethodSpec> methods) throws EpoxyProcessorException {
+      List<MethodSpec> methods) {
 
     if (!isEpoxyModelWithHolder(originalClassElement)) {
       return;
@@ -444,8 +469,9 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     TypeMirror epoxyObjectType = getEpoxyObjectType(originalClassElement, typeUtils);
     if (epoxyObjectType == null) {
-      throwError("Return type for createNewHolder method could not be found. (class: %s)",
+      logError("Return type for createNewHolder method could not be found. (class: %s)",
           originalClassElement.getSimpleName());
+      return;
     }
 
     createHolderMethod = createHolderMethod.toBuilder()
@@ -461,7 +487,7 @@ public class EpoxyProcessor extends AbstractProcessor {
    * This relies on a layout res being set in the @EpoxyModelClass annotation.
    */
   private void addDefaultLayoutMethodIfNeeded(TypeElement originalClassElement,
-      List<MethodSpec> methods) throws EpoxyProcessorException {
+      List<MethodSpec> methods) {
 
     MethodSpec getDefaultLayoutMethod = MethodSpec.methodBuilder(GET_DEFAULT_LAYOUT_METHOD_NAME)
         .addAnnotation(Override.class)
@@ -476,17 +502,18 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     EpoxyModelClass annotation = findClassAnnotationWithLayout(originalClassElement);
     if (annotation == null) {
-      throwError("Model must use %s annotation if it does not implement %s. (class: %s)",
+      logError("Model must use %s annotation if it does not implement %s. (class: %s)",
           EpoxyModelClass.class,
           GET_DEFAULT_LAYOUT_METHOD_NAME,
           originalClassElement.getSimpleName());
+      return;
     }
 
     int layoutRes;
     try {
       layoutRes = annotation.layout();
     } catch (AnnotationTypeMismatchException e) {
-      throwError("Invalid layout value in %s annotation. (class: %s). %s: %s",
+      logError("Invalid layout value in %s annotation. (class: %s). %s: %s",
           EpoxyModelClass.class,
           originalClassElement.getSimpleName(),
           e.getClass().getSimpleName(),
@@ -495,9 +522,10 @@ public class EpoxyProcessor extends AbstractProcessor {
     }
 
     if (layoutRes == 0) {
-      throwError("Model must specify a valid layout resource in the %s annotation. (class: %s)",
+      logError("Model must specify a valid layout resource in the %s annotation. (class: %s)",
           EpoxyModelClass.class,
           originalClassElement.getSimpleName());
+      return;
     }
 
     AndroidResource layoutResource = resourceProcessor.getResourceForValue(layoutRes);
@@ -511,8 +539,7 @@ public class EpoxyProcessor extends AbstractProcessor {
   /**
    * Looks for {@link EpoxyModelClass} annotation in the original class and his parents.
    */
-  private EpoxyModelClass findClassAnnotationWithLayout(TypeElement classElement)
-      throws EpoxyProcessorException {
+  private EpoxyModelClass findClassAnnotationWithLayout(TypeElement classElement) {
     if (!isEpoxyModel(classElement)) {
       return null;
     }
@@ -528,7 +555,7 @@ public class EpoxyProcessor extends AbstractProcessor {
         return annotation;
       }
     } catch (AnnotationTypeMismatchException e) {
-      throwError("Invalid layout value in %s annotation. (class: %s). %s: %s",
+      logError("Invalid layout value in %s annotation. (class: %s). %s: %s",
           EpoxyModelClass.class,
           classElement.getSimpleName(),
           e.getClass().getSimpleName(),
@@ -762,8 +789,23 @@ public class EpoxyProcessor extends AbstractProcessor {
         .build();
   }
 
-  private void writeError(Exception e) {
-    messager.printMessage(Diagnostic.Kind.ERROR, e.toString());
+  private void logErrors(List<Exception> exceptions) {
+    for (Exception exception : exceptions) {
+      logError(exception);
+    }
+  }
+
+  private void logError(String msg, Object... args) {
+    logError(buildEpoxyException(msg, args));
+  }
+
+  /**
+   * Errors are logged and saved until after classes are generating. Otherwise if we throw
+   * immediately the models are not generated which leads to lots of other compiler errors which
+   * mask the actual issues.
+   */
+  private void logError(Exception e) {
+    loggedExceptions.add(e);
   }
 
   private static String getDefaultValue(TypeName attributeType) {

@@ -76,7 +76,7 @@ public class ConfigTest {
         .that(asList(topLevelParentConfig, secondLevelParentConfig, model))
         .processedWith(new EpoxyProcessor())
         .failsToCompile()
-    .withErrorContaining("Attribute does not implement hashCode");
+        .withErrorContaining("Attribute does not implement hashCode");
   }
 
   @Test
@@ -142,18 +142,6 @@ public class ConfigTest {
     // Verify that enum attributes pass the hashcode requirement
     JavaFileObject model = JavaFileObjects
         .forResource("ModelRequiresHashCodeEnumPasses.java");
-
-    assert_().about(javaSources())
-        .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError();
-  }
-
-  @Test
-  public void testConfigRequireHashCodeAutoValueAttributePasses() {
-    // Verify that AutoValue class attributes pass the hashcode requirement
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelRequiresHashCodeAutoValueClassPasses.java");
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
