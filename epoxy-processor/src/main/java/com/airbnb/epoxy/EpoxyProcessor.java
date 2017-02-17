@@ -129,7 +129,7 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     for (Element attribute : roundEnv.getElementsAnnotatedWith(EpoxyAttribute.class)) {
       try {
-        processAttribute(attribute, modelClassMap);
+        addAttributeToGeneratedClass(attribute, modelClassMap);
       } catch (Exception e) {
         logError(e);
       }
@@ -197,21 +197,19 @@ public class EpoxyProcessor extends AbstractProcessor {
     }
   }
 
-  private void processAttribute(Element attribute,
+  private void addAttributeToGeneratedClass(Element attribute,
       Map<TypeElement, ClassToGenerateInfo> modelClassMap) {
-
-    validateAccessibleViaGeneratedCode(attribute);
-
     TypeElement classElement = (TypeElement) attribute.getEnclosingElement();
     ClassToGenerateInfo helperClass = getOrCreateTargetClass(modelClassMap, classElement);
+    helperClass.addAttribute(buildAttributeInfo(attribute));
+  }
 
-    AttributeInfo attributeInfo = new AttributeInfo(attribute, typeUtils);
-
-    helperClass.addAttribute(attributeInfo);
+  private AttributeInfo buildAttributeInfo(Element attribute) {
+    validateAccessibleViaGeneratedCode(attribute);
+    return new AttributeInfo(attribute, typeUtils);
   }
 
   private void validateAccessibleViaGeneratedCode(Element attribute) {
-
     TypeElement enclosingElement = (TypeElement) attribute.getEnclosingElement();
 
     // Verify method modifiers.
@@ -290,20 +288,33 @@ public class EpoxyProcessor extends AbstractProcessor {
         new HashSet<>(modelClassMap.entrySet());
 
     for (Entry<TypeElement, ClassToGenerateInfo> entry : originalEntries) {
-      TypeMirror superclassType = entry.getKey().getSuperclass();
+      TypeElement currentEpoxyModel = entry.getKey();
+      TypeMirror superclassType = currentEpoxyModel.getSuperclass();
+      ClassToGenerateInfo classToGenerateInfo = entry.getValue();
 
       while (isEpoxyModel(superclassType)) {
-        TypeElement superclassElement = (TypeElement) typeUtils.asElement(superclassType);
+        TypeElement superclassEpoxyModel = (TypeElement) typeUtils.asElement(superclassType);
 
-        if (!modelClassMap.keySet().contains(superclassElement)) {
-          for (Element element : superclassElement.getEnclosedElements()) {
+        if (!modelClassMap.keySet().contains(superclassEpoxyModel)) {
+          for (Element element : superclassEpoxyModel.getEnclosedElements()) {
             if (element.getAnnotation(EpoxyAttribute.class) != null) {
-              processAttribute(element, modelClassMap);
+              AttributeInfo attributeInfo = buildAttributeInfo(element);
+              if (!belongToTheSamePackage(currentEpoxyModel, superclassEpoxyModel)
+                  && attributeInfo.isPackagePrivate()) {
+                // We can't inherit a package private attribute if we're not in the same package
+                continue;
+              }
+
+              // We add just the attribute info to the class in our module. We do NOT want to
+              // generate a class for the super class EpoxyModel in the other module since one
+              // will be created when that module is processed. If we make one as well there will
+              // be a duplicate (causes proguard errors and is just wrong).
+              classToGenerateInfo.addAttribute(attributeInfo);
             }
           }
         }
 
-        superclassType = superclassElement.getSuperclass();
+        superclassType = superclassEpoxyModel.getSuperclass();
       }
     }
   }
