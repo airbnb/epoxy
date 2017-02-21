@@ -4,8 +4,9 @@ import android.support.annotation.ColorInt;
 import android.view.View;
 
 import com.airbnb.epoxy.EpoxyAttribute;
+import com.airbnb.epoxy.EpoxyModel;
+import com.airbnb.epoxy.EpoxyModelClass;
 import com.airbnb.epoxy.R;
-import com.airbnb.epoxy.SimpleEpoxyModel;
 
 /**
  * This is an example of using {@link com.airbnb.epoxy.SimpleEpoxyModel}, which is useful if you
@@ -13,17 +14,16 @@ import com.airbnb.epoxy.SimpleEpoxyModel;
  * com.airbnb.epoxy.SimpleEpoxyModel} directly instead of subclassing it if you don't need to do
  * anything in onBind.
  */
-public class ColorModel extends SimpleEpoxyModel {
+@EpoxyModelClass(layout = R.layout.model_color)
+public abstract class ColorModel extends EpoxyModel<View> {
   @EpoxyAttribute @ColorInt int color;
 
   public ColorModel(@ColorInt int color) {
-    super(R.layout.model_color);
     this.color = color;
   }
 
   @Override
   public void bind(View view) {
-    super.bind(view);
     view.setBackgroundColor(color);
   }
 }
