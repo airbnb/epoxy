@@ -184,6 +184,16 @@ public abstract class EpoxyModel<T> {
     return this;
   }
 
+  public void addTo(DiffAdapter adapter) {
+    adapter.add(this);
+  }
+
+  public void addIf(boolean condition, DiffAdapter adapter) {
+    if (condition) {
+      adapter.add(this);
+    }
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

@@ -20,8 +20,9 @@ class DiffHelper {
   private Map<Long, ModelState> oldStateMap = new HashMap<>();
   private ArrayList<ModelState> currentStateList = new ArrayList<>();
   private Map<Long, ModelState> currentStateMap = new HashMap<>();
-  private final EpoxyAdapter adapter;
+  private final BaseEpoxyAdapter adapter;
   private final DifferModelListObserver modelListObserver = new DifferModelListObserver();
+  private final boolean usingModelListObserver;
   /**
    * Set to true if an end user notifies adapter changes. We track this because our {@link
    * #modelListObserver} already tracks structural changes and we shouldn't double notify those
@@ -33,10 +34,14 @@ class DiffHelper {
    */
   private boolean notifiedOfStructuralChanges;
 
-  DiffHelper(EpoxyAdapter adapter) {
+  DiffHelper(BaseEpoxyAdapter adapter) {
     this.adapter = adapter;
     adapter.registerAdapterDataObserver(observer);
-    ((ModelList) adapter.models).setObserver(modelListObserver);
+
+    usingModelListObserver = adapter instanceof EpoxyAdapter;
+    if (usingModelListObserver) {
+      ((ModelList) adapter.getCurrentModels()).setObserver(modelListObserver);
+    }
   }
 
   private final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
@@ -49,7 +54,7 @@ class DiffHelper {
     @Override
     public void onItemRangeChanged(int positionStart, int itemCount) {
       for (int i = positionStart; i < positionStart + itemCount; i++) {
-        currentStateList.get(i).hashCode = adapter.models.get(i).hashCode();
+        currentStateList.get(i).hashCode = adapter.getCurrentModels().get(i).hashCode();
       }
     }
 
@@ -145,7 +150,7 @@ class DiffHelper {
   void notifyModelChanges() {
     UpdateOpHelper updateOpHelper = new UpdateOpHelper();
 
-    if (modelListObserver.hasNoChanges()) {
+    if (usingModelListObserver && modelListObserver.hasNoChanges()) {
       updateHashes(updateOpHelper);
     } else if (!notifiedOfStructuralChanges
         && (modelListObserver.hasOnlyInsertions() || modelListObserver.hasOnlyRemovals())) {
@@ -179,14 +184,14 @@ class DiffHelper {
    * notifications. Used only when the state list is already up to date with the adapter models.
    */
   private void updateHashes(UpdateOpHelper updateOpHelper) {
-    int modelCount = adapter.models.size();
+    int modelCount = adapter.getCurrentModels().size();
 
     if (modelCount != currentStateList.size()) {
       throw new IllegalStateException("State list does not match current models");
     }
 
     for (int i = 0; i < modelCount; i++) {
-      EpoxyModel<?> model = adapter.models.get(i);
+      EpoxyModel<?> model = adapter.getCurrentModels().get(i);
       ModelState state = currentStateList.get(i);
       int newHash = model.hashCode();
 
@@ -267,7 +272,7 @@ class DiffHelper {
       modelState.pair = null;
     }
 
-    int modelCount = adapter.models.size();
+    int modelCount = adapter.getCurrentModels().size();
     currentStateList.ensureCapacity(modelCount);
 
     for (int i = 0; i < modelCount; i++) {
@@ -276,14 +281,14 @@ class DiffHelper {
   }
 
   private ModelState createStateForPosition(int position) {
-    EpoxyModel<?> model = adapter.models.get(position);
+    EpoxyModel<?> model = adapter.getCurrentModels().get(position);
     model.addedToAdapter = true;
     ModelState state = ModelState.build(model, position);
 
     ModelState previousValue = currentStateMap.put(state.id, state);
     if (previousValue != null) {
       int previousPosition = previousValue.position;
-      EpoxyModel<?> previousModel = adapter.models.get(previousPosition);
+      EpoxyModel<?> previousModel = adapter.getCurrentModels().get(previousPosition);
       throw new IllegalStateException("Two models have the same ID. ID's must be unique!"
           + " Model at position " + position + ": " + model
           + " Model at position " + previousPosition + ": " + previousModel);
