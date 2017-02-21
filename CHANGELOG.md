@@ -1,4 +1,4 @@
-# 1.7.0 (Feb 14, 2017)
+# 1.7.5 (Feb 21, 2017)
 
 * **New**: Models inherit layouts specified in superclass `@EpoxyModelClass` annotations [#119](https://github.com/airbnb/epoxy/pull/119)
 * **New**: Support module configuration options [#124](https://github.com/airbnb/epoxy/pull/124)
