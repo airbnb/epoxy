@@ -29,8 +29,8 @@ public class AutoModelIntegrationTest {
 
     @Override
     protected void buildModels() {
-      add(model1);
-      add(model2);
+      add(model1.id(1));
+      add(model2.id(2));
     }
   }
 

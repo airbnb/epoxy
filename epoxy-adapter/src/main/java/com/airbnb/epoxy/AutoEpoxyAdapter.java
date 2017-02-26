@@ -32,8 +32,8 @@ public abstract class AutoEpoxyAdapter extends BaseEpoxyAdapter {
   }
 
   /**
-   * Call this to schedule a model update. The adapter will call {@link #buildModels()} so that
-   * models can be rebuilt for the current data.
+   * Call this to schedule a model update. The adapter will schedule a call to {@link
+   * #buildModels()} so that models can be rebuilt for the current data.
    */
   public void requestModelUpdate() {
     handler.removeCallbacks(updateModelsRunnable);
@@ -121,9 +121,9 @@ public abstract class AutoEpoxyAdapter extends BaseEpoxyAdapter {
 
   /**
    * Subclasses should implement this to describe what models should be shown for the current state.
-   * Implementations should call either {@link #add(EpoxyModel)} or {@link
-   * EpoxyModel#addTo(AutoEpoxyAdapter)} with the models that should be shown, in the order that is
-   * desired.
+   * Implementations should call either {@link #add(EpoxyModel)}, {@link
+   * EpoxyModel#addTo(AutoEpoxyAdapter)}, or {@link EpoxyModel#addIf(boolean, AutoEpoxyAdapter)}
+   * with the models that should be shown, in the order that is desired.
    */
   protected abstract void buildModels();
 

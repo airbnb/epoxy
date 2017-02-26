@@ -44,20 +44,20 @@ public class AutoEpoxyAdapterTest {
 
     @Override
     protected void buildModels() {
-      add(new TestModel());
-      new TestModel().addTo(this);
+      add(new TestModel().id(0));
+      new TestModel().id(1).addTo(this);
 
-      new TestModel2().addIf(true, this);
-      new TestModel3().addIf(false, this);
+      new TestModel2().id(2).addIf(true, this);
+      new TestModel3().id(3).addIf(false, this);
 
-      new TestModel().addIf(new AddPredicate() {
+      new TestModel().id(4).addIf(new AddPredicate() {
         @Override
         public boolean addIf() {
           return false;
         }
       }, this);
 
-      new TestModel().addIf(new AddPredicate() {
+      new TestModel().id(5).addIf(new AddPredicate() {
         @Override
         public boolean addIf() {
           return true;
