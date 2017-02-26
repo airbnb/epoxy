@@ -57,36 +57,4 @@ class SampleAdapter extends TypedAutoEpoxyAdapter<List<ColorData>> {
       add(new ColorModel_(color));
     }
   }
-
-  protected void build(List<ColorData> colors, List<EpoxyModel<?>> models) {
-    models.add(header
-        .title(R.string.epoxy)
-        .caption(R.string.header_subtitle));
-
-    models.add(addButton
-        .text(R.string.button_add)
-        .clickListener(v -> callbacks.onAddClicked()));
-
-    if (colors.size() > 0) {
-      models.add(clearButton
-          .text(R.string.button_clear)
-          .clickListener(v -> callbacks.onClearClicked()));
-    }
-
-    if (colors.size() > 1) {
-      models.add(shuffleButton
-          .text(R.string.button_shuffle)
-          .clickListener(v -> callbacks.onShuffleClicked()));
-    }
-
-    if (colors.size() > 0) {
-      models.add(changeColorsButton
-          .text(R.string.button_change)
-          .clickListener(v -> callbacks.onChangeColorsClicked()));
-    }
-
-    for (ColorData color : colors) {
-      models.add(new ColorModel_(color));
-    }
-  }
 }

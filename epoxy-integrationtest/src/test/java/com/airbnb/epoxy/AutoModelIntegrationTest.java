@@ -46,10 +46,19 @@ public class AutoModelIntegrationTest {
     assertEquals("Second model", TestModel.class, models.get(1).getClass());
   }
 
+  static class AdapterWithFieldAssigned extends AutoEpoxyAdapter {
 
+    @AutoModel TestModel model1 = new TestModel();
 
-  @Test
+    @Override
+    protected void buildModels() {
+      add(model1);
+    }
+  }
+
+  @Test(expected = IllegalStateException.class)
   public void assigningValueToFieldFails() {
-
+    AdapterWithFieldAssigned testAdapter = new AdapterWithFieldAssigned();
+    testAdapter.requestModelUpdate();
   }
 }

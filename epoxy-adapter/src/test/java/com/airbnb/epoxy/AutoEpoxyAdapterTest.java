@@ -2,6 +2,8 @@ package com.airbnb.epoxy;
 
 import android.view.View;
 
+import com.airbnb.epoxy.EpoxyModel.AddPredicate;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.annotation.Config;
@@ -47,6 +49,20 @@ public class AutoEpoxyAdapterTest {
 
       new TestModel2().addIf(true, this);
       new TestModel3().addIf(false, this);
+
+      new TestModel().addIf(new AddPredicate() {
+        @Override
+        public boolean addIf() {
+          return false;
+        }
+      }, this);
+
+      new TestModel().addIf(new AddPredicate() {
+        @Override
+        public boolean addIf() {
+          return true;
+        }
+      }, this);
     }
   }
 
@@ -57,10 +73,11 @@ public class AutoEpoxyAdapterTest {
 
     List<EpoxyModel<?>> models = testAdapter.getCurrentModels();
 
-    assertEquals("Models size", 3, models.size());
+    assertEquals("Models size", 4, models.size());
     assertEquals("First model", TestModel.class, models.get(0).getClass());
     assertEquals("Second model", TestModel.class, models.get(1).getClass());
     assertEquals("Third model", TestModel2.class, models.get(2).getClass());
+    assertEquals("Fourth model", TestModel.class, models.get(3).getClass());
   }
 
   @Test(expected = IllegalStateException.class)

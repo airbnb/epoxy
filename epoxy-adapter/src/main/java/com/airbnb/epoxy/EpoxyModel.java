@@ -194,6 +194,16 @@ public abstract class EpoxyModel<T> {
     }
   }
 
+  public void addIf(AddPredicate predicate, AutoEpoxyAdapter adapter) {
+    if (predicate.addIf()) {
+      adapter.add(this);
+    }
+  }
+
+  public interface AddPredicate {
+    boolean addIf();
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
