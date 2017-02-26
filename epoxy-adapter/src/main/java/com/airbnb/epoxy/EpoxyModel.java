@@ -27,6 +27,7 @@ public abstract class EpoxyModel<T> {
   private boolean shown = true;
   /** Set to true once this model is added to an adapter. */
   boolean addedToAdapter;
+  private boolean hasDefaultId;
 
   protected EpoxyModel(long id) {
     id(id);
@@ -34,6 +35,11 @@ public abstract class EpoxyModel<T> {
 
   public EpoxyModel() {
     this(idCounter--);
+    hasDefaultId = true;
+  }
+
+  boolean hasDefaultId() {
+    return hasDefaultId;
   }
 
   /**
@@ -83,6 +89,7 @@ public abstract class EpoxyModel<T> {
           "Cannot change a model's id after it has been added to the adapter.");
     }
 
+    hasDefaultId = false;
     this.id = id;
     return this;
   }
