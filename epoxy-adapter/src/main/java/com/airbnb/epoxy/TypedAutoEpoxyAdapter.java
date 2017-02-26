@@ -2,7 +2,7 @@ package com.airbnb.epoxy;
 
 import android.support.annotation.Nullable;
 
-public abstract class TypedDiffAdapter<T> extends DiffAdapter {
+public abstract class TypedAutoEpoxyAdapter<T> extends AutoEpoxyAdapter {
   private T currentData;
 
   public void setData(T data) {

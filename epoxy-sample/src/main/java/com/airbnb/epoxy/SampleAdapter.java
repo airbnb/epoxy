@@ -6,7 +6,7 @@ import com.airbnb.epoxy.models.HeaderModel_;
 
 import java.util.List;
 
-class SampleAdapter extends TypedDiffAdapter<List<ColorData>> {
+class SampleAdapter extends TypedAutoEpoxyAdapter<List<ColorData>> {
   interface AdapterCallbacks {
     void onAddClicked();
     void onClearClicked();

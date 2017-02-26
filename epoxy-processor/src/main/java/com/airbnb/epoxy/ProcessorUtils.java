@@ -26,7 +26,7 @@ class ProcessorUtils {
 
   static final String EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel<?>";
   static final String EPOXY_MODEL_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyModelWithHolder<?>";
-  static final String EPOXY_DIFF_ADAPTER_TYPE = "com.airbnb.epoxy.DiffAdapter";
+  static final String EPOXY_AUTO_ADAPTER_TYPE = "com.airbnb.epoxy.AutoEpoxyAdapter";
 
   static void throwError(String msg, Object... args)
       throws EpoxyProcessorException {
@@ -46,7 +46,7 @@ class ProcessorUtils {
   }
 
   static boolean isDiffAdapter(TypeElement element) {
-    return isSubtypeOfType(element.asType(), EPOXY_DIFF_ADAPTER_TYPE);
+    return isSubtypeOfType(element.asType(), EPOXY_AUTO_ADAPTER_TYPE);
   }
 
   static boolean isEpoxyModel(TypeElement type) {

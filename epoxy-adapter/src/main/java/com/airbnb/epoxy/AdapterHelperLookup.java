@@ -15,14 +15,14 @@ class AdapterHelperLookup {
   private static final Map<Class<?>, Constructor<?>> BINDINGS = new LinkedHashMap<>();
   private static final NoOpAdapterHelper DUMMY_ADAPTER_HELPER = new NoOpAdapterHelper();
 
-  static AdapterHelper getHelperForAdapter(DiffAdapter adapter) {
+  static AdapterHelper getHelperForAdapter(AutoEpoxyAdapter adapter) {
     Constructor<?> constructor = findConstructorForClass(adapter.getClass());
     if (constructor == null) {
       return DUMMY_ADAPTER_HELPER;
     }
 
     try {
-      return (AdapterHelper) constructor.newInstance();
+      return (AdapterHelper) constructor.newInstance(adapter);
     } catch (IllegalAccessException e) {
       throw new RuntimeException("Unable to invoke " + constructor, e);
     } catch (InstantiationException e) {
@@ -53,7 +53,7 @@ class AdapterHelperLookup {
     try {
       Class<?> bindingClass = Class.forName(clsName + GENERATED_HELPER_CLASS_SUFFIX);
       //noinspection unchecked
-      bindingCtor = bindingClass.getConstructor();
+      bindingCtor = bindingClass.getConstructor(adapterClass);
     } catch (ClassNotFoundException e) {
       bindingCtor = findConstructorForClass(adapterClass.getSuperclass());
     } catch (NoSuchMethodException e) {

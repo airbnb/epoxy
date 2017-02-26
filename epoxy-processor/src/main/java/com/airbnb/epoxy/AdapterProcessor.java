@@ -21,21 +21,24 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
-import static com.airbnb.epoxy.ProcessorUtils.EPOXY_DIFF_ADAPTER_TYPE;
+import static com.airbnb.epoxy.ProcessorUtils.EPOXY_AUTO_ADAPTER_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.EPOXY_MODEL_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.isDiffAdapter;
 import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModel;
 import static com.airbnb.epoxy.ProcessorUtils.validateFieldAccessibleViaGeneratedCode;
 
-class AdapterHelperProcessor {
+class AdapterProcessor {
   private static final String ADAPTER_HELPER_INTERFACE = "com.airbnb.epoxy.AdapterHelper";
   private Filer filer;
   private Elements elementUtils;
   private ErrorLogger errorLogger;
 
-  AdapterHelperProcessor(Filer filer, Elements elementUtils,
+  AdapterProcessor(Filer filer, Elements elementUtils,
       ErrorLogger errorLogger) {
     this.filer = filer;
     this.elementUtils = elementUtils;
@@ -47,6 +50,7 @@ class AdapterHelperProcessor {
 
     for (Element modelFieldElement : roundEnv.getElementsAnnotatedWith(AutoModel.class)) {
       try {
+        System.out.println("field: " + modelFieldElement);
         addFieldToAdapterClass(modelFieldElement, adapterClassMap);
       } catch (Exception e) {
         errorLogger.logError(e);
@@ -113,25 +117,12 @@ class AdapterHelperProcessor {
     adapterClass.addModel(buildFieldInfo(modelField));
   }
 
-  private AdapterModelField buildFieldInfo(Element modelFieldElement) {
-    validateFieldAccessibleViaGeneratedCode(modelFieldElement, AutoModel.class, errorLogger);
-
-    // TODO: (eli_hart 2/21/17) Test this
-    if (!isEpoxyModel(modelFieldElement.asType())) {
-      errorLogger.logError("Class with %s annotations must extend %s (%s)",
-          AutoModel.class.getSimpleName(), EPOXY_MODEL_TYPE,
-          modelFieldElement.getSimpleName());
-    }
-
-    return new AdapterModelField(modelFieldElement);
-  }
-
   private AdapterClassInfo getOrCreateTargetClass(
       Map<TypeElement, AdapterClassInfo> adapterClassMap, TypeElement adapterClassElement) {
 
     if (!isDiffAdapter(adapterClassElement)) {
       errorLogger.logError("Class with %s annotations must extend %s (%s)",
-          AutoModel.class.getSimpleName(), EPOXY_DIFF_ADAPTER_TYPE,
+          AutoModel.class.getSimpleName(), EPOXY_AUTO_ADAPTER_TYPE,
           adapterClassElement.getSimpleName());
     }
 
@@ -145,6 +136,37 @@ class AdapterHelperProcessor {
     return adapterClassInfo;
   }
 
+  private AdapterModelField buildFieldInfo(Element modelFieldElement) {
+    validateFieldAccessibleViaGeneratedCode(modelFieldElement, AutoModel.class, errorLogger);
+
+    TypeMirror fieldType = modelFieldElement.asType();
+    if (fieldType.getKind() != TypeKind.ERROR) {
+      // If the field is a generated Epoxy model then the class won't have been generated
+      // yet and it won't have type info. If the type can't be found that we assume it is
+      // a generated model and is ok.
+      if (!isEpoxyModel(fieldType)) {
+        errorLogger.logError("Fields with %s annotations must be of type %s (%s#%s)",
+            AutoModel.class.getSimpleName(), EPOXY_MODEL_TYPE,
+            modelFieldElement.getEnclosingElement().getSimpleName(),
+            modelFieldElement.getSimpleName());
+      }
+
+      TypeElement typeElement = (TypeElement) ((DeclaredType) fieldType).asElement();
+      if (typeElement.getNestingKind().isNested()) {
+        if (!typeElement.getModifiers().contains(Modifier.STATIC)) {
+          errorLogger
+              .logError(
+                  "Types with %s annotations must be static if they are nested classes (%s#%s)",
+                  AutoModel.class.getSimpleName(),
+                  modelFieldElement.getEnclosingElement().getSimpleName(),
+                  modelFieldElement.getSimpleName());
+        }
+      }
+    }
+
+    return new AdapterModelField(modelFieldElement);
+  }
+
   private void generateJava(LinkedHashMap<TypeElement, AdapterClassInfo> adapterClassMap) {
     for (Entry<TypeElement, AdapterClassInfo> adapterInfo : adapterClassMap.entrySet()) {
       try {
@@ -156,16 +178,19 @@ class AdapterHelperProcessor {
   }
 
   private void generateHelperClassForAdapter(AdapterClassInfo adapterInfo) throws IOException {
+    System.out.println("generating: " + adapterInfo);
     ClassName superclass = ClassName.get(elementUtils.getTypeElement(ADAPTER_HELPER_INTERFACE));
     ParameterizedTypeName parameterizedSuperClass =
         ParameterizedTypeName.get(superclass, adapterInfo.adapterClassType);
-
-    // TODO: (eli_hart 2/21/17) Have constructor validate that fields are null
 
     TypeSpec generatedClass = TypeSpec.classBuilder(adapterInfo.generatedClassName)
         .addJavadoc("Generated file. Do not modify!")
         .addModifiers(Modifier.PUBLIC)
         .superclass(parameterizedSuperClass)
+        .addField(adapterInfo.adapterClassType, "adapter", Modifier.FINAL, Modifier.PRIVATE)
+        .addMethod(buildConstructor(adapterInfo))
+        .addMethod(buildValidateFieldsAreNullMethod(adapterInfo))
+        .addMethod(buildValidateNullFieldMethod())
         .addMethod(buildModelsMethod(adapterInfo))
         .build();
 
@@ -174,19 +199,66 @@ class AdapterHelperProcessor {
         .writeTo(filer);
   }
 
-  private MethodSpec buildModelsMethod(AdapterClassInfo adapterInfo) {
+  private MethodSpec buildConstructor(AdapterClassInfo adapterInfo) {
     ParameterSpec adapterParam = ParameterSpec
         .builder(adapterInfo.adapterClassType, "adapter")
         .build();
 
-    Builder builder = MethodSpec.methodBuilder("buildAutoModels")
-        .addAnnotation(Override.class)
+    return MethodSpec.constructorBuilder()
         .addParameter(adapterParam)
+        .addModifiers(Modifier.PUBLIC)
+        .addStatement("this.adapter = adapter")
+        .build();
+  }
+
+  private MethodSpec buildValidateFieldsAreNullMethod(AdapterClassInfo adapterInfo) {
+
+    Builder builder = MethodSpec.methodBuilder("validateFieldsAreNull")
+        .addAnnotation(Override.class)
+        .addModifiers(Modifier.PUBLIC);
+
+    // Validate that annotated fields are null
+    for (AdapterModelField model : adapterInfo.models) {
+      builder.addStatement("validateFieldIsNull(adapter.$L, $S)", model.fieldName, model.fieldName);
+    }
+
+    return builder.build();
+  }
+
+  private MethodSpec buildValidateNullFieldMethod() {
+    ParameterSpec fieldValue = ParameterSpec
+        .builder(Object.class, "fieldValue")
+        .build();
+
+    ParameterSpec fieldName = ParameterSpec
+        .builder(String.class, "fieldName")
+        .build();
+
+    return MethodSpec.methodBuilder("validateFieldIsNull")
+        .addParameter(fieldValue)
+        .addParameter(fieldName)
+        .addModifiers(Modifier.PRIVATE)
+        .beginControlFlow("if (fieldValue != null)")
+        .addStatement(
+            "throw new $T(\"Fields annotated with $L cannot be directly assigned. The adapter "
+                + "manages these fields for you. (\" + adapter.getClass().getSimpleName() + \"#\""
+                + " + "
+                + "fieldName + \")\")",
+            IllegalStateException.class,
+            AutoModel.class.getSimpleName())
+        .endControlFlow()
+        .build();
+  }
+
+  private MethodSpec buildModelsMethod(AdapterClassInfo adapterInfo) {
+    Builder builder = MethodSpec.methodBuilder("resetAutoModels")
+        .addAnnotation(Override.class)
         .addModifiers(Modifier.PUBLIC);
 
     long id = -1;
     for (AdapterModelField model : adapterInfo.models) {
-      builder.addStatement("adapter.$L = new $T().id($L)", model.fieldName, model.typeName, id--);
+      builder.addStatement("adapter.$L = new $T()", model.fieldName, model.typeName)
+          .addStatement("adapter.$L.id($L)", model.fieldName, id--);
     }
 
     return builder.build();

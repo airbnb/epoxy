@@ -9,14 +9,15 @@ import java.util.List;
 
 import static com.airbnb.epoxy.AdapterHelperLookup.getHelperForAdapter;
 
-public abstract class DiffAdapter extends BaseEpoxyAdapter {
+public abstract class AutoEpoxyAdapter extends BaseEpoxyAdapter {
   private final DiffHelper diffHelper = new DiffHelper(this);
   private final AdapterHelper helper = getHelperForAdapter(this);
-  private List<EpoxyModel<?>> models = Collections.emptyList();
   private final NotifyWatcher notifyWatcher = new NotifyWatcher();
+  private List<EpoxyModel<?>> models = Collections.emptyList();
   private ArrayList<EpoxyModel<?>> modelsBeingBuilt;
+  private boolean isFirstModelBuild = true;
 
-  public DiffAdapter() {
+  public AutoEpoxyAdapter() {
     registerAdapterDataObserver(notifyWatcher);
   }
 
@@ -34,9 +35,14 @@ public abstract class DiffAdapter extends BaseEpoxyAdapter {
   }
 
   private void doModelUpdate() {
+    if (isFirstModelBuild) {
+      helper.validateFieldsAreNull();
+      isFirstModelBuild = false;
+    }
+
     // The helper should be the correct type because we looked it up based on the adapter's class
     //noinspection unchecked
-    helper.buildAutoModels(this);
+    helper.resetAutoModels();
 
     modelsBeingBuilt = new ArrayList<>(getExpectedModelCount());
     buildModels();
@@ -56,7 +62,7 @@ public abstract class DiffAdapter extends BaseEpoxyAdapter {
   /**
    * Subclasses should implement this to describe what models should be shown for the current state.
    * Implementations should call either {@link #add(EpoxyModel)} or {@link
-   * EpoxyModel#addTo(DiffAdapter)} with the models that should be shown, in the order that is
+   * EpoxyModel#addTo(AutoEpoxyAdapter)} with the models that should be shown, in the order that is
    * desired.
    */
   protected abstract void buildModels();
@@ -80,7 +86,9 @@ public abstract class DiffAdapter extends BaseEpoxyAdapter {
   /** Throw if adding a model is not currently allowed. */
   private void validateAddAllowed() {
     if (modelsBeingBuilt == null) {
-      throw new IllegalStateException("You can only add models inside the `buildModels` methods");
+      throw new IllegalStateException(
+          "You can only add models inside the `buildModels` methods, and you cannot call "
+              + "`buildModels` directly. Call `requestModelUpdate` instead");
     }
   }
 

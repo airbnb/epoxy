@@ -184,11 +184,11 @@ public abstract class EpoxyModel<T> {
     return this;
   }
 
-  public void addTo(DiffAdapter adapter) {
+  public void addTo(AutoEpoxyAdapter adapter) {
     adapter.add(this);
   }
 
-  public void addIf(boolean condition, DiffAdapter adapter) {
+  public void addIf(boolean condition, AutoEpoxyAdapter adapter) {
     if (condition) {
       adapter.add(this);
     }
