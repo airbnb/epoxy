@@ -18,6 +18,7 @@ public abstract class AutoEpoxyAdapter extends BaseEpoxyAdapter {
   private final NotifyBlocker notifyBlocker = new NotifyBlocker();
   private final Handler handler = new Handler();
   private List<EpoxyModel<?>> currentModels = Collections.emptyList();
+  private List<EpoxyModel<?>> copyOfCurrentModels = Collections.emptyList();
   private ArrayList<EpoxyModel<?>> modelsBeingBuilt;
   private boolean isFirstModelBuild = true;
   private boolean filterDuplicates;
@@ -164,6 +165,12 @@ public abstract class AutoEpoxyAdapter extends BaseEpoxyAdapter {
     if (model.hasDefaultId()) {
       throw new IllegalStateException("You must set an id on a model before adding it.");
     }
+
+    if (!model.isShown()) {
+      throw new IllegalStateException(
+          "You cannot hide a model in an AutoEpoxyAdapter. Use `addIf` to conditionally add a "
+              + "model instead.");
+    }
   }
 
   public void setFilterDuplicates(boolean filterDuplicates) {
@@ -172,5 +179,28 @@ public abstract class AutoEpoxyAdapter extends BaseEpoxyAdapter {
 
   public boolean isFilteringDuplicates() {
     return filterDuplicates;
+  }
+
+  public List<EpoxyModel<?>> getCopyOfModels() {
+    if (copyOfCurrentModels == null) {
+      // TODO: (eli_hart 2/26/17) Make this immutable
+      copyOfCurrentModels = new ArrayList<>(currentModels);
+    }
+
+    return copyOfCurrentModels;
+  }
+
+  public EpoxyModel<?> getModelAtPosition(int position) {
+    return currentModels.get(position);
+  }
+
+  public EpoxyModel<?> getModelWithId(long id) {
+    for (EpoxyModel<?> model : currentModels) {
+      if (model.id() == id) {
+        return model;
+      }
+    }
+
+    return null;
   }
 }

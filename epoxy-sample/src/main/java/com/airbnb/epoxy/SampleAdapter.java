@@ -1,5 +1,8 @@
 package com.airbnb.epoxy;
 
+import android.view.View;
+
+import com.airbnb.epoxy.models.ButtonModel.ButtonHolder;
 import com.airbnb.epoxy.models.ButtonModel_;
 import com.airbnb.epoxy.models.ColorModel_;
 import com.airbnb.epoxy.models.HeaderModel_;
@@ -35,22 +38,21 @@ class SampleAdapter extends TypedAutoEpoxyAdapter<List<ColorData>> {
 
     addButton
         .text(R.string.button_add)
-        .clickListener(v -> callbacks.onAddClicked())
         .addTo(this);
 
     clearButton
         .text(R.string.button_clear)
-        .clickListener(v -> callbacks.onClearClicked())
+        .clickListener((model, view, adapterPosition) -> {
+
+        })
         .addIf(colors.size() > 0, this);
 
     shuffleButton
         .text(R.string.button_shuffle)
-        .clickListener(v -> callbacks.onShuffleClicked())
         .addIf(colors.size() > 1, this);
 
     changeColorsButton
         .text(R.string.button_change)
-        .clickListener(v -> callbacks.onChangeColorsClicked())
         .addIf(colors.size() > 0, this);
 
     for (ColorData color : colors) {
