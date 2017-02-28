@@ -1,8 +1,30 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath 'me.tatarka:gradle-retrolambda:3.5.0'
+  }
+}
+
+repositories {
+  // For retrolambda
+  mavenCentral()
+}
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
   buildToolsVersion rootProject.ANDROID_BUILD_TOOLS_VERSION
+
+  // For retrolambda
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 
   defaultConfig {
     applicationId "com.airbnb.android.epoxysample"

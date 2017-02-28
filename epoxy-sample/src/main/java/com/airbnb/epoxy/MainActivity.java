@@ -1,10 +1,18 @@
 package com.airbnb.epoxy;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+
+import com.airbnb.epoxy.SampleAdapter.AdapterCallbacks;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -13,9 +21,12 @@ import butterknife.ButterKnife;
  * Example activity usage for {@link com.airbnb.epoxy.EpoxyAdapter}. Allows you to create a list of
  * colored blocks and modify it in different ways.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterCallbacks {
+  private static final Random RANDOM = new Random();
 
   @BindView(R.id.recycler_view) RecyclerView recyclerView;
+  private final SampleAdapter adapter = new SampleAdapter(this);
+  private final List<ColorData> colors = new ArrayList<>();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
     ButterKnife.bind(this);
 
     int spanCount = getSpanCount();
-
-    SampleAdapter adapter = new SampleAdapter();
 
     // We are using a multi span grid to show many color models in each row. To set this up we need
     // to set our span count on the adapter and then get the span size lookup object from
@@ -38,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     recyclerView.setHasFixedSize(true);
     recyclerView.addItemDecoration(new VerticalGridCardSpacingDecoration());
     recyclerView.setAdapter(adapter);
+    updateAdapter();
 
     // Many color models are shown on screen at once. The default recycled view pool size is
     // only 5, so we manually set the pool size to avoid constantly creating new views when
@@ -45,9 +55,47 @@ public class MainActivity extends AppCompatActivity {
     recyclerView.getRecycledViewPool().setMaxRecycledViews(R.layout.model_color, 50);
   }
 
+  private void updateAdapter() {
+    adapter.setData(colors);
+  }
+
   private int getSpanCount() {
     DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
     float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
     return (int) (dpWidth / 100);
+  }
+
+  @Override
+  public void onAddClicked() {
+    colors.add(0, new ColorData(randomColor(), colors.size()));
+    updateAdapter();
+  }
+
+  @Override
+  public void onClearClicked() {
+    colors.clear();
+    updateAdapter();
+  }
+
+  @Override
+  public void onShuffleClicked() {
+    Collections.shuffle(colors);
+    updateAdapter();
+  }
+
+  @Override
+  public void onChangeColorsClicked() {
+    for (ColorData color : colors) {
+      color.setColorInt(randomColor());
+    }
+    updateAdapter();
+  }
+
+  private static int randomColor() {
+    int r = RANDOM.nextInt(256);
+    int g = RANDOM.nextInt(256);
+    int b = RANDOM.nextInt(256);
+
+    return Color.rgb(r, g, b);
   }
 }

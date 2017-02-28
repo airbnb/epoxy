@@ -26,6 +26,10 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
       epoxyHolder.bindView(itemView);
     }
 
+    if (model instanceof ClickableModel) {
+      ((ClickableModel) model).setViewHolder(this);
+    }
+
     if (payloads.isEmpty()) {
       // noinspection unchecked
       model.bind(objectToBind());
@@ -45,6 +49,7 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     assertBound();
     // noinspection unchecked
     epoxyModel.unbind(objectToBind());
+
     epoxyModel = null;
     payloads = null;
   }

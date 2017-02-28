@@ -1,106 +1,103 @@
 package com.airbnb.epoxy;
 
-import android.graphics.Color;
-import android.view.View;
-import android.view.View.OnClickListener;
-
-import com.airbnb.epoxy.models.ButtonModel;
 import com.airbnb.epoxy.models.ButtonModel_;
 import com.airbnb.epoxy.models.ColorModel_;
-import com.airbnb.epoxy.models.HeaderModel;
 import com.airbnb.epoxy.models.HeaderModel_;
 
-import java.util.Collections;
-import java.util.Random;
+import java.util.List;
 
-class SampleAdapter extends EpoxyAdapter {
-  private static final Random RANDOM = new Random();
+class SampleAdapter extends TypedAutoEpoxyAdapter<List<ColorData>> {
+  interface AdapterCallbacks {
+    void onAddClicked();
+    void onClearClicked();
+    void onShuffleClicked();
+    void onChangeColorsClicked();
+  }
 
-  // These models are saved as fields so they can easily be shown or hidden as needed
-  private final ButtonModel_ clearButton = new ButtonModel_();
-  private final ButtonModel_ shuffleButton = new ButtonModel_();
-  private final ButtonModel_ changeColorsButton = new ButtonModel_();
+  @AutoModel HeaderModel_ header;
+  @AutoModel ButtonModel_ addButton;
+  @AutoModel ButtonModel_ clearButton;
+  @AutoModel ButtonModel_ shuffleButton;
+  @AutoModel ButtonModel_ changeColorsButton;
 
-  SampleAdapter() {
-    // We are going to use automatic diffing, so we just have to enable it first
-    enableDiffing();
+  private final AdapterCallbacks callbacks;
 
-    // We're using the generated subclasses of our models, which is indicated by the underscore
-    // appended to the class name. These generated classes contain our setter methods, as well as
-    // the hashcode methods that tell the diffing algorithm when a model has changed
-    HeaderModel headerModel = new HeaderModel_()
+  SampleAdapter(AdapterCallbacks callbacks) {
+    this.callbacks = callbacks;
+  }
+
+  // TODO: (eli_hart 2/26/17) Carousel with shared view pools, model groups
+  // TODO: (eli_hart 2/26/17) bind/attach callbacks for model builder
+  // TODO: (eli_hart 2/27/17) Save colors state
+  // TODO: (eli_hart 2/27/17) Shuffle color on click square
+  // TODO: (eli_hart 2/27/17) Have way of forcing hash on model attribute
+  // TODO: (eli_hart 2/27/17) typed adapter integration test
+  // TODO: (eli_hart 2/27/17) Consider adding span/position/count to getDefaultLayout
+  // TODO: (eli_hart 2/27/17) consider removing equals and renaming hashcode to epoxyHash
+
+  @Override
+  protected void buildModels(List<ColorData> colors) {
+    header
         .title(R.string.epoxy)
-        .caption(R.string.header_subtitle);
+        .caption(R.string.header_subtitle)
+        .addTo(this);
 
-    ButtonModel addButton = new ButtonModel_()
+    addButton
         .text(R.string.button_add)
-        .clickListener(onAddClicked);
+        .clickListener((model, view, position) -> {
+          callbacks.onAddClicked();
+        })
+        .addTo(this);
 
-    clearButton.text(R.string.button_clear)
-        .clickListener(onClearClicked);
+    clearButton
+        .text(R.string.button_clear)
+        .clickListener(v -> callbacks.onClearClicked())
+        .addIf(colors.size() > 0, this);
 
-    shuffleButton.text(R.string.button_shuffle)
-        .clickListener(onShuffleClicked);
+    shuffleButton
+        .text(R.string.button_shuffle)
+        .clickListener(v -> callbacks.onShuffleClicked())
+        .addIf(colors.size() > 1, this);
 
-    changeColorsButton.text(R.string.button_change)
-        .clickListener(onChangeColorsClicked);
+    changeColorsButton
+        .text(R.string.button_change)
+        .clickListener(v -> callbacks.onChangeColorsClicked())
+        .addIf(colors.size() > 0, this);
 
-    addModels(
-        headerModel,
-        addButton,
-        clearButton,
-        shuffleButton,
-        changeColorsButton
-    );
-
-    updateButtonVisibility();
+    for (ColorData color : colors) {
+      add(new ColorModel_(color));
+    }
   }
 
-  private void updateButtonVisibility() {
-    int colorCount = getAllModelsAfter(changeColorsButton).size();
-    showModels(colorCount > 0, changeColorsButton, clearButton);
-    showModels(colorCount > 1, shuffleButton);
-  }
+  protected void build(List<ColorData> colors, List<EpoxyModel<?>> models) {
+    models.add(header
+        .title(R.string.epoxy)
+        .caption(R.string.header_subtitle));
 
-  private final OnClickListener onAddClicked = new OnClickListener() {
-    @Override
-    public void onClick(View v) {
-      insertModelAfter(new ColorModel_(randomColor()), changeColorsButton);
-      updateButtonVisibility();
+    models.add(addButton
+        .text(R.string.button_add)
+        .clickListener(v -> callbacks.onAddClicked()));
+
+    if (colors.size() > 0) {
+      models.add(clearButton
+          .text(R.string.button_clear)
+          .clickListener(v -> callbacks.onClearClicked()));
     }
-  };
 
-  private final OnClickListener onClearClicked = new OnClickListener() {
-    @Override
-    public void onClick(View v) {
-      removeAllAfterModel(changeColorsButton);
-      updateButtonVisibility();
+    if (colors.size() > 1) {
+      models.add(shuffleButton
+          .text(R.string.button_shuffle)
+          .clickListener(v -> callbacks.onShuffleClicked()));
     }
-  };
 
-  private final OnClickListener onShuffleClicked = new OnClickListener() {
-    @Override
-    public void onClick(View v) {
-      Collections.shuffle(getAllModelsAfter(changeColorsButton));
-      notifyModelsChanged();
+    if (colors.size() > 0) {
+      models.add(changeColorsButton
+          .text(R.string.button_change)
+          .clickListener(v -> callbacks.onChangeColorsClicked()));
     }
-  };
 
-  private final OnClickListener onChangeColorsClicked = new OnClickListener() {
-    @Override
-    public void onClick(View v) {
-      for (EpoxyModel<?> model : getAllModelsAfter(changeColorsButton)) {
-        ((ColorModel_) model).color(randomColor());
-      }
-      notifyModelsChanged();
+    for (ColorData color : colors) {
+      models.add(new ColorModel_(color));
     }
-  };
-
-  private int randomColor() {
-    int r = RANDOM.nextInt(256);
-    int g = RANDOM.nextInt(256);
-    int b = RANDOM.nextInt(256);
-
-    return Color.rgb(r, g, b);
   }
 }

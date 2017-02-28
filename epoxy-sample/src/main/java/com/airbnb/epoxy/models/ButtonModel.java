@@ -29,7 +29,7 @@ public abstract class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
     holder.button.setOnClickListener(clickListener);
   }
 
-  static class ButtonHolder extends BaseEpoxyHolder {
+  public static class ButtonHolder extends BaseEpoxyHolder {
     @BindView(R.id.button) Button button;
   }
 }
