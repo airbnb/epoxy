@@ -34,6 +34,8 @@ class SampleAdapter extends TypedAutoEpoxyAdapter<List<ColorData>> {
   // TODO: (eli_hart 2/27/17) typed adapter integration test
   // TODO: (eli_hart 2/27/17) Consider adding span/position/count to getDefaultLayout
   // TODO: (eli_hart 2/27/17) consider removing equals and renaming hashcode to epoxyHash
+  // TODO: (eli_hart 2/28/17) Null out automodels after building models?
+  // TODO: (eli_hart 2/28/17) Change buildModels name to render?
 
   @Override
   protected void buildModels(List<ColorData> colors) {

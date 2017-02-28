@@ -55,6 +55,10 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
                 boundEpoxyViewHolder.getAdapterPosition());
           }
         }
+        public int hashCode() {
+          // Hash the original click listener to avoid changing model state
+          return clickListener.hashCode();
+        }
       };
     }
     return this;

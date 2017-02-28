@@ -143,7 +143,10 @@ class ModelProcessor {
 
     for (ClassToGenerateInfo generatedClass : generatedClasses) {
       for (AttributeInfo attributeInfo : generatedClass.getAttributeInfo()) {
-        if (configManager.requiresHashCode(attributeInfo) && attributeInfo.useInHash()) {
+        if (configManager.requiresHashCode(attributeInfo)
+            && attributeInfo.useInHash()
+            && !attributeInfo.allowMissingHash()) {
+
           try {
             hashCodeValidator.validate(attributeInfo);
           } catch (EpoxyProcessorException e) {
@@ -163,7 +166,7 @@ class ModelProcessor {
 
   private AttributeInfo buildAttributeInfo(Element attribute) {
     validateFieldAccessibleViaGeneratedCode(attribute, EpoxyAttribute.class, errorLogger);
-    return new AttributeInfo(attribute, typeUtils);
+    return new AttributeInfo(attribute, typeUtils, errorLogger);
   }
 
   private ClassToGenerateInfo getOrCreateTargetClass(
@@ -659,32 +662,19 @@ class ModelProcessor {
                 + "            boundEpoxyViewHolder.getAdapterPosition());\n"
                 + "      }\n"
                 + "    }\n"
+                + "    public int hashCode() {\n"
+                + "      // Hash the original click listener to avoid changing model state\n"
+                + "      return $L.hashCode();\n"
+                + "    }\n"
                 + "  };\n"
                 + "}\n", attributeName, attributeName, attributeName,
-            viewClickListenerType, viewType, attributeName, helperClass.getGeneratedName()));
+            viewClickListenerType, viewType, attributeName, helperClass.getGeneratedName(),
+            attributeName));
 
     return builder
         .addStatement("return this")
         .build();
   }
-
-//
-//  public ButtonModel_ clickListener(
-//      OnModelClickListener<ButtonModel_, ButtonHolder> clickListener) {
-//    this.clickListener = new OnClickListener() {
-//      @Override
-//      public void onClick(View v) {
-//        // protect from being called when unbound
-//        if (privateBoundViewHolder != null) {
-//          clickListener.onClick(ButtonModel_.this, privateBoundButtonHolder,
-//              privateBoundViewHolder.getAdapterPosition());
-//        }
-//      }
-//    };
-//
-//    return this;
-//  }
-//
 
   private MethodSpec generateEquals(ClassToGenerateInfo helperClass) {
     Builder builder = MethodSpec.methodBuilder("equals")

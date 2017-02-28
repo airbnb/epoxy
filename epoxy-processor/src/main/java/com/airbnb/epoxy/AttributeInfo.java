@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import com.airbnb.epoxy.EpoxyAttribute.Option;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
@@ -8,6 +9,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +34,9 @@ class AttributeInfo {
   private final String name;
   private final TypeName type;
   private final boolean useInHash;
+  private final boolean allowMissingHash;
   private final boolean generateSetter;
+  private final boolean generateGetter;
   private final boolean hasFinalModifier;
   private final boolean packagePrivate;
   /**
@@ -45,7 +49,7 @@ class AttributeInfo {
 
   private final TypeElement classElement;
 
-  AttributeInfo(Element attribute, Types typeUtils) {
+  AttributeInfo(Element attribute, Types typeUtils, ErrorLogger errorLogger) {
     attributeElement = attribute;
     this.typeUtils = typeUtils;
     this.name = attribute.getSimpleName().toString();
@@ -57,9 +61,52 @@ class AttributeInfo {
     this.packagePrivate = isFieldPackagePrivate(attribute);
 
     EpoxyAttribute annotation = attribute.getAnnotation(EpoxyAttribute.class);
-    useInHash = annotation.hash();
-    generateSetter = annotation.setter();
+    Set<Option> options = new HashSet<>(Arrays.asList(annotation.value()));
+    validateAnnotationOptions(errorLogger, annotation, options);
+
+    useInHash = annotation.hash() && !options.contains(Option.DoNotHash);
+    allowMissingHash = options.contains(Option.AllowMissingHash);
+
+    generateSetter = annotation.setter() && !options.contains(Option.NoSetter);
+    generateGetter = !options.contains(Option.NoGetter);
     buildAnnotationLists(attribute.getAnnotationMirrors());
+  }
+
+  private void validateAnnotationOptions(ErrorLogger errorLogger, EpoxyAttribute annotation,
+      Set<Option> options) {
+
+    if (options.contains(Option.AllowMissingHash) && options.contains(Option.DoNotHash)) {
+      errorLogger
+          .logError("Illegal to use both %s and %s options in an %s annotation. (%s#%s)",
+              Option.DoNotHash,
+              Option.AllowMissingHash,
+              EpoxyAttribute.class.getSimpleName(),
+              classElement.getSimpleName(),
+              name);
+    }
+
+    // Don't let legacy values be mixed with the new Options values
+    if (!options.isEmpty()) {
+      if (!annotation.hash()) {
+        errorLogger
+            .logError("Don't use hash=false in an %s if you are using options. Instead, use the"
+                    + " %s option. (%s#%s)",
+                EpoxyAttribute.class.getSimpleName(),
+                Option.DoNotHash,
+                classElement.getSimpleName(),
+                name);
+      }
+
+      if (!annotation.setter()) {
+        errorLogger
+            .logError("Don't use setter=false in an %s if you are using options. Instead, use the"
+                    + " %s option. (%s#%s)",
+                EpoxyAttribute.class.getSimpleName(),
+                Option.NoSetter,
+                classElement.getSimpleName(),
+                name);
+      }
+    }
   }
 
   /**
@@ -142,11 +189,11 @@ class AttributeInfo {
   }
 
   boolean useInHash() {
-    if (isViewClickListener()) {
-      return false;
-    }
-
     return useInHash;
+  }
+
+  public boolean allowMissingHash() {
+    return allowMissingHash;
   }
 
   boolean generateSetter() {
@@ -155,6 +202,10 @@ class AttributeInfo {
 
   List<AnnotationSpec> getSetterAnnotations() {
     return setterAnnotations;
+  }
+
+  public boolean generateGetter() {
+    return generateGetter;
   }
 
   List<AnnotationSpec> getGetterAnnotations() {
