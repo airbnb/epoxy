@@ -15,7 +15,7 @@ import static junit.framework.Assert.assertTrue;
  * android EpoxyAdapter library that contains the EpoxyModel.
  */
 
-public class EpoxyProcessorTest {
+public class ModelProcessorTest {
   @Test
   public void testSimpleModel() {
     JavaFileObject model = JavaFileObjects
@@ -466,5 +466,21 @@ public class EpoxyProcessorTest {
         .processedWith(new EpoxyProcessor())
         .failsToCompile()
         .withErrorContaining("Model must specify a valid layout resource");
+  }
+
+  @Test
+  public void modelWithViewClickListener() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithViewClickListener.java");
+
+    JavaFileObject generatedNoLayoutModel = JavaFileObjects
+        .forResource("ModelWithViewClickListener_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedNoLayoutModel);
   }
 }

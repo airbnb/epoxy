@@ -11,12 +11,15 @@ import org.robolectric.annotation.Config;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @Config(sdk = 21, manifest = TestRunner.MANIFEST_PATH)
 @RunWith(TestRunner.class)
 public class AutoEpoxyAdapterTest {
 
-  class TestModel extends EpoxyModel<View> {
+  static class TestModel extends EpoxyModel<View> {
 
     @Override
     protected int getDefaultLayout() {
@@ -24,7 +27,7 @@ public class AutoEpoxyAdapterTest {
     }
   }
 
-  class TestModel2 extends EpoxyModel<View> {
+  static class TestModel2 extends EpoxyModel<View> {
 
     @Override
     protected int getDefaultLayout() {
@@ -32,7 +35,7 @@ public class AutoEpoxyAdapterTest {
     }
   }
 
-  class TestModel3 extends EpoxyModel<View> {
+  static class TestModel3 extends EpoxyModel<View> {
 
     @Override
     protected int getDefaultLayout() {
@@ -40,7 +43,7 @@ public class AutoEpoxyAdapterTest {
     }
   }
 
-  class BasicModelBuildingAdapter extends AutoEpoxyAdapter {
+  static class BasicModelBuildingAdapter extends AutoEpoxyAdapter {
 
     @Override
     protected void buildModels() {
@@ -98,8 +101,29 @@ public class AutoEpoxyAdapterTest {
     testAdapter.add(new TestModel());
   }
 
-  @Test
+  static class AdapterThatSetsModelWithoutIdFails extends AutoEpoxyAdapter {
+
+    @Override
+    protected void buildModels() {
+      add(new TestModel());
+    }
+  }
+
+  @Test(expected = IllegalStateException.class)
   public void notSettingModelIdFails() {
-    // TODO: (eli_hart 2/25/17)
+    new AdapterThatSetsModelWithoutIdFails().requestModelUpdate();
+  }
+
+  static class AdapterThatHidesModelFails extends AutoEpoxyAdapter {
+
+    @Override
+    protected void buildModels() {
+      add(new TestModel().id(1).hide());
+    }
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void hidingModelFails() {
+    new AdapterThatHidesModelFails().requestModelUpdate();
   }
 }

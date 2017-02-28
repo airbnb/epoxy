@@ -60,6 +60,7 @@ import static com.squareup.javapoet.TypeName.INT;
 import static com.squareup.javapoet.TypeName.LONG;
 import static com.squareup.javapoet.TypeName.SHORT;
 import static javax.lang.model.element.Modifier.ABSTRACT;
+import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
@@ -638,7 +639,8 @@ class ModelProcessor {
         TypeName.get(helperClass.getModelType())
     );
 
-    ParameterSpec param = ParameterSpec.builder(modelClickListenerType, attributeName).build();
+    ParameterSpec param =
+        ParameterSpec.builder(modelClickListenerType, attributeName, FINAL).build();
 
     Builder builder = MethodSpec.methodBuilder(attributeName)
         .addModifiers(Modifier.PUBLIC)

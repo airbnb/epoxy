@@ -142,6 +142,10 @@ class AttributeInfo {
   }
 
   boolean useInHash() {
+    if (isViewClickListener()) {
+      return false;
+    }
+
     return useInHash;
   }
 
