@@ -26,6 +26,13 @@ class ErrorLogger {
     loggedExceptions.add(e);
   }
 
+  void logError(Exception e, String message) {
+    if (!(e instanceof EpoxyProcessorException)) {
+      e = new EpoxyProcessorException(e, message + " : " + e);
+    }
+    loggedExceptions.add(e);
+  }
+
   void logError(String msg, Object... args) {
     logError(buildEpoxyException(msg, args));
   }

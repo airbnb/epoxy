@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
@@ -16,6 +17,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import static javax.lang.model.element.ElementKind.CLASS;
@@ -26,15 +28,27 @@ class ProcessorUtils {
 
   static final String EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel<?>";
   static final String EPOXY_MODEL_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyModelWithHolder<?>";
+  static final String EPOXY_VIEW_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyViewHolder";
   static final String EPOXY_AUTO_ADAPTER_TYPE = "com.airbnb.epoxy.AutoEpoxyAdapter";
+  static final String VIEW_CLICK_LISTENER_TYPE = "android.view.View.OnClickListener";
+  static final String CLICKABLE_MODEL_INTERFACE = "com.airbnb.epoxy.ClickableModel";
+  static final String MODEL_CLICK_LISTENER_TYPE = "com.airbnb.epoxy.OnModelClickListener";
 
   static void throwError(String msg, Object... args)
       throws EpoxyProcessorException {
     throw new EpoxyProcessorException(String.format(msg, args));
   }
 
+  static ClassName getClassName(String className) {
+    return ClassName.bestGuess(className);
+  }
+
   static EpoxyProcessorException buildEpoxyException(String msg, Object... args) {
     return new EpoxyProcessorException(String.format(msg, args));
+  }
+
+  static boolean isViewClickListenerType(Element element) {
+    return isSubtypeOfType(element.asType(), VIEW_CLICK_LISTENER_TYPE);
   }
 
   static boolean isIterableType(TypeElement element) {

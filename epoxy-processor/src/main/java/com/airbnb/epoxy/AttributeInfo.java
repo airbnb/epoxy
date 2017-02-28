@@ -19,6 +19,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.ProcessorUtils.isViewClickListenerType;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PROTECTED;
@@ -200,11 +201,15 @@ class AttributeInfo {
     return result;
   }
 
-  public Element getAttributeElement() {
+  Element getAttributeElement() {
     return attributeElement;
   }
 
-  public TypeElement getClassElement() {
+  TypeElement getClassElement() {
     return classElement;
+  }
+
+  boolean isViewClickListener() {
+    return isViewClickListenerType(attributeElement);
   }
 }

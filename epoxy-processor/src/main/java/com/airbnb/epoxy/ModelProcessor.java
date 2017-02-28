@@ -5,10 +5,14 @@ import android.support.annotation.LayoutRes;
 import com.airbnb.epoxy.ClassToGenerateInfo.ConstructorInfo;
 import com.airbnb.epoxy.ClassToGenerateInfo.MethodInfo;
 import com.squareup.javapoet.ArrayTypeName;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
@@ -36,7 +40,12 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic.Kind;
 
+import static com.airbnb.epoxy.ProcessorUtils.CLICKABLE_MODEL_INTERFACE;
 import static com.airbnb.epoxy.ProcessorUtils.EPOXY_MODEL_TYPE;
+import static com.airbnb.epoxy.ProcessorUtils.EPOXY_VIEW_HOLDER_TYPE;
+import static com.airbnb.epoxy.ProcessorUtils.MODEL_CLICK_LISTENER_TYPE;
+import static com.airbnb.epoxy.ProcessorUtils.VIEW_CLICK_LISTENER_TYPE;
+import static com.airbnb.epoxy.ProcessorUtils.getClassName;
 import static com.airbnb.epoxy.ProcessorUtils.getEpoxyObjectType;
 import static com.airbnb.epoxy.ProcessorUtils.implementsMethod;
 import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModel;
@@ -51,6 +60,8 @@ import static com.squareup.javapoet.TypeName.INT;
 import static com.squareup.javapoet.TypeName.LONG;
 import static com.squareup.javapoet.TypeName.SHORT;
 import static javax.lang.model.element.Modifier.ABSTRACT;
+import static javax.lang.model.element.Modifier.PRIVATE;
+import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
 class ModelProcessor {
@@ -118,7 +129,7 @@ class ModelProcessor {
       try {
         generateClassForModel(modelEntry.getValue());
       } catch (Exception e) {
-        errorLogger.logError(e);
+        errorLogger.logError(e, "Error generating model classes");
       }
     }
 
@@ -300,12 +311,19 @@ class ModelProcessor {
       return;
     }
 
-    TypeSpec generatedClass = TypeSpec.classBuilder(info.getGeneratedName())
+    TypeSpec.Builder classBuilder = TypeSpec.classBuilder(info.getGeneratedName())
         .addJavadoc("Generated file. Do not modify!")
         .addModifiers(Modifier.PUBLIC)
-        .superclass(info.getOriginalClassName())
-        .addTypeVariables(info.getTypeVariables())
+        .superclass(info.getOriginalClassName());
+
+    if (info.hasClickListenerAttributes()) {
+      classBuilder.addSuperinterface(getClassName(CLICKABLE_MODEL_INTERFACE));
+    }
+
+    classBuilder.addTypeVariables(info.getTypeVariables())
+        .addFields(generateFields(info))
         .addMethods(generateConstructors(info))
+        .addMethods(generateBindMethodsIfNeeded(info))
         .addMethods(generateSettersAndGetters(info))
         .addMethods(generateMethodsReturningClassType(info))
         .addMethods(generateDefaultMethodImplementations(info))
@@ -315,9 +333,25 @@ class ModelProcessor {
         .addMethod(generateToString(info))
         .build();
 
-    JavaFile.builder(info.getGeneratedName().packageName(), generatedClass)
+    JavaFile.builder(info.getGeneratedName().packageName(), classBuilder.build())
         .build()
         .writeTo(filer);
+  }
+
+  private Iterable<FieldSpec> generateFields(ClassToGenerateInfo classInfo) {
+    List<FieldSpec> fields = new ArrayList<>();
+
+    if (classInfo.hasClickListenerAttributes()) {
+      // Adds fields to store the view holder and bound object so the model click listener can
+      // access them when clicked
+      TypeName viewHolderType = getClassName(EPOXY_VIEW_HOLDER_TYPE);
+      fields.add(FieldSpec.builder(viewHolderType, "boundEpoxyViewHolder", PRIVATE).build());
+
+      TypeName modelType = TypeName.get(classInfo.getModelType());
+      fields.add(FieldSpec.builder(modelType, "epoxyModelBoundObject", PRIVATE).build());
+    }
+
+    return fields;
   }
 
   /** Include any constructors that are in the super class. */
@@ -339,6 +373,59 @@ class ModelProcessor {
     }
 
     return constructors;
+  }
+
+  private Iterable<MethodSpec> generateBindMethodsIfNeeded(ClassToGenerateInfo info) {
+    List<MethodSpec> methods = new ArrayList<>();
+
+    if (info.hasClickListenerAttributes()) {
+      // Add bind/unbind/setViewHolder methods so the class can set the epoxyModelBoundObject and
+      // boundEpoxyViewHolder fields for the model click listener to access
+
+      TypeName viewHolderType = getClassName(EPOXY_VIEW_HOLDER_TYPE);
+      ParameterSpec viewHolderParam = ParameterSpec.builder(viewHolderType, "holder").build();
+
+      methods.add(MethodSpec.methodBuilder("setViewHolder")
+          .addAnnotation(Override.class)
+          .addModifiers(PUBLIC)
+          .addParameter(viewHolderParam)
+          .addStatement("this.boundEpoxyViewHolder = holder")
+          .build());
+
+      TypeName boundObjectType = TypeName.get(info.getModelType());
+      ParameterSpec boundObjectParam = ParameterSpec.builder(boundObjectType, "object").build();
+
+      methods.add(MethodSpec.methodBuilder("bind")
+          .addAnnotation(Override.class)
+          .addModifiers(PUBLIC)
+          .addParameter(boundObjectParam)
+          .addStatement("super.bind(object)")
+          .addStatement("this.epoxyModelBoundObject = object")
+          .build());
+
+      TypeName payloadsType = ParameterizedTypeName.get(List.class, Object.class);
+      ParameterSpec payloadsParam = ParameterSpec.builder(payloadsType, "payloads").build();
+
+      methods.add(MethodSpec.methodBuilder("bind")
+          .addAnnotation(Override.class)
+          .addModifiers(PUBLIC)
+          .addParameter(boundObjectParam)
+          .addParameter(payloadsParam)
+          .addStatement("super.bind(object, payloads)")
+          .addStatement("this.epoxyModelBoundObject = object")
+          .build());
+
+      methods.add(MethodSpec.methodBuilder("unbind")
+          .addAnnotation(Override.class)
+          .addModifiers(PUBLIC)
+          .addParameter(boundObjectParam)
+          .addStatement("super.unbind(object)")
+          .addStatement("this.epoxyModelBoundObject = null")
+          .addStatement("this.boundEpoxyViewHolder = null")
+          .build());
+    }
+
+    return methods;
   }
 
   private Iterable<MethodSpec> generateMethodsReturningClassType(ClassToGenerateInfo info) {
@@ -525,15 +612,77 @@ class ModelProcessor {
   private List<MethodSpec> generateSettersAndGetters(ClassToGenerateInfo helperClass) {
     List<MethodSpec> methods = new ArrayList<>();
 
-    for (AttributeInfo data : helperClass.getAttributeInfo()) {
-      if (data.generateSetter() && !data.hasFinalModifier()) {
-        methods.add(generateSetter(helperClass, data));
+    for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
+      if (attributeInfo.isViewClickListener()) {
+        methods.add(generateSetClickModelListener(helperClass, attributeInfo));
       }
-      methods.add(generateGetter(data));
+      if (attributeInfo.generateSetter() && !attributeInfo.hasFinalModifier()) {
+        methods.add(generateSetter(helperClass, attributeInfo));
+      }
+      methods.add(generateGetter(attributeInfo));
     }
 
     return methods;
   }
+
+  private MethodSpec generateSetClickModelListener(ClassToGenerateInfo helperClass,
+      AttributeInfo attribute) {
+    String attributeName = attribute.getName();
+
+    ClassName viewClickListenerType = getClassName(VIEW_CLICK_LISTENER_TYPE);
+    ClassName viewType = getClassName("android.view.View");
+
+    ParameterizedTypeName modelClickListenerType = ParameterizedTypeName.get(
+        getClassName(MODEL_CLICK_LISTENER_TYPE),
+        helperClass.getParameterizedGeneratedName(),
+        TypeName.get(helperClass.getModelType())
+    );
+
+    ParameterSpec param = ParameterSpec.builder(modelClickListenerType, attributeName).build();
+
+    Builder builder = MethodSpec.methodBuilder(attributeName)
+        .addModifiers(Modifier.PUBLIC)
+        .returns(helperClass.getParameterizedGeneratedName())
+        .addParameter(param)
+        .addAnnotations(attribute.getSetterAnnotations())
+        .addCode(CodeBlock.of(
+            "if ($L == null) {\n"
+                + "  this.$L = null;\n"
+                + "} else {\n"
+                + "  this.$L = new $T() {\n"
+                + "    public void onClick($T v) {\n"
+                + "      // protect from being called when unbound\n"
+                + "      if (boundEpoxyViewHolder != null) {\n"
+                + "        $L.onClick($T.this, epoxyModelBoundObject,\n"
+                + "            boundEpoxyViewHolder.getAdapterPosition());\n"
+                + "      }\n"
+                + "    }\n"
+                + "  };\n"
+                + "}\n", attributeName, attributeName, attributeName,
+            viewClickListenerType, viewType, attributeName, helperClass.getGeneratedName()));
+
+    return builder
+        .addStatement("return this")
+        .build();
+  }
+
+//
+//  public ButtonModel_ clickListener(
+//      OnModelClickListener<ButtonModel_, ButtonHolder> clickListener) {
+//    this.clickListener = new OnClickListener() {
+//      @Override
+//      public void onClick(View v) {
+//        // protect from being called when unbound
+//        if (privateBoundViewHolder != null) {
+//          clickListener.onClick(ButtonModel_.this, privateBoundButtonHolder,
+//              privateBoundViewHolder.getAdapterPosition());
+//        }
+//      }
+//    };
+//
+//    return this;
+//  }
+//
 
   private MethodSpec generateEquals(ClassToGenerateInfo helperClass) {
     Builder builder = MethodSpec.methodBuilder("equals")

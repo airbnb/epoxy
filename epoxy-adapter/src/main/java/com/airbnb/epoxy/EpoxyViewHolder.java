@@ -26,8 +26,8 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
       epoxyHolder.bindView(itemView);
     }
 
-    if (epoxyModel instanceof ClickableModel) {
-      ((ClickableModel) epoxyModel).setViewHolder(this);
+    if (model instanceof ClickableModel) {
+      ((ClickableModel) model).setViewHolder(this);
     }
 
     if (payloads.isEmpty()) {
