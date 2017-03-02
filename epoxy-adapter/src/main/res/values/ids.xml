@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="view_model_state_saving_id" type="id" />
+
+    <!-- Used by the model group class -->
+    <item name="epoxy_model_group_view_stub_1" type="id" />
+    <item name="epoxy_model_group_view_stub_2" type="id" />
+    <item name="epoxy_model_group_view_stub_3" type="id" />
+    <item name="epoxy_model_group_view_stub_4" type="id" />
+    <item name="epoxy_model_group_view_stub_5" type="id" />
 </resources>
