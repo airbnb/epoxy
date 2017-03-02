@@ -106,7 +106,7 @@ public class ModelWithoutHash_ extends ModelWithoutHash {
     if (value != that.value) {
       return false;
     }
-    if (value3 != null && that.value3 == null || value3 == null && that.value3 != null) {
+    if ((value3 != null && that.value3 == null) || (value3 == null && that.value3 != null)) {
       return false;
     }
     return true;
