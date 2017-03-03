@@ -662,14 +662,9 @@ class ModelProcessor {
                 + "            boundEpoxyViewHolder.getAdapterPosition());\n"
                 + "      }\n"
                 + "    }\n"
-                + "    public int hashCode() {\n"
-                + "      // Hash the original click listener to avoid changing model state\n"
-                + "      return $L.hashCode();\n"
-                + "    }\n"
                 + "  };\n"
                 + "}\n", attributeName, attributeName, attributeName,
-            viewClickListenerType, viewType, attributeName, helperClass.getGeneratedName(),
-            attributeName));
+            viewClickListenerType, viewType, attributeName, helperClass.getGeneratedName()));
 
     return builder
         .addStatement("return this")
