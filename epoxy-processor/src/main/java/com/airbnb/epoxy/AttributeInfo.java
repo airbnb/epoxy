@@ -34,7 +34,7 @@ class AttributeInfo {
   private final String name;
   private final TypeName type;
   private final boolean useInHash;
-  private final boolean allowMissingHash;
+  private final boolean ignoreRequireHashCode;
   private final boolean generateSetter;
   private final boolean generateGetter;
   private final boolean hasFinalModifier;
@@ -65,7 +65,7 @@ class AttributeInfo {
     validateAnnotationOptions(errorLogger, annotation, options);
 
     useInHash = annotation.hash() && !options.contains(Option.DoNotHash);
-    allowMissingHash = options.contains(Option.AllowMissingHash);
+    ignoreRequireHashCode = options.contains(Option.IgnoreRequireHashCode);
 
     generateSetter = annotation.setter() && !options.contains(Option.NoSetter);
     generateGetter = !options.contains(Option.NoGetter);
@@ -75,11 +75,11 @@ class AttributeInfo {
   private void validateAnnotationOptions(ErrorLogger errorLogger, EpoxyAttribute annotation,
       Set<Option> options) {
 
-    if (options.contains(Option.AllowMissingHash) && options.contains(Option.DoNotHash)) {
+    if (options.contains(Option.IgnoreRequireHashCode) && options.contains(Option.DoNotHash)) {
       errorLogger
           .logError("Illegal to use both %s and %s options in an %s annotation. (%s#%s)",
               Option.DoNotHash,
-              Option.AllowMissingHash,
+              Option.IgnoreRequireHashCode,
               EpoxyAttribute.class.getSimpleName(),
               classElement.getSimpleName(),
               name);
@@ -192,8 +192,8 @@ class AttributeInfo {
     return useInHash;
   }
 
-  public boolean allowMissingHash() {
-    return allowMissingHash;
+  boolean ignoreRequireHashCode() {
+    return ignoreRequireHashCode;
   }
 
   boolean generateSetter() {

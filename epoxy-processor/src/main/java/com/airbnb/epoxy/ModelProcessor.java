@@ -145,7 +145,7 @@ class ModelProcessor {
       for (AttributeInfo attributeInfo : generatedClass.getAttributeInfo()) {
         if (configManager.requiresHashCode(attributeInfo)
             && attributeInfo.useInHash()
-            && !attributeInfo.allowMissingHash()) {
+            && !attributeInfo.ignoreRequireHashCode()) {
 
           try {
             hashCodeValidator.validate(attributeInfo);

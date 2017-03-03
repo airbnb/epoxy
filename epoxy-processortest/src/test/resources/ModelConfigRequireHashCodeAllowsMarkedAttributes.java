@@ -10,7 +10,7 @@ public class ModelConfigRequireHashCodeAllowsMarkedAttributes extends EpoxyModel
 
   }
 
-  @EpoxyAttribute({Option.AllowMissingHash}) ClassWithoutHashCode classWithoutHashCode;
+  @EpoxyAttribute(Option.IgnoreRequireHashCode) ClassWithoutHashCode classWithoutHashCode;
 
   @Override
   protected int getDefaultLayout() {

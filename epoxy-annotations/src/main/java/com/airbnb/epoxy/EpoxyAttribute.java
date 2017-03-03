@@ -53,7 +53,7 @@ public @interface EpoxyAttribute {
      * at runtime correctly implements hashCode. If you don't want the attribute to contribute to
      * model state you should use {@link Option#DoNotHash} instead.
      */
-    AllowMissingHash
+    IgnoreRequireHashCode
   }
 
   /** Specify any {@link Option} values that should be used when generating the model class. */
