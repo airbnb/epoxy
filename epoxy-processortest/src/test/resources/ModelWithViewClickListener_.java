@@ -6,66 +6,75 @@ import java.lang.CharSequence;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.util.List;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithViewClickListener_ extends ModelWithViewClickListener implements ClickableModel {
-  private EpoxyViewHolder boundEpoxyViewHolder;
+public class ModelWithViewClickListener_ extends ModelWithViewClickListener implements GeneratedModel<Object> {
+  private OnModelBoundListener<ModelWithViewClickListener_, Object> onModelBoundListener_epoxyGeneratedModel;
 
-  private Object epoxyModelBoundObject;
+  private OnModelUnboundListener<ModelWithViewClickListener_, Object> onModelUnboundListener_epoxyGeneratedModel;
+
+  private OnModelClickListener<ModelWithViewClickListener_, Object> clickListener_epoxyGeneratedModel;
 
   public ModelWithViewClickListener_() {
     super();
   }
 
   @Override
-  public void setViewHolder(EpoxyViewHolder holder) {
-    this.boundEpoxyViewHolder = holder;
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
+    if (clickListener_epoxyGeneratedModel != null) {
+      super.clickListener = new View.OnClickListener() {
+        // Save the original click listener so if it gets changed on
+        // the generated model this click listener won't be affected
+        // if it is still bound to a view.
+        private final OnModelClickListener<ModelWithViewClickListener_, Object> clickListener_epoxyGeneratedModel = ModelWithViewClickListener_.this.clickListener_epoxyGeneratedModel;
+        public void onClick(View v) {
+          clickListener_epoxyGeneratedModel.onClick(ModelWithViewClickListener_.this, object,
+              holder.getAdapterPosition());
+        }
+        public int hashCode() {
+          // Use the hash of the original click listener so we don't change the
+          // value by wrapping it with this anonymous click listener
+          return clickListener_epoxyGeneratedModel.hashCode();
+        }
+      };
+    }
   }
 
   @Override
-  public void bind(Object object) {
-    super.bind(object);
-    this.epoxyModelBoundObject = object;
+  public void handlePostBind(final EpoxyViewHolder holder, final Object object) {
+    if (onModelBoundListener_epoxyGeneratedModel != null) {
+      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object);
+    }
   }
 
-  @Override
-  public void bind(Object object, List<Object> payloads) {
-    super.bind(object, payloads);
-    this.epoxyModelBoundObject = object;
+  public ModelWithViewClickListener_ onBind(OnModelBoundListener<ModelWithViewClickListener_, Object> listener) {
+    this.onModelBoundListener_epoxyGeneratedModel = listener;
+    return this;
   }
 
   @Override
   public void unbind(Object object) {
     super.unbind(object);
-    this.epoxyModelBoundObject = null;
-    this.boundEpoxyViewHolder = null;
+    if (onModelUnboundListener_epoxyGeneratedModel != null) {
+      onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
+    }
+  }
+
+  public ModelWithViewClickListener_ onUnbind(OnModelUnboundListener<ModelWithViewClickListener_, Object> listener) {
+    this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
   }
 
   public ModelWithViewClickListener_ clickListener(final OnModelClickListener<ModelWithViewClickListener_, Object> clickListener) {
-    if (clickListener == null) {
-      this.clickListener = null;
-    } else {
-      this.clickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-          // protect from being called when unbound
-          if (boundEpoxyViewHolder != null) {
-            clickListener.onClick(ModelWithViewClickListener_.this, epoxyModelBoundObject,
-                boundEpoxyViewHolder.getAdapterPosition());
-          }
-        }
-        public int hashCode() {
-          // Hash the original click listener to avoid changing model state
-          return clickListener.hashCode();
-        }
-      };
-    }
+    super.clickListener = null;
+    this.clickListener_epoxyGeneratedModel = clickListener;
     return this;
   }
 
   public ModelWithViewClickListener_ clickListener(View.OnClickListener clickListener) {
     this.clickListener = clickListener;
+    this.clickListener_epoxyGeneratedModel = null;
     return this;
   }
 
@@ -117,7 +126,10 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
 
   @Override
   public ModelWithViewClickListener_ reset() {
+    onModelBoundListener_epoxyGeneratedModel = null;
+    onModelUnboundListener_epoxyGeneratedModel = null;
     this.clickListener = null;
+    clickListener_epoxyGeneratedModel = null;
     super.reset();
     return this;
   }
@@ -134,7 +146,16 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
       return false;
     }
     ModelWithViewClickListener_ that = (ModelWithViewClickListener_) o;
-    if (clickListener != null && that.clickListener == null || clickListener == null && that.clickListener != null) {
+    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+      return false;
+    }
+    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+      return false;
+    }
+    if ((clickListener == null) != (that.clickListener == null)) {
+      return false;
+    }
+    if ((clickListener_epoxyGeneratedModel == null) != (that.clickListener_epoxyGeneratedModel == null)) {
       return false;
     }
     return true;
@@ -143,7 +164,10 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   @Override
   public int hashCode() {
     int result = super.hashCode();
+    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (clickListener != null ? 1 : 0);
+    result = 31 * result + (clickListener_epoxyGeneratedModel != null ? 1 : 0);
     return result;
   }
 

@@ -26,8 +26,10 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
       epoxyHolder.bindView(itemView);
     }
 
-    if (model instanceof ClickableModel) {
-      ((ClickableModel) model).setViewHolder(this);
+    if (model instanceof GeneratedModel) {
+      // The generated method will enforce that only a properly typed listener can be set
+      //noinspection unchecked
+      ((GeneratedModel) model).handlePreBind(this, objectToBind());
     }
 
     if (payloads.isEmpty()) {
@@ -36,6 +38,12 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     } else {
       // noinspection unchecked
       model.bind(objectToBind(), payloads);
+    }
+
+    if (model instanceof GeneratedModel) {
+      // The generated method will enforce that only a properly typed listener can be set
+      //noinspection unchecked
+      ((GeneratedModel) model).handlePostBind(this, objectToBind());
     }
 
     epoxyModel = model;

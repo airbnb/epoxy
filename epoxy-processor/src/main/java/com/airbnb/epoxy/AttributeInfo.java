@@ -267,4 +267,8 @@ class AttributeInfo {
   boolean isViewClickListener() {
     return isViewClickListenerType(attributeElement);
   }
+
+  String getModelClickListenerName() {
+    return getName() + GeneratedModelWriter.GENERATED_FIELD_SUFFIX;
+  }
 }

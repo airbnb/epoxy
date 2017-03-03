@@ -3,7 +3,8 @@ package com.airbnb.epoxy;
 import android.view.View;
 
 @EpoxyModelClass
-public abstract class AbstractModelWithHolder extends EpoxyModelWithHolder<AbstractModelWithHolder.Holder> {
+public abstract class AbstractModelWithHolder
+    extends EpoxyModelWithHolder<AbstractModelWithHolder.Holder> {
   @EpoxyAttribute int value;
 
   @Override
@@ -13,7 +14,7 @@ public abstract class AbstractModelWithHolder extends EpoxyModelWithHolder<Abstr
 
   static class Holder extends EpoxyHolder {
 
-    protected void bindView(View itemView){
+    protected void bindView(View itemView) {
 
     }
   }

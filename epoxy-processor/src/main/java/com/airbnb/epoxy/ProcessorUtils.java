@@ -30,8 +30,10 @@ class ProcessorUtils {
   static final String EPOXY_VIEW_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyViewHolder";
   static final String EPOXY_AUTO_ADAPTER_TYPE = "com.airbnb.epoxy.AutoEpoxyAdapter";
   static final String VIEW_CLICK_LISTENER_TYPE = "android.view.View.OnClickListener";
-  static final String CLICKABLE_MODEL_INTERFACE = "com.airbnb.epoxy.ClickableModel";
+  static final String GENERATED_MODEL_INTERFACE = "com.airbnb.epoxy.GeneratedModel";
   static final String MODEL_CLICK_LISTENER_TYPE = "com.airbnb.epoxy.OnModelClickListener";
+  static final String ON_BIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelBoundListener";
+  static final String ON_UNBIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelUnboundListener";
 
   static void throwError(String msg, Object... args)
       throws EpoxyProcessorException {

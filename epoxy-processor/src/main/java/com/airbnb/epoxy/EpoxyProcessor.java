@@ -79,7 +79,7 @@ public class EpoxyProcessor extends AbstractProcessor {
     resourceProcessor.processorResources(roundEnv);
 
     ModelProcessor modelProcessor = new ModelProcessor(filer, messager,
-        elementUtils, typeUtils, resourceProcessor, configManager, errorLogger);
+        elementUtils, typeUtils, configManager, errorLogger, resourceProcessor);
     modelProcessor.processModels(roundEnv);
 
     new AdapterProcessor(filer, elementUtils, errorLogger)
