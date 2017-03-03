@@ -36,6 +36,7 @@ class SampleAdapter extends TypedAutoEpoxyAdapter<List<ColorData>> {
   // TODO: (eli_hart 2/28/17) Null out automodels after building models?
   // TODO: (eli_hart 2/28/17) Change buildModels name to render?
   // TODO: (eli_hart 3/2/17) "invalidate" instead of request model update?
+  // TODO: (eli_hart 3/2/17) add clicked view to model click listener?
 
   @Override
   protected void buildModels(List<ColorData> colors) {

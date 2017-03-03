@@ -259,6 +259,14 @@ class GeneratedModelWriter {
     ParameterSpec bindListenerParam = ParameterSpec.builder(onBindListenerType, "listener").build();
 
     methods.add(MethodSpec.methodBuilder("onBind")
+        .addJavadoc(CodeBlock
+            .of("Register a listener that will be called when this model is bound to a view.\n"
+                + "<p>\n"
+                + "The listener will contribute to this model's hashCode state per the {@link\n"
+                + "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
+                + "<p>\n"
+                + "You may clear the listener by setting a null value, or by calling "
+                + "{@link #reset()}"))
         .addModifiers(PUBLIC)
         .returns(classInfo.getParameterizedGeneratedName())
         .addParameter(bindListenerParam)
@@ -288,6 +296,15 @@ class GeneratedModelWriter {
         ParameterSpec.builder(onUnbindListenerType, "listener").build();
 
     methods.add(MethodSpec.methodBuilder("onUnbind")
+        .addJavadoc(CodeBlock
+            .of("Register a listener that will be called when this model is unbound from a "
+                + "view.\n"
+                + "<p>\n"
+                + "The listener will contribute to this model's hashCode state per the {@link\n"
+                + "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
+                + "<p>\n"
+                + "You may clear the listener by setting a null value, or by calling "
+                + "{@link #reset()}"))
         .addModifiers(PUBLIC)
         .returns(classInfo.getParameterizedGeneratedName())
         .addParameter(unbindListenerParam)
@@ -503,6 +520,10 @@ class GeneratedModelWriter {
         ParameterSpec.builder(getModelClickListenerType(helperClass), attributeName, FINAL).build();
 
     Builder builder = MethodSpec.methodBuilder(attributeName)
+        .addJavadoc(CodeBlock
+            .of("Set a click listener that will provide the parent view, model, and adapter "
+                + "position of the clicked view. This will clear the normal View.OnClickListener "
+                + "if one has been set"))
         .addModifiers(PUBLIC)
         .returns(helperClass.getParameterizedGeneratedName())
         .addParameter(param)
