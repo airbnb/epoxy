@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+
 import java.lang.CharSequence;
 import java.lang.Object;
 import java.lang.Override;
@@ -8,14 +9,54 @@ import java.lang.String;
 import java.util.Arrays;
 
 /**
- * Generated file. Do not modify! */
-public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors {
+ * Generated file. Do not modify!
+ */
+public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors
+    implements GeneratedModel<Object> {
+
+  private OnModelBoundListener<ModelWithVarargsConstructors_, Object>
+      onModelBoundListener_epoxyGeneratedModel;
+  private OnModelUnboundListener<ModelWithVarargsConstructors_, Object>
+      onModelUnboundListener_epoxyGeneratedModel;
+
   public ModelWithVarargsConstructors(String... varargs) {
     super(varargs);
   }
 
   public ModelWithVarargsConstructors(int valueInt, String... varargs) {
     super(valueInt, varargs);
+  }
+
+  @Override
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
+  }
+
+  @Override
+  public void handlePostBind(final EpoxyViewHolder holder, final Object object) {
+    if (onModelBoundListener_epoxyGeneratedModel != null) {
+      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object);
+    }
+  }
+
+  public ModelWithVarargsConstructors_ onBind(
+      OnModelBoundListener<ModelWithVarargsConstructors_, Object> listener) {
+    this.onModelBoundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void unbind(Object object) {
+    super.unbind(object);
+
+    if (onModelUnboundListener_epoxyGeneratedModel != null) {
+      onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
+    }
+  }
+
+  public ModelWithVarargsConstructors_ onUnbind(
+      OnModelUnboundListener<ModelWithVarargsConstructors_, Object> listener) {
+    this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
   }
 
   public ModelWithVarargsConstructors_ varargs(String[] varargs) {
@@ -80,6 +121,9 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
 
   @Override
   public ModelWithVarargsConstructors_ reset() {
+    onModelBoundListener_epoxyGeneratedModel = null;
+    onModelUnboundListener_epoxyGeneratedModel = null;
+
     this.varargs = null;
     this.valueInt = 0;
     super.reset();
@@ -98,6 +142,15 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
       return false;
     }
     ModelWithVarargsConstructors_ that = (ModelWithVarargsConstructors_) o;
+    if ((onModelBoundListener_epoxyGeneratedModel == null) != (
+        that.onModelBoundListener_epoxyGeneratedModel == null)) {
+      return false;
+    }
+    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (
+        that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+      return false;
+    }
+
     if (!Arrays.equals(varargs, that.varargs)) {
       return false;
     }
@@ -110,6 +163,9 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
   @Override
   public int hashCode() {
     int result = super.hashCode();
+    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+
     result = 31 * result + Arrays.hashCode(varargs);
     result = 31 * result + valueInt;
     return result;

@@ -8,9 +8,42 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelDoNotHash_ extends ModelDoNotHash {
+public class ModelDoNotHash_ extends ModelDoNotHash implements GeneratedModel<Object> {
+  private OnModelBoundListener<ModelDoNotHash_, Object> onModelBoundListener_epoxyGeneratedModel;
+
+  private OnModelUnboundListener<ModelDoNotHash_, Object> onModelUnboundListener_epoxyGeneratedModel;
+
   public ModelDoNotHash_() {
     super();
+  }
+
+  @Override
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
+  }
+
+  @Override
+  public void handlePostBind(final EpoxyViewHolder holder, final Object object) {
+    if (onModelBoundListener_epoxyGeneratedModel != null) {
+      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object);
+    }
+  }
+
+  public ModelDoNotHash_ onBind(OnModelBoundListener<ModelDoNotHash_, Object> listener) {
+    this.onModelBoundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void unbind(Object object) {
+    super.unbind(object);
+    if (onModelUnboundListener_epoxyGeneratedModel != null) {
+      onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
+    }
+  }
+
+  public ModelDoNotHash_ onUnbind(OnModelUnboundListener<ModelDoNotHash_, Object> listener) {
+    this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
   }
 
   public ModelDoNotHash_ value2(int value2) {
@@ -84,6 +117,8 @@ public class ModelDoNotHash_ extends ModelDoNotHash {
 
   @Override
   public ModelDoNotHash_ reset() {
+    onModelBoundListener_epoxyGeneratedModel = null;
+    onModelUnboundListener_epoxyGeneratedModel = null;
     this.value2 = 0;
     this.value = 0;
     this.value3 = null;
@@ -103,10 +138,16 @@ public class ModelDoNotHash_ extends ModelDoNotHash {
       return false;
     }
     ModelDoNotHash_ that = (ModelDoNotHash_) o;
+    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+      return false;
+    }
+    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+      return false;
+    }
     if (value != that.value) {
       return false;
     }
-    if (value3 != null && that.value3 == null || value3 == null && that.value3 != null) {
+    if ((value3 == null) != (that.value3 == null)) {
       return false;
     }
     return true;
@@ -115,6 +156,8 @@ public class ModelDoNotHash_ extends ModelDoNotHash {
   @Override
   public int hashCode() {
     int result = super.hashCode();
+    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + value;
     result = 31 * result + (value3 != null ? 1 : 0);
     return result;

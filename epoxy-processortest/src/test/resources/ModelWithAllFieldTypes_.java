@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+
 import java.lang.Boolean;
 import java.lang.Byte;
 import java.lang.CharSequence;
@@ -17,10 +18,50 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Generated file. Do not modify! */
-public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
+ * Generated file. Do not modify!
+ */
+public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes
+    implements GeneratedModel<Object> {
+
+  private OnModelBoundListener<ModelWithAllFieldTypes_, Object>
+      onModelBoundListener_epoxyGeneratedModel;
+  private OnModelUnboundListener<ModelWithAllFieldTypes_, Object>
+      onModelUnboundListener_epoxyGeneratedModel;
+
   public ModelWithAllFieldTypes_() {
     super();
+  }
+
+  @Override
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
+  }
+
+  @Override
+  public void handlePostBind(final EpoxyViewHolder holder, final Object object) {
+    if (onModelBoundListener_epoxyGeneratedModel != null) {
+      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object);
+    }
+  }
+
+  public ModelWithAllFieldTypes_ onBind(
+      OnModelBoundListener<ModelWithAllFieldTypes_, Object> listener) {
+    this.onModelBoundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void unbind(Object object) {
+    super.unbind(object);
+
+    if (onModelUnboundListener_epoxyGeneratedModel != null) {
+      onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
+    }
+  }
+
+  public ModelWithAllFieldTypes_ onUnbind(
+      OnModelUnboundListener<ModelWithAllFieldTypes_, Object> listener) {
+    this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
   }
 
   public ModelWithAllFieldTypes_ valueInteger(Integer valueInteger) {
@@ -256,6 +297,9 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
 
   @Override
   public ModelWithAllFieldTypes_ reset() {
+    onModelBoundListener_epoxyGeneratedModel = null;
+    onModelUnboundListener_epoxyGeneratedModel = null;
+
     this.valueInteger = null;
     this.valueShort = 0;
     this.valueLong = 0L;
@@ -293,7 +337,17 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
       return false;
     }
     ModelWithAllFieldTypes_ that = (ModelWithAllFieldTypes_) o;
-    if (valueInteger != null ? !valueInteger.equals(that.valueInteger) : that.valueInteger != null) {
+    if ((onModelBoundListener_epoxyGeneratedModel == null) != (
+        that.onModelBoundListener_epoxyGeneratedModel == null)) {
+      return false;
+    }
+    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (
+        that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+      return false;
+    }
+
+    if (valueInteger != null ? !valueInteger.equals(that.valueInteger) :
+        that.valueInteger != null) {
       return false;
     }
     if (valueShort != that.valueShort) {
@@ -305,7 +359,8 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
     if (valueList != null ? !valueList.equals(that.valueList) : that.valueList != null) {
       return false;
     }
-    if (valueShortWrapper != null ? !valueShortWrapper.equals(that.valueShortWrapper) : that.valueShortWrapper != null) {
+    if (valueShortWrapper != null ? !valueShortWrapper.equals(that.valueShortWrapper) :
+        that.valueShortWrapper != null) {
       return false;
     }
     if (Double.compare(that.valueDouble, valueDouble) != 0) {
@@ -317,25 +372,31 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
     if (valueInt != that.valueInt) {
       return false;
     }
-    if (valueDoubleWrapper != null ? !valueDoubleWrapper.equals(that.valueDoubleWrapper) : that.valueDoubleWrapper != null) {
+    if (valueDoubleWrapper != null ? !valueDoubleWrapper.equals(that.valueDoubleWrapper) :
+        that.valueDoubleWrapper != null) {
       return false;
     }
-    if (valueFloatWrapper != null ? !valueFloatWrapper.equals(that.valueFloatWrapper) : that.valueFloatWrapper != null) {
+    if (valueFloatWrapper != null ? !valueFloatWrapper.equals(that.valueFloatWrapper) :
+        that.valueFloatWrapper != null) {
       return false;
     }
-    if (valueBooleanWrapper != null ? !valueBooleanWrapper.equals(that.valueBooleanWrapper) : that.valueBooleanWrapper != null) {
+    if (valueBooleanWrapper != null ? !valueBooleanWrapper.equals(that.valueBooleanWrapper) :
+        that.valueBooleanWrapper != null) {
       return false;
     }
-    if (valueByteWrapper != null ? !valueByteWrapper.equals(that.valueByteWrapper) : that.valueByteWrapper != null) {
+    if (valueByteWrapper != null ? !valueByteWrapper.equals(that.valueByteWrapper) :
+        that.valueByteWrapper != null) {
       return false;
     }
     if (valuebByte != that.valuebByte) {
       return false;
     }
-    if (valueLongWrapper != null ? !valueLongWrapper.equals(that.valueLongWrapper) : that.valueLongWrapper != null) {
+    if (valueLongWrapper != null ? !valueLongWrapper.equals(that.valueLongWrapper) :
+        that.valueLongWrapper != null) {
       return false;
     }
-    if (valueCharacter != null ? !valueCharacter.equals(that.valueCharacter) : that.valueCharacter != null) {
+    if (valueCharacter != null ? !valueCharacter.equals(that.valueCharacter) :
+        that.valueCharacter != null) {
       return false;
     }
     if (valueString != null ? !valueString.equals(that.valueString) : that.valueString != null) {
@@ -362,6 +423,9 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes {
   @Override
   public int hashCode() {
     int result = super.hashCode();
+    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+
     long temp;
     result = 31 * result + (valueInteger != null ? valueInteger.hashCode() : 0);
     result = 31 * result + valueShort;

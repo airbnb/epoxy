@@ -8,9 +8,42 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithType_<T extends String> extends ModelWithType<T> {
+public class ModelWithType_<T extends String> extends ModelWithType<T> implements GeneratedModel<Object> {
+  private OnModelBoundListener<ModelWithType_<T>, Object> onModelBoundListener_epoxyGeneratedModel;
+
+  private OnModelUnboundListener<ModelWithType_<T>, Object> onModelUnboundListener_epoxyGeneratedModel;
+
   public ModelWithType_() {
     super();
+  }
+
+  @Override
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
+  }
+
+  @Override
+  public void handlePostBind(final EpoxyViewHolder holder, final Object object) {
+    if (onModelBoundListener_epoxyGeneratedModel != null) {
+      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object);
+    }
+  }
+
+  public ModelWithType_<T> onBind(OnModelBoundListener<ModelWithType_<T>, Object> listener) {
+    this.onModelBoundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void unbind(Object object) {
+    super.unbind(object);
+    if (onModelUnboundListener_epoxyGeneratedModel != null) {
+      onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
+    }
+  }
+
+  public ModelWithType_<T> onUnbind(OnModelUnboundListener<ModelWithType_<T>, Object> listener) {
+    this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
   }
 
   public ModelWithType_<T> value(int value) {
@@ -66,6 +99,8 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> {
 
   @Override
   public ModelWithType_<T> reset() {
+    onModelBoundListener_epoxyGeneratedModel = null;
+    onModelUnboundListener_epoxyGeneratedModel = null;
     this.value = 0;
     super.reset();
     return this;
@@ -83,6 +118,12 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> {
       return false;
     }
     ModelWithType_ that = (ModelWithType_) o;
+    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+      return false;
+    }
+    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+      return false;
+    }
     if (value != that.value) {
       return false;
     }
@@ -92,6 +133,8 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> {
   @Override
   public int hashCode() {
     int result = super.hashCode();
+    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + value;
     return result;
   }

@@ -456,11 +456,11 @@ public class ModelProcessorTest {
         .forResource("GenerateDefaultLayoutMethodNextParentLayout.java");
 
     JavaFileObject generatedNoLayoutModel = JavaFileObjects
-        .forResource("GenerateDefaultLayoutMethodNextParentLayout$NoLayout.java");
+        .forResource("GenerateDefaultLayoutMethodNextParentLayout$NoLayout_.java");
     JavaFileObject generatedStillNoLayoutModel = JavaFileObjects
-        .forResource("GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout.java");
+        .forResource("GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_.java");
     JavaFileObject generatedWithLayoutModel =
-        JavaFileObjects.forResource("GenerateDefaultLayoutMethodNextParentLayout$WithLayout.java");
+        JavaFileObjects.forResource("GenerateDefaultLayoutMethodNextParentLayout$WithLayout_.java");
 
     assert_().about(javaSource())
         .that(model)

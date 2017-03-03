@@ -1,11 +1,6 @@
-package com.airbnb.epoxy.models;
+package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
-
-import com.airbnb.epoxy.EpoxyViewHolder;
-import com.airbnb.epoxy.GeneratedModel;
-import com.airbnb.epoxy.OnModelBoundListener;
-import com.airbnb.epoxy.OnModelUnboundListener;
 
 import java.lang.CharSequence;
 import java.lang.Object;
@@ -15,13 +10,16 @@ import java.lang.String;
 /**
  * Generated file. Do not modify!
  */
-public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<Object> {
+public class GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_
+    extends GenerateDefaultLayoutMethodNextParentLayout.StillNoLayout
+    implements GeneratedModel<Object> {
 
-  private OnModelBoundListener<ModelWithIntDef_, Object> onModelBoundListener_epoxyGeneratedModel;
-  private OnModelUnboundListener<ModelWithIntDef_, Object>
+  private OnModelBoundListener<GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_, Object>
+      onModelBoundListener_epoxyGeneratedModel;
+  private OnModelUnboundListener<GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_, Object>
       onModelUnboundListener_epoxyGeneratedModel;
 
-  public ModelWithIntDef_() {
+  public GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_() {
     super();
   }
 
@@ -36,7 +34,9 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
     }
   }
 
-  public ModelWithIntDef_ onBind(OnModelBoundListener<ModelWithIntDef_, Object> listener) {
+  public GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ onBind(
+      OnModelBoundListener<GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_, Object>
+          listener) {
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -50,69 +50,66 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
     }
   }
 
-  public ModelWithIntDef_ onUnbind(OnModelUnboundListener<ModelWithIntDef_, Object> listener) {
+  public GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ onUnbind(
+      OnModelUnboundListener<GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_, Object>
+          listener) {
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
-  public ModelWithIntDef_ type(@ModelWithIntDef.MyType int type) {
-    this.type = type;
-    return this;
-  }
-
-  @ModelWithIntDef.MyType
-  public int type() {
-    return type;
-  }
-
   @Override
-  public ModelWithIntDef_ id(long id) {
+  public GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ id(long id) {
     super.id(id);
     return this;
   }
 
   @Override
-  public ModelWithIntDef_ id(CharSequence key) {
+  public GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ id(CharSequence key) {
     super.id(key);
     return this;
   }
 
   @Override
-  public ModelWithIntDef_ id(CharSequence key, long id) {
+  public GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;
   }
 
   @Override
-  public ModelWithIntDef_ layout(@LayoutRes int arg0) {
+  public GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
     return this;
   }
 
   @Override
-  public ModelWithIntDef_ show() {
+  public GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ show() {
     super.show();
     return this;
   }
 
   @Override
-  public ModelWithIntDef_ show(boolean show) {
+  public GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ show(boolean show) {
     super.show(show);
     return this;
   }
 
   @Override
-  public ModelWithIntDef_ hide() {
+  public GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ hide() {
     super.hide();
     return this;
   }
 
   @Override
-  public ModelWithIntDef_ reset() {
+  @LayoutRes
+  protected int getDefaultLayout() {
+    return 1;
+  }
+
+  @Override
+  public GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
 
-    this.type = 0;
     super.reset();
     return this;
   }
@@ -122,13 +119,14 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelWithIntDef_)) {
+    if (!(o instanceof GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_)) {
       return false;
     }
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithIntDef_ that = (ModelWithIntDef_) o;
+    GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ that =
+        (GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_) o;
     if ((onModelBoundListener_epoxyGeneratedModel == null) != (
         that.onModelBoundListener_epoxyGeneratedModel == null)) {
       return false;
@@ -138,9 +136,6 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
       return false;
     }
 
-    if (type != that.type) {
-      return false;
-    }
     return true;
   }
 
@@ -150,14 +145,12 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
 
-    result = 31 * result + type;
     return result;
   }
 
   @Override
   public String toString() {
-    return "ModelWithIntDef_{" +
-        "type=" + type +
+    return "GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_{" +
         "}" + super.toString();
   }
 }

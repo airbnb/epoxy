@@ -10,4 +10,9 @@ class ModelWithClickListener extends EpoxyModel<View> {
   protected int getDefaultLayout() {
     return R.layout.model_with_click_listener;
   }
+
+  @Override
+  public void bind(View view) {
+    view.setOnClickListener(clickListener);
+  }
 }

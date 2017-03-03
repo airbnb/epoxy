@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+
 import java.lang.CharSequence;
 import java.lang.Object;
 import java.lang.Override;
@@ -10,9 +11,48 @@ import java.util.List;
 /**
  * Generated file. Do not modify!
  */
-public class ModelReturningClassType_ extends ModelReturningClassType {
+public class ModelReturningClassType_ extends ModelReturningClassType
+    implements GeneratedModel<Object> {
+
+  private OnModelBoundListener<ModelReturningClassType_, Object>
+      onModelBoundListener_epoxyGeneratedModel;
+  private OnModelUnboundListener<ModelReturningClassType_, Object>
+      onModelUnboundListener_epoxyGeneratedModel;
+
   public ModelReturningClassType_() {
     super();
+  }
+
+  @Override
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
+  }
+
+  @Override
+  public void handlePostBind(final EpoxyViewHolder holder, final Object object) {
+    if (onModelBoundListener_epoxyGeneratedModel != null) {
+      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object);
+    }
+  }
+
+  public ModelReturningClassType_ onBind(
+      OnModelBoundListener<ModelReturningClassType_, Object> listener) {
+    this.onModelBoundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void unbind(Object object) {
+    super.unbind(object);
+
+    if (onModelUnboundListener_epoxyGeneratedModel != null) {
+      onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
+    }
+  }
+
+  public ModelReturningClassType_ onUnbind(
+      OnModelUnboundListener<ModelReturningClassType_, Object> listener) {
+    this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
   }
 
   public ModelReturningClassType_ value(int value) {
@@ -86,6 +126,9 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
 
   @Override
   public ModelReturningClassType_ reset() {
+    onModelBoundListener_epoxyGeneratedModel = null;
+    onModelUnboundListener_epoxyGeneratedModel = null;
+
     this.value = 0;
     super.reset();
     return this;
@@ -103,6 +146,15 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
       return false;
     }
     ModelReturningClassType_ that = (ModelReturningClassType_) o;
+    if ((onModelBoundListener_epoxyGeneratedModel == null) != (
+        that.onModelBoundListener_epoxyGeneratedModel == null)) {
+      return false;
+    }
+    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (
+        that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+      return false;
+    }
+
     if (value != that.value) {
       return false;
     }
@@ -112,6 +164,9 @@ public class ModelReturningClassType_ extends ModelReturningClassType {
   @Override
   public int hashCode() {
     int result = super.hashCode();
+    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+
     result = 31 * result + value;
     return result;
   }

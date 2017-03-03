@@ -2,6 +2,7 @@ package com.airbnb.epoxy.adapter;
 
 import com.airbnb.epoxy.AdapterHelper;
 import com.airbnb.epoxy.BasicModelWithAttribute_;
+
 import java.lang.IllegalStateException;
 import java.lang.Object;
 import java.lang.Override;
