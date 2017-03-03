@@ -662,8 +662,7 @@ public class EpoxyProcessor extends AbstractProcessor {
               .endControlFlow();
         }
       } else {
-        builder.beginControlFlow("if (($L != null && that.$L == null)"
-                + " || ($L == null && that.$L != null))",
+        builder.beginControlFlow("if (($L == null) != (that.$L == null))",
             name, name, name, name)
             .addStatement("return false")
             .endControlFlow();
