@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.app.Activity;
+import android.support.v7.widget.RecyclerView.AdapterDataObserver;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -14,6 +15,9 @@ import java.util.List;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @Config(sdk = 21, manifest = TestRunner.MANIFEST_PATH)
 @RunWith(TestRunner.class)
@@ -126,5 +130,44 @@ public class AutoModelIntegrationTest {
     model.clickListener.onClick(new View(activity));
     // Click listener should not call back since the model isn't bound yet
     assertFalse(adapter.clicked);
+  }
+
+  static class AdapterClickListenerIsUsedInHash extends AutoEpoxyAdapter {
+
+    private OnModelClickListener<ModelWithClickListener_, View>
+        onModelClickListener = new OnModelClickListener<ModelWithClickListener_, View>() {
+
+          @Override
+          public void onClick(ModelWithClickListener_ model, View view, int position) {
+
+          }
+        };
+
+    @Override
+    protected void buildModels() {
+      new ModelWithClickListener_()
+          .id(1)
+          .clickListener(onModelClickListener)
+          .addTo(this);
+    }
+  }
+
+  @Test
+  public void modelClickListenerIsUsedInHash() {
+    // Internally we wrap the model click listener with an anonymous click listener. We can't hash
+    // the anonymous click listener since that changes the model state, instead our anonymous click
+    // listener should use the hashCode of the user's click listener
+
+    AdapterClickListenerIsUsedInHash adapter = new AdapterClickListenerIsUsedInHash();
+
+    AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
+    adapter.registerAdapterDataObserver(observerMock);
+
+    adapter.requestModelUpdate();
+    verify(observerMock).onItemRangeInserted(0, 1);
+
+    // The second update shouldn't cause a item change
+    adapter.requestModelUpdate();
+    verifyNoMoreInteractions(observerMock);
   }
 }

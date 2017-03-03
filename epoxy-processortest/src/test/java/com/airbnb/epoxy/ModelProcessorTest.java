@@ -139,6 +139,21 @@ public class ModelProcessorTest {
   }
 
   @Test
+  public void testDoNotHashModel() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelDoNotHash.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelDoNotHash_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
   public void testModelWithFinalAttribute() {
     JavaFileObject model = JavaFileObjects
         .forResource("ModelWithFinalField.java");

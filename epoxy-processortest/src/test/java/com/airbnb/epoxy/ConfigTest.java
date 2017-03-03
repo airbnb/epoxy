@@ -187,6 +187,18 @@ public class ConfigTest {
   }
 
   @Test
+  public void testConfigRequireHashCodeAllowsMarkedAttributes() {
+    // Verify that AutoValue class attributes pass the hashcode requirement
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelConfigRequireHashCodeAllowsMarkedAttributes.java");
+
+    assert_().about(javaSources())
+        .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError();
+  }
+
+  @Test
   public void testConfigRequireAbstractModelPassesClassWithAttribute() {
     // Verify that AutoValue class attributes pass the hashcode requirement. Only works for
     // classes in the module since AutoValue has a retention of Source so it is discarded after

@@ -195,6 +195,10 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
 
     if (inState != null) {
       viewHolderState = inState.getParcelable(SAVED_STATE_ARG_VIEW_HOLDERS);
+      if (viewHolderState == null) {
+        throw new IllegalStateException(
+            "Tried to restore instance state, but onSaveInstanceState was never called.");
+      }
     }
   }
 
