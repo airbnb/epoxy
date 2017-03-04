@@ -33,6 +33,16 @@ android {
     versionCode 1
     versionName "1.0"
   }
+
+  buildTypes {
+    debug {
+      buildConfigField "boolean", "VALIDATE_AUTO_MODEL_USAGE", "true"
+    }
+
+    release {
+      buildConfigField "boolean", "VALIDATE_AUTO_MODEL_USAGE", "false"
+    }
+  }
 }
 
 /* Forces all transitive deps listed to our version. */

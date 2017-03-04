@@ -58,6 +58,10 @@ class ConfigManager {
     return getConfigurationForElement(classElement).requireAbstractModels;
   }
 
+  boolean validateAutoAdapterUsage(AdapterClassInfo classElement) {
+    return getConfigurationForElement(classElement.adapterClassElement).validateAutoModelUsage;
+  }
+
   private PackageConfigSettings getConfigurationForElement(Element element) {
     String targetPackage = elementUtils.getPackageOf(element).getQualifiedName().toString();
 

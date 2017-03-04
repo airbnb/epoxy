@@ -5,10 +5,6 @@ package com.airbnb.epoxy;
  * com.airbnb.epoxy.AutoModel} usage.
  */
 class NoOpAdapterHelper extends AdapterHelper<AutoEpoxyAdapter> {
-  @Override
-  public void validateFieldsAreNull() {
-    // No - Op
-  }
 
   @Override
   public void resetAutoModels() {

@@ -6,6 +6,5 @@ package com.airbnb.epoxy;
  * annotation processor.
  */
 public abstract class AdapterHelper<T extends AutoEpoxyAdapter> {
-  public abstract void validateFieldsAreNull();
   public abstract void resetAutoModels();
 }
