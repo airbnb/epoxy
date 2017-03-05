@@ -20,7 +20,6 @@ public abstract class AutoEpoxyAdapter extends BaseEpoxyAdapter {
   private List<EpoxyModel<?>> currentModels = Collections.emptyList();
   private List<EpoxyModel<?>> copyOfCurrentModels = Collections.emptyList();
   private ArrayList<EpoxyModel<?>> modelsBeingBuilt;
-  private boolean isFirstModelBuild = true;
   private boolean filterDuplicates;
 
   public AutoEpoxyAdapter() {
@@ -49,10 +48,6 @@ public abstract class AutoEpoxyAdapter extends BaseEpoxyAdapter {
   };
 
   private void doModelUpdate() {
-    if (isFirstModelBuild) {
-      helper.validateFieldsAreNull();
-    }
-
     helper.resetAutoModels();
 
     modelsBeingBuilt = new ArrayList<>(getExpectedModelCount());
@@ -65,8 +60,6 @@ public abstract class AutoEpoxyAdapter extends BaseEpoxyAdapter {
     notifyBlocker.allowChanges();
     diffHelper.notifyModelChanges();
     notifyBlocker.blockChanges();
-
-    isFirstModelBuild = false;
   }
 
   private void filterDuplicatesIfNeeded(List<EpoxyModel<?>> models) {
@@ -113,7 +106,7 @@ public abstract class AutoEpoxyAdapter extends BaseEpoxyAdapter {
   }
 
   private int getExpectedModelCount() {
-    if (isFirstModelBuild) {
+    if (currentModels == Collections.EMPTY_LIST) {
       return 25;
     }
 
@@ -194,7 +187,7 @@ public abstract class AutoEpoxyAdapter extends BaseEpoxyAdapter {
     return currentModels.get(position);
   }
 
-  public EpoxyModel<?> getModelWithId(long id) {
+  public EpoxyModel<?> getModelById(long id) {
     for (EpoxyModel<?> model : currentModels) {
       if (model.id() == id) {
         return model;
@@ -202,5 +195,18 @@ public abstract class AutoEpoxyAdapter extends BaseEpoxyAdapter {
     }
 
     return null;
+  }
+
+  @Override
+  protected int getModelPosition(EpoxyModel<?> targetModel) {
+    int size = currentModels.size();
+    for (int i = 0; i < size; i++) {
+      EpoxyModel<?> model = currentModels.get(i);
+      if (model.id() == targetModel.id()) {
+        return i;
+      }
+    }
+
+    return -1;
   }
 }

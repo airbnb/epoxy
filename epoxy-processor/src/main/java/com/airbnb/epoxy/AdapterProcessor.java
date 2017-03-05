@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
@@ -37,12 +38,14 @@ class AdapterProcessor {
   private Filer filer;
   private Elements elementUtils;
   private ErrorLogger errorLogger;
+  private final ConfigManager configManager;
 
   AdapterProcessor(Filer filer, Elements elementUtils,
-      ErrorLogger errorLogger) {
+      ErrorLogger errorLogger, ConfigManager configManager) {
     this.filer = filer;
     this.elementUtils = elementUtils;
     this.errorLogger = errorLogger;
+    this.configManager = configManager;
   }
 
   void process(RoundEnvironment roundEnv, List<ClassToGenerateInfo> generatedModels) {
@@ -50,7 +53,6 @@ class AdapterProcessor {
 
     for (Element modelFieldElement : roundEnv.getElementsAnnotatedWith(AutoModel.class)) {
       try {
-        System.out.println("field: " + modelFieldElement);
         addFieldToAdapterClass(modelFieldElement, adapterClassMap);
       } catch (Exception e) {
         errorLogger.logError(e);
@@ -178,23 +180,26 @@ class AdapterProcessor {
   }
 
   private void generateHelperClassForAdapter(AdapterClassInfo adapterInfo) throws IOException {
-    System.out.println("generating: " + adapterInfo);
     ClassName superclass = ClassName.get(elementUtils.getTypeElement(ADAPTER_HELPER_INTERFACE));
     ParameterizedTypeName parameterizedSuperClass =
         ParameterizedTypeName.get(superclass, adapterInfo.adapterClassType);
 
-    TypeSpec generatedClass = TypeSpec.classBuilder(adapterInfo.generatedClassName)
+    TypeSpec.Builder builder = TypeSpec.classBuilder(adapterInfo.generatedClassName)
         .addJavadoc("Generated file. Do not modify!")
         .addModifiers(Modifier.PUBLIC)
         .superclass(parameterizedSuperClass)
         .addField(adapterInfo.adapterClassType, "adapter", Modifier.FINAL, Modifier.PRIVATE)
         .addMethod(buildConstructor(adapterInfo))
-        .addMethod(buildValidateFieldsAreNullMethod(adapterInfo))
-        .addMethod(buildValidateNullFieldMethod())
-        .addMethod(buildModelsMethod(adapterInfo))
-        .build();
+        .addMethod(buildModelsMethod(adapterInfo));
 
-    JavaFile.builder(adapterInfo.generatedClassName.packageName(), generatedClass)
+    if (configManager.validateAutoAdapterUsage(adapterInfo)) {
+      builder.addFields(buildFieldsToSaveModelsForValidation(adapterInfo))
+          .addMethod(buildValidateModelsHaveNotChangedMethod(adapterInfo))
+          .addMethod(buildValidateSameValueMethod(adapterInfo))
+          .addMethod(buildSaveModelsForNextValidationMethod(adapterInfo));
+    }
+
+    JavaFile.builder(adapterInfo.generatedClassName.packageName(), builder.build())
         .build()
         .writeTo(filer);
   }
@@ -211,34 +216,41 @@ class AdapterProcessor {
         .build();
   }
 
-  private MethodSpec buildValidateFieldsAreNullMethod(AdapterClassInfo adapterInfo) {
+  /**
+   * A field is created to save a reference to the model we create. Before the new buildModels phase
+   * we check that it is the same object as on the adapter, validating that the user has not
+   * manually assigned a new model to the AutoModel field.
+   */
+  private Iterable<FieldSpec> buildFieldsToSaveModelsForValidation(AdapterClassInfo adapterInfo) {
+    List<FieldSpec> fields = new ArrayList<>();
 
-    Builder builder = MethodSpec.methodBuilder("validateFieldsAreNull")
-        .addAnnotation(Override.class)
-        .addModifiers(Modifier.PUBLIC);
+    for (AdapterModelField model : adapterInfo.models) {
+      fields.add(FieldSpec.builder(Object.class, model.fieldName, Modifier.PRIVATE).build());
+    }
+
+    return fields;
+  }
+
+  private MethodSpec buildValidateModelsHaveNotChangedMethod(AdapterClassInfo adapterInfo) {
+    Builder builder = MethodSpec.methodBuilder("validateModelsHaveNotChanged")
+        .addModifiers(Modifier.PRIVATE);
 
     // Validate that annotated fields are null
     for (AdapterModelField model : adapterInfo.models) {
-      builder.addStatement("validateFieldIsNull(adapter.$L, $S)", model.fieldName, model.fieldName);
+      builder.addStatement("validateSameModel($L, adapter.$L, $S)",
+          model.fieldName, model.fieldName, model.fieldName);
     }
 
     return builder.build();
   }
 
-  private MethodSpec buildValidateNullFieldMethod() {
-    ParameterSpec fieldValue = ParameterSpec
-        .builder(Object.class, "fieldValue")
-        .build();
-
-    ParameterSpec fieldName = ParameterSpec
-        .builder(String.class, "fieldName")
-        .build();
-
-    return MethodSpec.methodBuilder("validateFieldIsNull")
-        .addParameter(fieldValue)
-        .addParameter(fieldName)
+  private MethodSpec buildValidateSameValueMethod(AdapterClassInfo adapterInfo) {
+    return MethodSpec.methodBuilder("validateSameModel")
         .addModifiers(Modifier.PRIVATE)
-        .beginControlFlow("if (fieldValue != null)")
+        .addParameter(Object.class, "expectedObject")
+        .addParameter(Object.class, "actualObject")
+        .addParameter(String.class, "fieldName")
+        .beginControlFlow("if (expectedObject != actualObject)")
         .addStatement(
             "throw new $T(\"Fields annotated with $L cannot be directly assigned. The adapter "
                 + "manages these fields for you. (\" + adapter.getClass().getSimpleName() + \"#\""
@@ -250,10 +262,25 @@ class AdapterProcessor {
         .build();
   }
 
+  private MethodSpec buildSaveModelsForNextValidationMethod(AdapterClassInfo adapterInfo) {
+    Builder builder = MethodSpec.methodBuilder("saveModelsForNextValidation")
+        .addModifiers(Modifier.PRIVATE);
+
+    for (AdapterModelField model : adapterInfo.models) {
+      builder.addStatement("$L = adapter.$L", model.fieldName, model.fieldName);
+    }
+
+    return builder.build();
+  }
+
   private MethodSpec buildModelsMethod(AdapterClassInfo adapterInfo) {
     Builder builder = MethodSpec.methodBuilder("resetAutoModels")
         .addAnnotation(Override.class)
         .addModifiers(Modifier.PUBLIC);
+
+    if (configManager.validateAutoAdapterUsage(adapterInfo)) {
+      builder.addStatement("validateModelsHaveNotChanged()");
+    }
 
     long id = -1;
     for (AdapterModelField model : adapterInfo.models) {
@@ -261,62 +288,10 @@ class AdapterProcessor {
           .addStatement("adapter.$L.id($L)", model.fieldName, id--);
     }
 
+    if (configManager.validateAutoAdapterUsage(adapterInfo)) {
+      builder.addStatement("saveModelsForNextValidation()");
+    }
+
     return builder.build();
-  }
-
-  private static class AdapterClassInfo {
-    static final String GENERATED_HELPER_CLASS_SUFFIX = "_EpoxyHelper";
-    final List<AdapterModelField> models = new ArrayList<>();
-    final Elements elementUtils;
-    final ClassName generatedClassName;
-    final TypeName adapterClassType;
-
-    AdapterClassInfo(Elements elementUtils, TypeElement adapterClassElement) {
-      this.elementUtils = elementUtils;
-      generatedClassName = getGeneratedClassName(adapterClassElement);
-      adapterClassType = TypeName.get(adapterClassElement.asType());
-    }
-
-    void addModel(AdapterModelField adapterModelField) {
-      models.add(adapterModelField);
-    }
-
-    private ClassName getGeneratedClassName(TypeElement adapterClass) {
-      String packageName = elementUtils.getPackageOf(adapterClass).getQualifiedName().toString();
-
-      int packageLen = packageName.length() + 1;
-      String className =
-          adapterClass.getQualifiedName().toString().substring(packageLen).replace('.', '$');
-
-      return ClassName.get(packageName, className + GENERATED_HELPER_CLASS_SUFFIX);
-    }
-
-    @Override
-    public String toString() {
-      return "AdapterClassInfo{"
-          + "models=" + models
-          + ", generatedClassName=" + generatedClassName
-          + ", adapterClassType=" + adapterClassType
-          + '}';
-    }
-  }
-
-  private static class AdapterModelField {
-
-    String fieldName;
-    TypeName typeName;
-
-    AdapterModelField(Element element) {
-      fieldName = element.getSimpleName().toString();
-      typeName = TypeName.get(element.asType());
-    }
-
-    @Override
-    public String toString() {
-      return "AdapterModelField{"
-          + "name='" + fieldName + '\''
-          + ", typeName=" + typeName
-          + '}';
-    }
   }
 }

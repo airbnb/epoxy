@@ -33,6 +33,34 @@ public class AdapterProcessorTest {
   }
 
   @Test
+  public void adapterWithAutoModelWithoutValidation() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("BasicModelWithAttribute.java");
+
+    JavaFileObject adapter = JavaFileObjects
+        .forResource("AdapterWithAutoModelWithoutValidation.java");
+
+    // Config to turn validation off
+    JavaFileObject CONFIG = JavaFileObjects
+        .forSourceString("com.airbnb.epoxy.package-info", "@PackageEpoxyConfig(\n"
+            + "    validateAutoModelUsage = false\n"
+            + ")\n"
+            + "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import com.airbnb.epoxy.PackageEpoxyConfig;");
+
+    JavaFileObject generatedHelper = JavaFileObjects
+        .forResource("AdapterWithAutoModelWithoutValidation_EpoxyHelper.java");
+
+    assert_().about(javaSources())
+        .that(asList(model, adapter, CONFIG))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedHelper);
+  }
+
+  @Test
   public void autoModelNotInAutoAdapterFails() {
     JavaFileObject badClass = JavaFileObjects
         .forResource("AutoModelNotInAutoAdapter.java");

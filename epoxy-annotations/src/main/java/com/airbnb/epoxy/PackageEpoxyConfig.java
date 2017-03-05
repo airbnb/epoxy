@@ -17,6 +17,7 @@ import java.lang.annotation.Target;
 public @interface PackageEpoxyConfig {
   boolean REQUIRE_HASHCODE_DEFAULT = false;
   boolean REQUIRE_ABSTRACT_MODELS = false;
+  boolean VALIDATE_AUTO_MODEL_USAGE = true;
   /**
    * If true, all fields marked with {@link com.airbnb.epoxy.EpoxyAttribute} must have a type that
    * implements hashCode (besides the default Object implementation), or the attribute must set
@@ -37,6 +38,7 @@ public @interface PackageEpoxyConfig {
    * implement hashCode.
    */
   boolean requireHashCode() default REQUIRE_HASHCODE_DEFAULT;
+
   /**
    * If true, all classes that contains {@link com.airbnb.epoxy.EpoxyAttribute} or {@link
    * com.airbnb.epoxy.EpoxyModelClass} annotations in your project must be abstract. Otherwise
@@ -46,4 +48,21 @@ public @interface PackageEpoxyConfig {
    * of the generated class.
    */
   boolean requireAbstractModels() default REQUIRE_ABSTRACT_MODELS;
+
+  /**
+   * If true, fields annotated with {@link com.airbnb.epoxy.AutoModel} in an adapter will be
+   * validated at run time to make sure they are properly used.
+   * <p>
+   * By default this is true, and it is highly recommended to enable it to prevent accidental misuse
+   * of your models. However, you may want to disable this for production builds to avoid the slight
+   * performance hit of the runtime validation code.
+   * <p>
+   * Using a debug build flag is a great way to do this. Unfortunately, BuildConfig.DEBUG is not
+   * considered a constant and cannot be used as an annotation param. However, you can define a
+   * custom BuildConfig field to use instead. See <a
+   * href="http://stackoverflow.com/questions/40721113/buildconfig-debug-or-equivalent-as-a
+   * -constant">this
+   * stack overflow post</a> for details.
+   */
+  boolean validateAutoModelUsage() default VALIDATE_AUTO_MODEL_USAGE;
 }

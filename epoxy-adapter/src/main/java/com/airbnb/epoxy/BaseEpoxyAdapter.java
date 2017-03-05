@@ -205,6 +205,9 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
   /**
    * Finds the position of the given model in the list. Doesn't use indexOf to avoid unnecessary
    * equals() calls since we're looking for the same object instance.
+   *
+   * @return The position of the given model in the current models list, or -1 if the model can't be
+   * found.
    */
   protected int getModelPosition(EpoxyModel<?> model) {
     int size = getCurrentModels().size();
