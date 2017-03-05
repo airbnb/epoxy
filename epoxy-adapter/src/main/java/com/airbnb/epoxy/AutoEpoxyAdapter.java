@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.os.Handler;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -100,9 +101,22 @@ public abstract class AutoEpoxyAdapter extends BaseEpoxyAdapter {
     throw new IllegalArgumentException("No duplicates in list");
   }
 
+  /**
+   * Called if a duplicate model is detected and filtered out.
+   *
+   * @see #setFilterDuplicates(boolean)
+   */
   protected void onModelFiltered(EpoxyModel<?> originalModel, int indexOfOriginal,
       EpoxyModel<?> duplicateModel, int indexOfDuplicate) {
 
+  }
+
+  /**
+   * If set to true, Epoxy will search for models with duplicate ids added during {@link
+   * #buildModels()} and remove any duplicates found.
+   */
+  public void setFilterDuplicates(boolean filterDuplicates) {
+    this.filterDuplicates = filterDuplicates;
   }
 
   private int getExpectedModelCount() {
@@ -166,18 +180,10 @@ public abstract class AutoEpoxyAdapter extends BaseEpoxyAdapter {
     }
   }
 
-  public void setFilterDuplicates(boolean filterDuplicates) {
-    this.filterDuplicates = filterDuplicates;
-  }
-
-  public boolean isFilteringDuplicates() {
-    return filterDuplicates;
-  }
-
+  /** Get an unmodifiable copy of the current models set on the adapter. */
   public List<EpoxyModel<?>> getCopyOfModels() {
     if (copyOfCurrentModels == null) {
-      // TODO: (eli_hart 2/26/17) Make this immutable
-      copyOfCurrentModels = new ArrayList<>(currentModels);
+      copyOfCurrentModels = new UnmodifiableList<>(currentModels);
     }
 
     return copyOfCurrentModels;
@@ -187,6 +193,11 @@ public abstract class AutoEpoxyAdapter extends BaseEpoxyAdapter {
     return currentModels.get(position);
   }
 
+  /**
+   * Searches the current model list for the model with the given id. Returns the matching model if
+   * one is found, otherwise null is returned.
+   */
+  @Nullable
   public EpoxyModel<?> getModelById(long id) {
     for (EpoxyModel<?> model : currentModels) {
       if (model.id() == id) {
