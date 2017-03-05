@@ -15,6 +15,7 @@ import static junit.framework.Assert.assertTrue;
  * android EpoxyAdapter library that contains the EpoxyModel.
  */
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class ModelProcessorTest {
   @Test
   public void testSimpleModel() {
@@ -169,18 +170,6 @@ public class ModelProcessorTest {
   }
 
   @Test
-  public void testModelWithPrivateAttributeFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateField.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("private");
-  }
-
-  @Test
   public void testModelWithStaticAttributeFails() {
     JavaFileObject model = JavaFileObjects
         .forResource("ModelWithStaticField.java");
@@ -282,7 +271,7 @@ public class ModelProcessorTest {
     // We don't generate subclasses if the model is abstract unless it has a class annotation.
     boolean modelNotGenerated;
     try {
-      JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithAbstractClass_.java");
+      JavaFileObjects.forResource("ModelWithAbstractClass_.java");
       modelNotGenerated = false;
     } catch (IllegalArgumentException e) {
       modelNotGenerated = true;
@@ -490,6 +479,181 @@ public class ModelProcessorTest {
 
     JavaFileObject generatedNoLayoutModel = JavaFileObjects
         .forResource("ModelWithViewClickListener_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedNoLayoutModel);
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithoutGetterAndSetterFails() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithPrivateFieldWithoutGetterAndSetter.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithoutSetterFails() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithPrivateFieldWithoutSetter.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithoutGetterFails() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithPrivateFieldWithoutGetter.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithIsPrefixGetter() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithPrivateFieldWithIsPrefixGetter.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError();
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithPrivateGetterFails() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithPrivateFieldWithPrivateGetter.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithStaticGetterFails() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithPrivateFieldWithStaticGetter.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithGetterWithParamsFails() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithPrivateFieldWithGetterWithParams.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithGetterWithWrongReturnTypeFails() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithPrivateFieldWithGetterWithWrongReturnType.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithPrivateSetterFails() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithPrivateFieldWithPrivateSetter.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithStaticSetterFails() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithPrivateFieldWithStaticSetter.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithGetterWithoutParamsFails() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithPrivateFieldWithSettterWithoutParams.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithSetterWithWrongReturnTypeFails() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithPrivateFieldWithSetterWithWrongParamType.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithAllPrivateFieldTypes() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithAllPrivateFieldTypes.java");
+
+    JavaFileObject generatedModel = JavaFileObjects
+        .forResource("ModelWithAllPrivateFieldTypes_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void modelWithViewPrivateClickListener() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithPrivateViewClickListener.java");
+
+    JavaFileObject generatedNoLayoutModel = JavaFileObjects
+        .forResource("ModelWithPrivateViewClickListener_.java");
 
     assert_().about(javaSource())
         .that(model)
