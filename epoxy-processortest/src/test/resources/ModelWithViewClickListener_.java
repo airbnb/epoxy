@@ -29,7 +29,7 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
         // if it is still bound to a view.
         private final OnModelClickListener<ModelWithViewClickListener_, Object> clickListener_epoxyGeneratedModel = ModelWithViewClickListener_.this.clickListener_epoxyGeneratedModel;
         public void onClick(View v) {
-          clickListener_epoxyGeneratedModel.onClick(ModelWithViewClickListener_.this, object,
+          clickListener_epoxyGeneratedModel.onClick(ModelWithViewClickListener_.this, object, v,
               holder.getAdapterPosition());
         }
         public int hashCode() {
