@@ -18,6 +18,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -43,7 +44,7 @@ public class ModelClickListenerTest {
     boolean clicked;
 
     @Override
-    public void onClick(ModelWithClickListener_ model, View view, int position) {
+    public void onClick(ModelWithClickListener_ model, View view, View v, int position) {
       clicked = true;
     }
   }
@@ -79,7 +80,7 @@ public class ModelClickListenerTest {
     adapter.model.clickListener().onClick(view);
     assertTrue(modelClickListener.clicked);
 
-    verify(modelClickListener).onClick(eq(adapter.model), any(View.class), anyInt());
+    verify(modelClickListener).onClick(eq(adapter.model), any(View.class), nullable(View.class), anyInt());
   }
 
   @Test
@@ -192,6 +193,6 @@ public class ModelClickListenerTest {
 
     // The original click listener is still called since it was the one bound.
     assertTrue(modelClickListener.clicked);
-    verify(modelClickListener).onClick(eq(adapter.model), any(View.class), anyInt());
+    verify(modelClickListener).onClick(eq(adapter.model), any(View.class), nullable(View.class), anyInt());
   }
 }

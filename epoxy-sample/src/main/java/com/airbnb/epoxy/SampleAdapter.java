@@ -45,7 +45,7 @@ class SampleAdapter extends TypedAutoEpoxyAdapter<List<ColorData>> {
 
     addButton
         .text(R.string.button_add)
-        .clickListener((model, view, position) -> {
+        .clickListener((model, parentView, clickedView, position) -> {
           callbacks.onAddClicked();
         })
         .addTo(this);
