@@ -14,7 +14,6 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-import com.sun.org.apache.bcel.internal.classfile.Code;
 
 import java.io.IOException;
 import java.lang.annotation.AnnotationTypeMismatchException;
