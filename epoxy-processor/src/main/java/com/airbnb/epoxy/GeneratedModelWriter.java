@@ -14,6 +14,7 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import com.sun.org.apache.bcel.internal.classfile.Code;
 
 import java.io.IOException;
 import java.lang.annotation.AnnotationTypeMismatchException;
@@ -215,48 +216,32 @@ class GeneratedModelWriter {
 
       String modelClickListenerField = attribute.getModelClickListenerName();
       preBindBuilder.beginControlFlow("if ($L != null)", modelClickListenerField);
+      CodeBlock clickListenerCodeBlock = CodeBlock.of(
+          "{\n"
+              + "    // Save the original click listener so if it gets changed on\n"
+              + "    // the generated model this click listener won't be affected\n"
+              + "    // if it is still bound to a view.\n"
+              + "    private final $T $L = $T.this.$L;\n"
+              + "    public void onClick($T v) {\n"
+              + "    $L.onClick($T.this, object, v,\n"
+              + "        holder.getAdapterPosition());\n"
+              + "    }\n"
+              + "    public int hashCode() {\n"
+              + "       // Use the hash of the original click listener so we don't change the\n"
+              + "       // value by wrapping it with this anonymous click listener\n"
+              + "       return $L.hashCode();\n"
+              + "    }\n"
+              + "  }",
+          getModelClickListenerType(classInfo),
+          modelClickListenerField, classInfo.getGeneratedName(),
+          modelClickListenerField, viewType, modelClickListenerField,
+          classInfo.getGeneratedName(), modelClickListenerField);
       if (attribute.isPrivate()) {
-        preBindBuilder.addCode(CodeBlock.of(
-            "super.$L(new $T() {\n"
-                + "    // Save the original click listener so if it gets changed on\n"
-                + "    // the generated model this click listener won't be affected\n"
-                + "    // if it is still bound to a view.\n"
-                + "    private final $T $L = $T.this.$L;\n"
-                + "    public void onClick($T v) {\n"
-                + "    $L.onClick($T.this, object, v,\n"
-                + "        holder.getAdapterPosition());\n"
-                + "    }\n"
-                + "    public int hashCode() {\n"
-                + "       // Use the hash of the original click listener so we don't change the\n"
-                + "       // value by wrapping it with this anonymous click listener\n"
-                + "       return $L.hashCode();\n"
-                + "    }\n"
-                + "  });\n", attribute.setter(), viewClickListenerType,
-            getModelClickListenerType(classInfo),
-            modelClickListenerField, classInfo.getGeneratedName(),
-            modelClickListenerField, viewType, modelClickListenerField,
-            classInfo.getGeneratedName(), modelClickListenerField));
+        preBindBuilder.addCode("super.$L(new $T() $L);\n", attribute.setter(),
+            viewClickListenerType, clickListenerCodeBlock);
       } else {
-        preBindBuilder.addCode(CodeBlock.of(
-            "super.$L = new $T() {\n"
-                + "    // Save the original click listener so if it gets changed on\n"
-                + "    // the generated model this click listener won't be affected\n"
-                + "    // if it is still bound to a view.\n"
-                + "    private final $T $L = $T.this.$L;\n"
-                + "    public void onClick($T v) {\n"
-                + "    $L.onClick($T.this, object, v,\n"
-                + "        holder.getAdapterPosition());\n"
-                + "    }\n"
-                + "    public int hashCode() {\n"
-                + "       // Use the hash of the original click listener so we don't change the\n"
-                + "       // value by wrapping it with this anonymous click listener\n"
-                + "       return $L.hashCode();\n"
-                + "    }\n"
-                + "  };\n", attribute.getName(), viewClickListenerType,
-            getModelClickListenerType(classInfo),
-            modelClickListenerField, classInfo.getGeneratedName(),
-            modelClickListenerField, viewType, modelClickListenerField,
-            classInfo.getGeneratedName(), modelClickListenerField));
+        preBindBuilder.addCode("super.$L = new $T() $L;\n", attribute.getName(),
+            viewClickListenerType, clickListenerCodeBlock);
       }
       preBindBuilder.endControlFlow();
     }
@@ -603,8 +588,8 @@ class GeneratedModelWriter {
       }
 
       if (attributeInfo.isPrivate()) {
-        addEqualsLineForTypeUsingGetter(builder, attributeInfo.useInHash(), type,
-            attributeInfo.getter());
+        addEqualsLineForType(builder, attributeInfo.useInHash(), type,
+            String.format("%s()",attributeInfo.getter()));
       } else {
         addEqualsLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getName());
       }
@@ -656,41 +641,6 @@ class GeneratedModelWriter {
     }
   }
 
-  private void addEqualsLineForTypeUsingGetter(Builder builder, boolean useObjectHashCode,
-      TypeName type, String getter) {
-    if (useObjectHashCode) {
-      if (type == FLOAT) {
-        builder.beginControlFlow("if (Float.compare(that.$L(), $L()) != 0)", getter, getter)
-            .addStatement("return false")
-            .endControlFlow();
-      } else if (type == DOUBLE) {
-        builder.beginControlFlow("if (Double.compare(that.$L(), $L()) != 0)", getter, getter)
-            .addStatement("return false")
-            .endControlFlow();
-      } else if (type.isPrimitive()) {
-        builder.beginControlFlow("if ($L() != that.$L())", getter, getter)
-            .addStatement("return false")
-            .endControlFlow();
-      } else if (type instanceof ArrayTypeName) {
-        builder
-            .beginControlFlow("if (!$T.equals($L(), that.$L()))", TypeName.get(Arrays.class),
-                getter, getter)
-            .addStatement("return false")
-            .endControlFlow();
-      } else {
-        builder
-            .beginControlFlow("if ($L() != null ? !$L().equals(that.$L()) : that.$L() != null)",
-                getter, getter, getter, getter)
-            .addStatement("return false")
-            .endControlFlow();
-      }
-    } else {
-      builder.beginControlFlow("if (($L() == null) != (that.$L() == null))", getter, getter)
-          .addStatement("return false")
-          .endControlFlow();
-    }
-  }
-
   private MethodSpec generateHashCode(ClassToGenerateInfo helperClass) {
     Builder builder = MethodSpec.methodBuilder("hashCode")
         .addAnnotation(Override.class)
@@ -730,8 +680,8 @@ class GeneratedModelWriter {
       }
 
       if (attributeInfo.isPrivate()) {
-        addHashCodeLineForTypeUsingGetter(builder, attributeInfo.useInHash(), type,
-            attributeInfo.getter());
+        addHashCodeLineForType(builder, attributeInfo.useInHash(), type,
+            String.format("%s()",attributeInfo.getter()));
       } else {
         addHashCodeLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getName());
       }
@@ -771,32 +721,6 @@ class GeneratedModelWriter {
       }
     } else {
       builder.addStatement("result = 31 * result + ($L != null ? 1 : 0)", name);
-    }
-  }
-
-  private static void addHashCodeLineForTypeUsingGetter(Builder builder, boolean useObjectHashCode,
-      TypeName type, String getter) {
-    if (useObjectHashCode) {
-      if ((type == BYTE) || (type == CHAR) || (type == SHORT) || (type == INT)) {
-        builder.addStatement("result = 31 * result + $L()", getter);
-      } else if (type == LONG) {
-        builder.addStatement("result = 31 * result + (int) ($L() ^ ($L() >>> 32))", getter, getter);
-      } else if (type == FLOAT) {
-        builder.addStatement("result = 31 * result + ($L() != +0.0f "
-            + "? Float.floatToIntBits($L()) : 0)", getter, getter);
-      } else if (type == DOUBLE) {
-        builder.addStatement("temp = Double.doubleToLongBits($L())", getter)
-            .addStatement("result = 31 * result + (int) (temp ^ (temp >>> 32))");
-      } else if (type == BOOLEAN) {
-        builder.addStatement("result = 31 * result + ($L() ? 1 : 0)", getter);
-      } else if (type instanceof ArrayTypeName) {
-        builder.addStatement("result = 31 * result + Arrays.hashCode($L())", getter);
-      } else {
-        builder.addStatement("result = 31 * result + ($L() != null ? $L().hashCode() : 0)", getter,
-            getter);
-      }
-    } else {
-      builder.addStatement("result = 31 * result + ($L() != null ? 1 : 0)", getter);
     }
   }
 

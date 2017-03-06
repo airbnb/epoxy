@@ -22,6 +22,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.ProcessorUtils.capitalizeFirstLetter;
 import static com.airbnb.epoxy.ProcessorUtils.isViewClickListenerType;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
@@ -163,8 +164,8 @@ class AttributeInfo {
         ExecutableElement method = (ExecutableElement) element;
         String methodName = method.getSimpleName().toString();
         // check if it is a valid getter
-        if ((methodName.equalsIgnoreCase(String.format("get%s", name))
-            || methodName.equalsIgnoreCase(String.format("is%s", name)))
+        if ((methodName.equalsIgnoreCase(String.format("get%s", capitalizeFirstLetter(name)))
+            || methodName.equalsIgnoreCase(String.format("is%s", capitalizeFirstLetter(name))))
             && !method.getModifiers().contains(PRIVATE)
             && !method.getModifiers().contains(STATIC)
             && method.getParameters().isEmpty()
@@ -172,7 +173,7 @@ class AttributeInfo {
           getter = methodName;
         }
         // check if it is a valid setter
-        if ((methodName.equalsIgnoreCase(String.format("set%s", name)))
+        if ((methodName.equalsIgnoreCase(String.format("set%s", capitalizeFirstLetter(name))))
             && !method.getModifiers().contains(PRIVATE)
             && !method.getModifiers().contains(STATIC)
             && method.getParameters().size() == 1
