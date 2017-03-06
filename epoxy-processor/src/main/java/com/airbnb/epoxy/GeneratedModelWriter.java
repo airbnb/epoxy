@@ -589,7 +589,7 @@ class GeneratedModelWriter {
 
       if (attributeInfo.isPrivate()) {
         addEqualsLineForType(builder, attributeInfo.useInHash(), type,
-            String.format("%s()",attributeInfo.getter()));
+            String.format("%s()", attributeInfo.getter()));
       } else {
         addEqualsLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getName());
       }
@@ -681,7 +681,7 @@ class GeneratedModelWriter {
 
       if (attributeInfo.isPrivate()) {
         addHashCodeLineForType(builder, attributeInfo.useInHash(), type,
-            String.format("%s()",attributeInfo.getter()));
+            String.format("%s()", attributeInfo.getter()));
       } else {
         addHashCodeLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getName());
       }
