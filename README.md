@@ -47,7 +47,7 @@ dependencies {
 
 Create a class that extends `EpoxyAdapter` and add an instance of your adapter to a `RecyclerView` as you normally would.
 
-Create `EpoxyModels` and add them to the adapter in the order you want them displayed. The base `EpoxyAdapter` will handle inflating your views and binding them to your models.
+Create `EpoxyModels` and add them to the adapter in the order you want them displayed. The base `EpoxyAdapter` will handle  your views and binding them to your models.
 
 In this example our `PhotoAdapter` starts off showing just a title header and a loading indicator. It has a method to add photos, which might be called as photos are loaded from a network request.
 
