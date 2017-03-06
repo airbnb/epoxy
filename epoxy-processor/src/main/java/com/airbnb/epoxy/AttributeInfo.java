@@ -164,8 +164,8 @@ class AttributeInfo {
         ExecutableElement method = (ExecutableElement) element;
         String methodName = method.getSimpleName().toString();
         // check if it is a valid getter
-        if ((methodName.equalsIgnoreCase(String.format("get%s", capitalizeFirstLetter(name)))
-            || methodName.equalsIgnoreCase(String.format("is%s", capitalizeFirstLetter(name))))
+        if ((methodName.equals(String.format("get%s", capitalizeFirstLetter(name)))
+            || methodName.equals(String.format("is%s", capitalizeFirstLetter(name))))
             && !method.getModifiers().contains(PRIVATE)
             && !method.getModifiers().contains(STATIC)
             && method.getParameters().isEmpty()
@@ -173,7 +173,7 @@ class AttributeInfo {
           getter = methodName;
         }
         // check if it is a valid setter
-        if ((methodName.equalsIgnoreCase(String.format("set%s", capitalizeFirstLetter(name))))
+        if ((methodName.equals(String.format("set%s", capitalizeFirstLetter(name))))
             && !method.getModifiers().contains(PRIVATE)
             && !method.getModifiers().contains(STATIC)
             && method.getParameters().size() == 1
