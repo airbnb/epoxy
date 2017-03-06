@@ -46,7 +46,6 @@ import static com.squareup.javapoet.TypeName.FLOAT;
 import static com.squareup.javapoet.TypeName.INT;
 import static com.squareup.javapoet.TypeName.LONG;
 import static com.squareup.javapoet.TypeName.SHORT;
-import static java.awt.SystemColor.info;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
@@ -215,29 +214,35 @@ class GeneratedModelWriter {
       // view click listener of the original model.
 
       String modelClickListenerField = attribute.getModelClickListenerName();
-      preBindBuilder
-          .beginControlFlow("if ($L != null)", modelClickListenerField)
-          .addCode(CodeBlock.of(
-              "super.$L = new $T() {\n"
-                  + "    // Save the original click listener so if it gets changed on\n"
-                  + "    // the generated model this click listener won't be affected\n"
-                  + "    // if it is still bound to a view.\n"
-                  + "    private final $T $L = $T.this.$L;\n"
-                  + "    public void onClick($T v) {\n"
-                  + "    $L.onClick($T.this, object, v,\n"
-                  + "        holder.getAdapterPosition());\n"
-                  + "    }\n"
-                  + "    public int hashCode() {\n"
-                  + "       // Use the hash of the original click listener so we don't change the\n"
-                  + "       // value by wrapping it with this anonymous click listener\n"
-                  + "       return $L.hashCode();\n"
-                  + "    }\n"
-                  + "  };\n", attribute.getName(), viewClickListenerType,
-              getModelClickListenerType(classInfo),
-              modelClickListenerField, classInfo.getGeneratedName(),
-              modelClickListenerField, viewType, modelClickListenerField,
-              classInfo.getGeneratedName(), modelClickListenerField))
-          .endControlFlow();
+      preBindBuilder.beginControlFlow("if ($L != null)", modelClickListenerField);
+      CodeBlock clickListenerCodeBlock = CodeBlock.of(
+          "{\n"
+              + "    // Save the original click listener so if it gets changed on\n"
+              + "    // the generated model this click listener won't be affected\n"
+              + "    // if it is still bound to a view.\n"
+              + "    private final $T $L = $T.this.$L;\n"
+              + "    public void onClick($T v) {\n"
+              + "    $L.onClick($T.this, object, v,\n"
+              + "        holder.getAdapterPosition());\n"
+              + "    }\n"
+              + "    public int hashCode() {\n"
+              + "       // Use the hash of the original click listener so we don't change the\n"
+              + "       // value by wrapping it with this anonymous click listener\n"
+              + "       return $L.hashCode();\n"
+              + "    }\n"
+              + "  }",
+          getModelClickListenerType(classInfo),
+          modelClickListenerField, classInfo.getGeneratedName(),
+          modelClickListenerField, viewType, modelClickListenerField,
+          classInfo.getGeneratedName(), modelClickListenerField);
+      if (attribute.isPrivate()) {
+        preBindBuilder.addCode("super.$L(new $T() $L);\n", attribute.setter(),
+            viewClickListenerType, clickListenerCodeBlock);
+      } else {
+        preBindBuilder.addCode("super.$L = new $T() $L;\n", attribute.getName(),
+            viewClickListenerType, clickListenerCodeBlock);
+      }
+      preBindBuilder.endControlFlow();
     }
     methods.add(preBindBuilder.build());
 
@@ -527,9 +532,15 @@ class GeneratedModelWriter {
         .addModifiers(PUBLIC)
         .returns(helperClass.getParameterizedGeneratedName())
         .addParameter(param)
-        .addAnnotations(attribute.getSetterAnnotations())
-        .addStatement("super.$L = null", attributeName)
-        .addStatement("this.$L = $L", attribute.getModelClickListenerName(), attributeName);
+        .addAnnotations(attribute.getSetterAnnotations());
+
+    if (attribute.isPrivate()) {
+      builder.addStatement("super.$L(null)", attribute.setter());
+    } else {
+      builder.addStatement("super.$L = null", attributeName);
+    }
+
+    builder.addStatement("this.$L = $L", attribute.getModelClickListenerName(), attributeName);
 
     return builder
         .addStatement("return this")
@@ -575,7 +586,13 @@ class GeneratedModelWriter {
         continue;
       }
 
-      addEqualsLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getName());
+      if (attributeInfo.isPrivate()) {
+        addEqualsLineForType(builder, attributeInfo.useInHash(), type,
+            String.format("%s()", attributeInfo.getter()));
+      } else {
+        addEqualsLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getName());
+      }
+
       if (attributeInfo.isViewClickListener()) {
         // Add the model click listener as well
         addEqualsLineForType(builder, attributeInfo.useInHash(), type,
@@ -661,7 +678,12 @@ class GeneratedModelWriter {
         continue;
       }
 
-      addHashCodeLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getName());
+      if (attributeInfo.isPrivate()) {
+        addHashCodeLineForType(builder, attributeInfo.useInHash(), type,
+            String.format("%s()", attributeInfo.getter()));
+      } else {
+        addHashCodeLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getName());
+      }
 
       if (attributeInfo.isViewClickListener()) {
         // Add the model click listener as well
@@ -714,10 +736,18 @@ class GeneratedModelWriter {
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
       String attributeName = attributeInfo.getName();
       if (first) {
-        sb.append(String.format("\"%s=\" + %s +\n", attributeName, attributeName));
+        if (attributeInfo.isPrivate()) {
+          sb.append(String.format("\"%s=\" + %s() +\n", attributeName, attributeInfo.getter()));
+        } else {
+          sb.append(String.format("\"%s=\" + %s +\n", attributeName, attributeName));
+        }
         first = false;
       } else {
-        sb.append(String.format("\", %s=\" + %s +\n", attributeName, attributeName));
+        if (attributeInfo.isPrivate()) {
+          sb.append(String.format("\", %s=\" + %s() +\n", attributeName, attributeInfo.getter()));
+        } else {
+          sb.append(String.format("\", %s=\" + %s +\n", attributeName, attributeName));
+        }
       }
     }
 
@@ -729,12 +759,18 @@ class GeneratedModelWriter {
   }
 
   private MethodSpec generateGetter(AttributeInfo data) {
-    return MethodSpec.methodBuilder(data.getName())
+    MethodSpec.Builder builder = MethodSpec.methodBuilder(data.getName())
         .addModifiers(PUBLIC)
         .returns(data.getType())
-        .addAnnotations(data.getGetterAnnotations())
-        .addStatement("return $L", data.getName())
-        .build();
+        .addAnnotations(data.getGetterAnnotations());
+
+    if (data.isPrivate()) {
+      builder.addStatement("return $L()", data.getter());
+    } else {
+      builder.addStatement("return $L", data.getName());
+    }
+
+    return builder.build();
   }
 
   private MethodSpec generateSetter(ClassToGenerateInfo helperClass, AttributeInfo attribute) {
@@ -743,8 +779,13 @@ class GeneratedModelWriter {
         .addModifiers(PUBLIC)
         .returns(helperClass.getParameterizedGeneratedName())
         .addParameter(ParameterSpec.builder(attribute.getType(), attributeName)
-            .addAnnotations(attribute.getSetterAnnotations()).build())
-        .addStatement("this.$L = $L", attributeName, attributeName);
+            .addAnnotations(attribute.getSetterAnnotations()).build());
+
+    if (attribute.isPrivate()) {
+      builder.addStatement("this.$L($L)", attribute.setter(), attributeName);
+    } else {
+      builder.addStatement("this.$L = $L", attributeName, attributeName);
+    }
 
     if (attribute.isViewClickListener()) {
       // Null out the model click listener since this view click listener should replace it
@@ -770,8 +811,13 @@ class GeneratedModelWriter {
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
       if (!attributeInfo.hasFinalModifier()) {
-        builder.addStatement("this.$L = $L", attributeInfo.getName(),
-            getDefaultValue(attributeInfo.getType()));
+        if (attributeInfo.isPrivate()) {
+          builder.addStatement("this.$L($L)", attributeInfo.setter(),
+              getDefaultValue(attributeInfo.getType()));
+        } else {
+          builder.addStatement("this.$L = $L", attributeInfo.getName(),
+              getDefaultValue(attributeInfo.getType()));
+        }
       }
 
       if (attributeInfo.isViewClickListener()) {
@@ -788,9 +834,14 @@ class GeneratedModelWriter {
   private static String getDefaultValue(TypeName attributeType) {
     if (attributeType == BOOLEAN) {
       return "false";
-    } else if (attributeType == BYTE || attributeType == CHAR || attributeType == SHORT
-        || attributeType == INT) {
+    } else if (attributeType == INT) {
       return "0";
+    } else if (attributeType == BYTE) {
+      return "(byte) 0";
+    } else if (attributeType == CHAR) {
+      return "(char) 0";
+    } else if (attributeType == SHORT) {
+      return "(short) 0";
     } else if (attributeType == LONG) {
       return "0L";
     } else if (attributeType == FLOAT) {

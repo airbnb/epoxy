@@ -16,16 +16,19 @@ import java.util.Set;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.ProcessorUtils.capitalizeFirstLetter;
 import static com.airbnb.epoxy.ProcessorUtils.isViewClickListenerType;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PROTECTED;
 import static javax.lang.model.element.Modifier.PUBLIC;
+import static javax.lang.model.element.Modifier.STATIC;
 
 class AttributeInfo {
 
@@ -49,6 +52,11 @@ class AttributeInfo {
 
   private final TypeElement classElement;
 
+  // for private fields (Kotlin case)
+  private final boolean isPrivate;
+  private String getter;
+  private String setter;
+
   AttributeInfo(Element attribute, Types typeUtils, ErrorLogger errorLogger) {
     attributeElement = attribute;
     this.typeUtils = typeUtils;
@@ -69,6 +77,12 @@ class AttributeInfo {
 
     generateSetter = annotation.setter() && !options.contains(Option.NoSetter);
     generateGetter = !options.contains(Option.NoGetter);
+
+    isPrivate = attribute.getModifiers().contains(PRIVATE);
+    if (isPrivate) {
+      findGetterAndSetterForPrivateField(errorLogger);
+    }
+
     buildAnnotationLists(attribute.getAnnotationMirrors());
   }
 
@@ -142,6 +156,43 @@ class AttributeInfo {
   }
 
   /**
+   * Checks if the given private field has getter and setter for access to it
+   */
+  private void findGetterAndSetterForPrivateField(ErrorLogger errorLogger) {
+    for (Element element : classElement.getEnclosedElements()) {
+      if (element.getKind() == ElementKind.METHOD) {
+        ExecutableElement method = (ExecutableElement) element;
+        String methodName = method.getSimpleName().toString();
+        // check if it is a valid getter
+        if ((methodName.equals(String.format("get%s", capitalizeFirstLetter(name)))
+            || methodName.equals(String.format("is%s", capitalizeFirstLetter(name))))
+            && !method.getModifiers().contains(PRIVATE)
+            && !method.getModifiers().contains(STATIC)
+            && method.getParameters().isEmpty()
+            && TypeName.get(method.getReturnType()).equals(type)) {
+          getter = methodName;
+        }
+        // check if it is a valid setter
+        if ((methodName.equals(String.format("set%s", capitalizeFirstLetter(name))))
+            && !method.getModifiers().contains(PRIVATE)
+            && !method.getModifiers().contains(STATIC)
+            && method.getParameters().size() == 1
+            && TypeName.get(method.getParameters().get(0).asType()).equals(type)) {
+          setter = methodName;
+        }
+      }
+    }
+    if (getter == null || setter == null) {
+      errorLogger
+          .logError("%s annotations must not be on private fields"
+                  + " without proper getter and setter methods. (class: %s, field: %s)",
+              EpoxyAttribute.class,
+              classElement.getSimpleName(),
+              name);
+    }
+  }
+
+  /**
    * Keeps track of annotations on the attribute so that they can be used in the generated setter
    * and getter method. Setter and getter annotations are stored separately since the annotation may
    * not target both method and parameter types.
@@ -204,7 +255,7 @@ class AttributeInfo {
     return setterAnnotations;
   }
 
-  public boolean generateGetter() {
+  boolean generateGetter() {
     return generateGetter;
   }
 
@@ -222,6 +273,18 @@ class AttributeInfo {
 
   boolean isPackagePrivate() {
     return packagePrivate;
+  }
+
+  boolean isPrivate() {
+    return isPrivate;
+  }
+
+  String getter() {
+    return getter;
+  }
+
+  String setter() {
+    return setter;
   }
 
   @Override

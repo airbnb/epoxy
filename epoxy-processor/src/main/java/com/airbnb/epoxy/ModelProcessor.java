@@ -124,7 +124,7 @@ class ModelProcessor {
   }
 
   private AttributeInfo buildAttributeInfo(Element attribute) {
-    validateFieldAccessibleViaGeneratedCode(attribute, EpoxyAttribute.class, errorLogger);
+    validateFieldAccessibleViaGeneratedCode(attribute, EpoxyAttribute.class, errorLogger, true);
     return new AttributeInfo(attribute, typeUtils, errorLogger);
   }
 

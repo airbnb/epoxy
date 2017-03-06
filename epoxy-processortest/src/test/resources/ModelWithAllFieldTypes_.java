@@ -301,18 +301,18 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes
     onModelUnboundListener_epoxyGeneratedModel = null;
 
     this.valueInteger = null;
-    this.valueShort = 0;
+    this.valueShort = (short) 0;
     this.valueLong = 0L;
     this.valueList = null;
     this.valueShortWrapper = null;
     this.valueDouble = 0.0d;
-    this.valueChar = 0;
+    this.valueChar = (char) 0;
     this.valueInt = 0;
     this.valueDoubleWrapper = null;
     this.valueFloatWrapper = null;
     this.valueBooleanWrapper = null;
     this.valueByteWrapper = null;
-    this.valuebByte = 0;
+    this.valuebByte = (byte) 0;
     this.valueLongWrapper = null;
     this.valueCharacter = null;
     this.valueString = null;

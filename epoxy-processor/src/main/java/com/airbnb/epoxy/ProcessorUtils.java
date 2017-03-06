@@ -210,12 +210,12 @@ class ProcessorUtils {
   }
 
   static void validateFieldAccessibleViaGeneratedCode(Element fieldElement,
-      Class<?> annotationClass, ErrorLogger errorLogger) {
+      Class<?> annotationClass, ErrorLogger errorLogger, boolean skipPrivateFieldCheck) {
     TypeElement enclosingElement = (TypeElement) fieldElement.getEnclosingElement();
 
     // Verify method modifiers.
     Set<Modifier> modifiers = fieldElement.getModifiers();
-    if (modifiers.contains(PRIVATE) || modifiers.contains(STATIC)) {
+    if ((modifiers.contains(PRIVATE) && !skipPrivateFieldCheck) || modifiers.contains(STATIC)) {
       errorLogger.logError(
           "%s annotations must not be on private or static fields. (class: %s, field: %s)",
           annotationClass.getSimpleName(),
@@ -247,5 +247,17 @@ class ProcessorUtils {
           annotationClass.getSimpleName(),
           enclosingElement.getSimpleName(), fieldElement.getSimpleName());
     }
+  }
+
+  static void validateFieldAccessibleViaGeneratedCode(Element fieldElement,
+      Class<?> annotationClass, ErrorLogger errorLogger) {
+    validateFieldAccessibleViaGeneratedCode(fieldElement, annotationClass, errorLogger, false);
+  }
+
+  static String capitalizeFirstLetter(String original) {
+    if (original == null || original.isEmpty()) {
+      return original;
+    }
+    return original.substring(0, 1).toUpperCase() + original.substring(1);
   }
 }
