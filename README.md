@@ -110,7 +110,7 @@ In this case the `PhotoModel` is typed with `PhotoView`, so the `getDefaultLayou
     android:padding="16dp" />
 ```
 
-Epoxy works well with custom views - in this pattern the model holds the data and passes it to the view, the layout file describes which view to use and how to style it, and the view itself handles displaying the data. Alternatively, you can opt to [use the view holder pattern](#view-holders).
+Epoxy works well with custom views - in this pattern the model holds the data and passes it to the view, the layout file describes which view to use and how to style it, and the view itself handles displaying the data. Alternatively, you can opt to [use the view holder pattern](#using-view-holders).
 
 Models also allow you to control other aspects of the view, such as the span size, id, saved state, and whether the view should be shown. Those aspects of models are described in detail below.
 
