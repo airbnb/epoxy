@@ -215,8 +215,9 @@ class GeneratedModelWriter {
 
       String modelClickListenerField = attribute.getModelClickListenerName();
       preBindBuilder.beginControlFlow("if ($L != null)", modelClickListenerField);
+
       CodeBlock clickListenerCodeBlock = CodeBlock.of(
-          "{\n"
+          "new $T() {\n"
               + "    // Save the original click listener so if it gets changed on\n"
               + "    // the generated model this click listener won't be affected\n"
               + "    // if it is still bound to a view.\n"
@@ -231,19 +232,16 @@ class GeneratedModelWriter {
               + "       return $L.hashCode();\n"
               + "    }\n"
               + "  }",
-          getModelClickListenerType(classInfo),
+          viewClickListenerType, getModelClickListenerType(classInfo),
           modelClickListenerField, classInfo.getGeneratedName(),
           modelClickListenerField, viewType, modelClickListenerField,
           classInfo.getGeneratedName(), modelClickListenerField);
-      if (attribute.isPrivate()) {
-        preBindBuilder.addCode("super.$L(new $T() $L);\n", attribute.setter(),
-            viewClickListenerType, clickListenerCodeBlock);
-      } else {
-        preBindBuilder.addCode("super.$L = new $T() $L;\n", attribute.getName(),
-            viewClickListenerType, clickListenerCodeBlock);
-      }
-      preBindBuilder.endControlFlow();
+
+      preBindBuilder
+          .addStatement("super." + attribute.setterCode(), clickListenerCodeBlock)
+          .endControlFlow();
     }
+
     methods.add(preBindBuilder.build());
 
     methods.add(MethodSpec.methodBuilder("handlePostBind")
@@ -349,7 +347,6 @@ class GeneratedModelWriter {
    * implement them.
    */
   private Iterable<MethodSpec> generateDefaultMethodImplementations(ClassToGenerateInfo info) {
-
     List<MethodSpec> methods = new ArrayList<>();
     TypeElement originalClassElement = info.getOriginalClassElement();
 
@@ -524,7 +521,7 @@ class GeneratedModelWriter {
     ParameterSpec param =
         ParameterSpec.builder(getModelClickListenerType(helperClass), attributeName, FINAL).build();
 
-    Builder builder = MethodSpec.methodBuilder(attributeName)
+    return MethodSpec.methodBuilder(attributeName)
         .addJavadoc(CodeBlock
             .of("Set a click listener that will provide the parent view, model, and adapter "
                 + "position of the clicked view. This will clear the normal View.OnClickListener "
@@ -532,17 +529,9 @@ class GeneratedModelWriter {
         .addModifiers(PUBLIC)
         .returns(helperClass.getParameterizedGeneratedName())
         .addParameter(param)
-        .addAnnotations(attribute.getSetterAnnotations());
-
-    if (attribute.isPrivate()) {
-      builder.addStatement("super.$L(null)", attribute.setter());
-    } else {
-      builder.addStatement("super.$L = null", attributeName);
-    }
-
-    builder.addStatement("this.$L = $L", attribute.getModelClickListenerName(), attributeName);
-
-    return builder
+        .addAnnotations(attribute.getSetterAnnotations())
+        .addStatement("super." + attribute.setterCode(), "null")
+        .addStatement("this.$L = $L", attribute.getModelClickListenerName(), attributeName)
         .addStatement("return this")
         .build();
   }
@@ -586,12 +575,7 @@ class GeneratedModelWriter {
         continue;
       }
 
-      if (attributeInfo.isPrivate()) {
-        addEqualsLineForType(builder, attributeInfo.useInHash(), type,
-            String.format("%s()", attributeInfo.getter()));
-      } else {
-        addEqualsLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getName());
-      }
+      addEqualsLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getterCode());
 
       if (attributeInfo.isViewClickListener()) {
         // Add the model click listener as well
@@ -606,35 +590,37 @@ class GeneratedModelWriter {
   }
 
   private void addEqualsLineForType(Builder builder, boolean useObjectHashCode, TypeName type,
-      String name) {
+      String accessorCode) {
     if (useObjectHashCode) {
       if (type == FLOAT) {
-        builder.beginControlFlow("if (Float.compare(that.$L, $L) != 0)", name, name)
+        builder.beginControlFlow("if (Float.compare(that.$L, $L) != 0)", accessorCode, accessorCode)
             .addStatement("return false")
             .endControlFlow();
       } else if (type == DOUBLE) {
-        builder.beginControlFlow("if (Double.compare(that.$L, $L) != 0)", name, name)
+        builder
+            .beginControlFlow("if (Double.compare(that.$L, $L) != 0)", accessorCode, accessorCode)
             .addStatement("return false")
             .endControlFlow();
       } else if (type.isPrimitive()) {
-        builder.beginControlFlow("if ($L != that.$L)", name, name)
+        builder.beginControlFlow("if ($L != that.$L)", accessorCode, accessorCode)
             .addStatement("return false")
             .endControlFlow();
       } else if (type instanceof ArrayTypeName) {
         builder
-            .beginControlFlow("if (!$T.equals($L, that.$L))", TypeName.get(Arrays.class), name,
-                name)
+            .beginControlFlow("if (!$T.equals($L, that.$L))", TypeName.get(Arrays.class),
+                accessorCode,
+                accessorCode)
             .addStatement("return false")
             .endControlFlow();
       } else {
         builder
             .beginControlFlow("if ($L != null ? !$L.equals(that.$L) : that.$L != null)",
-                name, name, name, name)
+                accessorCode, accessorCode, accessorCode, accessorCode)
             .addStatement("return false")
             .endControlFlow();
       }
     } else {
-      builder.beginControlFlow("if (($L == null) != (that.$L == null))", name, name)
+      builder.beginControlFlow("if (($L == null) != (that.$L == null))", accessorCode, accessorCode)
           .addStatement("return false")
           .endControlFlow();
     }
@@ -678,12 +664,7 @@ class GeneratedModelWriter {
         continue;
       }
 
-      if (attributeInfo.isPrivate()) {
-        addHashCodeLineForType(builder, attributeInfo.useInHash(), type,
-            String.format("%s()", attributeInfo.getter()));
-      } else {
-        addHashCodeLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getName());
-      }
+      addHashCodeLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getterCode());
 
       if (attributeInfo.isViewClickListener()) {
         // Add the model click listener as well
@@ -698,28 +679,30 @@ class GeneratedModelWriter {
   }
 
   private static void addHashCodeLineForType(Builder builder, boolean useObjectHashCode,
-      TypeName type, String name) {
+      TypeName type, String accessorCode) {
     if (useObjectHashCode) {
       if ((type == BYTE) || (type == CHAR) || (type == SHORT) || (type == INT)) {
-        builder.addStatement("result = 31 * result + $L", name);
+        builder.addStatement("result = 31 * result + $L", accessorCode);
       } else if (type == LONG) {
-        builder.addStatement("result = 31 * result + (int) ($L ^ ($L >>> 32))", name, name);
+        builder.addStatement("result = 31 * result + (int) ($L ^ ($L >>> 32))", accessorCode,
+            accessorCode);
       } else if (type == FLOAT) {
         builder.addStatement("result = 31 * result + ($L != +0.0f "
-            + "? Float.floatToIntBits($L) : 0)", name, name);
+            + "? Float.floatToIntBits($L) : 0)", accessorCode, accessorCode);
       } else if (type == DOUBLE) {
-        builder.addStatement("temp = Double.doubleToLongBits($L)", name)
+        builder.addStatement("temp = Double.doubleToLongBits($L)", accessorCode)
             .addStatement("result = 31 * result + (int) (temp ^ (temp >>> 32))");
       } else if (type == BOOLEAN) {
-        builder.addStatement("result = 31 * result + ($L ? 1 : 0)", name);
+        builder.addStatement("result = 31 * result + ($L ? 1 : 0)", accessorCode);
       } else if (type instanceof ArrayTypeName) {
-        builder.addStatement("result = 31 * result + Arrays.hashCode($L)", name);
+        builder.addStatement("result = 31 * result + Arrays.hashCode($L)", accessorCode);
       } else {
-        builder.addStatement("result = 31 * result + ($L != null ? $L.hashCode() : 0)", name,
-            name);
+        builder
+            .addStatement("result = 31 * result + ($L != null ? $L.hashCode() : 0)", accessorCode,
+                accessorCode);
       }
     } else {
-      builder.addStatement("result = 31 * result + ($L != null ? 1 : 0)", name);
+      builder.addStatement("result = 31 * result + ($L != null ? 1 : 0)", accessorCode);
     }
   }
 
@@ -736,18 +719,10 @@ class GeneratedModelWriter {
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
       String attributeName = attributeInfo.getName();
       if (first) {
-        if (attributeInfo.isPrivate()) {
-          sb.append(String.format("\"%s=\" + %s() +\n", attributeName, attributeInfo.getter()));
-        } else {
-          sb.append(String.format("\"%s=\" + %s +\n", attributeName, attributeName));
-        }
+        sb.append(String.format("\"%s=\" + %s +\n", attributeName, attributeInfo.getterCode()));
         first = false;
       } else {
-        if (attributeInfo.isPrivate()) {
-          sb.append(String.format("\", %s=\" + %s() +\n", attributeName, attributeInfo.getter()));
-        } else {
-          sb.append(String.format("\", %s=\" + %s +\n", attributeName, attributeName));
-        }
+        sb.append(String.format("\", %s=\" + %s +\n", attributeName, attributeInfo.getterCode()));
       }
     }
 
@@ -759,18 +734,12 @@ class GeneratedModelWriter {
   }
 
   private MethodSpec generateGetter(AttributeInfo data) {
-    MethodSpec.Builder builder = MethodSpec.methodBuilder(data.getName())
+    return MethodSpec.methodBuilder(data.getName())
         .addModifiers(PUBLIC)
         .returns(data.getType())
-        .addAnnotations(data.getGetterAnnotations());
-
-    if (data.isPrivate()) {
-      builder.addStatement("return $L()", data.getter());
-    } else {
-      builder.addStatement("return $L", data.getName());
-    }
-
-    return builder.build();
+        .addAnnotations(data.getGetterAnnotations())
+        .addStatement("return $L", data.getterCode())
+        .build();
   }
 
   private MethodSpec generateSetter(ClassToGenerateInfo helperClass, AttributeInfo attribute) {
@@ -779,13 +748,8 @@ class GeneratedModelWriter {
         .addModifiers(PUBLIC)
         .returns(helperClass.getParameterizedGeneratedName())
         .addParameter(ParameterSpec.builder(attribute.getType(), attributeName)
-            .addAnnotations(attribute.getSetterAnnotations()).build());
-
-    if (attribute.isPrivate()) {
-      builder.addStatement("this.$L($L)", attribute.setter(), attributeName);
-    } else {
-      builder.addStatement("this.$L = $L", attributeName, attributeName);
-    }
+            .addAnnotations(attribute.getSetterAnnotations()).build())
+        .addStatement("this." + attribute.setterCode(), attributeName);
 
     if (attribute.isViewClickListener()) {
       // Null out the model click listener since this view click listener should replace it
@@ -811,13 +775,8 @@ class GeneratedModelWriter {
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
       if (!attributeInfo.hasFinalModifier()) {
-        if (attributeInfo.isPrivate()) {
-          builder.addStatement("this.$L($L)", attributeInfo.setter(),
-              getDefaultValue(attributeInfo.getType()));
-        } else {
-          builder.addStatement("this.$L = $L", attributeInfo.getName(),
-              getDefaultValue(attributeInfo.getType()));
-        }
+        builder.addStatement("this." + attributeInfo.setterCode(),
+            getDefaultValue(attributeInfo.getType()));
       }
 
       if (attributeInfo.isViewClickListener()) {
