@@ -31,15 +31,24 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
  * automatically.
  */
 public abstract class EpoxyController {
+  private static final Timer NO_OP_TIMER = new NoOpTimer();
+
   private final ControllerAdapter adapter = new ControllerAdapter(this);
   private final ControllerHelper helper = getHelperForController(this);
   private final Handler handler = new Handler();
   private List<EpoxyModel<?>> copyOfCurrentModels;
   private ArrayList<EpoxyModel<?>> modelsBeingBuilt;
   private boolean filterDuplicates;
+  /** Used to time operations and log their duration when in debug mode. */
+  private Timer timer = NO_OP_TIMER;
 
-  // TODO: (eli_hart 3/6/17) add debug diff logs
-  // TODO: (eli_hart 3/6/17) log diff/build times in debug
+  // Readme items:
+  // hidden models breaking for pull to refresh or multiple items in a row on grid
+  // Model  group
+  // debug logs
+  // Config setting to validate auto models
+  // Note that it doesn't work to attach the adapter to multiple recyclerviews because of saved
+  // state. Multiple recyclerviews could be supported if needed.
 
   /**
    * Call this to schedule a model update. The adapter will schedule a call to {@link
@@ -61,13 +70,27 @@ public abstract class EpoxyController {
     helper.resetAutoModels();
 
     modelsBeingBuilt = new ArrayList<>(getExpectedModelCount());
+
+    timer.start();
     buildModels();
+    timer.stop("Models built");
 
     filterDuplicatesIfNeeded(modelsBeingBuilt);
 
+    timer.start();
     adapter.setModels(modelsBeingBuilt);
+    timer.stop("Models diffed");
+
     modelsBeingBuilt = null;
     copyOfCurrentModels = null;
+  }
+
+  private int getExpectedModelCount() {
+    if (adapter.currentModels == Collections.EMPTY_LIST) {
+      return 25;
+    }
+
+    return adapter.getItemCount();
   }
 
   /**
@@ -77,6 +100,55 @@ public abstract class EpoxyController {
    * with the models that should be shown, in the order that is desired.
    */
   protected abstract void buildModels();
+
+  protected void add(EpoxyModel<?> model) {
+    validateAddedModel(model);
+    modelsBeingBuilt.add(model);
+  }
+
+  protected void add(EpoxyModel<?>... modelsToAdd) {
+    for (EpoxyModel<?> model : modelsToAdd) {
+      validateAddedModel(model);
+    }
+    modelsBeingBuilt.ensureCapacity(modelsBeingBuilt.size() + modelsToAdd.length);
+    Collections.addAll(modelsBeingBuilt, modelsToAdd);
+  }
+
+  protected void add(Collection<EpoxyModel<?>> modelsToAdd) {
+    for (EpoxyModel<?> model : modelsToAdd) {
+      validateAddedModel(model);
+    }
+    modelsBeingBuilt.addAll(modelsToAdd);
+  }
+
+  boolean isBuildingModels() {
+    return modelsBeingBuilt != null;
+  }
+
+  /**
+   * Throw if adding a model is not currently allowed.
+   */
+  private void validateAddedModel(EpoxyModel<?> model) {
+    if (!isBuildingModels()) {
+      throw new IllegalStateException(
+          "You can only add models inside the `buildModels` methods, and you cannot call "
+              + "`buildModels` directly. Call `requestModelBuild` instead");
+    }
+
+    if (model == null) {
+      throw new IllegalArgumentException("You cannot add a null model");
+    }
+
+    if (model.hasDefaultId()) {
+      throw new IllegalStateException("You must set an id on a model before adding it.");
+    }
+
+    if (!model.isShown()) {
+      throw new IllegalStateException(
+          "You cannot hide a model in an AutoEpoxyAdapter. Use `addIf` to conditionally add a "
+              + "model instead.");
+    }
+  }
 
   private void filterDuplicatesIfNeeded(List<EpoxyModel<?>> models) {
     if (!filterDuplicates) {
@@ -141,60 +213,25 @@ public abstract class EpoxyController {
     this.filterDuplicates = filterDuplicates;
   }
 
-  private int getExpectedModelCount() {
-    if (adapter.currentModels == Collections.EMPTY_LIST) {
-      return 25;
-    }
-
-    return adapter.getItemCount();
-  }
-
-  protected void add(EpoxyModel<?> model) {
-    validateAddedModel(model);
-    modelsBeingBuilt.add(model);
-  }
-
-  protected void add(EpoxyModel<?>... modelsToAdd) {
-    for (EpoxyModel<?> model : modelsToAdd) {
-      validateAddedModel(model);
-    }
-    modelsBeingBuilt.ensureCapacity(modelsBeingBuilt.size() + modelsToAdd.length);
-    Collections.addAll(modelsBeingBuilt, modelsToAdd);
-  }
-
-  protected void add(Collection<EpoxyModel<?>> modelsToAdd) {
-    for (EpoxyModel<?> model : modelsToAdd) {
-      validateAddedModel(model);
-    }
-    modelsBeingBuilt.addAll(modelsToAdd);
-  }
-
-  boolean isBuildingModels() {
-    return modelsBeingBuilt != null;
-  }
-
   /**
-   * Throw if adding a model is not currently allowed.
+   * If enabled, DEBUG logcat messages will be printed to show when models are rebuilt, the time
+   * taken to build them, the time taken to diff them, and the item change outcomes from the
+   * differ. The tag of the logcat message is your adapter name.
+   * <p>
+   * This is useful to verify that models are being diffed as expected, as well as to watch for
+   * slowdowns in model building or diffing to indicate when you should optimize model building or
+   * model hashCode implementations (which can often slow down diffing).
+   * <p>
+   * This should only be used in debug builds to avoid a performance hit in prod.
    */
-  private void validateAddedModel(EpoxyModel<?> model) {
-    if (!isBuildingModels()) {
-      throw new IllegalStateException(
-          "You can only add models inside the `buildModels` methods, and you cannot call "
-              + "`buildModels` directly. Call `requestModelBuild` instead");
+  public void enableDebugLogging() {
+    if (isBuildingModels()) {
+      throw new IllegalStateException("Debug logging should be enabled before models are built");
     }
 
-    if (model == null) {
-      throw new IllegalArgumentException("You cannot add a null model");
-    }
-
-    if (model.hasDefaultId()) {
-      throw new IllegalStateException("You must set an id on a model before adding it.");
-    }
-
-    if (!model.isShown()) {
-      throw new IllegalStateException(
-          "You cannot hide a model in an AutoEpoxyAdapter. Use `addIf` to conditionally add a "
-              + "model instead.");
+    if (timer == NO_OP_TIMER) {
+      timer = new DebugTimer(getClass().getSimpleName());
+      registerAdapterDataObserver(new EpoxyDiffLogger(getClass().getSimpleName()));
     }
   }
 
@@ -309,6 +346,11 @@ public abstract class EpoxyController {
 
   }
 
+  /**
+   * Returns an object that manages the view holders currently bound to the RecyclerView. This
+   * object is mainly used by the base Epoxy adapter to save view states, but you may find it useful
+   * to help access views or models currently shown in the RecyclerView.
+   */
   public BoundViewHolders getBoundViewHolders() {
     return adapter.getBoundViewHolders();
   }
