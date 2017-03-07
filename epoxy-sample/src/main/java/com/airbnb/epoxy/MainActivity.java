@@ -7,7 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 
-import com.airbnb.epoxy.SampleAdapter.AdapterCallbacks;
+import com.airbnb.epoxy.SampleController.AdapterCallbacks;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
   private static final Random RANDOM = new Random();
 
   @BindView(R.id.recycler_view) RecyclerView recyclerView;
-  private final SampleAdapter controller = new SampleAdapter(this);
+  private final SampleController controller = new SampleController(this);
   private final List<ColorData> colors = new ArrayList<>();
 
   @Override

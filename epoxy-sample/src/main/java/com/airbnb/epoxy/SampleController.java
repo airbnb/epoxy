@@ -6,7 +6,7 @@ import com.airbnb.epoxy.models.HeaderModel_;
 
 import java.util.List;
 
-class SampleAdapter extends TypedEpoxyController<List<ColorData>> {
+class SampleController extends TypedEpoxyController<List<ColorData>> {
   interface AdapterCallbacks {
     void onAddClicked();
     void onClearClicked();
@@ -22,19 +22,15 @@ class SampleAdapter extends TypedEpoxyController<List<ColorData>> {
 
   private final AdapterCallbacks callbacks;
 
-  SampleAdapter(AdapterCallbacks callbacks) {
+  SampleController(AdapterCallbacks callbacks) {
     this.callbacks = callbacks;
+    enableDebugLogging();
   }
 
   // TODO: (eli_hart 2/26/17) Carousel with shared view pools, model groups
-  // TODO: (eli_hart 2/26/17) bind/attach callbacks for model builder
   // TODO: (eli_hart 2/27/17) Save colors state
   // TODO: (eli_hart 2/27/17) Shuffle color on click square
   // TODO: (eli_hart 2/27/17) typed adapter integration test
-  // TODO: (eli_hart 2/27/17) Consider adding span/position/count to getDefaultLayout
-  // TODO: (eli_hart 2/28/17) Change buildModels name to render?
-  // TODO: (eli_hart 3/2/17) "invalidate" instead of request model update?
-  // TODO: (eli_hart 3/2/17) add clicked view to model click listener?
 
   @Override
   protected void buildModels(List<ColorData> colors) {
