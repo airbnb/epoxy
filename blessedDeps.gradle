@@ -10,21 +10,20 @@
 rootProject.ext.JAVA_SOURCE_VERSION = JavaVersion.VERSION_1_7
 rootProject.ext.JAVA_TARGET_VERSION = JavaVersion.VERSION_1_7
 
-rootProject.ext.TARGET_SDK_VERSION = 24
-rootProject.ext.COMPILE_SDK_VERSION = 24
+rootProject.ext.TARGET_SDK_VERSION = 25
+rootProject.ext.COMPILE_SDK_VERSION = 25
 rootProject.ext.MIN_SDK_VERSION = 16
 
-rootProject.ext.ANDROID_BUILD_TOOLS_VERSION = "25.0.0"
-rootProject.ext.ANDROID_SUPPORT_LIBS_VERSION = "25.0.1"
-rootProject.ext.BUTTERKNIFE_VERSION = "8.4.0"
-rootProject.ext.BUTTERKNIFE_COMPILER_VERSION = "8.4.0"
+rootProject.ext.ANDROID_BUILD_TOOLS_VERSION = "25.0.2"
+rootProject.ext.ANDROID_SUPPORT_LIBS_VERSION = "25.2.0"
+rootProject.ext.BUTTERKNIFE_VERSION = "8.5.1"
 rootProject.ext.GOOGLE_AUTO_SERVICE_VERSION = "1.0-rc2"
 rootProject.ext.SQUARE_JAVAPOET_VERSION = "1.8.0"
 
 rootProject.ext.ASSERTJ_VERSION = "1.7.1"
 rootProject.ext.GOOGLE_TESTING_COMPILE_VERSION = "0.10"
 rootProject.ext.JUNIT_VERSION = "4.12"
-rootProject.ext.MOCKITO_VERSION = "2.2.11"
+rootProject.ext.MOCKITO_VERSION = "2.7.7"
 rootProject.ext.ROBOLECTRIC_VERSION = "3.1.4"
 
 rootProject.ext.deps = [
@@ -34,7 +33,7 @@ rootProject.ext.deps = [
     androidRecyclerView     : "com.android.support:recyclerview-v7:$ANDROID_SUPPORT_LIBS_VERSION",
     androidAnnotations      : "com.android.support:support-annotations:$ANDROID_SUPPORT_LIBS_VERSION",
     butterknifeLibrary      : "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION",
-    butterknifeCompiler     : "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_COMPILER_VERSION",
+    butterknifeCompiler     : "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION",
     googleAutoService       : "com.google.auto.service:auto-service:$GOOGLE_AUTO_SERVICE_VERSION",
     squareJavaPoet          : "com.squareup:javapoet:$SQUARE_JAVAPOET_VERSION",
     assertj                 : "org.assertj:assertj-core:$ASSERTJ_VERSION",
