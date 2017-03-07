@@ -279,12 +279,12 @@ class AttributeInfo {
     return isPrivate;
   }
 
-  String getter() {
-    return getter;
+  String getterCode() {
+    return isPrivate ? getter + "()" : name;
   }
 
-  String setter() {
-    return setter;
+  String setterCode() {
+    return isPrivate ? setter + "($L)" : name + " = $L";
   }
 
   @Override
