@@ -1,22 +1,17 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
-
 import java.lang.CharSequence;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
 /**
- * Generated file. Do not modify!
- */
-public class ModelWithSuperAttributes$SubModelWithSuperAttributes_
-    extends ModelWithSuperAttributes.SubModelWithSuperAttributes implements GeneratedModel<Object> {
+ * Generated file. Do not modify! */
+public class ModelWithSuperAttributes$SubModelWithSuperAttributes_ extends ModelWithSuperAttributes.SubModelWithSuperAttributes implements GeneratedModel<Object> {
+  private OnModelBoundListener<ModelWithSuperAttributes$SubModelWithSuperAttributes_, Object> onModelBoundListener_epoxyGeneratedModel;
 
-  private OnModelBoundListener<ModelWithSuperAttributes$SubModelWithSuperAttributes_, Object>
-      onModelBoundListener_epoxyGeneratedModel;
-  private OnModelUnboundListener<ModelWithSuperAttributes$SubModelWithSuperAttributes_, Object>
-      onModelUnboundListener_epoxyGeneratedModel;
+  private OnModelUnboundListener<ModelWithSuperAttributes$SubModelWithSuperAttributes_, Object> onModelUnboundListener_epoxyGeneratedModel;
 
   public ModelWithSuperAttributes$SubModelWithSuperAttributes_() {
     super();
@@ -27,15 +22,20 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_
   }
 
   @Override
-  public void handlePostBind(final EpoxyViewHolder holder, final Object object) {
+  public void handlePostBind(final Object object, int position) {
     if (onModelBoundListener_epoxyGeneratedModel != null) {
-      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object);
+      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
   }
 
-  public ModelWithSuperAttributes$SubModelWithSuperAttributes_ onBind(
-      OnModelBoundListener<ModelWithSuperAttributes$SubModelWithSuperAttributes_, Object>
-          listener) {
+  /**
+   * Register a listener that will be called when this model is bound to a view.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public ModelWithSuperAttributes$SubModelWithSuperAttributes_ onBind(OnModelBoundListener<ModelWithSuperAttributes$SubModelWithSuperAttributes_, Object> listener) {
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -43,15 +43,19 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_
   @Override
   public void unbind(Object object) {
     super.unbind(object);
-
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
   }
 
-  public ModelWithSuperAttributes$SubModelWithSuperAttributes_ onUnbind(
-      OnModelUnboundListener<ModelWithSuperAttributes$SubModelWithSuperAttributes_, Object>
-          listener) {
+  /**
+   * Register a listener that will be called when this model is unbound from a view.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public ModelWithSuperAttributes$SubModelWithSuperAttributes_ onUnbind(OnModelUnboundListener<ModelWithSuperAttributes$SubModelWithSuperAttributes_, Object> listener) {
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -120,7 +124,6 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_
   public ModelWithSuperAttributes$SubModelWithSuperAttributes_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-
     this.subValue = 0;
     this.superValue = 0;
     super.reset();
@@ -138,17 +141,13 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithSuperAttributes$SubModelWithSuperAttributes_ that =
-        (ModelWithSuperAttributes$SubModelWithSuperAttributes_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (
-        that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    ModelWithSuperAttributes$SubModelWithSuperAttributes_ that = (ModelWithSuperAttributes$SubModelWithSuperAttributes_) o;
+    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (
-        that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
       return false;
     }
-
     if (subValue != that.subValue) {
       return false;
     }
@@ -163,7 +162,6 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-
     result = 31 * result + subValue;
     result = 31 * result + superValue;
     return result;

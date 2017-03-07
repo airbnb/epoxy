@@ -247,10 +247,10 @@ class GeneratedModelWriter {
     methods.add(MethodSpec.methodBuilder("handlePostBind")
         .addModifiers(PUBLIC)
         .addAnnotation(Override.class)
-        .addParameter(viewHolderParam)
         .addParameter(boundObjectParam)
+        .addParameter(TypeName.INT, "position")
         .beginControlFlow("if ($L != null)", modelBindListenerFieldName())
-        .addStatement("$L.onModelBound(this, object)", modelBindListenerFieldName())
+        .addStatement("$L.onModelBound(this, object, position)", modelBindListenerFieldName())
         .endControlFlow()
         .build());
 

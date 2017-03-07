@@ -32,9 +32,9 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   @Override
-  public void handlePostBind(final EpoxyViewHolder holder, final Object object) {
+  public void handlePostBind(final Object object, int position) {
     if (onModelBoundListener_epoxyGeneratedModel != null) {
-      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object);
+      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
   }
 

@@ -4,14 +4,15 @@ import android.view.View;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-@Config(sdk = 21, manifest = TestRunner.MANIFEST_PATH)
-@RunWith(TestRunner.class)
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 21)
 public class AutoModelIntegrationTest {
 
   static class TestModel extends EpoxyModel<View> {
@@ -22,7 +23,7 @@ public class AutoModelIntegrationTest {
     }
   }
 
-  static class BasicAutoModelsAdapter extends AutoEpoxyAdapter {
+  static class BasicAutoModelsAdapter extends EpoxyController {
 
     @AutoModel TestModel model1;
     @AutoModel TestModel model2;
@@ -36,17 +37,17 @@ public class AutoModelIntegrationTest {
 
   @Test
   public void basicAutoModels() {
-    BasicAutoModelsAdapter testAdapter = new BasicAutoModelsAdapter();
-    testAdapter.requestModelUpdate();
+    BasicAutoModelsAdapter controller = new BasicAutoModelsAdapter();
+    controller.requestModelBuild();
 
-    List<EpoxyModel<?>> models = testAdapter.getCurrentModels();
+    List<EpoxyModel<?>> models = controller.getCopyOfModels();
 
     assertEquals("Models size", 2, models.size());
     assertEquals("First model", TestModel.class, models.get(0).getClass());
     assertEquals("Second model", TestModel.class, models.get(1).getClass());
   }
 
-  static class AdapterWithFieldAssigned extends AutoEpoxyAdapter {
+  static class AdapterWithFieldAssigned extends EpoxyController {
 
     @AutoModel TestModel model1 = new TestModel();
 
@@ -59,6 +60,22 @@ public class AutoModelIntegrationTest {
   @Test(expected = IllegalStateException.class)
   public void assigningValueToFieldFails() {
     AdapterWithFieldAssigned testAdapter = new AdapterWithFieldAssigned();
-    testAdapter.requestModelUpdate();
+    testAdapter.requestModelBuild();
+  }
+
+  static class AdapterWithIdChanged extends EpoxyController {
+
+    @AutoModel TestModel model1 = new TestModel();
+
+    @Override
+    protected void buildModels() {
+      add(model1.id(23));
+    }
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void assigningIdToAutoModelFails() {
+    AdapterWithIdChanged testAdapter = new AdapterWithIdChanged();
+    testAdapter.requestModelBuild();
   }
 }

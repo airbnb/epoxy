@@ -22,12 +22,19 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> implement
   }
 
   @Override
-  public void handlePostBind(final EpoxyViewHolder holder, final Object object) {
+  public void handlePostBind(final Object object, int position) {
     if (onModelBoundListener_epoxyGeneratedModel != null) {
-      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object);
+      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
   }
 
+  /**
+   * Register a listener that will be called when this model is bound to a view.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithType_<T> onBind(OnModelBoundListener<ModelWithType_<T>, Object> listener) {
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -41,6 +48,13 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> implement
     }
   }
 
+  /**
+   * Register a listener that will be called when this model is unbound from a view.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithType_<T> onUnbind(OnModelUnboundListener<ModelWithType_<T>, Object> listener) {
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;

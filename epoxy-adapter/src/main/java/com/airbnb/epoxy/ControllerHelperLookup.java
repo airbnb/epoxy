@@ -6,23 +6,23 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Looks up a generated {@link com.airbnb.epoxy.AdapterHelper} implementation for a given adapter.
+ * Looks up a generated {@link ControllerHelper} implementation for a given adapter.
  * If the adapter has no {@link com.airbnb.epoxy.AutoModel} models then a No-Op implementation will
  * be returned.
  */
-class AdapterHelperLookup {
+class ControllerHelperLookup {
   private static final String GENERATED_HELPER_CLASS_SUFFIX = "_EpoxyHelper";
   private static final Map<Class<?>, Constructor<?>> BINDINGS = new LinkedHashMap<>();
-  private static final NoOpAdapterHelper DUMMY_ADAPTER_HELPER = new NoOpAdapterHelper();
+  private static final NoOpControllerHelper NO_OP_CONTROLLER_HELPER = new NoOpControllerHelper();
 
-  static AdapterHelper getHelperForAdapter(AutoEpoxyAdapter adapter) {
-    Constructor<?> constructor = findConstructorForClass(adapter.getClass());
+  static ControllerHelper getHelperForController(EpoxyController controller) {
+    Constructor<?> constructor = findConstructorForClass(controller.getClass());
     if (constructor == null) {
-      return DUMMY_ADAPTER_HELPER;
+      return NO_OP_CONTROLLER_HELPER;
     }
 
     try {
-      return (AdapterHelper) constructor.newInstance(adapter);
+      return (ControllerHelper) constructor.newInstance(controller);
     } catch (IllegalAccessException e) {
       throw new RuntimeException("Unable to invoke " + constructor, e);
     } catch (InstantiationException e) {
@@ -39,13 +39,13 @@ class AdapterHelperLookup {
     }
   }
 
-  private static Constructor<?> findConstructorForClass(Class<?> adapterClass) {
-    Constructor<?> bindingCtor = BINDINGS.get(adapterClass);
+  private static Constructor<?> findConstructorForClass(Class<?> controllerClass) {
+    Constructor<?> bindingCtor = BINDINGS.get(controllerClass);
     if (bindingCtor != null) {
       return bindingCtor;
     }
 
-    String clsName = adapterClass.getName();
+    String clsName = controllerClass.getName();
     if (clsName.startsWith("android.") || clsName.startsWith("java.")) {
       return null;
     }
@@ -53,13 +53,13 @@ class AdapterHelperLookup {
     try {
       Class<?> bindingClass = Class.forName(clsName + GENERATED_HELPER_CLASS_SUFFIX);
       //noinspection unchecked
-      bindingCtor = bindingClass.getConstructor(adapterClass);
+      bindingCtor = bindingClass.getConstructor(controllerClass);
     } catch (ClassNotFoundException e) {
-      bindingCtor = findConstructorForClass(adapterClass.getSuperclass());
+      bindingCtor = findConstructorForClass(controllerClass.getSuperclass());
     } catch (NoSuchMethodException e) {
       throw new RuntimeException("Unable to find Epoxy Helper constructor for " + clsName, e);
     }
-    BINDINGS.put(adapterClass, bindingCtor);
+    BINDINGS.put(controllerClass, bindingCtor);
     return bindingCtor;
   }
 }

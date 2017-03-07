@@ -24,7 +24,7 @@ class NotifyBlocker extends AdapterDataObserver {
   public void onChanged() {
     if (!changesAllowed) {
       throw new IllegalStateException(
-          "You cannot notify item changes directly. Call `requestModelUpdate` instead.");
+          "You cannot notify item changes directly. Call `requestModelBuild` instead.");
     }
   }
 

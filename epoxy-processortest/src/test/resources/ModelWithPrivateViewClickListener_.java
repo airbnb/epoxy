@@ -24,27 +24,27 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
   public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
     if (clickListener_epoxyGeneratedModel != null) {
       super.setClickListener(new View.OnClickListener() {
-        // Save the original click listener so if it gets changed on
-        // the generated model this click listener won't be affected
-        // if it is still bound to a view.
-        private final OnModelClickListener<ModelWithPrivateViewClickListener_, Object> clickListener_epoxyGeneratedModel = ModelWithPrivateViewClickListener_.this.clickListener_epoxyGeneratedModel;
-        public void onClick(View v) {
+          // Save the original click listener so if it gets changed on
+          // the generated model this click listener won't be affected
+          // if it is still bound to a view.
+          private final OnModelClickListener<ModelWithPrivateViewClickListener_, Object> clickListener_epoxyGeneratedModel = ModelWithPrivateViewClickListener_.this.clickListener_epoxyGeneratedModel;
+          public void onClick(View v) {
           clickListener_epoxyGeneratedModel.onClick(ModelWithPrivateViewClickListener_.this, object, v,
               holder.getAdapterPosition());
-        }
-        public int hashCode() {
-          // Use the hash of the original click listener so we don't change the
-          // value by wrapping it with this anonymous click listener
-          return clickListener_epoxyGeneratedModel.hashCode();
-        }
-      });
+          }
+          public int hashCode() {
+             // Use the hash of the original click listener so we don't change the
+             // value by wrapping it with this anonymous click listener
+             return clickListener_epoxyGeneratedModel.hashCode();
+          }
+        });
     }
   }
 
   @Override
-  public void handlePostBind(final EpoxyViewHolder holder, final Object object) {
+  public void handlePostBind(final Object object, int position) {
     if (onModelBoundListener_epoxyGeneratedModel != null) {
-      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object);
+      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
   }
 

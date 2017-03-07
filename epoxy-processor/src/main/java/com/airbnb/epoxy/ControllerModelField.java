@@ -4,12 +4,12 @@ import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.element.Element;
 
-class AdapterModelField {
+class ControllerModelField {
 
   String fieldName;
   TypeName typeName;
 
-  AdapterModelField(Element element) {
+  ControllerModelField(Element element) {
     fieldName = element.getSimpleName().toString();
     typeName = TypeName.get(element.asType());
   }
