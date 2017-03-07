@@ -16,7 +16,21 @@ android {
 dependencies {
   testCompile project(':epoxy-processor')
   testCompile project(':epoxy-processortest2')
-  testCompile files(Jvm.current().getRuntimeJar())
+  testCompile files(getRuntimeJar())
   testCompile files(Jvm.current().getToolsJar())
   testCompile rootProject.deps.googleTestingCompile
+}
+
+static def getRuntimeJar() {
+  try {
+    final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile();
+    File runtimeJar = new File(javaBase, "lib/rt.jar");
+    if (runtimeJar.exists()) {
+      return runtimeJar;
+    }
+    runtimeJar = new File(javaBase, "jre/lib/rt.jar");
+    return runtimeJar.exists() ? runtimeJar : null;
+  } catch (IOException e) {
+    throw new RuntimeException(e);
+  }
 }
