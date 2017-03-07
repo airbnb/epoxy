@@ -1,22 +1,17 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
-
 import java.lang.CharSequence;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 
 /**
- * Generated file. Do not modify!
- */
-public class GenerateDefaultLayoutMethodParentLayout$NoLayout_
-    extends GenerateDefaultLayoutMethodParentLayout.NoLayout implements GeneratedModel<Object> {
+ * Generated file. Do not modify! */
+public class GenerateDefaultLayoutMethodParentLayout$NoLayout_ extends GenerateDefaultLayoutMethodParentLayout.NoLayout implements GeneratedModel<Object> {
+  private OnModelBoundListener<GenerateDefaultLayoutMethodParentLayout$NoLayout_, Object> onModelBoundListener_epoxyGeneratedModel;
 
-  private OnModelBoundListener<GenerateDefaultLayoutMethodParentLayout$NoLayout_, Object>
-      onModelBoundListener_epoxyGeneratedModel;
-  private OnModelUnboundListener<GenerateDefaultLayoutMethodParentLayout$NoLayout_, Object>
-      onModelUnboundListener_epoxyGeneratedModel;
+  private OnModelUnboundListener<GenerateDefaultLayoutMethodParentLayout$NoLayout_, Object> onModelUnboundListener_epoxyGeneratedModel;
 
   public GenerateDefaultLayoutMethodParentLayout$NoLayout_() {
     super();
@@ -27,14 +22,20 @@ public class GenerateDefaultLayoutMethodParentLayout$NoLayout_
   }
 
   @Override
-  public void handlePostBind(final EpoxyViewHolder holder, final Object object) {
+  public void handlePostBind(final Object object, int position) {
     if (onModelBoundListener_epoxyGeneratedModel != null) {
-      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object);
+      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
   }
 
-  public GenerateDefaultLayoutMethodParentLayout$NoLayout_ onBind(
-      OnModelBoundListener<GenerateDefaultLayoutMethodParentLayout$NoLayout_, Object> listener) {
+  /**
+   * Register a listener that will be called when this model is bound to a view.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public GenerateDefaultLayoutMethodParentLayout$NoLayout_ onBind(OnModelBoundListener<GenerateDefaultLayoutMethodParentLayout$NoLayout_, Object> listener) {
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -42,14 +43,19 @@ public class GenerateDefaultLayoutMethodParentLayout$NoLayout_
   @Override
   public void unbind(Object object) {
     super.unbind(object);
-
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
   }
 
-  public GenerateDefaultLayoutMethodParentLayout$NoLayout_ onUnbind(
-      OnModelUnboundListener<GenerateDefaultLayoutMethodParentLayout$NoLayout_, Object> listener) {
+  /**
+   * Register a listener that will be called when this model is unbound from a view.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public GenerateDefaultLayoutMethodParentLayout$NoLayout_ onUnbind(OnModelUnboundListener<GenerateDefaultLayoutMethodParentLayout$NoLayout_, Object> listener) {
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -115,7 +121,6 @@ public class GenerateDefaultLayoutMethodParentLayout$NoLayout_
   public GenerateDefaultLayoutMethodParentLayout$NoLayout_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-
     this.value = 0;
     super.reset();
     return this;
@@ -132,17 +137,13 @@ public class GenerateDefaultLayoutMethodParentLayout$NoLayout_
     if (!super.equals(o)) {
       return false;
     }
-    GenerateDefaultLayoutMethodParentLayout$NoLayout_ that =
-        (GenerateDefaultLayoutMethodParentLayout$NoLayout_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (
-        that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    GenerateDefaultLayoutMethodParentLayout$NoLayout_ that = (GenerateDefaultLayoutMethodParentLayout$NoLayout_) o;
+    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (
-        that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
       return false;
     }
-
     if (value != that.value) {
       return false;
     }
@@ -154,7 +155,6 @@ public class GenerateDefaultLayoutMethodParentLayout$NoLayout_
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-
     result = 31 * result + value;
     return result;
   }

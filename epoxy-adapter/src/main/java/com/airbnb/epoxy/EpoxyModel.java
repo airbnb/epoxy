@@ -191,17 +191,17 @@ public abstract class EpoxyModel<T> {
     return this;
   }
 
-  public void addTo(AutoEpoxyAdapter adapter) {
+  public void addTo(EpoxyController adapter) {
     adapter.add(this);
   }
 
-  public void addIf(boolean condition, AutoEpoxyAdapter adapter) {
+  public void addIf(boolean condition, EpoxyController adapter) {
     if (condition) {
       adapter.add(this);
     }
   }
 
-  public void addIf(AddPredicate predicate, AutoEpoxyAdapter adapter) {
+  public void addIf(AddPredicate predicate, EpoxyController adapter) {
     if (predicate.addIf()) {
       adapter.add(this);
     }

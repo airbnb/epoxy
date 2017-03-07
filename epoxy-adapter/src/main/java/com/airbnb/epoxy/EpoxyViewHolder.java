@@ -18,7 +18,8 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     super(LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false));
   }
 
-  public void bind(@SuppressWarnings("rawtypes") EpoxyModel model, List<Object> payloads) {
+  public void bind(@SuppressWarnings("rawtypes") EpoxyModel model, List<Object> payloads,
+      int position) {
     this.payloads = payloads;
 
     if (epoxyHolder == null && model instanceof EpoxyModelWithHolder) {
@@ -43,7 +44,7 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     if (model instanceof GeneratedModel) {
       // The generated method will enforce that only a properly typed listener can be set
       //noinspection unchecked
-      ((GeneratedModel) model).handlePostBind(this, objectToBind());
+      ((GeneratedModel) model).handlePostBind(objectToBind(), position);
     }
 
     epoxyModel = model;

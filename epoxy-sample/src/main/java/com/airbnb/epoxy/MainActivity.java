@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
   private static final Random RANDOM = new Random();
 
   @BindView(R.id.recycler_view) RecyclerView recyclerView;
-  private final SampleAdapter adapter = new SampleAdapter(this);
+  private final SampleAdapter controller = new SampleAdapter(this);
   private final List<ColorData> colors = new ArrayList<>();
 
   @Override
@@ -37,16 +37,16 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
     int spanCount = getSpanCount();
 
     // We are using a multi span grid to show many color models in each row. To set this up we need
-    // to set our span count on the adapter and then get the span size lookup object from
-    // the adapter. This look up object will delegate span size lookups to each model.
-    adapter.setSpanCount(spanCount);
+    // to set our span count on the controller and then get the span size lookup object from
+    // the controller. This look up object will delegate span size lookups to each model.
+    controller.setSpanCount(spanCount);
     GridLayoutManager gridLayoutManager = new GridLayoutManager(this, spanCount);
-    gridLayoutManager.setSpanSizeLookup(adapter.getSpanSizeLookup());
+    gridLayoutManager.setSpanSizeLookup(controller.getSpanSizeLookup());
 
     recyclerView.setLayoutManager(gridLayoutManager);
     recyclerView.setHasFixedSize(true);
     recyclerView.addItemDecoration(new VerticalGridCardSpacingDecoration());
-    recyclerView.setAdapter(adapter);
+    recyclerView.setAdapter(controller.getAdapter());
     updateAdapter();
 
     // Many color models are shown on screen at once. The default recycled view pool size is
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
   }
 
   private void updateAdapter() {
-    adapter.setData(colors);
+    controller.setData(colors);
   }
 
   private int getSpanCount() {

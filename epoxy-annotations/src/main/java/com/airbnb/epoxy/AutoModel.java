@@ -6,9 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to annotate model fields in a DiffAdapter. Model fields annotated with this should not be
- * assigned a value directly; a model will automatically be created for them. A stable ID will also
- * be generated and assigned to the model. This ID will be the same across all instances of the
+ * Used to annotate model fields in an EpoxyController. Model fields annotated with this should not
+ * be assigned a value directly; a model will automatically be created for them. A stable ID will
+ * also be generated and assigned to the model. This ID will be the same across all instances of the
  * adapter, so it can be used for saving state of a model.
  */
 @Target(ElementType.FIELD)

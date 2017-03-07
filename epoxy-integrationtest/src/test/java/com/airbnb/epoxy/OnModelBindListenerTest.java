@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.app.Activity;
+import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.AdapterDataObserver;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -8,6 +9,7 @@ import android.widget.FrameLayout;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertFalse;
@@ -18,24 +20,25 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@Config(sdk = 21, manifest = TestRunner.MANIFEST_PATH)
-@RunWith(TestRunner.class)
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 21)
 public class OnModelBindListenerTest {
   final Activity activity = Robolectric.setupActivity(Activity.class);
-  final AdapterWithModelClickListener adapter = new AdapterWithModelClickListener();
+  final AdapterWithModelClickListener controller = new AdapterWithModelClickListener();
   EpoxyViewHolder boundViewHolder;
 
   private void buildModelsAndBind() {
-    adapter.requestModelUpdate();
+    controller.requestModelBuild();
     // We can create the model and bind it
-    boundViewHolder = adapter.onCreateViewHolder(new FrameLayout(activity),
-        adapter.model.getLayout());
+    Adapter adapter = controller.getAdapter();
+    boundViewHolder = ((EpoxyViewHolder) adapter.onCreateViewHolder(new FrameLayout(activity),
+        controller.model.getLayout()));
 
     adapter.onBindViewHolder(boundViewHolder, 0);
   }
 
   private void recycleModel() {
-    adapter.onViewRecycled(boundViewHolder);
+    controller.getAdapter().onViewRecycled(boundViewHolder);
     boundViewHolder = null;
   }
 
@@ -43,7 +46,7 @@ public class OnModelBindListenerTest {
     boolean called;
 
     @Override
-    public void onModelBound(ModelWithClickListener_ model, View view) {
+    public void onModelBound(ModelWithClickListener_ model, View view, int position) {
       called = true;
     }
   }
@@ -57,7 +60,7 @@ public class OnModelBindListenerTest {
     }
   }
 
-  static class AdapterWithModelClickListener extends AutoEpoxyAdapter {
+  static class AdapterWithModelClickListener extends EpoxyController {
     final ModelWithClickListener_ model = new ModelWithClickListener_().id(1);
 
     @Override
@@ -69,7 +72,7 @@ public class OnModelBindListenerTest {
   @Test
   public void onBindListenerGetsCalled() {
     BindListener bindListener = new BindListener();
-    adapter.model.onBind(bindListener);
+    controller.model.onBind(bindListener);
 
     assertFalse(bindListener.called);
     buildModelsAndBind();
@@ -79,7 +82,7 @@ public class OnModelBindListenerTest {
   @Test
   public void onUnbindListenerGetsCalled() {
     UnbindListener unbindlistener = new UnbindListener();
-    adapter.model.onUnbind(unbindlistener);
+    controller.model.onUnbind(unbindlistener);
 
     assertFalse(unbindlistener.called);
     buildModelsAndBind();
@@ -92,39 +95,39 @@ public class OnModelBindListenerTest {
   @Test
   public void bindListenerChangesHashCode() {
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
-    adapter.registerAdapterDataObserver(observerMock);
+    controller.registerAdapterDataObserver(observerMock);
 
-    adapter.requestModelUpdate();
+    controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));
 
     // shouldn't change
-    adapter.model.onBind(null);
-    adapter.requestModelUpdate();
+    controller.model.onBind(null);
+    controller.requestModelBuild();
     verify(observerMock, never()).onItemRangeChanged(eq(0), eq(1), eq(null));
 
     BindListener listener1 = new BindListener();
-    adapter.model.onBind(listener1);
-    adapter.requestModelUpdate();
+    controller.model.onBind(listener1);
+    controller.requestModelBuild();
     verify(observerMock, times(1)).onItemRangeChanged(eq(0), eq(1), eq(null));
 
-    adapter.model.onBind(listener1);
-    adapter.requestModelUpdate();
+    controller.model.onBind(listener1);
+    controller.requestModelBuild();
     verify(observerMock, times(1)).onItemRangeChanged(eq(0), eq(1), eq(null));
   }
 
   @Test
   public void nullBindListenerChangesHashCode() {
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
-    adapter.registerAdapterDataObserver(observerMock);
+    controller.registerAdapterDataObserver(observerMock);
 
-    adapter.requestModelUpdate();
+    controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));
 
-    adapter.model.onBind(new BindListener());
-    adapter.requestModelUpdate();
+    controller.model.onBind(new BindListener());
+    controller.requestModelBuild();
 
-    adapter.model.onBind(null);
-    adapter.requestModelUpdate();
+    controller.model.onBind(null);
+    controller.requestModelBuild();
 
     verify(observerMock, times(2)).onItemRangeChanged(eq(0), eq(1), eq(null));
   }
@@ -132,16 +135,16 @@ public class OnModelBindListenerTest {
   @Test
   public void newBindListenerDoesNotChangeHashCode() {
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
-    adapter.registerAdapterDataObserver(observerMock);
+    controller.registerAdapterDataObserver(observerMock);
 
-    adapter.requestModelUpdate();
+    controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));
 
-    adapter.model.onBind(new BindListener());
-    adapter.requestModelUpdate();
+    controller.model.onBind(new BindListener());
+    controller.requestModelBuild();
 
-    adapter.model.onBind(new BindListener());
-    adapter.requestModelUpdate();
+    controller.model.onBind(new BindListener());
+    controller.requestModelBuild();
 
     verify(observerMock).onItemRangeChanged(eq(0), eq(1), eq(null));
   }
@@ -149,39 +152,39 @@ public class OnModelBindListenerTest {
   @Test
   public void unbindListenerChangesHashCode() {
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
-    adapter.registerAdapterDataObserver(observerMock);
+    controller.registerAdapterDataObserver(observerMock);
 
-    adapter.requestModelUpdate();
+    controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));
 
     // shouldn't change
-    adapter.model.onUnbind(null);
-    adapter.requestModelUpdate();
+    controller.model.onUnbind(null);
+    controller.requestModelBuild();
     verify(observerMock, never()).onItemRangeChanged(eq(0), eq(1), eq(null));
 
     UnbindListener listener1 = new UnbindListener();
-    adapter.model.onUnbind(listener1);
-    adapter.requestModelUpdate();
+    controller.model.onUnbind(listener1);
+    controller.requestModelBuild();
     verify(observerMock, times(1)).onItemRangeChanged(eq(0), eq(1), eq(null));
 
-    adapter.model.onUnbind(listener1);
-    adapter.requestModelUpdate();
+    controller.model.onUnbind(listener1);
+    controller.requestModelBuild();
     verify(observerMock, times(1)).onItemRangeChanged(eq(0), eq(1), eq(null));
   }
 
   @Test
   public void nullUnbindListenerChangesHashCode() {
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
-    adapter.registerAdapterDataObserver(observerMock);
+    controller.registerAdapterDataObserver(observerMock);
 
-    adapter.requestModelUpdate();
+    controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));
 
-    adapter.model.onUnbind(new UnbindListener());
-    adapter.requestModelUpdate();
+    controller.model.onUnbind(new UnbindListener());
+    controller.requestModelBuild();
 
-    adapter.model.onUnbind(null);
-    adapter.requestModelUpdate();
+    controller.model.onUnbind(null);
+    controller.requestModelBuild();
 
     verify(observerMock, times(2)).onItemRangeChanged(eq(0), eq(1), eq(null));
   }
@@ -189,16 +192,16 @@ public class OnModelBindListenerTest {
   @Test
   public void newUnbindListenerDoesNotChangHashCode() {
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
-    adapter.registerAdapterDataObserver(observerMock);
+    controller.registerAdapterDataObserver(observerMock);
 
-    adapter.requestModelUpdate();
+    controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));
 
-    adapter.model.onUnbind(new UnbindListener());
-    adapter.requestModelUpdate();
+    controller.model.onUnbind(new UnbindListener());
+    controller.requestModelBuild();
 
-    adapter.model.onUnbind(new UnbindListener());
-    adapter.requestModelUpdate();
+    controller.model.onUnbind(new UnbindListener());
+    controller.requestModelBuild();
 
     verify(observerMock).onItemRangeChanged(eq(0), eq(1), eq(null));
   }

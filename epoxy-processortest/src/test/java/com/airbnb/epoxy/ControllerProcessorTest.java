@@ -11,18 +11,18 @@ import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static com.google.testing.compile.JavaSourcesSubjectFactory.javaSources;
 import static java.util.Arrays.asList;
 
-public class AdapterProcessorTest {
+public class ControllerProcessorTest {
 
   @Test
-  public void adapterWithAutoModel() {
+  public void controllerWithAutoModel() {
     JavaFileObject model = JavaFileObjects
         .forResource("BasicModelWithAttribute.java");
 
     JavaFileObject adapter = JavaFileObjects
-        .forResource("AdapterWithAutoModel.java");
+        .forResource("ControllerWithAutoModel.java");
 
     JavaFileObject generatedHelper = JavaFileObjects
-        .forResource("AdapterWithAutoModel_EpoxyHelper.java");
+        .forResource("ControllerWithAutoModel_EpoxyHelper.java");
 
     assert_().about(javaSources())
         .that(asList(model, adapter))
@@ -33,12 +33,12 @@ public class AdapterProcessorTest {
   }
 
   @Test
-  public void adapterWithAutoModelWithoutValidation() {
+  public void controllerWithAutoModelWithoutValidation() {
     JavaFileObject model = JavaFileObjects
         .forResource("BasicModelWithAttribute.java");
 
-    JavaFileObject adapter = JavaFileObjects
-        .forResource("AdapterWithAutoModelWithoutValidation.java");
+    JavaFileObject controller = JavaFileObjects
+        .forResource("ControllerWithAutoModelWithoutValidation.java");
 
     // Config to turn validation off
     JavaFileObject CONFIG = JavaFileObjects
@@ -50,10 +50,10 @@ public class AdapterProcessorTest {
             + "import com.airbnb.epoxy.PackageEpoxyConfig;");
 
     JavaFileObject generatedHelper = JavaFileObjects
-        .forResource("AdapterWithAutoModelWithoutValidation_EpoxyHelper.java");
+        .forResource("ControllerWithAutoModelWithoutValidation_EpoxyHelper.java");
 
     assert_().about(javaSources())
-        .that(asList(model, adapter, CONFIG))
+        .that(asList(model, controller, CONFIG))
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
         .and()

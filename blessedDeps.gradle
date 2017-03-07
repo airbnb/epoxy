@@ -24,21 +24,21 @@ rootProject.ext.ASSERTJ_VERSION = "1.7.1"
 rootProject.ext.GOOGLE_TESTING_COMPILE_VERSION = "0.10"
 rootProject.ext.JUNIT_VERSION = "4.12"
 rootProject.ext.MOCKITO_VERSION = "2.7.7"
-rootProject.ext.ROBOLECTRIC_VERSION = "3.1.4"
+rootProject.ext.ROBOLECTRIC_VERSION = "3.3"
 
 rootProject.ext.deps = [
-    androidSupportLibrary   : "com.android.support:appcompat-v7:$ANDROID_SUPPORT_LIBS_VERSION",
-    androidCardView         : "com.android.support:cardview-v7:$ANDROID_SUPPORT_LIBS_VERSION",
-    androidDesignLibrary    : "com.android.support:design:$ANDROID_SUPPORT_LIBS_VERSION",
-    androidRecyclerView     : "com.android.support:recyclerview-v7:$ANDROID_SUPPORT_LIBS_VERSION",
-    androidAnnotations      : "com.android.support:support-annotations:$ANDROID_SUPPORT_LIBS_VERSION",
-    butterknifeLibrary      : "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION",
-    butterknifeCompiler     : "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION",
-    googleAutoService       : "com.google.auto.service:auto-service:$GOOGLE_AUTO_SERVICE_VERSION",
-    squareJavaPoet          : "com.squareup:javapoet:$SQUARE_JAVAPOET_VERSION",
-    assertj                 : "org.assertj:assertj-core:$ASSERTJ_VERSION",
-    googleTestingCompile    : "com.google.testing.compile:compile-testing:$GOOGLE_TESTING_COMPILE_VERSION",
-    junit                   : "junit:junit:$JUNIT_VERSION",
-    mockito                 : "org.mockito:mockito-core:$MOCKITO_VERSION",
-    robolectric            : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION"
+    androidSupportLibrary: "com.android.support:appcompat-v7:$ANDROID_SUPPORT_LIBS_VERSION",
+    androidCardView      : "com.android.support:cardview-v7:$ANDROID_SUPPORT_LIBS_VERSION",
+    androidDesignLibrary : "com.android.support:design:$ANDROID_SUPPORT_LIBS_VERSION",
+    androidRecyclerView  : "com.android.support:recyclerview-v7:$ANDROID_SUPPORT_LIBS_VERSION",
+    androidAnnotations   : "com.android.support:support-annotations:$ANDROID_SUPPORT_LIBS_VERSION",
+    butterknifeLibrary   : "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION",
+    butterknifeCompiler  : "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION",
+    googleAutoService    : "com.google.auto.service:auto-service:$GOOGLE_AUTO_SERVICE_VERSION",
+    squareJavaPoet       : "com.squareup:javapoet:$SQUARE_JAVAPOET_VERSION",
+    assertj              : "org.assertj:assertj-core:$ASSERTJ_VERSION",
+    googleTestingCompile : "com.google.testing.compile:compile-testing:$GOOGLE_TESTING_COMPILE_VERSION",
+    junit                : "junit:junit:$JUNIT_VERSION",
+    mockito              : "org.mockito:mockito-core:$MOCKITO_VERSION",
+    robolectric          : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION"
 ]

@@ -24,30 +24,37 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
     if (clickListener_epoxyGeneratedModel != null) {
       super.clickListener = new View.OnClickListener() {
-        // Save the original click listener so if it gets changed on
-        // the generated model this click listener won't be affected
-        // if it is still bound to a view.
-        private final OnModelClickListener<ModelWithViewClickListener_, Object> clickListener_epoxyGeneratedModel = ModelWithViewClickListener_.this.clickListener_epoxyGeneratedModel;
-        public void onClick(View v) {
+          // Save the original click listener so if it gets changed on
+          // the generated model this click listener won't be affected
+          // if it is still bound to a view.
+          private final OnModelClickListener<ModelWithViewClickListener_, Object> clickListener_epoxyGeneratedModel = ModelWithViewClickListener_.this.clickListener_epoxyGeneratedModel;
+          public void onClick(View v) {
           clickListener_epoxyGeneratedModel.onClick(ModelWithViewClickListener_.this, object, v,
               holder.getAdapterPosition());
-        }
-        public int hashCode() {
-          // Use the hash of the original click listener so we don't change the
-          // value by wrapping it with this anonymous click listener
-          return clickListener_epoxyGeneratedModel.hashCode();
-        }
-      };
+          }
+          public int hashCode() {
+             // Use the hash of the original click listener so we don't change the
+             // value by wrapping it with this anonymous click listener
+             return clickListener_epoxyGeneratedModel.hashCode();
+          }
+        };
     }
   }
 
   @Override
-  public void handlePostBind(final EpoxyViewHolder holder, final Object object) {
+  public void handlePostBind(final Object object, int position) {
     if (onModelBoundListener_epoxyGeneratedModel != null) {
-      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object);
+      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
   }
 
+  /**
+   * Register a listener that will be called when this model is bound to a view.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithViewClickListener_ onBind(OnModelBoundListener<ModelWithViewClickListener_, Object> listener) {
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -61,11 +68,20 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
     }
   }
 
+  /**
+   * Register a listener that will be called when this model is unbound from a view.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithViewClickListener_ onUnbind(OnModelUnboundListener<ModelWithViewClickListener_, Object> listener) {
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
+  /**
+   * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
   public ModelWithViewClickListener_ clickListener(final OnModelClickListener<ModelWithViewClickListener_, Object> clickListener) {
     super.clickListener = null;
     this.clickListener_epoxyGeneratedModel = clickListener;

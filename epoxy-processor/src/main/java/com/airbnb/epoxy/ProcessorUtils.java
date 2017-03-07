@@ -26,9 +26,10 @@ import static javax.lang.model.element.Modifier.STATIC;
 class ProcessorUtils {
 
   static final String EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel<?>";
+  static final String UNTYPED_EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel";
   static final String EPOXY_MODEL_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyModelWithHolder<?>";
   static final String EPOXY_VIEW_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyViewHolder";
-  static final String EPOXY_AUTO_ADAPTER_TYPE = "com.airbnb.epoxy.AutoEpoxyAdapter";
+  static final String EPOXY_CONTROLLER_TYPE = "com.airbnb.epoxy.EpoxyController";
   static final String VIEW_CLICK_LISTENER_TYPE = "android.view.View.OnClickListener";
   static final String GENERATED_MODEL_INTERFACE = "com.airbnb.epoxy.GeneratedModel";
   static final String MODEL_CLICK_LISTENER_TYPE = "com.airbnb.epoxy.OnModelClickListener";
@@ -60,8 +61,8 @@ class ProcessorUtils {
     return isSubtypeOfType(type, EPOXY_MODEL_TYPE);
   }
 
-  static boolean isDiffAdapter(TypeElement element) {
-    return isSubtypeOfType(element.asType(), EPOXY_AUTO_ADAPTER_TYPE);
+  static boolean isController(TypeElement element) {
+    return isSubtypeOfType(element.asType(), EPOXY_CONTROLLER_TYPE);
   }
 
   static boolean isEpoxyModel(TypeElement type) {

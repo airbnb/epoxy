@@ -23,13 +23,19 @@ public class AbstractModelWithHolder_ extends AbstractModelWithHolder implements
   }
 
   @Override
-  public void handlePostBind(final EpoxyViewHolder holder,
-      final AbstractModelWithHolder.Holder object) {
+  public void handlePostBind(final AbstractModelWithHolder.Holder object, int position) {
     if (onModelBoundListener_epoxyGeneratedModel != null) {
-      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object);
+      onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
   }
 
+  /**
+   * Register a listener that will be called when this model is bound to a view.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public AbstractModelWithHolder_ onBind(OnModelBoundListener<AbstractModelWithHolder_, AbstractModelWithHolder.Holder> listener) {
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -43,6 +49,13 @@ public class AbstractModelWithHolder_ extends AbstractModelWithHolder implements
     }
   }
 
+  /**
+   * Register a listener that will be called when this model is unbound from a view.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public AbstractModelWithHolder_ onUnbind(OnModelUnboundListener<AbstractModelWithHolder_, AbstractModelWithHolder.Holder> listener) {
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;

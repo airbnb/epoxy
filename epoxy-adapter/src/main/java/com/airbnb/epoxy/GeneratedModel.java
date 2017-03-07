@@ -18,5 +18,5 @@ public interface GeneratedModel<T> {
    * there on two onBind methods (one for payloads and one for no payloads), and one can call into
    * the other. We don't want to dispatch two onBind listener calls in that case.
    */
-  void handlePostBind(EpoxyViewHolder holder, T objectToBind);
+  void handlePostBind(T objectToBind, int position);
 }

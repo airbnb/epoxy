@@ -83,7 +83,7 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
     }
 
     EpoxyModel<?> modelToShow = getModelForPosition(position);
-    holder.bind(modelToShow, payloads);
+    holder.bind(modelToShow, payloads, position);
 
     viewHolderState.restore(holder);
     boundViewHolders.put(holder);
