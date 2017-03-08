@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewStub;
 
 import com.airbnb.epoxy.EpoxyModelGroup.Holder;
@@ -31,6 +32,9 @@ import java.util.List;
  * <p>
  * By default this model inherits the same id as the first model in the list. Call {@link #id(long)}
  * to override that if needed.
+ * <p>
+ * Any layout param options set on the view stubs will be transferred to the corresponding model
+ * view.
  */
 @SuppressWarnings("rawtypes")
 public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
@@ -200,15 +204,17 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
 
     @Override
     protected void bindView(View itemView) {
+      // TODO: (eli_hart 3/8/17) better error handling and messaging around the viewgroup
+      // expectation
+      ViewGroup groupView = (ViewGroup) itemView;
+
       int modelCount = models.size();
       views = new ArrayList<>(modelCount);
       holders = new ArrayList<>(modelCount);
 
       for (int i = 0; i < modelCount; i++) {
         EpoxyModel<?> model = models.get(i);
-        ViewStub viewStub = getViewStub(itemView, i, model);
-        viewStub.setLayoutResource(model.getLayout());
-        View view = viewStub.inflate();
+        View view = createAndAddView(groupView, i, model);
 
         if (model instanceof EpoxyModelWithHolder) {
           EpoxyHolder holder = ((EpoxyModelWithHolder) model).createNewHolder();
@@ -219,6 +225,29 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
         }
 
         views.add(view);
+      }
+    }
+
+    private View createAndAddView(ViewGroup groupView, int i, EpoxyModel<?> model) {
+      ViewStub viewStub = getViewStub(groupView, i, model);
+
+      // TODO: (eli_hart 3/8/17) Test this and update documentation
+      if (model instanceof EpoxyModelWithView) {
+        final int index = groupView.indexOfChild(viewStub);
+        groupView.removeViewInLayout(viewStub);
+
+        View modelView = model.buildView(groupView);
+        final ViewGroup.LayoutParams layoutParams = viewStub.getLayoutParams();
+        if (layoutParams != null) {
+          groupView.addView(modelView, index, layoutParams);
+        } else {
+          groupView.addView(modelView, index);
+        }
+
+        return groupView;
+      } else {
+        viewStub.setLayoutResource(model.getLayout());
+        return viewStub.inflate();
       }
     }
 

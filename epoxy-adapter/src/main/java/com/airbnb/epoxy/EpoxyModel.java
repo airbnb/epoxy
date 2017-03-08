@@ -1,6 +1,9 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -43,6 +46,20 @@ public abstract class EpoxyModel<T> {
   }
 
   /**
+   * Get the view type to associate with this model in the recyclerview. For models that use a
+   * layout resource, the view type is simply the layout resource value.
+   *
+   * @see android.support.v7.widget.RecyclerView.Adapter#getItemViewType(int)
+   */
+  int getViewType() {
+    return getLayout();
+  }
+
+  View buildView(ViewGroup parent) {
+    return LayoutInflater.from(parent.getContext()).inflate(getLayout(), parent, false);
+  }
+
+  /**
    * Binds the current data to the given view. You should bind all fields including unset/empty
    * fields to ensure proper recycling.
    */
@@ -69,7 +86,7 @@ public abstract class EpoxyModel<T> {
    * if the view has remained on screen to be reused across item changes. This means that you should
    * not rely on unbind to clear a view or model's state before bind is called again.
    *
-   * @see {@link EpoxyAdapter#onViewRecycled(EpoxyViewHolder)}
+   * @see EpoxyAdapter#onViewRecycled(EpoxyViewHolder)
    */
   public void unbind(T view) {
   }
@@ -225,7 +242,7 @@ public abstract class EpoxyModel<T> {
     if (id != that.id) {
       return false;
     }
-    if (getLayout() != that.getLayout()) {
+    if (getViewType() != that.getViewType()) {
       return false;
     }
     return shown == that.shown;
@@ -234,7 +251,7 @@ public abstract class EpoxyModel<T> {
   @Override
   public int hashCode() {
     int result = (int) (id ^ (id >>> 32));
-    result = 31 * result + getLayout();
+    result = 31 * result + getViewType();
     result = 31 * result + (shown ? 1 : 0);
     return result;
   }
@@ -316,7 +333,7 @@ public abstract class EpoxyModel<T> {
   public String toString() {
     return getClass().getSimpleName() + "{"
         + "id=" + id
-        + ", layout=" + getLayout()
+        + ", viewType=" + getViewType()
         + ", shown=" + shown
         + ", addedToAdapter=" + addedToAdapter
         + '}';

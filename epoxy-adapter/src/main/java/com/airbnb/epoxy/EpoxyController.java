@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.AdapterDataObserver;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,14 +32,18 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
 public abstract class EpoxyController {
   private static final Timer NO_OP_TIMER = new NoOpTimer();
 
-  private final ControllerAdapter adapter = new ControllerAdapter(this);
+  private final EpoxyControllerAdapter adapter = new EpoxyControllerAdapter(this);
   private final ControllerHelper helper = getHelperForController(this);
   private final Handler handler = new Handler();
-  private List<EpoxyModel<?>> copyOfCurrentModels;
   private ArrayList<EpoxyModel<?>> modelsBeingBuilt;
   private boolean filterDuplicates;
   /** Used to time operations and log their duration when in debug mode. */
   private Timer timer = NO_OP_TIMER;
+  private EpoxyDiffLogger debugObserver;
+  private boolean hasBuiltModelsEver;
+
+  // TODO: (eli_hart 3/8/17) Don't always delay first build?
+  // TODO: (eli_hart 3/9/17) Validate newly added model does not exist on current adapter models
 
   // Readme items:
   // hidden models breaking for pull to refresh or multiple items in a row on grid
@@ -49,6 +52,9 @@ public abstract class EpoxyController {
   // Config setting to validate auto models
   // Note that it doesn't work to attach the adapter to multiple recyclerviews because of saved
   // state. Multiple recyclerviews could be supported if needed.
+
+  // TODO: (eli_hart 3/7/17) Guide for updating to 2.0
+  // Setting a null click listener is broken. Now needs to be cast.
 
   /**
    * Call this to schedule a model update. The adapter will schedule a call to {@link
@@ -62,11 +68,11 @@ public abstract class EpoxyController {
   private final Runnable buildModelsRunnable = new Runnable() {
     @Override
     public void run() {
-      doModelBuild();
+      dispatchModelBuild();
     }
   };
 
-  private void doModelBuild() {
+  private void dispatchModelBuild() {
     helper.resetAutoModels();
 
     modelsBeingBuilt = new ArrayList<>(getExpectedModelCount());
@@ -82,15 +88,16 @@ public abstract class EpoxyController {
     timer.stop("Models diffed");
 
     modelsBeingBuilt = null;
-    copyOfCurrentModels = null;
+    hasBuiltModelsEver = true;
   }
 
+  /** An estimate for how many models will be built in the next {@link #buildModels()} phase. */
   private int getExpectedModelCount() {
-    if (adapter.currentModels == Collections.EMPTY_LIST) {
-      return 25;
+    if (hasBuiltModelsEver) {
+      return adapter.getItemCount();
     }
 
-    return adapter.getItemCount();
+    return 25;
   }
 
   /**
@@ -100,6 +107,22 @@ public abstract class EpoxyController {
    * with the models that should be shown, in the order that is desired.
    */
   protected abstract void buildModels();
+
+  /**
+   * Get the number of models added so far during the {@link #buildModels()} phase. It is only valid
+   * to call this from within that method.
+   * <p>
+   * This is different from the number of models currently on the adapter, since models on the
+   * adapter are not updated until after models are finished being built. To access current adapter
+   * count call {@link #getAdapter()} and {@link EpoxyControllerAdapter#getItemCount()}
+   */
+  protected int getModelCountBuiltSoFar() {
+    if (!isBuildingModels()) {
+      throw new IllegalStateException("Can only all this when inside the `buildModels` method");
+    }
+
+    return modelsBeingBuilt.size();
+  }
 
   protected void add(EpoxyModel<?> model) {
     validateAddedModel(model);
@@ -171,7 +194,11 @@ public abstract class EpoxyController {
           indexOfOriginal++;
         }
 
-        onModelFiltered(originalModel, indexOfOriginal, model, indexOfDuplicate);
+        onExceptionSwallowed(
+            new IllegalStateException("Two models have the same ID. ID's must be unique!"
+                + "\nOriginal has position " + indexOfOriginal + ":\n" + originalModel
+                + "\nDuplicate has position " + indexOfDuplicate + ":\n" + model)
+        );
       }
     }
   }
@@ -189,20 +216,10 @@ public abstract class EpoxyController {
   }
 
   /**
-   * Called if a duplicate model is detected and filtered out.
-   *
-   * @see #setFilterDuplicates(boolean)
-   */
-  protected void onModelFiltered(EpoxyModel<?> originalModel, int indexOfOriginal,
-      EpoxyModel<?> duplicateModel, int indexOfDuplicate) {
-
-  }
-
-  /**
    * If set to true, Epoxy will search for models with duplicate ids added during {@link
    * #buildModels()} and remove any duplicates found. If models with the same id are found, the
    * first one is left in the adapter and any subsequent models are removed. {@link
-   * #onModelFiltered(EpoxyModel, int, EpoxyModel, int)} will be called for each duplicate removed.
+   * #onExceptionSwallowed(RuntimeException)} will be called for each duplicate removed.
    * <p>
    * This may be useful if your models are created via server supplied data, in which case the
    * server may erroneously send duplicate items. Duplicate items break Epoxy's diffing and would
@@ -224,71 +241,29 @@ public abstract class EpoxyController {
    * <p>
    * This should only be used in debug builds to avoid a performance hit in prod.
    */
-  public void enableDebugLogging() {
+  public void setDebugLoggingEnabled(boolean enabled) {
     if (isBuildingModels()) {
       throw new IllegalStateException("Debug logging should be enabled before models are built");
     }
 
-    if (timer == NO_OP_TIMER) {
+    if (enabled) {
       timer = new DebugTimer(getClass().getSimpleName());
-      registerAdapterDataObserver(new EpoxyDiffLogger(getClass().getSimpleName()));
+      debugObserver = new EpoxyDiffLogger(getClass().getSimpleName());
+      adapter.registerAdapterDataObserver(debugObserver);
+    } else {
+      timer = NO_OP_TIMER;
+      if (debugObserver != null) {
+        adapter.unregisterAdapterDataObserver(debugObserver);
+      }
     }
   }
 
   /**
    * Get the underlying adapter built by this controller. Use this to get the adapter to set on a
-   * RecyclerView.
+   * RecyclerView, or to get information about models currently in use.
    */
-  public RecyclerView.Adapter getAdapter() {
+  public EpoxyControllerAdapter getAdapter() {
     return adapter;
-  }
-
-  public int getModelCount() {
-    return adapter.getItemCount();
-  }
-
-  public boolean isEmpty() {
-    return adapter.isEmpty();
-  }
-
-  /** Get an unmodifiable copy of the current models set on the adapter. */
-  public List<EpoxyModel<?>> getCopyOfModels() {
-    if (copyOfCurrentModels == null) {
-      copyOfCurrentModels = new UnmodifiableList<>(adapter.currentModels);
-    }
-
-    return copyOfCurrentModels;
-  }
-
-  public EpoxyModel<?> getModelAtPosition(int position) {
-    return adapter.currentModels.get(position);
-  }
-
-  /**
-   * Searches the current model list for the model with the given id. Returns the matching model if
-   * one is found, otherwise null is returned.
-   */
-  @Nullable
-  public EpoxyModel<?> getModelById(long id) {
-    for (EpoxyModel<?> model : adapter.currentModels) {
-      if (model.id() == id) {
-        return model;
-      }
-    }
-
-    return null;
-  }
-
-  protected int getModelPosition(EpoxyModel<?> targetModel) {
-    int size = adapter.currentModels.size();
-    for (int i = 0; i < size; i++) {
-      EpoxyModel<?> model = adapter.currentModels.get(i);
-      if (model.id() == targetModel.id()) {
-        return i;
-      }
-    }
-
-    return -1;
   }
 
   public void onSaveInstanceState(Bundle outState) {
@@ -328,14 +303,6 @@ public abstract class EpoxyController {
     return adapter.isMultiSpan();
   }
 
-  public void registerAdapterDataObserver(AdapterDataObserver observer) {
-    adapter.registerAdapterDataObserver(observer);
-  }
-
-  public void unregisterAdapterDataObserver(AdapterDataObserver observer) {
-    adapter.unregisterAdapterDataObserver(observer);
-  }
-
   /** Called when the controller's adapter is attach to a recyclerview. */
   protected void onAttachedToRecyclerView(RecyclerView recyclerView) {
 
@@ -347,11 +314,9 @@ public abstract class EpoxyController {
   }
 
   /**
-   * Returns an object that manages the view holders currently bound to the RecyclerView. This
-   * object is mainly used by the base Epoxy adapter to save view states, but you may find it useful
-   * to help access views or models currently shown in the RecyclerView.
+   * This is called when recoverable exceptions happen at runtime. They can be ignored and Epoxy
+   * will recover, but you can override this to be aware of when they happen.
    */
-  public BoundViewHolders getBoundViewHolders() {
-    return adapter.getBoundViewHolders();
+  protected void onExceptionSwallowed(RuntimeException exception) {
   }
 }
