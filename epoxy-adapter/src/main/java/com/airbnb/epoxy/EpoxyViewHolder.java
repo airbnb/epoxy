@@ -1,10 +1,8 @@
 
 package com.airbnb.epoxy;
 
-import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
+import android.view.View;
 
 import java.util.List;
 
@@ -14,8 +12,8 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
   private List<Object> payloads;
   private EpoxyHolder epoxyHolder;
 
-  public EpoxyViewHolder(ViewGroup parent, @LayoutRes int layoutId) {
-    super(LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false));
+  public EpoxyViewHolder(View view) {
+    super(view);
   }
 
   public void bind(@SuppressWarnings("rawtypes") EpoxyModel model, List<Object> payloads,

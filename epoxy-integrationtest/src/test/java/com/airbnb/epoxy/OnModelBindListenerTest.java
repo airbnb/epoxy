@@ -95,7 +95,7 @@ public class OnModelBindListenerTest {
   @Test
   public void bindListenerChangesHashCode() {
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
-    controller.registerAdapterDataObserver(observerMock);
+    controller.getAdapter().registerAdapterDataObserver(observerMock);
 
     controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));
@@ -118,7 +118,7 @@ public class OnModelBindListenerTest {
   @Test
   public void nullBindListenerChangesHashCode() {
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
-    controller.registerAdapterDataObserver(observerMock);
+    controller.getAdapter().registerAdapterDataObserver(observerMock);
 
     controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));
@@ -135,7 +135,7 @@ public class OnModelBindListenerTest {
   @Test
   public void newBindListenerDoesNotChangeHashCode() {
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
-    controller.registerAdapterDataObserver(observerMock);
+    controller.getAdapter().registerAdapterDataObserver(observerMock);
 
     controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));
@@ -152,7 +152,7 @@ public class OnModelBindListenerTest {
   @Test
   public void unbindListenerChangesHashCode() {
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
-    controller.registerAdapterDataObserver(observerMock);
+    controller.getAdapter().registerAdapterDataObserver(observerMock);
 
     controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));
@@ -175,7 +175,7 @@ public class OnModelBindListenerTest {
   @Test
   public void nullUnbindListenerChangesHashCode() {
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
-    controller.registerAdapterDataObserver(observerMock);
+    controller.getAdapter().registerAdapterDataObserver(observerMock);
 
     controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));
@@ -192,7 +192,7 @@ public class OnModelBindListenerTest {
   @Test
   public void newUnbindListenerDoesNotChangHashCode() {
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
-    controller.registerAdapterDataObserver(observerMock);
+    controller.getAdapter().registerAdapterDataObserver(observerMock);
 
     controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));

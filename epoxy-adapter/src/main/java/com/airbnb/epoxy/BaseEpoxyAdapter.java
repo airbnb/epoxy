@@ -5,6 +5,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.Collections;
@@ -21,6 +22,11 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
    */
   private final BoundViewHolders boundViewHolders = new BoundViewHolders();
   private ViewHolderState viewHolderState = new ViewHolderState();
+  /**
+   * The last model that had its view type looked up. This is stored so in {@link
+   * #onCreateViewHolder(ViewGroup, int)} we can easily know what model to create a view for.
+   */
+  private EpoxyModel<?> lastModelForViewTypeLookup;
 
   private final SpanSizeLookup spanSizeLookup = new SpanSizeLookup() {
 
@@ -36,6 +42,7 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
         // to the layout. We've posted a bug report and hopefully can update when the support
         // library fixes this
         // TODO: (eli_hart 8/23/16) Figure out if this has been fixed in new support library
+        onExceptionSwallowed(e);
         return 1;
       }
     }
@@ -46,6 +53,14 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
     // subclass if you don't want to support it
     setHasStableIds(true);
     spanSizeLookup.setSpanIndexCacheEnabled(true);
+  }
+
+  /**
+   * This is called when recoverable exceptions happen at runtime. They can be ignored and Epoxy
+   * will recover, but you can override this to be aware of when they happen.
+   */
+  protected void onExceptionSwallowed(RuntimeException exception) {
+
   }
 
   @Override
@@ -61,8 +76,43 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
   }
 
   @Override
-  public EpoxyViewHolder onCreateViewHolder(ViewGroup parent, int layoutRes) {
-    return new EpoxyViewHolder(parent, layoutRes);
+  public EpoxyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    EpoxyModel<?> model = getModelForViewType(viewType);
+    View view = model.buildView(parent);
+    return new EpoxyViewHolder(view);
+  }
+
+  /**
+   * Find the model that has the given view type so we can create a view for that model. In most
+   * cases this value is a layout resource and we could simply inflate it, but to support {@link
+   * EpoxyModelWithView} we can't assume the view type is a layout. In that case we need to lookup
+   * the model so we can ask it to create a new view for itself.
+   * <p>
+   * To make this efficient, we rely on the RecyclerView implementation detail that {@link
+   * #getItemViewType(int)} is called immediately before {@link #onCreateViewHolder(ViewGroup,
+   * int)}. We cache the last model that had its view type looked up, and unless that implementation
+   * changes we expect to have a very fast lookup for the correct model.
+   * <p>
+   * To be safe, we fallback to searching through all models for a view type match. This is slow and
+   * shouldn't be needed, but is a guard against recyclerview behavior changing.
+   */
+  private EpoxyModel<?> getModelForViewType(int viewType) {
+    if (lastModelForViewTypeLookup != null
+        && lastModelForViewTypeLookup.getViewType() == viewType) {
+      // We expect this to be a hit 100% of the time
+      return lastModelForViewTypeLookup;
+    }
+
+    onExceptionSwallowed(new IllegalStateException("Last model did not match expected view type"));
+
+    // To be extra safe in case RecyclerView implementation details change...
+    for (EpoxyModel<?> model : getCurrentModels()) {
+      if (model.getViewType() == viewType) {
+        return model;
+      }
+    }
+
+    throw new IllegalStateException("Could not find model for view type: " + viewType);
   }
 
   @Override
@@ -108,13 +158,19 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
 
   }
 
+  /**
+   * Returns an object that manages the view holders currently bound to the RecyclerView. This
+   * object is mainly used by the base Epoxy adapter to save view states, but you may find it useful
+   * to help access views or models currently shown in the RecyclerView.
+   */
   protected BoundViewHolders getBoundViewHolders() {
     return boundViewHolders;
   }
 
   @Override
   public int getItemViewType(int position) {
-    return getModelForPosition(position).getLayout();
+    lastModelForViewTypeLookup = getModelForPosition(position);
+    return lastModelForViewTypeLookup.getViewType();
   }
 
   @Override

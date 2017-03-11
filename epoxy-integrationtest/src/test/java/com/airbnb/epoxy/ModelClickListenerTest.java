@@ -140,7 +140,7 @@ public class ModelClickListenerTest {
     // click listener should use the hashCode of the user's click listener
 
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
-    controller.registerAdapterDataObserver(observerMock);
+    controller.getAdapter().registerAdapterDataObserver(observerMock);
 
     controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));
@@ -163,7 +163,7 @@ public class ModelClickListenerTest {
   @Test
   public void viewClickListenerIsHashed() {
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
-    controller.registerAdapterDataObserver(observerMock);
+    controller.getAdapter().registerAdapterDataObserver(observerMock);
 
     controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));

@@ -40,7 +40,7 @@ public class AutoModelIntegrationTest {
     BasicAutoModelsAdapter controller = new BasicAutoModelsAdapter();
     controller.requestModelBuild();
 
-    List<EpoxyModel<?>> models = controller.getCopyOfModels();
+    List<EpoxyModel<?>> models = controller.getAdapter().getCopyOfModels();
 
     assertEquals("Models size", 2, models.size());
     assertEquals("First model", TestModel.class, models.get(0).getClass());
