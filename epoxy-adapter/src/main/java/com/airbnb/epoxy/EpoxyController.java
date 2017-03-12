@@ -43,7 +43,9 @@ public abstract class EpoxyController {
   private boolean hasBuiltModelsEver;
 
   // TODO: (eli_hart 3/8/17) Don't always delay first build?
-  // TODO: (eli_hart 3/9/17) Validate newly added model does not exist on current adapter models
+  // TODO: (eli_hart 3/9/17) Validate newly added model does not exist on current adapter models???
+  // TODO: (eli_hart 3/9/17) validate addTo doesn't add a model that == a model already added
+  // TODO: (eli_hart 3/9/17) hook after build models before diffing (eg to toggle dividers)
 
   // Readme items:
   // hidden models breaking for pull to refresh or multiple items in a row on grid
@@ -61,6 +63,10 @@ public abstract class EpoxyController {
    * #buildModels()} so that models can be rebuilt for the current data.
    */
   public void requestModelBuild() {
+    if (isBuildingModels()) {
+      throw new IllegalStateException("Cannot call `requestBuildModels` from inside `buildModels`");
+    }
+
     handler.removeCallbacks(buildModelsRunnable);
     handler.post(buildModelsRunnable);
   }
@@ -303,6 +309,13 @@ public abstract class EpoxyController {
     return adapter.isMultiSpan();
   }
 
+  /**
+   * This is called when recoverable exceptions happen at runtime. They can be ignored and Epoxy
+   * will recover, but you can override this to be aware of when they happen.
+   */
+  protected void onExceptionSwallowed(RuntimeException exception) {
+  }
+
   /** Called when the controller's adapter is attach to a recyclerview. */
   protected void onAttachedToRecyclerView(RecyclerView recyclerView) {
 
@@ -314,9 +327,40 @@ public abstract class EpoxyController {
   }
 
   /**
-   * This is called when recoverable exceptions happen at runtime. They can be ignored and Epoxy
-   * will recover, but you can override this to be aware of when they happen.
+   * Called immediately after a model is bound to a view holder. Subclasses can override this if
+   * they want alerts on when a model is bound. Alternatively you may attach a listener directly to
+   * a generated model with model.onBind(...)
    */
-  protected void onExceptionSwallowed(RuntimeException exception) {
+  protected void onModelBound(EpoxyViewHolder holder, EpoxyModel<?> model, int position,
+      @Nullable List<Object> payloads) {
+  }
+
+  /**
+   * Called immediately after a model is unbound from a view holder. Subclasses can override this if
+   * they want alerts on when a model is unbound. Alternatively you may attach a listener directly
+   * to a generated model with model.onUnbind(...)
+   */
+  protected void onModelUnbound(EpoxyViewHolder holder, EpoxyModel<?> model) {
+
+  }
+
+  /**
+   * Called when the given viewholder is attached to the window, along with the model it is bound
+   * to.
+   *
+   * @see BaseEpoxyAdapter#onViewAttachedToWindow(EpoxyViewHolder)
+   */
+  protected void onViewAttachedToWindow(EpoxyViewHolder holder, EpoxyModel<?> model) {
+
+  }
+
+  /**
+   * Called when the given viewholder is detechaed from the window, along with the model it is bound
+   * to.
+   *
+   * @see BaseEpoxyAdapter#onViewDetachedFromWindow(EpoxyViewHolder)
+   */
+  protected void onViewDetachedFromWindow(EpoxyViewHolder holder, EpoxyModel<?> model) {
+
   }
 }

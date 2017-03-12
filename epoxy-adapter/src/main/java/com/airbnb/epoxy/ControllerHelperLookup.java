@@ -1,5 +1,7 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.Nullable;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
@@ -39,10 +41,11 @@ class ControllerHelperLookup {
     }
   }
 
+  @Nullable
   private static Constructor<?> findConstructorForClass(Class<?> controllerClass) {
-    Constructor<?> bindingCtor = BINDINGS.get(controllerClass);
-    if (bindingCtor != null) {
-      return bindingCtor;
+    Constructor<?> helperCtor = BINDINGS.get(controllerClass);
+    if (helperCtor != null || BINDINGS.containsKey(controllerClass)) {
+      return helperCtor;
     }
 
     String clsName = controllerClass.getName();
@@ -53,13 +56,13 @@ class ControllerHelperLookup {
     try {
       Class<?> bindingClass = Class.forName(clsName + GENERATED_HELPER_CLASS_SUFFIX);
       //noinspection unchecked
-      bindingCtor = bindingClass.getConstructor(controllerClass);
+      helperCtor = bindingClass.getConstructor(controllerClass);
     } catch (ClassNotFoundException e) {
-      bindingCtor = findConstructorForClass(controllerClass.getSuperclass());
+      helperCtor = findConstructorForClass(controllerClass.getSuperclass());
     } catch (NoSuchMethodException e) {
       throw new RuntimeException("Unable to find Epoxy Helper constructor for " + clsName, e);
     }
-    BINDINGS.put(controllerClass, bindingCtor);
-    return bindingCtor;
+    BINDINGS.put(controllerClass, helperCtor);
+    return helperCtor;
   }
 }
