@@ -441,7 +441,8 @@ class GeneratedModelWriter {
       return;
     }
 
-    AndroidResource layoutResource = resourceProcessor.getResourceForValue(layoutRes);
+    AndroidResource layoutResource = resourceProcessor.getResourceForValue(
+        resourceProcessor.elementToQualifiedId(originalClassElement, layoutRes));
     getDefaultLayoutMethod = getDefaultLayoutMethod.toBuilder()
         .addStatement("return $L", layoutResource.code)
         .build();
