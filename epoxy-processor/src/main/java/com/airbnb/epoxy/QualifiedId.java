@@ -1,9 +1,5 @@
 package com.airbnb.epoxy;
 
-/**
- * Created by ilyazorin on 12/03/2017.
- */
-
 final class QualifiedId {
 
   final String packageName;
