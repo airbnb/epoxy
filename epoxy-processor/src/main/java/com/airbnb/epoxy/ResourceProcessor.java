@@ -39,7 +39,7 @@ class ResourceProcessor {
   private final Types typeUtils;
 
   private Trees trees;
-  private final Map<Integer, AndroidResource> resources = new LinkedHashMap<>();
+  private final Map<QualifiedId, AndroidResource> resources = new LinkedHashMap<>();
 
   ResourceProcessor(ProcessingEnvironment processingEnv, Elements elementUtils, Types typeUtils) {
     this.elementUtils = elementUtils;
@@ -51,11 +51,15 @@ class ResourceProcessor {
     }
   }
 
-  AndroidResource getResourceForValue(int value) {
+  AndroidResource getResourceForValue(QualifiedId value) {
     if (resources.get(value) == null) {
-      resources.put(value, new AndroidResource(value));
+      resources.put(value, new AndroidResource(value.id));
     }
     return resources.get(value);
+  }
+
+  QualifiedId elementToQualifiedId(Element element, int id) {
+    return new QualifiedId(elementUtils.getPackageOf(element).getQualifiedName().toString(), id);
   }
 
   void processorResources(RoundEnvironment env) {
@@ -91,7 +95,7 @@ class ResourceProcessor {
     return null;
   }
 
-  private void parseRClass(String rClass, Map<Integer, AndroidResource> symbols) {
+  private void parseRClass(String rClass, Map<QualifiedId, AndroidResource> symbols) {
     Element element;
 
     try {
@@ -110,7 +114,7 @@ class ResourceProcessor {
     }
   }
 
-  private void parseCompiledR(TypeElement rClass, Map<Integer, AndroidResource> symbols) {
+  private void parseCompiledR(TypeElement rClass, Map<QualifiedId, AndroidResource> symbols) {
     for (Element element : rClass.getEnclosedElements()) {
       String innerClassName = element.getSimpleName().toString();
       if (SUPPORTED_TYPES.contains(innerClassName)) {
@@ -125,7 +129,8 @@ class ResourceProcessor {
                   ClassName.get(elementUtils.getPackageOf(variableElement).toString(), "R",
                       innerClassName);
               String resourceName = variableElement.getSimpleName().toString();
-              symbols.put(id, new AndroidResource(id, rClassName, resourceName));
+              symbols.put(elementToQualifiedId(variableElement, id),
+                  new AndroidResource(id, rClassName, resourceName));
             }
           }
         }
@@ -153,10 +158,10 @@ class ResourceProcessor {
   }
 
   private static class IdScanner extends TreeScanner {
-    private final Map<Integer, AndroidResource> resourceValues;
+    private final Map<QualifiedId, AndroidResource> resourceValues;
     private final String packageName;
 
-    IdScanner(Map<Integer, AndroidResource> resourceValues, String packageName) {
+    IdScanner(Map<QualifiedId, AndroidResource> resourceValues, String packageName) {
       this.resourceValues = resourceValues;
       this.packageName = packageName;
     }
@@ -169,7 +174,7 @@ class ResourceProcessor {
           String className = classTree.getSimpleName().toString();
           if (SUPPORTED_TYPES.contains(className)) {
             ClassName rClassName = ClassName.get(packageName, "R", className);
-            VarScanner scanner = new VarScanner(resourceValues, rClassName);
+            VarScanner scanner = new VarScanner(resourceValues, rClassName, packageName);
             ((JCTree) classTree).accept(scanner);
           }
         }
@@ -178,12 +183,15 @@ class ResourceProcessor {
   }
 
   private static class VarScanner extends TreeScanner {
-    private final Map<Integer, AndroidResource> resourceValues;
+    private final Map<QualifiedId, AndroidResource> resourceValues;
     private final ClassName className;
+    private final String packageName;
 
-    private VarScanner(Map<Integer, AndroidResource> resourceValues, ClassName className) {
+    private VarScanner(Map<QualifiedId, AndroidResource> resourceValues, ClassName className,
+        String packageName) {
       this.resourceValues = resourceValues;
       this.className = className;
+      this.packageName = packageName;
     }
 
     @Override
@@ -192,8 +200,9 @@ class ResourceProcessor {
       if ("int".equals(type)) {
         int resourceValue = Integer.valueOf(jcVariableDecl.getInitializer().toString());
         String resourceName = jcVariableDecl.getName().toString();
-        resourceValues
-            .put(resourceValue, new AndroidResource(resourceValue, className, resourceName));
+        QualifiedId qualifiedId = new QualifiedId(packageName, resourceValue);
+        resourceValues.put(qualifiedId, new AndroidResource(resourceValue, className,
+            resourceName));
       }
     }
   }
