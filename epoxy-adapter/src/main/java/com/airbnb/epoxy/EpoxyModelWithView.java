@@ -9,18 +9,16 @@ import android.view.ViewGroup;
  * resource. Just implement {@link #buildView} so the adapter can create a new view for this model
  * when needed.
  * <p>
- * {@link #getViewType()} is used by the adapter to know how to reuse views for this model. If it is
- * left unimplemented then the generated model will include an implementation which returns a value
- * based on the generated model's name. This means that all models of that type should be able to
- * share the same view, but the view won't be shared with models of any other type.
+ * {@link #getViewType()} is used by the adapter to know how to reuse views for this model. This
+ * means that all models that return the same type should be able to share the same view, and the
+ * view won't be shared with models of any other type.
  * <p>
- * The generated view type will be negative so that it cannot collide with values from layout
- * resources, which are used in normal Epoxy models. However, it is possible for generated view
- * types to collide if models from different libraries are used together, since the model processor
- * can only guarantee that view types are unique within a library. If you need to use {@link
- * EpoxyModelWithView} models from different libraries or modules together you can define a view
- * type manually to avoid this small collision chance. A good way to manually create value is by
- * creating an R.id. value in an ids resource while, which will guarantee a unique value.
+ * If it is left unimplemented then at runtime a unique view type will be created to use for all
+ * models of that class. The generated view type will be negative so that it cannot collide with
+ * values from resource files, which are used in normal Epoxy models. If you would like to share
+ * the same view between models of different classes you can have those classes return the same view
+ * type. A good way to manually create a view type value is by creating an R.id. value in an ids
+ * resource file.
  */
 public abstract class EpoxyModelWithView<T extends View> extends EpoxyModel<T> {
 
@@ -31,7 +29,9 @@ public abstract class EpoxyModelWithView<T extends View> extends EpoxyModel<T> {
    * @see android.support.v7.widget.RecyclerView.Adapter#getItemViewType(int)
    */
   @Override
-  protected abstract int getViewType();
+  protected int getViewType() {
+    return 0;
+  }
 
   /**
    * Create and return a new instance of a view for this model. If no layout params are set on the

@@ -16,17 +16,13 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
 
   private int spanCount = 1;
   private final HiddenEpoxyModel hiddenModel = new HiddenEpoxyModel();
+  private final ViewTypeManager viewTypeManager = new ViewTypeManager();
   /**
    * Keeps track of view holders that are currently bound so we can save their state in {@link
    * #onSaveInstanceState(Bundle)}.
    */
   private final BoundViewHolders boundViewHolders = new BoundViewHolders();
   private ViewHolderState viewHolderState = new ViewHolderState();
-  /**
-   * The last model that had its view type looked up. This is stored so in {@link
-   * #onCreateViewHolder(ViewGroup, int)} we can easily know what model to create a view for.
-   */
-  private EpoxyModel<?> lastModelForViewTypeLookup;
 
   private final SpanSizeLookup spanSizeLookup = new SpanSizeLookup() {
 
@@ -77,42 +73,9 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
 
   @Override
   public EpoxyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    EpoxyModel<?> model = getModelForViewType(viewType);
+    EpoxyModel<?> model = viewTypeManager.getModelForViewType(this, viewType);
     View view = model.buildView(parent);
     return new EpoxyViewHolder(view);
-  }
-
-  /**
-   * Find the model that has the given view type so we can create a view for that model. In most
-   * cases this value is a layout resource and we could simply inflate it, but to support {@link
-   * EpoxyModelWithView} we can't assume the view type is a layout. In that case we need to lookup
-   * the model so we can ask it to create a new view for itself.
-   * <p>
-   * To make this efficient, we rely on the RecyclerView implementation detail that {@link
-   * #getItemViewType(int)} is called immediately before {@link #onCreateViewHolder(ViewGroup,
-   * int)}. We cache the last model that had its view type looked up, and unless that implementation
-   * changes we expect to have a very fast lookup for the correct model.
-   * <p>
-   * To be safe, we fallback to searching through all models for a view type match. This is slow and
-   * shouldn't be needed, but is a guard against recyclerview behavior changing.
-   */
-  private EpoxyModel<?> getModelForViewType(int viewType) {
-    if (lastModelForViewTypeLookup != null
-        && lastModelForViewTypeLookup.getViewType() == viewType) {
-      // We expect this to be a hit 100% of the time
-      return lastModelForViewTypeLookup;
-    }
-
-    onExceptionSwallowed(new IllegalStateException("Last model did not match expected view type"));
-
-    // To be extra safe in case RecyclerView implementation details change...
-    for (EpoxyModel<?> model : getCurrentModels()) {
-      if (model.getViewType() == viewType) {
-        return model;
-      }
-    }
-
-    throw new IllegalStateException("Could not find model for view type: " + viewType);
   }
 
   @Override
@@ -169,8 +132,7 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
 
   @Override
   public int getItemViewType(int position) {
-    lastModelForViewTypeLookup = getModelForPosition(position);
-    return lastModelForViewTypeLookup.getViewType();
+    return viewTypeManager.getViewType(getCurrentModels().get(position));
   }
 
   @Override

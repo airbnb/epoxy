@@ -46,6 +46,29 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
     epoxyController.onDetachedFromRecyclerView(recyclerView);
   }
 
+  @Override
+  public void onViewAttachedToWindow(EpoxyViewHolder holder) {
+    super.onViewAttachedToWindow(holder);
+    epoxyController.onViewAttachedToWindow(holder, holder.getModel());
+  }
+
+  @Override
+  public void onViewDetachedFromWindow(EpoxyViewHolder holder) {
+    super.onViewDetachedFromWindow(holder);
+    epoxyController.onViewDetachedFromWindow(holder, holder.getModel());
+  }
+
+  @Override
+  protected void onModelBound(EpoxyViewHolder holder, EpoxyModel<?> model, int position,
+      @Nullable List<Object> payloads) {
+    epoxyController.onModelBound(holder, model, position, payloads);
+  }
+
+  @Override
+  protected void onModelUnbound(EpoxyViewHolder holder, EpoxyModel<?> model) {
+    epoxyController.onModelUnbound(holder, model);
+  }
+
   /** Get an unmodifiable copy of the current models set on the adapter. */
   public List<EpoxyModel<?>> getCopyOfModels() {
     if (copyOfCurrentModels == null) {
