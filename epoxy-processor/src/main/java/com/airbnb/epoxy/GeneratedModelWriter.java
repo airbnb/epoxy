@@ -62,14 +62,14 @@ class GeneratedModelWriter {
   private final Filer filer;
   private final Types typeUtils;
   private final ErrorLogger errorLogger;
-  private final ResourceProcessor resourceProcessor;
+  private final LayoutResourceProcessor layoutResourceProcessor;
 
   GeneratedModelWriter(Filer filer, Types typeUtils, ErrorLogger errorLogger,
-      ResourceProcessor resourceProcessor) {
+      LayoutResourceProcessor layoutResourceProcessor) {
     this.filer = filer;
     this.typeUtils = typeUtils;
     this.errorLogger = errorLogger;
-    this.resourceProcessor = resourceProcessor;
+    this.layoutResourceProcessor = layoutResourceProcessor;
   }
 
   void generateClassForModel(ClassToGenerateInfo info)
@@ -263,12 +263,12 @@ class GeneratedModelWriter {
 
     methods.add(MethodSpec.methodBuilder("onBind")
         .addJavadoc("Register a listener that will be called when this model is bound to a view.\n"
-                + "<p>\n"
-                + "The listener will contribute to this model's hashCode state per the {@link\n"
-                + "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
-                + "<p>\n"
-                + "You may clear the listener by setting a null value, or by calling "
-                + "{@link #reset()}")
+            + "<p>\n"
+            + "The listener will contribute to this model's hashCode state per the {@link\n"
+            + "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
+            + "<p>\n"
+            + "You may clear the listener by setting a null value, or by calling "
+            + "{@link #reset()}")
         .addModifiers(PUBLIC)
         .returns(classInfo.getParameterizedGeneratedName())
         .addParameter(bindListenerParam)
@@ -299,13 +299,13 @@ class GeneratedModelWriter {
 
     methods.add(MethodSpec.methodBuilder("onUnbind")
         .addJavadoc("Register a listener that will be called when this model is unbound from a "
-                + "view.\n"
-                + "<p>\n"
-                + "The listener will contribute to this model's hashCode state per the {@link\n"
-                + "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
-                + "<p>\n"
-                + "You may clear the listener by setting a null value, or by calling "
-                + "{@link #reset()}")
+            + "view.\n"
+            + "<p>\n"
+            + "The listener will contribute to this model's hashCode state per the {@link\n"
+            + "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
+            + "<p>\n"
+            + "You may clear the listener by setting a null value, or by calling "
+            + "{@link #reset()}")
         .addModifiers(PUBLIC)
         .returns(classInfo.getParameterizedGeneratedName())
         .addParameter(unbindListenerParam)
@@ -410,8 +410,8 @@ class GeneratedModelWriter {
       return;
     }
 
-    EpoxyModelClass annotation = findClassAnnotationWithLayout(originalClassElement);
-    if (annotation == null) {
+    TypeElement modelClassWithAnnotation = findSuperClassWithClassAnnotation(originalClassElement);
+    if (modelClassWithAnnotation == null) {
       errorLogger
           .logError("Model must use %s annotation if it does not implement %s. (class: %s)",
               EpoxyModelClass.class,
@@ -420,31 +420,10 @@ class GeneratedModelWriter {
       return;
     }
 
-    int layoutRes;
-    try {
-      layoutRes = annotation.layout();
-    } catch (AnnotationTypeMismatchException e) {
-      errorLogger.logError("Invalid layout value in %s annotation. (class: %s). %s: %s",
-          EpoxyModelClass.class,
-          originalClassElement.getSimpleName(),
-          e.getClass().getSimpleName(),
-          e.getMessage());
-      return;
-    }
-
-    if (layoutRes == 0) {
-      errorLogger
-          .logError(
-              "Model must specify a valid layout resource in the %s annotation. (class: %s)",
-              EpoxyModelClass.class,
-              originalClassElement.getSimpleName());
-      return;
-    }
-
-    AndroidResource layoutResource = resourceProcessor.getResourceForValue(
-        resourceProcessor.elementToQualifiedId(originalClassElement, layoutRes));
+    ModelLayoutResource layout =
+        layoutResourceProcessor.getLayoutForModel(modelClassWithAnnotation);
     getDefaultLayoutMethod = getDefaultLayoutMethod.toBuilder()
-        .addStatement("return $L", layoutResource.code)
+        .addStatement("return $L", layout.code)
         .build();
 
     methods.add(getDefaultLayoutMethod);
@@ -453,21 +432,21 @@ class GeneratedModelWriter {
   /**
    * Looks for {@link EpoxyModelClass} annotation in the original class and his parents.
    */
-  private EpoxyModelClass findClassAnnotationWithLayout(TypeElement classElement) {
+  private TypeElement findSuperClassWithClassAnnotation(TypeElement classElement) {
     if (!isEpoxyModel(classElement)) {
       return null;
     }
 
     EpoxyModelClass annotation = classElement.getAnnotation(EpoxyModelClass.class);
     if (annotation == null) {
+      // This is an error. The model must have an EpoxyModelClass annotation
+      // since getDefaultLayout is not implemented
       return null;
     }
 
+    int layoutRes;
     try {
-      int layoutRes = annotation.layout();
-      if (layoutRes != 0) {
-        return annotation;
-      }
+      layoutRes = annotation.layout();
     } catch (AnnotationTypeMismatchException e) {
       errorLogger.logError("Invalid layout value in %s annotation. (class: %s). %s: %s",
           EpoxyModelClass.class,
@@ -477,12 +456,26 @@ class GeneratedModelWriter {
       return null;
     }
 
-    TypeElement superclassElement =
-        (TypeElement) typeUtils.asElement(classElement.getSuperclass());
-    EpoxyModelClass annotationOnSuperClass = findClassAnnotationWithLayout(superclassElement);
+    if (layoutRes != 0) {
+      return classElement;
+    }
 
-    // Return the last annotation value we have so the proper error can be thrown if needed
-    return annotationOnSuperClass != null ? annotationOnSuperClass : annotation;
+    // This model did not specify a layout in its EpoxyModelClass annotation,
+    // but its superclass might
+    TypeElement superClass = (TypeElement) typeUtils.asElement(classElement.getSuperclass());
+    TypeElement superClassWithAnnotation = findSuperClassWithClassAnnotation(superClass);
+
+    if (superClassWithAnnotation != null) {
+      return superClassWithAnnotation;
+    }
+
+    errorLogger
+        .logError(
+            "Model must specify a valid layout resource in the %s annotation. (class: %s)",
+            EpoxyModelClass.class,
+            classElement.getSimpleName());
+
+    return null;
   }
 
   private void generateParams(StringBuilder statementBuilder, List<ParameterSpec> params) {
@@ -522,8 +515,8 @@ class GeneratedModelWriter {
 
     return MethodSpec.methodBuilder(attributeName)
         .addJavadoc("Set a click listener that will provide the parent view, model, and adapter "
-                + "position of the clicked view. This will clear the normal View.OnClickListener "
-                + "if one has been set")
+            + "position of the clicked view. This will clear the normal View.OnClickListener "
+            + "if one has been set")
         .addModifiers(PUBLIC)
         .returns(helperClass.getParameterizedGeneratedName())
         .addParameter(param)

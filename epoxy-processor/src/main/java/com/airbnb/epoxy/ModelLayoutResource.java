@@ -4,24 +4,24 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 
 /**
- * Represents an Android resource. Used with {@link ResourceProcessor}
+ * Represents a layout resource used in an Epoxy model via the {@link EpoxyModelClass} annotation
  * <p>
- * Taken from Butterknife. https://github.com/JakeWharton/butterknife/pull/613
+ * Inpspired by Butterknife. https://github.com/JakeWharton/butterknife/pull/613
  */
-final class AndroidResource {
+final class ModelLayoutResource {
   private static final ClassName ANDROID_R = ClassName.get("android", "R");
 
   final int value;
   final CodeBlock code;
   final boolean qualifed;
 
-  AndroidResource(int value) {
+  ModelLayoutResource(int value) {
     this.value = value;
     this.code = CodeBlock.of("$L", value);
     this.qualifed = false;
   }
 
-  AndroidResource(int value, ClassName className, String resourceName) {
+  ModelLayoutResource(ClassName className, String resourceName, int value) {
     this.value = value;
     this.code = className.topLevelClassName().equals(ANDROID_R)
         ? CodeBlock.of("$L.$N", className, resourceName)
@@ -31,12 +31,26 @@ final class AndroidResource {
 
   @Override
   public boolean equals(Object o) {
-    return o instanceof AndroidResource && value == ((AndroidResource) o).value;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof ModelLayoutResource)) {
+      return false;
+    }
+
+    ModelLayoutResource that = (ModelLayoutResource) o;
+
+    if (value != that.value) {
+      return false;
+    }
+    return code.equals(that.code);
   }
 
   @Override
   public int hashCode() {
-    return value;
+    int result = value;
+    result = 31 * result + code.hashCode();
+    return result;
   }
 
   @Override
