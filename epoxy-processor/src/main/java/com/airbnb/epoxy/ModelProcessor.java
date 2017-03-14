@@ -58,7 +58,6 @@ class ModelProcessor {
     modelClassMap = new LinkedHashMap<>();
 
     for (Element attribute : roundEnv.getElementsAnnotatedWith(EpoxyAttribute.class)) {
-      messager.printMessage(Kind.NOTE, "field typename: " + TypeName.get(attribute.asType()));
       try {
         addAttributeToGeneratedClass(attribute, modelClassMap);
       } catch (Exception e) {

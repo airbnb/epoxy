@@ -3,10 +3,10 @@ package com.airbnb.epoxy;
 import android.support.annotation.LayoutRes;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewStub;
 
 import com.airbnb.epoxy.EpoxyModelGroup.Holder;
-import com.airbnb.viewmodeladapter.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,32 +17,30 @@ import java.util.List;
  * An {@link EpoxyModel} that contains other models, and allows you to combine those models in
  * whatever view configuration you want.
  * <p>
- * The constructors take a list of models and a layout file. The layout file should contain a {@link
- * ViewStub} for each of the models in the list. Each view stub must have a specific view id to
- * associate it with the model it belongs to. These ids follow the form
- * R.id.epoxy_model_group_view_stub_1, R.id.epoxy_model_group_view_stub_2,
- * R.id.epoxy_model_group_view_stub_3, etc.
+ * The constructors take a list of models and a layout file. The layout file should specify a
+ * ViewGroup that contains a {@link ViewStub} for each of the models in the list. There should be at
+ * least as many view stubs as models. Extra stubs will be ignored. Each model will be inflated into
+ * a view stub in order of the view stub's position in the view group. That is, the view group's
+ * children will be iterated through in order. The first view stub found will be used for the first
+ * model in the models list, the second view stub will be used for the second model, and so on.
  * <p>
- * R.id.epoxy_model_group_view_stub_1 maps to the first model (index 0 of the provided list),
- * R.id.epoxy_model_group_view_stub_2 maps to the second model, and so on.
- * <p>
- * The layout can be of any view type, and it can arrange the view stubs however is needed.
- * <p>
- * A maximum of {@link #MAX_MODELS_SUPPORTED} can be added to a group.
- * <p>
- * By default this model inherits the same id as the first model in the list. Call {@link #id(long)}
- * to override that if needed.
+ * The layout can be of any ViewGroup subclass, and can have arbitrary other child views besides the
+ * view stubs. It can arrange the views and view stubs however is needed.
  * <p>
  * Any layout param options set on the view stubs will be transferred to the corresponding model
  * view.
+ * <p>
+ * If an {@link EpoxyModelWithView} is used then the view created by that model will simply replace
+ * its ViewStub instead of inflating the view stub with a resource. If layout params are set on the
+ * view created by {@link EpoxyModelWithView#buildView(ViewGroup)} then those will be kept,
+ * otherwise any layout params specified on the view stub will be transferred over as with normal
+ * models.
+ * <p>
+ * By default this model inherits the same id as the first model in the list. Call {@link #id(long)}
+ * to override that if needed.
  */
 @SuppressWarnings("rawtypes")
 public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
-  /**
-   * We have a hard cap on number of models since we have hardcoded ids for simplicity, clarity, and
-   * speed.
-   */
-  private static final int MAX_MODELS_SUPPORTED = 5;
 
   protected final List<EpoxyModel> models;
   /** By default we save view state if any of the models need to save state. */
@@ -71,11 +69,6 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
   private EpoxyModelGroup(@LayoutRes int layoutRes, List<EpoxyModel> models) {
     if (models.isEmpty()) {
       throw new IllegalArgumentException("Models cannot be empty");
-    }
-
-    if (models.size() > MAX_MODELS_SUPPORTED) {
-      throw new IllegalArgumentException(
-          "Too many models. Only " + MAX_MODELS_SUPPORTED + " models are supported");
     }
 
     this.models = models;
@@ -204,8 +197,10 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
 
     @Override
     protected void bindView(View itemView) {
-      // TODO: (eli_hart 3/8/17) better error handling and messaging around the viewgroup
-      // expectation
+      if (!(itemView instanceof ViewGroup)) {
+        throw new IllegalStateException(
+            "The layout provided to EpoxyModelGroup must be a ViewGroup");
+      }
       ViewGroup groupView = (ViewGroup) itemView;
 
       int modelCount = models.size();
@@ -229,61 +224,47 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
     }
 
     private View createAndAddView(ViewGroup groupView, int i, EpoxyModel<?> model) {
-      ViewStub viewStub = getViewStub(groupView, i, model);
+      int viewStubPosition = getNextViewStubPosition(groupView);
+      ViewStub viewStub = (ViewStub) groupView.getChildAt(viewStubPosition);
 
-      // TODO: (eli_hart 3/8/17) Test this and update documentation
+      // TODO: (eli_hart 3/8/17) Add example to sample
       if (model instanceof EpoxyModelWithView) {
-        final int index = groupView.indexOfChild(viewStub);
         groupView.removeViewInLayout(viewStub);
 
         View modelView = model.buildView(groupView);
-        final ViewGroup.LayoutParams layoutParams = viewStub.getLayoutParams();
-        if (layoutParams != null) {
-          groupView.addView(modelView, index, layoutParams);
+        LayoutParams modelLayoutParams = modelView.getLayoutParams();
+        ViewGroup.LayoutParams viewStubLayoutParams = viewStub.getLayoutParams();
+
+        // Use layout params off the view created by the model if they exist.
+        // Otherwise we fallback to any layout params on the view stub.
+        // And lastly we fallback to no layout params, in which case default params are applied.
+        if (modelLayoutParams != null) {
+          groupView.addView(modelView, viewStubPosition, modelLayoutParams);
+        } else if (viewStubLayoutParams != null) {
+          groupView.addView(modelView, viewStubPosition, viewStubLayoutParams);
         } else {
-          groupView.addView(modelView, index);
+          groupView.addView(modelView, viewStubPosition);
         }
 
-        return groupView;
+        return modelView;
       } else {
         viewStub.setLayoutResource(model.getLayout());
         return viewStub.inflate();
       }
     }
 
-    private ViewStub getViewStub(View itemView, int i, EpoxyModel<?> model) {
-      View stub = itemView.findViewById(getIdForIndex(i));
+    private int getNextViewStubPosition(ViewGroup groupView) {
+      int childCount = groupView.getChildCount();
+      for (int i = 0; i < childCount; i++) {
+        View child = groupView.getChildAt(i);
 
-      if (stub == null) {
-        throw new IllegalStateException(
-            "The expected view for your model " + model + " at position " + i
-                + " wasn't found. Are you using the correct stub id?");
-      }
-
-      if (stub instanceof ViewStub) {
-        return (ViewStub) stub;
+        if (child instanceof ViewStub) {
+          return i;
+        }
       }
 
       throw new IllegalStateException(
-          "Your layout should provide a ViewStub. See the layout() method javadoc for more info.");
-    }
-
-    private int getIdForIndex(int modelIndex) {
-      switch (modelIndex) {
-        case 0:
-          return R.id.epoxy_model_group_view_stub_1;
-        case 1:
-          return R.id.epoxy_model_group_view_stub_2;
-        case 2:
-          return R.id.epoxy_model_group_view_stub_3;
-        case 3:
-          return R.id.epoxy_model_group_view_stub_4;
-        case 4:
-          return R.id.epoxy_model_group_view_stub_5;
-        default:
-          throw new IllegalStateException(
-              "No support for more than " + MAX_MODELS_SUPPORTED + " models");
-      }
+          "Your layout should provide a ViewStub for each model to be inflated into.");
     }
   }
 

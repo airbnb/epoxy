@@ -35,10 +35,9 @@ public abstract class EpoxyModelWithView<T extends View> extends EpoxyModel<T> {
 
   /**
    * Create and return a new instance of a view for this model. If no layout params are set on the
-   * returned view then the RecyclerView will set default layout params on it, which set the size to
-   * wrap_content.
+   * returned view then default layout params will be used.
    *
-   * @param parent The parent viewgroup that the returned view will be added to. It can be used to
+   * @param parent The parent ViewGroup that the returned view will be added to. It can be used to
    *               create layout params for the new view.
    */
   @Override
