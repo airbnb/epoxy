@@ -63,6 +63,6 @@ def getRepositoryPassword() {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '2.14.1'
+  gradleVersion = '3.3'
   distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
