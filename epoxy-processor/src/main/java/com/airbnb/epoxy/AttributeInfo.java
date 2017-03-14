@@ -72,6 +72,7 @@ class AttributeInfo {
     Set<Option> options = new HashSet<>(Arrays.asList(annotation.value()));
     validateAnnotationOptions(errorLogger, annotation, options);
 
+    //noinspection deprecation
     useInHash = annotation.hash() && !options.contains(Option.DoNotHash);
     ignoreRequireHashCode = options.contains(Option.IgnoreRequireHashCode);
 

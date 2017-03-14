@@ -32,7 +32,7 @@ public class EpoxyProcessor extends AbstractProcessor {
   private Elements elementUtils;
   private Types typeUtils;
 
-  private ResourceProcessor resourceProcessor;
+  private LayoutResourceProcessor layoutResourceProcessor;
   private ConfigManager configManager;
   private final ErrorLogger errorLogger = new ErrorLogger();
 
@@ -44,7 +44,8 @@ public class EpoxyProcessor extends AbstractProcessor {
     elementUtils = processingEnv.getElementUtils();
     typeUtils = processingEnv.getTypeUtils();
 
-    resourceProcessor = new ResourceProcessor(processingEnv, elementUtils, typeUtils);
+    layoutResourceProcessor =
+        new LayoutResourceProcessor(processingEnv, errorLogger, elementUtils, typeUtils);
     configManager = new ConfigManager(elementUtils);
   }
 
@@ -76,10 +77,10 @@ public class EpoxyProcessor extends AbstractProcessor {
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     errorLogger.logErrors(configManager.processConfigurations(roundEnv));
-    resourceProcessor.processorResources(roundEnv);
+    layoutResourceProcessor.processResources(roundEnv);
 
     ModelProcessor modelProcessor = new ModelProcessor(filer, messager,
-        elementUtils, typeUtils, configManager, errorLogger, resourceProcessor);
+        elementUtils, typeUtils, configManager, errorLogger, layoutResourceProcessor);
     modelProcessor.processModels(roundEnv);
 
     new ControllerProcessor(filer, elementUtils, errorLogger, configManager)

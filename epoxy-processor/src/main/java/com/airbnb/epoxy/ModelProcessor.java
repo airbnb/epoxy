@@ -40,13 +40,14 @@ class ModelProcessor {
   private LinkedHashMap<TypeElement, ClassToGenerateInfo> modelClassMap;
 
   ModelProcessor(Filer filer, Messager messager, Elements elementUtils, Types typeUtils,
-      ConfigManager configManager, ErrorLogger errorLogger, ResourceProcessor resourceProcessor) {
+      ConfigManager configManager, ErrorLogger errorLogger,
+      LayoutResourceProcessor layoutProcessor) {
     this.messager = messager;
     this.elementUtils = elementUtils;
     this.typeUtils = typeUtils;
     this.configManager = configManager;
     this.errorLogger = errorLogger;
-    modelWriter = new GeneratedModelWriter(filer, typeUtils, errorLogger, resourceProcessor);
+    modelWriter = new GeneratedModelWriter(filer, typeUtils, errorLogger, layoutProcessor);
   }
 
   List<ClassToGenerateInfo> getGeneratedModels() {
