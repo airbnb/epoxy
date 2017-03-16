@@ -192,4 +192,36 @@ public class EpoxyControllerTest {
 
     savedModels.add(new TestModel());
   }
+
+  @Test
+  public void interceptorsRunInOrderAdded() {
+    EpoxyController controller = new EpoxyController() {
+
+      @Override
+      protected void buildModels() {
+        new TestModel()
+            .addTo(this);
+      }
+    };
+
+    controller.addInterceptor(new Interceptor() {
+      @Override
+      public void intercept(List<EpoxyModel<?>> models) {
+        assertEquals(1, models.size());
+        models.add(new TestModel());
+      }
+    });
+
+    controller.addInterceptor(new Interceptor() {
+      @Override
+      public void intercept(List<EpoxyModel<?>> models) {
+        assertEquals(2, models.size());
+        models.add(new TestModel());
+      }
+    });
+
+    controller.requestModelBuild();
+
+    assertEquals(3, controller.getAdapter().getItemCount());
+  }
 }
