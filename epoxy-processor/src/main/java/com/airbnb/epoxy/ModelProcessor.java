@@ -1,7 +1,5 @@
 package com.airbnb.epoxy;
 
-import com.squareup.javapoet.TypeName;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -21,7 +19,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import javax.tools.Diagnostic.Kind;
 
 import static com.airbnb.epoxy.ProcessorUtils.EPOXY_MODEL_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModel;
