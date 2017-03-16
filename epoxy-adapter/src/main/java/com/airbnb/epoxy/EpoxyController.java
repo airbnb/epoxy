@@ -30,22 +30,25 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
  * automatically.
  */
 public abstract class EpoxyController {
+
   private static final Timer NO_OP_TIMER = new NoOpTimer();
 
   private final EpoxyControllerAdapter adapter = new EpoxyControllerAdapter(this);
   private final ControllerHelper helper = getHelperForController(this);
   private final Handler handler = new Handler();
-  private ArrayList<EpoxyModel<?>> modelsBeingBuilt;
+  private final List<Interceptor> interceptors = new ArrayList<>();
+  private ControllerModelList modelsBeingBuilt;
   private boolean filterDuplicates;
   /** Used to time operations and log their duration when in debug mode. */
   private Timer timer = NO_OP_TIMER;
   private EpoxyDiffLogger debugObserver;
   private boolean hasBuiltModelsEver;
 
-  // TODO: (eli_hart 3/8/17) Don't always delay first build?
-  // TODO: (eli_hart 3/9/17) Validate newly added model does not exist on current adapter models???
-  // TODO: (eli_hart 3/9/17) validate addTo doesn't add a model that == a model already added
-  // TODO: (eli_hart 3/9/17) hook after build models before diffing (eg to toggle dividers)
+  // TODO: (eli_hart 3/9/17) validate add is only ever called once per model instance
+  // TODO: (eli_hart 3/14/17) change hash validation to ignore field if it is a generated model
+  // since the class can't be looked up at annotation proccessing time
+  // TODO: (eli_hart 3/14/17) validate hashcode never changes
+  // TODO: (eli_hart 3/14/17) validate a setter is never called once model is added
 
   // Readme items:
   // hidden models breaking for pull to refresh or multiple items in a row on grid
@@ -81,13 +84,15 @@ public abstract class EpoxyController {
   private void dispatchModelBuild() {
     helper.resetAutoModels();
 
-    modelsBeingBuilt = new ArrayList<>(getExpectedModelCount());
+    modelsBeingBuilt = new ControllerModelList(getExpectedModelCount());
 
     timer.start();
     buildModels();
     timer.stop("Models built");
 
+    runInterceptors();
     filterDuplicatesIfNeeded(modelsBeingBuilt);
+    modelsBeingBuilt.freeze();
 
     timer.start();
     adapter.setModels(modelsBeingBuilt);
@@ -113,6 +118,48 @@ public abstract class EpoxyController {
    * with the models that should be shown, in the order that is desired.
    */
   protected abstract void buildModels();
+
+  private void runInterceptors() {
+    if (interceptors.isEmpty()) {
+      return;
+    }
+
+    timer.start();
+    for (Interceptor interceptor : interceptors) {
+      interceptor.intercept(modelsBeingBuilt);
+    }
+    timer.stop("Interceptors executed");
+  }
+
+  /** A callback that is run after {@link #buildModels()} completes and before diffing is run. */
+  public interface Interceptor {
+    /**
+     * This is called immediately after {@link #buildModels()} and before diffing is run and the
+     * models are set on the adapter. This is a final chance to make any changes to the the models
+     * added in {@link #buildModels()}. This may be useful for actions that act on all models in
+     * aggregate, such as toggling divider settings, or for cases such as rearranging models for an
+     * experiment.
+     * <p>
+     * The models list must not be changed after this method returns. Doing so will throw an
+     * exception.
+     */
+    void intercept(List<EpoxyModel<?>> models);
+  }
+
+  /**
+   * Add an interceptor callback to be run after models are built, to make any last changes before
+   * they are set on the adapter. Interceptors are run in the order they are added.
+   *
+   * @see Interceptor#intercept(List)
+   */
+  public void addInterceptor(Interceptor interceptor) {
+    interceptors.add(interceptor);
+  }
+
+  /** Remove an interceptor that was added with {@link #addInterceptor(Interceptor)}. */
+  public void removeInterceptor(Interceptor interceptor) {
+    interceptors.remove(interceptor);
+  }
 
   /**
    * Get the number of models added so far during the {@link #buildModels()} phase. It is only valid

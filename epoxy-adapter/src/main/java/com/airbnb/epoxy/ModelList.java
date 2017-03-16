@@ -18,6 +18,14 @@ import java.util.NoSuchElementException;
  */
 class ModelList extends ArrayList<EpoxyModel<?>> {
 
+  ModelList(int expectedModelCount) {
+    super(expectedModelCount);
+  }
+
+  ModelList() {
+
+  }
+
   interface ModelListObserver {
     void onItemRangeInserted(int positionStart, int itemCount);
     void onItemRangeRemoved(int positionStart, int itemCount);
