@@ -24,6 +24,7 @@ import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.ProcessorUtils.capitalizeFirstLetter;
 import static com.airbnb.epoxy.ProcessorUtils.isViewClickListenerType;
+import static com.airbnb.epoxy.ProcessorUtils.startsWithIs;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PROTECTED;
@@ -64,7 +65,7 @@ class AttributeInfo {
     this.type = TypeName.get(attribute.asType());
 
     classElement = (TypeElement) attribute.getEnclosingElement();
-    this.hasSuperSetter = hasSuperMethod(classElement, name);
+    this.hasSuperSetter = hasSuperMethod(classElement, attribute);
     this.hasFinalModifier = attribute.getModifiers().contains(FINAL);
     this.packagePrivate = isFieldPackagePrivate(attribute);
 
@@ -128,22 +129,26 @@ class AttributeInfo {
    * Check if the given class or any of its super classes have a super method with the given name.
    * Private methods are ignored since the generated subclass can't call super on those.
    */
-  private boolean hasSuperMethod(TypeElement classElement, String methodName) {
+  private boolean hasSuperMethod(TypeElement classElement, Element attribute) {
     if (!ProcessorUtils.isEpoxyModel(classElement.asType())) {
       return false;
     }
 
     for (Element subElement : classElement.getEnclosedElements()) {
-      if (subElement.getKind() == ElementKind.METHOD
-          && !subElement.getModifiers().contains(Modifier.PRIVATE)
-          && subElement.getSimpleName().toString().equals(methodName)) {
-        return true;
+      if (subElement.getKind() == ElementKind.METHOD) {
+        ExecutableElement method = (ExecutableElement) subElement;
+        if (!method.getModifiers().contains(Modifier.PRIVATE)
+            && method.getSimpleName().toString().equals(attribute.getSimpleName().toString())
+            && method.getParameters().size() == 1
+            && method.getParameters().get(0).asType().equals(attribute.asType())) {
+          return true;
+        }
       }
     }
 
     Element superClass = typeUtils.asElement(classElement.getSuperclass());
     return (superClass instanceof TypeElement)
-        && hasSuperMethod((TypeElement) superClass, methodName);
+        && hasSuperMethod((TypeElement) superClass, attribute);
   }
 
   /**
@@ -166,7 +171,8 @@ class AttributeInfo {
         String methodName = method.getSimpleName().toString();
         // check if it is a valid getter
         if ((methodName.equals(String.format("get%s", capitalizeFirstLetter(name)))
-            || methodName.equals(String.format("is%s", capitalizeFirstLetter(name))))
+            || methodName.equals(String.format("is%s", capitalizeFirstLetter(name)))
+            || (methodName.equals(name) && startsWithIs(name)))
             && !method.getModifiers().contains(PRIVATE)
             && !method.getModifiers().contains(STATIC)
             && method.getParameters().isEmpty()
@@ -174,7 +180,9 @@ class AttributeInfo {
           getter = methodName;
         }
         // check if it is a valid setter
-        if ((methodName.equals(String.format("set%s", capitalizeFirstLetter(name))))
+        if ((methodName.equals(String.format("set%s", capitalizeFirstLetter(name)))
+            || (startsWithIs(name) && methodName.equals(String.format("set%s",
+                name.substring(2, name.length())))))
             && !method.getModifiers().contains(PRIVATE)
             && !method.getModifiers().contains(STATIC)
             && method.getParameters().size() == 1
