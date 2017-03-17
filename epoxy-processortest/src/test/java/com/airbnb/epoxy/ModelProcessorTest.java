@@ -652,7 +652,7 @@ public class ModelProcessorTest {
     JavaFileObject model = JavaFileObjects
         .forResource("ModelWithPrivateViewClickListener.java");
 
-    JavaFileObject generatedNoLayoutModel = JavaFileObjects
+    JavaFileObject generatedModel = JavaFileObjects
         .forResource("ModelWithPrivateViewClickListener_.java");
 
     assert_().about(javaSource())
@@ -660,6 +660,22 @@ public class ModelProcessorTest {
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
         .and()
-        .generatesSources(generatedNoLayoutModel);
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void modelWithPrivateFieldWithSameAsFieldGetterAndSetterName() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName.java");
+
+    JavaFileObject generatedModel = JavaFileObjects
+        .forResource("ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
   }
 }

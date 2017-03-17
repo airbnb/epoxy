@@ -261,4 +261,9 @@ class ProcessorUtils {
     }
     return original.substring(0, 1).toUpperCase() + original.substring(1);
   }
+
+  static boolean startsWithIs(String original) {
+    return original.startsWith("is") && original.length() > 2
+        && Character.isUpperCase(original.charAt(2));
+  }
 }
