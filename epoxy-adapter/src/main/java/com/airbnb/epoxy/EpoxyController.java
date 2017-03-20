@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -17,9 +16,11 @@ import java.util.Set;
 import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
 
 /**
- * A controller for easily combining {@link EpoxyModel} objects. Simply implement {@link
- * #buildModels()} to declare which models should be used, and in which order. Call {@link
- * #requestModelBuild()} whenever your data changes and the models need to be recreated.
+ * A controller for easily combining {@link EpoxyModel} instances in a {@link RecyclerView.Adapter}.
+ * Simply implement {@link #buildModels()} to declare which models should be used, and in which
+ * order. Call {@link #requestModelBuild()} whenever your data changes, and the controller will call
+ * {@link #buildModels()}, update the adapter with the new models, and notify any changes between
+ * the new and old models.
  * <p>
  * The controller creates a {@link android.support.v7.widget.RecyclerView.Adapter} with the latest
  * models, which you can get via {@link #getAdapter()} to set on your RecyclerView.
@@ -28,6 +29,11 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
  * your models must have a unique id set on them for diffing to work. You may choose to use {@link
  * AutoModel} annotations to have the controller create models with unique ids for you
  * automatically.
+ * <p>
+ * Once a model is created and added to the controller in {@link #buildModels()} it should be
+ * treated as immutable and never modified again. This is necessary for adapter updates to be
+ * accurate. If {@link PackageEpoxyConfig#validateModelUsage()} is enabled then runtime validations
+ * will be done to make sure models are not changed.
  */
 public abstract class EpoxyController {
 
@@ -43,12 +49,8 @@ public abstract class EpoxyController {
   private Timer timer = NO_OP_TIMER;
   private EpoxyDiffLogger debugObserver;
   private boolean hasBuiltModelsEver;
-
-  // TODO: (eli_hart 3/9/17) validate add is only ever called once per model instance
-  // TODO: (eli_hart 3/14/17) change hash validation to ignore field if it is a generated model
-  // since the class can't be looked up at annotation proccessing time
-  // TODO: (eli_hart 3/14/17) validate hashcode never changes
-  // TODO: (eli_hart 3/14/17) validate a setter is never called once model is added
+  private boolean runningInterceptors;
+  private List<AfterInterceptorCallback> afterInterceptorCallbacks;
 
   // Readme items:
   // hidden models breaking for pull to refresh or multiple items in a row on grid
@@ -62,12 +64,13 @@ public abstract class EpoxyController {
   // Setting a null click listener is broken. Now needs to be cast.
 
   /**
-   * Call this to schedule a model update. The adapter will schedule a call to {@link
-   * #buildModels()} so that models can be rebuilt for the current data.
+   * Call this to request a model update. The controller will schedule a call to {@link
+   * #buildModels()} so that models can be rebuilt for the current data. The call is posted and
+   * debounced so that the calling code need not worry about calling this multiple times in a row.
    */
   public void requestModelBuild() {
     if (isBuildingModels()) {
-      throw new IllegalStateException("Cannot call `requestBuildModels` from inside `buildModels`");
+      throw new IllegalEpoxyUsage("Cannot call `requestBuildModels` from inside `buildModels`");
     }
 
     handler.removeCallbacks(buildModelsRunnable);
@@ -114,21 +117,63 @@ public abstract class EpoxyController {
   /**
    * Subclasses should implement this to describe what models should be shown for the current state.
    * Implementations should call either {@link #add(EpoxyModel)}, {@link
-   * EpoxyModel#addTo(EpoxyController)}, or {@link EpoxyModel#addIf(boolean, EpoxyController)}
-   * with the models that should be shown, in the order that is desired.
+   * EpoxyModel#addTo(EpoxyController)}, or {@link EpoxyModel#addIf(boolean, EpoxyController)} with
+   * the models that should be shown, in the order that is desired.
+   * <p>
+   * Once a model is added to the controller it should be treated as immutable and never modified
+   * again. This is necessary for adapter updates to be accurate. If {@link
+   * PackageEpoxyConfig#validateModelUsage()} is enabled then runtime validations will be done to
+   * make sure models are not changed.
+   * <p>
+   * You CANNOT call this method directly. Instead, call {@link #requestModelBuild()} to have the
+   * controller schedule an update.
    */
   protected abstract void buildModels();
 
-  private void runInterceptors() {
-    if (interceptors.isEmpty()) {
-      return;
+  int getIndexOfModelInBuildingList(EpoxyModel<?> model) {
+    return modelsBeingBuilt.indexOf(model);
+  }
+
+  void addAfterInterceptorCallback(AfterInterceptorCallback callback) {
+    if (!isBuildingModels()) {
+      throw new IllegalEpoxyUsage("Can only call when building models");
     }
 
-    timer.start();
-    for (Interceptor interceptor : interceptors) {
-      interceptor.intercept(modelsBeingBuilt);
+    if (afterInterceptorCallbacks == null) {
+      afterInterceptorCallbacks = new ArrayList<>();
     }
-    timer.stop("Interceptors executed");
+
+    afterInterceptorCallbacks.add(callback);
+  }
+
+  interface AfterInterceptorCallback {
+    void afterInterceptorsRun();
+  }
+
+  boolean isRunningInterceptors() {
+    return runningInterceptors;
+  }
+
+  private void runInterceptors() {
+    if (!interceptors.isEmpty()) {
+      timer.start();
+      runningInterceptors = true;
+
+      for (Interceptor interceptor : interceptors) {
+        interceptor.intercept(modelsBeingBuilt);
+      }
+
+      runningInterceptors = false;
+      timer.stop("Interceptors executed");
+    }
+
+    if (afterInterceptorCallbacks != null) {
+      for (AfterInterceptorCallback callback : afterInterceptorCallbacks) {
+        callback.afterInterceptorsRun();
+      }
+
+      afterInterceptorCallbacks = null;
+    }
   }
 
   /** A callback that is run after {@link #buildModels()} completes and before diffing is run. */
@@ -171,59 +216,72 @@ public abstract class EpoxyController {
    */
   protected int getModelCountBuiltSoFar() {
     if (!isBuildingModels()) {
-      throw new IllegalStateException("Can only all this when inside the `buildModels` method");
+      throw new IllegalEpoxyUsage("Can only all this when inside the `buildModels` method");
     }
 
     return modelsBeingBuilt.size();
   }
 
+  /**
+   * Add the model to this controller. Can only be called from inside {@link
+   * EpoxyController#buildModels()}.
+   */
   protected void add(EpoxyModel<?> model) {
-    validateAddedModel(model);
-    modelsBeingBuilt.add(model);
-  }
-
-  protected void add(EpoxyModel<?>... modelsToAdd) {
-    for (EpoxyModel<?> model : modelsToAdd) {
-      validateAddedModel(model);
-    }
-    modelsBeingBuilt.ensureCapacity(modelsBeingBuilt.size() + modelsToAdd.length);
-    Collections.addAll(modelsBeingBuilt, modelsToAdd);
-  }
-
-  protected void add(Collection<EpoxyModel<?>> modelsToAdd) {
-    for (EpoxyModel<?> model : modelsToAdd) {
-      validateAddedModel(model);
-    }
-    modelsBeingBuilt.addAll(modelsToAdd);
-  }
-
-  boolean isBuildingModels() {
-    return modelsBeingBuilt != null;
+    model.addTo(this);
   }
 
   /**
-   * Throw if adding a model is not currently allowed.
+   * Add the models to this controller. Can only be called from inside {@link
+   * EpoxyController#buildModels()}.
    */
-  private void validateAddedModel(EpoxyModel<?> model) {
+  protected void add(EpoxyModel<?>... modelsToAdd) {
+    modelsBeingBuilt.ensureCapacity(modelsBeingBuilt.size() + modelsToAdd.length);
+
+    for (EpoxyModel<?> model : modelsToAdd) {
+      model.addTo(this);
+    }
+  }
+
+  /**
+   * Add the models to this controller. Can only be called from inside {@link
+   * EpoxyController#buildModels()}.
+   */
+  protected void add(Collection<EpoxyModel<?>> modelsToAdd) {
+    modelsBeingBuilt.ensureCapacity(modelsBeingBuilt.size() + modelsToAdd.size());
+
+    for (EpoxyModel<?> model : modelsToAdd) {
+      model.addTo(this);
+    }
+  }
+
+  /**
+   * Method to actually add the model to the list being built. Should be called after all
+   * validations are done.
+   */
+  void addInternal(EpoxyModel<?> modelToAdd) {
     if (!isBuildingModels()) {
-      throw new IllegalStateException(
+      throw new IllegalEpoxyUsage(
           "You can only add models inside the `buildModels` methods, and you cannot call "
               + "`buildModels` directly. Call `requestModelBuild` instead");
     }
 
-    if (model == null) {
-      throw new IllegalArgumentException("You cannot add a null model");
+    if (modelToAdd.hasDefaultId()) {
+      throw new IllegalEpoxyUsage(
+          "You must set an id on a model before adding it. Use the @AutoModel annotation if you "
+              + "want an id to be automatically generated for you.");
     }
 
-    if (model.hasDefaultId()) {
-      throw new IllegalStateException("You must set an id on a model before adding it.");
-    }
-
-    if (!model.isShown()) {
-      throw new IllegalStateException(
+    if (!modelToAdd.isShown()) {
+      throw new IllegalEpoxyUsage(
           "You cannot hide a model in an AutoEpoxyAdapter. Use `addIf` to conditionally add a "
               + "model instead.");
     }
+
+    modelsBeingBuilt.add(modelToAdd);
+  }
+
+  boolean isBuildingModels() {
+    return modelsBeingBuilt != null;
   }
 
   private void filterDuplicatesIfNeeded(List<EpoxyModel<?>> models) {
@@ -231,6 +289,7 @@ public abstract class EpoxyController {
       return;
     }
 
+    timer.start();
     Set<Long> modelIds = new HashSet<>(models.size());
 
     ListIterator<EpoxyModel<?>> modelIterator = models.listIterator();
@@ -248,12 +307,14 @@ public abstract class EpoxyController {
         }
 
         onExceptionSwallowed(
-            new IllegalStateException("Two models have the same ID. ID's must be unique!"
+            new IllegalEpoxyUsage("Two models have the same ID. ID's must be unique!"
                 + "\nOriginal has position " + indexOfOriginal + ":\n" + originalModel
                 + "\nDuplicate has position " + indexOfDuplicate + ":\n" + model)
         );
       }
     }
+
+    timer.stop("Duplicates filtered");
   }
 
   private int findPositionOfDuplicate(List<EpoxyModel<?>> models, EpoxyModel<?> duplicateModel) {
@@ -296,7 +357,7 @@ public abstract class EpoxyController {
    */
   public void setDebugLoggingEnabled(boolean enabled) {
     if (isBuildingModels()) {
-      throw new IllegalStateException("Debug logging should be enabled before models are built");
+      throw new IllegalEpoxyUsage("Debug logging should be enabled before models are built");
     }
 
     if (enabled) {

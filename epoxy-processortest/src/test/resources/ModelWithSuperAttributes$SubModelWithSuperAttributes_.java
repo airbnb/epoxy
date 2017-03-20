@@ -18,7 +18,14 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_ extends Model
   }
 
   @Override
+  public void addTo(EpoxyController controller) {
+    super.addTo(controller);
+    addWithDebugValidation(controller);
+  }
+
+  @Override
   public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.");
   }
 
   @Override
@@ -26,6 +33,7 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_ extends Model
     if (onModelBoundListener_epoxyGeneratedModel != null) {
       onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the bind call.");
   }
 
   /**
@@ -36,16 +44,19 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_ extends Model
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithSuperAttributes$SubModelWithSuperAttributes_ onBind(OnModelBoundListener<ModelWithSuperAttributes$SubModelWithSuperAttributes_, Object> listener) {
+    validateMutability();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   @Override
   public void unbind(Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being being bound to the recycler view and being unbound.");
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the unbind method.");
   }
 
   /**
@@ -56,11 +67,13 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_ extends Model
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithSuperAttributes$SubModelWithSuperAttributes_ onUnbind(OnModelUnboundListener<ModelWithSuperAttributes$SubModelWithSuperAttributes_, Object> listener) {
+    validateMutability();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithSuperAttributes$SubModelWithSuperAttributes_ subValue(int subValue) {
+    validateMutability();
     this.subValue = subValue;
     return this;
   }
@@ -70,6 +83,7 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_ extends Model
   }
 
   public ModelWithSuperAttributes$SubModelWithSuperAttributes_ superValue(int superValue) {
+    validateMutability();
     this.superValue = superValue;
     return this;
   }

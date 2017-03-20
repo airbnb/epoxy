@@ -28,7 +28,14 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   @Override
+  public void addTo(EpoxyController controller) {
+    super.addTo(controller);
+    addWithDebugValidation(controller);
+  }
+
+  @Override
   public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.");
   }
 
   @Override
@@ -36,6 +43,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     if (onModelBoundListener_epoxyGeneratedModel != null) {
       onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the bind call.");
   }
 
   /**
@@ -46,16 +54,19 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithAllPrivateFieldTypes_ onBind(OnModelBoundListener<ModelWithAllPrivateFieldTypes_, Object> listener) {
+    validateMutability();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   @Override
   public void unbind(Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being being bound to the recycler view and being unbound.");
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the unbind method.");
   }
 
   /**
@@ -66,11 +77,13 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithAllPrivateFieldTypes_ onUnbind(OnModelUnboundListener<ModelWithAllPrivateFieldTypes_, Object> listener) {
+    validateMutability();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithAllPrivateFieldTypes_ valueInteger(Integer valueInteger) {
+    validateMutability();
     this.setValueInteger(valueInteger);
     return this;
   }
@@ -80,6 +93,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueShort(short valueShort) {
+    validateMutability();
     this.setValueShort(valueShort);
     return this;
   }
@@ -89,6 +103,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueLong(long valueLong) {
+    validateMutability();
     this.setValueLong(valueLong);
     return this;
   }
@@ -98,6 +113,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueList(List<String> valueList) {
+    validateMutability();
     this.setValueList(valueList);
     return this;
   }
@@ -107,6 +123,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueShortWrapper(Short valueShortWrapper) {
+    validateMutability();
     this.setValueShortWrapper(valueShortWrapper);
     return this;
   }
@@ -116,6 +133,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueDouble(double valueDouble) {
+    validateMutability();
     this.setValueDouble(valueDouble);
     return this;
   }
@@ -125,6 +143,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueChar(char valueChar) {
+    validateMutability();
     this.setValueChar(valueChar);
     return this;
   }
@@ -134,6 +153,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueInt(int valueInt) {
+    validateMutability();
     this.setValueInt(valueInt);
     return this;
   }
@@ -143,6 +163,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueDoubleWrapper(Double valueDoubleWrapper) {
+    validateMutability();
     this.setValueDoubleWrapper(valueDoubleWrapper);
     return this;
   }
@@ -152,6 +173,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueFloatWrapper(Float valueFloatWrapper) {
+    validateMutability();
     this.setValueFloatWrapper(valueFloatWrapper);
     return this;
   }
@@ -161,6 +183,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueBooleanWrapper(Boolean valueBooleanWrapper) {
+    validateMutability();
     this.setValueBooleanWrapper(valueBooleanWrapper);
     return this;
   }
@@ -170,6 +193,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueByteWrapper(Byte valueByteWrapper) {
+    validateMutability();
     this.setValueByteWrapper(valueByteWrapper);
     return this;
   }
@@ -179,6 +203,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valuebByte(byte valuebByte) {
+    validateMutability();
     this.setValuebByte(valuebByte);
     return this;
   }
@@ -188,6 +213,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueLongWrapper(Long valueLongWrapper) {
+    validateMutability();
     this.setValueLongWrapper(valueLongWrapper);
     return this;
   }
@@ -197,6 +223,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueCharacter(Character valueCharacter) {
+    validateMutability();
     this.setValueCharacter(valueCharacter);
     return this;
   }
@@ -206,6 +233,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueString(String valueString) {
+    validateMutability();
     this.setValueString(valueString);
     return this;
   }
@@ -215,6 +243,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueFloat(float valueFloat) {
+    validateMutability();
     this.setValueFloat(valueFloat);
     return this;
   }
@@ -224,6 +253,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueBoolean(boolean valueBoolean) {
+    validateMutability();
     this.setValueBoolean(valueBoolean);
     return this;
   }
@@ -233,6 +263,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueObjectArray(Object[] valueObjectArray) {
+    validateMutability();
     this.setValueObjectArray(valueObjectArray);
     return this;
   }
@@ -242,6 +273,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueObject(Object valueObject) {
+    validateMutability();
     this.setValueObject(valueObject);
     return this;
   }
@@ -251,6 +283,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public ModelWithAllPrivateFieldTypes_ valueIntArray(int[] valueIntArray) {
+    validateMutability();
     this.setValueIntArray(valueIntArray);
     return this;
   }

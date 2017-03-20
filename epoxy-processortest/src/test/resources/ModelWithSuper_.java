@@ -18,7 +18,14 @@ public class ModelWithSuper_ extends ModelWithSuper implements GeneratedModel<Ob
   }
 
   @Override
+  public void addTo(EpoxyController controller) {
+    super.addTo(controller);
+    addWithDebugValidation(controller);
+  }
+
+  @Override
   public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.");
   }
 
   @Override
@@ -26,6 +33,7 @@ public class ModelWithSuper_ extends ModelWithSuper implements GeneratedModel<Ob
     if (onModelBoundListener_epoxyGeneratedModel != null) {
       onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the bind call.");
   }
 
   /**
@@ -36,16 +44,19 @@ public class ModelWithSuper_ extends ModelWithSuper implements GeneratedModel<Ob
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithSuper_ onBind(OnModelBoundListener<ModelWithSuper_, Object> listener) {
+    validateMutability();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   @Override
   public void unbind(Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being being bound to the recycler view and being unbound.");
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the unbind method.");
   }
 
   /**
@@ -56,11 +67,13 @@ public class ModelWithSuper_ extends ModelWithSuper implements GeneratedModel<Ob
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithSuper_ onUnbind(OnModelUnboundListener<ModelWithSuper_, Object> listener) {
+    validateMutability();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithSuper_ valueInt(int valueInt) {
+    validateMutability();
     this.valueInt = valueInt;
     super.valueInt(valueInt);
     return this;

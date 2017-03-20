@@ -53,6 +53,13 @@ class HashCodeValidator {
   }
 
   private void validateImplementsHashCode(TypeMirror mirror) throws EpoxyProcessorException {
+    if (mirror.getKind() == TypeKind.ERROR) {
+      // The class type cannot be resolved. This may be because it is a generated epoxy model and
+      // the class hasn't been built yet.
+      // We just assume that the class will implement hashCode at runtime.
+      return;
+    }
+
     if (TypeName.get(mirror).isPrimitive()) {
       return;
     }

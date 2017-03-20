@@ -7,20 +7,20 @@ class PackageConfigSettings {
 
   final boolean requireHashCode;
   final boolean requireAbstractModels;
-  final boolean validateAutoModelUsage;
+  final boolean validateModelUsage;
 
   private PackageConfigSettings(boolean requireHashCode, boolean requireAbstractModels,
-      boolean validateAutoModelUsage) {
+      boolean validateModelUsage) {
     this.requireHashCode = requireHashCode;
     this.requireAbstractModels = requireAbstractModels;
-    this.validateAutoModelUsage = validateAutoModelUsage;
+    this.validateModelUsage = validateModelUsage;
   }
 
   static PackageConfigSettings forDefaults() {
     return new PackageConfigSettings(
         PackageEpoxyConfig.REQUIRE_HASHCODE_DEFAULT,
         PackageEpoxyConfig.REQUIRE_ABSTRACT_MODELS,
-        PackageEpoxyConfig.VALIDATE_AUTO_MODEL_USAGE
+        PackageEpoxyConfig.VALIDATE_MODEL_USAGE
     );
   }
 
@@ -28,7 +28,7 @@ class PackageConfigSettings {
     return new PackageConfigSettings(
         configAnnotation.requireHashCode(),
         configAnnotation.requireAbstractModels(),
-        configAnnotation.validateAutoModelUsage()
+        configAnnotation.validateModelUsage()
     );
   }
 }

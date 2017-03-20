@@ -33,6 +33,7 @@ public class ControllerWithAutoModel_EpoxyHelper extends ControllerHelper<Contro
   private void validateModelsHaveNotChanged() {
     validateSameModel(modelWithAttribute1, controller.modelWithAttribute1, "modelWithAttribute1", -1);
     validateSameModel(modelWithAttribute2, controller.modelWithAttribute2, "modelWithAttribute2", -2);
+    validateModelHashCodesHaveNotChanged(controller);
   }
 
   private void validateSameModel(EpoxyModel expectedObject, EpoxyModel actualObject,

@@ -28,7 +28,14 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   @Override
+  public void addTo(EpoxyController controller) {
+    super.addTo(controller);
+    addWithDebugValidation(controller);
+  }
+
+  @Override
   public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.");
   }
 
   @Override
@@ -36,6 +43,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
     if (onModelBoundListener_epoxyGeneratedModel != null) {
       onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the bind call.");
   }
 
   /**
@@ -46,16 +54,19 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithAllFieldTypes_ onBind(OnModelBoundListener<ModelWithAllFieldTypes_, Object> listener) {
+    validateMutability();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   @Override
   public void unbind(Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being being bound to the recycler view and being unbound.");
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the unbind method.");
   }
 
   /**
@@ -66,11 +77,13 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithAllFieldTypes_ onUnbind(OnModelUnboundListener<ModelWithAllFieldTypes_, Object> listener) {
+    validateMutability();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithAllFieldTypes_ valueInteger(Integer valueInteger) {
+    validateMutability();
     this.valueInteger = valueInteger;
     return this;
   }
@@ -80,6 +93,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueShort(short valueShort) {
+    validateMutability();
     this.valueShort = valueShort;
     return this;
   }
@@ -89,6 +103,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueLong(long valueLong) {
+    validateMutability();
     this.valueLong = valueLong;
     return this;
   }
@@ -98,6 +113,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueList(List<String> valueList) {
+    validateMutability();
     this.valueList = valueList;
     return this;
   }
@@ -107,6 +123,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueShortWrapper(Short valueShortWrapper) {
+    validateMutability();
     this.valueShortWrapper = valueShortWrapper;
     return this;
   }
@@ -116,6 +133,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueDouble(double valueDouble) {
+    validateMutability();
     this.valueDouble = valueDouble;
     return this;
   }
@@ -125,6 +143,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueChar(char valueChar) {
+    validateMutability();
     this.valueChar = valueChar;
     return this;
   }
@@ -134,6 +153,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueInt(int valueInt) {
+    validateMutability();
     this.valueInt = valueInt;
     return this;
   }
@@ -143,6 +163,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueDoubleWrapper(Double valueDoubleWrapper) {
+    validateMutability();
     this.valueDoubleWrapper = valueDoubleWrapper;
     return this;
   }
@@ -152,6 +173,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueFloatWrapper(Float valueFloatWrapper) {
+    validateMutability();
     this.valueFloatWrapper = valueFloatWrapper;
     return this;
   }
@@ -161,6 +183,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueBooleanWrapper(Boolean valueBooleanWrapper) {
+    validateMutability();
     this.valueBooleanWrapper = valueBooleanWrapper;
     return this;
   }
@@ -170,6 +193,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueByteWrapper(Byte valueByteWrapper) {
+    validateMutability();
     this.valueByteWrapper = valueByteWrapper;
     return this;
   }
@@ -179,6 +203,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valuebByte(byte valuebByte) {
+    validateMutability();
     this.valuebByte = valuebByte;
     return this;
   }
@@ -188,6 +213,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueLongWrapper(Long valueLongWrapper) {
+    validateMutability();
     this.valueLongWrapper = valueLongWrapper;
     return this;
   }
@@ -197,6 +223,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueCharacter(Character valueCharacter) {
+    validateMutability();
     this.valueCharacter = valueCharacter;
     return this;
   }
@@ -206,6 +233,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueString(String valueString) {
+    validateMutability();
     this.valueString = valueString;
     return this;
   }
@@ -215,6 +243,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueFloat(float valueFloat) {
+    validateMutability();
     this.valueFloat = valueFloat;
     return this;
   }
@@ -224,6 +253,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueBoolean(boolean valueBoolean) {
+    validateMutability();
     this.valueBoolean = valueBoolean;
     return this;
   }
@@ -233,6 +263,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueObjectArray(Object[] valueObjectArray) {
+    validateMutability();
     this.valueObjectArray = valueObjectArray;
     return this;
   }
@@ -242,6 +273,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueObject(Object valueObject) {
+    validateMutability();
     this.valueObject = valueObject;
     return this;
   }
@@ -251,6 +283,7 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   public ModelWithAllFieldTypes_ valueIntArray(int[] valueIntArray) {
+    validateMutability();
     this.valueIntArray = valueIntArray;
     return this;
   }

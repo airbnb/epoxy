@@ -31,6 +31,10 @@ public class TestModel extends EpoxyModel<View> {
     return this;
   }
 
+  int value() {
+    return value;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

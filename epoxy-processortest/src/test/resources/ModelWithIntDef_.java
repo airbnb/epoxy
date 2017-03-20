@@ -1,6 +1,7 @@
 package com.airbnb.epoxy.models;
 
 import android.support.annotation.LayoutRes;
+import com.airbnb.epoxy.EpoxyController;
 import com.airbnb.epoxy.EpoxyViewHolder;
 import com.airbnb.epoxy.GeneratedModel;
 import com.airbnb.epoxy.OnModelBoundListener;
@@ -22,7 +23,14 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
   }
 
   @Override
+  public void addTo(EpoxyController controller) {
+    super.addTo(controller);
+    addWithDebugValidation(controller);
+  }
+
+  @Override
   public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.");
   }
 
   @Override
@@ -30,6 +38,7 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
     if (onModelBoundListener_epoxyGeneratedModel != null) {
       onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the bind call.");
   }
 
   /**
@@ -40,16 +49,19 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithIntDef_ onBind(OnModelBoundListener<ModelWithIntDef_, Object> listener) {
+    validateMutability();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   @Override
   public void unbind(Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being being bound to the recycler view and being unbound.");
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the unbind method.");
   }
 
   /**
@@ -60,11 +72,13 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithIntDef_ onUnbind(OnModelUnboundListener<ModelWithIntDef_, Object> listener) {
+    validateMutability();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithIntDef_ type(@ModelWithIntDef.MyType int type) {
+    validateMutability();
     this.type = type;
     return this;
   }

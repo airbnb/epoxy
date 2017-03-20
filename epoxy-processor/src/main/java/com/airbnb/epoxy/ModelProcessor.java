@@ -44,7 +44,8 @@ class ModelProcessor {
     this.typeUtils = typeUtils;
     this.configManager = configManager;
     this.errorLogger = errorLogger;
-    modelWriter = new GeneratedModelWriter(filer, typeUtils, errorLogger, layoutProcessor);
+    modelWriter =
+        new GeneratedModelWriter(filer, typeUtils, errorLogger, layoutProcessor, configManager);
   }
 
   List<ClassToGenerateInfo> getGeneratedModels() {

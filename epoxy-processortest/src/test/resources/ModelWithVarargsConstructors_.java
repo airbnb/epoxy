@@ -23,7 +23,14 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
   }
 
   @Override
+  public void addTo(EpoxyController controller) {
+    super.addTo(controller);
+    addWithDebugValidation(controller);
+  }
+
+  @Override
   public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.");
   }
 
   @Override
@@ -31,6 +38,7 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
     if (onModelBoundListener_epoxyGeneratedModel != null) {
       onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the bind call.");
   }
 
   /**
@@ -41,16 +49,19 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithVarargsConstructors_ onBind(OnModelBoundListener<ModelWithVarargsConstructors_, Object> listener) {
+    validateMutability();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   @Override
   public void unbind(Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being being bound to the recycler view and being unbound.");
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the unbind method.");
   }
 
   /**
@@ -61,11 +72,13 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithVarargsConstructors_ onUnbind(OnModelUnboundListener<ModelWithVarargsConstructors_, Object> listener) {
+    validateMutability();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithVarargsConstructors_ varargs(String[] varargs) {
+    validateMutability();
     this.varargs = varargs;
     return this;
   }
@@ -75,6 +88,7 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
   }
 
   public ModelWithVarargsConstructors_ valueInt(int valueInt) {
+    validateMutability();
     this.valueInt = valueInt;
     return this;
   }

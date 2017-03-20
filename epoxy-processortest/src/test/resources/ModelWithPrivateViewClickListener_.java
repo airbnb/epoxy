@@ -21,23 +21,30 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
   }
 
   @Override
+  public void addTo(EpoxyController controller) {
+    super.addTo(controller);
+    addWithDebugValidation(controller);
+  }
+
+  @Override
   public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.");
     if (clickListener_epoxyGeneratedModel != null) {
       super.setClickListener(new View.OnClickListener() {
-          // Save the original click listener so if it gets changed on
-          // the generated model this click listener won't be affected
-          // if it is still bound to a view.
-          private final OnModelClickListener<ModelWithPrivateViewClickListener_, Object> clickListener_epoxyGeneratedModel = ModelWithPrivateViewClickListener_.this.clickListener_epoxyGeneratedModel;
-          public void onClick(View v) {
-          clickListener_epoxyGeneratedModel.onClick(ModelWithPrivateViewClickListener_.this, object, v,
-              holder.getAdapterPosition());
-          }
-          public int hashCode() {
-             // Use the hash of the original click listener so we don't change the
-             // value by wrapping it with this anonymous click listener
-             return clickListener_epoxyGeneratedModel.hashCode();
-          }
-        });
+              // Save the original click listener so if it gets changed on
+              // the generated model this click listener won't be affected
+              // if it is still bound to a view.
+              private final OnModelClickListener<ModelWithPrivateViewClickListener_, Object> clickListener_epoxyGeneratedModel = ModelWithPrivateViewClickListener_.this.clickListener_epoxyGeneratedModel;
+              public void onClick(View v) {
+              clickListener_epoxyGeneratedModel.onClick(ModelWithPrivateViewClickListener_.this, object, v,
+                  holder.getAdapterPosition());
+              }
+              public int hashCode() {
+                 // Use the hash of the original click listener so we don't change the
+                 // value by wrapping it with this anonymous click listener
+                 return clickListener_epoxyGeneratedModel.hashCode();
+              }
+            });
     }
   }
 
@@ -46,6 +53,7 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
     if (onModelBoundListener_epoxyGeneratedModel != null) {
       onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the bind call.");
   }
 
   /**
@@ -56,16 +64,19 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithPrivateViewClickListener_ onBind(OnModelBoundListener<ModelWithPrivateViewClickListener_, Object> listener) {
+    validateMutability();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   @Override
   public void unbind(Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being being bound to the recycler view and being unbound.");
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the unbind method.");
   }
 
   /**
@@ -76,6 +87,7 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithPrivateViewClickListener_ onUnbind(OnModelUnboundListener<ModelWithPrivateViewClickListener_, Object> listener) {
+    validateMutability();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -83,12 +95,26 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
   public ModelWithPrivateViewClickListener_ clickListener(final OnModelClickListener<ModelWithPrivateViewClickListener_, Object> clickListener) {
-    super.setClickListener(null);
+    validateMutability();
     this.clickListener_epoxyGeneratedModel = clickListener;
+    super.setClickListener(new View.OnClickListener() {
+            // Save the original click listener so if it gets changed on
+            // the generated model this click listener won't be affected
+            // if it is still bound to a view.
+            private final OnModelClickListener<ModelWithPrivateViewClickListener_, Object> clickListener_epoxyGeneratedModel = ModelWithPrivateViewClickListener_.this.clickListener_epoxyGeneratedModel;
+            public void onClick(View v) { }
+            
+            public int hashCode() {
+               // Use the hash of the original click listener so we don't change the
+               // value by wrapping it with this anonymous click listener
+               return clickListener_epoxyGeneratedModel.hashCode();
+            }
+          });
     return this;
   }
 
   public ModelWithPrivateViewClickListener_ clickListener(View.OnClickListener clickListener) {
+    validateMutability();
     this.setClickListener(clickListener);
     this.clickListener_epoxyGeneratedModel = null;
     return this;
@@ -171,9 +197,6 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
     if ((getClickListener() == null) != (that.getClickListener() == null)) {
       return false;
     }
-    if ((clickListener_epoxyGeneratedModel == null) != (that.clickListener_epoxyGeneratedModel == null)) {
-      return false;
-    }
     return true;
   }
 
@@ -183,7 +206,6 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (getClickListener() != null ? 1 : 0);
-    result = 31 * result + (clickListener_epoxyGeneratedModel != null ? 1 : 0);
     return result;
   }
 
