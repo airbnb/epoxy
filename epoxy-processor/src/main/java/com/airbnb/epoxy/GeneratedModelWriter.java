@@ -27,6 +27,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.ProcessorUtils.EPOXY_CONTROLLER_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.EPOXY_VIEW_HOLDER_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.GENERATED_MODEL_INTERFACE;
 import static com.airbnb.epoxy.ProcessorUtils.MODEL_CLICK_LISTENER_TYPE;
@@ -63,13 +64,15 @@ class GeneratedModelWriter {
   private final Types typeUtils;
   private final ErrorLogger errorLogger;
   private final LayoutResourceProcessor layoutResourceProcessor;
+  private final ConfigManager configManager;
 
   GeneratedModelWriter(Filer filer, Types typeUtils, ErrorLogger errorLogger,
-      LayoutResourceProcessor layoutResourceProcessor) {
+      LayoutResourceProcessor layoutResourceProcessor, ConfigManager configManager) {
     this.filer = filer;
     this.typeUtils = typeUtils;
     this.errorLogger = errorLogger;
     this.layoutResourceProcessor = layoutResourceProcessor;
+    this.configManager = configManager;
   }
 
   void generateClassForModel(ClassToGenerateInfo info)
@@ -78,14 +81,18 @@ class GeneratedModelWriter {
       return;
     }
 
-    TypeSpec generatedClass = TypeSpec.classBuilder(info.getGeneratedName())
+    TypeSpec.Builder builder = TypeSpec.classBuilder(info.getGeneratedName())
         .addJavadoc("Generated file. Do not modify!")
         .addModifiers(PUBLIC)
         .superclass(info.getOriginalClassName())
         .addSuperinterface(getGeneratedModelInterface(info))
         .addTypeVariables(info.getTypeVariables())
         .addFields(generateFields(info))
-        .addMethods(generateConstructors(info))
+        .addMethods(generateConstructors(info));
+
+    generateDebugAddToMethodIfNeeded(builder, info);
+
+    builder
         .addMethods(generateBindMethods(info))
         .addMethods(generateSettersAndGetters(info))
         .addMethods(generateMethodsReturningClassType(info))
@@ -93,10 +100,9 @@ class GeneratedModelWriter {
         .addMethod(generateReset(info))
         .addMethod(generateEquals(info))
         .addMethod(generateHashCode(info))
-        .addMethod(generateToString(info))
-        .build();
+        .addMethod(generateToString(info));
 
-    JavaFile.builder(info.getGeneratedName().packageName(), generatedClass)
+    JavaFile.builder(info.getGeneratedName().packageName(), builder.build())
         .build()
         .writeTo(filer);
   }
@@ -185,6 +191,23 @@ class GeneratedModelWriter {
     return constructors;
   }
 
+  private void generateDebugAddToMethodIfNeeded(TypeSpec.Builder classBuilder,
+      ClassToGenerateInfo info) {
+    if (!configManager.validateModelUsage(info)) {
+      return;
+    }
+
+    MethodSpec addToMethod = MethodSpec.methodBuilder("addTo")
+        .addParameter(ProcessorUtils.getClassName(EPOXY_CONTROLLER_TYPE), "controller")
+        .addAnnotation(Override.class)
+        .addModifiers(PUBLIC)
+        .addStatement("super.addTo(controller)")
+        .addStatement("addWithDebugValidation(controller)")
+        .build();
+
+    classBuilder.addMethod(addToMethod);
+  }
+
   private Iterable<MethodSpec> generateBindMethods(ClassToGenerateInfo classInfo) {
     List<MethodSpec> methods = new ArrayList<>();
 
@@ -203,6 +226,9 @@ class GeneratedModelWriter {
         .addAnnotation(Override.class)
         .addParameter(viewHolderParam)
         .addParameter(boundObjectParam);
+
+    addHashCodeValidationIfNecessary(preBindBuilder, classInfo,
+        "The model was changed between being added to the controller and being bound.");
 
     ClassName viewClickListenerType = getClassName(VIEW_CLICK_LISTENER_TYPE);
     ClassName viewType = getClassName("android.view.View");
@@ -244,14 +270,19 @@ class GeneratedModelWriter {
 
     methods.add(preBindBuilder.build());
 
-    methods.add(MethodSpec.methodBuilder("handlePostBind")
+    Builder postBindBuilder = MethodSpec.methodBuilder("handlePostBind")
         .addModifiers(PUBLIC)
         .addAnnotation(Override.class)
         .addParameter(boundObjectParam)
         .addParameter(TypeName.INT, "position")
         .beginControlFlow("if ($L != null)", modelBindListenerFieldName())
         .addStatement("$L.onModelBound(this, object, position)", modelBindListenerFieldName())
-        .endControlFlow()
+        .endControlFlow();
+
+    addHashCodeValidationIfNecessary(postBindBuilder, classInfo,
+        "The model was changed during the bind call.");
+
+    methods.add(postBindBuilder
         .build());
 
     ParameterizedTypeName onBindListenerType = ParameterizedTypeName.get(
@@ -261,7 +292,7 @@ class GeneratedModelWriter {
     );
     ParameterSpec bindListenerParam = ParameterSpec.builder(onBindListenerType, "listener").build();
 
-    methods.add(MethodSpec.methodBuilder("onBind")
+    MethodSpec.Builder onBind = MethodSpec.methodBuilder("onBind")
         .addJavadoc("Register a listener that will be called when this model is bound to a view.\n"
             + "<p>\n"
             + "The listener will contribute to this model's hashCode state per the {@link\n"
@@ -271,22 +302,36 @@ class GeneratedModelWriter {
             + "{@link #reset()}")
         .addModifiers(PUBLIC)
         .returns(classInfo.getParameterizedGeneratedName())
-        .addParameter(bindListenerParam)
+        .addParameter(bindListenerParam);
+
+    addMutabilityValidationIfNecessary(onBind, classInfo)
         .addStatement("this.$L = listener", modelBindListenerFieldName())
         .addStatement("return this")
-        .build());
+        .build();
+
+    methods.add(onBind.build());
 
     ParameterSpec unbindObjectParam =
         ParameterSpec.builder(boundObjectType, "object").build();
 
-    methods.add(MethodSpec.methodBuilder("unbind")
+    Builder unbindBuilder = MethodSpec.methodBuilder("unbind")
         .addAnnotation(Override.class)
         .addModifiers(PUBLIC)
-        .addParameter(unbindObjectParam)
+        .addParameter(unbindObjectParam);
+
+    addHashCodeValidationIfNecessary(unbindBuilder, classInfo,
+        "The model was changed between being being bound to the recycler view and being unbound.");
+
+    unbindBuilder
         .addStatement("super.unbind(object)")
         .beginControlFlow("if ($L != null)", modelUnbindListenerFieldName())
         .addStatement("$L.onModelUnbound(this, object)", modelUnbindListenerFieldName())
-        .endControlFlow()
+        .endControlFlow();
+
+    addHashCodeValidationIfNecessary(unbindBuilder, classInfo,
+        "The model was changed during the unbind method.");
+
+    methods.add(unbindBuilder
         .build());
 
     ParameterizedTypeName onUnbindListenerType = ParameterizedTypeName.get(
@@ -297,7 +342,7 @@ class GeneratedModelWriter {
     ParameterSpec unbindListenerParam =
         ParameterSpec.builder(onUnbindListenerType, "listener").build();
 
-    methods.add(MethodSpec.methodBuilder("onUnbind")
+    Builder onUnbind = MethodSpec.methodBuilder("onUnbind")
         .addJavadoc("Register a listener that will be called when this model is unbound from a "
             + "view.\n"
             + "<p>\n"
@@ -307,11 +352,14 @@ class GeneratedModelWriter {
             + "You may clear the listener by setting a null value, or by calling "
             + "{@link #reset()}")
         .addModifiers(PUBLIC)
-        .returns(classInfo.getParameterizedGeneratedName())
+        .returns(classInfo.getParameterizedGeneratedName());
+
+    addMutabilityValidationIfNecessary(onUnbind, classInfo)
         .addParameter(unbindListenerParam)
         .addStatement("this.$L = listener", modelUnbindListenerFieldName())
-        .addStatement("return this")
-        .build());
+        .addStatement("return this");
+
+    methods.add(onUnbind.build());
 
     return methods;
   }
@@ -506,25 +554,57 @@ class GeneratedModelWriter {
     return methods;
   }
 
-  private MethodSpec generateSetClickModelListener(ClassToGenerateInfo helperClass,
+  private MethodSpec generateSetClickModelListener(ClassToGenerateInfo classInfo,
       AttributeInfo attribute) {
     String attributeName = attribute.getName();
 
     ParameterSpec param =
-        ParameterSpec.builder(getModelClickListenerType(helperClass), attributeName, FINAL).build();
+        ParameterSpec.builder(getModelClickListenerType(classInfo), attributeName, FINAL).build();
 
-    return MethodSpec.methodBuilder(attributeName)
+    Builder builder = MethodSpec.methodBuilder(attributeName)
         .addJavadoc("Set a click listener that will provide the parent view, model, and adapter "
             + "position of the clicked view. This will clear the normal View.OnClickListener "
             + "if one has been set")
         .addModifiers(PUBLIC)
-        .returns(helperClass.getParameterizedGeneratedName())
+        .returns(classInfo.getParameterizedGeneratedName())
         .addParameter(param)
-        .addAnnotations(attribute.getSetterAnnotations())
-        .addStatement("super." + attribute.setterCode(), "null")
+        .addAnnotations(attribute.getSetterAnnotations());
+
+    ClassName viewClickListenerType = getClassName(VIEW_CLICK_LISTENER_TYPE);
+    ClassName viewType = getClassName("android.view.View");
+    String modelClickListenerField = attribute.getModelClickListenerName();
+
+    // This creates a View.OnClickListener and sets it on the original model's click listener field.
+    // This click listener has an empty onClick implementation, and will be replaced in
+    // `handlePreBind`
+    // when we can create a functional click listener with the view holder we bind to.
+    // However, we use this stub version for now since it has the same hashCode implementation
+    // as the future click listener, so when we create the real click listener in `handlePreBind`
+    // it won't change the hashCode of the model.
+    CodeBlock clickListenerCodeBlock = CodeBlock.of(
+        "new $T() {\n"
+            + "    // Save the original click listener so if it gets changed on\n"
+            + "    // the generated model this click listener won't be affected\n"
+            + "    // if it is still bound to a view.\n"
+            + "    private final $T $L = $T.this.$L;\n"
+            + "    public void onClick($T v) { }\n"
+            + "    \n"
+            + "    public int hashCode() {\n"
+            + "       // Use the hash of the original click listener so we don't change the\n"
+            + "       // value by wrapping it with this anonymous click listener\n"
+            + "       return $L.hashCode();\n"
+            + "    }\n"
+            + "  }",
+        viewClickListenerType, getModelClickListenerType(classInfo),
+        modelClickListenerField, classInfo.getGeneratedName(),
+        modelClickListenerField, viewType, modelClickListenerField);
+
+    addMutabilityValidationIfNecessary(builder, classInfo)
         .addStatement("this.$L = $L", attribute.getModelClickListenerName(), attributeName)
-        .addStatement("return this")
-        .build();
+        .addStatement("super." + attribute.setterCode(), clickListenerCodeBlock)
+        .addStatement("return this");
+
+    return builder.build();
   }
 
   private MethodSpec generateEquals(ClassToGenerateInfo helperClass) {
@@ -567,12 +647,6 @@ class GeneratedModelWriter {
       }
 
       addEqualsLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getterCode());
-
-      if (attributeInfo.isViewClickListener()) {
-        // Add the model click listener as well
-        addEqualsLineForType(builder, attributeInfo.useInHash(), type,
-            attributeInfo.getModelClickListenerName());
-      }
     }
 
     return builder
@@ -656,12 +730,6 @@ class GeneratedModelWriter {
       }
 
       addHashCodeLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getterCode());
-
-      if (attributeInfo.isViewClickListener()) {
-        // Add the model click listener as well
-        addHashCodeLineForType(builder, attributeInfo.useInHash(), type,
-            attributeInfo.getModelClickListenerName());
-      }
     }
 
     return builder
@@ -739,7 +807,9 @@ class GeneratedModelWriter {
         .addModifiers(PUBLIC)
         .returns(helperClass.getParameterizedGeneratedName())
         .addParameter(ParameterSpec.builder(attribute.getType(), attributeName)
-            .addAnnotations(attribute.getSetterAnnotations()).build())
+            .addAnnotations(attribute.getSetterAnnotations()).build());
+
+    addMutabilityValidationIfNecessary(builder, helperClass)
         .addStatement("this." + attribute.setterCode(), attributeName);
 
     if (attribute.isViewClickListener()) {
@@ -779,6 +849,24 @@ class GeneratedModelWriter {
         .addStatement("super.reset()")
         .addStatement("return this")
         .build();
+  }
+
+  private MethodSpec.Builder addMutabilityValidationIfNecessary(MethodSpec.Builder method,
+      ClassToGenerateInfo classInfo) {
+    if (configManager.validateModelUsage(classInfo)) {
+      method.addStatement("validateMutability()");
+    }
+
+    return method;
+  }
+
+  private MethodSpec.Builder addHashCodeValidationIfNecessary(MethodSpec.Builder method,
+      ClassToGenerateInfo classInfo, String message) {
+    if (configManager.validateModelUsage(classInfo)) {
+      method.addStatement("validateStateHasNotChangedSinceAdded($S)", message);
+    }
+
+    return method;
   }
 
   private static String getDefaultValue(TypeName attributeType) {

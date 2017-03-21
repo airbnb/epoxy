@@ -8,24 +8,17 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelReturningClassTypeWithVarargs_ extends ModelReturningClassTypeWithVarargs implements GeneratedModel<Object> {
-  private OnModelBoundListener<ModelReturningClassTypeWithVarargs_, Object> onModelBoundListener_epoxyGeneratedModel;
+public class ModelNoValidation_ extends ModelNoValidation implements GeneratedModel<Object> {
+  private OnModelBoundListener<ModelNoValidation_, Object> onModelBoundListener_epoxyGeneratedModel;
 
-  private OnModelUnboundListener<ModelReturningClassTypeWithVarargs_, Object> onModelUnboundListener_epoxyGeneratedModel;
+  private OnModelUnboundListener<ModelNoValidation_, Object> onModelUnboundListener_epoxyGeneratedModel;
 
-  public ModelReturningClassTypeWithVarargs_() {
+  public ModelNoValidation_() {
     super();
   }
 
   @Override
-  public void addTo(EpoxyController controller) {
-    super.addTo(controller);
-    addWithDebugValidation(controller);
-  }
-
-  @Override
   public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
-    validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.");
   }
 
   @Override
@@ -33,7 +26,6 @@ public class ModelReturningClassTypeWithVarargs_ extends ModelReturningClassType
     if (onModelBoundListener_epoxyGeneratedModel != null) {
       onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
-    validateStateHasNotChangedSinceAdded("The model was changed during the bind call.");
   }
 
   /**
@@ -43,20 +35,17 @@ public class ModelReturningClassTypeWithVarargs_ extends ModelReturningClassType
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ModelReturningClassTypeWithVarargs_ onBind(OnModelBoundListener<ModelReturningClassTypeWithVarargs_, Object> listener) {
-    validateMutability();
+  public ModelNoValidation_ onBind(OnModelBoundListener<ModelNoValidation_, Object> listener) {
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   @Override
   public void unbind(Object object) {
-    validateStateHasNotChangedSinceAdded("The model was changed between being being bound to the recycler view and being unbound.");
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
-    validateStateHasNotChangedSinceAdded("The model was changed during the unbind method.");
   }
 
   /**
@@ -66,14 +55,12 @@ public class ModelReturningClassTypeWithVarargs_ extends ModelReturningClassType
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ModelReturningClassTypeWithVarargs_ onUnbind(OnModelUnboundListener<ModelReturningClassTypeWithVarargs_, Object> listener) {
-    validateMutability();
+  public ModelNoValidation_ onUnbind(OnModelUnboundListener<ModelNoValidation_, Object> listener) {
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
-  public ModelReturningClassTypeWithVarargs_ value(int value) {
-    validateMutability();
+  public ModelNoValidation_ value(int value) {
     this.value = value;
     return this;
   }
@@ -83,61 +70,49 @@ public class ModelReturningClassTypeWithVarargs_ extends ModelReturningClassType
   }
 
   @Override
-  public ModelReturningClassTypeWithVarargs_ classType(String... varargs) {
-    super.classType(varargs);
-    return this;
-  }
-
-  @Override
-  public ModelReturningClassTypeWithVarargs_ classType(String first, String... varargs) {
-    super.classType(first, varargs);
-    return this;
-  }
-
-  @Override
-  public ModelReturningClassTypeWithVarargs_ id(long id) {
+  public ModelNoValidation_ id(long id) {
     super.id(id);
     return this;
   }
 
   @Override
-  public ModelReturningClassTypeWithVarargs_ id(CharSequence key) {
+  public ModelNoValidation_ id(CharSequence key) {
     super.id(key);
     return this;
   }
 
   @Override
-  public ModelReturningClassTypeWithVarargs_ id(CharSequence key, long id) {
+  public ModelNoValidation_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;
   }
 
   @Override
-  public ModelReturningClassTypeWithVarargs_ layout(@LayoutRes int arg0) {
+  public ModelNoValidation_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
     return this;
   }
 
   @Override
-  public ModelReturningClassTypeWithVarargs_ show() {
+  public ModelNoValidation_ show() {
     super.show();
     return this;
   }
 
   @Override
-  public ModelReturningClassTypeWithVarargs_ show(boolean show) {
+  public ModelNoValidation_ show(boolean show) {
     super.show(show);
     return this;
   }
 
   @Override
-  public ModelReturningClassTypeWithVarargs_ hide() {
+  public ModelNoValidation_ hide() {
     super.hide();
     return this;
   }
 
   @Override
-  public ModelReturningClassTypeWithVarargs_ reset() {
+  public ModelNoValidation_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
     this.value = 0;
@@ -150,13 +125,13 @@ public class ModelReturningClassTypeWithVarargs_ extends ModelReturningClassType
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelReturningClassTypeWithVarargs_)) {
+    if (!(o instanceof ModelNoValidation_)) {
       return false;
     }
     if (!super.equals(o)) {
       return false;
     }
-    ModelReturningClassTypeWithVarargs_ that = (ModelReturningClassTypeWithVarargs_) o;
+    ModelNoValidation_ that = (ModelNoValidation_) o;
     if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
       return false;
     }
@@ -180,7 +155,7 @@ public class ModelReturningClassTypeWithVarargs_ extends ModelReturningClassType
 
   @Override
   public String toString() {
-    return "ModelReturningClassTypeWithVarargs_{" +
+    return "ModelNoValidation_{" +
         "value=" + value +
         "}" + super.toString();
   }

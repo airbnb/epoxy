@@ -56,6 +56,6 @@ def updateTestClass(test_class_result)
 end
 
 # Looks through each module's build folder for debug test results
-Dir.glob("*/build/reports/tests/debug/classes/*.html") do |test_class_result|
+Dir.glob("*/build/reports/tests/testDebugUnitTest/classes/*.html") do |test_class_result|
   updateTestClass(test_class_result)
 end

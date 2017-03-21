@@ -1,6 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.AdapterDataObserver;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,6 +13,7 @@ import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,18 +29,20 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
 public class ModelClickListenerTest {
-  final AdapterWithModelClickListener controller = new AdapterWithModelClickListener();
 
-  private void buildModelsAndBind() {
-    controller.requestModelBuild();
-    // We can create the model and bind it
-    Adapter adapter = controller.getAdapter();
-    EpoxyViewHolder viewHolder =
-        ((EpoxyViewHolder) adapter
-            .onCreateViewHolder(new FrameLayout(RuntimeEnvironment.application),
-                controller.model.getLayout()));
+  private ControllerLifecycleHelper lifecycleHelper = new ControllerLifecycleHelper();
 
-    adapter.onBindViewHolder(viewHolder, 0);
+  static class TestController extends EpoxyController {
+    private ModelWithClickListener_ model;
+
+    @Override
+    protected void buildModels() {
+      add(model.id(1));
+    }
+
+    void setModel(ModelWithClickListener_ model) {
+      this.model = model;
+    }
   }
 
   static class ModelClickListener implements OnModelClickListener<ModelWithClickListener_, View> {
@@ -61,76 +63,82 @@ public class ModelClickListenerTest {
     }
   }
 
-  static class AdapterWithModelClickListener extends EpoxyController {
-    final ModelWithClickListener_ model = new ModelWithClickListener_().id(1);
-
-    @Override
-    protected void buildModels() {
-      add(model);
-    }
-  }
-
   @Test
   public void basicModelClickListener() {
+    final ModelWithClickListener_ model = new ModelWithClickListener_();
     ModelClickListener modelClickListener = spy(new ModelClickListener());
-    controller.model.clickListener(modelClickListener);
-    assertNull(controller.model.clickListener());
+    model.clickListener(modelClickListener);
 
-    buildModelsAndBind();
-    assertNotNull(controller.model.clickListener());
+    TestController controller = new TestController();
+    controller.setModel(model);
+
+    lifecycleHelper.buildModelsAndBind(controller);
 
     View view = new View(RuntimeEnvironment.application);
-    controller.model.clickListener().onClick(view);
+    model.clickListener().onClick(view);
     assertTrue(modelClickListener.clicked);
 
     verify(modelClickListener)
-        .onClick(eq(controller.model), any(View.class), nullable(View.class), anyInt());
+        .onClick(eq(model), any(View.class), nullable(View.class), anyInt());
   }
 
   @Test
   public void modelClickListenerOverridesViewClickListener() {
+    final ModelWithClickListener_ model = new ModelWithClickListener_();
+
+    TestController controller = new TestController();
+    controller.setModel(model);
+
     ViewClickListener viewClickListener = new ViewClickListener();
-    controller.model.clickListener(viewClickListener);
-    assertNotNull(controller.model.clickListener());
+    model.clickListener(viewClickListener);
+    assertNotNull(model.clickListener());
 
     ModelClickListener modelClickListener = new ModelClickListener();
-    controller.model.clickListener(modelClickListener);
-    assertNull(controller.model.clickListener());
+    model.clickListener(modelClickListener);
+    assertNotSame(model.clickListener(), viewClickListener);
 
-    buildModelsAndBind();
-    assertNotNull(controller.model.clickListener());
+    lifecycleHelper.buildModelsAndBind(controller);
+    assertNotNull(model.clickListener());
 
-    controller.model.clickListener().onClick(null);
+    model.clickListener().onClick(null);
     assertTrue(modelClickListener.clicked);
     assertFalse(viewClickListener.clicked);
   }
 
   @Test
   public void viewClickListenerOverridesModelClickListener() {
+    final ModelWithClickListener_ model = new ModelWithClickListener_();
+
+    TestController controller = new TestController();
+    controller.setModel(model);
+
     ModelClickListener modelClickListener = new ModelClickListener();
-    controller.model.clickListener(modelClickListener);
-    assertNull(controller.model.clickListener());
+    model.clickListener(modelClickListener);
 
     ViewClickListener viewClickListener = new ViewClickListener();
-    controller.model.clickListener(viewClickListener);
-    assertNotNull(controller.model.clickListener());
+    model.clickListener(viewClickListener);
 
-    buildModelsAndBind();
-    assertNotNull(controller.model.clickListener());
+    lifecycleHelper.buildModelsAndBind(controller);
+    assertNotNull(model.clickListener());
 
-    controller.model.clickListener().onClick(null);
+    model.clickListener().onClick(null);
     assertTrue(viewClickListener.clicked);
     assertFalse(modelClickListener.clicked);
   }
 
   @Test
   public void resetClearsModelClickListener() {
-    ModelClickListener modelClickListener = spy(new ModelClickListener());
-    controller.model.clickListener(modelClickListener);
-    controller.model.reset();
+    final ModelWithClickListener_ model = new ModelWithClickListener_();
 
-    buildModelsAndBind();
-    assertNull(controller.model.clickListener());
+    TestController controller = new TestController();
+    controller.setModel(model);
+
+    ModelClickListener modelClickListener = spy(new ModelClickListener());
+    model.clickListener(modelClickListener);
+    model.reset();
+
+    lifecycleHelper.buildModelsAndBind(controller);
+    assertNull(model.clickListener());
   }
 
   @Test
@@ -139,21 +147,34 @@ public class ModelClickListenerTest {
     // the anonymous click listener since that changes the model state, instead our anonymous
     // click listener should use the hashCode of the user's click listener
 
+    ModelClickListener modelClickListener = new ModelClickListener();
+    ViewClickListener viewClickListener = new ViewClickListener();
+
+    TestController controller = new TestController();
+
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
     controller.getAdapter().registerAdapterDataObserver(observerMock);
 
+    ModelWithClickListener_ model = new ModelWithClickListener_();
+    controller.setModel(model);
     controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));
 
-    ModelClickListener modelClickListener = new ModelClickListener();
-    controller.model.clickListener(modelClickListener);
+    model = new ModelWithClickListener_();
+    model.clickListener(modelClickListener);
+    controller.setModel(model);
     controller.requestModelBuild();
 
     // The second update shouldn't cause a item change
+    model = new ModelWithClickListener_();
+    model.clickListener(modelClickListener);
+    controller.setModel(model);
+    model.clickListener(modelClickListener);
     controller.requestModelBuild();
 
-    ViewClickListener viewClickListener = new ViewClickListener();
-    controller.model.clickListener(viewClickListener);
+    model = new ModelWithClickListener_();
+    model.clickListener(viewClickListener);
+    controller.setModel(model);
     controller.requestModelBuild();
 
     verify(observerMock, times(2)).onItemRangeChanged(eq(0), eq(1), eq(null));
@@ -162,42 +183,35 @@ public class ModelClickListenerTest {
 
   @Test
   public void viewClickListenerIsHashed() {
+    TestController controller = new TestController();
+
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);
     controller.getAdapter().registerAdapterDataObserver(observerMock);
 
+    ModelWithClickListener_ model = new ModelWithClickListener_();
+    controller.setModel(model);
     controller.requestModelBuild();
     verify(observerMock).onItemRangeInserted(eq(0), eq(1));
 
     ViewClickListener viewClickListener = new ViewClickListener();
-    controller.model.clickListener(viewClickListener);
+    model = new ModelWithClickListener_();
+    model.clickListener(viewClickListener);
+    controller.setModel(model);
     controller.requestModelBuild();
 
     // The second update shouldn't cause a item change
+    model = new ModelWithClickListener_();
+    model.clickListener(viewClickListener);
+    controller.setModel(model);
     controller.requestModelBuild();
 
     ModelClickListener modelClickListener = new ModelClickListener();
-    controller.model.clickListener(modelClickListener);
+    model = new ModelWithClickListener_();
+    model.clickListener(modelClickListener);
+    controller.setModel(model);
     controller.requestModelBuild();
 
     verify(observerMock, times(2)).onItemRangeChanged(eq(0), eq(1), eq(null));
     verifyNoMoreInteractions(observerMock);
-  }
-
-  @Test
-  public void clearingModelClickListenerAfterBindStillWorks() {
-    ModelClickListener modelClickListener = spy(new ModelClickListener());
-    controller.model.clickListener(modelClickListener);
-
-    buildModelsAndBind();
-    // Clearing the model click listener and calling the view click listener
-    // should still call the original model click listener
-    View.OnClickListener viewClickListener = controller.model.clickListener();
-    controller.model.clickListener((ModelClickListener) null);
-    viewClickListener.onClick(null);
-
-    // The original click listener is still called since it was the one bound.
-    assertTrue(modelClickListener.clicked);
-    verify(modelClickListener)
-        .onClick(eq(controller.model), any(View.class), nullable(View.class), anyInt());
   }
 }

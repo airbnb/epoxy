@@ -58,8 +58,12 @@ class ConfigManager {
     return getConfigurationForElement(classElement).requireAbstractModels;
   }
 
-  boolean validateAutoModelUsage(ControllerClassInfo classElement) {
-    return getConfigurationForElement(classElement.controllerClassElement).validateAutoModelUsage;
+  boolean validateModelUsage(ControllerClassInfo classElement) {
+    return getConfigurationForElement(classElement.controllerClassElement).validateModelUsage;
+  }
+
+  boolean validateModelUsage(ClassToGenerateInfo epoxyClass) {
+    return getConfigurationForElement(epoxyClass.getOriginalClassElement()).validateModelUsage;
   }
 
   private PackageConfigSettings getConfigurationForElement(Element element) {

@@ -43,7 +43,7 @@ public class ControllerProcessorTest {
     // Config to turn validation off
     JavaFileObject CONFIG = JavaFileObjects
         .forSourceString("com.airbnb.epoxy.package-info", "@PackageEpoxyConfig(\n"
-            + "    validateAutoModelUsage = false\n"
+            + "    validateModelUsage = false\n"
             + ")\n"
             + "package com.airbnb.epoxy;\n"
             + "\n"

@@ -251,4 +251,28 @@ public class ConfigTest {
         .withErrorContaining(
             "Epoxy model class must be abstract (RequireAbstractModelFailsEpoxyModelClass)");
   }
+
+  @Test
+  public void testConfigNoModelValidation() {
+    JavaFileObject configNoModelValidation =
+        JavaFileObjects
+            .forSourceString("com.airbnb.epoxy.package-info", "@PackageEpoxyConfig(\n"
+                + "    validateModelUsage = false\n"
+                + ")\n"
+                + "package com.airbnb.epoxy;\n"
+                + "\n"
+                + "import com.airbnb.epoxy.PackageEpoxyConfig;");
+
+    JavaFileObject model =
+        forResource("ModelNoValidation.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelNoValidation_.java");
+
+    assert_().about(javaSources())
+        .that(asList(configNoModelValidation, model))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
 }

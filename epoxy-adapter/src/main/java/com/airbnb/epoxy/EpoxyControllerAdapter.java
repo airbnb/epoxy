@@ -12,6 +12,7 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
   private final EpoxyController epoxyController;
   private List<EpoxyModel<?>> currentModels = Collections.emptyList();
   private List<EpoxyModel<?>> copyOfCurrentModels;
+  private int itemCount;
 
   EpoxyControllerAdapter(EpoxyController epoxyController) {
     this.epoxyController = epoxyController;
@@ -28,7 +29,16 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
     return currentModels;
   }
 
+  @Override
+  public int getItemCount() {
+    // RecyclerView calls this A LOT. The base class implementation does
+    // getCurrentModels().size() which adds some overhead because of the method calls.
+    // We can easily memoize this, which seems to help when there are lots of models.
+    return itemCount;
+  }
+
   void setModels(List<EpoxyModel<?>> models) {
+    itemCount = models.size();
     copyOfCurrentModels = null;
     this.currentModels = models;
     notifyBlocker.allowChanges();

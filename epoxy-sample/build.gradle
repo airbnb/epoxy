@@ -36,11 +36,11 @@ android {
 
   buildTypes {
     debug {
-      buildConfigField "boolean", "VALIDATE_AUTO_MODEL_USAGE", "true"
+      buildConfigField "boolean", "VALIDATE_MODEL_USAGE", "true"
     }
 
     release {
-      buildConfigField "boolean", "VALIDATE_AUTO_MODEL_USAGE", "false"
+      buildConfigField "boolean", "VALIDATE_MODEL_USAGE", "false"
     }
   }
 }

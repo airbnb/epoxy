@@ -117,9 +117,12 @@ class ControllerProcessor {
 
   private void addFieldToControllerClass(Element modelField,
       LinkedHashMap<TypeElement, ControllerClassInfo> controllerClassMap) {
+
     TypeElement controllerClassElement = (TypeElement) modelField.getEnclosingElement();
+
     ControllerClassInfo controllerClass =
         getOrCreateTargetClass(controllerClassMap, controllerClassElement);
+
     controllerClass.addModel(buildFieldInfo(modelField));
   }
 
@@ -197,9 +200,9 @@ class ControllerProcessor {
         .addField(controllerInfo.controllerClassType, "controller", Modifier.FINAL,
             Modifier.PRIVATE)
         .addMethod(buildConstructor(controllerInfo))
-        .addMethod(buildModelsMethod(controllerInfo));
+        .addMethod(buildResetModelsMethod(controllerInfo));
 
-    if (configManager.validateAutoModelUsage(controllerInfo)) {
+    if (configManager.validateModelUsage(controllerInfo)) {
       builder.addFields(buildFieldsToSaveModelsForValidation(controllerInfo))
           .addMethod(buildValidateModelsHaveNotChangedMethod(controllerInfo))
           .addMethod(buildValidateSameValueMethod())
@@ -251,7 +254,9 @@ class ControllerProcessor {
           model.fieldName, model.fieldName, model.fieldName, id--);
     }
 
-    return builder.build();
+    return builder
+        .addStatement("validateModelHashCodesHaveNotChanged(controller)")
+        .build();
   }
 
   private MethodSpec buildValidateSameValueMethod() {
@@ -291,12 +296,12 @@ class ControllerProcessor {
     return builder.build();
   }
 
-  private MethodSpec buildModelsMethod(ControllerClassInfo controllerInfo) {
+  private MethodSpec buildResetModelsMethod(ControllerClassInfo controllerInfo) {
     Builder builder = MethodSpec.methodBuilder("resetAutoModels")
         .addAnnotation(Override.class)
         .addModifiers(Modifier.PUBLIC);
 
-    if (configManager.validateAutoModelUsage(controllerInfo)) {
+    if (configManager.validateModelUsage(controllerInfo)) {
       builder.addStatement("validateModelsHaveNotChanged()");
     }
 
@@ -306,7 +311,7 @@ class ControllerProcessor {
           .addStatement("controller.$L.id($L)", model.fieldName, id--);
     }
 
-    if (configManager.validateAutoModelUsage(controllerInfo)) {
+    if (configManager.validateModelUsage(controllerInfo)) {
       builder.addStatement("saveModelsForNextValidation()");
     }
 

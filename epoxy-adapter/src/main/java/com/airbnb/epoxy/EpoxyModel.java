@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.airbnb.epoxy.EpoxyController.AfterInterceptorCallback;
+
 import java.util.List;
 
 /**
@@ -28,8 +30,17 @@ public abstract class EpoxyModel<T> {
   private long id;
   @LayoutRes private int layout;
   private boolean shown = true;
-  /** Set to true once this model is added to an adapter. */
+  /**
+   * Set to true once this model is diffed in an adapter. Used to ensure that this model's id
+   * doesn't change after being diffed.
+   */
   boolean addedToAdapter;
+  /**
+   * The controller this model was added to. A reference is kept in debug mode in order to run
+   * validations.
+   */
+  private EpoxyController attachedControlled;
+  private int hashCodeWhenAdded;
   private boolean hasDefaultId;
 
   protected EpoxyModel(long id) {
@@ -101,8 +112,8 @@ public abstract class EpoxyModel<T> {
    * error to change the id after that.
    */
   public EpoxyModel<T> id(long id) {
-    if (addedToAdapter && id != this.id) {
-      throw new IllegalStateException(
+    if ((addedToAdapter || attachedControlled != null) && id != this.id) {
+      throw new IllegalEpoxyUsage(
           "Cannot change a model's id after it has been added to the adapter.");
     }
 
@@ -185,6 +196,7 @@ public abstract class EpoxyModel<T> {
   protected abstract int getDefaultLayout();
 
   public EpoxyModel<T> layout(@LayoutRes int layoutRes) {
+    validateMutability();
     layout = layoutRes;
     return this;
   }
@@ -202,30 +214,102 @@ public abstract class EpoxyModel<T> {
    * Sets fields of the model to default ones.
    */
   public EpoxyModel<T> reset() {
+    validateMutability();
+
     layout = 0;
     shown = true;
 
     return this;
   }
 
-  public void addTo(EpoxyController adapter) {
-    adapter.add(this);
+  /**
+   * Add this model to the given controller. Can only be called from inside {@link
+   * EpoxyController#buildModels()}.
+   */
+  public void addTo(EpoxyController controller) {
+    controller.addInternal(this);
   }
 
-  public void addIf(boolean condition, EpoxyController adapter) {
+  /**
+   * Add this model to the given controller if the condition is true. Can only be called from inside
+   * {@link EpoxyController#buildModels()}.
+   */
+  public void addIf(boolean condition, EpoxyController controller) {
     if (condition) {
-      adapter.add(this);
+      addTo(controller);
     }
   }
 
-  public void addIf(AddPredicate predicate, EpoxyController adapter) {
+  /**
+   * Add this model to the given controller if the {@link AddPredicate} return true. Can only be
+   * called from inside {@link EpoxyController#buildModels()}.
+   */
+  public void addIf(AddPredicate predicate, EpoxyController controller) {
     if (predicate.addIf()) {
-      adapter.add(this);
+      addTo(controller);
     }
   }
 
+  /**
+   * @see #addIf(AddPredicate, EpoxyController)
+   */
   public interface AddPredicate {
     boolean addIf();
+  }
+
+  /**
+   * This is used internally by generated models to turn on validation checking when {@link
+   * PackageEpoxyConfig#validateModelUsage()} is enabled.
+   */
+  protected final void addWithDebugValidation(EpoxyController controller) {
+    if (controller == null) {
+      throw new IllegalArgumentException("Controller cannot be null");
+    }
+
+    if (attachedControlled != null) {
+      throw new IllegalEpoxyUsage(
+          "This model was already added to the controller at position "
+              + controller.getIndexOfModelInBuildingList(this));
+    }
+
+    controller.addAfterInterceptorCallback(new AfterInterceptorCallback() {
+      @Override
+      public void afterInterceptorsRun() {
+        hashCodeWhenAdded = EpoxyModel.this.hashCode();
+      }
+    });
+
+    attachedControlled = controller;
+    hashCodeWhenAdded = hashCode();
+  }
+
+  /**
+   * This is used internally by generated models to do validation checking when {@link
+   * PackageEpoxyConfig#validateModelUsage()} is enabled and the model is used with an {@link
+   * EpoxyController}. This method validates that it is ok to change this model. It is only valid if
+   * the model hasn't yet been added, or the change is being done from an {@link
+   * EpoxyController.Interceptor} callback.
+   */
+  protected final void validateMutability() {
+    if (attachedControlled != null && !attachedControlled.isRunningInterceptors()) {
+      throw new ImmutableModelException(attachedControlled, this);
+    }
+  }
+
+  /**
+   * This is used internally by generated models to do validation checking when {@link
+   * PackageEpoxyConfig#validateModelUsage()} is enabled and the model is used with a {@link
+   * EpoxyController}. This method validates that the model's hashCode hasn't been changed since it
+   * was added to the controller. This is similar to {@link #validateMutability()}, but that method
+   * is only used for specific model changes such as calling a setter. By checking the hashCode,
+   * this method allows us to catch more subtle changes, such as through setting a field directly or
+   * through changing an object that is set on the model.
+   */
+  protected final void validateStateHasNotChangedSinceAdded(
+      String descriptionOfWhenChangeHappened) {
+    if (attachedControlled != null && hashCodeWhenAdded != hashCode()) {
+      throw new ImmutableModelException(attachedControlled, this, descriptionOfWhenChangeHappened);
+    }
   }
 
   @Override
@@ -269,18 +353,17 @@ public abstract class EpoxyModel<T> {
   }
 
   public EpoxyModel<T> show() {
-    shown = true;
-    return this;
+    return show(true);
   }
 
   public EpoxyModel<T> show(boolean show) {
+    validateMutability();
     shown = show;
     return this;
   }
 
   public EpoxyModel<T> hide() {
-    shown = false;
-    return this;
+    return show(false);
   }
 
   /**

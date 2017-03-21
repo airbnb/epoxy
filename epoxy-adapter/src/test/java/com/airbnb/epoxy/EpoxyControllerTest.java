@@ -20,6 +20,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 @RunWith(TestRunner.class)
 public class EpoxyControllerTest {
 
+  List<EpoxyModel<?>> savedModels;
   boolean noExceptionsDuringBasicBuildModels = true;
 
   @Test
@@ -46,6 +47,22 @@ public class EpoxyControllerTest {
     assertEquals(1, controller.getAdapter().getItemCount());
     verify(observer).onItemRangeInserted(0, 1);
     verifyNoMoreInteractions(observer);
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void addingSameModelTwiceThrows() {
+    final TestModel model = new TestModel();
+
+    EpoxyController controller = new EpoxyController() {
+
+      @Override
+      protected void buildModels() {
+        add(model);
+        add(model);
+      }
+    };
+
+    controller.requestModelBuild();
   }
 
   @Test
@@ -146,7 +163,7 @@ public class EpoxyControllerTest {
   }
 
   @Test
-  public void interceptorCanChangeModels() {
+  public void interceptorCanAddModels() {
     EpoxyController controller = new EpoxyController() {
 
       @Override
@@ -168,10 +185,8 @@ public class EpoxyControllerTest {
     assertEquals(2, controller.getAdapter().getItemCount());
   }
 
-  List<EpoxyModel<?>> savedModels;
-
   @Test(expected = IllegalStateException.class)
-  public void interceptorCannotAddModelsLater() {
+  public void savedModelsCannotBeAddedToLater() {
     EpoxyController controller = new EpoxyController() {
 
       @Override
@@ -191,6 +206,28 @@ public class EpoxyControllerTest {
     controller.requestModelBuild();
 
     savedModels.add(new TestModel());
+  }
+
+  @Test
+  public void interceptorCanModifyModels() {
+    EpoxyController controller = new EpoxyController() {
+
+      @Override
+      protected void buildModels() {
+        new TestModel()
+            .addTo(this);
+      }
+    };
+
+    controller.addInterceptor(new Interceptor() {
+      @Override
+      public void intercept(List<EpoxyModel<?>> models) {
+        TestModel model = ((TestModel) models.get(0));
+        model.value(model.value() + 1);
+      }
+    });
+
+    controller.requestModelBuild();
   }
 
   @Test

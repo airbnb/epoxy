@@ -19,7 +19,14 @@ public class ModelReturningClassType_ extends ModelReturningClassType implements
   }
 
   @Override
+  public void addTo(EpoxyController controller) {
+    super.addTo(controller);
+    addWithDebugValidation(controller);
+  }
+
+  @Override
   public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.");
   }
 
   @Override
@@ -27,6 +34,7 @@ public class ModelReturningClassType_ extends ModelReturningClassType implements
     if (onModelBoundListener_epoxyGeneratedModel != null) {
       onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the bind call.");
   }
 
   /**
@@ -37,16 +45,19 @@ public class ModelReturningClassType_ extends ModelReturningClassType implements
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelReturningClassType_ onBind(OnModelBoundListener<ModelReturningClassType_, Object> listener) {
+    validateMutability();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   @Override
   public void unbind(Object object) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being being bound to the recycler view and being unbound.");
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
+    validateStateHasNotChangedSinceAdded("The model was changed during the unbind method.");
   }
 
   /**
@@ -57,11 +68,13 @@ public class ModelReturningClassType_ extends ModelReturningClassType implements
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelReturningClassType_ onUnbind(OnModelUnboundListener<ModelReturningClassType_, Object> listener) {
+    validateMutability();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelReturningClassType_ value(int value) {
+    validateMutability();
     this.value = value;
     return this;
   }
