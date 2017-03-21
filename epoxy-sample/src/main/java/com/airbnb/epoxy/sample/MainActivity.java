@@ -1,4 +1,4 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.sample;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,7 +7,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 
-import com.airbnb.epoxy.SampleController.AdapterCallbacks;
+import com.airbnb.epoxy.R;
+import com.airbnb.epoxy.sample.SampleController.AdapterCallbacks;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +46,8 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
 
     recyclerView.setLayoutManager(gridLayoutManager);
     recyclerView.setHasFixedSize(true);
-    recyclerView.addItemDecoration(new VerticalGridCardSpacingDecoration());
+    recyclerView.setItemAnimator(new SampleItemAnimator());
+//    recyclerView.addItemDecoration(new VerticalGridCardSpacingDecoration());
     recyclerView.setAdapter(controller.getAdapter());
     updateAdapter();
 

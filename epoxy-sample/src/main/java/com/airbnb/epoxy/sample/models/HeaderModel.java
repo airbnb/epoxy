@@ -1,4 +1,4 @@
-package com.airbnb.epoxy.models;
+package com.airbnb.epoxy.sample.models;
 
 import android.support.annotation.StringRes;
 
@@ -6,7 +6,7 @@ import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.EpoxyModelClass;
 import com.airbnb.epoxy.R;
-import com.airbnb.epoxy.views.HeaderView;
+import com.airbnb.epoxy.sample.views.HeaderView;
 
 /**
  * This model shows an example of binding to a specific view type. In this case it is a custom view

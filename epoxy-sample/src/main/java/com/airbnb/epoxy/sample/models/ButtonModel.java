@@ -1,4 +1,4 @@
-package com.airbnb.epoxy.models;
+package com.airbnb.epoxy.sample.models;
 
 import android.support.annotation.StringRes;
 import android.view.View.OnClickListener;
@@ -8,7 +8,7 @@ import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyModelClass;
 import com.airbnb.epoxy.EpoxyModelWithHolder;
 import com.airbnb.epoxy.R;
-import com.airbnb.epoxy.models.ButtonModel.ButtonHolder;
+import com.airbnb.epoxy.sample.models.ButtonModel.ButtonHolder;
 
 import butterknife.BindView;
 

@@ -1,4 +1,4 @@
-package com.airbnb.epoxy.views;
+package com.airbnb.epoxy.sample.views;
 
 import android.content.Context;
 import android.support.annotation.StringRes;

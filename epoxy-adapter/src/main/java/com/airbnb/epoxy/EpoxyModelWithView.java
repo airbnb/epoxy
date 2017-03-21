@@ -37,8 +37,7 @@ public abstract class EpoxyModelWithView<T extends View> extends EpoxyModel<T> {
    * Create and return a new instance of a view for this model. If no layout params are set on the
    * returned view then default layout params will be used.
    *
-   * @param parent The parent ViewGroup that the returned view will be added to. It can be used to
-   *               create layout params for the new view.
+   * @param parent The parent ViewGroup that the returned view will be added to.
    */
   @Override
   protected abstract T buildView(ViewGroup parent);
@@ -50,7 +49,7 @@ public abstract class EpoxyModelWithView<T extends View> extends EpoxyModel<T> {
   }
 
   @Override
-  public final EpoxyModel<T> layout(@LayoutRes int layoutRes) {
+  public EpoxyModel<T> layout(@LayoutRes int layoutRes) {
     throw new UnsupportedOperationException(
         "Layout resources are unsupported. Views must be created with `buildView`");
   }

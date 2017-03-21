@@ -1,4 +1,4 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.sample;
 
 import android.support.annotation.ColorInt;
 

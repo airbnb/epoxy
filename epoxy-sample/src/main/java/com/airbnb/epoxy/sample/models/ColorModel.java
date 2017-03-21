@@ -1,13 +1,13 @@
-package com.airbnb.epoxy.models;
+package com.airbnb.epoxy.sample.models;
 
 import android.support.annotation.ColorInt;
 import android.view.View;
 
-import com.airbnb.epoxy.ColorData;
 import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.EpoxyModelClass;
 import com.airbnb.epoxy.R;
+import com.airbnb.epoxy.sample.ColorData;
 
 /**
  * This is an example of using {@link com.airbnb.epoxy.SimpleEpoxyModel}, which is useful if you
