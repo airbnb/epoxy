@@ -1,4 +1,4 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.sample;
 
 import android.graphics.Rect;
 import android.support.v7.widget.GridLayoutManager;

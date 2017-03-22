@@ -259,7 +259,8 @@ public abstract class EpoxyModel<T> {
 
   /**
    * This is used internally by generated models to turn on validation checking when {@link
-   * PackageEpoxyConfig#validateModelUsage()} is enabled.
+   * PackageEpoxyConfig#validateModelUsage()} is enabled and the model is used with an {@link
+   * EpoxyController}.
    */
   protected final void addWithDebugValidation(EpoxyController controller) {
     if (controller == null) {
@@ -272,6 +273,13 @@ public abstract class EpoxyModel<T> {
               + controller.getIndexOfModelInBuildingList(this));
     }
 
+    attachedControlled = controller;
+    // We save the current hashCode so we can compare it to the hashCode at later points in time
+    // in order to validate that it doesn't change and enforce mutability.
+    hashCodeWhenAdded = hashCode();
+
+    // The one time it is valid to change the model is during an interceptor callback. To support
+    // that we need to update the hashCode after interceptors have been run.
     controller.addAfterInterceptorCallback(new AfterInterceptorCallback() {
       @Override
       public void afterInterceptorsRun() {
@@ -279,8 +287,6 @@ public abstract class EpoxyModel<T> {
       }
     });
 
-    attachedControlled = controller;
-    hashCodeWhenAdded = hashCode();
   }
 
   /**

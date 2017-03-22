@@ -1,4 +1,4 @@
-package com.airbnb.epoxy.models;
+package com.airbnb.epoxy.sample.models;
 
 import android.support.annotation.CallSuper;
 import android.view.View;

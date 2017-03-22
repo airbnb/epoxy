@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.support.annotation.Nullable;
 
+// TODO: (eli_hart 2/27/17)  integration test
 public abstract class TypedEpoxyController<T> extends EpoxyController {
   private T currentData;
   private boolean insideSetData;
