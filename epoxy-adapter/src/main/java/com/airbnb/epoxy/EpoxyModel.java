@@ -286,6 +286,7 @@ public abstract class EpoxyModel<T> {
         hashCodeWhenAdded = EpoxyModel.this.hashCode();
       }
     });
+
   }
 
   /**
