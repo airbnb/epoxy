@@ -1,9 +1,9 @@
 package com.airbnb.epoxy;
 
-import android.view.View;
+import android.widget.TextView;
 
 @EpoxyModelClass
-abstract class Model extends EpoxyModel<View> {
+abstract class Model extends EpoxyModel<TextView> {
   @EpoxyAttribute int value;
 
   @Override

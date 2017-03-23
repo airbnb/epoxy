@@ -15,7 +15,7 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
   private static final String SAVED_STATE_ARG_VIEW_HOLDERS = "saved_state_view_holders";
 
   private int spanCount = 1;
-  private final HiddenEpoxyModel hiddenModel = new HiddenEpoxyModel();
+
   private final ViewTypeManager viewTypeManager = new ViewTypeManager();
   /**
    * Keeps track of view holders that are currently bound so we can save their state in {@link
@@ -132,7 +132,7 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
 
   @Override
   public int getItemViewType(int position) {
-    return viewTypeManager.getViewType(getCurrentModels().get(position));
+    return viewTypeManager.getViewType(getModelForPosition(position));
   }
 
   @Override
@@ -143,9 +143,8 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
     return getCurrentModels().get(position).id();
   }
 
-  private EpoxyModel<?> getModelForPosition(int position) {
-    EpoxyModel<?> epoxyModel = getCurrentModels().get(position);
-    return epoxyModel.isShown() ? epoxyModel : hiddenModel;
+  EpoxyModel<?> getModelForPosition(int position) {
+    return getCurrentModels().get(position);
   }
 
   @Override
