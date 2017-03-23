@@ -294,9 +294,8 @@ public abstract class EpoxyModel<T> {
   }
 
   /**
-   * This is used internally by generated models to turn on validation checking when {@link
-   * PackageEpoxyConfig#validateModelUsage()} is enabled and the model is used with an {@link
-   * EpoxyController}.
+   * This is used internally by generated models to turn on validation checking when
+   * "validateEpoxyModelUsage" is enabled and the model is used with an {@link EpoxyController}.
    */
   protected final void addWithDebugValidation(EpoxyController controller) {
     if (controller == null) {
@@ -325,11 +324,11 @@ public abstract class EpoxyModel<T> {
   }
 
   /**
-   * This is used internally by generated models to do validation checking when {@link
-   * PackageEpoxyConfig#validateModelUsage()} is enabled and the model is used with an {@link
-   * EpoxyController}. This method validates that it is ok to change this model. It is only valid if
-   * the model hasn't yet been added, or the change is being done from an {@link
-   * EpoxyController.Interceptor} callback.
+   * This is used internally by generated models to do validation checking when
+   * "validateEpoxyModelUsage" is enabled and the model is used with an {@link EpoxyController}.
+   * This method validates that it is ok to change this model. It is only valid if the model hasn't
+   * yet been added, or the change is being done from an {@link EpoxyController.Interceptor}
+   * callback.
    */
   protected final void validateMutability() {
     if (attachedController != null && !attachedController.isRunningInterceptors()) {
@@ -347,13 +346,13 @@ public abstract class EpoxyModel<T> {
   }
 
   /**
-   * This is used internally by generated models to do validation checking when {@link
-   * PackageEpoxyConfig#validateModelUsage()} is enabled and the model is used with a {@link
-   * EpoxyController}. This method validates that the model's hashCode hasn't been changed since it
-   * was added to the controller. This is similar to {@link #validateMutability()}, but that method
-   * is only used for specific model changes such as calling a setter. By checking the hashCode,
-   * this method allows us to catch more subtle changes, such as through setting a field directly or
-   * through changing an object that is set on the model.
+   * This is used internally by generated models to do validation checking when
+   * "validateEpoxyModelUsage" is enabled and the model is used with a {@link EpoxyController}. This
+   * method validates that the model's hashCode hasn't been changed since it was added to the
+   * controller. This is similar to {@link #validateMutability()}, but that method is only used for
+   * specific model changes such as calling a setter. By checking the hashCode, this method allows
+   * us to catch more subtle changes, such as through setting a field directly or through changing
+   * an object that is set on the model.
    */
   protected final void validateStateHasNotChangedSinceAdded(String descriptionOfChange,
       int modelPosition) {

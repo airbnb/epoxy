@@ -1,3 +1,7 @@
+# 2.0.0 (March 25, 2017)
+
+* **New**: The `EpoxyController` class helps you manage models better. Use this instead of `EpoxyAdapter`.
+
 # 1.7.5 (Feb 21, 2017)
 
 * **New**: Models inherit layouts specified in superclass `@EpoxyModelClass` annotations [#119](https://github.com/airbnb/epoxy/pull/119)

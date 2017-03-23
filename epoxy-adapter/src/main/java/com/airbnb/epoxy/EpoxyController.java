@@ -137,7 +137,8 @@ public abstract class EpoxyController {
    * the models that should be shown, in the order that is desired.
    * <p>
    * Once a model is added to the controller it should be treated as immutable and never modified
-   * again. This is necessary for adapter updates to be accurate.
+   * again. This is necessary for adapter updates to be accurate. If "validateEpoxyModelUsage" is
+   * enabled then runtime validations will be done to make sure models are not changed.
    * <p>
    * You CANNOT call this method directly. Instead, call {@link #requestModelBuild()} to have the
    * controller schedule an update.
