@@ -19,6 +19,7 @@ import java.util.List;
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class EpoxyAdapter extends BaseEpoxyAdapter {
+  private final HiddenEpoxyModel hiddenModel = new HiddenEpoxyModel();
 
   /**
    * Subclasses should modify this list as necessary with the models they want to show. Subclasses
@@ -52,6 +53,12 @@ public abstract class EpoxyAdapter extends BaseEpoxyAdapter {
     }
 
     diffHelper = new DiffHelper(this);
+  }
+
+  @Override
+  EpoxyModel<?> getModelForPosition(int position) {
+    EpoxyModel<?> model = models.get(position);
+    return model.isShown() ? model : hiddenModel;
   }
 
   /**

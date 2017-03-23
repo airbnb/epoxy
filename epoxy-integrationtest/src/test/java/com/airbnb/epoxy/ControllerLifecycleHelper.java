@@ -15,15 +15,17 @@ class ControllerLifecycleHelper {
   }
 
   void bindModels(EpoxyController controller) {
-    EpoxyControllerAdapter adapter = controller.getAdapter();
+    bindModels(controller.getAdapter());
+  }
 
-    List<EpoxyModel<?>> models = adapter.getCopyOfModels();
+  void bindModels(BaseEpoxyAdapter adapter) {
+    List<EpoxyModel<?>> models = adapter.getCurrentModels();
     for (int i = 0; i < models.size(); i++) {
-      EpoxyModel<?> model = models.get(i);
+      int itemViewType = adapter.getItemViewType(i);
       viewHolder =
           adapter.onCreateViewHolder(
               new FrameLayout(RuntimeEnvironment.application),
-              model.getLayout()
+              itemViewType
           );
 
       adapter.onBindViewHolder(viewHolder, i);

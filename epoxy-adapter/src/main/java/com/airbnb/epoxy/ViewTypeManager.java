@@ -62,10 +62,9 @@ class ViewTypeManager {
    * <p>
    * To make this efficient, we rely on the RecyclerView implementation detail that {@link
    * BaseEpoxyAdapter#getItemViewType(int)} is called immediately before {@link
-   * BaseEpoxyAdapter#onCreateViewHolder(android.view.
-   *, int)}. We cache the last model that
-   * had its view type looked up, and unless that implementation changes we expect to have a very
-   * fast lookup for the correct model.
+   * BaseEpoxyAdapter#onCreateViewHolder(android.view.ViewGroup, int)} . We cache the last model
+   * that had its view type looked up, and unless that implementation changes we expect to have a
+   * very fast lookup for the correct model.
    * <p>
    * To be safe, we fallback to searching through all models for a view type match. This is slow and
    * shouldn't be needed, but is a guard against recyclerview behavior changing.
@@ -85,6 +84,12 @@ class ViewTypeManager {
       if (model.getViewType() == viewType) {
         return model;
       }
+    }
+
+    // Check for the hidden model.
+    HiddenEpoxyModel hiddenEpoxyModel = new HiddenEpoxyModel();
+    if (viewType == hiddenEpoxyModel.getViewType()) {
+      return hiddenEpoxyModel;
     }
 
     throw new IllegalStateException("Could not find model for view type: " + viewType);

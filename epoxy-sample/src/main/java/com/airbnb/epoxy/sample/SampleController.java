@@ -37,7 +37,6 @@ class SampleController extends TypedEpoxyController<List<ColorData>> {
   // TODO: (eli_hart 2/26/17) Carousel with shared view pools, model groups
   // TODO: (eli_hart 2/27/17) Save colors state
   // TODO: (eli_hart 2/27/17) Shuffle color on click square
-  // TODO: (eli_hart 3/21/17) addUnless method?
 
   @Override
   protected void buildModels(List<ColorData> colors) {
