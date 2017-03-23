@@ -24,7 +24,7 @@ rootProject.ext.ASSERTJ_VERSION = "1.7.1"
 rootProject.ext.GOOGLE_TESTING_COMPILE_VERSION = "0.10"
 rootProject.ext.JUNIT_VERSION = "4.12"
 rootProject.ext.MOCKITO_VERSION = "2.7.7"
-rootProject.ext.ROBOLECTRIC_VERSION = "3.3"
+rootProject.ext.ROBOLECTRIC_VERSION = "3.3.1"
 
 rootProject.ext.deps = [
     androidSupportLibrary: "com.android.support:appcompat-v7:$ANDROID_SUPPORT_LIBS_VERSION",

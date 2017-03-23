@@ -39,7 +39,7 @@ public abstract class EpoxyModel<T> {
    * The controller this model was added to. A reference is kept in debug mode in order to run
    * validations.
    */
-  private EpoxyController attachedControlled;
+  private EpoxyController attachedController;
   private int hashCodeWhenAdded;
   private boolean hasDefaultId;
 
@@ -112,7 +112,7 @@ public abstract class EpoxyModel<T> {
    * error to change the id after that.
    */
   public EpoxyModel<T> id(long id) {
-    if ((addedToAdapter || attachedControlled != null) && id != this.id) {
+    if ((addedToAdapter || attachedController != null) && id != this.id) {
       throw new IllegalEpoxyUsage(
           "Cannot change a model's id after it has been added to the adapter.");
     }
@@ -267,13 +267,13 @@ public abstract class EpoxyModel<T> {
       throw new IllegalArgumentException("Controller cannot be null");
     }
 
-    if (attachedControlled != null) {
+    if (attachedController != null) {
       throw new IllegalEpoxyUsage(
           "This model was already added to the controller at position "
               + controller.getIndexOfModelInBuildingList(this));
     }
 
-    attachedControlled = controller;
+    attachedController = controller;
     // We save the current hashCode so we can compare it to the hashCode at later points in time
     // in order to validate that it doesn't change and enforce mutability.
     hashCodeWhenAdded = hashCode();
@@ -286,7 +286,6 @@ public abstract class EpoxyModel<T> {
         hashCodeWhenAdded = EpoxyModel.this.hashCode();
       }
     });
-
   }
 
   /**
@@ -297,9 +296,18 @@ public abstract class EpoxyModel<T> {
    * EpoxyController.Interceptor} callback.
    */
   protected final void validateMutability() {
-    if (attachedControlled != null && !attachedControlled.isRunningInterceptors()) {
-      throw new ImmutableModelException(attachedControlled, this);
+    if (attachedController != null && !attachedController.isRunningInterceptors()) {
+      throw new ImmutableModelException(this,
+          getPosition(attachedController, this));
     }
+  }
+
+  private static int getPosition(EpoxyController controller, EpoxyModel<?> model) {
+    if (controller.isBuildingModels()) {
+      return controller.getIndexOfModelInBuildingList(model);
+    }
+
+    return controller.getAdapter().getModelPosition(model);
   }
 
   /**
@@ -311,10 +319,10 @@ public abstract class EpoxyModel<T> {
    * this method allows us to catch more subtle changes, such as through setting a field directly or
    * through changing an object that is set on the model.
    */
-  protected final void validateStateHasNotChangedSinceAdded(
-      String descriptionOfWhenChangeHappened) {
-    if (attachedControlled != null && hashCodeWhenAdded != hashCode()) {
-      throw new ImmutableModelException(attachedControlled, this, descriptionOfWhenChangeHappened);
+  protected final void validateStateHasNotChangedSinceAdded(String descriptionOfChange,
+      int modelPosition) {
+    if (attachedController != null && hashCodeWhenAdded != hashCode()) {
+      throw new ImmutableModelException(this, descriptionOfChange, modelPosition);
     }
   }
 

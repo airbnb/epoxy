@@ -27,8 +27,8 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
-    validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.");
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
+    validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
     if (clickListener_epoxyGeneratedModel != null) {
       super.setClickListener(new View.OnClickListener() {
               // Save the original click listener so if it gets changed on
@@ -53,7 +53,7 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
     if (onModelBoundListener_epoxyGeneratedModel != null) {
       onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
-    validateStateHasNotChangedSinceAdded("The model was changed during the bind call.");
+    validateStateHasNotChangedSinceAdded("The model was changed during the bind call.", position);
   }
 
   /**
@@ -71,12 +71,10 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
 
   @Override
   public void unbind(Object object) {
-    validateStateHasNotChangedSinceAdded("The model was changed between being being bound to the recycler view and being unbound.");
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
-    validateStateHasNotChangedSinceAdded("The model was changed during the unbind method.");
   }
 
   /**

@@ -3,7 +3,10 @@ package com.airbnb.epoxy;
 import com.google.auto.service.AutoService;
 
 import java.lang.annotation.Annotation;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -17,6 +20,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_VALIDATE_MODEL_USAGE;
+
 /**
  * Looks for {@link EpoxyAttribute} annotations and generates a subclass for all classes that have
  * those attributes. The generated subclass includes setters, getters, equals, and hashcode for the
@@ -27,6 +32,7 @@ import javax.lang.model.util.Types;
 @AutoService(Processor.class)
 public class EpoxyProcessor extends AbstractProcessor {
 
+  private final Map<String, String> testOptions;
   private Filer filer;
   private Messager messager;
   private Elements elementUtils;
@@ -35,6 +41,25 @@ public class EpoxyProcessor extends AbstractProcessor {
   private LayoutResourceProcessor layoutResourceProcessor;
   private ConfigManager configManager;
   private final ErrorLogger errorLogger = new ErrorLogger();
+
+  public EpoxyProcessor() {
+    this(Collections.<String, String>emptyMap());
+  }
+
+  /**
+   * Constructor to use for tests to pass annotation processor options since we can't get them from
+   * the build.gradle
+   */
+  public EpoxyProcessor(Map<String, String> options) {
+    testOptions = options;
+  }
+
+  /** For testing. */
+  public static EpoxyProcessor withNoValidation() {
+    HashMap<String, String> options = new HashMap<>();
+    options.put(PROCESSOR_OPTION_VALIDATE_MODEL_USAGE, "false");
+    return new EpoxyProcessor(options);
+  }
 
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -46,7 +71,9 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     layoutResourceProcessor =
         new LayoutResourceProcessor(processingEnv, errorLogger, elementUtils, typeUtils);
-    configManager = new ConfigManager(elementUtils);
+    configManager =
+        new ConfigManager(!testOptions.isEmpty() ? testOptions : processingEnv.getOptions(),
+            elementUtils);
   }
 
   @Override

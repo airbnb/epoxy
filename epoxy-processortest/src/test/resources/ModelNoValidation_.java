@@ -18,7 +18,7 @@ public class ModelNoValidation_ extends ModelNoValidation implements GeneratedMo
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final Object object) {
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
   }
 
   @Override

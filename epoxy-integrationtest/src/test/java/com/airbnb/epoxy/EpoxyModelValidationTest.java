@@ -337,62 +337,6 @@ public class EpoxyModelValidationTest {
   }
 
   @Test
-  public void hashChangeThrows_beforeUnbind() {
-    thrown.expect(ImmutableModelException.class);
-    thrown.expectMessage("A model cannot be changed");
-
-    final Model model = new Model_().id(1);
-    EpoxyController controller = new EpoxyController() {
-
-      @Override
-      protected void buildModels() {
-        add(model);
-      }
-    };
-
-    ControllerLifecycleHelper lifecycleHelper = new ControllerLifecycleHelper();
-    lifecycleHelper.buildModelsAndBind(controller);
-    model.value = 3;
-    lifecycleHelper.recycleLastBoundModel(controller);
-  }
-
-  static class ModelChangesDuringUnbind extends EpoxyModel<View> {
-    @EpoxyAttribute int value;
-
-    @Override
-    protected int getDefaultLayout() {
-      return R.layout.model_with_click_listener;
-    }
-
-    @Override
-    public void unbind(View view) {
-      super.unbind(view);
-      value = 3;
-    }
-  }
-
-  @Test
-  public void hashChangeThrows_duringUnbind() {
-    thrown.expect(ImmutableModelException.class);
-    thrown.expectMessage("A model cannot be changed");
-
-    final EpoxyModelValidationTest$ModelChangesDuringUnbind_ model =
-        new EpoxyModelValidationTest$ModelChangesDuringUnbind_().id(1);
-    EpoxyController controller = new EpoxyController() {
-
-      @Override
-      protected void buildModels() {
-        add(model);
-      }
-    };
-
-    ControllerLifecycleHelper lifecycleHelper = new ControllerLifecycleHelper();
-    lifecycleHelper.buildModelsAndBind(controller);
-    lifecycleHelper.recycleLastBoundModel(controller);
-  }
-
-
-  @Test
   public void hashChangeThrows_beforeNextModelBuild() {
     // This only works for controllers with AutoModels since only those have generated helpers
     thrown.expect(ImmutableModelException.class);

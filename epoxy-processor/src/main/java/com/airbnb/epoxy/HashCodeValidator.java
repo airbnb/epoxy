@@ -46,9 +46,15 @@ class HashCodeValidator {
       validateImplementsHashCode(attribute.getAttributeElement().asType());
     } catch (EpoxyProcessorException e) {
       // Append information about the attribute and class to the existing exception
-      throwError(e.getMessage() + " (Attribute: %s Class: %s)",
-          attribute.getName(),
-          attribute.getClassElement().getSimpleName().toString());
+      throwError(e.getMessage()
+              + " (%s#%s) Epoxy requires every field annotated with "
+              + "@EpoxyAttribute to implement hashCode so that the state of the model can be "
+              + "tracked. "
+              + "If you want the attribute to be excluded from the model's hashCode, use "
+              + "@EpoxyAttribute(DoNotHash). If you want to ignore this warning use "
+              + "@EpoxyAttribute(IgnoreRequireHashCode)",
+          attribute.getClassElement().getSimpleName().toString(),
+          attribute.getName());
     }
   }
 

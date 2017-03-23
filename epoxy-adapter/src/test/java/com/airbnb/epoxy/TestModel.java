@@ -31,6 +31,11 @@ public class TestModel extends EpoxyModel<View> {
     return this;
   }
 
+  TestModel incrementValue() {
+    this.value++;
+    return this;
+  }
+
   int value() {
     return value;
   }

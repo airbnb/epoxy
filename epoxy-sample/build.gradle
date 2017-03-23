@@ -33,16 +33,14 @@ android {
     versionCode 1
     versionName "1.0"
   }
-
-  buildTypes {
-    debug {
-      buildConfigField "boolean", "VALIDATE_MODEL_USAGE", "true"
-    }
-
-    release {
-      buildConfigField "boolean", "VALIDATE_MODEL_USAGE", "false"
-    }
-  }
+}
+project.android.buildTypes.all { buildType ->
+  buildType.javaCompileOptions.annotationProcessorOptions.arguments =
+      [
+          validateEpoxyModelUsage     : String.valueOf(buildType.name == 'debug'),
+          requireHashCodeInEpoxyModels: "true",
+          requireAbstractEpoxyModels  : "true"
+      ]
 }
 
 /* Forces all transitive deps listed to our version. */
