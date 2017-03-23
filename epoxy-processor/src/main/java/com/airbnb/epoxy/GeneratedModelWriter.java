@@ -193,7 +193,7 @@ class GeneratedModelWriter {
 
   private void generateDebugAddToMethodIfNeeded(TypeSpec.Builder classBuilder,
       ClassToGenerateInfo info) {
-    if (!configManager.validateModelUsage(info)) {
+    if (!configManager.shouldValidateModeUsage()) {
       return;
     }
 
@@ -225,7 +225,8 @@ class GeneratedModelWriter {
         .addModifiers(PUBLIC)
         .addAnnotation(Override.class)
         .addParameter(viewHolderParam)
-        .addParameter(boundObjectParam);
+        .addParameter(boundObjectParam)
+        .addParameter(TypeName.INT, "position");
 
     addHashCodeValidationIfNecessary(preBindBuilder, classInfo,
         "The model was changed between being added to the controller and being bound.");
@@ -319,17 +320,11 @@ class GeneratedModelWriter {
         .addModifiers(PUBLIC)
         .addParameter(unbindObjectParam);
 
-    addHashCodeValidationIfNecessary(unbindBuilder, classInfo,
-        "The model was changed between being being bound to the recycler view and being unbound.");
-
     unbindBuilder
         .addStatement("super.unbind(object)")
         .beginControlFlow("if ($L != null)", modelUnbindListenerFieldName())
         .addStatement("$L.onModelUnbound(this, object)", modelUnbindListenerFieldName())
         .endControlFlow();
-
-    addHashCodeValidationIfNecessary(unbindBuilder, classInfo,
-        "The model was changed during the unbind method.");
 
     methods.add(unbindBuilder
         .build());
@@ -853,7 +848,7 @@ class GeneratedModelWriter {
 
   private MethodSpec.Builder addMutabilityValidationIfNecessary(MethodSpec.Builder method,
       ClassToGenerateInfo classInfo) {
-    if (configManager.validateModelUsage(classInfo)) {
+    if (configManager.shouldValidateModeUsage()) {
       method.addStatement("validateMutability()");
     }
 
@@ -862,8 +857,8 @@ class GeneratedModelWriter {
 
   private MethodSpec.Builder addHashCodeValidationIfNecessary(MethodSpec.Builder method,
       ClassToGenerateInfo classInfo, String message) {
-    if (configManager.validateModelUsage(classInfo)) {
-      method.addStatement("validateStateHasNotChangedSinceAdded($S)", message);
+    if (configManager.shouldValidateModeUsage()) {
+      method.addStatement("validateStateHasNotChangedSinceAdded($S, position)", message);
     }
 
     return method;

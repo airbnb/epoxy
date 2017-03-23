@@ -8,7 +8,7 @@ public interface GeneratedModel<T> {
    * <p>
    * The ViewHolder is needed to get the model's adapter position when clicked.
    */
-  void handlePreBind(EpoxyViewHolder holder, T objectToBind);
+  void handlePreBind(EpoxyViewHolder holder, T objectToBind, int position);
   /**
    * Called on the generated model immediately after the main model onBind method has been called.
    * This let's the generated model handle binding of its own and dispatch calls to its onBind

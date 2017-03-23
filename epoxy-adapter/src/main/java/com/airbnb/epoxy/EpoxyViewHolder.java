@@ -28,7 +28,7 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     if (model instanceof GeneratedModel) {
       // The generated method will enforce that only a properly typed listener can be set
       //noinspection unchecked
-      ((GeneratedModel) model).handlePreBind(this, objectToBind());
+      ((GeneratedModel) model).handlePreBind(this, objectToBind(), position);
     }
 
     if (payloads.isEmpty()) {

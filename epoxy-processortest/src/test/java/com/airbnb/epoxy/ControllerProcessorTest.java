@@ -40,21 +40,12 @@ public class ControllerProcessorTest {
     JavaFileObject controller = JavaFileObjects
         .forResource("ControllerWithAutoModelWithoutValidation.java");
 
-    // Config to turn validation off
-    JavaFileObject CONFIG = JavaFileObjects
-        .forSourceString("com.airbnb.epoxy.package-info", "@PackageEpoxyConfig(\n"
-            + "    validateModelUsage = false\n"
-            + ")\n"
-            + "package com.airbnb.epoxy;\n"
-            + "\n"
-            + "import com.airbnb.epoxy.PackageEpoxyConfig;");
-
     JavaFileObject generatedHelper = JavaFileObjects
         .forResource("ControllerWithAutoModelWithoutValidation_EpoxyHelper.java");
 
     assert_().about(javaSources())
-        .that(asList(model, controller, CONFIG))
-        .processedWith(new EpoxyProcessor())
+        .that(asList(model, controller))
+        .processedWith(EpoxyProcessor.withNoValidation())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedHelper);

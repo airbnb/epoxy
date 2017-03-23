@@ -8,6 +8,7 @@ import javax.tools.JavaFileObject;
 
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaFileObjects.forResource;
+import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static com.google.testing.compile.JavaSourcesSubjectFactory.javaSources;
 import static java.util.Arrays.asList;
 
@@ -254,23 +255,14 @@ public class ConfigTest {
 
   @Test
   public void testConfigNoModelValidation() {
-    JavaFileObject configNoModelValidation =
-        JavaFileObjects
-            .forSourceString("com.airbnb.epoxy.package-info", "@PackageEpoxyConfig(\n"
-                + "    validateModelUsage = false\n"
-                + ")\n"
-                + "package com.airbnb.epoxy;\n"
-                + "\n"
-                + "import com.airbnb.epoxy.PackageEpoxyConfig;");
-
     JavaFileObject model =
         forResource("ModelNoValidation.java");
 
     JavaFileObject generatedModel = JavaFileObjects.forResource("ModelNoValidation_.java");
 
-    assert_().about(javaSources())
-        .that(asList(configNoModelValidation, model))
-        .processedWith(new EpoxyProcessor())
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(EpoxyProcessor.withNoValidation())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedModel);
