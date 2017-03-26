@@ -7,7 +7,6 @@ import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -261,7 +260,7 @@ public abstract class EpoxyController {
    * Add the models to this controller. Can only be called from inside {@link
    * EpoxyController#buildModels()}.
    */
-  protected void add(Collection<EpoxyModel<?>> modelsToAdd) {
+  protected void add(List<? extends EpoxyModel<?>> modelsToAdd) {
     modelsBeingBuilt.ensureCapacity(modelsBeingBuilt.size() + modelsToAdd.size());
 
     for (EpoxyModel<?> model : modelsToAdd) {
