@@ -22,7 +22,6 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -159,18 +158,6 @@ class ControllerProcessor {
             AutoModel.class.getSimpleName(), EPOXY_MODEL_TYPE,
             modelFieldElement.getEnclosingElement().getSimpleName(),
             modelFieldElement.getSimpleName());
-      }
-
-      TypeElement typeElement = (TypeElement) ((DeclaredType) fieldType).asElement();
-      if (typeElement.getNestingKind().isNested()) {
-        if (!typeElement.getModifiers().contains(Modifier.STATIC)) {
-          errorLogger
-              .logError(
-                  "Types with %s annotations must be static if they are nested classes (%s#%s)",
-                  AutoModel.class.getSimpleName(),
-                  modelFieldElement.getEnclosingElement().getSimpleName(),
-                  modelFieldElement.getSimpleName());
-        }
       }
     }
 
