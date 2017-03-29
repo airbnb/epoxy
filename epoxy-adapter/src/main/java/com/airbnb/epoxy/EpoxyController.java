@@ -22,7 +22,7 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
  * {@link #buildModels()}, update the adapter with the new models, and notify any changes between
  * the new and old models.
  * <p>
- * The controller creates a {@link android.support.v7.widget.RecyclerView.Adapter} with the latest
+ * The controller maintains a {@link android.support.v7.widget.RecyclerView.Adapter} with the latest
  * models, which you can get via {@link #getAdapter()} to set on your RecyclerView.
  * <p>
  * All data change notifications are applied automatically via Epoxy's diffing algorithm. All of
@@ -32,8 +32,7 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
  * <p>
  * Once a model is created and added to the controller in {@link #buildModels()} it should be
  * treated as immutable and never modified again. This is necessary for adapter updates to be
- * accurate. If {@link PackageEpoxyConfig#validateModelUsage()} is enabled then runtime validations
- * will be done to make sure models are not changed.
+ * accurate.
  */
 public abstract class EpoxyController {
 
@@ -73,8 +72,17 @@ public abstract class EpoxyController {
       throw new IllegalEpoxyUsage("Cannot call `requestBuildModels` from inside `buildModels`");
     }
 
-    handler.removeCallbacks(buildModelsRunnable);
-    handler.post(buildModelsRunnable);
+    // If it is the first time building models then we do it right away, otherwise we post the call.
+    // We want to do it right away the first time so that scroll position can be restored correctly,
+    // shared element transitions aren't delayed, and content is shown asap. We post later calls
+    // so that they are debounced, and so any updates to data can be completely finished before
+    // the models are built.
+    if (hasBuiltModelsEver) {
+      handler.removeCallbacks(buildModelsRunnable);
+      handler.post(buildModelsRunnable);
+    } else {
+      dispatchModelBuild();
+    }
   }
 
   private final Runnable buildModelsRunnable = new Runnable() {
@@ -121,9 +129,7 @@ public abstract class EpoxyController {
    * the models that should be shown, in the order that is desired.
    * <p>
    * Once a model is added to the controller it should be treated as immutable and never modified
-   * again. This is necessary for adapter updates to be accurate. If {@link
-   * PackageEpoxyConfig#validateModelUsage()} is enabled then runtime validations will be done to
-   * make sure models are not changed.
+   * again. This is necessary for adapter updates to be accurate.
    * <p>
    * You CANNOT call this method directly. Instead, call {@link #requestModelBuild()} to have the
    * controller schedule an update.
