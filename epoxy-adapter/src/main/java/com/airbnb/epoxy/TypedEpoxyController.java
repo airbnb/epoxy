@@ -2,7 +2,16 @@ package com.airbnb.epoxy;
 
 import android.support.annotation.Nullable;
 
-// TODO: (eli_hart 2/27/17)  integration test
+/**
+ * This is a simple wrapper around {@link com.airbnb.epoxy.EpoxyController} to simplify how data is
+ * accessed. Use this if the data required to build your models is represented by a single object.
+ * <p>
+ * To use this, create a subclass typed with your data object. Then, call {@link #setData(Object)}
+ * whenever that data changes. This class will handle calling {@link #buildModels(Object)} with the
+ * latest data.
+ * <p>
+ * You should NOT call {@link #requestModelBuild()} directly.
+ */
 public abstract class TypedEpoxyController<T> extends EpoxyController {
   private T currentData;
   private boolean insideSetData;
