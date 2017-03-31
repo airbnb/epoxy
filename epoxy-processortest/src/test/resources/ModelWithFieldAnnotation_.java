@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
+import java.lang.Number;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
@@ -85,6 +86,18 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation implemen
   @Override
   public ModelWithFieldAnnotation_ id(long id) {
     super.id(id);
+    return this;
+  }
+
+  @Override
+  public ModelWithFieldAnnotation_ id(Number... ids) {
+    super.id(ids);
+    return this;
+  }
+
+  @Override
+  public ModelWithFieldAnnotation_ id(long id1, long id2) {
+    super.id(id1, id2);
     return this;
   }
 

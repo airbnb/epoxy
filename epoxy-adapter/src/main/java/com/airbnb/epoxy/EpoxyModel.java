@@ -158,14 +158,26 @@ public abstract class EpoxyModel<T> {
     return this;
   }
 
-  public EpoxyModel<T> id(Number id, Number... otherIds) {
-    long result = hashLong64Bit(id.hashCode());
-    for (Number otherId : otherIds) {
-      result = 31 * result + hashLong64Bit(otherId.hashCode());
+  /**
+   * Use multiple numbers as the id for this model. Useful when you don't have a single long that
+   * represents a unique id.
+   * <p>
+   * This hashes the numbers, so there is a tiny risk of collision with other ids.
+   */
+  public EpoxyModel<T> id(Number... ids) {
+    long result = 0;
+    for (Number id : ids) {
+      result = 31 * result + hashLong64Bit(id.hashCode());
     }
     return id(result);
   }
 
+  /**
+   * Use two numbers as the id for this model. Useful when you don't have a single long that
+   * represents a unique id.
+   * <p>
+   * This hashes the two numbers, so there is a tiny risk of collision with other ids.
+   */
   public EpoxyModel<T> id(long id1, long id2) {
     long result = hashLong64Bit(id1);
     result = 31 * result + hashLong64Bit(id2);

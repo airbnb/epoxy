@@ -1,7 +1,6 @@
 package com.airbnb.epoxy.sample;
 
 import com.airbnb.epoxy.AutoModel;
-import com.airbnb.epoxy.EpoxyController;
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.TypedEpoxyController;

@@ -7,6 +7,7 @@ import com.airbnb.epoxy.GeneratedModel;
 import com.airbnb.epoxy.OnModelBoundListener;
 import com.airbnb.epoxy.OnModelUnboundListener;
 import java.lang.CharSequence;
+import java.lang.Number;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
@@ -89,6 +90,18 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
   @Override
   public ModelWithIntDef_ id(long id) {
     super.id(id);
+    return this;
+  }
+
+  @Override
+  public ModelWithIntDef_ id(Number... ids) {
+    super.id(ids);
+    return this;
+  }
+
+  @Override
+  public ModelWithIntDef_ id(long id1, long id2) {
+    super.id(id1, id2);
     return this;
   }
 

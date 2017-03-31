@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
 import java.lang.CharSequence;
+import java.lang.Number;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
@@ -77,6 +78,18 @@ public class ModelWithoutSetter_ extends ModelWithoutSetter implements Generated
   @Override
   public ModelWithoutSetter_ id(long id) {
     super.id(id);
+    return this;
+  }
+
+  @Override
+  public ModelWithoutSetter_ id(Number... ids) {
+    super.id(ids);
+    return this;
+  }
+
+  @Override
+  public ModelWithoutSetter_ id(long id1, long id2) {
+    super.id(id1, id2);
     return this;
   }
 

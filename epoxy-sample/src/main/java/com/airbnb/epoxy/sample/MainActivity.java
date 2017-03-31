@@ -7,10 +7,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 
-import com.airbnb.epoxy.EpoxyAdapter;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.sample.SampleController.AdapterCallbacks;
-import com.airbnb.epoxy.sample.models.ButtonModel_;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,21 +48,14 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
     recyclerView.setHasFixedSize(true);
     recyclerView.setItemAnimator(new SampleItemAnimator());
 //    recyclerView.addItemDecoration(new VerticalGridCardSpacingDecoration());
-    recyclerView.setAdapter(new TestAdapter());
+    recyclerView.setAdapter(controller.getAdapter());
+
     updateAdapter();
 
     // Many color models are shown on screen at once. The default recycled view pool size is
     // only 5, so we manually set the pool size to avoid constantly creating new views when
     // the colors are randomized
     recyclerView.getRecycledViewPool().setMaxRecycledViews(R.layout.model_color, 50);
-  }
-
-  static class TestAdapter extends EpoxyAdapter {
-
-    public TestAdapter() {
-      addModel(new ButtonModel_().text(R.string.button_add));
-      addModel(new ButtonModel_().text(R.string.button_add).hide());
-    }
   }
 
   private void updateAdapter() {
