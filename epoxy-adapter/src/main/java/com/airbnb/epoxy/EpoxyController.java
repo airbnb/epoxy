@@ -78,11 +78,19 @@ public abstract class EpoxyController {
     // so that they are debounced, and so any updates to data can be completely finished before
     // the models are built.
     if (hasBuiltModelsEver) {
-      handler.removeCallbacks(buildModelsRunnable);
+      cancelPendingModelBuild();
       handler.post(buildModelsRunnable);
     } else {
       dispatchModelBuild();
     }
+  }
+
+  /**
+   * Cancels a pending call to {@link #buildModels()} if one has been queued by {@link
+   * #requestModelBuild()}.
+   */
+  public void cancelPendingModelBuild() {
+    handler.removeCallbacks(buildModelsRunnable);
   }
 
   private final Runnable buildModelsRunnable = new Runnable() {
