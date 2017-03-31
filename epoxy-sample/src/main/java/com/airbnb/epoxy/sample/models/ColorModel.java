@@ -21,7 +21,6 @@ public abstract class ColorModel extends EpoxyModel<View> {
 
   public ColorModel(ColorData color) {
     this.color = color.getColorInt();
-    id(color.getId());
   }
 
   @Override

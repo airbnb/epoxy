@@ -158,6 +158,20 @@ public abstract class EpoxyModel<T> {
     return this;
   }
 
+  public EpoxyModel<T> id(Number id, Number... otherIds) {
+    long result = hashLong64Bit(id.hashCode());
+    for (Number otherId : otherIds) {
+      result = 31 * result + hashLong64Bit(otherId.hashCode());
+    }
+    return id(result);
+  }
+
+  public EpoxyModel<T> id(long id1, long id2) {
+    long result = hashLong64Bit(id1);
+    result = 31 * result + hashLong64Bit(id2);
+    return id(result);
+  }
+
   /**
    * Use a string as the model id. Useful for models that don't clearly map to a numerical id. This
    * is preferable to using {@link String#hashCode()} because that is a 32 bit hash and this is a 64
