@@ -177,7 +177,7 @@ public class ModelClickListenerTest {
     controller.setModel(model);
     controller.requestModelBuild();
 
-    verify(observerMock, times(2)).onItemRangeChanged(eq(0), eq(1), eq(null));
+    verify(observerMock, times(2)).onItemRangeChanged(eq(0), eq(1), any());
     verifyNoMoreInteractions(observerMock);
   }
 
@@ -211,7 +211,7 @@ public class ModelClickListenerTest {
     controller.setModel(model);
     controller.requestModelBuild();
 
-    verify(observerMock, times(2)).onItemRangeChanged(eq(0), eq(1), eq(null));
+    verify(observerMock, times(2)).onItemRangeChanged(eq(0), eq(1), any());
     verifyNoMoreInteractions(observerMock);
   }
 }

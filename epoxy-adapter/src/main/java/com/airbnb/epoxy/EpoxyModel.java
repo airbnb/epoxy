@@ -83,9 +83,45 @@ public abstract class EpoxyModel<T> {
    * describing what changed. This is the payloads list specified in the adapter's notifyItemChanged
    * method. This is a useful optimization to allow you to only change part of a view instead of
    * updating the whole thing, which may prevent unnecessary layout calls. If there are no payloads
-   * then {@link #bind(Object)} is called instead.
+   * then {@link #bind(Object)} is called instead. This will only be used if the model is used with
+   * an {@link EpoxyAdapter}
    */
   public void bind(T view, List<Object> payloads) {
+    bind(view);
+  }
+
+  /**
+   * Similar to {@link #bind(Object)}, but provides a non null model which was previously bound to
+   * this view. This will only be called if the model is used with an {@link EpoxyController}.
+   *
+   * @param previouslyBoundModel This is a model with the same id that was previously bound. You can
+   *                             compare this previous model with the current one to see exactly
+   *                             what changed.
+   *                             <p>
+   *                             This model and the previously bound model are guaranteed to have
+   *                             the same id, but will not necessarily be of the same type depending
+   *                             on your implementation of {@link EpoxyController#buildModels()}.
+   *                             With common usage patterns of Epoxy they should be the same type,
+   *                             and will only differ if you are using different model classes with
+   *                             the same id.
+   *                             <p>
+   *                             Comparing the newly bound model with the previous model allows you
+   *                             to be more intelligent when binding your view. This may help you
+   *                             optimize view binding, or make it easier to work with animations.
+   *                             <p>
+   *                             If the new model and the previous model have the same view type
+   *                             (given by {@link EpoxyModel#getViewType()}), and if you are using
+   *                             the default ReyclerView item animator, the same view will be
+   *                             reused. This means that you only need to update the view to reflect
+   *                             the data that changed. If you are using a custom item animator then
+   *                             the view will be the same if the animator returns true in
+   *                             canReuseUpdatedViewHolder.
+   *                             <p>
+   *                             This previously bound model is taken as a payload from the diffing
+   *                             process, and follows the same general conditions for all
+   *                             recyclerview change payloads.
+   */
+  public void bind(T view, EpoxyModel<?> previouslyBoundModel) {
     bind(view);
   }
 

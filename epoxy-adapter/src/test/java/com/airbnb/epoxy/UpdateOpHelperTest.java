@@ -181,22 +181,6 @@ public class UpdateOpHelperTest {
   }
 
   @Test
-  public void updateBatchRange() {
-    helper.update(3, 3); // Initial batch
-    helper.update(3, 3); // Duplicate update, will be a no-op
-    helper.update(2, 4); // expand the front of the batch by one
-    helper.update(2, 1); // no-op
-    helper.update(3, 4); // expand the back of the batch by one
-    helper.update(1, 7); // expand both the front and back by one
-
-    List<UpdateOp> opList = helper.opList;
-    assertEquals(1, opList.size());
-
-    assertEquals(1, opList.get(0).positionStart);
-    assertEquals(7, opList.get(0).itemCount);
-  }
-
-  @Test
   public void moves() {
     helper.move(0, 3);
     helper.move(0, 4);

@@ -52,7 +52,7 @@ public abstract class EpoxyAdapter extends BaseEpoxyAdapter {
       throw new IllegalStateException("You must have stable ids to use diffing");
     }
 
-    diffHelper = new DiffHelper(this);
+    diffHelper = new DiffHelper(this, false);
   }
 
   @Override

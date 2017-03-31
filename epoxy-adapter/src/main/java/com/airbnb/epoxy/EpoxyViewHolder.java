@@ -1,6 +1,7 @@
 
 package com.airbnb.epoxy;
 
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -16,8 +17,8 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     super(view);
   }
 
-  public void bind(@SuppressWarnings("rawtypes") EpoxyModel model, List<Object> payloads,
-      int position) {
+  public void bind(@SuppressWarnings("rawtypes") EpoxyModel model,
+      @Nullable EpoxyModel<?> previouslyBoundModel, List<Object> payloads, int position) {
     this.payloads = payloads;
 
     if (epoxyHolder == null && model instanceof EpoxyModelWithHolder) {
@@ -31,7 +32,10 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
       ((GeneratedModel) model).handlePreBind(this, objectToBind(), position);
     }
 
-    if (payloads.isEmpty()) {
+    if (previouslyBoundModel != null) {
+      // noinspection unchecked
+      model.bind(objectToBind(), previouslyBoundModel);
+    } else if (payloads.isEmpty()) {
       // noinspection unchecked
       model.bind(objectToBind());
     } else {

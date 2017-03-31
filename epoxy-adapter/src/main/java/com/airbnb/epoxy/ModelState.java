@@ -5,6 +5,7 @@ class ModelState {
   long id;
   int hashCode;
   int position;
+  EpoxyModel<?> model;
 
   /**
    * A link to the item with the same id in the other list when diffing two lists. This will be null
@@ -31,6 +32,7 @@ class ModelState {
     state.id = model.id();
     state.hashCode = model.hashCode();
     state.position = position;
+    state.model = model;
 
     return state;
   }
@@ -50,6 +52,7 @@ class ModelState {
     pair.position = position;
     pair.hashCode = hashCode;
     pair.pair = this;
+    pair.model = model;
   }
 
   @Override
