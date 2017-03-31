@@ -1,27 +1,36 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.Nullable;
-
 /**
  * This is a wrapper around {@link com.airbnb.epoxy.EpoxyController} to simplify how data is
- * accessed. Use this if the data required to build your models is represented by a single object.
+ * accessed. Use this if the data required to build your models is represented by four objects.
  * <p>
- * To use this, create a subclass typed with your data object. Then, call {@link #setData(Object)}
- * whenever that data changes. This class will handle calling {@link #buildModels(Object)} with the
+ * To use this, create a subclass typed with your data object. Then, call {@link #setData}
+ * whenever that data changes. This class will handle calling {@link #buildModels} with the
  * latest data.
  * <p>
  * You should NOT call {@link #requestModelBuild()} directly.
  *
+ * @see TypedEpoxyController
  * @see Typed2EpoxyController
  * @see Typed3EpoxyController
- * @see Typed4EpoxyController
  */
-public abstract class TypedEpoxyController<T> extends EpoxyController {
-  private T currentData;
+public abstract class Typed4EpoxyController<T, U, V, W> extends EpoxyController {
+
+  private T data1;
+  private U data2;
+  private V data3;
+  private W data4;
   private boolean insideSetData;
 
-  public final void setData(T data) {
-    currentData = data;
+  /**
+   * Call this with the latest data when you want models to be rebuilt. The data will be passed on
+   * to {@link #buildModels(Object, Object, Object, Object)}
+   */
+  public void setData(T data1, U data2, V data3, W data4) {
+    this.data1 = data1;
+    this.data2 = data2;
+    this.data3 = data3;
+    this.data4 = data4;
     insideSetData = true;
     requestModelBuild();
     insideSetData = false;
@@ -37,11 +46,6 @@ public abstract class TypedEpoxyController<T> extends EpoxyController {
     super.requestModelBuild();
   }
 
-  @Nullable
-  public final T getCurrentData() {
-    return currentData;
-  }
-
   @Override
   protected final void buildModels() {
     if (!isBuildingModels()) {
@@ -49,8 +53,9 @@ public abstract class TypedEpoxyController<T> extends EpoxyController {
           "You cannot call `buildModels` directly. Call `setData` instead to trigger a model "
               + "refresh with new data.");
     }
-    buildModels(currentData);
+    buildModels(data1, data2, data3, data4);
   }
 
-  protected abstract void buildModels(T data);
+  protected abstract void buildModels(T data1, U data2, V data3, W data4);
 }
+

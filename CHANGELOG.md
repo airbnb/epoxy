@@ -8,6 +8,7 @@
 * **New**: `EpoxyModelGroup` supports grouping models together in arbitrary formations.
 * **New**: Instead of setting attribute options like `@EpoxyAttribute(hash = false)` you should now do `@EpoxyAttribute(DoNotHash)`. You can also set other options like that.
 * **New**: Annotation processor options can now be set via gradle instead of with `PackageEpoxyConfig`
+* **New**: In an EpoxyController, if a model with the same id changes state Epoxy will include its previous state as a payload in the change notification. The new model will have its `bind(view, previouslyBoundModel)` method called so it can compare what changed since the previous model, and so it can update the view with only the data that changed.
 
 # 1.7.5 (Feb 21, 2017)
 

@@ -50,21 +50,11 @@ public abstract class EpoxyController {
   private boolean runningInterceptors;
   private List<AfterInterceptorCallback> afterInterceptorCallbacks;
 
-  // Readme items:
-  // hidden models breaking for pull to refresh or multiple items in a row on grid
-  // Model  group
-  // debug logs
-  // Config setting to validate auto models
-  // Note that it doesn't work to attach the adapter to multiple recyclerviews because of saved
-  // state. Multiple recyclerviews could be supported if needed.
-
-  // TODO: (eli_hart 3/7/17) Guide for updating to 2.0
-  // Setting a null click listener is broken. Now needs to be cast.
-
   /**
    * Call this to request a model update. The controller will schedule a call to {@link
-   * #buildModels()} so that models can be rebuilt for the current data. The call is posted and
-   * debounced so that the calling code need not worry about calling this multiple times in a row.
+   * #buildModels()} so that models can be rebuilt for the current data. All calls after the first
+   * are posted and debounced so that the calling code need not worry about calling this multiple
+   * times in a row.
    */
   public void requestModelBuild() {
     if (isBuildingModels()) {
