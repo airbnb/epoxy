@@ -9,6 +9,7 @@ import java.lang.Double;
 import java.lang.Float;
 import java.lang.Integer;
 import java.lang.Long;
+import java.lang.Number;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.Short;
@@ -293,6 +294,18 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   @Override
   public ModelWithAllFieldTypes_ id(long id) {
     super.id(id);
+    return this;
+  }
+
+  @Override
+  public ModelWithAllFieldTypes_ id(Number... ids) {
+    super.id(ids);
+    return this;
+  }
+
+  @Override
+  public ModelWithAllFieldTypes_ id(long id1, long id2) {
+    super.id(id1, id2);
     return this;
   }
 

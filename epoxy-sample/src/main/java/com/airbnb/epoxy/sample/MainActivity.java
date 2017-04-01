@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
     recyclerView.setItemAnimator(new SampleItemAnimator());
 //    recyclerView.addItemDecoration(new VerticalGridCardSpacingDecoration());
     recyclerView.setAdapter(controller.getAdapter());
+
     updateAdapter();
 
     // Many color models are shown on screen at once. The default recycled view pool size is

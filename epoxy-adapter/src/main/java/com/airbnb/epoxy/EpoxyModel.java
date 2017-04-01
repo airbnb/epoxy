@@ -159,6 +159,32 @@ public abstract class EpoxyModel<T> {
   }
 
   /**
+   * Use multiple numbers as the id for this model. Useful when you don't have a single long that
+   * represents a unique id.
+   * <p>
+   * This hashes the numbers, so there is a tiny risk of collision with other ids.
+   */
+  public EpoxyModel<T> id(Number... ids) {
+    long result = 0;
+    for (Number id : ids) {
+      result = 31 * result + hashLong64Bit(id.hashCode());
+    }
+    return id(result);
+  }
+
+  /**
+   * Use two numbers as the id for this model. Useful when you don't have a single long that
+   * represents a unique id.
+   * <p>
+   * This hashes the two numbers, so there is a tiny risk of collision with other ids.
+   */
+  public EpoxyModel<T> id(long id1, long id2) {
+    long result = hashLong64Bit(id1);
+    result = 31 * result + hashLong64Bit(id2);
+    return id(result);
+  }
+
+  /**
    * Use a string as the model id. Useful for models that don't clearly map to a numerical id. This
    * is preferable to using {@link String#hashCode()} because that is a 32 bit hash and this is a 64
    * bit hash, giving better spread and less chance of collision with other ids.
@@ -294,9 +320,8 @@ public abstract class EpoxyModel<T> {
   }
 
   /**
-   * This is used internally by generated models to turn on validation checking when {@link
-   * PackageEpoxyConfig#validateModelUsage()} is enabled and the model is used with an {@link
-   * EpoxyController}.
+   * This is used internally by generated models to turn on validation checking when
+   * "validateEpoxyModelUsage" is enabled and the model is used with an {@link EpoxyController}.
    */
   protected final void addWithDebugValidation(EpoxyController controller) {
     if (controller == null) {
@@ -325,11 +350,11 @@ public abstract class EpoxyModel<T> {
   }
 
   /**
-   * This is used internally by generated models to do validation checking when {@link
-   * PackageEpoxyConfig#validateModelUsage()} is enabled and the model is used with an {@link
-   * EpoxyController}. This method validates that it is ok to change this model. It is only valid if
-   * the model hasn't yet been added, or the change is being done from an {@link
-   * EpoxyController.Interceptor} callback.
+   * This is used internally by generated models to do validation checking when
+   * "validateEpoxyModelUsage" is enabled and the model is used with an {@link EpoxyController}.
+   * This method validates that it is ok to change this model. It is only valid if the model hasn't
+   * yet been added, or the change is being done from an {@link EpoxyController.Interceptor}
+   * callback.
    */
   protected final void validateMutability() {
     if (attachedController != null && !attachedController.isRunningInterceptors()) {
@@ -347,13 +372,13 @@ public abstract class EpoxyModel<T> {
   }
 
   /**
-   * This is used internally by generated models to do validation checking when {@link
-   * PackageEpoxyConfig#validateModelUsage()} is enabled and the model is used with a {@link
-   * EpoxyController}. This method validates that the model's hashCode hasn't been changed since it
-   * was added to the controller. This is similar to {@link #validateMutability()}, but that method
-   * is only used for specific model changes such as calling a setter. By checking the hashCode,
-   * this method allows us to catch more subtle changes, such as through setting a field directly or
-   * through changing an object that is set on the model.
+   * This is used internally by generated models to do validation checking when
+   * "validateEpoxyModelUsage" is enabled and the model is used with a {@link EpoxyController}. This
+   * method validates that the model's hashCode hasn't been changed since it was added to the
+   * controller. This is similar to {@link #validateMutability()}, but that method is only used for
+   * specific model changes such as calling a setter. By checking the hashCode, this method allows
+   * us to catch more subtle changes, such as through setting a field directly or through changing
+   * an object that is set on the model.
    */
   protected final void validateStateHasNotChangedSinceAdded(String descriptionOfChange,
       int modelPosition) {

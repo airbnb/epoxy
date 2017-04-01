@@ -7,7 +7,6 @@ import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -51,21 +50,11 @@ public abstract class EpoxyController {
   private boolean runningInterceptors;
   private List<AfterInterceptorCallback> afterInterceptorCallbacks;
 
-  // Readme items:
-  // hidden models breaking for pull to refresh or multiple items in a row on grid
-  // Model  group
-  // debug logs
-  // Config setting to validate auto models
-  // Note that it doesn't work to attach the adapter to multiple recyclerviews because of saved
-  // state. Multiple recyclerviews could be supported if needed.
-
-  // TODO: (eli_hart 3/7/17) Guide for updating to 2.0
-  // Setting a null click listener is broken. Now needs to be cast.
-
   /**
    * Call this to request a model update. The controller will schedule a call to {@link
-   * #buildModels()} so that models can be rebuilt for the current data. The call is posted and
-   * debounced so that the calling code need not worry about calling this multiple times in a row.
+   * #buildModels()} so that models can be rebuilt for the current data. All calls after the first
+   * are posted and debounced so that the calling code need not worry about calling this multiple
+   * times in a row.
    */
   public void requestModelBuild() {
     if (isBuildingModels()) {
@@ -137,7 +126,8 @@ public abstract class EpoxyController {
    * the models that should be shown, in the order that is desired.
    * <p>
    * Once a model is added to the controller it should be treated as immutable and never modified
-   * again. This is necessary for adapter updates to be accurate.
+   * again. This is necessary for adapter updates to be accurate. If "validateEpoxyModelUsage" is
+   * enabled then runtime validations will be done to make sure models are not changed.
    * <p>
    * You CANNOT call this method directly. Instead, call {@link #requestModelBuild()} to have the
    * controller schedule an update.
@@ -260,7 +250,7 @@ public abstract class EpoxyController {
    * Add the models to this controller. Can only be called from inside {@link
    * EpoxyController#buildModels()}.
    */
-  protected void add(Collection<EpoxyModel<?>> modelsToAdd) {
+  protected void add(List<? extends EpoxyModel<?>> modelsToAdd) {
     modelsBeingBuilt.ensureCapacity(modelsBeingBuilt.size() + modelsToAdd.size());
 
     for (EpoxyModel<?> model : modelsToAdd) {
