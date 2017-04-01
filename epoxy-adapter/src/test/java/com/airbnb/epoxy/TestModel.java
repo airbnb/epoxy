@@ -16,6 +16,11 @@ public class TestModel extends EpoxyModel<View> {
     randomizeValue();
   }
 
+  public TestModel(long id) {
+    super(id);
+    randomizeValue();
+  }
+
   TestModel randomizeValue() {
     value = RANDOM.nextInt();
     return this;

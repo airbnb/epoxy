@@ -10,6 +10,7 @@ import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -105,18 +106,18 @@ public class OnModelBindListenerTest {
     model = new ModelWithClickListener_();
     model.onBind(null);
     controller.buildWithModel(model);
-    verify(observerMock, never()).onItemRangeChanged(eq(0), eq(1), eq(null));
+    verify(observerMock, never()).onItemRangeChanged(eq(0), eq(1), any());
 
     model = new ModelWithClickListener_();
     BindListener listener1 = new BindListener();
     model.onBind(listener1);
     controller.buildWithModel(model);
-    verify(observerMock, times(1)).onItemRangeChanged(eq(0), eq(1), eq(null));
+    verify(observerMock, times(1)).onItemRangeChanged(eq(0), eq(1), any());
 
     model = new ModelWithClickListener_();
     model.onBind(listener1);
     controller.buildWithModel(model);
-    verify(observerMock, times(1)).onItemRangeChanged(eq(0), eq(1), eq(null));
+    verify(observerMock, times(1)).onItemRangeChanged(eq(0), eq(1), any());
   }
 
   @Test
@@ -138,7 +139,7 @@ public class OnModelBindListenerTest {
     model.onBind(null);
     controller.buildWithModel(model);
 
-    verify(observerMock, times(2)).onItemRangeChanged(eq(0), eq(1), eq(null));
+    verify(observerMock, times(2)).onItemRangeChanged(eq(0), eq(1), any());
   }
 
   @Test
@@ -160,7 +161,7 @@ public class OnModelBindListenerTest {
     model.onBind(new BindListener());
     controller.buildWithModel(model);
 
-    verify(observerMock).onItemRangeChanged(eq(0), eq(1), eq(null));
+    verify(observerMock).onItemRangeChanged(eq(0), eq(1), any());
   }
 
   @Test
@@ -178,18 +179,18 @@ public class OnModelBindListenerTest {
     model = new ModelWithClickListener_();
     model.onUnbind(null);
     controller.buildWithModel(model);
-    verify(observerMock, never()).onItemRangeChanged(eq(0), eq(1), eq(null));
+    verify(observerMock, never()).onItemRangeChanged(eq(0), eq(1), any());
 
     model = new ModelWithClickListener_();
     UnbindListener listener1 = new UnbindListener();
     model.onUnbind(listener1);
     controller.buildWithModel(model);
-    verify(observerMock, times(1)).onItemRangeChanged(eq(0), eq(1), eq(null));
+    verify(observerMock, times(1)).onItemRangeChanged(eq(0), eq(1), any());
 
     model = new ModelWithClickListener_();
     model.onUnbind(listener1);
     controller.buildWithModel(model);
-    verify(observerMock, times(1)).onItemRangeChanged(eq(0), eq(1), eq(null));
+    verify(observerMock, times(1)).onItemRangeChanged(eq(0), eq(1), any());
   }
 
   @Test
@@ -211,7 +212,7 @@ public class OnModelBindListenerTest {
     model.onUnbind(null);
     controller.buildWithModel(model);
 
-    verify(observerMock, times(2)).onItemRangeChanged(eq(0), eq(1), eq(null));
+    verify(observerMock, times(2)).onItemRangeChanged(eq(0), eq(1), any());
   }
 
   @Test
@@ -233,6 +234,6 @@ public class OnModelBindListenerTest {
     model.onUnbind(new UnbindListener());
     controller.buildWithModel(model);
 
-    verify(observerMock).onItemRangeChanged(eq(0), eq(1), eq(null));
+    verify(observerMock).onItemRangeChanged(eq(0), eq(1), any());
   }
 }

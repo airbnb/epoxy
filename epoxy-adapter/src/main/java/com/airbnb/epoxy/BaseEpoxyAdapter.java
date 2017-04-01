@@ -96,12 +96,26 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
     }
 
     EpoxyModel<?> modelToShow = getModelForPosition(position);
-    holder.bind(modelToShow, payloads, position);
+
+    EpoxyModel<?> previouslyBoundModel = null;
+    if (diffPayloadsEnabled()) {
+      previouslyBoundModel = DiffPayload.getModelFromPayload(payloads, getItemId(position));
+    }
+
+    holder.bind(modelToShow, previouslyBoundModel, payloads, position);
 
     viewHolderState.restore(holder);
     boundViewHolders.put(holder);
 
-    onModelBound(holder, modelToShow, position, payloads);
+    if (diffPayloadsEnabled()) {
+      onModelBound(holder, modelToShow, position, previouslyBoundModel);
+    } else {
+      onModelBound(holder, modelToShow, position, payloads);
+    }
+  }
+
+  boolean diffPayloadsEnabled() {
+    return false;
   }
 
   /**
@@ -110,6 +124,11 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
    */
   protected void onModelBound(EpoxyViewHolder holder, EpoxyModel<?> model, int position,
       @Nullable List<Object> payloads) {
+    onModelBound(holder, model, position);
+  }
+
+  void onModelBound(EpoxyViewHolder holder, EpoxyModel<?> model, int position,
+      @Nullable EpoxyModel<?> previouslyBoundModel) {
     onModelBound(holder, model, position);
   }
 

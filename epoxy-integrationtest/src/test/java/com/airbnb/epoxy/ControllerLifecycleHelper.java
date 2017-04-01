@@ -21,15 +21,17 @@ class ControllerLifecycleHelper {
   void bindModels(BaseEpoxyAdapter adapter) {
     List<EpoxyModel<?>> models = adapter.getCurrentModels();
     for (int i = 0; i < models.size(); i++) {
-      int itemViewType = adapter.getItemViewType(i);
-      viewHolder =
-          adapter.onCreateViewHolder(
-              new FrameLayout(RuntimeEnvironment.application),
-              itemViewType
-          );
-
+      viewHolder = createViewHolder(adapter, i);
       adapter.onBindViewHolder(viewHolder, i);
     }
+  }
+
+  static EpoxyViewHolder createViewHolder(BaseEpoxyAdapter adapter, int position) {
+    int itemViewType = adapter.getItemViewType(position);
+    return adapter.onCreateViewHolder(
+        new FrameLayout(RuntimeEnvironment.application),
+        itemViewType
+    );
   }
 
   void recycleLastBoundModel(EpoxyController controller) {

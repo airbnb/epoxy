@@ -21,6 +21,7 @@ class DiffHelper {
   private ArrayList<ModelState> currentStateList = new ArrayList<>();
   private Map<Long, ModelState> currentStateMap = new HashMap<>();
   private final BaseEpoxyAdapter adapter;
+  private final boolean includePayloads;
   private final DifferModelListObserver modelListObserver = new DifferModelListObserver();
   private final boolean usingModelListObserver;
   /**
@@ -34,8 +35,9 @@ class DiffHelper {
    */
   private boolean notifiedOfStructuralChanges;
 
-  DiffHelper(BaseEpoxyAdapter adapter) {
+  DiffHelper(BaseEpoxyAdapter adapter, boolean includePayloads) {
     this.adapter = adapter;
+    this.includePayloads = includePayloads;
     adapter.registerAdapterDataObserver(observer);
 
     usingModelListObserver = adapter instanceof EpoxyAdapter;
@@ -196,7 +198,7 @@ class DiffHelper {
       int newHash = model.hashCode();
 
       if (state.hashCode != newHash) {
-        updateOpHelper.update(i);
+        updateOpHelper.update(i, state.model);
         state.hashCode = newHash;
       }
     }
@@ -215,7 +217,12 @@ class DiffHelper {
           adapter.notifyItemRangeRemoved(op.positionStart, op.itemCount);
           break;
         case UpdateOp.UPDATE:
-          adapter.notifyItemRangeChanged(op.positionStart, op.itemCount);
+          if (includePayloads && op.payloads != null) {
+            adapter.notifyItemRangeChanged(op.positionStart, op.itemCount,
+                new DiffPayload(op.payloads));
+          } else {
+            adapter.notifyItemRangeChanged(op.positionStart, op.itemCount);
+          }
           break;
         default:
           throw new IllegalArgumentException("Unknown type: " + op.type);
@@ -353,7 +360,7 @@ class DiffHelper {
       }
 
       if (newItem.pair.hashCode != newItem.hashCode) {
-        helper.update(newItem.position);
+        helper.update(newItem.position, newItem.pair.model);
       }
     }
   }

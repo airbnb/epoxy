@@ -452,9 +452,37 @@ public abstract class EpoxyController {
    * Called immediately after a model is bound to a view holder. Subclasses can override this if
    * they want alerts on when a model is bound. Alternatively you may attach a listener directly to
    * a generated model with model.onBind(...)
+   *
+   * @param previouslyBoundModel If non null, this is a model with the same id as the newly bound
+   *                             model, and was previously bound to a view. This means that {@link
+   *                             #buildModels()} returned a model that is different from the
+   *                             previouslyBoundModel and the view is being rebound to incorporate
+   *                             the change. You can compare this previous model with the new one to
+   *                             see exactly what changed.
+   *                             <p>
+   *                             The newly bound model and the previously bound model are guaranteed
+   *                             to have the same id, but will not necessarily be of the same type
+   *                             depending on your implementation of {@link #buildModels()}. With
+   *                             common usage patterns of Epoxy they should be the same type, and
+   *                             will only differ if you are using different model classes with the
+   *                             same id.
+   *                             <p>
+   *                             Comparing the newly bound model with the previous model allows you
+   *                             to be more intelligent when updating your view. This may help you
+   *                             optimize, or make it easier to work with animations.
+   *                             <p>
+   *                             If the new model and the previous model have the same view type
+   *                             (given by {@link EpoxyModel#getViewType()}), and if you are using
+   *                             the default ReyclerView item animator, the same view will be kept.
+   *                             If you are using a custom item animator then the view will be the
+   *                             same if the animator returns true in canReuseUpdatedViewHolder.
+   *                             <p>
+   *                             This previously bound model is taken as a payload from the diffing
+   *                             process, and follows the same general conditions for all
+   *                             recyclerview change payloads.
    */
-  protected void onModelBound(EpoxyViewHolder holder, EpoxyModel<?> model, int position,
-      @Nullable List<Object> payloads) {
+  protected void onModelBound(EpoxyViewHolder holder, EpoxyModel<?> boundModel, int position,
+      @Nullable EpoxyModel<?> previouslyBoundModel) {
   }
 
   /**

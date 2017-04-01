@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
-  private final DiffHelper diffHelper = new DiffHelper(this);
+  private final DiffHelper diffHelper = new DiffHelper(this, true);
   private final NotifyBlocker notifyBlocker = new NotifyBlocker();
   private final EpoxyController epoxyController;
   private List<EpoxyModel<?>> currentModels = Collections.emptyList();
@@ -47,6 +47,11 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
   }
 
   @Override
+  boolean diffPayloadsEnabled() {
+    return true;
+  }
+
+  @Override
   public void onAttachedToRecyclerView(RecyclerView recyclerView) {
     epoxyController.onAttachedToRecyclerView(recyclerView);
   }
@@ -70,8 +75,8 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
 
   @Override
   protected void onModelBound(EpoxyViewHolder holder, EpoxyModel<?> model, int position,
-      @Nullable List<Object> payloads) {
-    epoxyController.onModelBound(holder, model, position, payloads);
+      @Nullable EpoxyModel<?> previouslyBoundModel) {
+    epoxyController.onModelBound(holder, model, position, previouslyBoundModel);
   }
 
   @Override
