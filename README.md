@@ -32,8 +32,10 @@ dependencies {
 }
 ```
 
-## Installation
+## Documentation
 Browse complete documentation at the [Epoxy Wiki](#https://github.com/airbnb/epoxy/wiki)
+
+If you still have questions, feel free to create a new issue.
 
 ## Basic Usage
 
@@ -65,7 +67,7 @@ public class PhotoController extends Typed2EpoxyController<List<Photo>, Boolean>
 ```
 
 ## Contributing
-
+Pull requests are welcome! We'd love help improving this library. Feel free to browse through open issues to look for things that need work. If you have a feature request or bug, please open a new issue so we can track it.
 
 ## License
 
