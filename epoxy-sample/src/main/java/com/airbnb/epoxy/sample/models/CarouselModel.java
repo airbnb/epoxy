@@ -1,10 +1,7 @@
 package com.airbnb.epoxy.sample.models;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView.RecycledViewPool;
-import android.util.TypedValue;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 
 import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyModel;
@@ -16,10 +13,8 @@ import java.util.List;
 
 @EpoxyModelClass
 public abstract class CarouselModel extends EpoxyModelWithView<Carousel> {
-  private static final int CAROUSEL_VIEW_HEIGHT_DP = 100;
-  private static int carouselViewHeightPx = -1;
 
-  @EpoxyAttribute List<EpoxyModel<?>> models;
+  @EpoxyAttribute List<? extends EpoxyModel<?>> models;
   @EpoxyAttribute int numItemsExpectedOnDisplay;
   @EpoxyAttribute(hash = false) RecycledViewPool recycledViewPool;
 
@@ -46,23 +41,12 @@ public abstract class CarouselModel extends EpoxyModelWithView<Carousel> {
 
   @Override
   protected Carousel buildView(ViewGroup parent) {
-    Context context = parent.getContext();
-    Carousel carousel = new Carousel(context, null);
-
-    if (carouselViewHeightPx == -1) {
-      carouselViewHeightPx =
-          (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, CAROUSEL_VIEW_HEIGHT_DP,
-              context.getResources().getDisplayMetrics());
-    }
-
-    LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, carouselViewHeightPx);
-    carousel.setLayoutParams(params);
-
-    return carousel;
+    return new Carousel(parent.getContext(), null);
   }
 
   @Override
-  public int getSpanSize(int totalSpanCount, int position, int itemCount) {
-    return totalSpanCount;
+  public boolean shouldSaveViewState() {
+    // Save the state of the scroll position
+    return true;
   }
 }

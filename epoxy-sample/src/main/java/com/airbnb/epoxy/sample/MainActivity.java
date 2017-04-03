@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
+import android.support.v7.widget.RecyclerView.RecycledViewPool;
 
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.sample.SampleController.AdapterCallbacks;
@@ -24,10 +24,12 @@ import butterknife.ButterKnife;
  */
 public class MainActivity extends AppCompatActivity implements AdapterCallbacks {
   private static final Random RANDOM = new Random();
+  public static final int SPAN_COUNT = 2;
 
   @BindView(R.id.recycler_view) RecyclerView recyclerView;
-  private final SampleController controller = new SampleController(this);
-  private final List<ColorData> colors = new ArrayList<>();
+  private final List<CarouselData> carousels = new ArrayList<>();
+  private final RecycledViewPool recycledViewPool = new RecycledViewPool();
+  private final SampleController controller = new SampleController(this, recycledViewPool);
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -35,62 +37,92 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
 
-    int spanCount = getSpanCount();
-
-    // We are using a multi span grid to show many color models in each row. To set this up we need
-    // to set our span count on the controller and then get the span size lookup object from
-    // the controller. This look up object will delegate span size lookups to each model.
-    controller.setSpanCount(spanCount);
-    GridLayoutManager gridLayoutManager = new GridLayoutManager(this, spanCount);
-    gridLayoutManager.setSpanSizeLookup(controller.getSpanSizeLookup());
-
-    recyclerView.setLayoutManager(gridLayoutManager);
-    recyclerView.setHasFixedSize(true);
-    recyclerView.setItemAnimator(new SampleItemAnimator());
-//    recyclerView.addItemDecoration(new VerticalGridCardSpacingDecoration());
-    recyclerView.setAdapter(controller.getAdapter());
-
-    updateAdapter();
-
     // Many color models are shown on screen at once. The default recycled view pool size is
     // only 5, so we manually set the pool size to avoid constantly creating new views when
     // the colors are randomized
-    recyclerView.getRecycledViewPool().setMaxRecycledViews(R.layout.model_color, 50);
+    recycledViewPool.setMaxRecycledViews(R.layout.model_color, 50);
+    recyclerView.setRecycledViewPool(recycledViewPool);
+
+    // We are using a multi span grid to allow two columns of buttons. To set this up we need
+    // to set our span count on the controller and then get the span size lookup object from
+    // the controller. This look up object will delegate span size lookups to each model.
+    controller.setSpanCount(SPAN_COUNT);
+    GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+    gridLayoutManager.setSpanSizeLookup(controller.getSpanSizeLookup());
+    recyclerView.setLayoutManager(gridLayoutManager);
+
+    recyclerView.setHasFixedSize(true);
+    recyclerView.addItemDecoration(new VerticalGridCardSpacingDecoration());
+    recyclerView.setItemAnimator(new SampleItemAnimator());
+    recyclerView.setAdapter(controller.getAdapter());
+
+    updateAdapter();
   }
 
   private void updateAdapter() {
-    controller.setData(colors);
+    controller.setData(carousels);
   }
 
-  private int getSpanCount() {
-    DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-    float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-    return (int) (dpWidth / 100);
-  }
-
-  @Override
-  public void onAddClicked() {
+  private void addColorToCarousel(CarouselData carousel) {
+    List<ColorData> colors = carousel.getColors();
     colors.add(0, new ColorData(randomColor(), colors.size()));
+  }
+
+  @Override
+  public void onAddCarouselClicked() {
+    CarouselData carousel = new CarouselData(carousels.size(), new ArrayList<>());
+    addColorToCarousel(carousel);
+    carousels.add(0, carousel);
     updateAdapter();
   }
 
   @Override
-  public void onClearClicked() {
-    colors.clear();
+  public void onClearCarouselsClicked() {
+    carousels.clear();
     updateAdapter();
   }
 
   @Override
-  public void onShuffleClicked() {
-    Collections.shuffle(colors);
+  public void onShuffleCarouselsClicked() {
+    Collections.shuffle(carousels);
     updateAdapter();
   }
 
   @Override
-  public void onChangeColorsClicked() {
-    for (ColorData color : colors) {
-      color.setColorInt(randomColor());
+  public void onChangeAllColorsClicked() {
+    for (CarouselData carouselData : carousels) {
+      for (ColorData colorData : carouselData.getColors()) {
+        colorData.setColorInt(randomColor());
+      }
     }
+
+    updateAdapter();
+  }
+
+  @Override
+  public void onAddColorToCarouselClicked(CarouselData carousel) {
+    addColorToCarousel(carousel);
+    updateAdapter();
+  }
+
+  @Override
+  public void onClearCarouselClicked(CarouselData carousel) {
+    carousel.getColors().clear();
+    updateAdapter();
+  }
+
+  @Override
+  public void onShuffleCarouselColorsClicked(CarouselData carousel) {
+    Collections.shuffle(carousel.getColors());
+    updateAdapter();
+  }
+
+  @Override
+  public void onChangeCarouselColorsClicked(CarouselData carousel) {
+    for (ColorData colorData : carousel.getColors()) {
+      colorData.setColorInt(randomColor());
+    }
+
     updateAdapter();
   }
 

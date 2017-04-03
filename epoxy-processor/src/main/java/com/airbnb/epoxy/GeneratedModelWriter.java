@@ -90,7 +90,7 @@ class GeneratedModelWriter {
         .addFields(generateFields(info))
         .addMethods(generateConstructors(info));
 
-    generateDebugAddToMethodIfNeeded(builder, info);
+    generateDebugAddToMethodIfNeeded(builder);
 
     builder
         .addMethods(generateBindMethods(info))
@@ -191,8 +191,7 @@ class GeneratedModelWriter {
     return constructors;
   }
 
-  private void generateDebugAddToMethodIfNeeded(TypeSpec.Builder classBuilder,
-      ClassToGenerateInfo info) {
+  private void generateDebugAddToMethodIfNeeded(TypeSpec.Builder classBuilder) {
     if (!configManager.shouldValidateModeUsage()) {
       return;
     }

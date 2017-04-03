@@ -207,9 +207,8 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
       views = new ArrayList<>(modelCount);
       holders = new ArrayList<>(modelCount);
 
-      for (int i = 0; i < modelCount; i++) {
-        EpoxyModel<?> model = models.get(i);
-        View view = createAndAddView(groupView, i, model);
+      for (EpoxyModel model : models) {
+        View view = createAndAddView(groupView, model);
 
         if (model instanceof EpoxyModelWithHolder) {
           EpoxyHolder holder = ((EpoxyModelWithHolder) model).createNewHolder();
@@ -223,48 +222,67 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
       }
     }
 
-    private View createAndAddView(ViewGroup groupView, int i, EpoxyModel<?> model) {
-      int viewStubPosition = getNextViewStubPosition(groupView);
-      ViewStub viewStub = (ViewStub) groupView.getChildAt(viewStubPosition);
+    private View createAndAddView(ViewGroup groupView, EpoxyModel<?> model) {
+      ViewStubData stubData = getNextViewStubPosition(groupView);
+      if (stubData == null) {
+        throw new IllegalStateException(
+            "Your layout should provide a ViewStub for each model to be inflated into.");
+      }
 
-      // TODO: (eli_hart 3/8/17) Add example to sample
       if (model instanceof EpoxyModelWithView) {
-        groupView.removeViewInLayout(viewStub);
+        stubData.viewGroup.removeView(stubData.viewStub);
 
         View modelView = model.buildView(groupView);
         LayoutParams modelLayoutParams = modelView.getLayoutParams();
-        ViewGroup.LayoutParams viewStubLayoutParams = viewStub.getLayoutParams();
+        ViewGroup.LayoutParams viewStubLayoutParams = stubData.viewStub.getLayoutParams();
 
         // Use layout params off the view created by the model if they exist.
         // Otherwise we fallback to any layout params on the view stub.
         // And lastly we fallback to no layout params, in which case default params are applied.
         if (modelLayoutParams != null) {
-          groupView.addView(modelView, viewStubPosition, modelLayoutParams);
+          groupView.addView(modelView, stubData.position, modelLayoutParams);
         } else if (viewStubLayoutParams != null) {
-          groupView.addView(modelView, viewStubPosition, viewStubLayoutParams);
+          groupView.addView(modelView, stubData.position, viewStubLayoutParams);
         } else {
-          groupView.addView(modelView, viewStubPosition);
+          groupView.addView(modelView, stubData.position);
         }
 
         return modelView;
       } else {
-        viewStub.setLayoutResource(model.getLayout());
-        return viewStub.inflate();
+        stubData.viewStub.setLayoutResource(model.getLayout());
+        return stubData.viewStub.inflate();
       }
     }
 
-    private int getNextViewStubPosition(ViewGroup groupView) {
-      int childCount = groupView.getChildCount();
+    private ViewStubData getNextViewStubPosition(ViewGroup viewGroup) {
+      int childCount = viewGroup.getChildCount();
       for (int i = 0; i < childCount; i++) {
-        View child = groupView.getChildAt(i);
+        View child = viewGroup.getChildAt(i);
 
-        if (child instanceof ViewStub) {
-          return i;
+        if (child instanceof ViewGroup) {
+          ViewStubData nestedResult = getNextViewStubPosition((ViewGroup) child);
+          if (nestedResult != null) {
+            return nestedResult;
+          }
+        } else if (child instanceof ViewStub) {
+          return new ViewStubData(viewGroup, (ViewStub) child, i);
         }
       }
 
-      throw new IllegalStateException(
-          "Your layout should provide a ViewStub for each model to be inflated into.");
+      return null;
+    }
+  }
+
+  private static class ViewStubData {
+
+    private final ViewGroup viewGroup;
+    private final ViewStub viewStub;
+    private final int position;
+
+    private ViewStubData(ViewGroup viewGroup, ViewStub viewStub, int position) {
+      this.viewGroup = viewGroup;
+      this.viewStub = viewStub;
+      this.position = position;
     }
   }
 
