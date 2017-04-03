@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.airbnb.epoxy.EpoxyController.AfterInterceptorCallback;
+import com.airbnb.epoxy.EpoxyController.ModelInterceptorCallback;
 
 import java.util.List;
 
@@ -36,10 +36,12 @@ public abstract class EpoxyModel<T> {
    */
   boolean addedToAdapter;
   /**
-   * The controller this model was added to. A reference is kept in debug mode in order to run
-   * validations.
+   * The first controller this model was added to. A reference is kept in debug mode in order to run
+   * validations. The model is allowed to be added to other controllers, but we only keep a
+   * reference to the first.
    */
-  private EpoxyController attachedController;
+  private EpoxyController firstControllerAddedTo;
+  private boolean currentlyInInterceptors;
   private int hashCodeWhenAdded;
   private boolean hasDefaultId;
 
@@ -148,7 +150,7 @@ public abstract class EpoxyModel<T> {
    * error to change the id after that.
    */
   public EpoxyModel<T> id(long id) {
-    if ((addedToAdapter || attachedController != null) && id != this.id) {
+    if ((addedToAdapter || firstControllerAddedTo != null) && id != this.id) {
       throw new IllegalEpoxyUsage(
           "Cannot change a model's id after it has been added to the adapter.");
     }
@@ -328,25 +330,36 @@ public abstract class EpoxyModel<T> {
       throw new IllegalArgumentException("Controller cannot be null");
     }
 
-    if (attachedController != null) {
+    if (controller.isModelAddedMultipleTimes(this)) {
       throw new IllegalEpoxyUsage(
           "This model was already added to the controller at position "
-              + controller.getIndexOfModelInBuildingList(this));
+              + controller.getFirstIndexOfModelInBuildingList(this));
     }
 
-    attachedController = controller;
-    // We save the current hashCode so we can compare it to the hashCode at later points in time
-    // in order to validate that it doesn't change and enforce mutability.
-    hashCodeWhenAdded = hashCode();
+    if (firstControllerAddedTo == null) {
+      firstControllerAddedTo = controller;
 
-    // The one time it is valid to change the model is during an interceptor callback. To support
-    // that we need to update the hashCode after interceptors have been run.
-    controller.addAfterInterceptorCallback(new AfterInterceptorCallback() {
-      @Override
-      public void afterInterceptorsRun() {
-        hashCodeWhenAdded = EpoxyModel.this.hashCode();
-      }
-    });
+      // We save the current hashCode so we can compare it to the hashCode at later points in time
+      // in order to validate that it doesn't change and enforce mutability.
+      hashCodeWhenAdded = hashCode();
+
+      // The one time it is valid to change the model is during an interceptor callback. To support
+      // that we need to update the hashCode after interceptors have been run.
+      // The model can be added to multiple controllers, but we only allow an interceptor change
+      // the first time, since after that it will have been added to an adapter.
+      controller.addAfterInterceptorCallback(new ModelInterceptorCallback() {
+        @Override
+        public void onInterceptorsStarted(EpoxyController controller) {
+          currentlyInInterceptors = true;
+        }
+
+        @Override
+        public void onInterceptorsFinished(EpoxyController controller) {
+          hashCodeWhenAdded = EpoxyModel.this.hashCode();
+          currentlyInInterceptors = false;
+        }
+      });
+    }
   }
 
   /**
@@ -357,15 +370,21 @@ public abstract class EpoxyModel<T> {
    * callback.
    */
   protected final void validateMutability() {
-    if (attachedController != null && !attachedController.isRunningInterceptors()) {
+    // The model may be added to multiple controllers, in which case if it was already diffed
+    // and added to an adapter in one controller we don't want to even allow interceptors
+    // from changing the model in a different controller
+    if (firstControllerAddedTo != null && !currentlyInInterceptors) {
       throw new ImmutableModelException(this,
-          getPosition(attachedController, this));
+          getPosition(firstControllerAddedTo, this));
     }
   }
 
   private static int getPosition(EpoxyController controller, EpoxyModel<?> model) {
+    // If the model was added to multiple controllers, or was removed from the controller and then
+    // modified, this won't be correct. But those should be very rare cases that we don't need to
+    // worry about
     if (controller.isBuildingModels()) {
-      return controller.getIndexOfModelInBuildingList(model);
+      return controller.getFirstIndexOfModelInBuildingList(model);
     }
 
     return controller.getAdapter().getModelPosition(model);
@@ -382,7 +401,8 @@ public abstract class EpoxyModel<T> {
    */
   protected final void validateStateHasNotChangedSinceAdded(String descriptionOfChange,
       int modelPosition) {
-    if (attachedController != null && hashCodeWhenAdded != hashCode()) {
+    if (firstControllerAddedTo != null && !currentlyInInterceptors
+        && hashCodeWhenAdded != hashCode()) {
       throw new ImmutableModelException(this, descriptionOfChange, modelPosition);
     }
   }
@@ -427,16 +447,31 @@ public abstract class EpoxyModel<T> {
     return 1;
   }
 
+  /**
+   * Change the visibility of the model so that it's view is shown. This only works if the model is
+   * used in {@link EpoxyAdapter} or a {@link EpoxyModelGroup}, but is not supported in {@link
+   * EpoxyController}
+   */
   public EpoxyModel<T> show() {
     return show(true);
   }
 
+  /**
+   * Change the visibility of the model's view. This only works if the model is
+   * used in {@link EpoxyAdapter} or a {@link EpoxyModelGroup}, but is not supported in {@link
+   * EpoxyController}
+   */
   public EpoxyModel<T> show(boolean show) {
     validateMutability();
     shown = show;
     return this;
   }
 
+  /**
+   * Change the visibility of the model so that it's view is hidden. This only works if the model is
+   * used in {@link EpoxyAdapter} or a {@link EpoxyModelGroup}, but is not supported in {@link
+   * EpoxyController}
+   */
   public EpoxyModel<T> hide() {
     return show(false);
   }

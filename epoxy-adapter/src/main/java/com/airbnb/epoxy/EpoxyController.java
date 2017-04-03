@@ -47,8 +47,7 @@ public abstract class EpoxyController {
   private Timer timer = NO_OP_TIMER;
   private EpoxyDiffLogger debugObserver;
   private boolean hasBuiltModelsEver;
-  private boolean runningInterceptors;
-  private List<AfterInterceptorCallback> afterInterceptorCallbacks;
+  private List<ModelInterceptorCallback> modelInterceptorCallbacks;
 
   /**
    * Call this to request a model update. The controller will schedule a call to {@link
@@ -134,49 +133,74 @@ public abstract class EpoxyController {
    */
   protected abstract void buildModels();
 
-  int getIndexOfModelInBuildingList(EpoxyModel<?> model) {
-    return modelsBeingBuilt.indexOf(model);
+  int getFirstIndexOfModelInBuildingList(EpoxyModel<?> model) {
+    int size = modelsBeingBuilt.size();
+    for (int i = 0; i < size; i++) {
+      if (modelsBeingBuilt.get(i) == model) {
+        return i;
+      }
+    }
+
+    return -1;
   }
 
-  void addAfterInterceptorCallback(AfterInterceptorCallback callback) {
+  boolean isModelAddedMultipleTimes(EpoxyModel<?> model) {
+    int modelCount = 0;
+    int size = modelsBeingBuilt.size();
+    for (int i = 0; i < size; i++) {
+      if (modelsBeingBuilt.get(i) == model) {
+        modelCount++;
+      }
+    }
+
+    return modelCount > 1;
+  }
+
+  void addAfterInterceptorCallback(ModelInterceptorCallback callback) {
     if (!isBuildingModels()) {
       throw new IllegalEpoxyUsage("Can only call when building models");
     }
 
-    if (afterInterceptorCallbacks == null) {
-      afterInterceptorCallbacks = new ArrayList<>();
+    if (modelInterceptorCallbacks == null) {
+      modelInterceptorCallbacks = new ArrayList<>();
     }
 
-    afterInterceptorCallbacks.add(callback);
+    modelInterceptorCallbacks.add(callback);
   }
 
-  interface AfterInterceptorCallback {
-    void afterInterceptorsRun();
-  }
-
-  boolean isRunningInterceptors() {
-    return runningInterceptors;
+  /**
+   * Callbacks to each model for when interceptors are started and stopped, so the models know when
+   * to allow changes.
+   */
+  interface ModelInterceptorCallback {
+    void onInterceptorsStarted(EpoxyController controller);
+    void onInterceptorsFinished(EpoxyController controller);
   }
 
   private void runInterceptors() {
     if (!interceptors.isEmpty()) {
+      if (modelInterceptorCallbacks != null) {
+        for (ModelInterceptorCallback callback : modelInterceptorCallbacks) {
+          callback.onInterceptorsStarted(this);
+        }
+      }
+
       timer.start();
-      runningInterceptors = true;
 
       for (Interceptor interceptor : interceptors) {
         interceptor.intercept(modelsBeingBuilt);
       }
 
-      runningInterceptors = false;
       timer.stop("Interceptors executed");
-    }
 
-    if (afterInterceptorCallbacks != null) {
-      for (AfterInterceptorCallback callback : afterInterceptorCallbacks) {
-        callback.afterInterceptorsRun();
+      if (modelInterceptorCallbacks != null) {
+        for (ModelInterceptorCallback callback : modelInterceptorCallbacks) {
+          callback.onInterceptorsFinished(this);
+        }
+
+        // Interceptors are cleared so that future model builds don't notify past models
+        modelInterceptorCallbacks = null;
       }
-
-      afterInterceptorCallbacks = null;
     }
   }
 
@@ -277,7 +301,7 @@ public abstract class EpoxyController {
 
     if (!modelToAdd.isShown()) {
       throw new IllegalEpoxyUsage(
-          "You cannot hide a model in an AutoEpoxyAdapter. Use `addIf` to conditionally add a "
+          "You cannot hide a model in an EpoxyController. Use `addIf` to conditionally add a "
               + "model instead.");
     }
 

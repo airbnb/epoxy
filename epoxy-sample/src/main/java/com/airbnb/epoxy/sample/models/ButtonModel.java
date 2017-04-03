@@ -21,11 +21,6 @@ public abstract class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
   @EpoxyAttribute(DoNotHash) OnClickListener clickListener;
 
   @Override
-  public int getSpanSize(int totalSpanCount, int position, int itemCount) {
-    return totalSpanCount;
-  }
-
-  @Override
   public void bind(ButtonHolder holder) {
     holder.button.setText(text);
     holder.button.setOnClickListener(clickListener);

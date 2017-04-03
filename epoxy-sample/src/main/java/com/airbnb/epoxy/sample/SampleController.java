@@ -1,23 +1,26 @@
 package com.airbnb.epoxy.sample;
 
+import android.support.v7.widget.RecyclerView.RecycledViewPool;
+
 import com.airbnb.epoxy.AutoModel;
-import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.TypedEpoxyController;
 import com.airbnb.epoxy.sample.models.ButtonModel_;
-import com.airbnb.epoxy.sample.models.CarouselModel_;
-import com.airbnb.epoxy.sample.models.ColorModel_;
+import com.airbnb.epoxy.sample.models.CarouselModelGroup;
 import com.airbnb.epoxy.sample.models.HeaderModel_;
 
-import java.util.ArrayList;
 import java.util.List;
 
-class SampleController extends TypedEpoxyController<List<ColorData>> {
-  interface AdapterCallbacks {
-    void onAddClicked();
-    void onClearClicked();
-    void onShuffleClicked();
-    void onChangeColorsClicked();
+public class SampleController extends TypedEpoxyController<List<CarouselData>> {
+  public interface AdapterCallbacks {
+    void onAddCarouselClicked();
+    void onClearCarouselsClicked();
+    void onShuffleCarouselsClicked();
+    void onChangeAllColorsClicked();
+    void onAddColorToCarouselClicked(CarouselData carousel);
+    void onClearCarouselClicked(CarouselData carousel);
+    void onShuffleCarouselColorsClicked(CarouselData carousel);
+    void onChangeCarouselColorsClicked(CarouselData carousel);
   }
 
   @AutoModel HeaderModel_ header;
@@ -25,12 +28,13 @@ class SampleController extends TypedEpoxyController<List<ColorData>> {
   @AutoModel ButtonModel_ clearButton;
   @AutoModel ButtonModel_ shuffleButton;
   @AutoModel ButtonModel_ changeColorsButton;
-  @AutoModel CarouselModel_ carousel;
 
   private final AdapterCallbacks callbacks;
+  private final RecycledViewPool recycledViewPool;
 
-  SampleController(AdapterCallbacks callbacks) {
+  SampleController(AdapterCallbacks callbacks, RecycledViewPool recycledViewPool) {
     this.callbacks = callbacks;
+    this.recycledViewPool = recycledViewPool;
     setDebugLoggingEnabled(true);
   }
 
@@ -39,7 +43,7 @@ class SampleController extends TypedEpoxyController<List<ColorData>> {
   // TODO: (eli_hart 2/27/17) Shuffle color on click square
 
   @Override
-  protected void buildModels(List<ColorData> colors) {
+  protected void buildModels(List<CarouselData> carousels) {
     header
         .title(R.string.epoxy)
         .caption(R.string.header_subtitle)
@@ -48,32 +52,27 @@ class SampleController extends TypedEpoxyController<List<ColorData>> {
     addButton
         .text(R.string.button_add)
         .clickListener((model, parentView, clickedView, position) -> {
-          callbacks.onAddClicked();
+          callbacks.onAddCarouselClicked();
         })
         .addTo(this);
 
     clearButton
         .text(R.string.button_clear)
-        .clickListener(v -> callbacks.onClearClicked())
-        .addIf(colors.size() > 0, this);
+        .clickListener(v -> callbacks.onClearCarouselsClicked())
+        .addIf(carousels.size() > 0, this);
 
     shuffleButton
         .text(R.string.button_shuffle)
-        .clickListener(v -> callbacks.onShuffleClicked())
-        .addIf(colors.size() > 1, this);
+        .clickListener(v -> callbacks.onShuffleCarouselsClicked())
+        .addIf(carousels.size() > 1, this);
 
     changeColorsButton
         .text(R.string.button_change)
-        .clickListener(v -> callbacks.onChangeColorsClicked())
-        .addIf(colors.size() > 0, this);
+        .clickListener(v -> callbacks.onChangeAllColorsClicked())
+        .addIf(carousels.size() > 0, this);
 
-    List<EpoxyModel<?>> models = new ArrayList<>();
-    for (ColorData color : colors) {
-      models.add(new ColorModel_(color));
+    for (CarouselData carousel : carousels) {
+      add(new CarouselModelGroup(carousel, callbacks, recycledViewPool));
     }
-
-    carousel
-        .models(models)
-        .addIf(!models.isEmpty(), this);
   }
 }

@@ -8,14 +8,14 @@ import java.util.List;
  * models directly.
  */
 public class SimpleEpoxyController extends EpoxyController {
-  private List<EpoxyModel<?>> currentModels;
+  private List<? extends EpoxyModel<?>> currentModels;
   private boolean insideSetModels;
 
   /**
    * Set the models to add to this controller. Clears any previous models and adds this new list
    * .
    */
-  public void setModels(List<EpoxyModel<?>> models) {
+  public void setModels(List<? extends EpoxyModel<?>> models) {
     currentModels = models;
     insideSetModels = true;
     requestModelBuild();
