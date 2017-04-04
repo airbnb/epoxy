@@ -6,9 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.RecycledViewPool;
+import android.view.View;
 
+import com.airbnb.epoxy.OnModelClickListener;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.sample.SampleController.AdapterCallbacks;
+import com.airbnb.epoxy.sample.models.ColorModel_;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,14 +25,15 @@ import butterknife.ButterKnife;
  * Example activity usage for {@link com.airbnb.epoxy.EpoxyAdapter}. Allows you to create a list of
  * colored blocks and modify it in different ways.
  */
-public class MainActivity extends AppCompatActivity implements AdapterCallbacks {
+public class MainActivity extends AppCompatActivity implements AdapterCallbacks,
+    OnModelClickListener<ColorModel_, View> {
   private static final Random RANDOM = new Random();
   public static final int SPAN_COUNT = 2;
 
   @BindView(R.id.recycler_view) RecyclerView recyclerView;
   private final List<CarouselData> carousels = new ArrayList<>();
   private final RecycledViewPool recycledViewPool = new RecycledViewPool();
-  private final SampleController controller = new SampleController(this, recycledViewPool);
+  private final SampleController controller = new SampleController(this, this, recycledViewPool);
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +127,12 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
       colorData.setColorInt(randomColor());
     }
 
+    updateAdapter();
+  }
+
+  @Override
+  public void onClick(ColorModel_ model, View parentView, View clickedView, int position) {
+    carousels.get(model.carousel()).getColors().get(position).setColorInt(randomColor());
     updateAdapter();
   }
 
