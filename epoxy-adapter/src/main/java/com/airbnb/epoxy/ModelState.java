@@ -24,15 +24,19 @@ class ModelState {
    */
   int lastMoveOp;
 
-  static ModelState build(EpoxyModel<?> model, int position) {
+  static ModelState build(EpoxyModel<?> model, int position, boolean immutableModel) {
     ModelState state = new ModelState();
 
     state.lastMoveOp = 0;
     state.pair = null;
     state.id = model.id();
-    state.hashCode = model.hashCode();
     state.position = position;
-    state.model = model;
+
+    if (immutableModel) {
+      state.model = model;
+    } else {
+      state.hashCode = model.hashCode();
+    }
 
     return state;
   }
@@ -59,6 +63,7 @@ class ModelState {
   public String toString() {
     return "ModelState{"
         + "id=" + id
+        + ", model=" + model
         + ", hashCode=" + hashCode
         + ", position=" + position
         + ", pair=" + pair

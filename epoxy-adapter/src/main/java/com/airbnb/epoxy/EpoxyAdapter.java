@@ -66,10 +66,10 @@ public abstract class EpoxyAdapter extends BaseEpoxyAdapter {
    * previous so you don't have to micromanage notification calls yourself. This may be
    * prohibitively slow for large model lists (in the hundreds), in which case consider doing
    * notification calls yourself. If you use this, all your view models must implement {@link
-   * EpoxyModel#hashCode()} to completely identify their state, so that changes to a model's content
-   * can be detected. Before using this you must enable it with {@link #enableDiffing()}, since
-   * keeping track of the model state adds extra computation time to all other data change
-   * notifications.
+   * EpoxyModel#hashCode()} and {@link EpoxyModel#equals(Object)} to completely identify their
+   * state, so that changes to a model's content can be detected. Before using this you must enable
+   * it with {@link #enableDiffing()}, since keeping track of the model state adds extra computation
+   * time to all other data change notifications.
    *
    * @see #enableDiffing()
    */

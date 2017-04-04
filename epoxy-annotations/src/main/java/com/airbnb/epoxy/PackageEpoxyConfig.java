@@ -19,22 +19,22 @@ public @interface PackageEpoxyConfig {
   boolean REQUIRE_ABSTRACT_MODELS_DEFAULT = false;
   /**
    * If true, all fields marked with {@link com.airbnb.epoxy.EpoxyAttribute} must have a type that
-   * implements hashCode (besides the default Object implementation), or the attribute must set
-   * hash=false.
+   * implements hashCode and equals (besides the default Object implementation), or the attribute
+   * must set DoNotHash as an option.
    * <p>
    * Setting this to true is useful for ensuring that all model attributes correctly implement
-   * hashCode, or use hash=false (eg for click listeners). It is a common mistake to miss these,
-   * which leads to invalid model state and incorrect diffing.
+   * hashCode and equals, or use DoNotHash (eg for click listeners). It is a common mistake to miss
+   * these, which leads to invalid model state and incorrect diffing.
    * <p>
    * The check is done at compile time and compilation will fail if a hashCode validation fails.
    * <p>
    * Since it is done at compile time this can only check the direct type of the field. Interfaces
-   * or classes will pass the check if they either have an abstract hashCode method (since it is
-   * assumed that the object at runtime will implement it) or their class hierarchy must have an
-   * implementation of hashCode besides the default Object implementation.
+   * or classes will pass the check if they either have an abstract hashCode/equals method (since it
+   * is assumed that the object at runtime will implement it) or their class hierarchy must have an
+   * implementation of hashCode/equals besides the default Object implementation.
    * <p>
    * If an attribute is an Iterable or Array then the type of object in that collection must
-   * implement hashCode.
+   * implement hashCode/equals.
    */
   boolean requireHashCode() default REQUIRE_HASHCODE_DEFAULT;
 

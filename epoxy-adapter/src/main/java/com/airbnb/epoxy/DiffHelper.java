@@ -21,7 +21,7 @@ class DiffHelper {
   private ArrayList<ModelState> currentStateList = new ArrayList<>();
   private Map<Long, ModelState> currentStateMap = new HashMap<>();
   private final BaseEpoxyAdapter adapter;
-  private final boolean includePayloads;
+  private final boolean immutableModels;
   private final DifferModelListObserver modelListObserver = new DifferModelListObserver();
   private final boolean usingModelListObserver;
   /**
@@ -35,9 +35,9 @@ class DiffHelper {
    */
   private boolean notifiedOfStructuralChanges;
 
-  DiffHelper(BaseEpoxyAdapter adapter, boolean includePayloads) {
+  DiffHelper(BaseEpoxyAdapter adapter, boolean immutableModels) {
     this.adapter = adapter;
-    this.includePayloads = includePayloads;
+    this.immutableModels = immutableModels;
     adapter.registerAdapterDataObserver(observer);
 
     usingModelListObserver = adapter instanceof EpoxyAdapter;
@@ -217,7 +217,7 @@ class DiffHelper {
           adapter.notifyItemRangeRemoved(op.positionStart, op.itemCount);
           break;
         case UpdateOp.UPDATE:
-          if (includePayloads && op.payloads != null) {
+          if (immutableModels && op.payloads != null) {
             adapter.notifyItemRangeChanged(op.positionStart, op.itemCount,
                 new DiffPayload(op.payloads));
           } else {
@@ -290,7 +290,7 @@ class DiffHelper {
   private ModelState createStateForPosition(int position) {
     EpoxyModel<?> model = adapter.getCurrentModels().get(position);
     model.addedToAdapter = true;
-    ModelState state = ModelState.build(model, position);
+    ModelState state = ModelState.build(model, position, immutableModels);
 
     ModelState previousValue = currentStateMap.put(state.id, state);
     if (previousValue != null) {
@@ -355,12 +355,30 @@ class DiffHelper {
    */
   private void collectChanges(UpdateOpHelper helper) {
     for (ModelState newItem : currentStateList) {
-      if (newItem.pair == null) {
+      ModelState previousItem = newItem.pair;
+      if (previousItem == null) {
         continue;
       }
 
-      if (newItem.pair.hashCode != newItem.hashCode) {
-        helper.update(newItem.position, newItem.pair.model);
+      // We use equals when we know the models are immutable and available, otherwise we have to
+      // rely on the stored hashCode
+      boolean modelChanged;
+      if (immutableModels) {
+        // Make sure that the old model hasn't changed, otherwise comparing it with the new one
+        // won't be accurate.
+        if (previousItem.model.isDebugValidationEnabled()) {
+          previousItem.model
+              .validateStateHasNotChangedSinceAdded("Model was changed before it could be diffed.",
+                  previousItem.position);
+        }
+
+        modelChanged = !previousItem.model.equals(newItem.model);
+      } else {
+        modelChanged = previousItem.hashCode != newItem.hashCode;
+      }
+
+      if (modelChanged) {
+        helper.update(newItem.position, previousItem.model);
       }
     }
   }

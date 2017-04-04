@@ -21,11 +21,11 @@ import static com.airbnb.epoxy.ProcessorUtils.isIterableType;
 import static com.airbnb.epoxy.ProcessorUtils.isSubtypeOfType;
 import static com.airbnb.epoxy.ProcessorUtils.throwError;
 
-/** Validates that an attribute implements hashCode. */
+/** Validates that an attribute implements hashCode and equals. */
 class HashCodeValidator {
   /**
-   * Common types that can be assumed will have implementations at runtime that implement hashCode,
-   * but that don't have it by default.
+   * Common interfaces that can be assumed will have implementations at runtime that implement
+   * hashCode, but that don't have it by default.
    */
   private static final List<String> WHITE_LISTED_TYPES = Arrays.asList(
       "java.lang.CharSequence"
@@ -33,6 +33,11 @@ class HashCodeValidator {
 
   private static final MethodSpec HASH_CODE_METHOD = MethodSpec.methodBuilder("hashCode")
       .returns(TypeName.INT)
+      .build();
+
+  private static final MethodSpec EQUALS_METHOD = MethodSpec.methodBuilder("equals")
+      .addParameter(TypeName.OBJECT, "obj")
+      .returns(TypeName.BOOLEAN)
       .build();
 
   private final Types typeUtils;
@@ -48,9 +53,9 @@ class HashCodeValidator {
       // Append information about the attribute and class to the existing exception
       throwError(e.getMessage()
               + " (%s#%s) Epoxy requires every field annotated with "
-              + "@EpoxyAttribute to implement hashCode so that the state of the model can be "
-              + "tracked. "
-              + "If you want the attribute to be excluded from the model's hashCode, use "
+              + "@EpoxyAttribute to implement equals and hashCode so that changes in the model "
+              + "can be tracked. "
+              + "If you want the attribute to be excluded, use "
               + "@EpoxyAttribute(DoNotHash). If you want to ignore this warning use "
               + "@EpoxyAttribute(IgnoreRequireHashCode)",
           attribute.getClassElement().getSimpleName().toString(),
@@ -99,10 +104,32 @@ class HashCodeValidator {
     if (!hasHashCodeInClassHierarchy(clazz)) {
       throwError("Attribute does not implement hashCode");
     }
+
+    if (!hasEqualsInClassHierarchy(clazz)) {
+      throwError("Attribute does not implement equals");
+    }
   }
 
   private boolean hasHashCodeInClassHierarchy(TypeElement clazz) {
     ExecutableElement methodOnClass = getMethodOnClass(clazz, HASH_CODE_METHOD, typeUtils);
+    if (methodOnClass == null) {
+      return false;
+    }
+
+    Element implementingClass = methodOnClass.getEnclosingElement();
+    if (implementingClass.getSimpleName().toString().equals("Object")) {
+      // Don't count default implementation on Object class
+      return false;
+    }
+
+    // We don't care if the method is abstract or not, as long as it exists and it isn't the Object
+    // implementation then the runtime value will implement it to some degree (hopefully
+    // correctly :P)
+    return true;
+  }
+
+  private boolean hasEqualsInClassHierarchy(TypeElement clazz) {
+    ExecutableElement methodOnClass = getMethodOnClass(clazz, EQUALS_METHOD, typeUtils);
     if (methodOnClass == null) {
       return false;
     }

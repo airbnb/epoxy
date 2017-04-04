@@ -29,8 +29,9 @@ public @interface EpoxyAttribute {
      */
     NoSetter,
     /**
-     * By default every attribute's hashCode method is called when determining the model's state.
-     * This option can be used to exclude an attribute's hashCode from contributing to the state.
+     * By default every attribute's hashCode and equals method is called when determining the
+     * model's state. This option can be used to exclude an attribute's hashCode/equals from
+     * contributing to the state.
      * <p>
      * This is useful for objects that may change without actually changing the model's state. A
      * common case is an anonymous click listener that gets recreated with every bind call.
@@ -41,17 +42,17 @@ public @interface EpoxyAttribute {
     DoNotHash,
     /**
      * This is meant to be used in conjunction with {@link PackageEpoxyConfig#requireHashCode()}.
-     * When that is enabled every attribute must implement hashCode. However, there are some valid
-     * cases where the attribute type does not implement hashCode, but it should still be hashed at
-     * runtime and contribute to the model's state. Use this option on an attribute in that case to
-     * tell the processor to let it pass the hashCode validation.
+     * When that is enabled every attribute must implement hashCode/equals. However, there are some
+     * valid cases where the attribute type does not implement hashCode/equals, but it should still
+     * be hashed at runtime and contribute to the model's state. Use this option on an attribute in
+     * that case to tell the processor to let it pass the hashCode/equals validation.
      * <p>
-     * An example case is AutoValue classes, where the generated class correctly implements hashCode
-     * at runtime.
+     * An example case is AutoValue classes, where the generated class correctly implements
+     * hashCode/equals at runtime.
      * <p>
      * If you use this it is your responsibility to ensure that the object assigned to the attribute
-     * at runtime correctly implements hashCode. If you don't want the attribute to contribute to
-     * model state you should use {@link Option#DoNotHash} instead.
+     * at runtime correctly implements hashCode/equals. If you don't want the attribute to
+     * contribute to model state you should use {@link Option#DoNotHash} instead.
      */
     IgnoreRequireHashCode
   }
