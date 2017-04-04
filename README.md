@@ -33,7 +33,7 @@ dependencies {
 ```
 
 ## Documentation
-Browse complete documentation at the [Epoxy Wiki](#https://github.com/airbnb/epoxy/wiki)
+Browse complete documentation at the [Epoxy Wiki](https://github.com/airbnb/epoxy/wiki)
 
 If you still have questions, feel free to create a new issue.
 
