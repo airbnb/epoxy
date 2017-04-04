@@ -94,6 +94,18 @@ public class ConfigTest {
   }
 
   @Test
+  public void testConfigRequireEquals() {
+    JavaFileObject model =
+        forResource("ModelRequiresEqualsFailsBasicObject.java");
+
+    assert_().about(javaSources())
+        .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("Attribute does not implement equals");
+  }
+
+  @Test
   public void testConfigRequireHashCodeIterableFails() {
     JavaFileObject model =
         forResource("ModelRequiresHashCodeIterableFails.java");

@@ -142,7 +142,7 @@ public class ModelClickListenerTest {
   }
 
   @Test
-  public void modelClickListenerIsHashed() {
+  public void modelClickListenerIsDiffed() {
     // Internally we wrap the model click listener with an anonymous click listener. We can't hash
     // the anonymous click listener since that changes the model state, instead our anonymous
     // click listener should use the hashCode of the user's click listener
@@ -169,7 +169,6 @@ public class ModelClickListenerTest {
     model = new ModelWithClickListener_();
     model.clickListener(modelClickListener);
     controller.setModel(model);
-    model.clickListener(modelClickListener);
     controller.requestModelBuild();
 
     model = new ModelWithClickListener_();
@@ -182,7 +181,7 @@ public class ModelClickListenerTest {
   }
 
   @Test
-  public void viewClickListenerIsHashed() {
+  public void viewClickListenerIsDiffed() {
     TestController controller = new TestController();
 
     AdapterDataObserver observerMock = mock(AdapterDataObserver.class);

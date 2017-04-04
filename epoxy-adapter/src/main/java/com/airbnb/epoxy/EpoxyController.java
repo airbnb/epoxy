@@ -379,7 +379,7 @@ public abstract class EpoxyController {
    * <p>
    * This is useful to verify that models are being diffed as expected, as well as to watch for
    * slowdowns in model building or diffing to indicate when you should optimize model building or
-   * model hashCode implementations (which can often slow down diffing).
+   * model hashCode/equals implementations (which can often slow down diffing).
    * <p>
    * This should only be used in debug builds to avoid a performance hit in prod.
    */

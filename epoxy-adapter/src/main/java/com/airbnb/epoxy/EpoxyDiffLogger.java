@@ -9,8 +9,8 @@ import android.util.Log;
  * events. This may be useful to use in debug builds in order to observe model updates and monitor
  * for issues.
  * <p>
- * You may want to look for unexpected item updates to catch improper hashCode implementations in
- * your models.
+ * You may want to look for unexpected item updates to catch improper hashCode/equals
+ * implementations in your models.
  * <p>
  * Additionally, you may want to look for frequent or unnecessary updates as an opportunity for
  * optimization.

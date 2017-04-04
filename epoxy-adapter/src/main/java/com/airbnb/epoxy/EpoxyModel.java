@@ -362,6 +362,10 @@ public abstract class EpoxyModel<T> {
     }
   }
 
+  boolean isDebugValidationEnabled() {
+    return firstControllerAddedTo != null;
+  }
+
   /**
    * This is used internally by generated models to do validation checking when
    * "validateEpoxyModelUsage" is enabled and the model is used with an {@link EpoxyController}.
@@ -373,7 +377,7 @@ public abstract class EpoxyModel<T> {
     // The model may be added to multiple controllers, in which case if it was already diffed
     // and added to an adapter in one controller we don't want to even allow interceptors
     // from changing the model in a different controller
-    if (firstControllerAddedTo != null && !currentlyInInterceptors) {
+    if (isDebugValidationEnabled() && !currentlyInInterceptors) {
       throw new ImmutableModelException(this,
           getPosition(firstControllerAddedTo, this));
     }
@@ -401,7 +405,8 @@ public abstract class EpoxyModel<T> {
    */
   protected final void validateStateHasNotChangedSinceAdded(String descriptionOfChange,
       int modelPosition) {
-    if (firstControllerAddedTo != null && !currentlyInInterceptors
+    if (isDebugValidationEnabled()
+        && !currentlyInInterceptors
         && hashCodeWhenAdded != hashCode()) {
       throw new ImmutableModelException(this, descriptionOfChange, modelPosition);
     }

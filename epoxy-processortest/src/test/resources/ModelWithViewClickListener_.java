@@ -31,21 +31,13 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
     if (clickListener_epoxyGeneratedModel != null) {
-      super.clickListener = new View.OnClickListener() {
-              // Save the original click listener so if it gets changed on
-              // the generated model this click listener won't be affected
-              // if it is still bound to a view.
-              private final OnModelClickListener<ModelWithViewClickListener_, Object> clickListener_epoxyGeneratedModel = ModelWithViewClickListener_.this.clickListener_epoxyGeneratedModel;
-              public void onClick(View v) {
-              clickListener_epoxyGeneratedModel.onClick(ModelWithViewClickListener_.this, object, v,
-                  holder.getAdapterPosition());
-              }
-              public int hashCode() {
-                 // Use the hash of the original click listener so we don't change the
-                 // value by wrapping it with this anonymous click listener
-                 return clickListener_epoxyGeneratedModel.hashCode();
-              }
-            };
+      super.clickListener = new WrappedEpoxyModelClickListener(clickListener_epoxyGeneratedModel) {
+              @Override
+              protected void wrappedOnClick(View v, OnModelClickListener originalClickListener) {
+                 originalClickListener.onClick(com.airbnb.epoxy.ModelWithViewClickListener_.this, object, v,
+                        holder.getAdapterPosition());
+                 }
+              };
     }
   }
 
@@ -96,19 +88,17 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   public ModelWithViewClickListener_ clickListener(final OnModelClickListener<ModelWithViewClickListener_, Object> clickListener) {
     validateMutability();
     this.clickListener_epoxyGeneratedModel = clickListener;
-    super.clickListener = new View.OnClickListener() {
-            // Save the original click listener so if it gets changed on
-            // the generated model this click listener won't be affected
-            // if it is still bound to a view.
-            private final OnModelClickListener<ModelWithViewClickListener_, Object> clickListener_epoxyGeneratedModel = ModelWithViewClickListener_.this.clickListener_epoxyGeneratedModel;
-            public void onClick(View v) { }
-            
-            public int hashCode() {
-               // Use the hash of the original click listener so we don't change the
-               // value by wrapping it with this anonymous click listener
-               return clickListener_epoxyGeneratedModel.hashCode();
-            }
-          };
+    if (clickListener == null) {
+      super.clickListener = null;
+    }
+    else {
+      super.clickListener = new WrappedEpoxyModelClickListener(clickListener)  {
+                  @Override
+                  protected void wrappedOnClick(View v, OnModelClickListener originalClickListener) {
+                    
+                  }
+                };
+    }
     return this;
   }
 

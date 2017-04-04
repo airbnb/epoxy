@@ -33,7 +33,6 @@ import static com.airbnb.epoxy.ProcessorUtils.GENERATED_MODEL_INTERFACE;
 import static com.airbnb.epoxy.ProcessorUtils.MODEL_CLICK_LISTENER_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.ON_BIND_MODEL_LISTENER_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.ON_UNBIND_MODEL_LISTENER_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.VIEW_CLICK_LISTENER_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.getClassName;
 import static com.airbnb.epoxy.ProcessorUtils.getEpoxyObjectType;
 import static com.airbnb.epoxy.ProcessorUtils.implementsMethod;
@@ -230,8 +229,9 @@ class GeneratedModelWriter {
     addHashCodeValidationIfNecessary(preBindBuilder, classInfo,
         "The model was changed between being added to the controller and being bound.");
 
-    ClassName viewClickListenerType = getClassName(VIEW_CLICK_LISTENER_TYPE);
     ClassName viewType = getClassName("android.view.View");
+    ClassName clickWrapperType = getClassName(ProcessorUtils.WRAPPED_LISTENER_TYPE);
+    ClassName modelClickListenerType = getClassName(ProcessorUtils.MODEL_CLICK_LISTENER_TYPE);
     for (AttributeInfo attribute : classInfo.getAttributeInfo()) {
       if (!attribute.isViewClickListener()) {
         continue;
@@ -243,25 +243,15 @@ class GeneratedModelWriter {
       preBindBuilder.beginControlFlow("if ($L != null)", modelClickListenerField);
 
       CodeBlock clickListenerCodeBlock = CodeBlock.of(
-          "new $T() {\n"
-              + "    // Save the original click listener so if it gets changed on\n"
-              + "    // the generated model this click listener won't be affected\n"
-              + "    // if it is still bound to a view.\n"
-              + "    private final $T $L = $T.this.$L;\n"
-              + "    public void onClick($T v) {\n"
-              + "    $L.onClick($T.this, object, v,\n"
-              + "        holder.getAdapterPosition());\n"
-              + "    }\n"
-              + "    public int hashCode() {\n"
-              + "       // Use the hash of the original click listener so we don't change the\n"
-              + "       // value by wrapping it with this anonymous click listener\n"
-              + "       return $L.hashCode();\n"
-              + "    }\n"
-              + "  }",
-          viewClickListenerType, getModelClickListenerType(classInfo),
-          modelClickListenerField, classInfo.getGeneratedName(),
-          modelClickListenerField, viewType, modelClickListenerField,
-          classInfo.getGeneratedName(), modelClickListenerField);
+          "new $T($L) {\n"
+              + "    @Override\n"
+              + "    protected void wrappedOnClick($T v, $T originalClickListener) {\n"
+              + "       originalClickListener.onClick($L.this, object, v,\n"
+              + "              holder.getAdapterPosition());\n"
+              + "       }\n"
+              + "    }",
+          clickWrapperType, modelClickListenerField, viewType, modelClickListenerType,
+          classInfo.getGeneratedName());
 
       preBindBuilder
           .addStatement("super." + attribute.setterCode(), clickListenerCodeBlock)
@@ -564,9 +554,9 @@ class GeneratedModelWriter {
         .addParameter(param)
         .addAnnotations(attribute.getSetterAnnotations());
 
-    ClassName viewClickListenerType = getClassName(VIEW_CLICK_LISTENER_TYPE);
     ClassName viewType = getClassName("android.view.View");
-    String modelClickListenerField = attribute.getModelClickListenerName();
+    ClassName clickWrapperType = getClassName(ProcessorUtils.WRAPPED_LISTENER_TYPE);
+    ClassName modelClickListenerType = getClassName(ProcessorUtils.MODEL_CLICK_LISTENER_TYPE);
 
     // This creates a View.OnClickListener and sets it on the original model's click listener field.
     // This click listener has an empty onClick implementation, and will be replaced in
@@ -576,26 +566,23 @@ class GeneratedModelWriter {
     // as the future click listener, so when we create the real click listener in `handlePreBind`
     // it won't change the hashCode of the model.
     CodeBlock clickListenerCodeBlock = CodeBlock.of(
-        "new $T() {\n"
-            + "    // Save the original click listener so if it gets changed on\n"
-            + "    // the generated model this click listener won't be affected\n"
-            + "    // if it is still bound to a view.\n"
-            + "    private final $T $L = $T.this.$L;\n"
-            + "    public void onClick($T v) { }\n"
-            + "    \n"
-            + "    public int hashCode() {\n"
-            + "       // Use the hash of the original click listener so we don't change the\n"
-            + "       // value by wrapping it with this anonymous click listener\n"
-            + "       return $L.hashCode();\n"
-            + "    }\n"
-            + "  }",
-        viewClickListenerType, getModelClickListenerType(classInfo),
-        modelClickListenerField, classInfo.getGeneratedName(),
-        modelClickListenerField, viewType, modelClickListenerField);
+        "new $T($L)  {\n"
+            + "        @Override\n"
+            + "        protected void wrappedOnClick($T v, $T "
+            + "originalClickListener) {\n"
+            + "          \n"
+            + "        }\n"
+            + "      }",
+        clickWrapperType, attributeName, viewType, modelClickListenerType);
 
     addMutabilityValidationIfNecessary(builder, classInfo)
         .addStatement("this.$L = $L", attribute.getModelClickListenerName(), attributeName)
+        .beginControlFlow("if ($L == null)", attributeName)
+        .addStatement("super." + attribute.setterCode(), "null")
+        .endControlFlow()
+        .beginControlFlow("else")
         .addStatement("super." + attribute.setterCode(), clickListenerCodeBlock)
+        .endControlFlow()
         .addStatement("return this");
 
     return builder.build();

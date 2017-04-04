@@ -4,7 +4,6 @@ import android.support.annotation.ColorInt;
 import android.view.View;
 
 import com.airbnb.epoxy.EpoxyAttribute;
-import com.airbnb.epoxy.EpoxyAttribute.Option;
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.EpoxyModelClass;
 import com.airbnb.epoxy.R;
