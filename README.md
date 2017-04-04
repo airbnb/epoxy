@@ -39,7 +39,7 @@ If you still have questions, feel free to create a new issue.
 
 ## Basic Usage
 
-Create a class that extends `EpoxyController` and implement `buildModels` to specify which models to add, and in what order.  Call `EpoxyController#getAdapter()` to get the backing adapter to add to your `RecyclerView`. Call `requestModelBuild` on the controller whenever your data changes and you would like the models to be rebuilt.
+Create a class that extends `EpoxyController` and implement `buildModels` to specify which models to add, and in what order.  Call `EpoxyController#getAdapter()` to get the backing adapter to add to your `RecyclerView`. Call `setData` on the controller whenever your data changes and you would like the models to be rebuilt.
 
 Create `EpoxyModels` to specify how your data is bound to views. Epoxy will handle inflating your views and binding them to your models.
 
@@ -61,7 +61,7 @@ public class PhotoController extends Typed2EpoxyController<List<Photo>, Boolean>
       }
 
       loaderModel
-          .addIf(loadingMore);
+          .addIf(loadingMore, this);
     }
   }
 ```
