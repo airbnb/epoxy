@@ -1,12 +1,15 @@
 package com.airbnb.epoxy.sample;
 
 import android.support.v7.widget.RecyclerView.RecycledViewPool;
+import android.view.View;
 
 import com.airbnb.epoxy.AutoModel;
+import com.airbnb.epoxy.OnModelClickListener;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.TypedEpoxyController;
 import com.airbnb.epoxy.sample.models.ButtonModel_;
 import com.airbnb.epoxy.sample.models.CarouselModelGroup;
+import com.airbnb.epoxy.sample.models.ColorModel_;
 import com.airbnb.epoxy.sample.models.HeaderModel_;
 
 import java.util.List;
@@ -30,10 +33,14 @@ public class SampleController extends TypedEpoxyController<List<CarouselData>> {
   @AutoModel ButtonModel_ changeColorsButton;
 
   private final AdapterCallbacks callbacks;
+  private final OnModelClickListener<ColorModel_, View> colorClickListener;
   private final RecycledViewPool recycledViewPool;
 
-  SampleController(AdapterCallbacks callbacks, RecycledViewPool recycledViewPool) {
+  SampleController(AdapterCallbacks callbacks,
+      OnModelClickListener<ColorModel_, View> colorClickListener,
+      RecycledViewPool recycledViewPool) {
     this.callbacks = callbacks;
+    this.colorClickListener = colorClickListener;
     this.recycledViewPool = recycledViewPool;
     setDebugLoggingEnabled(true);
   }
@@ -71,8 +78,9 @@ public class SampleController extends TypedEpoxyController<List<CarouselData>> {
         .clickListener(v -> callbacks.onChangeAllColorsClicked())
         .addIf(carousels.size() > 0, this);
 
-    for (CarouselData carousel : carousels) {
-      add(new CarouselModelGroup(carousel, callbacks, recycledViewPool));
+    for (int i = 0; i < carousels.size(); i++) {
+      CarouselData carousel = carousels.get(i);
+      add(new CarouselModelGroup(carousel, i, callbacks, colorClickListener, recycledViewPool));
     }
   }
 }
