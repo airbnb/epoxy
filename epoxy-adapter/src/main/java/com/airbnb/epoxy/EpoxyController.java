@@ -57,7 +57,7 @@ public abstract class EpoxyController {
    */
   public void requestModelBuild() {
     if (isBuildingModels()) {
-      throw new IllegalEpoxyUsage("Cannot call `requestBuildModels` from inside `buildModels`");
+      throw new IllegalEpoxyUsage("Cannot call `requestModelBuild` from inside `buildModels`");
     }
 
     // If it is the first time building models then we do it right away, otherwise we post the call.
@@ -66,11 +66,39 @@ public abstract class EpoxyController {
     // so that they are debounced, and so any updates to data can be completely finished before
     // the models are built.
     if (hasBuiltModelsEver) {
-      cancelPendingModelBuild();
-      handler.post(buildModelsRunnable);
+      requestDelayedModelBuild(0);
     } else {
+      cancelPendingModelBuild();
       dispatchModelBuild();
     }
+  }
+
+  /**
+   * Call this to request a delayed model update. The controller will schedule a call to {@link
+   * #buildModels()} so that models can be rebuilt for the current data.
+   * <p>
+   * Using this to delay a model update may be helpful in cases where user input is causing many
+   * rapid changes in the models, such as typing. In that case, the view is already updated on
+   * screen and constantly rebuilding models is potentially slow and unnecessary. The downside to
+   * delaying the model build too long is that models will not be in sync with the data or view, and
+   * scrolling the view offscreen and back onscreen will cause the model to bind old data.
+   * <p>
+   * This will cancel any currently queued request to build models.
+   * <p>
+   * In most cases you should use {@link #requestModelBuild()} instead of this.
+   *
+   * @param delayMs The time in milliseconds to delay the model build by. Should be greater than or
+   *                equal to 0. Even if a delay of 0 is given the model build will be posted to the
+   *                next frame.
+   */
+  public void requestDelayedModelBuild(int delayMs) {
+    if (isBuildingModels()) {
+      throw new IllegalEpoxyUsage(
+          "Cannot call `requestDelayedModelBuild` from inside `buildModels`");
+    }
+
+    cancelPendingModelBuild();
+    handler.postDelayed(buildModelsRunnable, delayMs);
   }
 
   /**
