@@ -1,7 +1,6 @@
 package com.airbnb.epoxy.sample.models;
 
 import android.support.v7.widget.RecyclerView.RecycledViewPool;
-import android.view.View;
 
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.EpoxyModelGroup;
@@ -10,13 +9,14 @@ import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.sample.CarouselData;
 import com.airbnb.epoxy.sample.ColorData;
 import com.airbnb.epoxy.sample.SampleController.AdapterCallbacks;
+import com.airbnb.epoxy.sample.models.ColorModel.ColorHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CarouselModelGroup extends EpoxyModelGroup {
   public CarouselModelGroup(CarouselData carousel, int carouselIndex, AdapterCallbacks callbacks,
-      OnModelClickListener<ColorModel_, View> colorClickListener,
+      OnModelClickListener<ColorModel_, ColorHolder> colorClickListener,
       RecycledViewPool recycledViewPool) {
     super(R.layout.model_carousel_group, buildModels(carousel, carouselIndex, callbacks,
         colorClickListener, recycledViewPool));
@@ -24,12 +24,12 @@ public class CarouselModelGroup extends EpoxyModelGroup {
   }
 
   private static List<EpoxyModel> buildModels(CarouselData carousel, int carouselIndex,
-      AdapterCallbacks callbacks, OnModelClickListener<ColorModel_, View> colorClickListener,
+      AdapterCallbacks callbacks, OnModelClickListener<ColorModel_, ColorHolder> colorClickListener,
       RecycledViewPool recycledViewPool) {
     List<ColorData> colors = carousel.getColors();
     ArrayList<EpoxyModel> models = new ArrayList<>();
 
-    models.add(new ImageButtonModel_() {}
+    models.add(new ImageButtonModel_()
         .imageRes(R.drawable.ic_add_circle)
         .clickListener(v -> callbacks.onAddColorToCarouselClicked(carousel)));
 
@@ -54,6 +54,7 @@ public class CarouselModelGroup extends EpoxyModelGroup {
           .id(colorData.getId(), carousel.getId())
           .color(colorData.getColorInt())
           .carousel(carouselIndex)
+          .playAnimation(colorData.shouldPlayAnimation())
           .clickListener(colorClickListener));
     }
 

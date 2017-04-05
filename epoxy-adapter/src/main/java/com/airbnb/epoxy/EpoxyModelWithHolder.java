@@ -29,6 +29,11 @@ public abstract class EpoxyModelWithHolder<T extends EpoxyHolder> extends EpoxyM
   }
 
   @Override
+  public void bind(T holder, EpoxyModel<?> previouslyBoundModel) {
+    super.bind(holder, previouslyBoundModel);
+  }
+
+  @Override
   public void unbind(T holder) {
     super.unbind(holder);
   }

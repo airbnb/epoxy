@@ -59,6 +59,7 @@ dependencies {
   annotationProcessor rootProject.deps.butterknifeCompiler
 
   compile rootProject.deps.androidCardView
+  compile rootProject.deps.lottie
 
   testCompile rootProject.deps.junit
 }

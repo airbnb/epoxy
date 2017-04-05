@@ -26,6 +26,8 @@ rootProject.ext.JUNIT_VERSION = "4.12"
 rootProject.ext.MOCKITO_VERSION = "2.7.7"
 rootProject.ext.ROBOLECTRIC_VERSION = "3.3.1"
 
+rootProject.ext.LOTTIE_VERSION = "2.0.0-beta3"
+
 rootProject.ext.deps = [
     androidSupportLibrary: "com.android.support:appcompat-v7:$ANDROID_SUPPORT_LIBS_VERSION",
     androidCardView      : "com.android.support:cardview-v7:$ANDROID_SUPPORT_LIBS_VERSION",
@@ -40,5 +42,6 @@ rootProject.ext.deps = [
     googleTestingCompile : "com.google.testing.compile:compile-testing:$GOOGLE_TESTING_COMPILE_VERSION",
     junit                : "junit:junit:$JUNIT_VERSION",
     mockito              : "org.mockito:mockito-core:$MOCKITO_VERSION",
-    robolectric          : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION"
+    robolectric          : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION",
+    lottie               : "com.airbnb.android:lottie:$LOTTIE_VERSION"
 ]

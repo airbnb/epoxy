@@ -12,6 +12,7 @@ import android.view.View;
 import com.airbnb.epoxy.OnModelClickListener;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.sample.SampleController.AdapterCallbacks;
+import com.airbnb.epoxy.sample.models.ColorModel.ColorHolder;
 import com.airbnb.epoxy.sample.models.ColorModel_;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import butterknife.ButterKnife;
  * colored blocks and modify it in different ways.
  */
 public class MainActivity extends AppCompatActivity implements AdapterCallbacks,
-    OnModelClickListener<ColorModel_, View> {
+    OnModelClickListener<ColorModel_, ColorHolder> {
   private static final Random RANDOM = new Random();
   private static final String CAROUSEL_DATA_KEY = "carousel_data_key";
   public static final int SPAN_COUNT = 2;
@@ -150,10 +151,11 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks,
   }
 
   @Override
-  public void onClick(ColorModel_ model, View parentView, View clickedView, int position) {
+  public void onClick(ColorModel_ model, ColorHolder parentView, View clickedView, int position) {
     // This is used as an example of a model click listener, to get the model, view, and position
     // that was clicked.
-    carousels.get(model.carousel()).getColors().get(position).setColorInt(randomColor());
+    ColorData colorData = carousels.get(model.carousel()).getColors().get(position);
+    colorData.setPlayAnimation(!colorData.shouldPlayAnimation());
     updateAdapter();
   }
 
