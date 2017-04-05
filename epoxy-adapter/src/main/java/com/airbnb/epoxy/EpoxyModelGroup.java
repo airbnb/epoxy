@@ -235,6 +235,8 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
         View modelView = model.buildView(groupView);
         LayoutParams modelLayoutParams = modelView.getLayoutParams();
         ViewGroup.LayoutParams viewStubLayoutParams = stubData.viewStub.getLayoutParams();
+        // Carry over the stub id manually since we aren't actually inflating it
+        modelView.setId(stubData.viewStub.getInflatedId());
 
         // Use layout params off the view created by the model if they exist.
         // Otherwise we fallback to any layout params on the view stub.

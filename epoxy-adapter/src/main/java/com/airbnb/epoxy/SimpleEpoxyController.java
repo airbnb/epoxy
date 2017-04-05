@@ -1,6 +1,5 @@
 package com.airbnb.epoxy;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,11 +19,6 @@ public class SimpleEpoxyController extends EpoxyController {
     insideSetModels = true;
     requestModelBuild();
     insideSetModels = false;
-  }
-
-  public void clearModels() {
-    //noinspection unchecked
-    setModels(Collections.EMPTY_LIST);
   }
 
   @Override

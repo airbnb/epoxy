@@ -53,12 +53,12 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
 
   @Override
   public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-    epoxyController.onAttachedToRecyclerView(recyclerView);
+    epoxyController.onAttachedToRecyclerViewInternal(recyclerView);
   }
 
   @Override
   public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-    epoxyController.onDetachedFromRecyclerView(recyclerView);
+    epoxyController.onDetachedFromRecyclerViewInternal(recyclerView);
   }
 
   @Override

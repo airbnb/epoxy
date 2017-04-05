@@ -27,4 +27,10 @@ public abstract class ColorModel extends EpoxyModel<View> {
     view.setBackgroundColor(color);
     view.setOnClickListener(clickListener);
   }
+
+  @Override
+  public void unbind(View view) {
+    // Don't leak the click listener when this view goes back in the view pool
+    view.setOnClickListener(null);
+  }
 }

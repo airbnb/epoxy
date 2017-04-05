@@ -83,4 +83,11 @@ public class SampleController extends TypedEpoxyController<List<CarouselData>> {
       add(new CarouselModelGroup(carousel, i, callbacks, colorClickListener, recycledViewPool));
     }
   }
+
+  @Override
+  protected void onExceptionSwallowed(RuntimeException exception) {
+    // Best practice is to throw in debug so you are aware of any issues that Epoxy notices.
+    // Otherwise Epoxy does its best to swallow these exceptions and continue gracefully
+    throw exception;
+  }
 }
