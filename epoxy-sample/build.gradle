@@ -30,6 +30,7 @@ android {
     applicationId "com.airbnb.android.epoxysample"
     minSdkVersion rootProject.MIN_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
+    vectorDrawables.useSupportLibrary = true
     versionCode 1
     versionName "1.0"
   }

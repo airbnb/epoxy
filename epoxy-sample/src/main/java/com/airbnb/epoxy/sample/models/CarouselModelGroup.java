@@ -29,24 +29,24 @@ public class CarouselModelGroup extends EpoxyModelGroup {
     List<ColorData> colors = carousel.getColors();
     ArrayList<EpoxyModel> models = new ArrayList<>();
 
-    models.add(new ButtonModel_()
-        .text(R.string.button_add)
+    models.add(new ImageButtonModel_() {}
+        .imageRes(R.drawable.ic_add_circle)
         .clickListener(v -> callbacks.onAddColorToCarouselClicked(carousel)));
 
-    models.add(new ButtonModel_()
-        .text(R.string.button_change)
+    models.add(new ImageButtonModel_()
+        .imageRes(R.drawable.ic_delete)
+        .clickListener(v -> callbacks.onClearCarouselClicked(carousel))
+        .show(colors.size() > 0));
+
+    models.add(new ImageButtonModel_()
+        .imageRes(R.drawable.ic_change)
         .clickListener(v -> callbacks.onChangeCarouselColorsClicked(carousel))
         .show(colors.size() > 0));
 
-    models.add(new ButtonModel_()
-        .text(R.string.button_shuffle)
+    models.add(new ImageButtonModel_()
+        .imageRes(R.drawable.ic_shuffle)
         .clickListener(v -> callbacks.onShuffleCarouselColorsClicked(carousel))
         .show(colors.size() > 1));
-
-    models.add(new ButtonModel_()
-        .text(R.string.button_clear)
-        .clickListener(v -> callbacks.onClearCarouselClicked(carousel))
-        .show(colors.size() > 0));
 
     List<ColorModel_> colorModels = new ArrayList<>();
     for (ColorData colorData : colors) {
