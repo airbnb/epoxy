@@ -2,6 +2,7 @@ package com.airbnb.epoxy.sample;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,12 +29,13 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements AdapterCallbacks,
     OnModelClickListener<ColorModel_, View> {
   private static final Random RANDOM = new Random();
+  private static final String CAROUSEL_DATA_KEY = "carousel_data_key";
   public static final int SPAN_COUNT = 2;
 
   @BindView(R.id.recycler_view) RecyclerView recyclerView;
-  private final List<CarouselData> carousels = new ArrayList<>();
+  private List<CarouselData> carousels = new ArrayList<>();
   private final RecycledViewPool recycledViewPool = new RecycledViewPool();
-  private final SampleController controller = new SampleController(this, this, recycledViewPool);
+  private SampleController controller = new SampleController(this, this, recycledViewPool);
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +62,24 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks,
     recyclerView.setItemAnimator(new SampleItemAnimator());
     recyclerView.setAdapter(controller.getAdapter());
 
+    if (savedInstanceState != null) {
+      carousels = savedInstanceState.getParcelableArrayList(CAROUSEL_DATA_KEY);
+    }
+
     updateAdapter();
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle state) {
+    super.onSaveInstanceState(state);
+    state.putParcelableArrayList(CAROUSEL_DATA_KEY, (ArrayList<? extends Parcelable>) carousels);
+    controller.onSaveInstanceState(state);
+  }
+
+  @Override
+  protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+    controller.onRestoreInstanceState(savedInstanceState);
   }
 
   private void updateAdapter() {
