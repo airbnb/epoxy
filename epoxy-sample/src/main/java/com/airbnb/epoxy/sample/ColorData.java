@@ -5,12 +5,17 @@ import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 
 public class ColorData implements Parcelable {
-  @ColorInt private int colorInt;
   private final long id;
+  @ColorInt private int colorInt;
+  private boolean playAnimation;
 
   public ColorData(int colorInt, long id) {
     this.colorInt = colorInt;
     this.id = id;
+  }
+
+  public long getId() {
+    return id;
   }
 
   @ColorInt
@@ -22,8 +27,12 @@ public class ColorData implements Parcelable {
     this.colorInt = colorInt;
   }
 
-  public long getId() {
-    return id;
+  public void setPlayAnimation(boolean playAnimation) {
+    this.playAnimation = playAnimation;
+  }
+
+  public boolean shouldPlayAnimation() {
+    return playAnimation;
   }
 
   @Override

@@ -12,6 +12,7 @@ import android.view.View;
 import com.airbnb.epoxy.OnModelClickListener;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.sample.SampleController.AdapterCallbacks;
+import com.airbnb.epoxy.sample.models.ColorModel.ColorHolder;
 import com.airbnb.epoxy.sample.models.ColorModel_;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import butterknife.ButterKnife;
  * colored blocks and modify it in different ways.
  */
 public class MainActivity extends AppCompatActivity implements AdapterCallbacks,
-    OnModelClickListener<ColorModel_, View> {
+    OnModelClickListener<ColorModel_, ColorHolder> {
   private static final Random RANDOM = new Random();
   private static final String CAROUSEL_DATA_KEY = "carousel_data_key";
   public static final int SPAN_COUNT = 2;
@@ -43,10 +44,10 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks,
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
 
-    // Many color models are shown on screen at once. The default recycled view pool size is
-    // only 5, so we manually set the pool size to avoid constantly creating new views when
-    // the colors are randomized
-    recycledViewPool.setMaxRecycledViews(R.layout.model_color, 50);
+    // Many carousels and color models are shown on screen at once. The default recycled view
+    // pool size is only 5, so we manually set the pool size to avoid constantly creating new views
+    recycledViewPool.setMaxRecycledViews(R.layout.model_color, Integer.MAX_VALUE);
+    recycledViewPool.setMaxRecycledViews(R.layout.model_carousel_group, Integer.MAX_VALUE);
     recyclerView.setRecycledViewPool(recycledViewPool);
 
     // We are using a multi span grid to allow two columns of buttons. To set this up we need
@@ -150,8 +151,11 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks,
   }
 
   @Override
-  public void onClick(ColorModel_ model, View parentView, View clickedView, int position) {
-    carousels.get(model.carousel()).getColors().get(position).setColorInt(randomColor());
+  public void onClick(ColorModel_ model, ColorHolder parentView, View clickedView, int position) {
+    // This is used as an example of a model click listener, to get the model, view, and position
+    // that was clicked.
+    ColorData colorData = carousels.get(model.carousel()).getColors().get(position);
+    colorData.setPlayAnimation(!colorData.shouldPlayAnimation());
     updateAdapter();
   }
 

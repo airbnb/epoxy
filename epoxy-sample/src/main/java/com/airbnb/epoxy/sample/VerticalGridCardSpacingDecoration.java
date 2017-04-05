@@ -31,6 +31,11 @@ public class VerticalGridCardSpacingDecoration extends ItemDecoration {
     }
 
     int position = parent.getChildAdapterPosition(view);
+    if (position == RecyclerView.NO_POSITION) {
+      // View is not shown
+      return;
+    }
+
     final GridLayoutManager layoutManager = (GridLayoutManager) parent.getLayoutManager();
     final SpanSizeLookup spanSizeLookup = layoutManager.getSpanSizeLookup();
 

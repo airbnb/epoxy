@@ -5,33 +5,38 @@
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:animateLayoutChanges="true">
 
         <!-- Button view stubs -->
         <ViewStub
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left" />
 
         <ViewStub
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right" />
 
         <ViewStub
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left" />
 
         <ViewStub
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right" />
 
-    </LinearLayout>
+    </FrameLayout>
 
+    <!-- We must set an inflatedId so this view can have its state saved (eg scroll position) -->
     <ViewStub
-        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="120dp" />
+        android:layout_height="120dp"
+        android:inflatedId="@+id/recycler_view" />
 
 </LinearLayout>

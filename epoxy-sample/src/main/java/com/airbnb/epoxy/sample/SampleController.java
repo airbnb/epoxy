@@ -1,7 +1,6 @@
 package com.airbnb.epoxy.sample;
 
 import android.support.v7.widget.RecyclerView.RecycledViewPool;
-import android.view.View;
 
 import com.airbnb.epoxy.AutoModel;
 import com.airbnb.epoxy.OnModelClickListener;
@@ -9,6 +8,7 @@ import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.TypedEpoxyController;
 import com.airbnb.epoxy.sample.models.ButtonModel_;
 import com.airbnb.epoxy.sample.models.CarouselModelGroup;
+import com.airbnb.epoxy.sample.models.ColorModel.ColorHolder;
 import com.airbnb.epoxy.sample.models.ColorModel_;
 import com.airbnb.epoxy.sample.models.HeaderModel_;
 
@@ -33,11 +33,11 @@ public class SampleController extends TypedEpoxyController<List<CarouselData>> {
   @AutoModel ButtonModel_ changeColorsButton;
 
   private final AdapterCallbacks callbacks;
-  private final OnModelClickListener<ColorModel_, View> colorClickListener;
+  private final OnModelClickListener<ColorModel_, ColorHolder> colorClickListener;
   private final RecycledViewPool recycledViewPool;
 
   SampleController(AdapterCallbacks callbacks,
-      OnModelClickListener<ColorModel_, View> colorClickListener,
+      OnModelClickListener<ColorModel_, ColorHolder> colorClickListener,
       RecycledViewPool recycledViewPool) {
     this.callbacks = callbacks;
     this.colorClickListener = colorClickListener;
@@ -82,5 +82,12 @@ public class SampleController extends TypedEpoxyController<List<CarouselData>> {
       CarouselData carousel = carousels.get(i);
       add(new CarouselModelGroup(carousel, i, callbacks, colorClickListener, recycledViewPool));
     }
+  }
+
+  @Override
+  protected void onExceptionSwallowed(RuntimeException exception) {
+    // Best practice is to throw in debug so you are aware of any issues that Epoxy notices.
+    // Otherwise Epoxy does its best to swallow these exceptions and continue gracefully
+    throw exception;
   }
 }

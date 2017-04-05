@@ -48,6 +48,7 @@ public abstract class EpoxyController {
   private EpoxyDiffLogger debugObserver;
   private boolean hasBuiltModelsEver;
   private List<ModelInterceptorCallback> modelInterceptorCallbacks;
+  private int recyclerViewAttachCount = 0;
 
   /**
    * Call this to request a model update. The controller will schedule a call to {@link
@@ -139,11 +140,8 @@ public abstract class EpoxyController {
 
   /** An estimate for how many models will be built in the next {@link #buildModels()} phase. */
   private int getExpectedModelCount() {
-    if (hasBuiltModelsEver) {
-      return adapter.getItemCount();
-    }
-
-    return 25;
+    int currentModelCount = adapter.getItemCount();
+    return currentModelCount != 0 ? currentModelCount : 25;
   }
 
   /**
@@ -478,6 +476,26 @@ public abstract class EpoxyController {
    * will recover, but you can override this to be aware of when they happen.
    */
   protected void onExceptionSwallowed(RuntimeException exception) {
+  }
+
+  void onAttachedToRecyclerViewInternal(RecyclerView recyclerView) {
+    recyclerViewAttachCount++;
+    if (recyclerViewAttachCount > 1) {
+      onExceptionSwallowed(new IllegalStateException(
+          "Epoxy does not support attaching an adapter to more than one RecyclerView because "
+              + "saved state will not work properly. If you did not intend to attach your adapter "
+              + "to multiple RecyclerViews you may be leaking a "
+              + "reference to a previous RecyclerView. Make sure to remove the adapter from any "
+              + "previous RecyclerViews (eg if the adapter is reused in a Fragment across "
+              + "multiple onCreateView/onDestroyView cycles). See https://github"
+              + ".com/airbnb/epoxy/wiki/Avoiding-Memory-Leaks for more information."));
+    }
+    onAttachedToRecyclerView(recyclerView);
+  }
+
+  void onDetachedFromRecyclerViewInternal(RecyclerView recyclerView) {
+    recyclerViewAttachCount--;
+    onDetachedFromRecyclerView(recyclerView);
   }
 
   /** Called when the controller's adapter is attach to a recyclerview. */

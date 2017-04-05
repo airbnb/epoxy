@@ -26,6 +26,11 @@ public abstract class ButtonModel extends EpoxyModelWithHolder<ButtonHolder> {
     holder.button.setOnClickListener(clickListener);
   }
 
+  @Override
+  public void unbind(ButtonHolder holder) {
+    holder.button.setOnClickListener(null);
+  }
+
   public static class ButtonHolder extends BaseEpoxyHolder {
     @BindView(R.id.button) Button button;
   }
