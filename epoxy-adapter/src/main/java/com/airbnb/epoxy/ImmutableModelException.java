@@ -7,7 +7,9 @@ import android.support.annotation.NonNull;
  */
 class ImmutableModelException extends RuntimeException {
   private static final String MODEL_CANNOT_BE_CHANGED_MESSAGE =
-      "A model cannot be changed once it is added to a controller. The only exception is if "
+      "Epoxy attribute fields on a model cannot be changed once the model is added to a "
+          + "controller. Check that these fields are not updated, or that the assigned objects "
+          + "are not mutated, outside of the buildModels method. The only exception is if "
           + "the change is made inside an Interceptor callback. Consider using an interceptor"
           + " if you need to change a model after it is added to the controller and before it"
           + " is set on the adapter. If the model is already set on the adapter then you must"
