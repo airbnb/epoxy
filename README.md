@@ -28,7 +28,7 @@ dependencies {
 ```
 
 ## Documentation
-Seem examples and browse complete documentation at the [Epoxy Wiki](https://github.com/airbnb/epoxy/wiki)
+See examples and browse complete documentation at the [Epoxy Wiki](https://github.com/airbnb/epoxy/wiki)
 
 If you still have questions, feel free to create a new issue.
 
