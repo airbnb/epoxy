@@ -37,6 +37,16 @@ public abstract class TypedEpoxyController<T> extends EpoxyController {
     super.requestModelBuild();
   }
 
+  @Override
+  public void requestDelayedModelBuild(int delayMs) {
+    if (!insideSetData) {
+      throw new IllegalStateException(
+          "You cannot call `requestModelBuild` directly. Call `setData` instead to trigger a "
+              + "model refresh with new data.");
+    }
+    super.requestDelayedModelBuild(delayMs);
+  }
+
   @Nullable
   public final T getCurrentData() {
     return currentData;

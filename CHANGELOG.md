@@ -1,6 +1,7 @@
 # 2.0.0 (March 25, 2017)
 
 * **New**: The `EpoxyController` class helps you manage even models better. This should be used instead of the original `EpoxyAdapter` in most places. Read more about `EpoxyController` in the wiki.
+* **Change**: In the new EpoxyController, the diffing algorithm uses both `equals` and `hashCode` on each model to check for changes. This is a change from the EpoxyAdapter where only `hashCode` was used. Generated models have both hashCode and equals implemented properly already, but if you have any custom hashCode implementations in your models make sure you have equals implemented as well.
 * **New**: Models that have a `View.OnClickListener` as an EpoxyAttribute will now have an overloaded setter on the generated model that allows you to set a click listener that will return the model, view, and adapter position. **Upgrade Note** If you were setting a click listener value to null anywhere you will need to now cast that to `View.OnClickListener` because of the new overloaded method.
 * **New**: Attach an onBind/onUnbind listener directly to a model instead of overriding the onModelBound method. Generated models will have methods created to set this listener and handle the callback for you.
 * **New**: Support for creating models in Kotlin (Thanks to @geralt-encore! https://github.com/airbnb/epoxy/pull/144)
