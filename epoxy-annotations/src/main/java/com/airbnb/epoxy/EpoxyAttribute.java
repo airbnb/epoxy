@@ -38,6 +38,10 @@ public @interface EpoxyAttribute {
      * <p>
      * When this is used, the attribute will affect the model state solely based on whether it is
      * null or non null.
+     * <p>
+     * A good rule of thumb for whether to use this on an attribute is, "If this is the only
+     * attribute that changed do I still need to rebind and update the view?" If the answer if no
+     * then you can use this to prevent the rebind.
      */
     DoNotHash,
     /**

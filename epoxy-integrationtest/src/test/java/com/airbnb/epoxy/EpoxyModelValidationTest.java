@@ -152,7 +152,7 @@ public class EpoxyModelValidationTest {
   @Test
   public void mutationNotAllowedAfterModelIsAdded_reset() {
     thrown.expect(ImmutableModelException.class);
-    thrown.expectMessage("A model cannot be changed");
+    thrown.expectMessage("Epoxy attribute fields on a model cannot be changed");
 
     final Model model = new Model_().id(1);
     EpoxyController controller = new EpoxyController() {
@@ -171,7 +171,7 @@ public class EpoxyModelValidationTest {
   @Test
   public void mutationNotAllowedAfterModelIsAdded_bindListener() {
     thrown.expect(ImmutableModelException.class);
-    thrown.expectMessage("A model cannot be changed");
+    thrown.expectMessage("Epoxy attribute fields on a model cannot be changed");
 
     final Model_ model = new Model_().id(1);
     EpoxyController controller = new EpoxyController() {
@@ -190,7 +190,7 @@ public class EpoxyModelValidationTest {
   @Test
   public void mutationNotAllowedAfterModelIsAdded_unbindListener() {
     thrown.expect(ImmutableModelException.class);
-    thrown.expectMessage("A model cannot be changed");
+    thrown.expectMessage("Epoxy attribute fields on a model cannot be changed");
 
     final Model_ model = new Model_().id(1);
     EpoxyController controller = new EpoxyController() {
@@ -209,7 +209,7 @@ public class EpoxyModelValidationTest {
   @Test
   public void mutationNotAllowedAfterModelIsAdded_setter() {
     thrown.expect(ImmutableModelException.class);
-    thrown.expectMessage("A model cannot be changed");
+    thrown.expectMessage("Epoxy attribute fields on a model cannot be changed");
 
     final Model_ model = new Model_().id(1);
     EpoxyController controller = new EpoxyController() {
@@ -228,7 +228,7 @@ public class EpoxyModelValidationTest {
   @Test
   public void mutationNotAllowedAfterModelIsAdded_layout() {
     thrown.expect(ImmutableModelException.class);
-    thrown.expectMessage("A model cannot be changed");
+    thrown.expectMessage("Epoxy attribute fields on a model cannot be changed");
 
     final Model model = new Model_().id(1);
     EpoxyController controller = new EpoxyController() {
@@ -247,7 +247,7 @@ public class EpoxyModelValidationTest {
   @Test
   public void mutationNotAllowedAfterModelIsAdded_hide() {
     thrown.expect(ImmutableModelException.class);
-    thrown.expectMessage("A model cannot be changed");
+    thrown.expectMessage("Epoxy attribute fields on a model cannot be changed");
 
     final Model model = new Model_().id(1);
     EpoxyController controller = new EpoxyController() {
@@ -287,7 +287,7 @@ public class EpoxyModelValidationTest {
   @Test
   public void hashChangeThrows_beforeBind() {
     thrown.expect(ImmutableModelException.class);
-    thrown.expectMessage("A model cannot be changed");
+    thrown.expectMessage("Epoxy attribute fields on a model cannot be changed");
 
     final Model model = new Model_().id(1);
     EpoxyController controller = new EpoxyController() {
@@ -321,7 +321,7 @@ public class EpoxyModelValidationTest {
   @Test
   public void hashChangeThrows_duringBind() {
     thrown.expect(ImmutableModelException.class);
-    thrown.expectMessage("A model cannot be changed");
+    thrown.expectMessage("Epoxy attribute fields on a model cannot be changed");
 
     final EpoxyModelValidationTest$ModelChangesDuringBind_ model =
         new EpoxyModelValidationTest$ModelChangesDuringBind_().id(1);
@@ -340,7 +340,7 @@ public class EpoxyModelValidationTest {
   public void hashChangeThrows_beforeNextModelBuild() {
     // This only works for controllers with AutoModels since only those have generated helpers
     thrown.expect(ImmutableModelException.class);
-    thrown.expectMessage("A model cannot be changed");
+    thrown.expectMessage("Epoxy attribute fields on a model cannot be changed");
 
     ControllerWithAutoModel controller = new ControllerWithAutoModel();
 

@@ -23,11 +23,11 @@ public class CarouselModelGroup extends EpoxyModelGroup {
     id(carousel.getId());
   }
 
-  private static List<EpoxyModel> buildModels(CarouselData carousel, int carouselIndex,
+  private static List<EpoxyModel<?>> buildModels(CarouselData carousel, int carouselIndex,
       AdapterCallbacks callbacks, OnModelClickListener<ColorModel_, ColorHolder> colorClickListener,
       RecycledViewPool recycledViewPool) {
     List<ColorData> colors = carousel.getColors();
-    ArrayList<EpoxyModel> models = new ArrayList<>();
+    ArrayList<EpoxyModel<?>> models = new ArrayList<>();
 
     models.add(new ImageButtonModel_()
         .imageRes(R.drawable.ic_add_circle)
