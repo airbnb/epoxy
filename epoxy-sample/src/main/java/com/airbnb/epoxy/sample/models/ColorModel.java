@@ -25,7 +25,6 @@ import static com.airbnb.epoxy.EpoxyAttribute.Option.DoNotHash;
 @EpoxyModelClass(layout = R.layout.model_color)
 public abstract class ColorModel extends EpoxyModelWithHolder<ColorHolder> {
   @EpoxyAttribute @ColorInt int color;
-  @EpoxyAttribute int carousel;
   @EpoxyAttribute boolean playAnimation;
   @EpoxyAttribute(DoNotHash) View.OnClickListener clickListener;
 

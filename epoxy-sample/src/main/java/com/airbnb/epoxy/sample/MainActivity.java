@@ -7,47 +7,38 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.RecycledViewPool;
-import android.view.View;
 
-import com.airbnb.epoxy.OnModelClickListener;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.sample.SampleController.AdapterCallbacks;
-import com.airbnb.epoxy.sample.models.ColorModel.ColorHolder;
-import com.airbnb.epoxy.sample.models.ColorModel_;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
- * Example activity usage for {@link com.airbnb.epoxy.EpoxyAdapter}. Allows you to create a list of
- * colored blocks and modify it in different ways.
+ * Example activity usage for {@link com.airbnb.epoxy.EpoxyController}.
  */
-public class MainActivity extends AppCompatActivity implements AdapterCallbacks,
-    OnModelClickListener<ColorModel_, ColorHolder> {
+public class MainActivity extends AppCompatActivity implements AdapterCallbacks {
   private static final Random RANDOM = new Random();
   private static final String CAROUSEL_DATA_KEY = "carousel_data_key";
-  public static final int SPAN_COUNT = 2;
+  private static final int SPAN_COUNT = 2;
 
-  @BindView(R.id.recycler_view) RecyclerView recyclerView;
-  private List<CarouselData> carousels = new ArrayList<>();
   private final RecycledViewPool recycledViewPool = new RecycledViewPool();
-  private SampleController controller = new SampleController(this, this, recycledViewPool);
+  private final SampleController controller = new SampleController(this, recycledViewPool);
+  private List<CarouselData> carousels = new ArrayList<>();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    ButterKnife.bind(this);
 
     // Many carousels and color models are shown on screen at once. The default recycled view
     // pool size is only 5, so we manually set the pool size to avoid constantly creating new views
+    // We also use a shared view pool so that carousels can recycle items between themselves.
     recycledViewPool.setMaxRecycledViews(R.layout.model_color, Integer.MAX_VALUE);
     recycledViewPool.setMaxRecycledViews(R.layout.model_carousel_group, Integer.MAX_VALUE);
+    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
     recyclerView.setRecycledViewPool(recycledViewPool);
 
     // We are using a multi span grid to allow two columns of buttons. To set this up we need
@@ -67,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks,
       carousels = savedInstanceState.getParcelableArrayList(CAROUSEL_DATA_KEY);
     }
 
-    updateAdapter();
+    updateController();
   }
 
   @Override
@@ -83,8 +74,16 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks,
     controller.onRestoreInstanceState(savedInstanceState);
   }
 
-  private void updateAdapter() {
+  private void updateController() {
     controller.setData(carousels);
+  }
+
+  @Override
+  public void onAddCarouselClicked() {
+    CarouselData carousel = new CarouselData(carousels.size(), new ArrayList<>());
+    addColorToCarousel(carousel);
+    carousels.add(0, carousel);
+    updateController();
   }
 
   private void addColorToCarousel(CarouselData carousel) {
@@ -93,23 +92,15 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks,
   }
 
   @Override
-  public void onAddCarouselClicked() {
-    CarouselData carousel = new CarouselData(carousels.size(), new ArrayList<>());
-    addColorToCarousel(carousel);
-    carousels.add(0, carousel);
-    updateAdapter();
-  }
-
-  @Override
   public void onClearCarouselsClicked() {
     carousels.clear();
-    updateAdapter();
+    updateController();
   }
 
   @Override
   public void onShuffleCarouselsClicked() {
     Collections.shuffle(carousels);
-    updateAdapter();
+    updateController();
   }
 
   @Override
@@ -120,25 +111,25 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks,
       }
     }
 
-    updateAdapter();
+    updateController();
   }
 
   @Override
   public void onAddColorToCarouselClicked(CarouselData carousel) {
     addColorToCarousel(carousel);
-    updateAdapter();
+    updateController();
   }
 
   @Override
   public void onClearCarouselClicked(CarouselData carousel) {
     carousel.getColors().clear();
-    updateAdapter();
+    updateController();
   }
 
   @Override
   public void onShuffleCarouselColorsClicked(CarouselData carousel) {
     Collections.shuffle(carousel.getColors());
-    updateAdapter();
+    updateController();
   }
 
   @Override
@@ -147,16 +138,16 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks,
       colorData.setColorInt(randomColor());
     }
 
-    updateAdapter();
+    updateController();
   }
 
   @Override
-  public void onClick(ColorModel_ model, ColorHolder parentView, View clickedView, int position) {
-    // This is used as an example of a model click listener, to get the model, view, and position
-    // that was clicked.
-    ColorData colorData = carousels.get(model.carousel()).getColors().get(position);
+  public void onColorClicked(CarouselData carousel, int colorPosition) {
+    int carouselPosition = carousels.indexOf(carousel);
+    ColorData colorData = carousels.get(carouselPosition).getColors().get(colorPosition);
     colorData.setPlayAnimation(!colorData.shouldPlayAnimation());
-    updateAdapter();
+
+    updateController();
   }
 
   private static int randomColor() {
