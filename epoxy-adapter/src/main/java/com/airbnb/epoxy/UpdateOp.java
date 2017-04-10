@@ -2,12 +2,15 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.Nullable;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
 
 /** Defines an operation that makes a change to the epoxy model list. */
 class UpdateOp {
+
   @IntDef({ADD, REMOVE, UPDATE, MOVE})
   @Retention(RetentionPolicy.SOURCE)
   @interface Type {
@@ -22,22 +25,22 @@ class UpdateOp {
   int positionStart;
   /** Holds the target position if this is a MOVE */
   int itemCount;
+  ArrayList<EpoxyModel<?>> payloads;
 
   private UpdateOp() {
   }
 
-  static UpdateOp instance(@Type int type, int positionStart, int itemCount) {
+  static UpdateOp instance(@Type int type, int positionStart, int itemCount,
+      @Nullable EpoxyModel<?> payload) {
     UpdateOp op = new UpdateOp();
 
     op.type = type;
     op.positionStart = positionStart;
     op.itemCount = itemCount;
 
-    return op;
-  }
+    op.addPayload(payload);
 
-  static UpdateOp instance(@Type int type, int positionStart) {
-    return instance(type, positionStart, 1);
+    return op;
   }
 
   /** Returns the index one past the last item in the affected range. */
@@ -55,6 +58,23 @@ class UpdateOp {
 
   boolean contains(int position) {
     return position >= positionStart && position < positionEnd();
+  }
+
+  void addPayload(@Nullable EpoxyModel<?> payload) {
+    if (payload == null) {
+      return;
+    }
+
+    if (payloads == null) {
+      // In most cases this won't be a batch update so we can expect just one payload
+      payloads = new ArrayList<>(1);
+    } else if (payloads.size() == 1) {
+      // There are multiple payloads, but we don't know how big the batch will end up being.
+      // To prevent resizing the list many times we bump it to a medium size
+      payloads.ensureCapacity(10);
+    }
+
+    payloads.add(payload);
   }
 
   @Override

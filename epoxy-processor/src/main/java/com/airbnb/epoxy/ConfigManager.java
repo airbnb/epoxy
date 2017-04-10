@@ -16,16 +16,50 @@ import static com.airbnb.epoxy.ProcessorUtils.buildEpoxyException;
 
 /** Manages configuration settings for different packages. */
 class ConfigManager {
+  static final String PROCESSOR_OPTION_VALIDATE_MODEL_USAGE = "validateEpoxyModelUsage";
+  static final String PROCESSOR_OPTION_REQUIRE_HASHCODE = "requireHashCodeInEpoxyModels";
+  static final String PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS = "requireAbstractEpoxyModels";
 
   private static final PackageConfigSettings
       DEFAULT_PACKAGE_CONFIG_SETTINGS = PackageConfigSettings.forDefaults();
   private final Map<String, PackageConfigSettings> configurationMap = new HashMap<>();
   private final Elements elementUtils;
+  private final boolean validateModelUsage;
+  private final boolean globalRequireHashCode;
+  private final boolean globalRequireAbstractModels;
 
-  ConfigManager(Elements elementUtils) {
+  ConfigManager(Map<String, String> options, Elements elementUtils) {
     this.elementUtils = elementUtils;
+    validateModelUsage = getBooleanOption(options, PROCESSOR_OPTION_VALIDATE_MODEL_USAGE, true);
+
+    globalRequireHashCode = getBooleanOption(options, PROCESSOR_OPTION_REQUIRE_HASHCODE,
+        PackageEpoxyConfig.REQUIRE_HASHCODE_DEFAULT);
+
+    globalRequireAbstractModels =
+        getBooleanOption(options, PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS,
+            PackageEpoxyConfig.REQUIRE_ABSTRACT_MODELS_DEFAULT);
   }
 
+  private static boolean getBooleanOption(Map<String, String> options, String option,
+      boolean defaultValue) {
+    String value = options.get(option);
+    if (value == null) {
+      return defaultValue;
+    }
+
+    return Boolean.valueOf(value);
+  }
+
+  /**
+   * If true, Epoxy models added to an EpoxyController will be
+   * validated at run time to make sure they are properly used.
+   * <p>
+   * By default this is true, and it is highly recommended to enable it to prevent accidental misuse
+   * of your models. However, you may want to disable this for production builds to avoid the
+   * overhead of the runtime validation code.
+   * <p>
+   * Using a debug build flag is a great way to do this.
+   */
   List<Exception> processConfigurations(RoundEnvironment roundEnv) {
     configurationMap.clear();
 
@@ -51,11 +85,17 @@ class ConfigManager {
   }
 
   boolean requiresHashCode(AttributeInfo attributeInfo) {
-    return getConfigurationForElement(attributeInfo.getClassElement()).requireHashCode;
+    return globalRequireHashCode
+        || getConfigurationForElement(attributeInfo.getClassElement()).requireHashCode;
   }
 
   boolean requiresAbstractModels(TypeElement classElement) {
-    return getConfigurationForElement(classElement).requireAbstractModels;
+    return globalRequireAbstractModels
+        || getConfigurationForElement(classElement).requireAbstractModels;
+  }
+
+  boolean shouldValidateModeUsage() {
+    return validateModelUsage;
   }
 
   private PackageConfigSettings getConfigurationForElement(Element element) {

@@ -16,7 +16,7 @@ class PackageConfigSettings {
   static PackageConfigSettings forDefaults() {
     return new PackageConfigSettings(
         PackageEpoxyConfig.REQUIRE_HASHCODE_DEFAULT,
-        PackageEpoxyConfig.REQUIRE_ABSTRACT_MODELS
+        PackageEpoxyConfig.REQUIRE_ABSTRACT_MODELS_DEFAULT
     );
   }
 

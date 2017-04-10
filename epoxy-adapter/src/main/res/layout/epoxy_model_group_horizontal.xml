@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- A sample layout to use with EpoxyModelGroup to group up to 5 models horizontally. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <ViewStub
-        android:id="@id/epoxy_model_group_view_stub_1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <ViewStub
-        android:id="@id/epoxy_model_group_view_stub_2"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <ViewStub
-        android:id="@id/epoxy_model_group_view_stub_3"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <ViewStub
-        android:id="@id/epoxy_model_group_view_stub_4"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <ViewStub
-        android:id="@id/epoxy_model_group_view_stub_5"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

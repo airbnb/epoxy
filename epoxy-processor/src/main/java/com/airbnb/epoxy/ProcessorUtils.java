@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
@@ -18,18 +19,39 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
+import static javax.lang.model.element.ElementKind.CLASS;
+import static javax.lang.model.element.Modifier.PRIVATE;
+import static javax.lang.model.element.Modifier.STATIC;
+
 class ProcessorUtils {
 
   static final String EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel<?>";
+  static final String UNTYPED_EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel";
   static final String EPOXY_MODEL_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyModelWithHolder<?>";
+  static final String EPOXY_VIEW_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyViewHolder";
+  static final String EPOXY_CONTROLLER_TYPE = "com.airbnb.epoxy.EpoxyController";
+  static final String VIEW_CLICK_LISTENER_TYPE = "android.view.View.OnClickListener";
+  static final String GENERATED_MODEL_INTERFACE = "com.airbnb.epoxy.GeneratedModel";
+  static final String MODEL_CLICK_LISTENER_TYPE = "com.airbnb.epoxy.OnModelClickListener";
+  static final String ON_BIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelBoundListener";
+  static final String ON_UNBIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelUnboundListener";
+  static final String WRAPPED_LISTENER_TYPE = "com.airbnb.epoxy.WrappedEpoxyModelClickListener";
 
   static void throwError(String msg, Object... args)
       throws EpoxyProcessorException {
     throw new EpoxyProcessorException(String.format(msg, args));
   }
 
+  static ClassName getClassName(String className) {
+    return ClassName.bestGuess(className);
+  }
+
   static EpoxyProcessorException buildEpoxyException(String msg, Object... args) {
     return new EpoxyProcessorException(String.format(msg, args));
+  }
+
+  static boolean isViewClickListenerType(Element element) {
+    return isSubtypeOfType(element.asType(), VIEW_CLICK_LISTENER_TYPE);
   }
 
   static boolean isIterableType(TypeElement element) {
@@ -38,6 +60,10 @@ class ProcessorUtils {
 
   static boolean isEpoxyModel(TypeMirror type) {
     return isSubtypeOfType(type, EPOXY_MODEL_TYPE);
+  }
+
+  static boolean isController(TypeElement element) {
+    return isSubtypeOfType(element.asType(), EPOXY_CONTROLLER_TYPE);
   }
 
   static boolean isEpoxyModel(TypeElement type) {
@@ -183,5 +209,62 @@ class ProcessorUtils {
     // TODO: (eli_hart 2/2/17) If the class added additional types this won't be correct. That
     // should be rare, but it would be nice to handle.
     return superTypeArguments.get(0);
+  }
+
+  static void validateFieldAccessibleViaGeneratedCode(Element fieldElement,
+      Class<?> annotationClass, ErrorLogger errorLogger, boolean skipPrivateFieldCheck) {
+    TypeElement enclosingElement = (TypeElement) fieldElement.getEnclosingElement();
+
+    // Verify method modifiers.
+    Set<Modifier> modifiers = fieldElement.getModifiers();
+    if ((modifiers.contains(PRIVATE) && !skipPrivateFieldCheck) || modifiers.contains(STATIC)) {
+      errorLogger.logError(
+          "%s annotations must not be on private or static fields. (class: %s, field: %s)",
+          annotationClass.getSimpleName(),
+          enclosingElement.getSimpleName(), fieldElement.getSimpleName());
+    }
+
+    // Nested classes must be static
+    if (enclosingElement.getNestingKind().isNested()) {
+      if (!enclosingElement.getModifiers().contains(STATIC)) {
+        errorLogger.logError(
+            "Nested classes with %s annotations must be static. (class: %s, field: %s)",
+            annotationClass.getSimpleName(),
+            enclosingElement.getSimpleName(), fieldElement.getSimpleName());
+      }
+    }
+
+    // Verify containing type.
+    if (enclosingElement.getKind() != CLASS) {
+      errorLogger
+          .logError("%s annotations may only be contained in classes. (class: %s, field: %s)",
+              annotationClass.getSimpleName(),
+              enclosingElement.getSimpleName(), fieldElement.getSimpleName());
+    }
+
+    // Verify containing class visibility is not private.
+    if (enclosingElement.getModifiers().contains(PRIVATE)) {
+      errorLogger.logError(
+          "%s annotations may not be contained in private classes. (class: %s, field: %s)",
+          annotationClass.getSimpleName(),
+          enclosingElement.getSimpleName(), fieldElement.getSimpleName());
+    }
+  }
+
+  static void validateFieldAccessibleViaGeneratedCode(Element fieldElement,
+      Class<?> annotationClass, ErrorLogger errorLogger) {
+    validateFieldAccessibleViaGeneratedCode(fieldElement, annotationClass, errorLogger, false);
+  }
+
+  static String capitalizeFirstLetter(String original) {
+    if (original == null || original.isEmpty()) {
+      return original;
+    }
+    return original.substring(0, 1).toUpperCase() + original.substring(1);
+  }
+
+  static boolean startsWithIs(String original) {
+    return original.startsWith("is") && original.length() > 2
+        && Character.isUpperCase(original.charAt(2));
   }
 }

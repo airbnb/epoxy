@@ -8,6 +8,7 @@ import javax.tools.JavaFileObject;
 
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaFileObjects.forResource;
+import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static com.google.testing.compile.JavaSourcesSubjectFactory.javaSources;
 import static java.util.Arrays.asList;
 
@@ -90,6 +91,18 @@ public class ConfigTest {
         .processedWith(new EpoxyProcessor())
         .failsToCompile()
         .withErrorContaining("Attribute does not implement hashCode");
+  }
+
+  @Test
+  public void testConfigRequireEquals() {
+    JavaFileObject model =
+        forResource("ModelRequiresEqualsFailsBasicObject.java");
+
+    assert_().about(javaSources())
+        .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("Attribute does not implement equals");
   }
 
   @Test
@@ -187,6 +200,18 @@ public class ConfigTest {
   }
 
   @Test
+  public void testConfigRequireHashCodeAllowsMarkedAttributes() {
+    // Verify that AutoValue class attributes pass the hashcode requirement
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelConfigRequireHashCodeAllowsMarkedAttributes.java");
+
+    assert_().about(javaSources())
+        .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError();
+  }
+
+  @Test
   public void testConfigRequireAbstractModelPassesClassWithAttribute() {
     // Verify that AutoValue class attributes pass the hashcode requirement. Only works for
     // classes in the module since AutoValue has a retention of Source so it is discarded after
@@ -238,5 +263,20 @@ public class ConfigTest {
         .failsToCompile()
         .withErrorContaining(
             "Epoxy model class must be abstract (RequireAbstractModelFailsEpoxyModelClass)");
+  }
+
+  @Test
+  public void testConfigNoModelValidation() {
+    JavaFileObject model =
+        forResource("ModelNoValidation.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelNoValidation_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(EpoxyProcessor.withNoValidation())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
   }
 }

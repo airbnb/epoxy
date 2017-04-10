@@ -32,7 +32,9 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-public class ClassToGenerateInfo {
+import static com.airbnb.epoxy.ProcessorUtils.getEpoxyObjectType;
+
+class ClassToGenerateInfo {
   private static final String GENERATED_CLASS_NAME_SUFFIX = "_";
   private static final String RESET_METHOD = "reset";
 
@@ -159,52 +161,52 @@ public class ClassToGenerateInfo {
     return result;
   }
 
-  public void addAttribute(AttributeInfo attributeInfo) {
+  void addAttribute(AttributeInfo attributeInfo) {
     addAttributes(Collections.singletonList(attributeInfo));
   }
 
-  public void addAttributes(Collection<AttributeInfo> attributeInfo) {
+  void addAttributes(Collection<AttributeInfo> attributeInfo) {
     removeMethodIfDuplicatedBySetter(attributeInfo);
     this.attributeInfo.addAll(attributeInfo);
   }
 
-  public TypeElement getOriginalClassElement() {
+  TypeElement getOriginalClassElement() {
     return originalClassElement;
   }
 
-  public TypeName getOriginalClassName() {
+  TypeName getOriginalClassName() {
     return originalClassName;
   }
 
-  public TypeName getOriginalClassNameWithoutType() {
+  TypeName getOriginalClassNameWithoutType() {
     return originalClassNameWithoutType;
   }
 
-  public List<ConstructorInfo> getConstructors() {
+  List<ConstructorInfo> getConstructors() {
     return constructors;
   }
 
-  public Set<MethodInfo> getMethodsReturningClassType() {
+  Set<MethodInfo> getMethodsReturningClassType() {
     return methodsReturningClassType;
   }
 
-  public ClassName getGeneratedName() {
+  ClassName getGeneratedName() {
     return generatedClassName;
   }
 
-  public Set<AttributeInfo> getAttributeInfo() {
+  Set<AttributeInfo> getAttributeInfo() {
     return attributeInfo;
   }
 
-  public boolean shouldGenerateSubClass() {
+  boolean shouldGenerateSubClass() {
     return shouldGenerateSubClass;
   }
 
-  public Iterable<TypeVariableName> getTypeVariables() {
+  Iterable<TypeVariableName> getTypeVariables() {
     return typeVariableNames;
   }
 
-  public TypeName getParameterizedGeneratedName() {
+  TypeName getParameterizedGeneratedName() {
     return parameterizedClassName;
   }
 
@@ -223,25 +225,39 @@ public class ClassToGenerateInfo {
     }
   }
 
-  public static class ConstructorInfo {
+  boolean hasClickListenerAttributes() {
+    for (AttributeInfo info : attributeInfo) {
+      if (info.isViewClickListener()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** Get the object type this model is typed with. */
+  TypeMirror getModelType() {
+    return getEpoxyObjectType(originalClassElement, typeUtils);
+  }
+
+  static class ConstructorInfo {
     final Set<Modifier> modifiers;
     final List<ParameterSpec> params;
     final boolean varargs;
 
-    public ConstructorInfo(Set<Modifier> modifiers, List<ParameterSpec> params, boolean varargs) {
+    ConstructorInfo(Set<Modifier> modifiers, List<ParameterSpec> params, boolean varargs) {
       this.modifiers = modifiers;
       this.params = params;
       this.varargs = varargs;
     }
   }
 
-  public static class MethodInfo {
+  static class MethodInfo {
     final String name;
     final Set<Modifier> modifiers;
     final List<ParameterSpec> params;
     final boolean varargs;
 
-    public MethodInfo(String name, Set<Modifier> modifiers, List<ParameterSpec> params,
+    MethodInfo(String name, Set<Modifier> modifiers, List<ParameterSpec> params,
         boolean varargs) {
       this.name = name;
       this.modifiers = modifiers;

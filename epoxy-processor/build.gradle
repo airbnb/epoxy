@@ -18,9 +18,9 @@ for (File file : sdkHandler.sdkLoader.repositories) {
 }
 
 dependencies {
-  compile deps.googleAutoService
   compile deps.squareJavaPoet
 
+  compileOnly deps.googleAutoService
   /** Provides the sun javac tools for looking up the R class trees. */
   compileOnly files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
 

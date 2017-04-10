@@ -382,7 +382,7 @@ public class EpoxyAdapterTest {
 
     testAdapter.addModel(testModel);
 
-    thrown.expect(IllegalStateException.class);
+    thrown.expect(IllegalEpoxyUsage.class);
     thrown.expectMessage("Cannot change a model's id after it has been added to the adapter");
     testModel.id(200);
   }
@@ -404,7 +404,7 @@ public class EpoxyAdapterTest {
     testAdapter.models.add(testModel);
     testAdapter.notifyModelsChanged();
 
-    thrown.expect(IllegalStateException.class);
+    thrown.expect(IllegalEpoxyUsage.class);
     thrown.expectMessage("Cannot change a model's id after it has been added to the adapter");
     testModel.id(200);
   }

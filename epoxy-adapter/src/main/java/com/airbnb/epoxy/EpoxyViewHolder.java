@@ -1,10 +1,9 @@
 
 package com.airbnb.epoxy;
 
-import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
+import android.view.View;
 
 import java.util.List;
 
@@ -14,11 +13,12 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
   private List<Object> payloads;
   private EpoxyHolder epoxyHolder;
 
-  public EpoxyViewHolder(ViewGroup parent, @LayoutRes int layoutId) {
-    super(LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false));
+  public EpoxyViewHolder(View view) {
+    super(view);
   }
 
-  public void bind(@SuppressWarnings("rawtypes") EpoxyModel model, List<Object> payloads) {
+  public void bind(@SuppressWarnings("rawtypes") EpoxyModel model,
+      @Nullable EpoxyModel<?> previouslyBoundModel, List<Object> payloads, int position) {
     this.payloads = payloads;
 
     if (epoxyHolder == null && model instanceof EpoxyModelWithHolder) {
@@ -26,12 +26,27 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
       epoxyHolder.bindView(itemView);
     }
 
-    if (payloads.isEmpty()) {
+    if (model instanceof GeneratedModel) {
+      // The generated method will enforce that only a properly typed listener can be set
+      //noinspection unchecked
+      ((GeneratedModel) model).handlePreBind(this, objectToBind(), position);
+    }
+
+    if (previouslyBoundModel != null) {
+      // noinspection unchecked
+      model.bind(objectToBind(), previouslyBoundModel);
+    } else if (payloads.isEmpty()) {
       // noinspection unchecked
       model.bind(objectToBind());
     } else {
       // noinspection unchecked
       model.bind(objectToBind(), payloads);
+    }
+
+    if (model instanceof GeneratedModel) {
+      // The generated method will enforce that only a properly typed listener can be set
+      //noinspection unchecked
+      ((GeneratedModel) model).handlePostBind(objectToBind(), position);
     }
 
     epoxyModel = model;
@@ -45,6 +60,7 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     assertBound();
     // noinspection unchecked
     epoxyModel.unbind(objectToBind());
+
     epoxyModel = null;
     payloads = null;
   }

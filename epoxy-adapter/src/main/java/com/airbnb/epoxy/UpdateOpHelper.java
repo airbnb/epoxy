@@ -1,5 +1,7 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.Nullable;
+
 import com.airbnb.epoxy.UpdateOp.Type;
 
 import java.util.ArrayList;
@@ -46,46 +48,38 @@ class UpdateOpHelper {
     boolean batchWithLast = isLastOp(ADD)
         && (lastOp.contains(startPosition) || lastOp.positionEnd() == startPosition);
 
-    if (!batchWithLast) {
+    if (batchWithLast) {
+      addItemsToLastOperation(itemCount, null);
+    } else {
       numInsertionBatches++;
+      addNewOperation(ADD, startPosition, itemCount);
     }
-
-    addOperation(ADD, startPosition, itemCount, batchWithLast);
   }
 
   void update(int indexToChange) {
-    update(indexToChange, 1);
+    update(indexToChange, null);
   }
 
-  void update(int startPosition, int itemCount) {
-    boolean batchWithLast = false;
-
+  void update(final int indexToChange, EpoxyModel<?> payload) {
     if (isLastOp(UPDATE)) {
-      int lastIndexInRange = startPosition + itemCount - 1;
-
-      if (lastOp.contains(startPosition) && lastOp.contains(lastIndexInRange)) {
-        // These items have already been included in the existing batch range
-        return;
+      if (lastOp.positionStart == indexToChange + 1) {
+        // Change another item at the start of the batch range
+        addItemsToLastOperation(1, payload);
+        lastOp.positionStart = indexToChange;
+      } else if (lastOp.positionEnd() == indexToChange) {
+        // Add another item at the end of the batch range
+        addItemsToLastOperation(1, payload);
+      } else if (lastOp.contains(indexToChange)) {
+        // This item is already included in the existing batch range, so we don't add any items
+        // to the batch count, but we still need to add the new payload
+        addItemsToLastOperation(0, payload);
+      } else {
+        // The item can't be batched with the previous update operation
+        addNewOperation(UPDATE, indexToChange, 1, payload);
       }
-
-      if (lastOp.isAfter(startPosition) && lastOp.isBefore(lastIndexInRange)) {
-        // Include more items to update at both the start and end of the batch range
-        itemCount -= lastOp.itemCount;
-        lastOp.positionStart = startPosition;
-        batchWithLast = true;
-      } else if (lastOp.isAfter(startPosition) && lastIndexInRange >= lastOp.positionStart - 1) {
-        // Include more items to update at the start of the batch range
-        itemCount = lastOp.positionStart - startPosition;
-        lastOp.positionStart = startPosition;
-        batchWithLast = true;
-      } else if (startPosition <= lastOp.positionEnd() && lastOp.isBefore(lastIndexInRange)) {
-        // Include more items at the end of the batch range
-        itemCount -= lastOp.positionEnd() - startPosition;
-        batchWithLast = true;
-      }
+    } else {
+      addNewOperation(UPDATE, indexToChange, 1, payload);
     }
-
-    addOperation(UPDATE, startPosition, itemCount, batchWithLast);
   }
 
   void remove(int indexToRemove) {
@@ -108,30 +102,37 @@ class UpdateOpHelper {
       }
     }
 
-    if (!batchWithLast) {
+    if (batchWithLast) {
+      addItemsToLastOperation(itemCount, null);
+    } else {
       numRemovalBatches++;
+      addNewOperation(REMOVE, startPosition, itemCount);
     }
-
-    addOperation(REMOVE, startPosition, itemCount, batchWithLast);
   }
 
   private boolean isLastOp(@UpdateOp.Type int updateType) {
     return lastOp != null && lastOp.type == updateType;
   }
 
-  private void addOperation(@Type int type, int position, int itemCount, boolean batchWithLast) {
-    if (batchWithLast) {
-      lastOp.itemCount += itemCount;
-    } else {
-      lastOp = UpdateOp.instance(type, position, itemCount);
-      opList.add(lastOp);
-    }
+  private void addNewOperation(@Type int type, int position, int itemCount) {
+    addNewOperation(type, position, itemCount, null);
+  }
+
+  private void addNewOperation(@Type int type, int position, int itemCount,
+      @Nullable EpoxyModel<?> payload) {
+    lastOp = UpdateOp.instance(type, position, itemCount, payload);
+    opList.add(lastOp);
+  }
+
+  private void addItemsToLastOperation(int numItemsToAdd, EpoxyModel<?> payload) {
+    lastOp.itemCount += numItemsToAdd;
+    lastOp.addPayload(payload);
   }
 
   void move(int from, int to) {
     // We can't batch moves
     lastOp = null;
-    UpdateOp op = UpdateOp.instance(MOVE, from, to);
+    UpdateOp op = UpdateOp.instance(MOVE, from, to, null);
     opList.add(op);
     moves.add(op);
   }

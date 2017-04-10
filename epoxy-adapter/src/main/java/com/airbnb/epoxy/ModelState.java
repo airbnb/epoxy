@@ -5,6 +5,7 @@ class ModelState {
   long id;
   int hashCode;
   int position;
+  EpoxyModel<?> model;
 
   /**
    * A link to the item with the same id in the other list when diffing two lists. This will be null
@@ -23,14 +24,19 @@ class ModelState {
    */
   int lastMoveOp;
 
-  static ModelState build(EpoxyModel<?> model, int position) {
+  static ModelState build(EpoxyModel<?> model, int position, boolean immutableModel) {
     ModelState state = new ModelState();
 
     state.lastMoveOp = 0;
     state.pair = null;
     state.id = model.id();
-    state.hashCode = model.hashCode();
     state.position = position;
+
+    if (immutableModel) {
+      state.model = model;
+    } else {
+      state.hashCode = model.hashCode();
+    }
 
     return state;
   }
@@ -50,12 +56,14 @@ class ModelState {
     pair.position = position;
     pair.hashCode = hashCode;
     pair.pair = this;
+    pair.model = model;
   }
 
   @Override
   public String toString() {
     return "ModelState{"
         + "id=" + id
+        + ", model=" + model
         + ", hashCode=" + hashCode
         + ", position=" + position
         + ", pair=" + pair
