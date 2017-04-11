@@ -189,7 +189,7 @@ class ControllerProcessor {
         .addMethod(buildConstructor(controllerInfo))
         .addMethod(buildResetModelsMethod(controllerInfo));
 
-    if (configManager.shouldValidateModeUsage()) {
+    if (configManager.shouldValidateModelUsage()) {
       builder.addFields(buildFieldsToSaveModelsForValidation(controllerInfo))
           .addMethod(buildValidateModelsHaveNotChangedMethod(controllerInfo))
           .addMethod(buildValidateSameValueMethod())
@@ -288,7 +288,7 @@ class ControllerProcessor {
         .addAnnotation(Override.class)
         .addModifiers(Modifier.PUBLIC);
 
-    if (configManager.shouldValidateModeUsage()) {
+    if (configManager.shouldValidateModelUsage()) {
       builder.addStatement("validateModelsHaveNotChanged()");
     }
 
@@ -298,7 +298,7 @@ class ControllerProcessor {
           .addStatement("controller.$L.id($L)", model.fieldName, id--);
     }
 
-    if (configManager.shouldValidateModeUsage()) {
+    if (configManager.shouldValidateModelUsage()) {
       builder.addStatement("saveModelsForNextValidation()");
     }
 

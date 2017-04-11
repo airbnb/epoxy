@@ -196,7 +196,7 @@ class GeneratedModelWriter {
   }
 
   private void generateDebugAddToMethodIfNeeded(TypeSpec.Builder classBuilder) {
-    if (!configManager.shouldValidateModeUsage()) {
+    if (!configManager.shouldValidateModelUsage()) {
       return;
     }
 
@@ -484,8 +484,9 @@ class GeneratedModelWriter {
 
     List<MethodSpec> methods = new ArrayList<>();
 
+    ClassName generatedModelClass = info.getGeneratedName();
     String moduleName =
-        layoutResourceProcessor.getModuleName(info.getGeneratedName().packageName());
+        layoutResourceProcessor.getModuleName(generatedModelClass.packageName());
 
     ClassName brClass = ClassName.get(moduleName, "BR");
 
@@ -494,16 +495,40 @@ class GeneratedModelWriter {
 
     Builder payloadMethodBuilder = bindVariablesMethod
         .toBuilder()
-        .addParameter(getClassName(UNTYPED_EPOXY_MODEL_TYPE), "previousModel");
+        .addParameter(getClassName(UNTYPED_EPOXY_MODEL_TYPE), "previousModel")
+        .beginControlFlow("if (!(previousModel instanceof $T))", generatedModelClass)
+        .addStatement("setDataBindingVariables(binding)")
+        .addStatement("return")
+        .endControlFlow()
+        .addStatement("$T otherModel = ($T) previousModel", generatedModelClass,
+            generatedModelClass);
 
+    boolean validateAttributes = configManager.shouldValidateModelUsage();
     for (AttributeInfo attribute : info.getAttributeInfo()) {
       String attrName = attribute.getName();
-      baseMethodBuilder.addStatement("binding.setVariable($T.$L, $L)", brClass, attrName, attrName);
-      // // TODO: (eli_hart 4/11/17) check for false return value and throw if validations enabled 
+      if (validateAttributes) {
+        // The setVariable method returns false if the variable id was not found in the layout.
+        // We can warn the user about this if they have model validations turned on, otherwise
+        // it fails silently.
+        baseMethodBuilder
+            .beginControlFlow("if (!binding.setVariable($T.$L, $L))", brClass, attrName, attrName)
+            .addStatement(
+                "throw new $T(\"The attribute $L was defined in your data binding model ($L) but "
+                    + "a data variable of that name was not found in the layout.\")",
+                IllegalStateException.class, attrName, info.getOriginalClassName())
+            .endControlFlow();
+      } else {
+        baseMethodBuilder
+            .addStatement("binding.setVariable($T.$L, $L)", brClass, attrName, attrName);
+      }
+
+      // Handle binding variables only if they changed
+      payloadMethodBuilder.addStatement("setDataBindingVariables(binding)");
+      // TODO: (eli_hart 4/11/17) Compare attribute to previous model and setVariable if it changed
     }
 
     methods.add(baseMethodBuilder.build());
-//    methods.add(payloadMethodBuilder.build());
+    methods.add(payloadMethodBuilder.build());
     return methods;
   }
 
@@ -880,7 +905,7 @@ class GeneratedModelWriter {
 
   private MethodSpec.Builder addMutabilityValidationIfNecessary(MethodSpec.Builder method,
       ClassToGenerateInfo classInfo) {
-    if (configManager.shouldValidateModeUsage()) {
+    if (configManager.shouldValidateModelUsage()) {
       method.addStatement("validateMutability()");
     }
 
@@ -889,7 +914,7 @@ class GeneratedModelWriter {
 
   private MethodSpec.Builder addHashCodeValidationIfNecessary(MethodSpec.Builder method,
       ClassToGenerateInfo classInfo, String message) {
-    if (configManager.shouldValidateModeUsage()) {
+    if (configManager.shouldValidateModelUsage()) {
       method.addStatement("validateStateHasNotChangedSinceAdded($S, position)", message);
     }
 

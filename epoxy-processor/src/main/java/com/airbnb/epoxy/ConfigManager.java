@@ -94,7 +94,7 @@ class ConfigManager {
         || getConfigurationForElement(classElement).requireAbstractModels;
   }
 
-  boolean shouldValidateModeUsage() {
+  boolean shouldValidateModelUsage() {
     return validateModelUsage;
   }
 
