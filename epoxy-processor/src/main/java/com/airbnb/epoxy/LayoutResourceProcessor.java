@@ -7,7 +7,9 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeScanner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -74,6 +76,45 @@ class LayoutResourceProcessor {
     return modelLayout;
   }
 
+  String getModuleName(String packageName) {
+    List<ClassName> rClasses = new ArrayList<>(rClassNameMap.values());
+    if (rClasses.isEmpty()) {
+      return null;
+    }
+
+    if (rClasses.size() == 1) {
+      return rClasses.get(0).packageName();
+    }
+
+    String[] packageNames = packageName.split(".");
+//    android.R.layout.simple_list_item_activated_1
+
+    ClassName bestMatch = null;
+    int bestNumMatches = -1;
+
+    for (ClassName rClass : rClasses) {
+      String[] rModuleNames = rClass.packageName().split(".");
+      int numNameMatches = 0;
+      for (int i = 0; i < Math.min(packageNames.length, rModuleNames.length); i++) {
+        if (packageNames[i].equals(rModuleNames[i])) {
+          numNameMatches++;
+        } else {
+          break;
+        }
+      }
+
+      if (numNameMatches > bestNumMatches) {
+        bestMatch = rClass;
+      }
+    }
+
+    if (bestMatch == null) {
+      bestMatch = rClasses.get(0);
+    }
+
+    return bestMatch.packageName();
+  }
+
   private String getModelNameFromElement(TypeElement modelClassElement) {
     return modelClassElement.getQualifiedName().toString();
   }
@@ -115,8 +156,6 @@ class LayoutResourceProcessor {
         // hardcoded
         continue;
       }
-
-
 
       if (layoutValue != result.resourceValue) {
         // I don't know why this would happen, but it seems worth sanity checking for

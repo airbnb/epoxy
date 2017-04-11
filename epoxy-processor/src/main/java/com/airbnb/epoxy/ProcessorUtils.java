@@ -36,6 +36,7 @@ class ProcessorUtils {
   static final String ON_BIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelBoundListener";
   static final String ON_UNBIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelUnboundListener";
   static final String WRAPPED_LISTENER_TYPE = "com.airbnb.epoxy.WrappedEpoxyModelClickListener";
+  static final String DATA_BINDING_MODEL_TYPE = "com.airbnb.epoxy.DataBindingEpoxyModel";
 
   static void throwError(String msg, Object... args)
       throws EpoxyProcessorException {
@@ -72,6 +73,10 @@ class ProcessorUtils {
 
   static boolean isEpoxyModelWithHolder(TypeElement type) {
     return isSubtypeOfType(type.asType(), EPOXY_MODEL_HOLDER_TYPE);
+  }
+
+  static boolean isDataBindingModel(TypeElement type) {
+    return isSubtypeOfType(type.asType(), DATA_BINDING_MODEL_TYPE);
   }
 
   static boolean isSubtypeOfType(TypeMirror typeMirror, String otherType) {

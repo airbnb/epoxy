@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.lang.annotation.AnnotationTypeMismatchException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.processing.Filer;
@@ -33,9 +34,12 @@ import static com.airbnb.epoxy.ProcessorUtils.GENERATED_MODEL_INTERFACE;
 import static com.airbnb.epoxy.ProcessorUtils.MODEL_CLICK_LISTENER_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.ON_BIND_MODEL_LISTENER_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.ON_UNBIND_MODEL_LISTENER_TYPE;
+import static com.airbnb.epoxy.ProcessorUtils.UNTYPED_EPOXY_MODEL_TYPE;
+import static com.airbnb.epoxy.ProcessorUtils.WRAPPED_LISTENER_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.getClassName;
 import static com.airbnb.epoxy.ProcessorUtils.getEpoxyObjectType;
 import static com.airbnb.epoxy.ProcessorUtils.implementsMethod;
+import static com.airbnb.epoxy.ProcessorUtils.isDataBindingModel;
 import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModel;
 import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModelWithHolder;
 import static com.squareup.javapoet.TypeName.BOOLEAN;
@@ -96,6 +100,7 @@ class GeneratedModelWriter {
         .addMethods(generateSettersAndGetters(info))
         .addMethods(generateMethodsReturningClassType(info))
         .addMethods(generateDefaultMethodImplementations(info))
+        .addMethods(generateDataBindingMethodsIfNeeded(info))
         .addMethod(generateReset(info))
         .addMethod(generateEquals(info))
         .addMethod(generateHashCode(info))
@@ -196,7 +201,7 @@ class GeneratedModelWriter {
     }
 
     MethodSpec addToMethod = MethodSpec.methodBuilder("addTo")
-        .addParameter(ProcessorUtils.getClassName(EPOXY_CONTROLLER_TYPE), "controller")
+        .addParameter(getClassName(EPOXY_CONTROLLER_TYPE), "controller")
         .addAnnotation(Override.class)
         .addModifiers(PUBLIC)
         .addStatement("super.addTo(controller)")
@@ -230,8 +235,8 @@ class GeneratedModelWriter {
         "The model was changed between being added to the controller and being bound.");
 
     ClassName viewType = getClassName("android.view.View");
-    ClassName clickWrapperType = getClassName(ProcessorUtils.WRAPPED_LISTENER_TYPE);
-    ClassName modelClickListenerType = getClassName(ProcessorUtils.MODEL_CLICK_LISTENER_TYPE);
+    ClassName clickWrapperType = getClassName(WRAPPED_LISTENER_TYPE);
+    ClassName modelClickListenerType = getClassName(MODEL_CLICK_LISTENER_TYPE);
     for (AttributeInfo attribute : classInfo.getAttributeInfo()) {
       if (!attribute.isViewClickListener()) {
         continue;
@@ -461,6 +466,47 @@ class GeneratedModelWriter {
     methods.add(getDefaultLayoutMethod);
   }
 
+  private Iterable<MethodSpec> generateDataBindingMethodsIfNeeded(ClassToGenerateInfo info) {
+    if (!isDataBindingModel(info.getOriginalClassElement())) {
+      return Collections.emptyList();
+    }
+
+    MethodSpec bindVariablesMethod = MethodSpec.methodBuilder("setDataBindingVariables")
+        .addAnnotation(Override.class)
+        .addParameter(ClassName.get("android.databinding", "ViewDataBinding"), "binding")
+        .addModifiers(Modifier.PROTECTED)
+        .returns(TypeName.VOID)
+        .build();
+
+    if (implementsMethod(info.getOriginalClassElement(), bindVariablesMethod, typeUtils)) {
+      return Collections.emptyList();
+    }
+
+    List<MethodSpec> methods = new ArrayList<>();
+
+    String moduleName =
+        layoutResourceProcessor.getModuleName(info.getGeneratedName().packageName());
+
+    ClassName brClass = ClassName.get(moduleName, "BR");
+
+    Builder baseMethodBuilder = bindVariablesMethod
+        .toBuilder();
+
+    Builder payloadMethodBuilder = bindVariablesMethod
+        .toBuilder()
+        .addParameter(getClassName(UNTYPED_EPOXY_MODEL_TYPE), "previousModel");
+
+    for (AttributeInfo attribute : info.getAttributeInfo()) {
+      String attrName = attribute.getName();
+      baseMethodBuilder.addStatement("binding.setVariable($T.$L, $L)", brClass, attrName, attrName);
+      // // TODO: (eli_hart 4/11/17) check for false return value and throw if validations enabled 
+    }
+
+    methods.add(baseMethodBuilder.build());
+//    methods.add(payloadMethodBuilder.build());
+    return methods;
+  }
+
   /**
    * Looks for {@link EpoxyModelClass} annotation in the original class and his parents.
    */
@@ -555,8 +601,8 @@ class GeneratedModelWriter {
         .addAnnotations(attribute.getSetterAnnotations());
 
     ClassName viewType = getClassName("android.view.View");
-    ClassName clickWrapperType = getClassName(ProcessorUtils.WRAPPED_LISTENER_TYPE);
-    ClassName modelClickListenerType = getClassName(ProcessorUtils.MODEL_CLICK_LISTENER_TYPE);
+    ClassName clickWrapperType = getClassName(WRAPPED_LISTENER_TYPE);
+    ClassName modelClickListenerType = getClassName(MODEL_CLICK_LISTENER_TYPE);
 
     // This creates a View.OnClickListener and sets it on the original model's click listener field.
     // This click listener has an empty onClick implementation, and will be replaced in

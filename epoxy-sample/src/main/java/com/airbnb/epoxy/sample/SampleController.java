@@ -47,24 +47,24 @@ public class SampleController extends TypedEpoxyController<List<CarouselData>> {
         .addTo(this);
 
     addButton
-        .text(R.string.button_add)
+        .textRes(R.string.button_add)
         .clickListener((model, parentView, clickedView, position) -> {
           callbacks.onAddCarouselClicked();
         })
         .addTo(this);
 
     clearButton
-        .text(R.string.button_clear)
+        .textRes(R.string.button_clear)
         .clickListener(v -> callbacks.onClearCarouselsClicked())
         .addIf(carousels.size() > 0, this);
 
     shuffleButton
-        .text(R.string.button_shuffle)
+        .textRes(R.string.button_shuffle)
         .clickListener(v -> callbacks.onShuffleCarouselsClicked())
         .addIf(carousels.size() > 1, this);
 
     changeColorsButton
-        .text(R.string.button_change)
+        .textRes(R.string.button_change)
         .clickListener(v -> callbacks.onChangeAllColorsClicked())
         .addIf(carousels.size() > 0, this);
 
