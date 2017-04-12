@@ -76,18 +76,35 @@ class LayoutResourceProcessor {
     return modelLayout;
   }
 
+  /**
+   * Attempts to get the module name of the given package. We can do this because the package name
+   * of an R class is the module. Generally only one R class is used and we can just use that module
+   * name, but it is possible to have multiple R classes. In that case we compare the package names
+   * to find what is the most similar.
+   * <p>
+   * We need to get the module name to know the path of the BR class for data binding.
+   */
   String getModuleName(String packageName) {
     List<ClassName> rClasses = new ArrayList<>(rClassNameMap.values());
     if (rClasses.isEmpty()) {
-      return null;
+      errorLogger.logError(
+          "Could not look up module name for DataBinding BR class. Make sure you use a layout "
+              + "resource "
+              + "in a %s annotation on your model class so Epoxy can look up the module name.",
+          EpoxyModelClass.class);
+      return packageName;
     }
 
     if (rClasses.size() == 1) {
+      // Commong case
       return rClasses.get(0).packageName();
     }
 
+    // Generally the only R class used should be the app's. It is possible to use other R classes
+    // though, like Android's. In that case we figure out the most likely match by comparing the
+    // package name.
+    //  For example we might have "com.airbnb.epoxy.R" and "android.R"
     String[] packageNames = packageName.split(".");
-//    android.R.layout.simple_list_item_activated_1
 
     ClassName bestMatch = null;
     int bestNumMatches = -1;
@@ -106,10 +123,6 @@ class LayoutResourceProcessor {
       if (numNameMatches > bestNumMatches) {
         bestMatch = rClass;
       }
-    }
-
-    if (bestMatch == null) {
-      bestMatch = rClasses.get(0);
     }
 
     return bestMatch.packageName();

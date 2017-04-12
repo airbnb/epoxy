@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 
+import com.google.common.collect.ImmutableList;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -466,6 +467,11 @@ class GeneratedModelWriter {
     methods.add(getDefaultLayoutMethod);
   }
 
+  /**
+   * Add `setDataBindingVariables` for DataBinding models if they haven't implemented it. This adds
+   * the basic method and a method that checks for payload changes and only sets the variables that
+   * changed.
+   */
   private Iterable<MethodSpec> generateDataBindingMethodsIfNeeded(ClassToGenerateInfo info) {
     if (!isDataBindingModel(info.getOriginalClassElement())) {
       return Collections.emptyList();
@@ -478,20 +484,16 @@ class GeneratedModelWriter {
         .returns(TypeName.VOID)
         .build();
 
+    // If the base method is already implemented don't bother checking for the payload method
     if (implementsMethod(info.getOriginalClassElement(), bindVariablesMethod, typeUtils)) {
       return Collections.emptyList();
     }
-
-    List<MethodSpec> methods = new ArrayList<>();
 
     ClassName generatedModelClass = info.getGeneratedName();
     String moduleName =
         layoutResourceProcessor.getModuleName(generatedModelClass.packageName());
 
-    ClassName brClass = ClassName.get(moduleName, "BR");
-
-    Builder baseMethodBuilder = bindVariablesMethod
-        .toBuilder();
+    Builder baseMethodBuilder = bindVariablesMethod.toBuilder();
 
     Builder payloadMethodBuilder = bindVariablesMethod
         .toBuilder()
@@ -500,36 +502,37 @@ class GeneratedModelWriter {
         .addStatement("setDataBindingVariables(binding)")
         .addStatement("return")
         .endControlFlow()
-        .addStatement("$T otherModel = ($T) previousModel", generatedModelClass,
-            generatedModelClass);
+        .addStatement("$T that = ($T) previousModel", generatedModelClass, generatedModelClass);
 
+    ClassName brClass = ClassName.get(moduleName, "BR");
     boolean validateAttributes = configManager.shouldValidateModelUsage();
     for (AttributeInfo attribute : info.getAttributeInfo()) {
       String attrName = attribute.getName();
+      CodeBlock setVariableBlock =
+          CodeBlock.of("binding.setVariable($T.$L, $L)", brClass, attrName, attribute.getterCode());
+
       if (validateAttributes) {
         // The setVariable method returns false if the variable id was not found in the layout.
         // We can warn the user about this if they have model validations turned on, otherwise
         // it fails silently.
         baseMethodBuilder
-            .beginControlFlow("if (!binding.setVariable($T.$L, $L))", brClass, attrName, attrName)
+            .beginControlFlow("if (!$L)", setVariableBlock)
             .addStatement(
                 "throw new $T(\"The attribute $L was defined in your data binding model ($L) but "
                     + "a data variable of that name was not found in the layout.\")",
                 IllegalStateException.class, attrName, info.getOriginalClassName())
             .endControlFlow();
       } else {
-        baseMethodBuilder
-            .addStatement("binding.setVariable($T.$L, $L)", brClass, attrName, attrName);
+        baseMethodBuilder.addStatement("$L", setVariableBlock);
       }
 
       // Handle binding variables only if they changed
-      payloadMethodBuilder.addStatement("setDataBindingVariables(binding)");
-      // TODO: (eli_hart 4/11/17) Compare attribute to previous model and setVariable if it changed
+      startNotEqualsControlFlow(payloadMethodBuilder, attribute)
+          .addStatement("$L", setVariableBlock)
+          .endControlFlow();
     }
 
-    methods.add(baseMethodBuilder.build());
-    methods.add(payloadMethodBuilder.build());
-    return methods;
+    return ImmutableList.of(baseMethodBuilder.build(), payloadMethodBuilder.build());
   }
 
   /**
@@ -677,19 +680,21 @@ class GeneratedModelWriter {
         .addStatement("$T that = ($T) o", helperClass.getGeneratedName(),
             helperClass.getGeneratedName());
 
-    addEqualsLineForType(
+    startNotEqualsControlFlow(
         builder,
         false,
         getClassName(ON_BIND_MODEL_LISTENER_TYPE),
-        modelBindListenerFieldName()
-    );
+        modelBindListenerFieldName())
+        .addStatement("return false")
+        .endControlFlow();
 
-    addEqualsLineForType(
+    startNotEqualsControlFlow(
         builder,
         false,
         getClassName(ON_UNBIND_MODEL_LISTENER_TYPE),
-        modelUnbindListenerFieldName()
-    );
+        modelUnbindListenerFieldName())
+        .addStatement("return false")
+        .endControlFlow();
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
       TypeName type = attributeInfo.getType();
@@ -698,7 +703,9 @@ class GeneratedModelWriter {
         continue;
       }
 
-      addEqualsLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getterCode());
+      startNotEqualsControlFlow(builder, attributeInfo)
+          .addStatement("return false")
+          .endControlFlow();
     }
 
     return builder
@@ -706,41 +713,40 @@ class GeneratedModelWriter {
         .build();
   }
 
-  private void addEqualsLineForType(Builder builder, boolean useObjectHashCode, TypeName type,
-      String accessorCode) {
+  private static MethodSpec.Builder startNotEqualsControlFlow(MethodSpec.Builder methodBuilder,
+      AttributeInfo attribute) {
+    TypeName attributeType = attribute.getType();
+    boolean useHash = attributeType.isPrimitive() || attribute.useInHash();
+    return startNotEqualsControlFlow(methodBuilder, useHash, attributeType, attribute.getterCode());
+  }
+
+  private static MethodSpec.Builder startNotEqualsControlFlow(Builder builder,
+      boolean useObjectHashCode, TypeName type, String accessorCode) {
+
     if (useObjectHashCode) {
       if (type == FLOAT) {
-        builder.beginControlFlow("if (Float.compare(that.$L, $L) != 0)", accessorCode, accessorCode)
-            .addStatement("return false")
-            .endControlFlow();
+        builder
+            .beginControlFlow("if (Float.compare(that.$L, $L) != 0)", accessorCode, accessorCode);
       } else if (type == DOUBLE) {
         builder
-            .beginControlFlow("if (Double.compare(that.$L, $L) != 0)", accessorCode, accessorCode)
-            .addStatement("return false")
-            .endControlFlow();
+            .beginControlFlow("if (Double.compare(that.$L, $L) != 0)", accessorCode, accessorCode);
       } else if (type.isPrimitive()) {
-        builder.beginControlFlow("if ($L != that.$L)", accessorCode, accessorCode)
-            .addStatement("return false")
-            .endControlFlow();
+        builder.beginControlFlow("if ($L != that.$L)", accessorCode, accessorCode);
       } else if (type instanceof ArrayTypeName) {
         builder
             .beginControlFlow("if (!$T.equals($L, that.$L))", TypeName.get(Arrays.class),
-                accessorCode,
-                accessorCode)
-            .addStatement("return false")
-            .endControlFlow();
+                accessorCode, accessorCode);
       } else {
         builder
             .beginControlFlow("if ($L != null ? !$L.equals(that.$L) : that.$L != null)",
-                accessorCode, accessorCode, accessorCode, accessorCode)
-            .addStatement("return false")
-            .endControlFlow();
+                accessorCode, accessorCode, accessorCode, accessorCode);
       }
     } else {
-      builder.beginControlFlow("if (($L == null) != (that.$L == null))", accessorCode, accessorCode)
-          .addStatement("return false")
-          .endControlFlow();
+      builder
+          .beginControlFlow("if (($L == null) != (that.$L == null))", accessorCode, accessorCode);
     }
+
+    return builder;
   }
 
   private MethodSpec generateHashCode(ClassToGenerateInfo helperClass) {

@@ -10,6 +10,27 @@ import com.airbnb.epoxy.DataBindingEpoxyModel.DataBindingHolder;
 
 import java.util.List;
 
+/**
+ * A version of {@link com.airbnb.epoxy.EpoxyModel} that can be used with databinding. The layout
+ * resource used with this model must be a databinding layout. This class will create the
+ * databinding object from the layout and call the {@link #setDataBindingVariables} methods when the
+ * view needs binding to the model.
+ * <p>
+ * The easiest way to use this model is to have Epoxy generate a model to do all the binding work
+ * for you. To do this, create an abstract subclass of this model, annotate it with {@link
+ * EpoxyModelClass}, and pass your layout resource as the layout param. (You must pass the layout
+ * this way instead of implementing {@link #getDefaultLayout()}).
+ * <p>
+ * Then, make a field to represent each of the data variables in your layout and annotate each one
+ * with {@link EpoxyAttribute}. The name of each field must match the name of the variable in the
+ * layout exactly.
+ * <p>
+ * Epoxy will generate a subclass of your model at compile time that implements {@link
+ * #setDataBindingVariables(ViewDataBinding)} and {@link #setDataBindingVariables(ViewDataBinding,
+ * EpoxyModel)} for you. This will do all binding for you, and also only bind variables that change
+ * if you update your model (Note: The change optimization only works when used with {@link
+ * EpoxyController}).
+ */
 public abstract class DataBindingEpoxyModel extends EpoxyModelWithHolder<DataBindingHolder> {
 
   @Override
@@ -39,8 +60,20 @@ public abstract class DataBindingEpoxyModel extends EpoxyModelWithHolder<DataBin
     holder.dataBinding.executePendingBindings();
   }
 
+  /**
+   * If you leave your class abstract and have a model generated for you via annotations this will
+   * be implemented for you. However, you may choose to implement this manually if you like.
+   */
   protected abstract void setDataBindingVariables(ViewDataBinding binding);
 
+  /**
+   * Similar to {@link #setDataBindingVariables(ViewDataBinding)}, but this method only binds
+   * variables that have changed. The changed model comes from {@link #bind(DataBindingHolder,
+   * EpoxyModel)}. This will only be called if the model is used in an {@link EpoxyController}
+   * <p>
+   * If you leave your class abstract and have a model generated for you via annotations this will
+   * be implemented for you. However, you may choose to implement this manually if you like.
+   */
   protected void setDataBindingVariables(ViewDataBinding dataBinding,
       EpoxyModel<?> previouslyBoundModel) {
     setDataBindingVariables(dataBinding);
@@ -62,6 +95,10 @@ public abstract class DataBindingEpoxyModel extends EpoxyModelWithHolder<DataBin
 
   public static class DataBindingHolder extends EpoxyHolder {
     private ViewDataBinding dataBinding;
+
+    public ViewDataBinding getDataBinding() {
+      return dataBinding;
+    }
 
     @Override
     protected void bindView(View itemView) {

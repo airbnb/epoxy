@@ -1,12 +1,21 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 
 android {
+
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
   buildToolsVersion rootProject.ANDROID_BUILD_TOOLS_VERSION
 
   defaultConfig {
+    applicationId "com.airbnb.android.epoxy"
     minSdkVersion rootProject.MIN_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
+    vectorDrawables.useSupportLibrary = true
+    versionCode 1
+    versionName "1.0"
+  }
+
+  dataBinding {
+    enabled = true
   }
 }
 

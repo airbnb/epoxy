@@ -303,28 +303,13 @@ public class EpoxyModelValidationTest {
     new ControllerLifecycleHelper().bindModels(controller);
   }
 
-  static class ModelChangesDuringBind extends EpoxyModel<View> {
-    @EpoxyAttribute int value;
-
-    @Override
-    protected int getDefaultLayout() {
-      return R.layout.model_with_click_listener;
-    }
-
-    @Override
-    public void bind(View view) {
-      super.bind(view);
-      value = 3;
-    }
-  }
-
   @Test
   public void hashChangeThrows_duringBind() {
     thrown.expect(ImmutableModelException.class);
     thrown.expectMessage("Epoxy attribute fields on a model cannot be changed");
 
-    final EpoxyModelValidationTest$ModelChangesDuringBind_ model =
-        new EpoxyModelValidationTest$ModelChangesDuringBind_().id(1);
+    final ModelChangesDuringBind_ model =
+        new ModelChangesDuringBind_().id(1);
     EpoxyController controller = new EpoxyController() {
 
       @Override
