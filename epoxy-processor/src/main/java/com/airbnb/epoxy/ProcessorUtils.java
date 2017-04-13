@@ -15,8 +15,10 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import static javax.lang.model.element.ElementKind.CLASS;
@@ -41,6 +43,14 @@ class ProcessorUtils {
   static void throwError(String msg, Object... args)
       throws EpoxyProcessorException {
     throw new EpoxyProcessorException(String.format(msg, args));
+  }
+
+  static Element getElementByName(String name, Elements elements, Types types) {
+    try {
+      return elements.getTypeElement(name);
+    } catch (MirroredTypeException mte) {
+      return types.asElement(mte.getTypeMirror());
+    }
   }
 
   static ClassName getClassName(String className) {

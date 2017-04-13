@@ -17,7 +17,6 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
@@ -279,12 +278,7 @@ class LayoutResourceProcessor {
     ClassName className = rClassNameMap.get(rClass);
 
     if (className == null) {
-      Element rClassElement;
-      try {
-        rClassElement = elementUtils.getTypeElement(rClass);
-      } catch (MirroredTypeException mte) {
-        rClassElement = typeUtils.asElement(mte.getTypeMirror());
-      }
+      Element rClassElement = ProcessorUtils.getElementByName(rClass, elementUtils, typeUtils);
 
       String rClassPackageName =
           elementUtils.getPackageOf(rClassElement).getQualifiedName().toString();
