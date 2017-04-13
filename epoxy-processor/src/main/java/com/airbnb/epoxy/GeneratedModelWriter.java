@@ -3,7 +3,6 @@ package com.airbnb.epoxy;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 
-import com.google.common.collect.ImmutableList;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -532,7 +531,10 @@ class GeneratedModelWriter {
           .endControlFlow();
     }
 
-    return ImmutableList.of(baseMethodBuilder.build(), payloadMethodBuilder.build());
+    ArrayList<MethodSpec> methods = new ArrayList<>();
+    methods.add(baseMethodBuilder.build());
+    methods.add(payloadMethodBuilder.build());
+    return methods;
   }
 
   /**
