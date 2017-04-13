@@ -1,7 +1,13 @@
 package com.airbnb.epoxy.sample.models;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.airbnb.epoxy.EpoxyAttribute;
@@ -14,6 +20,7 @@ import com.airbnb.lottie.LottieAnimationView;
 
 import butterknife.BindView;
 
+import static android.animation.ObjectAnimator.ofInt;
 import static com.airbnb.epoxy.EpoxyAttribute.Option.DoNotHash;
 
 /**
@@ -29,13 +36,14 @@ public abstract class ColorModel extends EpoxyModelWithHolder<ColorHolder> {
   @EpoxyAttribute(DoNotHash) View.OnClickListener clickListener;
 
   @Override
-  public void bind(ColorHolder holder) {
+  public void bind(@NonNull ColorHolder holder) {
     holder.cardView.setBackgroundColor(color);
     holder.cardView.setOnClickListener(clickListener);
   }
 
   @Override
-  public void bind(ColorHolder holder, EpoxyModel<?> previouslyBoundModel) {
+  public void bindChanges(@NonNull ColorHolder holder,
+      @NonNull EpoxyModel<?> previouslyBoundModel) {
     // When this model changes we get a bind call with the previously bound model, so we can see
     // what changed and update accordingly.
     ColorModel previousModel = (ColorModel) previouslyBoundModel;
@@ -83,6 +91,28 @@ public abstract class ColorModel extends EpoxyModelWithHolder<ColorHolder> {
     lottieView.cancelAnimation();
     lottieView.setProgress(0);
     lottieView.setVisibility(View.GONE);
+  }
+
+  @Override
+  public boolean canAnimateChanges(ColorHolder view) {
+    return false;
+  }
+
+  @Override
+  public Animator animateChanges(ColorHolder view) {
+    int currentColor = ((ColorDrawable) view.getBackground()).getColor();
+
+    ObjectAnimator fadeToBlack =
+        ObjectAnimator.ofInt(view, "backgroundColor", currentColor, Color.BLACK);
+    fadeToBlack.setEvaluator(new ArgbEvaluator());
+
+    ObjectAnimator fadeFromBlack = ofInt(view, "backgroundColor", Color.BLACK, color);
+    fadeFromBlack.setEvaluator(new ArgbEvaluator());
+
+    AnimatorSet combinedAnim = new AnimatorSet();
+    combinedAnim.playSequentially(fadeToBlack, fadeFromBlack);
+
+    return combinedAnim;
   }
 
   @Override

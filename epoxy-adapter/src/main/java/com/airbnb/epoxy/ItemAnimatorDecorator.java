@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView.ItemAnimator;
@@ -16,7 +17,7 @@ import java.util.List;
  * base class for decorating ItemAnimators
  * currently only supports decorating change animations
  */
-abstract class ItemAnimatorDecorator extends ItemAnimator {
+public class ItemAnimatorDecorator extends ItemAnimator {
 
   private final ItemAnimator mDecorated;
 
@@ -27,7 +28,7 @@ abstract class ItemAnimatorDecorator extends ItemAnimator {
   private HashSet<ViewHolder> mDisappearAnims = new HashSet<>();
   private HashSet<ViewHolder> mPersistAnims = new HashSet<>();
 
-  ItemAnimatorDecorator(@NonNull ItemAnimator decorated) {
+  public ItemAnimatorDecorator(@NonNull ItemAnimator decorated) {
     mDecorated = decorated;
 
     setAnimationFinishedListener(decorated, new AnimationFinishedListener() {
@@ -154,6 +155,7 @@ abstract class ItemAnimatorDecorator extends ItemAnimator {
     mDecorated.endAnimation(item);
   }
 
+  @CallSuper
   public void endAnimations() {
     mDecorated.endAnimations();
   }
@@ -189,10 +191,12 @@ abstract class ItemAnimatorDecorator extends ItemAnimator {
     return mDecorated.recordPreLayoutInformation(state, viewHolder, changeFlags, payloads);
   }
 
+  @CallSuper
   public void runPendingAnimations() {
     mDecorated.runPendingAnimations();
   }
 
+  @CallSuper
   public boolean isRunning() {
     return mDecorated.isRunning();
   }

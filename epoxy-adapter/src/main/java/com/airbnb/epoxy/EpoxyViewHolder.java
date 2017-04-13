@@ -34,7 +34,7 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
 
     if (previouslyBoundModel != null) {
       // noinspection unchecked
-      model.bind(objectToBind(), previouslyBoundModel);
+      model.bindChanges(objectToBind(), previouslyBoundModel);
     } else if (payloads.isEmpty()) {
       // noinspection unchecked
       model.bind(objectToBind());
