@@ -1,30 +1,31 @@
 package com.airbnb.epoxy;
 
 import android.animation.AnimatorListenerAdapter;
-import android.animation.EpoxyItemAnimation.AnimatorListener;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView.ItemAnimator;
+import android.support.v7.widget.RecyclerView.State;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ItemAnimator that wraps any other ItemAnimator and delegates change animations to
  * {@link EpoxyModel}
  */
 public final class ChangeAnimationDelegator extends ItemAnimatorDecorator
-    implements AnimatorListener {
-  /* use a BiMap so we can use the same listener for every animator and quickly find the holder for
-     an animation. We do this to be able to remove only OUR listener from an animator and not those
-     that the user might have set */
-  @NonNull private final BiHashMap<ViewHolder, EpoxyItemAnimation> mChangeAnimations =
-      new BiHashMap<>();
+    implements EpoxyItemAnimation.Listener {
+
+  @NonNull private final Map<ViewHolder, EpoxyItemAnimation> mChangeAnimations = new HashMap<>();
 
   public ChangeAnimationDelegator(@NonNull ItemAnimator decoratedAnimator) {
     super(decoratedAnimator);
   }
 
+  @Override
   public long getChangeDuration() {
     long maxDuration = super.getChangeDuration();
 
@@ -36,8 +37,7 @@ public final class ChangeAnimationDelegator extends ItemAnimatorDecorator
   }
 
   public void onAnimationEnd(EpoxyItemAnimation anim) {
-    dispatchAnimationFinished(mChangeAnimations.inverse().get(anim));
-    mChangeAnimations.inverse().remove(anim);
+    dispatchAnimationFinished(mChangeAnimations.remove(anim.holder));
 
     if (mChangeAnimations.isEmpty()) {
       dispatchChangeAnimationsFinished();
@@ -53,40 +53,58 @@ public final class ChangeAnimationDelegator extends ItemAnimatorDecorator
     dispatchAnimationStarted(mChangeAnimations.inverse().get(anim));
   }
 
+  @Override
+  public boolean animateAppearance(@NonNull ViewHolder viewHolder,
+      @Nullable ItemHolderInfo preLayoutInfo, @NonNull ItemHolderInfo postLayoutInfo) {
+
+    return super.animateAppearance(viewHolder,
+        preLayoutInfo != null
+            ? ((DecoratedItemHolderInfo) preLayoutInfo).decoratedHolderInfo
+            : null,
+        ((DecoratedItemHolderInfo) postLayoutInfo).decoratedHolderInfo);
+  }
+
   @SuppressWarnings("unchecked")
+  @Override
   public boolean animateChange(
       @NonNull final ViewHolder oldHolder, @NonNull final ViewHolder newHolder,
-      @NonNull ItemHolderInfo preLayoutInfo, @NonNull ItemHolderInfo postLayoutInfo) {
+      @NonNull final ItemHolderInfo preLayoutInfo, @NonNull final ItemHolderInfo postLayoutInfo) {
 
-    if (oldHolder == newHolder && oldHolder instanceof EpoxyViewHolder
-        && canHolderAnimateChanges((EpoxyViewHolder) oldHolder)) {
+    final EpoxyViewHolder holder = ((EpoxyViewHolder) oldHolder);
+    final EpoxyModel previousModel = ((PreviousModelHolderInfo) preLayoutInfo).previousModel;
 
-      final EpoxyViewHolder holder = ((EpoxyViewHolder) oldHolder);
+    if (oldHolder == newHolder && previousModel != null && holder.canBindChanges(previousModel)) {
+
       final EpoxyModel newModel = holder.getModel();
       final Object viewToBind = holder.objectToBind();
-      final EpoxyModel oldModel = DiffPayload.getModelFromPayload();
 
       final EpoxyItemAnimation oldAnim = mChangeAnimations.get(oldHolder);
 
       if (oldAnim == null || !oldAnim.isRunning()) {
-        EpoxyItemAnimation newAnim = newModel.bindChangesAnimated(viewToBind, oldModel);
+        EpoxyItemAnimation newAnim = newModel.bindChangesAnimated(viewToBind, previousModel, null);
+        checkAnimNotStarted(newAnim);
         newAnim.addListener(this);
         mChangeAnimations.put(holder, newAnim);
       } else {
         EpoxyItemAnimation continuedAnim =
-            newModel.bindChangesAnimated(viewToBind, oldModel, oldAnim);
+            newModel.bindChangesAnimated(viewToBind, previousModel, oldAnim);
 
         if (continuedAnim != null) {
+          //TODO: if continuedAnim is started again, dispatchAnimationStarted will be called in the
+          // listener but we already did that for the interruptedAnim. Bug?
+          continuedAnim.addListener(this);
+
           //cancel old anim if user decided to create a new animator instead of reusing the old one
           if (continuedAnim != oldAnim) {
             oldAnim.cancel();
             continuedAnim.start();
           }
 
-          continuedAnim.addListener(this);
           mChangeAnimations.put(holder, continuedAnim);
         } else {
-          final EpoxyItemAnimation newAnim = newModel.bindChangesAnimated(viewToBind, oldModel);
+          final EpoxyItemAnimation newAnim =
+              newModel.bindChangesAnimated(viewToBind, previousModel, null);
+          checkAnimNotStarted(newAnim);
           newAnim.addListener(this);
 
           oldAnim.removeListener(this);
@@ -103,10 +121,40 @@ public final class ChangeAnimationDelegator extends ItemAnimatorDecorator
 
       return true;
     } else {
-      return super.animateChange(oldHolder, newHolder, preLayoutInfo, postLayoutInfo);
+      return super.animateChange(oldHolder, newHolder,
+          ((DecoratedItemHolderInfo) preLayoutInfo).decoratedHolderInfo,
+          ((DecoratedItemHolderInfo) postLayoutInfo).decoratedHolderInfo);
     }
   }
 
+  @Override
+  public boolean animateDisappearance(@NonNull ViewHolder viewHolder,
+      @NonNull ItemHolderInfo preLayoutInfo, @Nullable ItemHolderInfo postLayoutInfo) {
+
+    return super.animateDisappearance(viewHolder,
+        ((DecoratedItemHolderInfo) preLayoutInfo).decoratedHolderInfo,
+        postLayoutInfo != null
+            ? ((DecoratedItemHolderInfo) postLayoutInfo).decoratedHolderInfo
+            : null);
+  }
+
+  @Override
+  public boolean animatePersistence(@NonNull ViewHolder viewHolder,
+      @NonNull ItemHolderInfo preLayoutInfo, @NonNull ItemHolderInfo postLayoutInfo) {
+
+    return super.animatePersistence(viewHolder,
+        ((DecoratedItemHolderInfo) preLayoutInfo).decoratedHolderInfo,
+        ((DecoratedItemHolderInfo) postLayoutInfo).decoratedHolderInfo);
+  }
+
+  private void checkAnimNotStarted(EpoxyItemAnimation anim) {
+    if (anim.isRunning()) {
+      throw new IllegalStateException(
+          "EpoxyItemAnimation already started. Do not start animations yourself!");
+    }
+  }
+
+  @Override
   public void runPendingAnimations() {
     super.runPendingAnimations();
 
@@ -124,6 +172,7 @@ public final class ChangeAnimationDelegator extends ItemAnimatorDecorator
     }
   }
 
+  @Override
   public void endAnimation(@NonNull ViewHolder holder) {
     super.endAnimation(holder);
 
@@ -143,6 +192,7 @@ public final class ChangeAnimationDelegator extends ItemAnimatorDecorator
     }
   }
 
+  @Override
   public boolean isRunning() {
     boolean changesRunning = false;
 
@@ -153,16 +203,58 @@ public final class ChangeAnimationDelegator extends ItemAnimatorDecorator
     return changesRunning || super.isRunning();
   }
 
+  @Override
   public boolean canReuseUpdatedViewHolder(@NonNull ViewHolder holder,
       @NonNull List<Object> payloads) {
     // pass empty list to super because it contains only the previous model and DefaultItemAnimator
     // would decide not to cross fade
     return (holder instanceof EpoxyViewHolder && !payloads.isEmpty())
-        || super.canReuseUpdatedViewHolder(holder, Collections.emptyList());
+        || super.canReuseUpdatedViewHolder(holder,
+        Collections.emptyList()); //TODO: only remove our payloads
   }
 
-  @SuppressWarnings("unchecked")
-  private boolean canHolderAnimateChanges(@NonNull EpoxyViewHolder holder) {
-    return ((EpoxyModel) holder.getModel()).canReuseViewHolder();
+  @NonNull
+  @Override
+  public ItemHolderInfo recordPreLayoutInformation(@NonNull State state,
+      @NonNull ViewHolder viewHolder, int changeFlags, @NonNull List<Object> payloads) {
+
+    EpoxyModel previousModel = DiffPayload.getModelFromPayload(payloads, viewHolder.getItemId());
+
+    if (previousModel == null) {
+      throw new IllegalStateException(
+          "recordPreLayoutInfo: could not get previousModel from change payloads");
+    }
+
+    return new PreviousModelHolderInfo(
+        previousModel,
+        super.recordPreLayoutInformation(state, viewHolder, changeFlags, payloads));
+
   }
+
+  @NonNull
+  @Override
+  public ItemHolderInfo recordPostLayoutInformation(@NonNull State state,
+      @NonNull ViewHolder viewHolder) {
+
+    return new DecoratedItemHolderInfo(super.recordPostLayoutInformation(state, viewHolder));
+  }
+
+  private class DecoratedItemHolderInfo extends ItemHolderInfo {
+    @NonNull final ItemHolderInfo decoratedHolderInfo;
+
+    DecoratedItemHolderInfo(@NonNull ItemHolderInfo decoratedHolderInfo) {
+      this.decoratedHolderInfo = decoratedHolderInfo;
+    }
+  }
+
+  private class PreviousModelHolderInfo extends DecoratedItemHolderInfo {
+    @NonNull final EpoxyModel previousModel;
+
+    PreviousModelHolderInfo(@NonNull EpoxyModel previousModel,
+        @NonNull ItemHolderInfo decoratedHolderInfo) {
+      super(decoratedHolderInfo);
+      this.previousModel = previousModel;
+    }
+  }
+
 }

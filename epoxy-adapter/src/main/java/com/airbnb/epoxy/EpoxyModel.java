@@ -193,7 +193,7 @@ public abstract class EpoxyModel<T> {
    *
    * @return true if you wish to animate changes in the model
    */
-  public boolean canReuseViewHolder(@NonNull EpoxyModel<?> previouslyBoundModel) {
+  public boolean canBindChanges(@NonNull EpoxyModel<?> previouslyBoundModel) {
     return false;
   }
 

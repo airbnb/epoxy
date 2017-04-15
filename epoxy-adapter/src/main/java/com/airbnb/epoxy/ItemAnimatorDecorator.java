@@ -93,34 +93,43 @@ public class ItemAnimatorDecorator extends ItemAnimator {
   }
 
   @NonNull
-  public ItemAnimator getDecoratedAnimator() {
+  public final ItemAnimator getDecoratedAnimator() {
     return mDecorated;
   }
 
-  protected boolean appearAnimationsScheduled() {
+  protected final boolean appearAnimationsScheduled() {
     return !mAppearAnims.isEmpty();
   }
 
-  protected boolean changeAnimationsScheduled() {
+  protected final boolean changeAnimationsScheduled() {
     return !mChangeAnims.isEmpty();
   }
 
-  boolean disappearAnimationsScheduled() {
+  protected final boolean disappearAnimationsScheduled() {
     return !mDisappearAnims.isEmpty();
   }
 
-  protected boolean persistAnimationsScheduled() {
+  protected final boolean persistAnimationsScheduled() {
     return !mPersistAnims.isEmpty();
   }
 
-  public final boolean animateAppearance(@NonNull ViewHolder viewHolder,
+  protected final boolean animationScheduled(ViewHolder holder) {
+    return mAppearAnims.contains(holder) || mChangeAnims.contains(holder)
+        || mDisappearAnims.contains(holder) || mPersistAnims.contains(holder);
+  }
+
+  @Override
+  public boolean animateAppearance(@NonNull ViewHolder viewHolder,
       @Nullable ItemHolderInfo preLayoutInfo, @NonNull ItemHolderInfo postLayoutInfo) {
+
     mAppearAnims.add(viewHolder);
     return mDecorated.animateAppearance(viewHolder, preLayoutInfo, postLayoutInfo);
   }
 
+  @Override
   public boolean animateChange(@NonNull ViewHolder oldHolder, @NonNull ViewHolder newHolder,
       @NonNull ItemHolderInfo preLayoutInfo, @NonNull ItemHolderInfo postLayoutInfo) {
+
     mAppearAnims.add(oldHolder);
 
     if (newHolder != oldHolder) {
@@ -130,36 +139,45 @@ public class ItemAnimatorDecorator extends ItemAnimator {
     return mDecorated.animateChange(oldHolder, newHolder, preLayoutInfo, postLayoutInfo);
   }
 
-  public final boolean animateDisappearance(@NonNull ViewHolder viewHolder,
+  @Override
+  public boolean animateDisappearance(@NonNull ViewHolder viewHolder,
       @NonNull ItemHolderInfo preLayoutInfo, @Nullable ItemHolderInfo postLayoutInfo) {
+
     mDisappearAnims.add(viewHolder);
     return mDecorated.animateDisappearance(viewHolder, preLayoutInfo, postLayoutInfo);
   }
 
-  public final boolean animatePersistence(@NonNull ViewHolder viewHolder,
+  @Override
+  public boolean animatePersistence(@NonNull ViewHolder viewHolder,
       @NonNull ItemHolderInfo preLayoutInfo, @NonNull ItemHolderInfo postLayoutInfo) {
+
     mDisappearAnims.add(viewHolder);
     return mDecorated.animatePersistence(viewHolder, preLayoutInfo, postLayoutInfo);
   }
 
+  @Override
   public boolean canReuseUpdatedViewHolder(@NonNull ViewHolder viewHolder) {
     return mDecorated.canReuseUpdatedViewHolder(viewHolder);
   }
 
+  @Override
   public boolean canReuseUpdatedViewHolder(@NonNull ViewHolder holder,
       @NonNull List<Object> payloads) {
     return mDecorated.canReuseUpdatedViewHolder(holder, payloads);
   }
 
+  @Override
   public void endAnimation(@NonNull ViewHolder item) {
     mDecorated.endAnimation(item);
   }
 
   @CallSuper
+  @Override
   public void endAnimations() {
     mDecorated.endAnimations();
   }
 
+  @Override
   @NonNull
   public ItemHolderInfo obtainHolderInfo() {
     return mDecorated.obtainHolderInfo();
@@ -168,6 +186,7 @@ public class ItemAnimatorDecorator extends ItemAnimator {
   /**
    * will also be called for animations started by the mDecorated class
    */
+  @Override
   public void onAnimationFinished(@NonNull ViewHolder viewHolder) {
 
   }
@@ -175,16 +194,27 @@ public class ItemAnimatorDecorator extends ItemAnimator {
   /**
    * attention: will not be called for animations that are started by the mDecorated class
    */
+  @Override
   public void onAnimationStarted(@NonNull ViewHolder viewHolder) {
 
   }
 
+  /**
+   * when overriding this, don't forget to call the decorated animator's animate* methods with the
+   * right HolderInfo
+   */
+  @CallSuper
   @NonNull
   public ItemHolderInfo recordPostLayoutInformation(@NonNull State state,
       @NonNull ViewHolder viewHolder) {
     return mDecorated.recordPostLayoutInformation(state, viewHolder);
   }
 
+  /**
+   * when overriding this, don't forget to call the decorated animator's animate* methods with the
+   * right HolderInfo
+   */
+  @CallSuper
   @NonNull
   public ItemHolderInfo recordPreLayoutInformation(@NonNull State state,
       @NonNull ViewHolder viewHolder, int changeFlags, @NonNull List<Object> payloads) {
@@ -218,34 +248,42 @@ public class ItemAnimatorDecorator extends ItemAnimator {
     }
   }
 
+  @Override
   public final long getAddDuration() {
     return mDecorated.getAddDuration();
   }
 
+  @Override
   public final void setAddDuration(long newAddDuration) {
     mDecorated.setAddDuration(newAddDuration);
   }
 
+  @Override
   public long getChangeDuration() {
     return mDecorated.getChangeDuration();
   }
 
+  @Override
   public void setChangeDuration(long newChangeDuration) {
     mDecorated.setChangeDuration(newChangeDuration);
   }
 
+  @Override
   public final long getMoveDuration() {
     return mDecorated.getMoveDuration();
   }
 
+  @Override
   public final void setMoveDuration(long newMoveDuration) {
     mDecorated.setMoveDuration(newMoveDuration);
   }
 
+  @Override
   public final long getRemoveDuration() {
     return mDecorated.getRemoveDuration();
   }
 
+  @Override
   public final void setRemoveDuration(long newRemoveDuration) {
     mDecorated.setRemoveDuration(newRemoveDuration);
   }
