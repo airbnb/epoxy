@@ -7,7 +7,6 @@ import org.junit.Test;
 import javax.tools.JavaFileObject;
 
 import static com.google.common.truth.Truth.assert_;
-import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static com.google.testing.compile.JavaSourcesSubjectFactory.javaSources;
 import static java.util.Arrays.asList;
 
@@ -74,8 +73,6 @@ public class DataBindingModelTest {
     JavaFileObject generatedModel =
         JavaFileObjects.forResource("DataBindingModelWithAllFieldTypes_.java");
 
-//    EpoxyProcessor.withNoValidation()
-
     assert_().about(javaSources())
         .that(asList(model, BR_CLASS, R))
         .processedWith(new EpoxyProcessor())
@@ -84,5 +81,19 @@ public class DataBindingModelTest {
         .generatesSources(generatedModel);
   }
 
+  @Test
+  public void testSimpleModelNoValidation() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("DataBindingModelWithAllFieldTypesNoValidation.java");
 
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("DataBindingModelWithAllFieldTypesNoValidation_.java");
+
+    assert_().about(javaSources())
+        .that(asList(model, BR_CLASS, R))
+        .processedWith(EpoxyProcessor.withNoValidation())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
 }

@@ -61,6 +61,10 @@ public abstract class DataBindingEpoxyModel extends EpoxyModelWithHolder<DataBin
   }
 
   /**
+   * This is called when the model is bound to a view, and the view's variables should be updated
+   * with the model's data. {@link ViewDataBinding#executePendingBindings()} is called for you after
+   * this method is run.
+   * <p>
    * If you leave your class abstract and have a model generated for you via annotations this will
    * be implemented for you. However, you may choose to implement this manually if you like.
    */
