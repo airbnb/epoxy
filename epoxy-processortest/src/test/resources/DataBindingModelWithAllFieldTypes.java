@@ -2,7 +2,8 @@ package com.airbnb.epoxy;
 
 import java.util.List;
 
-public class DataBindingModelWithAllFieldTypes extends EpoxyModel<Object> {
+@EpoxyModelClass
+public abstract class DataBindingModelWithAllFieldTypes extends DataBindingEpoxyModel {
   @EpoxyAttribute int valueInt;
   @EpoxyAttribute Integer valueInteger;
   @EpoxyAttribute short valueShort;
@@ -24,4 +25,9 @@ public class DataBindingModelWithAllFieldTypes extends EpoxyModel<Object> {
   @EpoxyAttribute String valueString;
   @EpoxyAttribute Object valueObject;
   @EpoxyAttribute List<String> valueList;
+
+  @Override
+  protected int getDefaultLayout() {
+    return 0;
+  }
 }

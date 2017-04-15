@@ -86,16 +86,11 @@ class LayoutResourceProcessor {
   String getModuleName(String packageName) {
     List<ClassName> rClasses = new ArrayList<>(rClassNameMap.values());
     if (rClasses.isEmpty()) {
-      errorLogger.logError(
-          "Could not look up module name for DataBinding BR class. Make sure you use a layout "
-              + "resource "
-              + "in a %s annotation on your model class so Epoxy can look up the module name.",
-          EpoxyModelClass.class);
       return packageName;
     }
 
     if (rClasses.size() == 1) {
-      // Commong case
+      // Common case
       return rClasses.get(0).packageName();
     }
 
@@ -103,13 +98,13 @@ class LayoutResourceProcessor {
     // though, like Android's. In that case we figure out the most likely match by comparing the
     // package name.
     //  For example we might have "com.airbnb.epoxy.R" and "android.R"
-    String[] packageNames = packageName.split(".");
+    String[] packageNames = packageName.split("\\.");
 
     ClassName bestMatch = null;
     int bestNumMatches = -1;
 
     for (ClassName rClass : rClasses) {
-      String[] rModuleNames = rClass.packageName().split(".");
+      String[] rModuleNames = rClass.packageName().split("\\.");
       int numNameMatches = 0;
       for (int i = 0; i < Math.min(packageNames.length, rModuleNames.length); i++) {
         if (packageNames[i].equals(rModuleNames[i])) {
