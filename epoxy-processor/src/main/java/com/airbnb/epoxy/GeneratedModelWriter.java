@@ -39,7 +39,6 @@ import static com.airbnb.epoxy.ProcessorUtils.UNTYPED_EPOXY_MODEL_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.WRAPPED_LISTENER_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.getClassName;
 import static com.airbnb.epoxy.ProcessorUtils.getEpoxyObjectType;
-import static com.airbnb.epoxy.ProcessorUtils.getModelNameForElement;
 import static com.airbnb.epoxy.ProcessorUtils.implementsMethod;
 import static com.airbnb.epoxy.ProcessorUtils.isDataBindingModel;
 import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModel;
@@ -71,15 +70,18 @@ class GeneratedModelWriter {
   private final ErrorLogger errorLogger;
   private final LayoutResourceProcessor layoutResourceProcessor;
   private final ConfigManager configManager;
+  private final DataBindingModuleLookup dataBindingModuleLookup;
 
   GeneratedModelWriter(Filer filer, Types typeUtils, Elements elementUtils, ErrorLogger errorLogger,
-      LayoutResourceProcessor layoutResourceProcessor, ConfigManager configManager) {
+      LayoutResourceProcessor layoutResourceProcessor, ConfigManager configManager,
+      DataBindingModuleLookup dataBindingModuleLookup) {
     this.filer = filer;
     this.typeUtils = typeUtils;
     this.elementUtils = elementUtils;
     this.errorLogger = errorLogger;
     this.layoutResourceProcessor = layoutResourceProcessor;
     this.configManager = configManager;
+    this.dataBindingModuleLookup = dataBindingModuleLookup;
   }
 
   void generateClassForModel(ClassToGenerateInfo info)
@@ -461,8 +463,9 @@ class GeneratedModelWriter {
       return;
     }
 
-    ModelLayoutResource layout =
-        layoutResourceProcessor.getLayoutForModel(modelClassWithAnnotation);
+    LayoutResource layout = layoutResourceProcessor
+        .getLayoutInAnnotation(modelClassWithAnnotation, EpoxyModelClass.class);
+
     getDefaultLayoutMethod = getDefaultLayoutMethod.toBuilder()
         .addStatement("return $L", layout.code)
         .build();
@@ -494,7 +497,7 @@ class GeneratedModelWriter {
 
     ClassName generatedModelClass = info.getGeneratedName();
 
-    String moduleName = getModuleName(info);
+    String moduleName = dataBindingModuleLookup.getModuleName(info.getOriginalClassElement());
 
     Builder baseMethodBuilder = bindVariablesMethod.toBuilder();
 
@@ -539,29 +542,6 @@ class GeneratedModelWriter {
     methods.add(baseMethodBuilder.build());
     methods.add(payloadMethodBuilder.build());
     return methods;
-  }
-
-  private String getModuleName(ClassToGenerateInfo classInfo) {
-    String packageName = classInfo.getGeneratedName().packageName();
-
-    // First we try to get the module name by looking at what R classes were found when processing
-    // layout annotations. This may find nothing if no layouts were given via @EpoxyModelClass
-    String moduleName = layoutResourceProcessor.getModuleName(packageName);
-
-    if (moduleName == null) {
-      // If the first approach fails, we try to guess at the R class for the module and look up
-      // the class to see if it exists. This can fail if this model's package name does not
-      // include the module name as a prefix (convention makes this unlikely.)
-      moduleName = getModelNameForElement(packageName, elementUtils, typeUtils);
-    }
-
-    if (moduleName == null) {
-      errorLogger.logError("Could not find module name for DataBinding BR class.");
-      // Fallback to using the packagename so we can at least try to generate and compile something
-      moduleName = packageName;
-    }
-
-    return moduleName;
   }
 
   /**

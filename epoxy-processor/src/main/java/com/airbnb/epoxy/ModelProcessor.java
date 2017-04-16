@@ -38,7 +38,7 @@ class ModelProcessor {
 
   ModelProcessor(Filer filer, Messager messager, Elements elementUtils, Types typeUtils,
       ConfigManager configManager, ErrorLogger errorLogger,
-      LayoutResourceProcessor layoutProcessor) {
+      LayoutResourceProcessor layoutProcessor, DataBindingModuleLookup dataBindingModuleLookup) {
     this.messager = messager;
     this.elementUtils = elementUtils;
     this.typeUtils = typeUtils;
@@ -46,7 +46,7 @@ class ModelProcessor {
     this.errorLogger = errorLogger;
     modelWriter =
         new GeneratedModelWriter(filer, typeUtils, elementUtils, errorLogger, layoutProcessor,
-            configManager);
+            configManager, dataBindingModuleLookup);
   }
 
   List<ClassToGenerateInfo> getGeneratedModels() {
