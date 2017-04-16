@@ -22,6 +22,7 @@ android {
 dependencies {
   compile project(':epoxy-adapter')
   compile project(':epoxy-annotations')
+  compile project(':epoxy-databinding')
   annotationProcessor project(':epoxy-processor')
 
   testCompile rootProject.deps.junit
