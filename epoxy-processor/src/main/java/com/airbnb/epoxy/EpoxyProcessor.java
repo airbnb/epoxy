@@ -40,6 +40,7 @@ public class EpoxyProcessor extends AbstractProcessor {
 
   private LayoutResourceProcessor layoutResourceProcessor;
   private ConfigManager configManager;
+  private DataBindingModuleLookup dataBindingModuleLookup;
   private final ErrorLogger errorLogger = new ErrorLogger();
 
   public EpoxyProcessor() {
@@ -74,6 +75,9 @@ public class EpoxyProcessor extends AbstractProcessor {
     configManager =
         new ConfigManager(!testOptions.isEmpty() ? testOptions : processingEnv.getOptions(),
             elementUtils);
+
+    dataBindingModuleLookup =
+        new DataBindingModuleLookup(elementUtils, typeUtils, errorLogger, layoutResourceProcessor);
   }
 
   @Override
@@ -92,6 +96,7 @@ public class EpoxyProcessor extends AbstractProcessor {
     annotations.add(EpoxyAttribute.class);
     annotations.add(PackageEpoxyConfig.class);
     annotations.add(AutoModel.class);
+    annotations.add(EpoxyDataBindingLayouts.class);
 
     return annotations;
   }
@@ -104,14 +109,17 @@ public class EpoxyProcessor extends AbstractProcessor {
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     errorLogger.logErrors(configManager.processConfigurations(roundEnv));
-    layoutResourceProcessor.processResources(roundEnv);
 
     ModelProcessor modelProcessor = new ModelProcessor(filer, messager,
-        elementUtils, typeUtils, configManager, errorLogger, layoutResourceProcessor);
+        elementUtils, typeUtils, configManager, errorLogger, layoutResourceProcessor,
+        dataBindingModuleLookup);
     modelProcessor.processModels(roundEnv);
 
     new ControllerProcessor(filer, elementUtils, errorLogger, configManager)
         .process(roundEnv, modelProcessor.getGeneratedModels());
+
+    new DataBindingProcessor(filer, elementUtils, typeUtils, errorLogger, configManager,
+        layoutResourceProcessor, dataBindingModuleLookup).process(roundEnv);
 
     if (roundEnv.processingOver()) {
 

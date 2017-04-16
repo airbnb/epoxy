@@ -8,20 +8,26 @@ import com.squareup.javapoet.CodeBlock;
  * <p>
  * Inpspired by Butterknife. https://github.com/JakeWharton/butterknife/pull/613
  */
-final class ModelLayoutResource {
+final class LayoutResource {
   private static final ClassName ANDROID_R = ClassName.get("android", "R");
 
+  final ClassName className;
+  final String resourceName;
   final int value;
   final CodeBlock code;
   final boolean qualifed;
 
-  ModelLayoutResource(int value) {
+  LayoutResource(int value) {
     this.value = value;
     this.code = CodeBlock.of("$L", value);
     this.qualifed = false;
+    resourceName = null;
+    className = null;
   }
 
-  ModelLayoutResource(ClassName className, String resourceName, int value) {
+  LayoutResource(ClassName className, String resourceName, int value) {
+    this.className = className;
+    this.resourceName = resourceName;
     this.value = value;
     this.code = className.topLevelClassName().equals(ANDROID_R)
         ? CodeBlock.of("$L.$N", className, resourceName)
@@ -34,11 +40,11 @@ final class ModelLayoutResource {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof ModelLayoutResource)) {
+    if (!(o instanceof LayoutResource)) {
       return false;
     }
 
-    ModelLayoutResource that = (ModelLayoutResource) o;
+    LayoutResource that = (LayoutResource) o;
 
     if (value != that.value) {
       return false;
