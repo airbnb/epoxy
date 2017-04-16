@@ -19,12 +19,14 @@ import java.io.IOException;
 import java.lang.annotation.AnnotationTypeMismatchException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.ProcessorUtils.EPOXY_CONTROLLER_TYPE;
@@ -33,9 +35,13 @@ import static com.airbnb.epoxy.ProcessorUtils.GENERATED_MODEL_INTERFACE;
 import static com.airbnb.epoxy.ProcessorUtils.MODEL_CLICK_LISTENER_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.ON_BIND_MODEL_LISTENER_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.ON_UNBIND_MODEL_LISTENER_TYPE;
+import static com.airbnb.epoxy.ProcessorUtils.UNTYPED_EPOXY_MODEL_TYPE;
+import static com.airbnb.epoxy.ProcessorUtils.WRAPPED_LISTENER_TYPE;
 import static com.airbnb.epoxy.ProcessorUtils.getClassName;
 import static com.airbnb.epoxy.ProcessorUtils.getEpoxyObjectType;
+import static com.airbnb.epoxy.ProcessorUtils.getModelNameForElement;
 import static com.airbnb.epoxy.ProcessorUtils.implementsMethod;
+import static com.airbnb.epoxy.ProcessorUtils.isDataBindingModel;
 import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModel;
 import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModelWithHolder;
 import static com.squareup.javapoet.TypeName.BOOLEAN;
@@ -61,14 +67,16 @@ class GeneratedModelWriter {
 
   private final Filer filer;
   private final Types typeUtils;
+  private final Elements elementUtils;
   private final ErrorLogger errorLogger;
   private final LayoutResourceProcessor layoutResourceProcessor;
   private final ConfigManager configManager;
 
-  GeneratedModelWriter(Filer filer, Types typeUtils, ErrorLogger errorLogger,
+  GeneratedModelWriter(Filer filer, Types typeUtils, Elements elementUtils, ErrorLogger errorLogger,
       LayoutResourceProcessor layoutResourceProcessor, ConfigManager configManager) {
     this.filer = filer;
     this.typeUtils = typeUtils;
+    this.elementUtils = elementUtils;
     this.errorLogger = errorLogger;
     this.layoutResourceProcessor = layoutResourceProcessor;
     this.configManager = configManager;
@@ -96,6 +104,7 @@ class GeneratedModelWriter {
         .addMethods(generateSettersAndGetters(info))
         .addMethods(generateMethodsReturningClassType(info))
         .addMethods(generateDefaultMethodImplementations(info))
+        .addMethods(generateDataBindingMethodsIfNeeded(info))
         .addMethod(generateReset(info))
         .addMethod(generateEquals(info))
         .addMethod(generateHashCode(info))
@@ -191,12 +200,12 @@ class GeneratedModelWriter {
   }
 
   private void generateDebugAddToMethodIfNeeded(TypeSpec.Builder classBuilder) {
-    if (!configManager.shouldValidateModeUsage()) {
+    if (!configManager.shouldValidateModelUsage()) {
       return;
     }
 
     MethodSpec addToMethod = MethodSpec.methodBuilder("addTo")
-        .addParameter(ProcessorUtils.getClassName(EPOXY_CONTROLLER_TYPE), "controller")
+        .addParameter(getClassName(EPOXY_CONTROLLER_TYPE), "controller")
         .addAnnotation(Override.class)
         .addModifiers(PUBLIC)
         .addStatement("super.addTo(controller)")
@@ -230,8 +239,8 @@ class GeneratedModelWriter {
         "The model was changed between being added to the controller and being bound.");
 
     ClassName viewType = getClassName("android.view.View");
-    ClassName clickWrapperType = getClassName(ProcessorUtils.WRAPPED_LISTENER_TYPE);
-    ClassName modelClickListenerType = getClassName(ProcessorUtils.MODEL_CLICK_LISTENER_TYPE);
+    ClassName clickWrapperType = getClassName(WRAPPED_LISTENER_TYPE);
+    ClassName modelClickListenerType = getClassName(MODEL_CLICK_LISTENER_TYPE);
     for (AttributeInfo attribute : classInfo.getAttributeInfo()) {
       if (!attribute.isViewClickListener()) {
         continue;
@@ -462,6 +471,100 @@ class GeneratedModelWriter {
   }
 
   /**
+   * Add `setDataBindingVariables` for DataBinding models if they haven't implemented it. This adds
+   * the basic method and a method that checks for payload changes and only sets the variables that
+   * changed.
+   */
+  private Iterable<MethodSpec> generateDataBindingMethodsIfNeeded(ClassToGenerateInfo info) {
+    if (!isDataBindingModel(info.getOriginalClassElement())) {
+      return Collections.emptyList();
+    }
+
+    MethodSpec bindVariablesMethod = MethodSpec.methodBuilder("setDataBindingVariables")
+        .addAnnotation(Override.class)
+        .addParameter(ClassName.get("android.databinding", "ViewDataBinding"), "binding")
+        .addModifiers(Modifier.PROTECTED)
+        .returns(TypeName.VOID)
+        .build();
+
+    // If the base method is already implemented don't bother checking for the payload method
+    if (implementsMethod(info.getOriginalClassElement(), bindVariablesMethod, typeUtils)) {
+      return Collections.emptyList();
+    }
+
+    ClassName generatedModelClass = info.getGeneratedName();
+
+    String moduleName = getModuleName(info);
+
+    Builder baseMethodBuilder = bindVariablesMethod.toBuilder();
+
+    Builder payloadMethodBuilder = bindVariablesMethod
+        .toBuilder()
+        .addParameter(getClassName(UNTYPED_EPOXY_MODEL_TYPE), "previousModel")
+        .beginControlFlow("if (!(previousModel instanceof $T))", generatedModelClass)
+        .addStatement("setDataBindingVariables(binding)")
+        .addStatement("return")
+        .endControlFlow()
+        .addStatement("$T that = ($T) previousModel", generatedModelClass, generatedModelClass);
+
+    ClassName brClass = ClassName.get(moduleName, "BR");
+    boolean validateAttributes = configManager.shouldValidateModelUsage();
+    for (AttributeInfo attribute : info.getAttributeInfo()) {
+      String attrName = attribute.getName();
+      CodeBlock setVariableBlock =
+          CodeBlock.of("binding.setVariable($T.$L, $L)", brClass, attrName, attribute.getterCode());
+
+      if (validateAttributes) {
+        // The setVariable method returns false if the variable id was not found in the layout.
+        // We can warn the user about this if they have model validations turned on, otherwise
+        // it fails silently.
+        baseMethodBuilder
+            .beginControlFlow("if (!$L)", setVariableBlock)
+            .addStatement(
+                "throw new $T(\"The attribute $L was defined in your data binding model ($L) but "
+                    + "a data variable of that name was not found in the layout.\")",
+                IllegalStateException.class, attrName, info.getOriginalClassName())
+            .endControlFlow();
+      } else {
+        baseMethodBuilder.addStatement("$L", setVariableBlock);
+      }
+
+      // Handle binding variables only if they changed
+      startNotEqualsControlFlow(payloadMethodBuilder, attribute)
+          .addStatement("$L", setVariableBlock)
+          .endControlFlow();
+    }
+
+    ArrayList<MethodSpec> methods = new ArrayList<>();
+    methods.add(baseMethodBuilder.build());
+    methods.add(payloadMethodBuilder.build());
+    return methods;
+  }
+
+  private String getModuleName(ClassToGenerateInfo classInfo) {
+    String packageName = classInfo.getGeneratedName().packageName();
+
+    // First we try to get the module name by looking at what R classes were found when processing
+    // layout annotations. This may find nothing if no layouts were given via @EpoxyModelClass
+    String moduleName = layoutResourceProcessor.getModuleName(packageName);
+
+    if (moduleName == null) {
+      // If the first approach fails, we try to guess at the R class for the module and look up
+      // the class to see if it exists. This can fail if this model's package name does not
+      // include the module name as a prefix (convention makes this unlikely.)
+      moduleName = getModelNameForElement(packageName, elementUtils, typeUtils);
+    }
+
+    if (moduleName == null) {
+      errorLogger.logError("Could not find module name for DataBinding BR class.");
+      // Fallback to using the packagename so we can at least try to generate and compile something
+      moduleName = packageName;
+    }
+
+    return moduleName;
+  }
+
+  /**
    * Looks for {@link EpoxyModelClass} annotation in the original class and his parents.
    */
   private TypeElement findSuperClassWithClassAnnotation(TypeElement classElement) {
@@ -555,8 +658,8 @@ class GeneratedModelWriter {
         .addAnnotations(attribute.getSetterAnnotations());
 
     ClassName viewType = getClassName("android.view.View");
-    ClassName clickWrapperType = getClassName(ProcessorUtils.WRAPPED_LISTENER_TYPE);
-    ClassName modelClickListenerType = getClassName(ProcessorUtils.MODEL_CLICK_LISTENER_TYPE);
+    ClassName clickWrapperType = getClassName(WRAPPED_LISTENER_TYPE);
+    ClassName modelClickListenerType = getClassName(MODEL_CLICK_LISTENER_TYPE);
 
     // This creates a View.OnClickListener and sets it on the original model's click listener field.
     // This click listener has an empty onClick implementation, and will be replaced in
@@ -606,19 +709,21 @@ class GeneratedModelWriter {
         .addStatement("$T that = ($T) o", helperClass.getGeneratedName(),
             helperClass.getGeneratedName());
 
-    addEqualsLineForType(
+    startNotEqualsControlFlow(
         builder,
         false,
         getClassName(ON_BIND_MODEL_LISTENER_TYPE),
-        modelBindListenerFieldName()
-    );
+        modelBindListenerFieldName())
+        .addStatement("return false")
+        .endControlFlow();
 
-    addEqualsLineForType(
+    startNotEqualsControlFlow(
         builder,
         false,
         getClassName(ON_UNBIND_MODEL_LISTENER_TYPE),
-        modelUnbindListenerFieldName()
-    );
+        modelUnbindListenerFieldName())
+        .addStatement("return false")
+        .endControlFlow();
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
       TypeName type = attributeInfo.getType();
@@ -627,7 +732,9 @@ class GeneratedModelWriter {
         continue;
       }
 
-      addEqualsLineForType(builder, attributeInfo.useInHash(), type, attributeInfo.getterCode());
+      startNotEqualsControlFlow(builder, attributeInfo)
+          .addStatement("return false")
+          .endControlFlow();
     }
 
     return builder
@@ -635,41 +742,40 @@ class GeneratedModelWriter {
         .build();
   }
 
-  private void addEqualsLineForType(Builder builder, boolean useObjectHashCode, TypeName type,
-      String accessorCode) {
+  private static MethodSpec.Builder startNotEqualsControlFlow(MethodSpec.Builder methodBuilder,
+      AttributeInfo attribute) {
+    TypeName attributeType = attribute.getType();
+    boolean useHash = attributeType.isPrimitive() || attribute.useInHash();
+    return startNotEqualsControlFlow(methodBuilder, useHash, attributeType, attribute.getterCode());
+  }
+
+  private static MethodSpec.Builder startNotEqualsControlFlow(Builder builder,
+      boolean useObjectHashCode, TypeName type, String accessorCode) {
+
     if (useObjectHashCode) {
       if (type == FLOAT) {
-        builder.beginControlFlow("if (Float.compare(that.$L, $L) != 0)", accessorCode, accessorCode)
-            .addStatement("return false")
-            .endControlFlow();
+        builder
+            .beginControlFlow("if (Float.compare(that.$L, $L) != 0)", accessorCode, accessorCode);
       } else if (type == DOUBLE) {
         builder
-            .beginControlFlow("if (Double.compare(that.$L, $L) != 0)", accessorCode, accessorCode)
-            .addStatement("return false")
-            .endControlFlow();
+            .beginControlFlow("if (Double.compare(that.$L, $L) != 0)", accessorCode, accessorCode);
       } else if (type.isPrimitive()) {
-        builder.beginControlFlow("if ($L != that.$L)", accessorCode, accessorCode)
-            .addStatement("return false")
-            .endControlFlow();
+        builder.beginControlFlow("if ($L != that.$L)", accessorCode, accessorCode);
       } else if (type instanceof ArrayTypeName) {
         builder
             .beginControlFlow("if (!$T.equals($L, that.$L))", TypeName.get(Arrays.class),
-                accessorCode,
-                accessorCode)
-            .addStatement("return false")
-            .endControlFlow();
+                accessorCode, accessorCode);
       } else {
         builder
             .beginControlFlow("if ($L != null ? !$L.equals(that.$L) : that.$L != null)",
-                accessorCode, accessorCode, accessorCode, accessorCode)
-            .addStatement("return false")
-            .endControlFlow();
+                accessorCode, accessorCode, accessorCode, accessorCode);
       }
     } else {
-      builder.beginControlFlow("if (($L == null) != (that.$L == null))", accessorCode, accessorCode)
-          .addStatement("return false")
-          .endControlFlow();
+      builder
+          .beginControlFlow("if (($L == null) != (that.$L == null))", accessorCode, accessorCode);
     }
+
+    return builder;
   }
 
   private MethodSpec generateHashCode(ClassToGenerateInfo helperClass) {
@@ -834,7 +940,7 @@ class GeneratedModelWriter {
 
   private MethodSpec.Builder addMutabilityValidationIfNecessary(MethodSpec.Builder method,
       ClassToGenerateInfo classInfo) {
-    if (configManager.shouldValidateModeUsage()) {
+    if (configManager.shouldValidateModelUsage()) {
       method.addStatement("validateMutability()");
     }
 
@@ -843,7 +949,7 @@ class GeneratedModelWriter {
 
   private MethodSpec.Builder addHashCodeValidationIfNecessary(MethodSpec.Builder method,
       ClassToGenerateInfo classInfo, String message) {
-    if (configManager.shouldValidateModeUsage()) {
+    if (configManager.shouldValidateModelUsage()) {
       method.addStatement("validateStateHasNotChangedSinceAdded($S, position)", message);
     }
 

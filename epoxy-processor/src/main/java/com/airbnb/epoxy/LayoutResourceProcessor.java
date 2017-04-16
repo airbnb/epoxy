@@ -7,7 +7,9 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeScanner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -15,7 +17,6 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
@@ -74,6 +75,53 @@ class LayoutResourceProcessor {
     return modelLayout;
   }
 
+  /**
+   * Attempts to get the module name of the given package. We can do this because the package name
+   * of an R class is the module. Generally only one R class is used and we can just use that module
+   * name, but it is possible to have multiple R classes. In that case we compare the package names
+   * to find what is the most similar.
+   * <p>
+   * We need to get the module name to know the path of the BR class for data binding.
+   */
+  String getModuleName(String packageName) {
+    List<ClassName> rClasses = new ArrayList<>(rClassNameMap.values());
+    if (rClasses.isEmpty()) {
+      return packageName;
+    }
+
+    if (rClasses.size() == 1) {
+      // Common case
+      return rClasses.get(0).packageName();
+    }
+
+    // Generally the only R class used should be the app's. It is possible to use other R classes
+    // though, like Android's. In that case we figure out the most likely match by comparing the
+    // package name.
+    //  For example we might have "com.airbnb.epoxy.R" and "android.R"
+    String[] packageNames = packageName.split("\\.");
+
+    ClassName bestMatch = null;
+    int bestNumMatches = -1;
+
+    for (ClassName rClass : rClasses) {
+      String[] rModuleNames = rClass.packageName().split("\\.");
+      int numNameMatches = 0;
+      for (int i = 0; i < Math.min(packageNames.length, rModuleNames.length); i++) {
+        if (packageNames[i].equals(rModuleNames[i])) {
+          numNameMatches++;
+        } else {
+          break;
+        }
+      }
+
+      if (numNameMatches > bestNumMatches) {
+        bestMatch = rClass;
+      }
+    }
+
+    return bestMatch.packageName();
+  }
+
   private String getModelNameFromElement(TypeElement modelClassElement) {
     return modelClassElement.getQualifiedName().toString();
   }
@@ -115,8 +163,6 @@ class LayoutResourceProcessor {
         // hardcoded
         continue;
       }
-
-
 
       if (layoutValue != result.resourceValue) {
         // I don't know why this would happen, but it seems worth sanity checking for
@@ -227,12 +273,7 @@ class LayoutResourceProcessor {
     ClassName className = rClassNameMap.get(rClass);
 
     if (className == null) {
-      Element rClassElement;
-      try {
-        rClassElement = elementUtils.getTypeElement(rClass);
-      } catch (MirroredTypeException mte) {
-        rClassElement = typeUtils.asElement(mte.getTypeMirror());
-      }
+      Element rClassElement = ProcessorUtils.getElementByName(rClass, elementUtils, typeUtils);
 
       String rClassPackageName =
           elementUtils.getPackageOf(rClassElement).getQualifiedName().toString();

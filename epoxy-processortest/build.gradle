@@ -15,6 +15,7 @@ android {
 
 dependencies {
   testCompile project(':epoxy-processor')
+  testCompile project(':epoxy-databinding')
   testCompile project(':epoxy-processortest2')
   testCompile files(getRuntimeJar())
   testCompile files(Jvm.current().getToolsJar())

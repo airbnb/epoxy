@@ -16,7 +16,7 @@ public class DiffPayload {
   private final EpoxyModel<?> singleModel;
   private final LongSparseArray<EpoxyModel<?>> modelsById;
 
-  DiffPayload(List<EpoxyModel<?>> models) {
+  DiffPayload(List<? extends EpoxyModel<?>> models) {
     if (models.isEmpty()) {
       throw new IllegalStateException("Models must not be empty");
     }

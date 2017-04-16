@@ -34,6 +34,10 @@ android {
     versionCode 1
     versionName "1.0"
   }
+
+  dataBinding {
+    enabled = true
+  }
 }
 
 project.android.buildTypes.all { buildType ->
@@ -53,6 +57,7 @@ configurations.all { strategy ->
 dependencies {
   compile project(':epoxy-adapter')
   compile project(':epoxy-annotations')
+  compile project(':epoxy-databinding')
   annotationProcessor project(':epoxy-processor')
 
   compile rootProject.deps.butterknifeLibrary

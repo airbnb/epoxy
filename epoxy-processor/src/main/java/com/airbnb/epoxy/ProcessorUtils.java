@@ -15,8 +15,10 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import static javax.lang.model.element.ElementKind.CLASS;
@@ -36,10 +38,43 @@ class ProcessorUtils {
   static final String ON_BIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelBoundListener";
   static final String ON_UNBIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelUnboundListener";
   static final String WRAPPED_LISTENER_TYPE = "com.airbnb.epoxy.WrappedEpoxyModelClickListener";
+  static final String DATA_BINDING_MODEL_TYPE = "com.airbnb.epoxy.DataBindingEpoxyModel";
 
   static void throwError(String msg, Object... args)
       throws EpoxyProcessorException {
     throw new EpoxyProcessorException(String.format(msg, args));
+  }
+
+  static Element getElementByName(String name, Elements elements, Types types) {
+    try {
+      return elements.getTypeElement(name);
+    } catch (MirroredTypeException mte) {
+      return types.asElement(mte.getTypeMirror());
+    }
+  }
+
+  /**
+   * Attempts to get the android module that is currently being processed.. We can do this because
+   * the package name of an R class is the module name. So, we take any element in the module,
+   * <p>
+   * We need to get the module name to know the path of the BR class for data binding.
+   */
+  static String getModelNameForElement(String packageName, Elements elements, Types types) {
+    String[] packageNameParts = packageName.split("\\.");
+
+    String moduleName = "";
+    for (int i = 0; i < packageNameParts.length; i++) {
+      moduleName += packageNameParts[i];
+
+      Element rClass = getElementByName(moduleName + ".R", elements, types);
+      if (rClass != null) {
+        return moduleName;
+      } else {
+        moduleName += ".";
+      }
+    }
+
+    return null;
   }
 
   static ClassName getClassName(String className) {
@@ -72,6 +107,10 @@ class ProcessorUtils {
 
   static boolean isEpoxyModelWithHolder(TypeElement type) {
     return isSubtypeOfType(type.asType(), EPOXY_MODEL_HOLDER_TYPE);
+  }
+
+  static boolean isDataBindingModel(TypeElement type) {
+    return isSubtypeOfType(type.asType(), DATA_BINDING_MODEL_TYPE);
   }
 
   static boolean isSubtypeOfType(TypeMirror typeMirror, String otherType) {
