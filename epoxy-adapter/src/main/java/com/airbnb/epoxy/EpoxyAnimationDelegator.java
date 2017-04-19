@@ -16,12 +16,12 @@ import java.util.Map;
  * ItemAnimator that wraps any other ItemAnimator and delegates change animations to
  * {@link EpoxyModel}
  */
-public final class ChangeAnimationDelegator extends ItemAnimatorDecorator
+public final class EpoxyAnimationDelegator extends ItemAnimatorDecorator
     implements EpoxyItemAnimation.Listener {
 
-  @NonNull private final Map<ViewHolder, EpoxyItemAnimation> mChangeAnimations = new HashMap<>();
+  @NonNull private final Map<EpoxyViewHolder, EpoxyItemAnimation> mChangeAnimations = new HashMap<>();
 
-  public ChangeAnimationDelegator(@NonNull ItemAnimator decoratedAnimator) {
+  public EpoxyAnimationDelegator(@NonNull ItemAnimator decoratedAnimator) {
     super(decoratedAnimator);
   }
 
@@ -46,11 +46,11 @@ public final class ChangeAnimationDelegator extends ItemAnimatorDecorator
 
   @Override
   public void onAnimationCancel(EpoxyItemAnimation anim) {
-    mChangeAnimations.inverse().remove(anim);
+    mChangeAnimations.remove(anim.holder);
   }
 
   public void onAnimationStart(EpoxyItemAnimation anim) {
-    dispatchAnimationStarted(mChangeAnimations.inverse().get(anim));
+    dispatchAnimationStarted(mChangeAnimations.get(anim.holder));
   }
 
   @Override

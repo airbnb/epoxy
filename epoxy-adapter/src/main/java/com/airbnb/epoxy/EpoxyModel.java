@@ -229,7 +229,7 @@ public abstract class EpoxyModel<T> {
    */
   @Nullable
   public EpoxyItemAnimation bindChangesAnimated(@NonNull T view,
-      @NonNull EpoxyModel<?> previouslyBoundModel, @Nullable Animator interruptedAnimation) {
+      @NonNull EpoxyModel<?> previouslyBoundModel, @Nullable EpoxyItemAnimation interruptedAnimation) {
     return interruptedAnimation == null ? bindChangesAnimated(view, previouslyBoundModel) : null;
   }
 

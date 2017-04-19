@@ -8,9 +8,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.airbnb.epoxy.EpoxyAttribute;
+import com.airbnb.epoxy.EpoxyItemAnimation;
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.EpoxyModelClass;
 import com.airbnb.epoxy.EpoxyModelWithHolder;
@@ -42,6 +44,11 @@ public abstract class ColorModel extends EpoxyModelWithHolder<ColorHolder> {
   }
 
   @Override
+  public boolean canBindChanges(@NonNull EpoxyModel<?> previouslyBoundModel) {
+    return true;
+  }
+
+  @Override
   public void bindChanges(@NonNull ColorHolder holder,
       @NonNull EpoxyModel<?> previouslyBoundModel) {
     // When this model changes we get a bind call with the previously bound model, so we can see
@@ -52,6 +59,31 @@ public abstract class ColorModel extends EpoxyModelWithHolder<ColorHolder> {
     } else {
       bind(holder);
     }
+  }
+
+  @Nullable
+  @Override
+  public EpoxyItemAnimation bindChangesAnimated(@NonNull ColorHolder view,
+                                                @NonNull EpoxyModel<?> previouslyBoundModel,
+                                                @Nullable EpoxyItemAnimation interruptedAnimation) {
+
+    int currentColor = ((ColorModel) previouslyBoundModel).color;
+    float currentRotation = 0f;
+
+    if(interruptedAnimation != null) {
+      AnimatorSet previousAnim = (AnimatorSet) ((EpoxyItemAnimation.AnimatorWrapper) interruptedAnimation).wrappedAnimator;
+
+      currentColor = (int) ((ObjectAnimator) previousAnim.getChildAnimations().get(0)).getAnimatedValue();
+      currentRotation = (float) ((ObjectAnimator) previousAnim.getChildAnimations().get(1)).getAnimatedValue();
+    }
+
+    Animator fadeColorAnim = ObjectAnimator.ofInt(view, "backgroundColor", currentColor, color);
+    Animator rotateAnim = ObjectAnimator.ofFloat(view, View.ROTATION_X, currentRotation, 360f);
+
+    AnimatorSet combinedAnim = new AnimatorSet();
+    combinedAnim.playTogether(fadeColorAnim, rotateAnim);
+
+    return EpoxyItemAnimation.fromAnimator(combinedAnim);
   }
 
   private void toggleAnimation(final LottieAnimationView lottieView, boolean playAnimation) {
@@ -109,8 +141,7 @@ public abstract class ColorModel extends EpoxyModelWithHolder<ColorHolder> {
     ObjectAnimator fadeFromBlack = ofInt(view, "backgroundColor", Color.BLACK, color);
     fadeFromBlack.setEvaluator(new ArgbEvaluator());
 
-    AnimatorSet combinedAnim = new AnimatorSet();
-    combinedAnim.playSequentially(fadeToBlack, fadeFromBlack);
+
 
     return combinedAnim;
   }

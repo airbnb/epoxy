@@ -145,8 +145,8 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
 
     // set our item animator decorator so we can intercept calls to the item animator
     // and the user doesn't have to worry about setting the decorator himself
-    if (!(recycler.getItemAnimator() instanceof ChangeAnimationDelegator)) {
-      recycler.setItemAnimator(new ChangeAnimationDelegator(recycler.getItemAnimator()));
+    if (!(recycler.getItemAnimator() instanceof EpoxyAnimationDelegator)) {
+      recycler.setItemAnimator(new EpoxyAnimationDelegator(recycler.getItemAnimator()));
     }
   }
 
@@ -159,8 +159,8 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
     // the user decides to attach a non-epoxy adapter afterwards
     ItemAnimator itemAnimator = recycler.getItemAnimator();
 
-    if (itemAnimator instanceof ChangeAnimationDelegator) {
-      recycler.setItemAnimator(((ChangeAnimationDelegator) itemAnimator).getDecoratedAnimator());
+    if (itemAnimator instanceof EpoxyAnimationDelegator) {
+      recycler.setItemAnimator(((EpoxyAnimationDelegator) itemAnimator).getDecoratedAnimator());
     }
   }
 
