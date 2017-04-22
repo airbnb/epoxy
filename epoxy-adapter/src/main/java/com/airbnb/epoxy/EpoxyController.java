@@ -49,6 +49,7 @@ public abstract class EpoxyController {
   private boolean hasBuiltModelsEver;
   private List<ModelInterceptorCallback> modelInterceptorCallbacks;
   private int recyclerViewAttachCount = 0;
+  private EpoxyModel<?> stagedModel;
 
   /**
    * Call this to request a model update. The controller will schedule a call to {@link
@@ -124,6 +125,7 @@ public abstract class EpoxyController {
 
     timer.start();
     buildModels();
+    addCurrentlyStagedModelIfExists();
     timer.stop("Models built");
 
     runInterceptors();
@@ -331,7 +333,43 @@ public abstract class EpoxyController {
               + "model instead.");
     }
 
+    // The model being added may not have been staged if it wasn't mutated before it was added.
+    // In that case we may have a previously staged model that still needs to be added.
+    clearModelFromStaging(modelToAdd);
+    modelToAdd.controllerToStageTo = null;
     modelsBeingBuilt.add(modelToAdd);
+  }
+
+  /**
+   * Staging models allows them to be implicitly added after the user finishes modifying them. This
+   * means that if a user has modified a model, and then moves on to modifying a different model,
+   * the first model is automatically added as soon as the second model is modified.
+   * <p>
+   * There are some edge cases for handling models that are added without modification, or models
+   * that are modified but then fail an `addIf` check.
+   * <p>
+   * This only works for AutoModels, and only if implicity adding is enabled in configuration.
+   */
+  void setStagedModel(EpoxyModel<?> model) {
+    if (model != stagedModel) {
+      addCurrentlyStagedModelIfExists();
+    }
+
+    stagedModel = model;
+  }
+
+  void addCurrentlyStagedModelIfExists() {
+    if (stagedModel != null) {
+      stagedModel.addTo(this);
+    }
+    stagedModel = null;
+  }
+
+  void clearModelFromStaging(EpoxyModel<?> model) {
+    if (stagedModel != model) {
+      addCurrentlyStagedModelIfExists();
+    }
+    stagedModel = null;
   }
 
   boolean isBuildingModels() {

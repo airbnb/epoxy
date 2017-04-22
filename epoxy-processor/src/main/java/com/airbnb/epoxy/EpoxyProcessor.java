@@ -20,6 +20,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.ConfigManager.PROCESSOR_IMPLICITLY_ADD_AUTO_MODELS;
 import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_VALIDATE_MODEL_USAGE;
 
 /**
@@ -59,6 +60,13 @@ public class EpoxyProcessor extends AbstractProcessor {
   public static EpoxyProcessor withNoValidation() {
     HashMap<String, String> options = new HashMap<>();
     options.put(PROCESSOR_OPTION_VALIDATE_MODEL_USAGE, "false");
+    return new EpoxyProcessor(options);
+  }
+
+  /** For testing. */
+  public static EpoxyProcessor withImplicitAdding() {
+    HashMap<String, String> options = new HashMap<>();
+    options.put(PROCESSOR_IMPLICITLY_ADD_AUTO_MODELS, "true");
     return new EpoxyProcessor(options);
   }
 

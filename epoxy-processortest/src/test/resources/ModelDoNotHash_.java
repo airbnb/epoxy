@@ -45,7 +45,7 @@ public class ModelDoNotHash_ extends ModelDoNotHash implements GeneratedModel<Ob
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelDoNotHash_ onBind(OnModelBoundListener<ModelDoNotHash_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,13 +66,13 @@ public class ModelDoNotHash_ extends ModelDoNotHash implements GeneratedModel<Ob
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelDoNotHash_ onUnbind(OnModelUnboundListener<ModelDoNotHash_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelDoNotHash_ value2(int value2) {
-    validateMutability();
+    onMutation();
     this.value2 = value2;
     return this;
   }
@@ -82,7 +82,7 @@ public class ModelDoNotHash_ extends ModelDoNotHash implements GeneratedModel<Ob
   }
 
   public ModelDoNotHash_ value(int value) {
-    validateMutability();
+    onMutation();
     this.value = value;
     return this;
   }
@@ -92,7 +92,7 @@ public class ModelDoNotHash_ extends ModelDoNotHash implements GeneratedModel<Ob
   }
 
   public ModelDoNotHash_ value3(String value3) {
-    validateMutability();
+    onMutation();
     this.value3 = value3;
     return this;
   }

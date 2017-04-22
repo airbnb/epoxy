@@ -45,7 +45,7 @@ public class ModelWithAnnotatedClassAndSuperAttributes_ extends ModelWithAnnotat
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithAnnotatedClassAndSuperAttributes_ onBind(OnModelBoundListener<ModelWithAnnotatedClassAndSuperAttributes_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,13 +66,13 @@ public class ModelWithAnnotatedClassAndSuperAttributes_ extends ModelWithAnnotat
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithAnnotatedClassAndSuperAttributes_ onUnbind(OnModelUnboundListener<ModelWithAnnotatedClassAndSuperAttributes_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithAnnotatedClassAndSuperAttributes_ superValue(int superValue) {
-    validateMutability();
+    onMutation();
     this.superValue = superValue;
     return this;
   }

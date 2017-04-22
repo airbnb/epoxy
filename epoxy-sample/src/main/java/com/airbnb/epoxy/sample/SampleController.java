@@ -43,15 +43,13 @@ public class SampleController extends TypedEpoxyController<List<CarouselData>> {
   protected void buildModels(List<CarouselData> carousels) {
     header
         .title(R.string.epoxy)
-        .caption(R.string.header_subtitle)
-        .addTo(this);
+        .caption(R.string.header_subtitle);
 
     addButton
         .textRes(R.string.button_add)
         .clickListener((model, parentView, clickedView, position) -> {
           callbacks.onAddCarouselClicked();
-        })
-        .addTo(this);
+        });
 
     clearButton
         .textRes(R.string.button_clear)

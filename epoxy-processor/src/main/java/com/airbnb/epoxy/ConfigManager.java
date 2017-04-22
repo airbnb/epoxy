@@ -19,6 +19,7 @@ class ConfigManager {
   static final String PROCESSOR_OPTION_VALIDATE_MODEL_USAGE = "validateEpoxyModelUsage";
   static final String PROCESSOR_OPTION_REQUIRE_HASHCODE = "requireHashCodeInEpoxyModels";
   static final String PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS = "requireAbstractEpoxyModels";
+  static final String PROCESSOR_IMPLICITLY_ADD_AUTO_MODELS = "implicitlyAddAutoModels";
 
   private static final PackageConfigSettings
       DEFAULT_PACKAGE_CONFIG_SETTINGS = PackageConfigSettings.forDefaults();
@@ -27,6 +28,7 @@ class ConfigManager {
   private final boolean validateModelUsage;
   private final boolean globalRequireHashCode;
   private final boolean globalRequireAbstractModels;
+  private final boolean globalImplicitlyAddAutoModels;
 
   ConfigManager(Map<String, String> options, Elements elementUtils) {
     this.elementUtils = elementUtils;
@@ -38,6 +40,10 @@ class ConfigManager {
     globalRequireAbstractModels =
         getBooleanOption(options, PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS,
             PackageEpoxyConfig.REQUIRE_ABSTRACT_MODELS_DEFAULT);
+
+    globalImplicitlyAddAutoModels =
+        getBooleanOption(options, PROCESSOR_IMPLICITLY_ADD_AUTO_MODELS,
+            PackageEpoxyConfig.IMPLICITLY_ADD_AUTO_MODELS_DEFAULT);
   }
 
   private static boolean getBooleanOption(Map<String, String> options, String option,
@@ -92,6 +98,11 @@ class ConfigManager {
   boolean requiresAbstractModels(TypeElement classElement) {
     return globalRequireAbstractModels
         || getConfigurationForElement(classElement).requireAbstractModels;
+  }
+
+  boolean implicitlyAddAutoModels(ControllerClassInfo controller) {
+    return globalImplicitlyAddAutoModels
+        || getConfigurationForElement(controller.controllerClassElement).implicitlyAddAutoModels;
   }
 
   boolean shouldValidateModelUsage() {

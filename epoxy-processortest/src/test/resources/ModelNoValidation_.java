@@ -37,6 +37,7 @@ public class ModelNoValidation_ extends ModelNoValidation implements GeneratedMo
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelNoValidation_ onBind(OnModelBoundListener<ModelNoValidation_, Object> listener) {
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -57,11 +58,13 @@ public class ModelNoValidation_ extends ModelNoValidation implements GeneratedMo
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelNoValidation_ onUnbind(OnModelUnboundListener<ModelNoValidation_, Object> listener) {
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelNoValidation_ value(int value) {
+    onMutation();
     this.value = value;
     return this;
   }

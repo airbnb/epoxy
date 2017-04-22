@@ -45,7 +45,7 @@ public class ModelWithSuperAttributes_ extends ModelWithSuperAttributes implemen
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithSuperAttributes_ onBind(OnModelBoundListener<ModelWithSuperAttributes_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,13 +66,13 @@ public class ModelWithSuperAttributes_ extends ModelWithSuperAttributes implemen
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithSuperAttributes_ onUnbind(OnModelUnboundListener<ModelWithSuperAttributes_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithSuperAttributes_ superValue(int superValue) {
-    validateMutability();
+    onMutation();
     this.superValue = superValue;
     return this;
   }

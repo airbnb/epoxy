@@ -18,14 +18,14 @@ public class ControllerProcessorTest {
     JavaFileObject model = JavaFileObjects
         .forResource("BasicModelWithAttribute.java");
 
-    JavaFileObject adapter = JavaFileObjects
+    JavaFileObject controller = JavaFileObjects
         .forResource("ControllerWithAutoModel.java");
 
     JavaFileObject generatedHelper = JavaFileObjects
         .forResource("ControllerWithAutoModel_EpoxyHelper.java");
 
     assert_().about(javaSources())
-        .that(asList(model, adapter))
+        .that(asList(model, controller))
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
         .and()
@@ -71,5 +71,25 @@ public class ControllerProcessorTest {
         .that(badClass)
         .processedWith(new EpoxyProcessor())
         .failsToCompile();
+  }
+
+  @Test
+  public void setsStagingControllerWhenImplicitlyAddingModels() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("BasicModelWithAttribute.java");
+
+    JavaFileObject controller = JavaFileObjects
+        .forResource("ControllerWithAutoModelAndImplicitAdding.java");
+
+    JavaFileObject generatedHelper = JavaFileObjects
+        .forResource("ControllerWithAutoModelAndImplicitAdding_EpoxyHelper.java");
+
+    assert_().about(javaSources())
+        .that(asList(model, controller))
+        .processedWith(EpoxyProcessor.withImplicitAdding())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedHelper);
+
   }
 }

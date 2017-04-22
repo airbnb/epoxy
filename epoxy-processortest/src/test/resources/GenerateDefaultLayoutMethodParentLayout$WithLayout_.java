@@ -45,7 +45,7 @@ public class GenerateDefaultLayoutMethodParentLayout$WithLayout_ extends Generat
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public GenerateDefaultLayoutMethodParentLayout$WithLayout_ onBind(OnModelBoundListener<GenerateDefaultLayoutMethodParentLayout$WithLayout_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,7 +66,7 @@ public class GenerateDefaultLayoutMethodParentLayout$WithLayout_ extends Generat
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public GenerateDefaultLayoutMethodParentLayout$WithLayout_ onUnbind(OnModelUnboundListener<GenerateDefaultLayoutMethodParentLayout$WithLayout_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }

@@ -46,7 +46,7 @@ public class ModelReturningClassType_ extends ModelReturningClassType implements
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelReturningClassType_ onBind(OnModelBoundListener<ModelReturningClassType_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -67,13 +67,13 @@ public class ModelReturningClassType_ extends ModelReturningClassType implements
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelReturningClassType_ onUnbind(OnModelUnboundListener<ModelReturningClassType_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelReturningClassType_ value(int value) {
-    validateMutability();
+    onMutation();
     this.value = value;
     return this;
   }

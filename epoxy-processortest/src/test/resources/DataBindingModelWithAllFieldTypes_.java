@@ -58,7 +58,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public DataBindingModelWithAllFieldTypes_ onBind(OnModelBoundListener<DataBindingModelWithAllFieldTypes_, DataBindingEpoxyModel.DataBindingHolder> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -79,13 +79,13 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public DataBindingModelWithAllFieldTypes_ onUnbind(OnModelUnboundListener<DataBindingModelWithAllFieldTypes_, DataBindingEpoxyModel.DataBindingHolder> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public DataBindingModelWithAllFieldTypes_ valueInteger(Integer valueInteger) {
-    validateMutability();
+    onMutation();
     this.valueInteger = valueInteger;
     return this;
   }
@@ -95,7 +95,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueShort(short valueShort) {
-    validateMutability();
+    onMutation();
     this.valueShort = valueShort;
     return this;
   }
@@ -105,7 +105,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueLong(long valueLong) {
-    validateMutability();
+    onMutation();
     this.valueLong = valueLong;
     return this;
   }
@@ -115,7 +115,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueList(List<String> valueList) {
-    validateMutability();
+    onMutation();
     this.valueList = valueList;
     return this;
   }
@@ -125,7 +125,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueShortWrapper(Short valueShortWrapper) {
-    validateMutability();
+    onMutation();
     this.valueShortWrapper = valueShortWrapper;
     return this;
   }
@@ -135,7 +135,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueDouble(double valueDouble) {
-    validateMutability();
+    onMutation();
     this.valueDouble = valueDouble;
     return this;
   }
@@ -145,7 +145,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueChar(char valueChar) {
-    validateMutability();
+    onMutation();
     this.valueChar = valueChar;
     return this;
   }
@@ -155,7 +155,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueInt(int valueInt) {
-    validateMutability();
+    onMutation();
     this.valueInt = valueInt;
     return this;
   }
@@ -165,7 +165,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueDoubleWrapper(Double valueDoubleWrapper) {
-    validateMutability();
+    onMutation();
     this.valueDoubleWrapper = valueDoubleWrapper;
     return this;
   }
@@ -175,7 +175,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueFloatWrapper(Float valueFloatWrapper) {
-    validateMutability();
+    onMutation();
     this.valueFloatWrapper = valueFloatWrapper;
     return this;
   }
@@ -185,7 +185,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueBooleanWrapper(Boolean valueBooleanWrapper) {
-    validateMutability();
+    onMutation();
     this.valueBooleanWrapper = valueBooleanWrapper;
     return this;
   }
@@ -195,7 +195,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueByteWrapper(Byte valueByteWrapper) {
-    validateMutability();
+    onMutation();
     this.valueByteWrapper = valueByteWrapper;
     return this;
   }
@@ -205,7 +205,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valuebByte(byte valuebByte) {
-    validateMutability();
+    onMutation();
     this.valuebByte = valuebByte;
     return this;
   }
@@ -215,7 +215,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueLongWrapper(Long valueLongWrapper) {
-    validateMutability();
+    onMutation();
     this.valueLongWrapper = valueLongWrapper;
     return this;
   }
@@ -225,7 +225,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueCharacter(Character valueCharacter) {
-    validateMutability();
+    onMutation();
     this.valueCharacter = valueCharacter;
     return this;
   }
@@ -235,7 +235,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueString(String valueString) {
-    validateMutability();
+    onMutation();
     this.valueString = valueString;
     return this;
   }
@@ -245,7 +245,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueFloat(float valueFloat) {
-    validateMutability();
+    onMutation();
     this.valueFloat = valueFloat;
     return this;
   }
@@ -255,7 +255,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueBoolean(boolean valueBoolean) {
-    validateMutability();
+    onMutation();
     this.valueBoolean = valueBoolean;
     return this;
   }
@@ -265,7 +265,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueObjectArray(Object[] valueObjectArray) {
-    validateMutability();
+    onMutation();
     this.valueObjectArray = valueObjectArray;
     return this;
   }
@@ -275,7 +275,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueObject(Object valueObject) {
-    validateMutability();
+    onMutation();
     this.valueObject = valueObject;
     return this;
   }
@@ -285,7 +285,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   public DataBindingModelWithAllFieldTypes_ valueIntArray(int[] valueIntArray) {
-    validateMutability();
+    onMutation();
     this.valueIntArray = valueIntArray;
     return this;
   }

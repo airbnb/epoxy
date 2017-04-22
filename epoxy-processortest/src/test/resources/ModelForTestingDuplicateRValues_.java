@@ -46,7 +46,7 @@ public class ModelForTestingDuplicateRValues_ extends ModelForTestingDuplicateRV
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelForTestingDuplicateRValues_ onBind(OnModelBoundListener<ModelForTestingDuplicateRValues_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -67,13 +67,13 @@ public class ModelForTestingDuplicateRValues_ extends ModelForTestingDuplicateRV
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelForTestingDuplicateRValues_ onUnbind(OnModelUnboundListener<ModelForTestingDuplicateRValues_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelForTestingDuplicateRValues_ value(int value) {
-    validateMutability();
+    onMutation();
     this.value = value;
     return this;
   }

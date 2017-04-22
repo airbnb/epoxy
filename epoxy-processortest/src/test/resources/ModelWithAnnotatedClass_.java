@@ -45,7 +45,7 @@ public class ModelWithAnnotatedClass_ extends ModelWithAnnotatedClass implements
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithAnnotatedClass_ onBind(OnModelBoundListener<ModelWithAnnotatedClass_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,7 +66,7 @@ public class ModelWithAnnotatedClass_ extends ModelWithAnnotatedClass implements
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithAnnotatedClass_ onUnbind(OnModelUnboundListener<ModelWithAnnotatedClass_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }

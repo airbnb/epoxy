@@ -292,10 +292,15 @@ class ControllerProcessor {
       builder.addStatement("validateModelsHaveNotChanged()");
     }
 
+    boolean implicitlyAddAutoModels = configManager.implicitlyAddAutoModels(controllerInfo);
     long id = -1;
     for (ControllerModelField model : controllerInfo.models) {
       builder.addStatement("controller.$L = new $T()", model.fieldName, model.typeName)
           .addStatement("controller.$L.id($L)", model.fieldName, id--);
+
+      if (implicitlyAddAutoModels) {
+        builder.addStatement("setControllerToStageTo(controller.$L, controller)", model.fieldName);
+      }
     }
 
     if (configManager.shouldValidateModelUsage()) {

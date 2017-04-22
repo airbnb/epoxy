@@ -45,7 +45,7 @@ public class ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ extends Mo
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ onBind(OnModelBoundListener<ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,13 +66,13 @@ public class ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ extends Mo
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ onUnbind(OnModelUnboundListener<ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ isValue(boolean isValue) {
-    validateMutability();
+    onMutation();
     this.setValue(isValue);
     return this;
   }
