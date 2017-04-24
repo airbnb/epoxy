@@ -45,7 +45,7 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> implement
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithType_<T> onBind(OnModelBoundListener<ModelWithType_<T>, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,13 +66,13 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> implement
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithType_<T> onUnbind(OnModelUnboundListener<ModelWithType_<T>, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithType_<T> value(int value) {
-    validateMutability();
+    onMutation();
     this.value = value;
     return this;
   }

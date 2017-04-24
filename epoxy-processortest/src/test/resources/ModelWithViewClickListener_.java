@@ -57,7 +57,7 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithViewClickListener_ onBind(OnModelBoundListener<ModelWithViewClickListener_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -78,7 +78,7 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithViewClickListener_ onUnbind(OnModelUnboundListener<ModelWithViewClickListener_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -86,7 +86,7 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
   public ModelWithViewClickListener_ clickListener(final OnModelClickListener<ModelWithViewClickListener_, Object> clickListener) {
-    validateMutability();
+    onMutation();
     this.clickListener_epoxyGeneratedModel = clickListener;
     if (clickListener == null) {
       super.clickListener = null;
@@ -103,7 +103,7 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   }
 
   public ModelWithViewClickListener_ clickListener(View.OnClickListener clickListener) {
-    validateMutability();
+    onMutation();
     this.clickListener = clickListener;
     this.clickListener_epoxyGeneratedModel = null;
     return this;

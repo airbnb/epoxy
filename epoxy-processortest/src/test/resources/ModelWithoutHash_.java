@@ -45,7 +45,7 @@ public class ModelWithoutHash_ extends ModelWithoutHash implements GeneratedMode
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithoutHash_ onBind(OnModelBoundListener<ModelWithoutHash_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,13 +66,13 @@ public class ModelWithoutHash_ extends ModelWithoutHash implements GeneratedMode
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithoutHash_ onUnbind(OnModelUnboundListener<ModelWithoutHash_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelWithoutHash_ value2(int value2) {
-    validateMutability();
+    onMutation();
     this.value2 = value2;
     return this;
   }
@@ -82,7 +82,7 @@ public class ModelWithoutHash_ extends ModelWithoutHash implements GeneratedMode
   }
 
   public ModelWithoutHash_ value(int value) {
-    validateMutability();
+    onMutation();
     this.value = value;
     return this;
   }
@@ -92,7 +92,7 @@ public class ModelWithoutHash_ extends ModelWithoutHash implements GeneratedMode
   }
 
   public ModelWithoutHash_ value3(String value3) {
-    validateMutability();
+    onMutation();
     this.value3 = value3;
     return this;
   }

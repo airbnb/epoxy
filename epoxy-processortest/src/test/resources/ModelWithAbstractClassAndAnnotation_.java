@@ -45,7 +45,7 @@ public class ModelWithAbstractClassAndAnnotation_ extends ModelWithAbstractClass
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithAbstractClassAndAnnotation_ onBind(OnModelBoundListener<ModelWithAbstractClassAndAnnotation_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,7 +66,7 @@ public class ModelWithAbstractClassAndAnnotation_ extends ModelWithAbstractClass
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithAbstractClassAndAnnotation_ onUnbind(OnModelUnboundListener<ModelWithAbstractClassAndAnnotation_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }

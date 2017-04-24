@@ -1,10 +1,15 @@
 package com.airbnb.epoxy;
 
+import com.airbnb.epoxy.autoaddautomodels.ControllerWithImplicitlyAddedModels;
+import com.airbnb.epoxy.autoaddautomodels.ControllerWithImplicitlyAddedModels2;
+import com.airbnb.epoxy.autoaddautomodels.ControllerWithImplicitlyAddedModels3;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -35,5 +40,37 @@ public class AutoModelIntegrationTest {
   public void assigningIdToAutoModelFails() {
     AdapterWithIdChanged testAdapter = new AdapterWithIdChanged();
     testAdapter.requestModelBuild();
+  }
+
+  @Test
+  public void implicitlyAddingAutoModelsDisabledByDefault() {
+    ControllerWithoutImplicityAdding controller = new ControllerWithoutImplicityAdding();
+    controller.requestModelBuild();
+
+    assertEquals(new ArrayList<>(), controller.getAdapter().getCopyOfModels());
+  }
+
+  @Test
+  public void implicitlyAddingAutoModels() {
+    ControllerWithImplicitlyAddedModels controller = new ControllerWithImplicitlyAddedModels();
+    controller.requestModelBuild();
+
+    assertEquals(controller.getExpectedModels(), controller.getAdapter().getCopyOfModels());
+  }
+
+  @Test
+  public void implicitlyAddingAutoModels2() {
+    ControllerWithImplicitlyAddedModels2 controller = new ControllerWithImplicitlyAddedModels2();
+    controller.requestModelBuild();
+
+    assertEquals(controller.getExpectedModels(), controller.getAdapter().getCopyOfModels());
+  }
+
+  @Test
+  public void implicitlyAddingAutoModels3() {
+    ControllerWithImplicitlyAddedModels3 controller = new ControllerWithImplicitlyAddedModels3();
+    controller.requestModelBuild();
+
+    assertEquals(controller.getExpectedModels(), controller.getAdapter().getCopyOfModels());
   }
 }

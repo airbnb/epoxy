@@ -3,7 +3,7 @@ package com.airbnb.epoxy;
 import android.widget.TextView;
 
 @EpoxyModelClass
-abstract class Model extends EpoxyModel<TextView> {
+public abstract class Model extends EpoxyModel<TextView> {
   @EpoxyAttribute int value;
 
   @Override

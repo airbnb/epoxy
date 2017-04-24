@@ -57,7 +57,7 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithPrivateViewClickListener_ onBind(OnModelBoundListener<ModelWithPrivateViewClickListener_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -78,7 +78,7 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithPrivateViewClickListener_ onUnbind(OnModelUnboundListener<ModelWithPrivateViewClickListener_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -86,7 +86,7 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
   public ModelWithPrivateViewClickListener_ clickListener(final OnModelClickListener<ModelWithPrivateViewClickListener_, Object> clickListener) {
-    validateMutability();
+    onMutation();
     this.clickListener_epoxyGeneratedModel = clickListener;
     if (clickListener == null) {
       super.setClickListener(null);
@@ -103,7 +103,7 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
   }
 
   public ModelWithPrivateViewClickListener_ clickListener(View.OnClickListener clickListener) {
-    validateMutability();
+    onMutation();
     this.setClickListener(clickListener);
     this.clickListener_epoxyGeneratedModel = null;
     return this;

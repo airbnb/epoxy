@@ -45,7 +45,7 @@ public class ModelForRProcessingTest_ extends ModelForRProcessingTest implements
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelForRProcessingTest_ onBind(OnModelBoundListener<ModelForRProcessingTest_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,13 +66,13 @@ public class ModelForRProcessingTest_ extends ModelForRProcessingTest implements
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelForRProcessingTest_ onUnbind(OnModelUnboundListener<ModelForRProcessingTest_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelForRProcessingTest_ value(int value) {
-    validateMutability();
+    onMutation();
     this.value = value;
     return this;
   }

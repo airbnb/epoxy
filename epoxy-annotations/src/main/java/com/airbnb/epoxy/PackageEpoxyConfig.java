@@ -11,12 +11,15 @@ import java.lang.annotation.Target;
  * package.
  * <p>
  * If an instance of this annotation is not found in a package then the default values are used.
+ * <p>
+ * See https://github.com/airbnb/epoxy/wiki/Configuration for more details on these options.
  */
 @Target(ElementType.PACKAGE)
 @Retention(RetentionPolicy.CLASS)
 public @interface PackageEpoxyConfig {
   boolean REQUIRE_HASHCODE_DEFAULT = false;
   boolean REQUIRE_ABSTRACT_MODELS_DEFAULT = false;
+  boolean IMPLICITLY_ADD_AUTO_MODELS_DEFAULT = false;
   /**
    * If true, all fields marked with {@link com.airbnb.epoxy.EpoxyAttribute} must have a type that
    * implements hashCode and equals (besides the default Object implementation), or the attribute
@@ -47,4 +50,14 @@ public @interface PackageEpoxyConfig {
    * of the generated class.
    */
   boolean requireAbstractModels() default REQUIRE_ABSTRACT_MODELS_DEFAULT;
+
+  /**
+   * If true, models in an EpoxyController that use the {@link AutoModel} annotation don't need to
+   * be explicitly added to the controller with ".addTo". Instead, they will be added automatically
+   * after they are modified.
+   * <p>
+   * For more details, see the wiki:
+   * https://github.com/airbnb/epoxy/wiki/Epoxy-Controller#implicit-adding
+   */
+  boolean implicitlyAddAutoModels() default IMPLICITLY_ADD_AUTO_MODELS_DEFAULT;
 }

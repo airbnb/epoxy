@@ -237,7 +237,7 @@ class GeneratedModelWriter {
         .addParameter(boundObjectParam)
         .addParameter(TypeName.INT, "position");
 
-    addHashCodeValidationIfNecessary(preBindBuilder, classInfo,
+    addHashCodeValidationIfNecessary(preBindBuilder,
         "The model was changed between being added to the controller and being bound.");
 
     ClassName viewType = getClassName("android.view.View");
@@ -280,7 +280,7 @@ class GeneratedModelWriter {
         .addStatement("$L.onModelBound(this, object, position)", modelBindListenerFieldName())
         .endControlFlow();
 
-    addHashCodeValidationIfNecessary(postBindBuilder, classInfo,
+    addHashCodeValidationIfNecessary(postBindBuilder,
         "The model was changed during the bind call.");
 
     methods.add(postBindBuilder
@@ -305,7 +305,7 @@ class GeneratedModelWriter {
         .returns(classInfo.getParameterizedGeneratedName())
         .addParameter(bindListenerParam);
 
-    addMutabilityValidationIfNecessary(onBind, classInfo)
+    addOnMutationCall(onBind)
         .addStatement("this.$L = listener", modelBindListenerFieldName())
         .addStatement("return this")
         .build();
@@ -349,7 +349,7 @@ class GeneratedModelWriter {
         .addModifiers(PUBLIC)
         .returns(classInfo.getParameterizedGeneratedName());
 
-    addMutabilityValidationIfNecessary(onUnbind, classInfo)
+    addOnMutationCall(onUnbind)
         .addParameter(unbindListenerParam)
         .addStatement("this.$L = listener", modelUnbindListenerFieldName())
         .addStatement("return this");
@@ -658,7 +658,7 @@ class GeneratedModelWriter {
             + "      }",
         clickWrapperType, attributeName, viewType, modelClickListenerType);
 
-    addMutabilityValidationIfNecessary(builder, classInfo)
+    addOnMutationCall(builder)
         .addStatement("this.$L = $L", attribute.getModelClickListenerName(), attributeName)
         .beginControlFlow("if ($L == null)", attributeName)
         .addStatement("super." + attribute.setterCode(), "null")
@@ -876,7 +876,7 @@ class GeneratedModelWriter {
         .addParameter(ParameterSpec.builder(attribute.getType(), attributeName)
             .addAnnotations(attribute.getSetterAnnotations()).build());
 
-    addMutabilityValidationIfNecessary(builder, helperClass)
+    addOnMutationCall(builder)
         .addStatement("this." + attribute.setterCode(), attributeName);
 
     if (attribute.isViewClickListener()) {
@@ -918,17 +918,13 @@ class GeneratedModelWriter {
         .build();
   }
 
-  private MethodSpec.Builder addMutabilityValidationIfNecessary(MethodSpec.Builder method,
-      ClassToGenerateInfo classInfo) {
-    if (configManager.shouldValidateModelUsage()) {
-      method.addStatement("validateMutability()");
-    }
-
+  private MethodSpec.Builder addOnMutationCall(MethodSpec.Builder method) {
+      method.addStatement("onMutation()");
     return method;
   }
 
   private MethodSpec.Builder addHashCodeValidationIfNecessary(MethodSpec.Builder method,
-      ClassToGenerateInfo classInfo, String message) {
+      String message) {
     if (configManager.shouldValidateModelUsage()) {
       method.addStatement("validateStateHasNotChangedSinceAdded($S, position)", message);
     }

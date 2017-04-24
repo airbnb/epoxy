@@ -10,7 +10,7 @@ import java.util.List;
 public abstract class ControllerHelper<T extends EpoxyController> {
   public abstract void resetAutoModels();
 
-  protected void validateModelHashCodesHaveNotChanged(EpoxyController controller) {
+  protected void validateModelHashCodesHaveNotChanged(T controller) {
     List<EpoxyModel<?>> currentModels = controller.getAdapter().getCopyOfModels();
 
     for (int i = 0; i < currentModels.size(); i++) {
@@ -18,5 +18,9 @@ public abstract class ControllerHelper<T extends EpoxyController> {
       model.validateStateHasNotChangedSinceAdded(
           "Model has changed since it was added to the controller.", i);
     }
+  }
+
+  protected void setControllerToStageTo(EpoxyModel<?> model, T controller) {
+    model.controllerToStageTo = controller;
   }
 }

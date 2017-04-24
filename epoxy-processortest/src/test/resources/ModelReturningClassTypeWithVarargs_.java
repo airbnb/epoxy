@@ -45,7 +45,7 @@ public class ModelReturningClassTypeWithVarargs_ extends ModelReturningClassType
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelReturningClassTypeWithVarargs_ onBind(OnModelBoundListener<ModelReturningClassTypeWithVarargs_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,13 +66,13 @@ public class ModelReturningClassTypeWithVarargs_ extends ModelReturningClassType
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelReturningClassTypeWithVarargs_ onUnbind(OnModelUnboundListener<ModelReturningClassTypeWithVarargs_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   public ModelReturningClassTypeWithVarargs_ value(int value) {
-    validateMutability();
+    onMutation();
     this.value = value;
     return this;
   }

@@ -45,7 +45,7 @@ public class ModelWithFinalField_ extends ModelWithFinalField implements Generat
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithFinalField_ onBind(OnModelBoundListener<ModelWithFinalField_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
@@ -66,7 +66,7 @@ public class ModelWithFinalField_ extends ModelWithFinalField implements Generat
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public ModelWithFinalField_ onUnbind(OnModelUnboundListener<ModelWithFinalField_, Object> listener) {
-    validateMutability();
+    onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
