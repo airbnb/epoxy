@@ -44,6 +44,8 @@ public class SampleController extends TypedEpoxyController<List<CarouselData>> {
     header
         .title(R.string.epoxy)
         .caption(R.string.header_subtitle);
+    // "addTo" is not needed since implicit adding is enabled 
+    // (https://github.com/airbnb/epoxy/wiki/Epoxy-Controller#implicit-adding)
 
     addButton
         .textRes(R.string.button_add)
