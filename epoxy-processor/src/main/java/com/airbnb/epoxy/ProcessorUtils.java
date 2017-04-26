@@ -244,7 +244,7 @@ class ProcessorUtils {
     }
 
     return null;
-  }
+}
 
   static void validateFieldAccessibleViaGeneratedCode(Element fieldElement,
       Class<?> annotationClass, ErrorLogger errorLogger, boolean skipPrivateFieldCheck) {
