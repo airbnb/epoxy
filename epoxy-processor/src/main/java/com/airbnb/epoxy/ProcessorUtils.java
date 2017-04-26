@@ -31,6 +31,8 @@ class ProcessorUtils {
   static final String UNTYPED_EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel";
   static final String EPOXY_MODEL_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyModelWithHolder<?>";
   static final String EPOXY_VIEW_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyViewHolder";
+  static final String EPOXY_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyHolder";
+  static final String ANDROID_VIEW_TYPE = "android.view.View";
   static final String EPOXY_CONTROLLER_TYPE = "com.airbnb.epoxy.EpoxyController";
   static final String VIEW_CLICK_LISTENER_TYPE = "android.view.View.OnClickListener";
   static final String GENERATED_MODEL_INTERFACE = "com.airbnb.epoxy.GeneratedModel";
@@ -210,21 +212,39 @@ class ProcessorUtils {
    * Eg for "class MyModel extends EpoxyModel<TextView>" it would return TextView.
    */
   static TypeMirror getEpoxyObjectType(TypeElement clazz, Types typeUtils) {
-    if (clazz.asType().getKind() != TypeKind.DECLARED) {
+    if (clazz.getSuperclass().getKind() != TypeKind.DECLARED) {
       return null;
     }
 
     DeclaredType superclass = (DeclaredType) clazz.getSuperclass();
-    List<? extends TypeMirror> superTypeArguments = superclass.getTypeArguments();
+    TypeMirror recursiveResult =
+        getEpoxyObjectType((TypeElement) typeUtils.asElement(superclass), typeUtils);
 
-    if (superTypeArguments.isEmpty()) {
-      return getEpoxyObjectType((TypeElement) typeUtils.asElement(superclass), typeUtils);
+    if (recursiveResult != null && recursiveResult.getKind() != TypeKind.TYPEVAR) {
+      // Use the type on the parent highest in the class hierarchy so we can find the original type.
+      // We don't allow TypeVar since that is just type letter (eg T).
+      return recursiveResult;
     }
 
-    // TODO: (eli_hart 2/2/17) If the class added additional types this won't be correct. That
-    // should be rare, but it would be nice to handle.
-    return superTypeArguments.get(0);
-  }
+    List<? extends TypeMirror> superTypeArguments = superclass.getTypeArguments();
+
+    if (superTypeArguments.size() == 1) {
+      // If there is only one type then we use that
+      return superTypeArguments.get(0);
+    }
+
+    for (TypeMirror superTypeArgument : superTypeArguments) {
+      // The user might have added additional types to their class which makes it more difficult
+      // to figure out the base model type. We just look for the first type that is a view or
+      // view holder.
+      if (isSubtypeOfType(superTypeArgument, ANDROID_VIEW_TYPE)
+          || isSubtypeOfType(superTypeArgument, EPOXY_HOLDER_TYPE)) {
+        return superTypeArgument;
+      }
+    }
+
+    return null;
+}
 
   static void validateFieldAccessibleViaGeneratedCode(Element fieldElement,
       Class<?> annotationClass, ErrorLogger errorLogger, boolean skipPrivateFieldCheck) {
