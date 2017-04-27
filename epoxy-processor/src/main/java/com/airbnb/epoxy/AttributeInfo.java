@@ -10,7 +10,7 @@ import javax.lang.model.type.TypeMirror;
 
 import static com.airbnb.epoxy.ProcessorUtils.isViewClickListenerType;
 
-class AttributeInfo {
+abstract class AttributeInfo {
 
   protected String name;
   protected TypeName typeName;

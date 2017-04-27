@@ -29,7 +29,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
-class GeneratedModelInfo {
+abstract class GeneratedModelInfo {
   private static final String RESET_METHOD = "reset";
   protected static final String GENERATED_CLASS_NAME_SUFFIX = "_";
 
@@ -75,7 +75,6 @@ class GeneratedModelInfo {
       clazz = (TypeElement) typeUtils.asElement(clazz.getSuperclass());
     }
   }
-
 
   protected List<ParameterSpec> buildParamSpecs(List<? extends VariableElement> params) {
     List<ParameterSpec> result = new ArrayList<>();
