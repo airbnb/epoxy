@@ -19,6 +19,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.ClassNames.EPOXY_LITHO_MODEL;
 import static com.airbnb.epoxy.ProcessorUtils.getAnnotationClass;
 
 class LithoSpecProcessor {
@@ -42,6 +43,12 @@ class LithoSpecProcessor {
 
   Collection<LithoModelInfo> processSpecs(RoundEnvironment roundEnv) {
     Map<TypeElement, LithoModelInfo> modelInfoMap = new LinkedHashMap<>();
+
+    if (!hasLithoEpoxyDependency()) {
+      // If the epoxy-litho module has not been included then we don't have access to the Epoxy
+      // litho model and can't build a model that extends it
+      return new ArrayList<>();
+    }
 
     layoutSpecAnnotationClass =
         getAnnotationClass(ClassNames.LITHO_ANNOTATION_LAYOUT_SPEC);
@@ -82,6 +89,11 @@ class LithoSpecProcessor {
     }
 
     return modelInfoMap.values();
+  }
+
+  private boolean hasLithoEpoxyDependency() {
+    // Only true if the epoxy-litho module is included in dependencies
+    return ProcessorUtils.getClass(EPOXY_LITHO_MODEL) != null;
   }
 
   private void updateGeneratedClassForLithoComponent(LithoModelInfo modelInfo,

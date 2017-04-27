@@ -45,6 +45,9 @@ public class EpoxyProcessor extends AbstractProcessor {
   private DataBindingModuleLookup dataBindingModuleLookup;
   private final ErrorLogger errorLogger = new ErrorLogger();
   private GeneratedModelWriter modelWriter;
+  private ControllerProcessor controllerProcessor;
+  private DataBindingProcessor dataBindingProcessor;
+  private final List<GeneratedModelInfo> generatedModels = new ArrayList<>();
 
   public EpoxyProcessor() {
     this(Collections.<String, String>emptyMap());
@@ -93,6 +96,12 @@ public class EpoxyProcessor extends AbstractProcessor {
         new GeneratedModelWriter(filer, typeUtils, elementUtils, errorLogger,
             layoutResourceProcessor,
             configManager, dataBindingModuleLookup);
+
+    controllerProcessor = new ControllerProcessor(filer, elementUtils, errorLogger, configManager);
+
+    dataBindingProcessor =
+        new DataBindingProcessor(elementUtils, typeUtils, errorLogger, configManager,
+            layoutResourceProcessor, dataBindingModuleLookup, modelWriter);
   }
 
   @Override
@@ -118,25 +127,27 @@ public class EpoxyProcessor extends AbstractProcessor {
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     errorLogger.logErrors(configManager.processConfigurations(roundEnv));
-    List<GeneratedModelInfo> generatedModels = new ArrayList<>();
 
     ModelProcessor modelProcessor = new ModelProcessor(messager,
         elementUtils, typeUtils, configManager, errorLogger,
         modelWriter);
+
     generatedModels.addAll(modelProcessor.processModels(roundEnv));
 
-    new DataBindingProcessor(filer, elementUtils, typeUtils, errorLogger, configManager,
-        layoutResourceProcessor, dataBindingModuleLookup).process(roundEnv);
+    dataBindingProcessor.process(roundEnv);
 
     LithoSpecProcessor lithoSpecProcessor = new LithoSpecProcessor(
-        elementUtils, typeUtils, configManager, errorLogger,
-        modelWriter);
+        elementUtils, typeUtils, configManager, errorLogger, modelWriter);
+
     generatedModels.addAll(lithoSpecProcessor.processSpecs(roundEnv));
 
-    new ControllerProcessor(filer, elementUtils, errorLogger, configManager)
-        .process(roundEnv, generatedModels);
+    controllerProcessor.process(roundEnv);
 
     if (roundEnv.processingOver()) {
+      generatedModels.addAll(dataBindingProcessor.resolveDataBindingClassesAndWriteJava());
+
+      // This must be done after all generated model info is collected
+      controllerProcessor.resolveGeneratedModelsAndWriteJava(generatedModels);
 
       // We wait until the very end to log errors so that all the generated classes are still
       // created.

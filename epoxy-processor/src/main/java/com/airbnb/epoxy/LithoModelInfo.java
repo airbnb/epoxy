@@ -8,7 +8,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import static com.airbnb.epoxy.ProcessorUtils.LITHO_MODEL_TYPE;
+import static com.airbnb.epoxy.ClassNames.EPOXY_LITHO_MODEL;
 
 class LithoModelInfo extends GeneratedModelInfo {
 
@@ -16,11 +16,10 @@ class LithoModelInfo extends GeneratedModelInfo {
 
   LithoModelInfo(Types typeUtils, Elements elementUtils, TypeElement layoutSpecClassElement) {
     superClassElement =
-        (TypeElement) ProcessorUtils.getElementByName(LITHO_MODEL_TYPE, elementUtils, typeUtils);
+        (TypeElement) ProcessorUtils.getElementByName(EPOXY_LITHO_MODEL, elementUtils, typeUtils);
 
     lithoComponentName = getLithoComponentName(elementUtils, layoutSpecClassElement);
-    this.superClassName = ParameterizedTypeName
-        .get(ProcessorUtils.getClassName(LITHO_MODEL_TYPE), lithoComponentName);
+    this.superClassName = ParameterizedTypeName.get(EPOXY_LITHO_MODEL, lithoComponentName);
 
     generatedClassName = buildGeneratedModelName(lithoComponentName);
     // We don't have any type parameters on our generated litho model

@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import com.squareup.javapoet.AnnotationSpec;
