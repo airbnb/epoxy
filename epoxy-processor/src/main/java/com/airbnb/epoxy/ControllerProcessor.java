@@ -49,7 +49,7 @@ class ControllerProcessor {
     this.configManager = configManager;
   }
 
-  void process(RoundEnvironment roundEnv, List<ClassToGenerateInfo> generatedModels) {
+  void process(RoundEnvironment roundEnv, List<GeneratedModelInfo> generatedModels) {
     LinkedHashMap<TypeElement, ControllerClassInfo> controllerClassMap = new LinkedHashMap<>();
 
     for (Element modelFieldElement : roundEnv.getElementsAnnotatedWith(AutoModel.class)) {
@@ -77,7 +77,7 @@ class ControllerProcessor {
    */
   private void resolveGeneratedModelNames(
       LinkedHashMap<TypeElement, ControllerClassInfo> controllerClassMap,
-      List<ClassToGenerateInfo> generatedModels) {
+      List<GeneratedModelInfo> generatedModels) {
 
     for (ControllerClassInfo controllerClassInfo : controllerClassMap.values()) {
       for (ControllerModelField model : controllerClassInfo.models) {
@@ -101,9 +101,9 @@ class ControllerProcessor {
    * no match is found the original model type is returned as a fallback.
    */
   private TypeName getFullyQualifiedModelTypeName(ControllerModelField model,
-      List<ClassToGenerateInfo> generatedModels) {
+      List<GeneratedModelInfo> generatedModels) {
     String modelName = model.typeName.toString();
-    for (ClassToGenerateInfo generatedModel : generatedModels) {
+    for (GeneratedModelInfo generatedModel : generatedModels) {
       String generatedName = generatedModel.getGeneratedName().toString();
       if (generatedName.endsWith("." + modelName)) {
         return generatedModel.getGeneratedName();

@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 
@@ -92,7 +93,7 @@ class ConfigManager {
 
   boolean requiresHashCode(AttributeInfo attributeInfo) {
     return globalRequireHashCode
-        || getConfigurationForElement(attributeInfo.getClassElement()).requireHashCode;
+        || getConfigurationForPackage(attributeInfo.getPackageName()).requireHashCode;
   }
 
   boolean requiresAbstractModels(TypeElement classElement) {
@@ -110,10 +111,17 @@ class ConfigManager {
   }
 
   private PackageConfigSettings getConfigurationForElement(Element element) {
-    String targetPackage = elementUtils.getPackageOf(element).getQualifiedName().toString();
+    return getConfigurationForPackage(elementUtils.getPackageOf(element));
+  }
 
-    if (configurationMap.containsKey(targetPackage)) {
-      return configurationMap.get(targetPackage);
+  private PackageConfigSettings getConfigurationForPackage(PackageElement packageElement) {
+    String packageName = packageElement.getQualifiedName().toString();
+    return getConfigurationForPackage(packageName);
+  }
+
+  private PackageConfigSettings getConfigurationForPackage(String packageName) {
+    if (configurationMap.containsKey(packageName)) {
+      return configurationMap.get(packageName);
     }
 
     // If there isn't a configuration for that exact package then we look for configurations for
@@ -122,7 +130,7 @@ class ConfigManager {
     Entry<String, PackageConfigSettings> bestMatch = null;
     for (Entry<String, PackageConfigSettings> configEntry : configurationMap.entrySet()) {
       String entryPackage = configEntry.getKey();
-      if (!targetPackage.startsWith(entryPackage + ".")) {
+      if (!packageName.startsWith(entryPackage + ".")) {
         continue;
       }
 

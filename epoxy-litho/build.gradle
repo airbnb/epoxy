@@ -1,0 +1,36 @@
+apply plugin: 'com.android.library'
+
+android {
+  compileSdkVersion rootProject.COMPILE_SDK_VERSION
+  buildToolsVersion rootProject.ANDROID_BUILD_TOOLS_VERSION
+
+  defaultConfig {
+    minSdkVersion rootProject.MIN_SDK_VERSION
+    targetSdkVersion rootProject.TARGET_SDK_VERSION
+  }
+}
+
+configurations.all { strategy ->
+  strategy.resolutionStrategy.force rootProject.deps.androidAnnotations, rootProject.deps.androidRecyclerView,
+      rootProject.deps.androidDesignLibrary, rootProject.deps.androidSupportLibrary, rootProject.deps.junit,
+      rootProject.deps.robolectric, rootProject.deps.mockito
+}
+
+dependencies {
+  compile rootProject.deps.androidAnnotations
+  compile rootProject.deps.androidRecyclerView
+  compile rootProject.deps.androidDesignLibrary
+  compile rootProject.deps.androidSupportLibrary
+  compile project(':epoxy-adapter')
+  compile project(':epoxy-annotations')
+
+  compile rootProject.deps.lithoCore
+  compile rootProject.deps.lithoWidget
+  provided rootProject.deps.lithoAnnotations
+
+  testCompile rootProject.deps.junit
+  testCompile rootProject.deps.robolectric
+  testCompile rootProject.deps.mockito
+}
+
+apply from: rootProject.file('gradle/gradle-maven-push.gradle')

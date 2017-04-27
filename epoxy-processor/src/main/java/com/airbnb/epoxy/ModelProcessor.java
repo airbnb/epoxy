@@ -1,15 +1,12 @@
 package com.airbnb.epoxy;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
@@ -34,26 +31,19 @@ class ModelProcessor {
   private final ConfigManager configManager;
   private final ErrorLogger errorLogger;
   private final GeneratedModelWriter modelWriter;
-  private LinkedHashMap<TypeElement, ClassToGenerateInfo> modelClassMap;
+  private LinkedHashMap<TypeElement, GeneratedModelInfo> modelClassMap;
 
-  ModelProcessor(Filer filer, Messager messager, Elements elementUtils, Types typeUtils,
-      ConfigManager configManager, ErrorLogger errorLogger,
-      LayoutResourceProcessor layoutProcessor, DataBindingModuleLookup dataBindingModuleLookup) {
+  ModelProcessor(Messager messager, Elements elementUtils, Types typeUtils,
+      ConfigManager configManager, ErrorLogger errorLogger, GeneratedModelWriter modelWriter) {
     this.messager = messager;
     this.elementUtils = elementUtils;
     this.typeUtils = typeUtils;
     this.configManager = configManager;
     this.errorLogger = errorLogger;
-    modelWriter =
-        new GeneratedModelWriter(filer, typeUtils, elementUtils, errorLogger, layoutProcessor,
-            configManager, dataBindingModuleLookup);
+    this.modelWriter = modelWriter;
   }
 
-  List<ClassToGenerateInfo> getGeneratedModels() {
-    return new ArrayList<>(modelClassMap.values());
-  }
-
-  void processModels(RoundEnvironment roundEnv) {
+  Collection<GeneratedModelInfo> processModels(RoundEnvironment roundEnv) {
     modelClassMap = new LinkedHashMap<>();
 
     for (Element attribute : roundEnv.getElementsAnnotatedWith(EpoxyAttribute.class)) {
@@ -84,7 +74,7 @@ class ModelProcessor {
       errorLogger.logError(e);
     }
 
-    for (Entry<TypeElement, ClassToGenerateInfo> modelEntry : modelClassMap.entrySet()) {
+    for (Entry<TypeElement, GeneratedModelInfo> modelEntry : modelClassMap.entrySet()) {
       try {
         modelWriter.generateClassForModel(modelEntry.getValue());
       } catch (Exception e) {
@@ -93,13 +83,14 @@ class ModelProcessor {
     }
 
     validateAttributesImplementHashCode(modelClassMap.values());
+    return modelClassMap.values();
   }
 
   private void validateAttributesImplementHashCode(
-      Collection<ClassToGenerateInfo> generatedClasses) {
+      Collection<GeneratedModelInfo> generatedClasses) {
     HashCodeValidator hashCodeValidator = new HashCodeValidator(typeUtils);
 
-    for (ClassToGenerateInfo generatedClass : generatedClasses) {
+    for (GeneratedModelInfo generatedClass : generatedClasses) {
       for (AttributeInfo attributeInfo : generatedClass.getAttributeInfo()) {
         if (configManager.requiresHashCode(attributeInfo)
             && attributeInfo.useInHash()
@@ -116,21 +107,21 @@ class ModelProcessor {
   }
 
   private void addAttributeToGeneratedClass(Element attribute,
-      Map<TypeElement, ClassToGenerateInfo> modelClassMap) {
+      Map<TypeElement, GeneratedModelInfo> modelClassMap) {
     TypeElement classElement = (TypeElement) attribute.getEnclosingElement();
-    ClassToGenerateInfo helperClass = getOrCreateTargetClass(modelClassMap, classElement);
+    GeneratedModelInfo helperClass = getOrCreateTargetClass(modelClassMap, classElement);
     helperClass.addAttribute(buildAttributeInfo(attribute));
   }
 
   private AttributeInfo buildAttributeInfo(Element attribute) {
     validateFieldAccessibleViaGeneratedCode(attribute, EpoxyAttribute.class, errorLogger, true);
-    return new AttributeInfo(attribute, typeUtils, errorLogger);
+    return new BaseModelAttributeInfo(attribute, typeUtils, elementUtils, errorLogger);
   }
 
-  private ClassToGenerateInfo getOrCreateTargetClass(
-      Map<TypeElement, ClassToGenerateInfo> modelClassMap, TypeElement classElement) {
+  private GeneratedModelInfo getOrCreateTargetClass(
+      Map<TypeElement, GeneratedModelInfo> modelClassMap, TypeElement classElement) {
 
-    ClassToGenerateInfo classToGenerateInfo = modelClassMap.get(classElement);
+    GeneratedModelInfo generatedModelInfo = modelClassMap.get(classElement);
 
     boolean isFinal = classElement.getModifiers().contains(Modifier.FINAL);
     if (isFinal) {
@@ -159,12 +150,13 @@ class ModelProcessor {
           .logError("Epoxy model class must be abstract (%s)", classElement.getSimpleName());
     }
 
-    if (classToGenerateInfo == null) {
-      classToGenerateInfo = new ClassToGenerateInfo(typeUtils, elementUtils, classElement);
-      modelClassMap.put(classElement, classToGenerateInfo);
+    if (generatedModelInfo == null) {
+      generatedModelInfo = new BasicGeneratedModelInfo(typeUtils, elementUtils, classElement,
+          errorLogger);
+      modelClassMap.put(classElement, generatedModelInfo);
     }
 
-    return classToGenerateInfo;
+    return generatedModelInfo;
   }
 
   /**
@@ -173,16 +165,16 @@ class ModelProcessor {
    * with the rest of the annotations.
    */
   private void addAttributesFromOtherModules(
-      Map<TypeElement, ClassToGenerateInfo> modelClassMap) {
+      Map<TypeElement, GeneratedModelInfo> modelClassMap) {
     // Copy the entries in the original map so we can add new entries to the map while we iterate
     // through the old entries
-    Set<Entry<TypeElement, ClassToGenerateInfo>> originalEntries =
+    Set<Entry<TypeElement, GeneratedModelInfo>> originalEntries =
         new HashSet<>(modelClassMap.entrySet());
 
-    for (Entry<TypeElement, ClassToGenerateInfo> entry : originalEntries) {
+    for (Entry<TypeElement, GeneratedModelInfo> entry : originalEntries) {
       TypeElement currentEpoxyModel = entry.getKey();
       TypeMirror superclassType = currentEpoxyModel.getSuperclass();
-      ClassToGenerateInfo classToGenerateInfo = entry.getValue();
+      GeneratedModelInfo generatedModelInfo = entry.getValue();
 
       while (isEpoxyModel(superclassType)) {
         TypeElement superclassEpoxyModel = (TypeElement) typeUtils.asElement(superclassType);
@@ -201,7 +193,7 @@ class ModelProcessor {
               // generate a class for the super class EpoxyModel in the other module since one
               // will be created when that module is processed. If we make one as well there will
               // be a duplicate (causes proguard errors and is just wrong).
-              classToGenerateInfo.addAttribute(attributeInfo);
+              generatedModelInfo.addAttribute(attributeInfo);
             }
           }
         }
@@ -220,14 +212,14 @@ class ModelProcessor {
    * include attributes that are package private, otherwise the generated class won't compile.
    */
   private void updateClassesForInheritance(
-      Map<TypeElement, ClassToGenerateInfo> helperClassMap) {
-    for (Entry<TypeElement, ClassToGenerateInfo> entry : helperClassMap.entrySet()) {
+      Map<TypeElement, GeneratedModelInfo> helperClassMap) {
+    for (Entry<TypeElement, GeneratedModelInfo> entry : helperClassMap.entrySet()) {
       TypeElement thisClass = entry.getKey();
 
-      Map<TypeElement, ClassToGenerateInfo> otherClasses = new LinkedHashMap<>(helperClassMap);
+      Map<TypeElement, GeneratedModelInfo> otherClasses = new LinkedHashMap<>(helperClassMap);
       otherClasses.remove(thisClass);
 
-      for (Entry<TypeElement, ClassToGenerateInfo> otherEntry : otherClasses.entrySet()) {
+      for (Entry<TypeElement, GeneratedModelInfo> otherEntry : otherClasses.entrySet()) {
         TypeElement otherClass = otherEntry.getKey();
 
         if (!isSubtype(thisClass, otherClass)) {
