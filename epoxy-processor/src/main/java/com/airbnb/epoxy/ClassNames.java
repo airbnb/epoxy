@@ -8,6 +8,7 @@ final class ClassNames {
   private ClassNames() {
   }
 
+  private static final String PKG_EPOXY = "com.airbnb.epoxy";
   private static final String PKG_LITHO = "com.facebook.litho";
   private static final String PKG_LITHO_ANNOTATIONS = "com.facebook.litho.annotations";
 
@@ -15,4 +16,5 @@ final class ClassNames {
   static final ClassName LITHO_COMPONENT_CONTEXT = get(PKG_LITHO, "ComponentContext");
   static final ClassName LITHO_ANNOTATION_LAYOUT_SPEC = get(PKG_LITHO_ANNOTATIONS, "LayoutSpec");
   static final ClassName LITHO_ANNOTATION_PROP = get(PKG_LITHO_ANNOTATIONS, "Prop");
+  static final ClassName EPOXY_LITHO_MODEL = get(PKG_EPOXY, "EpoxyLithoModel");
 }

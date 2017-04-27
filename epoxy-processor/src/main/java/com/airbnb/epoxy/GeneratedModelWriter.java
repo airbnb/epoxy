@@ -406,10 +406,9 @@ class GeneratedModelWriter {
    */
   private Iterable<MethodSpec> generateDefaultMethodImplementations(GeneratedModelInfo info) {
     List<MethodSpec> methods = new ArrayList<>();
-    TypeElement originalClassElement = info.getSuperClassElement();
 
     addCreateHolderMethodIfNeeded(info, methods);
-    addDefaultLayoutMethodIfNeeded(originalClassElement, methods);
+    addDefaultLayoutMethodIfNeeded(info, methods);
 
     return methods;
   }
@@ -448,7 +447,7 @@ class GeneratedModelWriter {
    * If there is no existing implementation of getDefaultLayout we can generate an implementation.
    * This relies on a layout res being set in the @EpoxyModelClass annotation.
    */
-  private void addDefaultLayoutMethodIfNeeded(TypeElement originalClassElement,
+  private void addDefaultLayoutMethodIfNeeded(GeneratedModelInfo modelInfo,
       List<MethodSpec> methods) {
 
     MethodSpec getDefaultLayoutMethod = MethodSpec.methodBuilder(
@@ -459,22 +458,31 @@ class GeneratedModelWriter {
         .returns(TypeName.INT)
         .build();
 
-    if (implementsMethod(originalClassElement, getDefaultLayoutMethod, typeUtils)) {
-      return;
-    }
+    // TODO: This is pretty ugly and could be abstracted/decomposed better. We could probably
+    // make a small class to contain this logic, or build it into the model info classes
+    LayoutResource layout;
+    if (modelInfo instanceof DataBindingModelInfo) {
+      layout = ((DataBindingModelInfo) modelInfo).getLayoutResource();
+    } else {
 
-    TypeElement modelClassWithAnnotation = findSuperClassWithClassAnnotation(originalClassElement);
-    if (modelClassWithAnnotation == null) {
-      errorLogger
-          .logError("Model must use %s annotation if it does not implement %s. (class: %s)",
-              EpoxyModelClass.class,
-              GET_DEFAULT_LAYOUT_METHOD_NAME,
-              originalClassElement.getSimpleName());
-      return;
-    }
+      TypeElement superClassElement = modelInfo.getSuperClassElement();
+      if (implementsMethod(superClassElement, getDefaultLayoutMethod, typeUtils)) {
+        return;
+      }
 
-    LayoutResource layout = layoutResourceProcessor
-        .getLayoutInAnnotation(modelClassWithAnnotation, EpoxyModelClass.class);
+      TypeElement modelClassWithAnnotation = findSuperClassWithClassAnnotation(superClassElement);
+      if (modelClassWithAnnotation == null) {
+        errorLogger
+            .logError("Model must use %s annotation if it does not implement %s. (class: %s)",
+                EpoxyModelClass.class,
+                GET_DEFAULT_LAYOUT_METHOD_NAME,
+                modelInfo.getSuperClassName());
+        return;
+      }
+
+      layout = layoutResourceProcessor
+          .getLayoutInAnnotation(modelClassWithAnnotation, EpoxyModelClass.class);
+    }
 
     getDefaultLayoutMethod = getDefaultLayoutMethod.toBuilder()
         .addStatement("return $L", layout.code)

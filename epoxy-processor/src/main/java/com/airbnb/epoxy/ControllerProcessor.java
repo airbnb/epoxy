@@ -40,6 +40,7 @@ class ControllerProcessor {
   private Elements elementUtils;
   private ErrorLogger errorLogger;
   private final ConfigManager configManager;
+  private final Map<TypeElement, ControllerClassInfo> controllerClassMap = new LinkedHashMap<>();
 
   ControllerProcessor(Filer filer, Elements elementUtils,
       ErrorLogger errorLogger, ConfigManager configManager) {
@@ -49,9 +50,7 @@ class ControllerProcessor {
     this.configManager = configManager;
   }
 
-  void process(RoundEnvironment roundEnv, List<GeneratedModelInfo> generatedModels) {
-    LinkedHashMap<TypeElement, ControllerClassInfo> controllerClassMap = new LinkedHashMap<>();
-
+  void process(RoundEnvironment roundEnv) {
     for (Element modelFieldElement : roundEnv.getElementsAnnotatedWith(AutoModel.class)) {
       try {
         addFieldToControllerClass(modelFieldElement, controllerClassMap);
@@ -59,9 +58,10 @@ class ControllerProcessor {
         errorLogger.logError(e);
       }
     }
+  }
 
+  void resolveGeneratedModelsAndWriteJava(List<GeneratedModelInfo> generatedModels) {
     resolveGeneratedModelNames(controllerClassMap, generatedModels);
-
     generateJava(controllerClassMap);
   }
 
@@ -75,8 +75,7 @@ class ControllerProcessor {
    * @param generatedModels Information about the already generated models. Relies on the model
    *                        processor running first and passing us this information.
    */
-  private void resolveGeneratedModelNames(
-      LinkedHashMap<TypeElement, ControllerClassInfo> controllerClassMap,
+  private void resolveGeneratedModelNames(Map<TypeElement, ControllerClassInfo> controllerClassMap,
       List<GeneratedModelInfo> generatedModels) {
 
     for (ControllerClassInfo controllerClassInfo : controllerClassMap.values()) {
@@ -115,7 +114,7 @@ class ControllerProcessor {
   }
 
   private void addFieldToControllerClass(Element modelField,
-      LinkedHashMap<TypeElement, ControllerClassInfo> controllerClassMap) {
+      Map<TypeElement, ControllerClassInfo> controllerClassMap) {
 
     TypeElement controllerClassElement = (TypeElement) modelField.getEnclosingElement();
 
@@ -164,7 +163,7 @@ class ControllerProcessor {
     return new ControllerModelField(modelFieldElement);
   }
 
-  private void generateJava(LinkedHashMap<TypeElement, ControllerClassInfo> controllerClassMap) {
+  private void generateJava(Map<TypeElement, ControllerClassInfo> controllerClassMap) {
     for (Entry<TypeElement, ControllerClassInfo> controllerInfo : controllerClassMap.entrySet()) {
       try {
         generateHelperClassForController(controllerInfo.getValue());
