@@ -5,6 +5,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 
+import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ class ProcessorUtils {
 
   static final String EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel<?>";
   static final String UNTYPED_EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel";
-  static final String EPOXY_MODEL_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyModelWithHolder<?>";
+  static final String EPOXY_MODEL_WITH_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyModelWithHolder<?>";
   static final String EPOXY_VIEW_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyViewHolder";
   static final String EPOXY_HOLDER_TYPE = "com.airbnb.epoxy.EpoxyHolder";
   static final String ANDROID_VIEW_TYPE = "android.view.View";
@@ -41,10 +42,36 @@ class ProcessorUtils {
   static final String ON_UNBIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelUnboundListener";
   static final String WRAPPED_LISTENER_TYPE = "com.airbnb.epoxy.WrappedEpoxyModelClickListener";
   static final String DATA_BINDING_MODEL_TYPE = "com.airbnb.epoxy.DataBindingEpoxyModel";
+  static final String LITHO_MODEL_TYPE = "com.airbnb.epoxy.EpoxyLithoModel";
 
   static void throwError(String msg, Object... args)
       throws EpoxyProcessorException {
     throw new EpoxyProcessorException(String.format(msg, args));
+  }
+
+  static Class<?> getClass(ClassName name) {
+    try {
+      return Class.forName(name.reflectionName());
+    } catch (ClassNotFoundException e) {
+      return null;
+    }
+  }
+
+  static Class<? extends Annotation> getAnnotationClass(ClassName name) {
+    try {
+      Class<?> aClass = Class.forName(name.reflectionName());
+      return (Class<? extends Annotation>) aClass;
+    } catch (ClassNotFoundException | ClassCastException e) {
+      return null;
+    }
+  }
+
+  static Element getElementByName(ClassName name, Elements elements, Types types) {
+    try {
+      return elements.getTypeElement(name.reflectionName());
+    } catch (MirroredTypeException mte) {
+      return types.asElement(mte.getTypeMirror());
+    }
   }
 
   static Element getElementByName(String name, Elements elements, Types types) {
@@ -63,8 +90,8 @@ class ProcessorUtils {
     return new EpoxyProcessorException(String.format(msg, args));
   }
 
-  static boolean isViewClickListenerType(Element element) {
-    return isSubtypeOfType(element.asType(), VIEW_CLICK_LISTENER_TYPE);
+  static boolean isViewClickListenerType(TypeMirror type) {
+    return isSubtypeOfType(type, VIEW_CLICK_LISTENER_TYPE);
   }
 
   static boolean isIterableType(TypeElement element) {
@@ -84,7 +111,7 @@ class ProcessorUtils {
   }
 
   static boolean isEpoxyModelWithHolder(TypeElement type) {
-    return isSubtypeOfType(type.asType(), EPOXY_MODEL_HOLDER_TYPE);
+    return isSubtypeOfType(type.asType(), EPOXY_MODEL_WITH_HOLDER_TYPE);
   }
 
   static boolean isDataBindingModel(TypeElement type) {
@@ -244,7 +271,7 @@ class ProcessorUtils {
     }
 
     return null;
-}
+  }
 
   static void validateFieldAccessibleViaGeneratedCode(Element fieldElement,
       Class<?> annotationClass, ErrorLogger errorLogger, boolean skipPrivateFieldCheck) {

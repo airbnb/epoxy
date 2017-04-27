@@ -2,10 +2,11 @@ package com.airbnb.epoxy;
 
 import com.google.auto.service.AutoService;
 
-import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,6 +44,7 @@ public class EpoxyProcessor extends AbstractProcessor {
   private ConfigManager configManager;
   private DataBindingModuleLookup dataBindingModuleLookup;
   private final ErrorLogger errorLogger = new ErrorLogger();
+  private GeneratedModelWriter modelWriter;
 
   public EpoxyProcessor() {
     this(Collections.<String, String>emptyMap());
@@ -86,27 +88,26 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     dataBindingModuleLookup =
         new DataBindingModuleLookup(elementUtils, typeUtils, errorLogger, layoutResourceProcessor);
+
+    modelWriter =
+        new GeneratedModelWriter(filer, typeUtils, elementUtils, errorLogger,
+            layoutResourceProcessor,
+            configManager, dataBindingModuleLookup);
   }
 
   @Override
   public Set<String> getSupportedAnnotationTypes() {
     Set<String> types = new LinkedHashSet<>();
-    for (Class<? extends Annotation> annotation : getSupportedAnnotations()) {
-      types.add(annotation.getCanonicalName());
-    }
+
+    types.add(EpoxyModelClass.class.getCanonicalName());
+    types.add(EpoxyAttribute.class.getCanonicalName());
+    types.add(PackageEpoxyConfig.class.getCanonicalName());
+    types.add(AutoModel.class.getCanonicalName());
+    types.add(EpoxyDataBindingLayouts.class.getCanonicalName());
+
+    types.add(ClassNames.LITHO_ANNOTATION_LAYOUT_SPEC.reflectionName());
+
     return types;
-  }
-
-  static Set<Class<? extends Annotation>> getSupportedAnnotations() {
-    Set<Class<? extends Annotation>> annotations = new LinkedHashSet<>();
-
-    annotations.add(EpoxyModelClass.class);
-    annotations.add(EpoxyAttribute.class);
-    annotations.add(PackageEpoxyConfig.class);
-    annotations.add(AutoModel.class);
-    annotations.add(EpoxyDataBindingLayouts.class);
-
-    return annotations;
   }
 
   @Override
@@ -117,17 +118,23 @@ public class EpoxyProcessor extends AbstractProcessor {
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     errorLogger.logErrors(configManager.processConfigurations(roundEnv));
+    List<GeneratedModelInfo> generatedModels = new ArrayList<>();
 
-    ModelProcessor modelProcessor = new ModelProcessor(filer, messager,
-        elementUtils, typeUtils, configManager, errorLogger, layoutResourceProcessor,
-        dataBindingModuleLookup);
-    modelProcessor.processModels(roundEnv);
-
-    new ControllerProcessor(filer, elementUtils, errorLogger, configManager)
-        .process(roundEnv, modelProcessor.getGeneratedModels());
+    ModelProcessor modelProcessor = new ModelProcessor(messager,
+        elementUtils, typeUtils, configManager, errorLogger,
+        modelWriter);
+    generatedModels.addAll(modelProcessor.processModels(roundEnv));
 
     new DataBindingProcessor(filer, elementUtils, typeUtils, errorLogger, configManager,
         layoutResourceProcessor, dataBindingModuleLookup).process(roundEnv);
+
+    LithoSpecProcessor lithoSpecProcessor = new LithoSpecProcessor(
+        elementUtils, typeUtils, configManager, errorLogger,
+        modelWriter);
+    generatedModels.addAll(lithoSpecProcessor.processSpecs(roundEnv));
+
+    new ControllerProcessor(filer, elementUtils, errorLogger, configManager)
+        .process(roundEnv, generatedModels);
 
     if (roundEnv.processingOver()) {
 

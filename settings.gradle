@@ -1,1 +1,1 @@
-include ':epoxy-adapter', ':epoxy-sample', ':epoxy-processor', ':epoxy-annotations', ':epoxy-processortest', ':epoxy-processortest2', ':epoxy-integrationtest', ':epoxy-databinding'
+include ':epoxy-adapter', ':epoxy-sample', ':epoxy-processor', ':epoxy-annotations', ':epoxy-processortest', ':epoxy-processortest2', ':epoxy-integrationtest', ':epoxy-databinding', ':epoxy-litho'

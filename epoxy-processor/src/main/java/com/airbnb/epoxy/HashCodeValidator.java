@@ -48,7 +48,7 @@ class HashCodeValidator {
 
   void validate(AttributeInfo attribute) throws EpoxyProcessorException {
     try {
-      validateImplementsHashCode(attribute.getAttributeElement().asType());
+      validateImplementsHashCode(attribute.getTypeMirror());
     } catch (EpoxyProcessorException e) {
       // Append information about the attribute and class to the existing exception
       throwError(e.getMessage()
@@ -58,8 +58,7 @@ class HashCodeValidator {
               + "If you want the attribute to be excluded, use "
               + "@EpoxyAttribute(DoNotHash). If you want to ignore this warning use "
               + "@EpoxyAttribute(IgnoreRequireHashCode)",
-          attribute.getClassElement().getSimpleName().toString(),
-          attribute.getName());
+          attribute.getModelName(), attribute.getName());
     }
   }
 

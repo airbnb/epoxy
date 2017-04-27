@@ -1,0 +1,18 @@
+package com.airbnb.epoxy;
+
+import com.squareup.javapoet.ClassName;
+
+import static com.squareup.javapoet.ClassName.get;
+
+final class ClassNames {
+  private ClassNames() {
+  }
+
+  private static final String PKG_LITHO = "com.facebook.litho";
+  private static final String PKG_LITHO_ANNOTATIONS = "com.facebook.litho.annotations";
+
+  static final ClassName LITHO_COMPONENT = get(PKG_LITHO, "Component");
+  static final ClassName LITHO_COMPONENT_CONTEXT = get(PKG_LITHO, "ComponentContext");
+  static final ClassName LITHO_ANNOTATION_LAYOUT_SPEC = get(PKG_LITHO_ANNOTATIONS, "LayoutSpec");
+  static final ClassName LITHO_ANNOTATION_PROP = get(PKG_LITHO_ANNOTATIONS, "Prop");
+}

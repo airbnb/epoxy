@@ -45,7 +45,8 @@ project.android.buildTypes.all { buildType ->
       [
           validateEpoxyModelUsage     : String.valueOf(buildType.name == 'debug'),
           requireHashCodeInEpoxyModels: "true",
-          requireAbstractEpoxyModels  : "true"
+          requireAbstractEpoxyModels  : "true",
+          implicitlyAddAutoModels     : "true"
       ]
 }
 
@@ -55,10 +56,17 @@ configurations.all { strategy ->
 }
 
 dependencies {
-  compile project(':epoxy-adapter')
-  compile project(':epoxy-annotations')
   compile project(':epoxy-databinding')
+  compile project(':epoxy-adapter')
   annotationProcessor project(':epoxy-processor')
+
+  // Dependencies for the optional litho integration
+  compile project(':epoxy-litho')
+  annotationProcessor rootProject.deps.lithoProcessor
+  compile rootProject.deps.lithoCore
+  compile rootProject.deps.lithoWidget
+  compile rootProject.deps.lithoSoloader
+  provided rootProject.deps.lithoAnnotations
 
   compile rootProject.deps.butterknifeLibrary
   annotationProcessor rootProject.deps.butterknifeCompiler
