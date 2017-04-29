@@ -18,5 +18,5 @@
 
 -keep class * extends com.airbnb.epoxy.EpoxyController { *; }
 -keep class * extends com.airbnb.epoxy.ControllerHelper { *; }
--keepclasseswithmembernames class * { @com.airbnb.epoxy.* <methods>; }
--keepclasseswithmembernames class * { @com.airbnb.epoxy.* <fields>; }
+-keepclasseswithmembernames class * { @com.airbnb.epoxy.AutoModel <methods>; }
+-keepclasseswithmembernames class * { @com.airbnb.epoxy.AutoModel <fields>; }
