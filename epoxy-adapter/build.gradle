@@ -7,6 +7,7 @@ android {
   defaultConfig {
     minSdkVersion rootProject.MIN_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
+    consumerProguardFiles 'proguard-rules.pro'
   }
 }
 

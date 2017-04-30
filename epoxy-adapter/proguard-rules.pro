@@ -15,3 +15,8 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keep class * extends com.airbnb.epoxy.EpoxyController { *; }
+-keep class * extends com.airbnb.epoxy.ControllerHelper { *; }
+-keepclasseswithmembernames class * { @com.airbnb.epoxy.AutoModel <methods>; }
+-keepclasseswithmembernames class * { @com.airbnb.epoxy.AutoModel <fields>; }
