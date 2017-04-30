@@ -68,7 +68,6 @@ class ConfigManager {
    * Using a debug build flag is a great way to do this.
    */
   List<Exception> processConfigurations(RoundEnvironment roundEnv) {
-    configurationMap.clear();
 
     Set<? extends Element> annotatedElements =
         roundEnv.getElementsAnnotatedWith(PackageEpoxyConfig.class);

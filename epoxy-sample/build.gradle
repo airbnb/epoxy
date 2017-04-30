@@ -35,12 +35,6 @@ android {
     versionName "1.0"
   }
 
-  buildTypes {
-    debug {
-      minifyEnabled true
-    }
-  }
-
   dataBinding {
     enabled = true
   }
