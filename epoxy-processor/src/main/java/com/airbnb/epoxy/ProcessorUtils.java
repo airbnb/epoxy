@@ -51,16 +51,15 @@ class ProcessorUtils {
   static Class<?> getClass(ClassName name) {
     try {
       return Class.forName(name.reflectionName());
-    } catch (ClassNotFoundException e) {
+    } catch (ClassNotFoundException | NoClassDefFoundError e) {
       return null;
     }
   }
 
   static Class<? extends Annotation> getAnnotationClass(ClassName name) {
     try {
-      Class<?> aClass = Class.forName(name.reflectionName());
-      return (Class<? extends Annotation>) aClass;
-    } catch (ClassNotFoundException | ClassCastException e) {
+      return (Class<? extends Annotation>) getClass(name);
+    } catch (ClassCastException e) {
       return null;
     }
   }
