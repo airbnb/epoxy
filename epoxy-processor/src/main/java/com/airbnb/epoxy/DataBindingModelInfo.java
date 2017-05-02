@@ -16,8 +16,8 @@ import static com.airbnb.epoxy.ProcessorUtils.getElementByName;
 
 class DataBindingModelInfo extends GeneratedModelInfo {
 
-  private final static String BINDING_SUFFIX = "Binding";
-  private final static String SET_PREFIX = "set";
+  private static final String BINDING_SUFFIX = "Binding";
+  private static final String SET_PREFIX = "set";
 
   private final Types typeUtils;
   private final Elements elementUtils;
