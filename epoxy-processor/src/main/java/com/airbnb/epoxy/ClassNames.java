@@ -19,4 +19,6 @@ final class ClassNames {
   static final ClassName EPOXY_LITHO_MODEL = get(PKG_EPOXY, "EpoxyLithoModel");
 
   static final ClassName EPOXY_DATA_BINDING_MODEL = get(PKG_EPOXY, "DataBindingEpoxyModel");
+  static final ClassName EPOXY_DATA_BINDING_HOLDER = get(PKG_EPOXY,
+      "DataBindingEpoxyModel.DataBindingHolder");
 }

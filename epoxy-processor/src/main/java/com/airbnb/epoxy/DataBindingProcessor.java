@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -66,9 +67,14 @@ class DataBindingProcessor {
     for (DataBindingModelInfo modelInfo : modelInfoList) {
       try {
         modelWriter.generateClassForModel(modelInfo);
-      } catch (Exception e) {
-        errorLogger.logError(e, "Error generating model classes");
+      } catch (IOException e) {
+        e.printStackTrace();
       }
+//      try {
+//        modelWriter.generateClassForModel(modelInfo);
+//      } catch (Exception e) {
+//        errorLogger.logError(e, "Error generating model classes");
+//      }
     }
   }
 }

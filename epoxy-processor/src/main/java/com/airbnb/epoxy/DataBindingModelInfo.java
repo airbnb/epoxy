@@ -9,6 +9,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.ClassNames.EPOXY_DATA_BINDING_HOLDER;
 import static com.airbnb.epoxy.ClassNames.EPOXY_DATA_BINDING_MODEL;
 import static com.airbnb.epoxy.ProcessorUtils.capitalizeFirstLetter;
 import static com.airbnb.epoxy.ProcessorUtils.getElementByName;
@@ -21,11 +22,13 @@ class DataBindingModelInfo extends GeneratedModelInfo {
   private final Types typeUtils;
   private final Elements elementUtils;
   private final LayoutResource layoutResource;
+  private final String moduleName;
   private final ClassName dataBindingClassName;
 
   DataBindingModelInfo(Types typeUtils, Elements elementUtils, LayoutResource layoutResource,
       String moduleName) {
     this.layoutResource = layoutResource;
+    this.moduleName = moduleName;
 
     dataBindingClassName = getDataBindingClassNameForResource(layoutResource, moduleName);
 
@@ -35,8 +38,9 @@ class DataBindingModelInfo extends GeneratedModelInfo {
     superClassElement = (TypeElement) ProcessorUtils.getElementByName(EPOXY_DATA_BINDING_MODEL,
         elementUtils, typeUtils);
     superClassName = EPOXY_DATA_BINDING_MODEL;
-    generatedClassName = buildGeneratedModelName(dataBindingClassName);
+    generatedClassName = buildGeneratedModelName();
     parameterizedClassName = generatedClassName;
+    boundObjectTypeName = EPOXY_DATA_BINDING_HOLDER;
     shouldGenerateModel = true;
     generateFieldsForAttributes = true;
   }
@@ -67,12 +71,12 @@ class DataBindingModelInfo extends GeneratedModelInfo {
     }
     builder.append(BINDING_SUFFIX);
 
-    return ClassName.get(moduleName, builder.toString());
+    return ClassName.get(moduleName + ".databinding", builder.toString());
   }
 
-  private ClassName buildGeneratedModelName(ClassName className) {
-    String simpleName = className.simpleName() + "Model" + GENERATED_CLASS_NAME_SUFFIX;
-    return ClassName.get(className.packageName(), simpleName);
+  private ClassName buildGeneratedModelName() {
+    String simpleName = dataBindingClassName.simpleName() + "Model" + GENERATED_CLASS_NAME_SUFFIX;
+    return ClassName.get(moduleName, simpleName);
   }
 
   LayoutResource getLayoutResource() {
