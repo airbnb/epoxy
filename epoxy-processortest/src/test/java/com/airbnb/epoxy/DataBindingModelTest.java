@@ -65,7 +65,7 @@ public class DataBindingModelTest {
               + "  public static final int valueString = 19;\n"
               + "  public static final int valueObject = 20;\n"
               + "  public static final int valueList = 21;\n"
-              + "  public static final int stringValue = 21;\n"
+              + "  public static final int stringValue = 22;\n"
               + "}");
 
   @Test
