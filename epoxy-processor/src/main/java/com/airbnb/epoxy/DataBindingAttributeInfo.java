@@ -6,8 +6,9 @@ import javax.lang.model.element.Element;
 
 class DataBindingAttributeInfo extends AttributeInfo {
 
-  public DataBindingAttributeInfo(DataBindingModelInfo modelInfo, Element dataBindingElement) {
-    name = ProcessorUtils.decapitalizeFirstLetter(dataBindingElement.getSimpleName().toString());
+  public DataBindingAttributeInfo(DataBindingModelInfo modelInfo, Element dataBindingElement,
+      String name) {
+    this.name = name;
     typeName = TypeName.get(dataBindingElement.asType());
     typeMirror = dataBindingElement.asType();
     modelName = modelInfo.getGeneratedName().simpleName();

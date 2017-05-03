@@ -2,6 +2,8 @@ package com.airbnb.epoxy;
 
 import com.squareup.javapoet.ClassName;
 
+import java.util.regex.Pattern;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -16,8 +18,8 @@ import static com.airbnb.epoxy.ProcessorUtils.getElementByName;
 
 class DataBindingModelInfo extends GeneratedModelInfo {
 
+  private static final Pattern PATTERN_STARTS_WITH_SET = Pattern.compile("set[A-Z]\\w*");
   private static final String BINDING_SUFFIX = "Binding";
-  private static final String SET_PREFIX = "set";
 
   private final Types typeUtils;
   private final Elements elementUtils;
@@ -43,6 +45,8 @@ class DataBindingModelInfo extends GeneratedModelInfo {
     boundObjectTypeName = EPOXY_DATA_BINDING_HOLDER;
     shouldGenerateModel = true;
     generateFieldsForAttributes = true;
+
+    collectMethodsReturningClassType(superClassElement, typeUtils);
   }
 
   void parseDataBindingClass() {
@@ -53,10 +57,13 @@ class DataBindingModelInfo extends GeneratedModelInfo {
     for (Element element : dataBindingClass.getEnclosedElements()) {
       if (element.getKind() == ElementKind.METHOD) {
         ExecutableElement method = (ExecutableElement) element;
-        if (method.getSimpleName().toString().startsWith(SET_PREFIX)
+        String methodName = method.getSimpleName().toString();
+        if (PATTERN_STARTS_WITH_SET.matcher(methodName).matches()
             && method.getParameters().size() == 1) {
           Element dataBindingElement = method.getParameters().get(0);
-          addAttribute(new DataBindingAttributeInfo(this, dataBindingElement));
+          String name = String.valueOf(methodName.charAt(3)).toLowerCase()
+              + methodName.substring(4);
+          addAttribute(new DataBindingAttributeInfo(this, dataBindingElement, name));
         }
       }
     }

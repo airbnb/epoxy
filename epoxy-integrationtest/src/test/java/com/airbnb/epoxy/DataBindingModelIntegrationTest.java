@@ -49,4 +49,35 @@ public class DataBindingModelIntegrationTest {
     // Check that the text was updated after the change payload
     assertEquals(secondModel.stringValue(), ((Button) viewHolder.itemView).getText());
   }
+
+  @Test
+  public void fullyCreateDataBindingModel() {
+    SimpleEpoxyController controller = new SimpleEpoxyController();
+    ModelWithDataBindingBindingModel_ firstModel = new ModelWithDataBindingBindingModel_()
+        .stringValue("hello")
+        .id(1);
+
+    controller.setModels(Collections.singletonList(firstModel));
+
+    ControllerLifecycleHelper lifecycleHelper = new ControllerLifecycleHelper();
+    EpoxyViewHolder viewHolder = lifecycleHelper.createViewHolder(controller.getAdapter(), 0);
+    controller.getAdapter().onBindViewHolder(viewHolder, 0);
+
+    DataBindingHolder dataBindingHolder = ((DataBindingHolder) viewHolder.objectToBind());
+    assertNotNull(dataBindingHolder.getDataBinding());
+
+    // Check that the text was set on the view
+    assertEquals(firstModel.stringValue(), ((Button) viewHolder.itemView).getText());
+
+    ModelWithDataBindingBindingModel_ secondModel = new ModelWithDataBindingBindingModel_()
+        .stringValue("hello again")
+        .id(1);
+
+    controller.setModels(Collections.singletonList(secondModel));
+    List<Object> payloads = DiffPayloadTestUtil.payloadsWithChangedModels(firstModel);
+    controller.getAdapter().onBindViewHolder(viewHolder, 0, payloads);
+
+    // Check that the text was updated after the change payload
+    assertEquals(secondModel.stringValue(), ((Button) viewHolder.itemView).getText());
+  }
 }
