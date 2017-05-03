@@ -11,6 +11,10 @@ android {
     minSdkVersion rootProject.MIN_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
   }
+
+  dataBinding {
+    enabled = true
+  }
 }
 
 dependencies {

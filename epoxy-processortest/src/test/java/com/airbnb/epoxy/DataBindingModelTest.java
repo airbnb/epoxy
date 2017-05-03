@@ -10,6 +10,7 @@ import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaSourcesSubjectFactory.javaSources;
 import static java.util.Arrays.asList;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class DataBindingModelTest {
 
   private static final JavaFileObject R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
@@ -26,6 +27,7 @@ public class DataBindingModelTest {
       + "  }\n"
       + "  public static final class layout {\n"
       + "    public static final int res = 0x7f040008;\n"
+      + "    public static final int model_with_data_binding=0x7f040009;\n"
       + "  }\n"
       + "  public static final class integer {\n"
       + "    public static final int res = 0x7f040004;\n"
@@ -63,6 +65,7 @@ public class DataBindingModelTest {
               + "  public static final int valueString = 19;\n"
               + "  public static final int valueObject = 20;\n"
               + "  public static final int valueList = 21;\n"
+              + "  public static final int stringValue = 22;\n"
               + "}");
 
   @Test
@@ -92,6 +95,25 @@ public class DataBindingModelTest {
     assert_().about(javaSources())
         .that(asList(model, BR_CLASS, R))
         .processedWith(EpoxyProcessor.withNoValidation())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void testFullyGeneratedModel() {
+    JavaFileObject packageInfo = JavaFileObjects
+        .forResource("package-info.java");
+
+    JavaFileObject binding = JavaFileObjects
+        .forResource("ModelWithDataBindingBinding.java");
+
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("ModelWithDataBindingBindingModel_.java");
+
+    assert_().about(javaSources())
+        .that(asList(packageInfo, binding, BR_CLASS, R))
+        .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedModel);
