@@ -73,7 +73,7 @@ public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClas
 
   public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ superValue(int superValue) {
     onMutation();
-    this.superValue = superValue;
+    super.superValue = superValue;
     return this;
   }
 
@@ -141,7 +141,7 @@ public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClas
   public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.superValue = 0;
+    super.superValue = 0;
     super.reset();
     return this;
   }

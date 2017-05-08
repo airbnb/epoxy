@@ -74,7 +74,7 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation implemen
 
   public ModelWithFieldAnnotation_ title(@Nullable String title) {
     onMutation();
-    this.title = title;
+    super.title = title;
     return this;
   }
 
@@ -141,7 +141,7 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation implemen
   public ModelWithFieldAnnotation_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.title = null;
+    super.title = null;
     super.reset();
     return this;
   }

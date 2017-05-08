@@ -18,8 +18,8 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import static com.airbnb.epoxy.ProcessorUtils.getElementByName;
-import static com.airbnb.epoxy.ProcessorUtils.getEpoxyObjectType;
+import static com.airbnb.epoxy.Utils.getElementByName;
+import static com.airbnb.epoxy.Utils.getEpoxyObjectType;
 
  class BasicGeneratedModelInfo extends GeneratedModelInfo {
 
@@ -54,7 +54,7 @@ import static com.airbnb.epoxy.ProcessorUtils.getEpoxyObjectType;
               superClassElement.getSimpleName());
       // Return a basic view type so the code can be generated
       boundObjectTypeMirror =
-          getElementByName(ProcessorUtils.ANDROID_VIEW_TYPE, elementUtils, typeUtils).asType();
+          getElementByName(Utils.ANDROID_VIEW_TYPE, elementUtils, typeUtils).asType();
     }
     boundObjectTypeName = TypeName.get(boundObjectTypeMirror);
 

@@ -73,7 +73,7 @@ public class ModelWithoutHash_ extends ModelWithoutHash implements GeneratedMode
 
   public ModelWithoutHash_ value2(int value2) {
     onMutation();
-    this.value2 = value2;
+    super.value2 = value2;
     return this;
   }
 
@@ -83,7 +83,7 @@ public class ModelWithoutHash_ extends ModelWithoutHash implements GeneratedMode
 
   public ModelWithoutHash_ value(int value) {
     onMutation();
-    this.value = value;
+    super.value = value;
     return this;
   }
 
@@ -93,7 +93,7 @@ public class ModelWithoutHash_ extends ModelWithoutHash implements GeneratedMode
 
   public ModelWithoutHash_ value3(String value3) {
     onMutation();
-    this.value3 = value3;
+    super.value3 = value3;
     return this;
   }
 
@@ -159,9 +159,9 @@ public class ModelWithoutHash_ extends ModelWithoutHash implements GeneratedMode
   public ModelWithoutHash_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.value2 = 0;
-    this.value = 0;
-    this.value3 = null;
+    super.value2 = 0;
+    super.value = 0;
+    super.value3 = null;
     super.reset();
     return this;
   }

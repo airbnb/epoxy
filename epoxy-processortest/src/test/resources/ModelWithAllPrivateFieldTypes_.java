@@ -83,7 +83,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueInteger(Integer valueInteger) {
     onMutation();
-    this.setValueInteger(valueInteger);
+    super.setValueInteger(valueInteger);
     return this;
   }
 
@@ -93,7 +93,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueShort(short valueShort) {
     onMutation();
-    this.setValueShort(valueShort);
+    super.setValueShort(valueShort);
     return this;
   }
 
@@ -103,7 +103,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueLong(long valueLong) {
     onMutation();
-    this.setValueLong(valueLong);
+    super.setValueLong(valueLong);
     return this;
   }
 
@@ -113,7 +113,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueList(List<String> valueList) {
     onMutation();
-    this.setValueList(valueList);
+    super.setValueList(valueList);
     return this;
   }
 
@@ -123,7 +123,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueShortWrapper(Short valueShortWrapper) {
     onMutation();
-    this.setValueShortWrapper(valueShortWrapper);
+    super.setValueShortWrapper(valueShortWrapper);
     return this;
   }
 
@@ -133,7 +133,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueDouble(double valueDouble) {
     onMutation();
-    this.setValueDouble(valueDouble);
+    super.setValueDouble(valueDouble);
     return this;
   }
 
@@ -143,7 +143,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueChar(char valueChar) {
     onMutation();
-    this.setValueChar(valueChar);
+    super.setValueChar(valueChar);
     return this;
   }
 
@@ -153,7 +153,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueInt(int valueInt) {
     onMutation();
-    this.setValueInt(valueInt);
+    super.setValueInt(valueInt);
     return this;
   }
 
@@ -163,7 +163,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueDoubleWrapper(Double valueDoubleWrapper) {
     onMutation();
-    this.setValueDoubleWrapper(valueDoubleWrapper);
+    super.setValueDoubleWrapper(valueDoubleWrapper);
     return this;
   }
 
@@ -173,7 +173,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueFloatWrapper(Float valueFloatWrapper) {
     onMutation();
-    this.setValueFloatWrapper(valueFloatWrapper);
+    super.setValueFloatWrapper(valueFloatWrapper);
     return this;
   }
 
@@ -183,7 +183,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueBooleanWrapper(Boolean valueBooleanWrapper) {
     onMutation();
-    this.setValueBooleanWrapper(valueBooleanWrapper);
+    super.setValueBooleanWrapper(valueBooleanWrapper);
     return this;
   }
 
@@ -193,7 +193,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueByteWrapper(Byte valueByteWrapper) {
     onMutation();
-    this.setValueByteWrapper(valueByteWrapper);
+    super.setValueByteWrapper(valueByteWrapper);
     return this;
   }
 
@@ -203,7 +203,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valuebByte(byte valuebByte) {
     onMutation();
-    this.setValuebByte(valuebByte);
+    super.setValuebByte(valuebByte);
     return this;
   }
 
@@ -213,7 +213,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueLongWrapper(Long valueLongWrapper) {
     onMutation();
-    this.setValueLongWrapper(valueLongWrapper);
+    super.setValueLongWrapper(valueLongWrapper);
     return this;
   }
 
@@ -223,7 +223,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueCharacter(Character valueCharacter) {
     onMutation();
-    this.setValueCharacter(valueCharacter);
+    super.setValueCharacter(valueCharacter);
     return this;
   }
 
@@ -233,7 +233,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueString(String valueString) {
     onMutation();
-    this.setValueString(valueString);
+    super.setValueString(valueString);
     return this;
   }
 
@@ -243,7 +243,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueFloat(float valueFloat) {
     onMutation();
-    this.setValueFloat(valueFloat);
+    super.setValueFloat(valueFloat);
     return this;
   }
 
@@ -253,7 +253,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueBoolean(boolean valueBoolean) {
     onMutation();
-    this.setValueBoolean(valueBoolean);
+    super.setValueBoolean(valueBoolean);
     return this;
   }
 
@@ -263,7 +263,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueObjectArray(Object[] valueObjectArray) {
     onMutation();
-    this.setValueObjectArray(valueObjectArray);
+    super.setValueObjectArray(valueObjectArray);
     return this;
   }
 
@@ -273,7 +273,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueObject(Object valueObject) {
     onMutation();
-    this.setValueObject(valueObject);
+    super.setValueObject(valueObject);
     return this;
   }
 
@@ -283,7 +283,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public ModelWithAllPrivateFieldTypes_ valueIntArray(int[] valueIntArray) {
     onMutation();
-    this.setValueIntArray(valueIntArray);
+    super.setValueIntArray(valueIntArray);
     return this;
   }
 
@@ -355,27 +355,27 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   public ModelWithAllPrivateFieldTypes_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.setValueInteger(null);
-    this.setValueShort((short) 0);
-    this.setValueLong(0L);
-    this.setValueList(null);
-    this.setValueShortWrapper(null);
-    this.setValueDouble(0.0d);
-    this.setValueChar((char) 0);
-    this.setValueInt(0);
-    this.setValueDoubleWrapper(null);
-    this.setValueFloatWrapper(null);
-    this.setValueBooleanWrapper(null);
-    this.setValueByteWrapper(null);
-    this.setValuebByte((byte) 0);
-    this.setValueLongWrapper(null);
-    this.setValueCharacter(null);
-    this.setValueString(null);
-    this.setValueFloat(0.0f);
-    this.setValueBoolean(false);
-    this.setValueObjectArray(null);
-    this.setValueObject(null);
-    this.setValueIntArray(null);
+    super.setValueInteger(null);
+    super.setValueShort((short) 0);
+    super.setValueLong(0L);
+    super.setValueList(null);
+    super.setValueShortWrapper(null);
+    super.setValueDouble(0.0d);
+    super.setValueChar((char) 0);
+    super.setValueInt(0);
+    super.setValueDoubleWrapper(null);
+    super.setValueFloatWrapper(null);
+    super.setValueBooleanWrapper(null);
+    super.setValueByteWrapper(null);
+    super.setValuebByte((byte) 0);
+    super.setValueLongWrapper(null);
+    super.setValueCharacter(null);
+    super.setValueString(null);
+    super.setValueFloat(0.0f);
+    super.setValueBoolean(false);
+    super.setValueObjectArray(null);
+    super.setValueObject(null);
+    super.setValueIntArray(null);
     super.reset();
     return this;
   }

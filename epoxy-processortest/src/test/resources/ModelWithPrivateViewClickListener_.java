@@ -104,7 +104,7 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
 
   public ModelWithPrivateViewClickListener_ clickListener(View.OnClickListener clickListener) {
     onMutation();
-    this.setClickListener(clickListener);
+    super.setClickListener(clickListener);
     this.clickListener_epoxyGeneratedModel = null;
     return this;
   }
@@ -171,7 +171,7 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
   public ModelWithPrivateViewClickListener_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.setClickListener(null);
+    super.setClickListener(null);
     clickListener_epoxyGeneratedModel = null;
     super.reset();
     return this;

@@ -109,7 +109,7 @@ class DataBindingModuleLookup {
     for (int i = 0; i < packageNameParts.length; i++) {
       moduleName += packageNameParts[i];
 
-      Element rClass = ProcessorUtils.getElementByName(moduleName + ".R", elements, types);
+      Element rClass = Utils.getElementByName(moduleName + ".R", elements, types);
       if (rClass != null) {
         return moduleName;
       } else {

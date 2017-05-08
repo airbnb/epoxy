@@ -22,15 +22,15 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import static com.airbnb.epoxy.ProcessorUtils.capitalizeFirstLetter;
-import static com.airbnb.epoxy.ProcessorUtils.startsWithIs;
+import static com.airbnb.epoxy.Utils.capitalizeFirstLetter;
+import static com.airbnb.epoxy.Utils.startsWithIs;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PROTECTED;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
-public class BaseModelAttributeInfo extends AttributeInfo {
+class BaseModelAttributeInfo extends AttributeInfo {
 
   private final TypeElement classElement;
   protected Types typeUtils;
@@ -74,7 +74,7 @@ public class BaseModelAttributeInfo extends AttributeInfo {
    * Private methods are ignored since the generated subclass can't call super on those.
    */
   protected boolean hasSuperMethod(TypeElement classElement, Element attribute) {
-    if (!ProcessorUtils.isEpoxyModel(classElement.asType())) {
+    if (!Utils.isEpoxyModel(classElement.asType())) {
       return false;
     }
 

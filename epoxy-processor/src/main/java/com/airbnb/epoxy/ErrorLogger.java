@@ -6,7 +6,7 @@ import java.util.List;
 import javax.annotation.processing.Messager;
 import javax.tools.Diagnostic;
 
-import static com.airbnb.epoxy.ProcessorUtils.buildEpoxyException;
+import static com.airbnb.epoxy.Utils.buildEpoxyException;
 
 class ErrorLogger {
   private final List<Exception> loggedExceptions = new ArrayList<>();

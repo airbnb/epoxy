@@ -73,7 +73,7 @@ public class ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ extends Mo
 
   public ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ isValue(boolean isValue) {
     onMutation();
-    this.setValue(isValue);
+    super.setValue(isValue);
     return this;
   }
 
@@ -139,7 +139,7 @@ public class ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ extends Mo
   public ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.setValue(false);
+    super.setValue(false);
     super.reset();
     return this;
   }

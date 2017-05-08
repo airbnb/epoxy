@@ -78,7 +78,7 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
 
   public ModelWithIntDef_ type(@ModelWithIntDef.MyType int type) {
     onMutation();
-    this.type = type;
+    super.type = type;
     return this;
   }
 
@@ -145,7 +145,7 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
   public ModelWithIntDef_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.type = 0;
+    super.type = 0;
     super.reset();
     return this;
   }

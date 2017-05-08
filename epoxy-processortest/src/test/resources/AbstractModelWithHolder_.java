@@ -74,7 +74,7 @@ public class AbstractModelWithHolder_ extends AbstractModelWithHolder implements
 
   public AbstractModelWithHolder_ value(int value) {
     onMutation();
-    this.value = value;
+    super.value = value;
     return this;
   }
 
@@ -145,7 +145,7 @@ public class AbstractModelWithHolder_ extends AbstractModelWithHolder implements
   public AbstractModelWithHolder_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.value = 0;
+    super.value = 0;
     super.reset();
     return this;
   }

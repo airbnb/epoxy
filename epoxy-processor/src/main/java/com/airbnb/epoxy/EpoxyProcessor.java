@@ -93,7 +93,7 @@ public class EpoxyProcessor extends AbstractProcessor {
         new DataBindingModuleLookup(elementUtils, typeUtils, errorLogger, layoutResourceProcessor);
 
     modelWriter =
-        new GeneratedModelWriter(filer, typeUtils, elementUtils, errorLogger,
+        new GeneratedModelWriter(filer, typeUtils, errorLogger,
             layoutResourceProcessor,
             configManager, dataBindingModuleLookup);
 

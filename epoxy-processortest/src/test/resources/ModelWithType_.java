@@ -73,7 +73,7 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> implement
 
   public ModelWithType_<T> value(int value) {
     onMutation();
-    this.value = value;
+    super.value = value;
     return this;
   }
 
@@ -139,7 +139,7 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> implement
   public ModelWithType_<T> reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.value = 0;
+    super.value = 0;
     super.reset();
     return this;
   }

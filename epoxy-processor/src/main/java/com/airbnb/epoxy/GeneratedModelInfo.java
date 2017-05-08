@@ -38,7 +38,6 @@ abstract class GeneratedModelInfo {
   protected ClassName generatedClassName;
   protected TypeName boundObjectTypeName;
   protected boolean shouldGenerateModel;
-  protected boolean generateFieldsForAttributes;
   protected final Set<AttributeInfo> attributeInfo = new HashSet<>();
   protected final List<TypeVariableName> typeVariableNames = new ArrayList<>();
   protected final List<ConstructorInfo> constructors = new ArrayList<>();

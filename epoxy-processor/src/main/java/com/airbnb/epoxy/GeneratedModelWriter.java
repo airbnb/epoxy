@@ -25,22 +25,21 @@ import java.util.List;
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import static com.airbnb.epoxy.ProcessorUtils.EPOXY_CONTROLLER_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.EPOXY_VIEW_HOLDER_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.GENERATED_MODEL_INTERFACE;
-import static com.airbnb.epoxy.ProcessorUtils.MODEL_CLICK_LISTENER_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.ON_BIND_MODEL_LISTENER_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.ON_UNBIND_MODEL_LISTENER_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.UNTYPED_EPOXY_MODEL_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.WRAPPED_LISTENER_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.getClassName;
-import static com.airbnb.epoxy.ProcessorUtils.implementsMethod;
-import static com.airbnb.epoxy.ProcessorUtils.isDataBindingModel;
-import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModel;
-import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModelWithHolder;
+import static com.airbnb.epoxy.Utils.EPOXY_CONTROLLER_TYPE;
+import static com.airbnb.epoxy.Utils.EPOXY_VIEW_HOLDER_TYPE;
+import static com.airbnb.epoxy.Utils.GENERATED_MODEL_INTERFACE;
+import static com.airbnb.epoxy.Utils.MODEL_CLICK_LISTENER_TYPE;
+import static com.airbnb.epoxy.Utils.ON_BIND_MODEL_LISTENER_TYPE;
+import static com.airbnb.epoxy.Utils.ON_UNBIND_MODEL_LISTENER_TYPE;
+import static com.airbnb.epoxy.Utils.UNTYPED_EPOXY_MODEL_TYPE;
+import static com.airbnb.epoxy.Utils.WRAPPED_LISTENER_TYPE;
+import static com.airbnb.epoxy.Utils.getClassName;
+import static com.airbnb.epoxy.Utils.implementsMethod;
+import static com.airbnb.epoxy.Utils.isDataBindingModel;
+import static com.airbnb.epoxy.Utils.isEpoxyModel;
+import static com.airbnb.epoxy.Utils.isEpoxyModelWithHolder;
 import static com.squareup.javapoet.TypeName.BOOLEAN;
 import static com.squareup.javapoet.TypeName.BYTE;
 import static com.squareup.javapoet.TypeName.CHAR;
@@ -64,7 +63,6 @@ class GeneratedModelWriter {
 
   private final Filer filer;
   private final Types typeUtils;
-  private final Elements elementUtils;
   private final ErrorLogger errorLogger;
   private final LayoutResourceProcessor layoutResourceProcessor;
   private final ConfigManager configManager;
@@ -74,12 +72,11 @@ class GeneratedModelWriter {
     void modifyBuilder(TypeSpec.Builder builder);
   }
 
-  GeneratedModelWriter(Filer filer, Types typeUtils, Elements elementUtils, ErrorLogger errorLogger,
+  GeneratedModelWriter(Filer filer, Types typeUtils, ErrorLogger errorLogger,
       LayoutResourceProcessor layoutResourceProcessor, ConfigManager configManager,
       DataBindingModuleLookup dataBindingModuleLookup) {
     this.filer = filer;
     this.typeUtils = typeUtils;
-    this.elementUtils = elementUtils;
     this.errorLogger = errorLogger;
     this.layoutResourceProcessor = layoutResourceProcessor;
     this.configManager = configManager;
@@ -156,7 +153,7 @@ class GeneratedModelWriter {
         FieldSpec.builder(onUnbindListenerType, modelUnbindListenerFieldName(), PRIVATE).build());
 
     for (AttributeInfo attributeInfo : classInfo.getAttributeInfo()) {
-      if (classInfo.generateFieldsForAttributes) {
+      if (attributeInfo.isGenerated) {
         fields.add(FieldSpec.builder(
             attributeInfo.getTypeName(),
             attributeInfo.name,
@@ -282,7 +279,7 @@ class GeneratedModelWriter {
           classInfo.getGeneratedName());
 
       preBindBuilder
-          .addStatement("super." + attribute.setterCode(), clickListenerCodeBlock)
+          .addStatement(attribute.setterCode(), clickListenerCodeBlock)
           .endControlFlow();
     }
 
@@ -682,10 +679,10 @@ class GeneratedModelWriter {
     addOnMutationCall(builder)
         .addStatement("this.$L = $L", attribute.getModelClickListenerName(), attributeName)
         .beginControlFlow("if ($L == null)", attributeName)
-        .addStatement("super." + attribute.setterCode(), "null")
+        .addStatement(attribute.setterCode(), "null")
         .endControlFlow()
         .beginControlFlow("else")
-        .addStatement("super." + attribute.setterCode(), clickListenerCodeBlock)
+        .addStatement(attribute.setterCode(), clickListenerCodeBlock)
         .endControlFlow()
         .addStatement("return this");
 
@@ -898,14 +895,17 @@ class GeneratedModelWriter {
             .addAnnotations(attribute.getSetterAnnotations()).build());
 
     addOnMutationCall(builder)
-        .addStatement("this." + attribute.setterCode(), attributeName);
+        .addStatement(attribute.setterCode(), attributeName);
 
     if (attribute.isViewClickListener()) {
       // Null out the model click listener since this view click listener should replace it
       builder.addStatement("this.$L = null", attribute.getModelClickListenerName());
     }
 
-    if (attribute.hasSuperSetterMethod()) {
+    // Call the super setter if it exists.
+    // No need to do this if the attribute is private since we already called the super setter to
+    // set it
+    if (!attribute.isPrivate && attribute.hasSuperSetterMethod()) {
       builder.addStatement("super.$L($L)", attributeName, attributeName);
     }
 
@@ -924,7 +924,7 @@ class GeneratedModelWriter {
 
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
       if (!attributeInfo.hasFinalModifier()) {
-        builder.addStatement("this." + attributeInfo.setterCode(),
+        builder.addStatement(attributeInfo.setterCode(),
             getDefaultValue(attributeInfo.getTypeName()));
       }
 

@@ -74,7 +74,7 @@ public class ModelReturningClassType_ extends ModelReturningClassType implements
 
   public ModelReturningClassType_ value(int value) {
     onMutation();
-    this.value = value;
+    super.value = value;
     return this;
   }
 
@@ -158,7 +158,7 @@ public class ModelReturningClassType_ extends ModelReturningClassType implements
   public ModelReturningClassType_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.value = 0;
+    super.value = 0;
     super.reset();
     return this;
   }
