@@ -244,7 +244,7 @@ class LayoutResourceProcessor {
     ClassName className = rClassNameMap.get(rClass);
 
     if (className == null) {
-      Element rClassElement = ProcessorUtils.getElementByName(rClass, elementUtils, typeUtils);
+      Element rClassElement = Utils.getElementByName(rClass, elementUtils, typeUtils);
 
       String rClassPackageName =
           elementUtils.getPackageOf(rClassElement).getQualifiedName().toString();

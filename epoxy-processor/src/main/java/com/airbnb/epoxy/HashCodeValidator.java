@@ -16,10 +16,10 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
-import static com.airbnb.epoxy.ProcessorUtils.getMethodOnClass;
-import static com.airbnb.epoxy.ProcessorUtils.isIterableType;
-import static com.airbnb.epoxy.ProcessorUtils.isSubtypeOfType;
-import static com.airbnb.epoxy.ProcessorUtils.throwError;
+import static com.airbnb.epoxy.Utils.getMethodOnClass;
+import static com.airbnb.epoxy.Utils.isIterableType;
+import static com.airbnb.epoxy.Utils.isSubtypeOfType;
+import static com.airbnb.epoxy.Utils.throwError;
 
 /** Validates that an attribute implements hashCode and equals. */
 class HashCodeValidator {
@@ -44,6 +44,15 @@ class HashCodeValidator {
 
   HashCodeValidator(Types typeUtils) {
     this.typeUtils = typeUtils;
+  }
+
+  boolean implementsHashCodeAndEquals(TypeMirror mirror) {
+    try {
+      validateImplementsHashCode(mirror);
+      return true;
+    } catch (EpoxyProcessorException e) {
+      return false;
+    }
   }
 
   void validate(AttributeInfo attribute) throws EpoxyProcessorException {

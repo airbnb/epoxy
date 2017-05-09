@@ -73,7 +73,7 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_ extends Model
 
   public ModelWithSuperAttributes$SubModelWithSuperAttributes_ subValue(int subValue) {
     onMutation();
-    this.subValue = subValue;
+    super.subValue = subValue;
     return this;
   }
 
@@ -83,7 +83,7 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_ extends Model
 
   public ModelWithSuperAttributes$SubModelWithSuperAttributes_ superValue(int superValue) {
     onMutation();
-    this.superValue = superValue;
+    super.superValue = superValue;
     return this;
   }
 
@@ -149,8 +149,8 @@ public class ModelWithSuperAttributes$SubModelWithSuperAttributes_ extends Model
   public ModelWithSuperAttributes$SubModelWithSuperAttributes_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.subValue = 0;
-    this.superValue = 0;
+    super.subValue = 0;
+    super.superValue = 0;
     super.reset();
     return this;
   }

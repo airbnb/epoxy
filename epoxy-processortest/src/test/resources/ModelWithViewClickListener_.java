@@ -104,7 +104,7 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
 
   public ModelWithViewClickListener_ clickListener(View.OnClickListener clickListener) {
     onMutation();
-    this.clickListener = clickListener;
+    super.clickListener = clickListener;
     this.clickListener_epoxyGeneratedModel = null;
     return this;
   }
@@ -171,7 +171,7 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   public ModelWithViewClickListener_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.clickListener = null;
+    super.clickListener = null;
     clickListener_epoxyGeneratedModel = null;
     super.reset();
     return this;

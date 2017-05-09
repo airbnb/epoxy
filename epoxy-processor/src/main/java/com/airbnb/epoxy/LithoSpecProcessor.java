@@ -20,7 +20,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.ClassNames.EPOXY_LITHO_MODEL;
-import static com.airbnb.epoxy.ProcessorUtils.getAnnotationClass;
+import static com.airbnb.epoxy.Utils.getAnnotationClass;
 
 class LithoSpecProcessor {
 
@@ -93,7 +93,7 @@ class LithoSpecProcessor {
 
   private boolean hasLithoEpoxyDependency() {
     // Only true if the epoxy-litho module is included in dependencies
-    return ProcessorUtils.getClass(EPOXY_LITHO_MODEL) != null;
+    return Utils.getClass(EPOXY_LITHO_MODEL) != null;
   }
 
   private void updateGeneratedClassForLithoComponent(LithoModelInfo modelInfo,

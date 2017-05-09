@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.lang.model.type.TypeMirror;
 
-import static com.airbnb.epoxy.ProcessorUtils.isViewClickListenerType;
+import static com.airbnb.epoxy.Utils.isViewClickListenerType;
 
 abstract class AttributeInfo {
 
@@ -35,6 +35,12 @@ abstract class AttributeInfo {
   protected boolean isPrivate;
   protected String getterMethodName;
   protected String setterMethodName;
+
+  /**
+   * True if this attribute is completely generated as a field on the generated model. False if it
+   * exists as a user defined attribute in a model super class.
+   */
+  protected boolean isGenerated;
 
   String getName() {
     return name;
@@ -89,7 +95,8 @@ abstract class AttributeInfo {
   }
 
   String setterCode() {
-    return isPrivate ? setterMethodName + "($L)" : name + " = $L";
+    return (isGenerated ? "this." : "super.")
+        + (isPrivate ? setterMethodName + "($L)" : name + " = $L");
   }
 
   @Override

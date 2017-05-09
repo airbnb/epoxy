@@ -73,7 +73,7 @@ public class ModelForRProcessingTest_ extends ModelForRProcessingTest implements
 
   public ModelForRProcessingTest_ value(int value) {
     onMutation();
-    this.value = value;
+    super.value = value;
     return this;
   }
 
@@ -145,7 +145,7 @@ public class ModelForRProcessingTest_ extends ModelForRProcessingTest implements
   public ModelForRProcessingTest_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.value = 0;
+    super.value = 0;
     super.reset();
     return this;
   }

@@ -2,10 +2,7 @@ package com.airbnb.epoxy;
 
 import com.squareup.javapoet.ClassName;
 
-import java.util.regex.Pattern;
-
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
@@ -13,12 +10,11 @@ import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.ClassNames.EPOXY_DATA_BINDING_HOLDER;
 import static com.airbnb.epoxy.ClassNames.EPOXY_DATA_BINDING_MODEL;
-import static com.airbnb.epoxy.ProcessorUtils.capitalizeFirstLetter;
-import static com.airbnb.epoxy.ProcessorUtils.getElementByName;
+import static com.airbnb.epoxy.Utils.capitalizeFirstLetter;
+import static com.airbnb.epoxy.Utils.getElementByName;
 
 class DataBindingModelInfo extends GeneratedModelInfo {
 
-  private static final Pattern PATTERN_STARTS_WITH_SET = Pattern.compile("set[A-Z]\\w*");
   private static final String BINDING_SUFFIX = "Binding";
 
   private final Types typeUtils;
@@ -37,14 +33,13 @@ class DataBindingModelInfo extends GeneratedModelInfo {
     this.typeUtils = typeUtils;
     this.elementUtils = elementUtils;
 
-    superClassElement = (TypeElement) ProcessorUtils.getElementByName(EPOXY_DATA_BINDING_MODEL,
+    superClassElement = (TypeElement) Utils.getElementByName(EPOXY_DATA_BINDING_MODEL,
         elementUtils, typeUtils);
     superClassName = EPOXY_DATA_BINDING_MODEL;
     generatedClassName = buildGeneratedModelName();
     parameterizedClassName = generatedClassName;
     boundObjectTypeName = EPOXY_DATA_BINDING_HOLDER;
     shouldGenerateModel = true;
-    generateFieldsForAttributes = true;
 
     collectMethodsReturningClassType(superClassElement, typeUtils);
   }
@@ -54,17 +49,11 @@ class DataBindingModelInfo extends GeneratedModelInfo {
     // it is generated in the first round.
     Element dataBindingClass = getElementByName(dataBindingClassName, elementUtils, typeUtils);
 
+    HashCodeValidator hashCodeValidator = new HashCodeValidator(typeUtils);
     for (Element element : dataBindingClass.getEnclosedElements()) {
-      if (element.getKind() == ElementKind.METHOD) {
-        ExecutableElement method = (ExecutableElement) element;
-        String methodName = method.getSimpleName().toString();
-        if (PATTERN_STARTS_WITH_SET.matcher(methodName).matches()
-            && method.getParameters().size() == 1) {
-          Element dataBindingElement = method.getParameters().get(0);
-          String name = String.valueOf(methodName.charAt(3)).toLowerCase()
-              + methodName.substring(4);
-          addAttribute(new DataBindingAttributeInfo(this, dataBindingElement, name));
-        }
+      if (Utils.isSetterMethod(element)) {
+        addAttribute(
+            new DataBindingAttributeInfo(this, ((ExecutableElement) element), hashCodeValidator));
       }
     }
   }

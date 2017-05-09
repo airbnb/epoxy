@@ -16,7 +16,7 @@ class LithoModelInfo extends GeneratedModelInfo {
 
   LithoModelInfo(Types typeUtils, Elements elementUtils, TypeElement layoutSpecClassElement) {
     superClassElement =
-        (TypeElement) ProcessorUtils.getElementByName(EPOXY_LITHO_MODEL, elementUtils, typeUtils);
+        (TypeElement) Utils.getElementByName(EPOXY_LITHO_MODEL, elementUtils, typeUtils);
 
     lithoComponentName = getLithoComponentName(elementUtils, layoutSpecClassElement);
     this.superClassName = ParameterizedTypeName.get(EPOXY_LITHO_MODEL, lithoComponentName);
@@ -25,7 +25,6 @@ class LithoModelInfo extends GeneratedModelInfo {
     // We don't have any type parameters on our generated litho model
     this.parameterizedClassName = generatedClassName;
     shouldGenerateModel = true;
-    generateFieldsForAttributes = true;
 
     collectMethodsReturningClassType(superClassElement, typeUtils);
 

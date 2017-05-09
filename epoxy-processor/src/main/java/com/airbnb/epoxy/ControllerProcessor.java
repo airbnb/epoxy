@@ -26,13 +26,13 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
-import static com.airbnb.epoxy.ProcessorUtils.EPOXY_CONTROLLER_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.EPOXY_MODEL_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.UNTYPED_EPOXY_MODEL_TYPE;
-import static com.airbnb.epoxy.ProcessorUtils.getClassName;
-import static com.airbnb.epoxy.ProcessorUtils.isController;
-import static com.airbnb.epoxy.ProcessorUtils.isEpoxyModel;
-import static com.airbnb.epoxy.ProcessorUtils.validateFieldAccessibleViaGeneratedCode;
+import static com.airbnb.epoxy.Utils.EPOXY_CONTROLLER_TYPE;
+import static com.airbnb.epoxy.Utils.EPOXY_MODEL_TYPE;
+import static com.airbnb.epoxy.Utils.UNTYPED_EPOXY_MODEL_TYPE;
+import static com.airbnb.epoxy.Utils.getClassName;
+import static com.airbnb.epoxy.Utils.isController;
+import static com.airbnb.epoxy.Utils.isEpoxyModel;
+import static com.airbnb.epoxy.Utils.validateFieldAccessibleViaGeneratedCode;
 
 class ControllerProcessor {
   private static final String CONTROLLER_HELPER_INTERFACE = "com.airbnb.epoxy.ControllerHelper";

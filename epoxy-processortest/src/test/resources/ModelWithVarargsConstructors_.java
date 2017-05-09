@@ -78,7 +78,7 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
 
   public ModelWithVarargsConstructors_ varargs(String[] varargs) {
     onMutation();
-    this.varargs = varargs;
+    super.varargs = varargs;
     return this;
   }
 
@@ -88,7 +88,7 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
 
   public ModelWithVarargsConstructors_ valueInt(int valueInt) {
     onMutation();
-    this.valueInt = valueInt;
+    super.valueInt = valueInt;
     return this;
   }
 
@@ -154,8 +154,8 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
   public ModelWithVarargsConstructors_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.varargs = null;
-    this.valueInt = 0;
+    super.varargs = null;
+    super.valueInt = 0;
     super.reset();
     return this;
   }

@@ -73,7 +73,7 @@ public class ModelWithSuperAttributes_ extends ModelWithSuperAttributes implemen
 
   public ModelWithSuperAttributes_ superValue(int superValue) {
     onMutation();
-    this.superValue = superValue;
+    super.superValue = superValue;
     return this;
   }
 
@@ -139,7 +139,7 @@ public class ModelWithSuperAttributes_ extends ModelWithSuperAttributes implemen
   public ModelWithSuperAttributes_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.superValue = 0;
+    super.superValue = 0;
     super.reset();
     return this;
   }

@@ -8,6 +8,7 @@ import com.squareup.javapoet.TypeName;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -26,7 +27,8 @@ import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.STATIC;
 
-class ProcessorUtils {
+class Utils {
+  private static final Pattern PATTERN_STARTS_WITH_SET = Pattern.compile("set[A-Z]\\w*");
 
   static final String EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel<?>";
   static final String UNTYPED_EPOXY_MODEL_TYPE = "com.airbnb.epoxy.EpoxyModel";
@@ -333,5 +335,20 @@ class ProcessorUtils {
   static boolean startsWithIs(String original) {
     return original.startsWith("is") && original.length() > 2
         && Character.isUpperCase(original.charAt(2));
+  }
+
+  static boolean isSetterMethod(Element element) {
+    if (element.getKind() != ElementKind.METHOD) {
+      return false;
+    }
+
+    ExecutableElement method = (ExecutableElement) element;
+    String methodName = method.getSimpleName().toString();
+    return PATTERN_STARTS_WITH_SET.matcher(methodName).matches()
+        && method.getParameters().size() == 1;
+  }
+
+  static String removeSetPrefix(String string) {
+    return String.valueOf(string.charAt(3)).toLowerCase() + string.substring(4);
   }
 }

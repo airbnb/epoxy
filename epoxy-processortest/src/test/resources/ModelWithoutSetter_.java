@@ -133,7 +133,7 @@ public class ModelWithoutSetter_ extends ModelWithoutSetter implements Generated
   public ModelWithoutSetter_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.value = 0;
+    super.value = 0;
     super.reset();
     return this;
   }

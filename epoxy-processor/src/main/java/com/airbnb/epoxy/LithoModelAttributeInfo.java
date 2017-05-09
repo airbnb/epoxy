@@ -4,8 +4,8 @@ import com.squareup.javapoet.TypeName;
 
 import javax.lang.model.element.Element;
 
-public class LithoModelAttributeInfo extends AttributeInfo {
-  public LithoModelAttributeInfo(LithoModelInfo lithoModelInfo,
+class LithoModelAttributeInfo extends AttributeInfo {
+  LithoModelAttributeInfo(LithoModelInfo lithoModelInfo,
       Element propElement) {
     name = propElement.getSimpleName().toString();
     typeName = TypeName.get(propElement.asType());
@@ -20,5 +20,6 @@ public class LithoModelAttributeInfo extends AttributeInfo {
     generateGetter = true;
     hasFinalModifier = false;
     packagePrivate = false;
+    isGenerated = true;
   }
 }

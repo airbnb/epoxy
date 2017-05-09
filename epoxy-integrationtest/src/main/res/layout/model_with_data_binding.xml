@@ -6,6 +6,10 @@
         <variable
             name="stringValue"
             type="String" />
+
+        <variable
+            name="clickListener"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <Button

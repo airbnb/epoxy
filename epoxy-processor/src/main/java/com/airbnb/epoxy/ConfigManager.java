@@ -13,7 +13,7 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 
-import static com.airbnb.epoxy.ProcessorUtils.buildEpoxyException;
+import static com.airbnb.epoxy.Utils.buildEpoxyException;
 
 /** Manages configuration settings for different packages. */
 class ConfigManager {

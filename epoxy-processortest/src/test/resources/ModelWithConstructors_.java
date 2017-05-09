@@ -81,7 +81,7 @@ public class ModelWithConstructors_ extends ModelWithConstructors implements Gen
 
   public ModelWithConstructors_ valueInt(int valueInt) {
     onMutation();
-    this.valueInt = valueInt;
+    super.valueInt = valueInt;
     return this;
   }
 
@@ -147,7 +147,7 @@ public class ModelWithConstructors_ extends ModelWithConstructors implements Gen
   public ModelWithConstructors_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    this.valueInt = 0;
+    super.valueInt = 0;
     super.reset();
     return this;
   }
