@@ -1,3 +1,9 @@
+# 2.1.0 (May 9, 2017)
+
+* **New**: Support for Android Data Binding! Epoxy will now generate an EpoxyModel directly from a Data Binding xml layout, and handle all data binding details automatically. Thanks to @geralt-encore for helping with this! See more details in [the wiki](https://github.com/airbnb/epoxy/wiki/Data-Binding-Support).
+* **New**: Support for Litho. Epoxy will now generate an EpoxyModel for Litho Layout Specs. See more details in [the wiki](https://github.com/airbnb/epoxy/wiki/Litho-Support).
+* **New**: Support for implicitly adding AutoModels to an EpoxyController, this let's you drop the extra `.addTo(this)` line. More details and instructions [here](https://github.com/airbnb/epoxy/wiki/Epoxy-Controller#implicit-adding)
+
 # 2.0.0 (March 25, 2017)
 
 * **New**: The `EpoxyController` class helps you manage even models better. This should be used instead of the original `EpoxyAdapter` in most places. Read more about `EpoxyController` in [the wiki](https://github.com/airbnb/epoxy/wiki/Epoxy-Controller).
