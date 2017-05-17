@@ -27,8 +27,6 @@ import static com.airbnb.epoxy.Utils.isFieldPackagePrivate;
 import static com.airbnb.epoxy.Utils.startsWithIs;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
-import static javax.lang.model.element.Modifier.PROTECTED;
-import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
 class BaseModelAttributeInfo extends AttributeInfo {

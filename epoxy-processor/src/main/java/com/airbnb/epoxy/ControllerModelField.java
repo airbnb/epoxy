@@ -48,10 +48,10 @@ class ControllerModelField {
 
   @Override
   public String toString() {
-    return "ControllerModelField{" +
-        "fieldName='" + fieldName + '\'' +
-        ", typeName=" + typeName +
-        ", packagePrivate=" + packagePrivate +
-        '}';
+    return "ControllerModelField{"
+        + "fieldName='" + fieldName + '\''
+        + ", typeName=" + typeName
+        + ", packagePrivate=" + packagePrivate
+        + '}';
   }
 }

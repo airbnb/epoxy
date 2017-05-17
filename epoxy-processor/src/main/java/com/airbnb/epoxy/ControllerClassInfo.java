@@ -3,10 +3,8 @@ package com.airbnb.epoxy;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.TypeElement;
