@@ -23,6 +23,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.Utils.capitalizeFirstLetter;
+import static com.airbnb.epoxy.Utils.isFieldPackagePrivate;
 import static com.airbnb.epoxy.Utils.startsWithIs;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
@@ -130,16 +131,6 @@ class BaseModelAttributeInfo extends AttributeInfo {
                 name);
       }
     }
-  }
-
-  /**
-   * Checks if the given field has package-private visibility
-   */
-  private boolean isFieldPackagePrivate(Element attribute) {
-    Set<Modifier> modifiers = attribute.getModifiers();
-    return !modifiers.contains(PUBLIC)
-        && !modifiers.contains(PROTECTED)
-        && !modifiers.contains(PRIVATE);
   }
 
   /**

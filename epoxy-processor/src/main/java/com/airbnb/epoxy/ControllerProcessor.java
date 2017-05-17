@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.RoundEnvironment;
@@ -25,27 +26,32 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.Utils.EPOXY_CONTROLLER_TYPE;
 import static com.airbnb.epoxy.Utils.EPOXY_MODEL_TYPE;
 import static com.airbnb.epoxy.Utils.UNTYPED_EPOXY_MODEL_TYPE;
+import static com.airbnb.epoxy.Utils.belongToTheSamePackage;
 import static com.airbnb.epoxy.Utils.getClassName;
 import static com.airbnb.epoxy.Utils.isController;
 import static com.airbnb.epoxy.Utils.isEpoxyModel;
+import static com.airbnb.epoxy.Utils.isSubtype;
 import static com.airbnb.epoxy.Utils.validateFieldAccessibleViaGeneratedCode;
 
 class ControllerProcessor {
   private static final String CONTROLLER_HELPER_INTERFACE = "com.airbnb.epoxy.ControllerHelper";
   private Filer filer;
   private Elements elementUtils;
+  private Types typeUtils;
   private ErrorLogger errorLogger;
   private final ConfigManager configManager;
   private final Map<TypeElement, ControllerClassInfo> controllerClassMap = new LinkedHashMap<>();
 
-  ControllerProcessor(Filer filer, Elements elementUtils,
+  ControllerProcessor(Filer filer, Elements elementUtils, Types typeUtils,
       ErrorLogger errorLogger, ConfigManager configManager) {
     this.filer = filer;
     this.elementUtils = elementUtils;
+    this.typeUtils = typeUtils;
     this.errorLogger = errorLogger;
     this.configManager = configManager;
   }
@@ -57,6 +63,12 @@ class ControllerProcessor {
       } catch (Exception e) {
         errorLogger.logError(e);
       }
+    }
+
+    try {
+      updateClassesForInheritance(controllerClassMap);
+    } catch (Exception e) {
+      errorLogger.logError(e);
     }
   }
 
@@ -122,6 +134,44 @@ class ControllerProcessor {
         getOrCreateTargetClass(controllerClassMap, controllerClassElement);
 
     controllerClass.addModel(buildFieldInfo(modelField));
+  }
+
+  /**
+   * Check each controller for super classes that also have auto models. For each super class with
+   * auto model we add those models to the auto models of the generated class, so that a
+   * generated class contains all the models of its super classes combined.
+   * <p>
+   * One caveat is that if a sub class is in a different package than its super class we can't
+   * include auto models that are package private, otherwise the generated class won't compile.
+   */
+  private void updateClassesForInheritance(
+      Map<TypeElement, ControllerClassInfo> controllerClassMap) {
+    for (Entry<TypeElement, ControllerClassInfo> entry : controllerClassMap.entrySet()) {
+      TypeElement thisClass = entry.getKey();
+
+      Map<TypeElement, ControllerClassInfo> otherClasses = new LinkedHashMap<>(controllerClassMap);
+      otherClasses.remove(thisClass);
+
+      for (Entry<TypeElement, ControllerClassInfo> otherEntry : otherClasses.entrySet()) {
+        TypeElement otherClass = otherEntry.getKey();
+
+        if (!isSubtype(thisClass, otherClass, typeUtils)) {
+          continue;
+        }
+
+        Set<ControllerModelField> otherControllerModelFields = otherEntry.getValue().models;
+
+        if (belongToTheSamePackage(thisClass, otherClass, elementUtils)) {
+          entry.getValue().addModels(otherControllerModelFields);
+        } else {
+          for (ControllerModelField controllerModelField : otherControllerModelFields) {
+            if (!controllerModelField.packagePrivate) {
+              entry.getValue().addModel(controllerModelField);
+            }
+          }
+        }
+      }
+    }
   }
 
   private ControllerClassInfo getOrCreateTargetClass(

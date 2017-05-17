@@ -4,7 +4,10 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
@@ -12,7 +15,7 @@ import javax.lang.model.util.Elements;
 class ControllerClassInfo {
   private static final String GENERATED_HELPER_CLASS_SUFFIX = "_EpoxyHelper";
   private final Elements elementUtils;
-  final List<ControllerModelField> models = new ArrayList<>();
+  final Set<ControllerModelField> models = new HashSet<>();
   final ClassName generatedClassName;
   final TypeName controllerClassType;
   final TypeElement controllerClassElement;
@@ -26,6 +29,10 @@ class ControllerClassInfo {
 
   void addModel(ControllerModelField controllerModelField) {
     models.add(controllerModelField);
+  }
+
+  void addModels(Collection<ControllerModelField> controllerModelFields) {
+    models.addAll(controllerModelFields);
   }
 
   private ClassName getGeneratedClassName(TypeElement controllerClass) {
