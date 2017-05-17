@@ -97,7 +97,8 @@ public class EpoxyProcessor extends AbstractProcessor {
             layoutResourceProcessor,
             configManager, dataBindingModuleLookup);
 
-    controllerProcessor = new ControllerProcessor(filer, elementUtils, errorLogger, configManager);
+    controllerProcessor = new ControllerProcessor(filer, elementUtils, typeUtils, errorLogger,
+        configManager);
 
     dataBindingProcessor =
         new DataBindingProcessor(elementUtils, typeUtils, errorLogger, configManager,

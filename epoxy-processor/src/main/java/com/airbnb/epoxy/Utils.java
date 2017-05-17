@@ -14,6 +14,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
@@ -25,6 +26,8 @@ import javax.lang.model.util.Types;
 
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.Modifier.PRIVATE;
+import static javax.lang.model.element.Modifier.PROTECTED;
+import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
 class Utils {
@@ -156,6 +159,33 @@ class Utils {
       }
     }
     return false;
+  }
+
+  /**
+   * Checks if two classes belong to the same package
+   */
+  static boolean belongToTheSamePackage(TypeElement class1, TypeElement class2, Elements elements) {
+    Name package1 = elements.getPackageOf(class1).getQualifiedName();
+    Name package2 = elements.getPackageOf(class2).getQualifiedName();
+    return package1.equals(package2);
+  }
+
+  static boolean isSubtype(TypeElement e1, TypeElement e2, Types types) {
+    return isSubtype(e1.asType(), e2.asType(), types);
+  }
+
+  static boolean isSubtype(TypeMirror e1, TypeMirror e2, Types types) {
+    return types.isSubtype(e1, types.erasure(e2));
+  }
+
+  /**
+   * Checks if the given field has package-private visibility
+   */
+  static boolean isFieldPackagePrivate(Element element) {
+    Set<Modifier> modifiers = element.getModifiers();
+    return !modifiers.contains(PUBLIC)
+        && !modifiers.contains(PROTECTED)
+        && !modifiers.contains(PRIVATE);
   }
 
   /**

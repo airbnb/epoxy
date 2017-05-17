@@ -52,6 +52,28 @@ public class ControllerProcessorTest {
   }
 
   @Test
+  public void controllerWithSuperClassWithAutoModel() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("BasicModelWithAttribute.java");
+
+    JavaFileObject controller = JavaFileObjects
+        .forResource("ControllerWithAutoModelWithSuperClass.java");
+
+    JavaFileObject generatedHelper = JavaFileObjects
+        .forResource("ControllerWithAutoModelWithSuperClass_EpoxyHelper.java");
+
+    JavaFileObject generatedSubHelper = JavaFileObjects
+        .forResource("ControllerWithAutoModelWithSuperClass$SubControllerWithAutoModelWithSuperClass_EpoxyHelper.java");
+
+    assert_().about(javaSources())
+        .that(asList(model, controller))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedHelper, generatedSubHelper);
+  }
+
+  @Test
   public void autoModelNotInAutoAdapterFails() {
     JavaFileObject badClass = JavaFileObjects
         .forResource("AutoModelNotInAutoAdapter.java");

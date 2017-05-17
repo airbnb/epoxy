@@ -11,14 +11,15 @@ import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.Utils.EPOXY_MODEL_TYPE;
+import static com.airbnb.epoxy.Utils.belongToTheSamePackage;
 import static com.airbnb.epoxy.Utils.isEpoxyModel;
+import static com.airbnb.epoxy.Utils.isSubtype;
 import static com.airbnb.epoxy.Utils.validateFieldAccessibleViaGeneratedCode;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.STATIC;
@@ -183,7 +184,7 @@ class ModelProcessor {
           for (Element element : superclassEpoxyModel.getEnclosedElements()) {
             if (element.getAnnotation(EpoxyAttribute.class) != null) {
               AttributeInfo attributeInfo = buildAttributeInfo(element);
-              if (!belongToTheSamePackage(currentEpoxyModel, superclassEpoxyModel)
+              if (!belongToTheSamePackage(currentEpoxyModel, superclassEpoxyModel, elementUtils)
                   && attributeInfo.isPackagePrivate()) {
                 // We can't inherit a package private attribute if we're not in the same package
                 continue;
@@ -222,13 +223,13 @@ class ModelProcessor {
       for (Entry<TypeElement, GeneratedModelInfo> otherEntry : otherClasses.entrySet()) {
         TypeElement otherClass = otherEntry.getKey();
 
-        if (!isSubtype(thisClass, otherClass)) {
+        if (!isSubtype(thisClass, otherClass, typeUtils)) {
           continue;
         }
 
         Set<AttributeInfo> otherAttributes = otherEntry.getValue().getAttributeInfo();
 
-        if (belongToTheSamePackage(thisClass, otherClass)) {
+        if (belongToTheSamePackage(thisClass, otherClass, elementUtils)) {
           entry.getValue().addAttributes(otherAttributes);
         } else {
           for (AttributeInfo attribute : otherAttributes) {
@@ -239,23 +240,5 @@ class ModelProcessor {
         }
       }
     }
-  }
-
-  /**
-   * Checks if two classes belong to the same package
-   */
-  private boolean belongToTheSamePackage(TypeElement class1, TypeElement class2) {
-    Name package1 = elementUtils.getPackageOf(class1).getQualifiedName();
-    Name package2 = elementUtils.getPackageOf(class2).getQualifiedName();
-    return package1.equals(package2);
-  }
-
-  private boolean isSubtype(TypeElement e1, TypeElement e2) {
-    return isSubtype(e1.asType(), e2.asType());
-  }
-
-  private boolean isSubtype(TypeMirror e1, TypeMirror e2) {
-    // We use erasure so that EpoxyModelA is considered a subtype of EpoxyModel<T extends View>
-    return typeUtils.isSubtype(e1, typeUtils.erasure(e2));
   }
 }
