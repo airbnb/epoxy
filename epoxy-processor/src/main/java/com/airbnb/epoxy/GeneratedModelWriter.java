@@ -861,6 +861,9 @@ class GeneratedModelWriter {
 
     boolean first = true;
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
+      if (attributeInfo.doNotUseInToString()) {
+        continue;
+      }
       String attributeName = attributeInfo.getName();
       if (first) {
         sb.append(String.format("\"%s=\" + %s +\n", attributeName, attributeInfo.getterCode()));

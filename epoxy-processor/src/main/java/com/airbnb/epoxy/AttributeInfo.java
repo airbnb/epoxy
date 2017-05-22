@@ -19,6 +19,7 @@ abstract class AttributeInfo {
   protected String modelPackageName;
   protected boolean useInHash;
   protected boolean ignoreRequireHashCode;
+  protected boolean doNotUseInToString;
   protected boolean generateSetter;
   protected List<AnnotationSpec> setterAnnotations = new ArrayList<>();
   protected boolean generateGetter;
@@ -60,6 +61,10 @@ abstract class AttributeInfo {
 
   boolean ignoreRequireHashCode() {
     return ignoreRequireHashCode;
+  }
+
+  public boolean doNotUseInToString() {
+    return doNotUseInToString;
   }
 
   boolean generateSetter() {

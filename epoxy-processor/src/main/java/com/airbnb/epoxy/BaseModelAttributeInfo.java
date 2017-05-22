@@ -56,6 +56,7 @@ class BaseModelAttributeInfo extends AttributeInfo {
     //noinspection deprecation
     useInHash = annotation.hash() && !options.contains(Option.DoNotHash);
     ignoreRequireHashCode = options.contains(Option.IgnoreRequireHashCode);
+    doNotUseInToString = options.contains(Option.DoNotUseInToString);
 
     generateSetter = annotation.setter() && !options.contains(Option.NoSetter);
     generateGetter = !options.contains(Option.NoGetter);
