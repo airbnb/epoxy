@@ -28,16 +28,6 @@ public abstract class ColorModel extends EpoxyModelWithHolder<ColorHolder> {
   @EpoxyAttribute boolean playAnimation;
   @EpoxyAttribute(DoNotHash) View.OnClickListener clickListener;
 
-  @EpoxyAttribute private boolean test;
-
-  public boolean isTest() {
-    return test;
-  }
-
-  public void setTest(boolean test) {
-    this.test = test;
-  }
-
   @Override
   public void bind(ColorHolder holder) {
     holder.cardView.setBackgroundColor(color);
