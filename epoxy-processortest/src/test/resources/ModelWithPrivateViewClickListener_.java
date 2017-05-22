@@ -110,7 +110,7 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
   }
 
   public View.OnClickListener clickListener() {
-    return getClickListener();
+    return super.getClickListener();
   }
 
   @Override

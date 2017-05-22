@@ -78,7 +78,7 @@ public class ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ extends Mo
   }
 
   public boolean isValue() {
-    return isValue();
+    return super.isValue();
   }
 
   @Override

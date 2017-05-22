@@ -88,7 +88,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public Integer valueInteger() {
-    return getValueInteger();
+    return super.getValueInteger();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueShort(short valueShort) {
@@ -98,7 +98,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public short valueShort() {
-    return getValueShort();
+    return super.getValueShort();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueLong(long valueLong) {
@@ -108,7 +108,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public long valueLong() {
-    return getValueLong();
+    return super.getValueLong();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueList(List<String> valueList) {
@@ -118,7 +118,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public List<String> valueList() {
-    return getValueList();
+    return super.getValueList();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueShortWrapper(Short valueShortWrapper) {
@@ -128,7 +128,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public Short valueShortWrapper() {
-    return getValueShortWrapper();
+    return super.getValueShortWrapper();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueDouble(double valueDouble) {
@@ -138,7 +138,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public double valueDouble() {
-    return getValueDouble();
+    return super.getValueDouble();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueChar(char valueChar) {
@@ -148,7 +148,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public char valueChar() {
-    return getValueChar();
+    return super.getValueChar();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueInt(int valueInt) {
@@ -158,7 +158,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public int valueInt() {
-    return getValueInt();
+    return super.getValueInt();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueDoubleWrapper(Double valueDoubleWrapper) {
@@ -168,7 +168,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public Double valueDoubleWrapper() {
-    return getValueDoubleWrapper();
+    return super.getValueDoubleWrapper();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueFloatWrapper(Float valueFloatWrapper) {
@@ -178,7 +178,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public Float valueFloatWrapper() {
-    return getValueFloatWrapper();
+    return super.getValueFloatWrapper();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueBooleanWrapper(Boolean valueBooleanWrapper) {
@@ -188,7 +188,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public Boolean valueBooleanWrapper() {
-    return getValueBooleanWrapper();
+    return super.getValueBooleanWrapper();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueByteWrapper(Byte valueByteWrapper) {
@@ -198,7 +198,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public Byte valueByteWrapper() {
-    return getValueByteWrapper();
+    return super.getValueByteWrapper();
   }
 
   public ModelWithAllPrivateFieldTypes_ valuebByte(byte valuebByte) {
@@ -208,7 +208,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public byte valuebByte() {
-    return getValuebByte();
+    return super.getValuebByte();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueLongWrapper(Long valueLongWrapper) {
@@ -218,7 +218,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public Long valueLongWrapper() {
-    return getValueLongWrapper();
+    return super.getValueLongWrapper();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueCharacter(Character valueCharacter) {
@@ -228,7 +228,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public Character valueCharacter() {
-    return getValueCharacter();
+    return super.getValueCharacter();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueString(String valueString) {
@@ -238,7 +238,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public String valueString() {
-    return getValueString();
+    return super.getValueString();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueFloat(float valueFloat) {
@@ -248,7 +248,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public float valueFloat() {
-    return getValueFloat();
+    return super.getValueFloat();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueBoolean(boolean valueBoolean) {
@@ -258,7 +258,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public boolean valueBoolean() {
-    return isValueBoolean();
+    return super.isValueBoolean();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueObjectArray(Object[] valueObjectArray) {
@@ -268,7 +268,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public Object[] valueObjectArray() {
-    return getValueObjectArray();
+    return super.getValueObjectArray();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueObject(Object valueObject) {
@@ -278,7 +278,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public Object valueObject() {
-    return getValueObject();
+    return super.getValueObject();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueIntArray(int[] valueIntArray) {
@@ -288,7 +288,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public int[] valueIntArray() {
-    return getValueIntArray();
+    return super.getValueIntArray();
   }
 
   @Override
