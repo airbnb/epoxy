@@ -885,7 +885,7 @@ class GeneratedModelWriter {
         .addModifiers(PUBLIC)
         .returns(data.getTypeName())
         .addAnnotations(data.getGetterAnnotations())
-        .addStatement("return $L", data.getterCode())
+        .addStatement("return $L", data.superGetterCode())
         .build();
   }
 
