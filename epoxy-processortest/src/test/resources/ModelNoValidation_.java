@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
 import java.lang.Object;
@@ -106,6 +107,12 @@ public class ModelNoValidation_ extends ModelNoValidation implements GeneratedMo
   @Override
   public ModelNoValidation_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
+    return this;
+  }
+
+  @Override
+  public ModelNoValidation_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
+    super.spanSizeCallback(arg0);
     return this;
   }
 

@@ -1,0 +1,172 @@
+package com.airbnb.epoxy;
+
+import com.airbnb.epoxy.ModelProp.Option;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Parameterizable;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
+
+import static com.airbnb.epoxy.Utils.isEpoxyModel;
+import static com.airbnb.epoxy.Utils.isSubtypeOfType;
+
+class ModelViewInfo extends GeneratedModelInfo {
+  final List<String> resetMethodNames = new ArrayList<>();
+  final TypeElement viewElement;
+  final Types typeUtils;
+  final Elements elementUtils;
+  final ErrorLogger errorLogger;
+  final ConfigManager configManager;
+  final boolean saveViewState;
+  final ModelView viewAnnotation;
+  final boolean fullSpanSize;
+
+  ModelViewInfo(TypeElement viewElement, Types typeUtils, Elements elementUtils,
+      ErrorLogger errorLogger, ConfigManager configManager) {
+
+    viewAnnotation = viewElement.getAnnotation(ModelView.class);
+    this.viewElement = viewElement;
+    this.typeUtils = typeUtils;
+    this.elementUtils = elementUtils;
+    this.errorLogger = errorLogger;
+    this.configManager = configManager;
+    superClassElement =
+        (TypeElement) Utils.getElementByName(ClassNames.EPOXY_MODEL_UNTYPED,
+            elementUtils, typeUtils);
+
+    this.superClassName = getSuperClass();
+
+    generatedClassName = buildGeneratedModelName(viewElement, elementUtils);
+    // We don't have any type parameters on our generated model
+    this.parametrizedClassName = generatedClassName;
+    shouldGenerateModel = true;
+
+    collectMethodsReturningClassType(superClassElement, typeUtils);
+
+    // The bound type is the type of this view
+    boundObjectTypeName = ClassName.get(viewElement.asType());
+
+    saveViewState = viewAnnotation.saveViewState();
+    fullSpanSize = viewAnnotation.fullSpan();
+  }
+
+  private TypeName getSuperClass() {
+    ParameterizedTypeName defaultSuper = ParameterizedTypeName
+        .get(ClassNames.EPOXY_MODEL_UNTYPED, TypeName.get(viewElement.asType()));
+
+    // Unfortunately we have to do this weird try/catch to get the class type
+    TypeMirror classToExtend = null;
+    try {
+      viewAnnotation.baseModelClass(); // this should throw
+    } catch (MirroredTypeException mte) {
+      classToExtend = mte.getTypeMirror();
+    }
+
+    if (classToExtend == null || classToExtend.toString().equals("java.lang.Void")) {
+      // The default value of the annotation parameter is Void.class to signal that the user
+      // does not want to provide a custom base class
+      return defaultSuper;
+    }
+
+    if (!isEpoxyModel(classToExtend)) {
+      errorLogger
+          .logError("The base model provided to an %s must extend EpoxyModel (%s).",
+              ModelView.class.getSimpleName(), viewElement.getSimpleName());
+      return defaultSuper;
+    }
+
+    if (!validateSuperClassIsTypedCorrectly(classToExtend)) {
+      errorLogger.logError("The base model provided to an %s must have View as its type (%s).",
+          ModelView.class.getSimpleName(), viewElement.getSimpleName());
+      return defaultSuper;
+    }
+
+    TypeElement classElement = (TypeElement) typeUtils.asElement(classToExtend);
+    return ParameterizedTypeName
+        .get(ClassName.get(classElement), TypeName.get(viewElement.asType()));
+  }
+
+  /** The super class that our generated model extends from must have View as its only type. */
+  private boolean validateSuperClassIsTypedCorrectly(TypeMirror classType) {
+    Element classElement = typeUtils.asElement(classType);
+    if (!(classElement instanceof Parameterizable)) {
+      return false;
+    }
+
+    Parameterizable parameterizable = (Parameterizable) classElement;
+    List<? extends TypeParameterElement> typeParameters = parameterizable.getTypeParameters();
+    if (typeParameters.size() != 1) {
+      return false;
+    }
+
+    TypeParameterElement typeParam = typeParameters.get(0);
+    List<? extends TypeMirror> bounds = typeParam.getBounds();
+    if (bounds.isEmpty()) {
+      return false;
+    }
+
+    TypeMirror typeMirror = bounds.get(0);
+    return isSubtypeOfType(typeMirror, Utils.ANDROID_VIEW_TYPE);
+  }
+
+  private ClassName buildGeneratedModelName(TypeElement viewElement, Elements elementUtils) {
+    String packageName = elementUtils.getPackageOf(viewElement).getQualifiedName().toString();
+
+    String className = viewElement.getSimpleName().toString();
+    className += "Model" + GENERATED_CLASS_NAME_SUFFIX;
+
+    return ClassName.get(packageName, className);
+  }
+
+  void addProp(ExecutableElement propMethod, Types types) {
+    ViewAttributeInfo attributeInfo =
+        new ViewAttributeInfo(this, propMethod, typeUtils, elementUtils, errorLogger);
+    addAttribute(attributeInfo);
+
+    ModelProp annotation = propMethod.getAnnotation(ModelProp.class);
+    Set<Option> options = new HashSet<>(Arrays.asList(annotation.options()));
+    if (options.contains(Option.GenerateStringOverloads)) {
+      addAttribute(new ViewAttributeStringResOverload(this, attributeInfo, types));
+    }
+  }
+
+  void addResetMethod(ExecutableElement resetMethod) {
+    resetMethodNames.add(resetMethod.getSimpleName().toString());
+  }
+
+  LayoutResource getLayoutResource(LayoutResourceProcessor layoutResourceProcessor) {
+    ModelView annotation = viewElement.getAnnotation(ModelView.class);
+    int layoutValue = annotation.defaultLayout();
+    if (layoutValue != 0) {
+      return layoutResourceProcessor.getLayoutInAnnotation(viewElement, ModelView.class);
+    }
+
+    PackageModelViewNameSettings namingSettings =
+        configManager.getModelViewNamingSettings(viewElement);
+
+    if (namingSettings != null) {
+      return namingSettings.getNameForView(viewElement);
+    }
+
+    errorLogger.logError("Unable to get layout resource for view %s", viewElement.getSimpleName());
+    return new LayoutResource(0);
+  }
+
+  List<String> getResetMethodNames() {
+    return resetMethodNames;
+  }
+}

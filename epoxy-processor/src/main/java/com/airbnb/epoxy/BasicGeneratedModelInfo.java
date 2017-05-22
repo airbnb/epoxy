@@ -42,9 +42,9 @@ import static com.airbnb.epoxy.Utils.getEpoxyObjectType;
     if (!typeVariableNames.isEmpty()) {
       TypeVariableName[] typeArguments =
           typeVariableNames.toArray(new TypeVariableName[typeVariableNames.size()]);
-      this.parameterizedClassName = ParameterizedTypeName.get(generatedClassName, typeArguments);
+      this.parametrizedClassName = ParameterizedTypeName.get(generatedClassName, typeArguments);
     } else {
-      this.parameterizedClassName = generatedClassName;
+      this.parametrizedClassName = generatedClassName;
     }
 
     TypeMirror boundObjectTypeMirror = getEpoxyObjectType(superClassElement, typeUtils);

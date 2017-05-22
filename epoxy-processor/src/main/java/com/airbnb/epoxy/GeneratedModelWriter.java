@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 
+import com.airbnb.epoxy.GeneratedModelInfo.AttributeGroup;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.lang.annotation.AnnotationTypeMismatchException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
 
@@ -60,6 +62,7 @@ class GeneratedModelWriter {
   static final String GENERATED_FIELD_SUFFIX = "_epoxyGeneratedModel";
   private static final String CREATE_NEW_HOLDER_METHOD_NAME = "createNewHolder";
   private static final String GET_DEFAULT_LAYOUT_METHOD_NAME = "getDefaultLayout";
+  static final String ATTRIBUTES_BITSET_FIELD_NAME = "assignedAttributes" + GENERATED_FIELD_SUFFIX;
 
   private final Filer filer;
   private final Types typeUtils;
@@ -67,9 +70,31 @@ class GeneratedModelWriter {
   private final LayoutResourceProcessor layoutResourceProcessor;
   private final ConfigManager configManager;
   private final DataBindingModuleLookup dataBindingModuleLookup;
+  private BuilderHooks builderHooks;
 
-  interface BeforeBuildCallback {
-    void modifyBuilder(TypeSpec.Builder builder);
+  static class BuilderHooks {
+    void beforeFinalBuild(TypeSpec.Builder builder) {
+    }
+
+    /** Opportunity to add additional code to the unbind method. */
+    void addToUnbindMethod(Builder unbindBuilder, String unbindParamName) {
+
+    }
+
+    /**
+     * True true to have the bind method build, false to not add the method to the generated class.
+     */
+    boolean addToBindMethod(Builder methodBuilder, ParameterSpec boundObjectParam) {
+      return false;
+    }
+
+    /**
+     * True true to have the bind method build, false to not add the method to the generated class.
+     */
+    boolean addToBindWithDiffMethod(Builder methodBuilder, ParameterSpec boundObjectParam,
+        ParameterSpec previousModelParam) {
+      return false;
+    }
   }
 
   GeneratedModelWriter(Filer filer, Types typeUtils, ErrorLogger errorLogger,
@@ -84,11 +109,12 @@ class GeneratedModelWriter {
   }
 
   void generateClassForModel(GeneratedModelInfo info) throws IOException {
-    generateClassForModel(info, null);
+    generateClassForModel(info, new BuilderHooks());
   }
 
-  void generateClassForModel(GeneratedModelInfo info, BeforeBuildCallback beforeBuildCallback)
+  void generateClassForModel(GeneratedModelInfo info, BuilderHooks builderHooks)
       throws IOException {
+    this.builderHooks = builderHooks;
     if (!info.shouldGenerateModel()) {
       return;
     }
@@ -102,7 +128,7 @@ class GeneratedModelWriter {
         .addFields(generateFields(info))
         .addMethods(generateConstructors(info));
 
-    generateDebugAddToMethodIfNeeded(builder);
+    generateDebugAddToMethodIfNeeded(builder, info);
 
     builder
         .addMethods(generateBindMethods(info))
@@ -115,13 +141,15 @@ class GeneratedModelWriter {
         .addMethod(generateHashCode(info))
         .addMethod(generateToString(info));
 
-    if (beforeBuildCallback != null) {
-      beforeBuildCallback.modifyBuilder(builder);
-    }
+    builderHooks.beforeFinalBuild(builder);
 
     JavaFile.builder(info.getGeneratedName().packageName(), builder.build())
         .build()
         .writeTo(filer);
+  }
+
+  private boolean shouldUseBitSet(GeneratedModelInfo info) {
+    return info instanceof ModelViewInfo;
   }
 
   @NonNull
@@ -134,6 +162,15 @@ class GeneratedModelWriter {
 
   private Iterable<FieldSpec> generateFields(GeneratedModelInfo classInfo) {
     List<FieldSpec> fields = new ArrayList<>();
+
+    // bit set for tracking what attributes were set
+    if (shouldUseBitSet(classInfo)) {
+      fields.add(FieldSpec
+          .builder(ClassName.get(BitSet.class), ATTRIBUTES_BITSET_FIELD_NAME, Modifier.PRIVATE,
+              Modifier.FINAL)
+          .initializer("new $T($L)", BitSet.class, classInfo.attributeInfo.size())
+          .build());
+    }
 
     // Add fields for the bind/unbind listeners
     ParameterizedTypeName onBindListenerType = ParameterizedTypeName.get(
@@ -154,11 +191,18 @@ class GeneratedModelWriter {
 
     for (AttributeInfo attributeInfo : classInfo.getAttributeInfo()) {
       if (attributeInfo.isGenerated) {
-        fields.add(FieldSpec.builder(
+        FieldSpec.Builder builder = FieldSpec.builder(
             attributeInfo.getTypeName(),
-            attributeInfo.name,
+            attributeInfo.fieldName,
             PRIVATE
-            ).build()
+        )
+            .addAnnotations(attributeInfo.getSetterAnnotations());
+
+        if (attributeInfo.defaultValue != null) {
+          builder.initializer(attributeInfo.defaultValue);
+        }
+
+        fields.add(builder.build()
         );
       }
 
@@ -216,20 +260,58 @@ class GeneratedModelWriter {
     return constructors;
   }
 
-  private void generateDebugAddToMethodIfNeeded(TypeSpec.Builder classBuilder) {
+  private void generateDebugAddToMethodIfNeeded(TypeSpec.Builder classBuilder,
+      GeneratedModelInfo info) {
     if (!configManager.shouldValidateModelUsage()) {
       return;
     }
 
-    MethodSpec addToMethod = MethodSpec.methodBuilder("addTo")
+    Builder builder = MethodSpec.methodBuilder("addTo")
         .addParameter(getClassName(EPOXY_CONTROLLER_TYPE), "controller")
         .addAnnotation(Override.class)
         .addModifiers(PUBLIC)
         .addStatement("super.addTo(controller)")
-        .addStatement("addWithDebugValidation(controller)")
-        .build();
+        .addStatement("addWithDebugValidation(controller)");
 
-    classBuilder.addMethod(addToMethod);
+    // If no group default exists, and no attribute in group is set, throw an exception
+    for (AttributeGroup attributeGroup : info.attributeGroups) {
+      if (!attributeGroup.isRequired) {
+        continue;
+      }
+
+      builder.addCode("if (");
+      boolean firstAttribute = true;
+      for (AttributeInfo attribute : attributeGroup.attributes) {
+        if (!firstAttribute) {
+          builder.addCode(" && ");
+        }
+        firstAttribute = false;
+
+        builder
+            .addCode("!$L", isAttributeSetCode(info, attribute));
+      }
+
+      builder.addCode(") {\n")
+          .addStatement("\tthrow new $T(\"A value is required for $L\")",
+              IllegalStateException.class,
+              attributeGroup.name)
+          .addCode("}\n");
+    }
+
+    classBuilder.addMethod(builder.build());
+  }
+
+  static CodeBlock isAttributeSetCode(GeneratedModelInfo info, AttributeInfo attribute) {
+    return CodeBlock
+        .of("$L.get($L)", ATTRIBUTES_BITSET_FIELD_NAME, attributeIndex(info, attribute));
+  }
+
+  private static int attributeIndex(GeneratedModelInfo modelInfo, AttributeInfo attributeInfo) {
+    int index = modelInfo.attributeInfo.indexOf(attributeInfo);
+    if (index < 0) {
+      throw new IllegalStateException("The attribute does not exist in the model.");
+    }
+    return index;
   }
 
   private Iterable<MethodSpec> generateBindMethods(GeneratedModelInfo classInfo) {
@@ -285,6 +367,30 @@ class GeneratedModelWriter {
 
     methods.add(preBindBuilder.build());
 
+    Builder bindBuilder = MethodSpec.methodBuilder("bind")
+        .addAnnotation(Override.class)
+        .addModifiers(PUBLIC)
+        .addParameter(boundObjectParam)
+        .addStatement("super.bind($L)", boundObjectParam.name);
+
+    if (builderHooks.addToBindMethod(bindBuilder, boundObjectParam)) {
+      methods.add(bindBuilder.build());
+    }
+
+    ParameterSpec previousModelParam =
+        ParameterSpec.builder(getClassName(UNTYPED_EPOXY_MODEL_TYPE), "previousModel").build();
+
+    Builder bindWithDiffBuilder = MethodSpec.methodBuilder("bind")
+        .addAnnotation(Override.class)
+        .addModifiers(PUBLIC)
+        .addParameter(boundObjectParam)
+        .addParameter(previousModelParam);
+
+    if (builderHooks
+        .addToBindWithDiffMethod(bindWithDiffBuilder, boundObjectParam, previousModelParam)) {
+      methods.add(bindWithDiffBuilder.build());
+    }
+
     Builder postBindBuilder = MethodSpec.methodBuilder("handlePostBind")
         .addModifiers(PUBLIC)
         .addAnnotation(Override.class)
@@ -326,8 +432,9 @@ class GeneratedModelWriter {
 
     methods.add(onBind.build());
 
+    String unbindParamName = "object";
     ParameterSpec unbindObjectParam =
-        ParameterSpec.builder(classInfo.getModelType(), "object").build();
+        ParameterSpec.builder(classInfo.getModelType(), unbindParamName).build();
 
     Builder unbindBuilder = MethodSpec.methodBuilder("unbind")
         .addAnnotation(Override.class)
@@ -339,6 +446,8 @@ class GeneratedModelWriter {
         .beginControlFlow("if ($L != null)", modelUnbindListenerFieldName())
         .addStatement("$L.onModelUnbound(this, object)", modelUnbindListenerFieldName())
         .endControlFlow();
+
+    builderHooks.addToUnbindMethod(unbindBuilder, unbindParamName);
 
     methods.add(unbindBuilder
         .build());
@@ -460,6 +569,8 @@ class GeneratedModelWriter {
     LayoutResource layout;
     if (modelInfo instanceof DataBindingModelInfo) {
       layout = ((DataBindingModelInfo) modelInfo).getLayoutResource();
+    } else if (modelInfo instanceof ModelViewInfo) {
+      layout = ((ModelViewInfo) modelInfo).getLayoutResource(layoutResourceProcessor);
     } else {
 
       TypeElement superClassElement = modelInfo.getSuperClassElement();
@@ -528,7 +639,7 @@ class GeneratedModelWriter {
     ClassName brClass = ClassName.get(moduleName, "BR");
     boolean validateAttributes = configManager.shouldValidateModelUsage();
     for (AttributeInfo attribute : info.getAttributeInfo()) {
-      String attrName = attribute.getName();
+      String attrName = attribute.getFieldName();
       CodeBlock setVariableBlock =
           CodeBlock.of("binding.setVariable($T.$L, $L)", brClass, attrName, attribute.getterCode());
 
@@ -641,7 +752,7 @@ class GeneratedModelWriter {
 
   private MethodSpec generateSetClickModelListener(GeneratedModelInfo classInfo,
       AttributeInfo attribute) {
-    String attributeName = attribute.getName();
+    String attributeName = attribute.getFieldName();
 
     ParameterSpec param =
         ParameterSpec.builder(getModelClickListenerType(classInfo), attributeName, FINAL).build();
@@ -740,14 +851,14 @@ class GeneratedModelWriter {
         .build();
   }
 
-  private static MethodSpec.Builder startNotEqualsControlFlow(MethodSpec.Builder methodBuilder,
+  static MethodSpec.Builder startNotEqualsControlFlow(MethodSpec.Builder methodBuilder,
       AttributeInfo attribute) {
     TypeName attributeType = attribute.getTypeName();
     boolean useHash = attributeType.isPrimitive() || attribute.useInHash();
     return startNotEqualsControlFlow(methodBuilder, useHash, attributeType, attribute.getterCode());
   }
 
-  private static MethodSpec.Builder startNotEqualsControlFlow(Builder builder,
+  static MethodSpec.Builder startNotEqualsControlFlow(Builder builder,
       boolean useObjectHashCode, TypeName type, String accessorCode) {
 
     if (useObjectHashCode) {
@@ -864,7 +975,8 @@ class GeneratedModelWriter {
       if (attributeInfo.doNotUseInToString()) {
         continue;
       }
-      String attributeName = attributeInfo.getName();
+
+      String attributeName = attributeInfo.getFieldName();
       if (first) {
         sb.append(String.format("\"%s=\" + %s +\n", attributeName, attributeInfo.getterCode()));
         first = false;
@@ -881,7 +993,7 @@ class GeneratedModelWriter {
   }
 
   private MethodSpec generateGetter(AttributeInfo data) {
-    return MethodSpec.methodBuilder(data.getName())
+    return MethodSpec.methodBuilder(data.generatedGetterName())
         .addModifiers(PUBLIC)
         .returns(data.getTypeName())
         .addAnnotations(data.getGetterAnnotations())
@@ -890,15 +1002,49 @@ class GeneratedModelWriter {
   }
 
   private MethodSpec generateSetter(GeneratedModelInfo helperClass, AttributeInfo attribute) {
-    String attributeName = attribute.getName();
-    Builder builder = MethodSpec.methodBuilder(attributeName)
+    String attributeName = attribute.getFieldName();
+    String paramName = attribute.generatedSetterName();
+    Builder builder = MethodSpec.methodBuilder(paramName)
         .addModifiers(PUBLIC)
         .returns(helperClass.getParameterizedGeneratedName())
-        .addParameter(ParameterSpec.builder(attribute.getTypeName(), attributeName)
-            .addAnnotations(attribute.getSetterAnnotations()).build());
+        .addParameter(
+            ParameterSpec.builder(attribute.getTypeName(), paramName)
+                .addAnnotations(attribute.getSetterAnnotations()).build());
+
+    if (attribute.javaDoc != null) {
+      builder.addJavadoc(attribute.javaDoc);
+    }
+
+    if (configManager.shouldValidateModelUsage()
+        && attribute.isNullable != null
+        && !attribute.isNullable) {
+
+      builder.beginControlFlow("if ($L == null)", paramName)
+          .addStatement("throw new $T(\"$L cannot be null\")",
+              IllegalArgumentException.class, paramName)
+          .endControlFlow();
+    }
+
+    if (shouldUseBitSet(helperClass)) {
+      builder.addStatement("$L.set($L)", ATTRIBUTES_BITSET_FIELD_NAME,
+          attributeIndex(helperClass, attribute));
+    }
+
+    if (attribute.isOverload()) {
+      for (AttributeInfo overload : attribute.overloadedAttributesInSameGroup) {
+        if (shouldUseBitSet(helperClass)) {
+          builder.addStatement("$L.clear($L)", ATTRIBUTES_BITSET_FIELD_NAME,
+              attributeIndex(helperClass, overload));
+        }
+
+        builder.addStatement(overload.setterCode(),
+            overload.defaultValue != null ? overload.defaultValue
+                : getDefaultValue(overload.getTypeName()));
+      }
+    }
 
     addOnMutationCall(builder)
-        .addStatement(attribute.setterCode(), attributeName);
+        .addStatement(attribute.setterCode(), paramName);
 
     if (attribute.isViewClickListener()) {
       // Null out the model click listener since this view click listener should replace it
@@ -909,7 +1055,7 @@ class GeneratedModelWriter {
     // No need to do this if the attribute is private since we already called the super setter to
     // set it
     if (!attribute.isPrivate && attribute.hasSuperSetterMethod()) {
-      builder.addStatement("super.$L($L)", attributeName, attributeName);
+      builder.addStatement("super.$L($L)", attributeName, paramName);
     }
 
     return builder
@@ -925,10 +1071,16 @@ class GeneratedModelWriter {
         .addStatement("$L = null", modelBindListenerFieldName())
         .addStatement("$L = null", modelUnbindListenerFieldName());
 
+    if (shouldUseBitSet(helperClass)) {
+      builder.addStatement("$L.clear()", ATTRIBUTES_BITSET_FIELD_NAME);
+    }
+
     for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
       if (!attributeInfo.hasFinalModifier()) {
+
         builder.addStatement(attributeInfo.setterCode(),
-            getDefaultValue(attributeInfo.getTypeName()));
+            attributeInfo.defaultValue != null ? attributeInfo.defaultValue
+                : getDefaultValue(attributeInfo.getTypeName()));
       }
 
       if (attributeInfo.isViewClickListener()) {

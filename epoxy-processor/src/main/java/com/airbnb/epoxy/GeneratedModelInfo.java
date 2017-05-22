@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterSpec.Builder;
 import com.squareup.javapoet.TypeName;
@@ -10,7 +11,6 @@ import com.squareup.javapoet.TypeVariableName;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -34,14 +34,16 @@ abstract class GeneratedModelInfo {
 
   protected TypeName superClassName;
   protected TypeElement superClassElement;
-  protected TypeName parameterizedClassName;
+  protected TypeName parametrizedClassName;
   protected ClassName generatedClassName;
   protected TypeName boundObjectTypeName;
   protected boolean shouldGenerateModel;
-  protected final Set<AttributeInfo> attributeInfo = new HashSet<>();
+  // TODO: (eli_hart 5/16/17) Sort attributes alphabetically so overloaded setters are together
+  protected final List<AttributeInfo> attributeInfo = new ArrayList<>();
   protected final List<TypeVariableName> typeVariableNames = new ArrayList<>();
   protected final List<ConstructorInfo> constructors = new ArrayList<>();
   protected final Set<MethodInfo> methodsReturningClassType = new LinkedHashSet<>();
+  protected final List<AttributeGroup> attributeGroups = new ArrayList<>();
 
   /**
    * Get information about methods returning class type of the original class so we can duplicate
@@ -93,9 +95,23 @@ abstract class GeneratedModelInfo {
     addAttributes(Collections.singletonList(attributeInfo));
   }
 
-  void addAttributes(Collection<AttributeInfo> attributeInfo) {
-    removeMethodIfDuplicatedBySetter(attributeInfo);
-    this.attributeInfo.addAll(attributeInfo);
+  void addAttributes(Collection<AttributeInfo> attributesToAdd) {
+    removeMethodIfDuplicatedBySetter(attributesToAdd);
+    for (AttributeInfo info : attributesToAdd) {
+      int existingIndex = attributeInfo.indexOf(info);
+      if (existingIndex > -1) {
+        // Don't allow duplicates.
+        attributeInfo.set(existingIndex, info);
+      } else {
+        attributeInfo.add(info);
+      }
+    }
+  }
+
+  void addAttributeIfNotExists(AttributeInfo attributeToAdd) {
+    if (!attributeInfo.contains(attributeToAdd)) {
+      addAttribute(attributeToAdd);
+    }
   }
 
   private void removeMethodIfDuplicatedBySetter(Collection<AttributeInfo> attributeInfos) {
@@ -103,7 +119,7 @@ abstract class GeneratedModelInfo {
       Iterator<MethodInfo> iterator = methodsReturningClassType.iterator();
       while (iterator.hasNext()) {
         MethodInfo methodInfo = iterator.next();
-        if (methodInfo.name.equals(attributeInfo.getName())
+        if (methodInfo.name.equals(attributeInfo.getFieldName())
             // checking for overloads
             && methodInfo.params.size() == 1
             && methodInfo.params.get(0).type.equals(attributeInfo.getTypeName())) {
@@ -133,7 +149,7 @@ abstract class GeneratedModelInfo {
     return generatedClassName;
   }
 
-  Set<AttributeInfo> getAttributeInfo() {
+  List<AttributeInfo> getAttributeInfo() {
     return attributeInfo;
   }
 
@@ -146,7 +162,7 @@ abstract class GeneratedModelInfo {
   }
 
   TypeName getParameterizedGeneratedName() {
-    return parameterizedClassName;
+    return parametrizedClassName;
   }
 
   /**
@@ -221,5 +237,73 @@ abstract class GeneratedModelInfo {
         + "attributeInfo=" + attributeInfo
         + ", superClassName=" + superClassName
         + '}';
+  }
+
+  void addAttributeGroup(String groupName, List<AttributeInfo> attributes)
+      throws EpoxyProcessorException {
+
+    AttributeInfo defaultAttribute = null;
+    AttributeInfo nullableAttribute = null;
+    boolean isRequired = true;
+    for (AttributeInfo attribute : attributes) {
+      List<AttributeInfo> otherAttributes = new ArrayList<>(attributes);
+      otherAttributes.remove(attribute);
+      attribute.setAttributesInSameGroup(otherAttributes);
+      isRequired &= attribute.isRequired();
+
+      if (attribute.isNullable != null && attribute.isNullable) {
+        nullableAttribute = attribute;
+      }
+
+      if (attribute.defaultValue != null) {
+        if (defaultAttribute != null) {
+          throw Utils.buildEpoxyException(
+              "Only one default value can exist for a group of attributes that set the same value: "
+                  + attributes);
+        }
+        defaultAttribute = attribute;
+      }
+    }
+
+    CodeBlock codeToSetDefaultValue = null;
+    if (defaultAttribute == null && nullableAttribute != null) {
+      defaultAttribute = nullableAttribute;
+    }
+
+    // TODO: (eli_hart 5/17/17) clean up null/default code architecture
+
+    attributeGroups
+        .add(new AttributeGroup(groupName, attributes, isRequired, defaultAttribute));
+  }
+
+  static class AttributeGroup {
+    final String name;
+    final List<AttributeInfo> attributes;
+    final boolean isRequired;
+    final AttributeInfo defaultAttribute;
+
+    AttributeGroup(String groupName, List<AttributeInfo> attributes, boolean isRequired,
+        AttributeInfo defaultAttribute) throws EpoxyProcessorException {
+      if (attributes.isEmpty()) {
+        throw Utils.buildEpoxyException("Attributes cannot be empty");
+      }
+
+      if (!isRequired && defaultAttribute == null) {
+        throw Utils.buildEpoxyException("Default attribute must be set if group is not required");
+      }
+
+      this.name = groupName;
+      this.attributes = new ArrayList<>(attributes);
+      this.isRequired = isRequired;
+      this.defaultAttribute = defaultAttribute;
+    }
+
+    CodeBlock codeToSetDefaultValue() {
+      if (defaultAttribute == null) {
+        throw new IllegalStateException("No default value exists");
+      }
+
+      return CodeBlock.of(defaultAttribute.setterCode(), defaultAttribute.defaultValue);
+    }
   }
 }

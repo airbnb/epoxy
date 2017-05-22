@@ -3,11 +3,11 @@ package com.airbnb.epoxy;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
@@ -26,17 +26,14 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 class ModelProcessor {
 
-  private final Messager messager;
   private final Elements elementUtils;
   private final Types typeUtils;
   private final ConfigManager configManager;
   private final ErrorLogger errorLogger;
   private final GeneratedModelWriter modelWriter;
-  private LinkedHashMap<TypeElement, GeneratedModelInfo> modelClassMap;
 
-  ModelProcessor(Messager messager, Elements elementUtils, Types typeUtils,
+  ModelProcessor(Elements elementUtils, Types typeUtils,
       ConfigManager configManager, ErrorLogger errorLogger, GeneratedModelWriter modelWriter) {
-    this.messager = messager;
     this.elementUtils = elementUtils;
     this.typeUtils = typeUtils;
     this.configManager = configManager;
@@ -45,7 +42,7 @@ class ModelProcessor {
   }
 
   Collection<GeneratedModelInfo> processModels(RoundEnvironment roundEnv) {
-    modelClassMap = new LinkedHashMap<>();
+    LinkedHashMap<TypeElement, GeneratedModelInfo> modelClassMap = new LinkedHashMap<>();
 
     for (Element attribute : roundEnv.getElementsAnnotatedWith(EpoxyAttribute.class)) {
       try {
@@ -83,28 +80,7 @@ class ModelProcessor {
       }
     }
 
-    validateAttributesImplementHashCode(modelClassMap.values());
     return modelClassMap.values();
-  }
-
-  private void validateAttributesImplementHashCode(
-      Collection<GeneratedModelInfo> generatedClasses) {
-    HashCodeValidator hashCodeValidator = new HashCodeValidator(typeUtils);
-
-    for (GeneratedModelInfo generatedClass : generatedClasses) {
-      for (AttributeInfo attributeInfo : generatedClass.getAttributeInfo()) {
-        if (configManager.requiresHashCode(attributeInfo)
-            && attributeInfo.useInHash()
-            && !attributeInfo.ignoreRequireHashCode()) {
-
-          try {
-            hashCodeValidator.validate(attributeInfo);
-          } catch (EpoxyProcessorException e) {
-            errorLogger.logError(e);
-          }
-        }
-      }
-    }
   }
 
   private void addAttributeToGeneratedClass(Element attribute,
@@ -227,7 +203,7 @@ class ModelProcessor {
           continue;
         }
 
-        Set<AttributeInfo> otherAttributes = otherEntry.getValue().getAttributeInfo();
+        List<AttributeInfo> otherAttributes = otherEntry.getValue().getAttributeInfo();
 
         if (belongToTheSamePackage(thisClass, otherClass, elementUtils)) {
           entry.getValue().addAttributes(otherAttributes);

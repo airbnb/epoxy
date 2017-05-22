@@ -1,6 +1,6 @@
 package com.airbnb.epoxy;
 
-import com.airbnb.epoxy.GeneratedModelWriter.BeforeBuildCallback;
+import com.airbnb.epoxy.GeneratedModelWriter.BuilderHooks;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec.Builder;
@@ -67,19 +67,20 @@ class LithoSpecProcessor {
     }
 
     Class<? extends Annotation> propClass = getAnnotationClass(ClassNames.LITHO_ANNOTATION_PROP);
+    HashCodeValidator hashCodeValidator = new HashCodeValidator(typeUtils);
     for (Element propElement : roundEnv.getElementsAnnotatedWith(propClass)) {
       LithoModelInfo lithoModelInfo = getModelInfoForProp(modelInfoMap, propElement);
       if (lithoModelInfo != null) {
-        lithoModelInfo.addProp(propElement);
+        lithoModelInfo.addProp(propElement, hashCodeValidator);
       }
     }
 
     for (Entry<TypeElement, LithoModelInfo> modelInfoEntry : modelInfoMap.entrySet()) {
       try {
         final LithoModelInfo modelInfo = modelInfoEntry.getValue();
-        modelWriter.generateClassForModel(modelInfo, new BeforeBuildCallback() {
+        modelWriter.generateClassForModel(modelInfo, new BuilderHooks() {
           @Override
-          public void modifyBuilder(Builder builder) {
+          public void beforeFinalBuild(Builder builder) {
             updateGeneratedClassForLithoComponent(modelInfo, builder);
           }
         });
@@ -109,7 +110,7 @@ class LithoSpecProcessor {
         .addCode("return $T.create(context)", modelInfo.lithoComponentName);
 
     for (AttributeInfo attributeInfo : modelInfo.attributeInfo) {
-      methodBuilder.addCode(".$L($L)", attributeInfo.getName(), attributeInfo.getName());
+      methodBuilder.addCode(".$L($L)", attributeInfo.getFieldName(), attributeInfo.getFieldName());
     }
 
     methodBuilder.addStatement(".build()");

@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ public abstract class EpoxyModel<T> {
   private boolean currentlyInInterceptors;
   private int hashCodeWhenAdded;
   private boolean hasDefaultId;
+  private SpanSizeCallback spanSizeCallback;
 
   protected EpoxyModel(long id) {
     id(id);
@@ -467,6 +469,23 @@ public abstract class EpoxyModel<T> {
    */
   public int getSpanSize(int totalSpanCount, int position, int itemCount) {
     return 1;
+  }
+
+  public EpoxyModel<T> spanSizeCallback(@Nullable SpanSizeCallback spanSizeCallback) {
+    this.spanSizeCallback = spanSizeCallback;
+    return this;
+  }
+
+  public interface SpanSizeCallback {
+    int getSpanSize(int totalSpanCount, int position, int itemCount);
+  }
+
+  int getSpanSizeInternal(int totalSpanCount, int position, int itemCount) {
+    if (spanSizeCallback != null) {
+      return spanSizeCallback.getSpanSize(totalSpanCount, position, itemCount);
+    }
+
+    return getSpanSize(totalSpanCount, position, itemCount);
   }
 
   /**

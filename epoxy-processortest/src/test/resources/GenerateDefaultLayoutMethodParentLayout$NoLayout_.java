@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
 import java.lang.Object;
@@ -114,6 +115,12 @@ public class GenerateDefaultLayoutMethodParentLayout$NoLayout_ extends GenerateD
   @Override
   public GenerateDefaultLayoutMethodParentLayout$NoLayout_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
+    return this;
+  }
+
+  @Override
+  public GenerateDefaultLayoutMethodParentLayout$NoLayout_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
+    super.spanSizeCallback(arg0);
     return this;
   }
 

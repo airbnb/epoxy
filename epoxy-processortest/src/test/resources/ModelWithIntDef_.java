@@ -1,7 +1,9 @@
 package com.airbnb.epoxy.models;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import com.airbnb.epoxy.EpoxyController;
+import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.EpoxyViewHolder;
 import com.airbnb.epoxy.GeneratedModel;
 import com.airbnb.epoxy.OnModelBoundListener;
@@ -120,6 +122,12 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
   @Override
   public ModelWithIntDef_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
+    return this;
+  }
+
+  @Override
+  public ModelWithIntDef_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
+    super.spanSizeCallback(arg0);
     return this;
   }
 

@@ -12,7 +12,7 @@ class DataBindingAttributeInfo extends AttributeInfo {
   DataBindingAttributeInfo(DataBindingModelInfo modelInfo, ExecutableElement setterMethod,
       HashCodeValidator hashCodeValidator) {
     VariableElement paramElement = setterMethod.getParameters().get(0);
-    this.name = removeSetPrefix(setterMethod.getSimpleName().toString());
+    this.fieldName = removeSetPrefix(setterMethod.getSimpleName().toString());
     typeName = TypeName.get(paramElement.asType());
     typeMirror = paramElement.asType();
     modelName = modelInfo.getGeneratedName().simpleName();

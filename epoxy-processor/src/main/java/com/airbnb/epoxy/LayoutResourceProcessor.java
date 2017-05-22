@@ -128,6 +128,8 @@ class LayoutResourceProcessor {
       for (int layoutRes : ((EpoxyDataBindingLayouts) annotation).value()) {
         layoutResources.add(layoutRes);
       }
+    } else if (annotation instanceof ModelView) {
+      layoutResources.add(((ModelView) annotation).defaultLayout());
     }
 
     return layoutResources;

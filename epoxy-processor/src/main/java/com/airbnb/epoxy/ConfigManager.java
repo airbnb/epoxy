@@ -1,19 +1,23 @@
 package com.airbnb.epoxy;
 
+import com.squareup.javapoet.ClassName;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.Utils.buildEpoxyException;
+import static com.airbnb.epoxy.Utils.getClassParamFromAnnotation;
 
 /** Manages configuration settings for different packages. */
 class ConfigManager {
@@ -25,13 +29,15 @@ class ConfigManager {
   private static final PackageConfigSettings
       DEFAULT_PACKAGE_CONFIG_SETTINGS = PackageConfigSettings.forDefaults();
   private final Map<String, PackageConfigSettings> configurationMap = new HashMap<>();
+  private final Map<String, PackageModelViewNameSettings> modelViewNamingMap = new HashMap<>();
   private final Elements elementUtils;
   private final boolean validateModelUsage;
   private final boolean globalRequireHashCode;
   private final boolean globalRequireAbstractModels;
   private final boolean globalImplicitlyAddAutoModels;
+  private final Types typeUtils;
 
-  ConfigManager(Map<String, String> options, Elements elementUtils) {
+  ConfigManager(Map<String, String> options, Elements elementUtils, Types typeUtils) {
     this.elementUtils = elementUtils;
     validateModelUsage = getBooleanOption(options, PROCESSOR_OPTION_VALIDATE_MODEL_USAGE, true);
 
@@ -45,6 +51,7 @@ class ConfigManager {
     globalImplicitlyAddAutoModels =
         getBooleanOption(options, PROCESSOR_IMPLICITLY_ADD_AUTO_MODELS,
             PackageEpoxyConfig.IMPLICITLY_ADD_AUTO_MODELS_DEFAULT);
+    this.typeUtils = typeUtils;
   }
 
   private static boolean getBooleanOption(Map<String, String> options, String option,
@@ -69,22 +76,53 @@ class ConfigManager {
    */
   List<Exception> processConfigurations(RoundEnvironment roundEnv) {
 
-    Set<? extends Element> annotatedElements =
-        roundEnv.getElementsAnnotatedWith(PackageEpoxyConfig.class);
-
     List<Exception> errors = new ArrayList<>();
 
-    for (Element element : annotatedElements) {
+    for (Element element : roundEnv.getElementsAnnotatedWith(PackageEpoxyConfig.class)) {
       String packageName = elementUtils.getPackageOf(element).getQualifiedName().toString();
 
       if (configurationMap.containsKey(packageName)) {
         errors.add(buildEpoxyException(
-            "Only one Epoxy configuration annotation is allowed per package (%s)",
-            packageName));
+            "Only one Epoxy configuration annotation is allowed per package (%s)", packageName));
+        continue;
       }
 
       PackageEpoxyConfig annotation = element.getAnnotation(PackageEpoxyConfig.class);
       configurationMap.put(packageName, PackageConfigSettings.create(annotation));
+    }
+
+    for (Element element : roundEnv.getElementsAnnotatedWith(PackageModelViewLayoutNaming.class)) {
+      String packageName = elementUtils.getPackageOf(element).getQualifiedName().toString();
+
+      if (modelViewNamingMap.containsKey(packageName)) {
+        errors.add(buildEpoxyException("Only one %s annotation is allowed per package (%s)",
+            PackageModelViewLayoutNaming.class.getSimpleName(), packageName));
+        continue;
+      }
+
+      TypeMirror rLayoutClassType =
+          getClassParamFromAnnotation(element, PackageModelViewLayoutNaming.class, "rLayoutClass");
+      if (rLayoutClassType == null) {
+        errors.add(buildEpoxyException(
+            "Unable to get R class details from annotation %s (package: %s)",
+            PackageModelViewLayoutNaming.class.getSimpleName(), packageName));
+        continue;
+      }
+
+      ClassName rLayoutClassName =
+          ClassName.get((TypeElement) typeUtils.asElement(rLayoutClassType));
+
+      if (!rLayoutClassName.reflectionName().endsWith(".R$layout")) {
+        errors.add(buildEpoxyException(
+            "Layout class in %s must be of the form 'R.layout' (package: %s)",
+            PackageModelViewLayoutNaming.class.getSimpleName(), packageName));
+        continue;
+      }
+
+      PackageModelViewLayoutNaming annotation =
+          element.getAnnotation(PackageModelViewLayoutNaming.class);
+      modelViewNamingMap.put(packageName,
+          new PackageModelViewNameSettings(rLayoutClassName, annotation.layoutName()));
     }
 
     return errors;
@@ -109,6 +147,11 @@ class ConfigManager {
     return validateModelUsage;
   }
 
+  PackageModelViewNameSettings getModelViewNamingSettings(Element viewElement) {
+    String packageName = elementUtils.getPackageOf(viewElement).getQualifiedName().toString();
+    return getObjectFromPackageMap(modelViewNamingMap, packageName, null);
+  }
+
   private PackageConfigSettings getConfigurationForElement(Element element) {
     return getConfigurationForPackage(elementUtils.getPackageOf(element));
   }
@@ -119,16 +162,23 @@ class ConfigManager {
   }
 
   private PackageConfigSettings getConfigurationForPackage(String packageName) {
-    if (configurationMap.containsKey(packageName)) {
-      return configurationMap.get(packageName);
+    return getObjectFromPackageMap(configurationMap, packageName, DEFAULT_PACKAGE_CONFIG_SETTINGS);
+  }
+
+  private static <T> T getObjectFromPackageMap(Map<String, T> map, String packageName,
+      T ifNotFound) {
+
+    if (map.containsKey(packageName)) {
+      return map.get(packageName);
     }
 
     // If there isn't a configuration for that exact package then we look for configurations for
     // parent packages which include the target package. If multiple parent packages declare
     // configurations we take the configuration from the more nested parent.
-    Entry<String, PackageConfigSettings> bestMatch = null;
-    for (Entry<String, PackageConfigSettings> configEntry : configurationMap.entrySet()) {
+    Entry<String, T> bestMatch = null;
+    for (Entry<String, T> configEntry : map.entrySet()) {
       String entryPackage = configEntry.getKey();
+
       if (!packageName.startsWith(entryPackage + ".")) {
         continue;
       }
@@ -138,6 +188,6 @@ class ConfigManager {
       }
     }
 
-    return bestMatch != null ? bestMatch.getValue() : DEFAULT_PACKAGE_CONFIG_SETTINGS;
+    return bestMatch != null ? bestMatch.getValue() : ifNotFound;
   }
 }

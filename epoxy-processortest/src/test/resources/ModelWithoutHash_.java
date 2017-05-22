@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
 import java.lang.Object;
@@ -71,16 +72,6 @@ public class ModelWithoutHash_ extends ModelWithoutHash implements GeneratedMode
     return this;
   }
 
-  public ModelWithoutHash_ value2(int value2) {
-    onMutation();
-    super.value2 = value2;
-    return this;
-  }
-
-  public int value2() {
-    return value2;
-  }
-
   public ModelWithoutHash_ value(int value) {
     onMutation();
     super.value = value;
@@ -89,6 +80,16 @@ public class ModelWithoutHash_ extends ModelWithoutHash implements GeneratedMode
 
   public int value() {
     return value;
+  }
+
+  public ModelWithoutHash_ value2(int value2) {
+    onMutation();
+    super.value2 = value2;
+    return this;
+  }
+
+  public int value2() {
+    return value2;
   }
 
   public ModelWithoutHash_ value3(String value3) {
@@ -138,6 +139,12 @@ public class ModelWithoutHash_ extends ModelWithoutHash implements GeneratedMode
   }
 
   @Override
+  public ModelWithoutHash_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
+    super.spanSizeCallback(arg0);
+    return this;
+  }
+
+  @Override
   public ModelWithoutHash_ show() {
     super.show();
     return this;
@@ -159,8 +166,8 @@ public class ModelWithoutHash_ extends ModelWithoutHash implements GeneratedMode
   public ModelWithoutHash_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    super.value2 = 0;
     super.value = 0;
+    super.value2 = 0;
     super.value3 = null;
     super.reset();
     return this;
@@ -206,8 +213,8 @@ public class ModelWithoutHash_ extends ModelWithoutHash implements GeneratedMode
   @Override
   public String toString() {
     return "ModelWithoutHash_{" +
-        "value2=" + value2 +
-        ", value=" + value +
+        "value=" + value +
+        ", value2=" + value2 +
         ", value3=" + value3 +
         "}" + super.toString();
   }

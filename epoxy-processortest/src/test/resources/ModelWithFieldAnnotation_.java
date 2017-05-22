@@ -120,6 +120,12 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation implemen
   }
 
   @Override
+  public ModelWithFieldAnnotation_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
+    super.spanSizeCallback(arg0);
+    return this;
+  }
+
+  @Override
   public ModelWithFieldAnnotation_ show() {
     super.show();
     return this;

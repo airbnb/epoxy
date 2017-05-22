@@ -112,7 +112,8 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
     return null;
   }
 
-  protected int getModelPosition(EpoxyModel<?> targetModel) {
+  @Override
+  public int getModelPosition(EpoxyModel<?> targetModel) {
     int size = currentModels.size();
     for (int i = 0; i < size; i++) {
       EpoxyModel<?> model = currentModels.get(i);
@@ -122,5 +123,10 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
     }
 
     return -1;
+  }
+
+  @Override
+  public BoundViewHolders getBoundViewHolders() {
+    return super.getBoundViewHolders();
   }
 }

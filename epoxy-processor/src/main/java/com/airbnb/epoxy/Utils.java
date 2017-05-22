@@ -7,9 +7,12 @@ import com.squareup.javapoet.TypeName;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -69,12 +72,16 @@ class Utils {
     }
   }
 
-  static Element getElementByName(ClassName name, Elements elements, Types types) {
+  static TypeMirror getTypeMirror(Class<?> clazz, Elements elements) {
     try {
-      return elements.getTypeElement(name.reflectionName());
+      return elements.getTypeElement(clazz.getCanonicalName()).asType();
     } catch (MirroredTypeException mte) {
-      return types.asElement(mte.getTypeMirror());
+      return mte.getTypeMirror();
     }
+  }
+
+  static Element getElementByName(ClassName name, Elements elements, Types types) {
+    return getElementByName(name.reflectionName(), elements, types);
   }
 
   static Element getElementByName(String name, Elements elements, Types types) {
@@ -101,12 +108,12 @@ class Utils {
     return isSubtypeOfType(element.asType(), "java.lang.Iterable<?>");
   }
 
-  static boolean isEpoxyModel(TypeMirror type) {
-    return isSubtypeOfType(type, EPOXY_MODEL_TYPE);
-  }
-
   static boolean isController(TypeElement element) {
     return isSubtypeOfType(element.asType(), EPOXY_CONTROLLER_TYPE);
+  }
+
+  static boolean isEpoxyModel(TypeMirror type) {
+    return isSubtypeOfType(type, EPOXY_MODEL_TYPE);
   }
 
   static boolean isEpoxyModel(TypeElement type) {
@@ -379,6 +386,72 @@ class Utils {
   }
 
   static String removeSetPrefix(String string) {
+    if (!PATTERN_STARTS_WITH_SET.matcher(string).matches()) {
+      return string;
+    }
+
     return String.valueOf(string.charAt(3)).toLowerCase() + string.substring(4);
+  }
+
+  static boolean isType(Elements elements, Types types, TypeMirror typeMirror, Class<?> clazz) {
+    TypeMirror classType = getTypeMirror(clazz, elements);
+    return types.isSameType(typeMirror, classType);
+  }
+
+  static boolean isType(Elements elements, Types types, TypeMirror typeMirror,
+      Class<?>... typeNames) {
+    for (Class<?> clazz : typeNames) {
+      if (isType(elements, types, typeMirror, clazz)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  static <T extends Annotation> TypeMirror getClassParamFromAnnotation(
+      Element annotatedElement, Class<T> annotationClass, String paramName) {
+    AnnotationMirror am = getAnnotationMirror(annotatedElement, annotationClass);
+    if (am == null) {
+      return null;
+    }
+    AnnotationValue av = getAnnotationValue(am, paramName);
+    if (av == null) {
+      return null;
+    } else {
+      return (TypeMirror) av.getValue();
+    }
+  }
+
+  private static AnnotationMirror getAnnotationMirror(Element typeElement,
+      Class<? extends Annotation> annotationClass) {
+    String clazzName = annotationClass.getName();
+    for (AnnotationMirror m : typeElement.getAnnotationMirrors()) {
+      if (m.getAnnotationType().toString().equals(clazzName)) {
+        return m;
+      }
+    }
+    return null;
+  }
+
+  private static AnnotationValue getAnnotationValue(AnnotationMirror annotationMirror, String key) {
+    for (Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror
+        .getElementValues().entrySet()) {
+      if (entry.getKey().getSimpleName().toString().equals(key)) {
+        return entry.getValue();
+      }
+    }
+    return null;
+  }
+
+  static String toSnakeCase(String s) {
+    return s.replaceAll("([^_A-Z])([A-Z])", "$1_$2").toLowerCase();
+  }
+
+  static <T> T notNull(T object) {
+    if (object == null) {
+      throw new NullPointerException();
+    }
+
+    return object;
   }
 }

@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import android.view.View;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -146,6 +147,12 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   @Override
   public ModelWithViewClickListener_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
+    return this;
+  }
+
+  @Override
+  public ModelWithViewClickListener_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
+    super.spanSizeCallback(arg0);
     return this;
   }
 
