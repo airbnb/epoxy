@@ -678,4 +678,19 @@ public class ModelProcessorTest {
         .and()
         .generatesSources(generatedModel);
   }
+
+  @Test
+  public void testDoNotUseInToStringModel() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelDoNotUseInToString.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelDoNotUseInToString_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
 }

@@ -58,7 +58,12 @@ public @interface EpoxyAttribute {
      * at runtime correctly implements hashCode/equals. If you don't want the attribute to
      * contribute to model state you should use {@link Option#DoNotHash} instead.
      */
-    IgnoreRequireHashCode
+    IgnoreRequireHashCode,
+    /**
+     * This attribute is used in {@link Object#toString()} implementation by default.
+     * Add this option to prevent this attribute being used in {@link Object#toString()}.
+     */
+    DoNotUseInToString
   }
 
   /** Specify any {@link Option} values that should be used when generating the model class. */
