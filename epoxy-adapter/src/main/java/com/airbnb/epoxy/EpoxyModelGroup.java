@@ -105,6 +105,14 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
     shouldSaveViewState = saveState;
   }
 
+  private static void setViewVisibility(EpoxyModel model, View view) {
+    if (model.isShown()) {
+      view.setVisibility(View.VISIBLE);
+    } else {
+      view.setVisibility(View.GONE);
+    }
+  }
+
   @Override
   public final void bind(Holder holder) {
     iterateModels(holder, new IterateModelsCallback() {
@@ -127,14 +135,6 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
         model.bind(boundObject, payloads);
       }
     });
-  }
-
-  private static void setViewVisibility(EpoxyModel model, View view) {
-    if (model.isShown()) {
-      view.setVisibility(View.VISIBLE);
-    } else {
-      view.setVisibility(View.GONE);
-    }
   }
 
   @Override
@@ -190,10 +190,6 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
     }
   }
 
-  private interface IterateModelsCallback {
-    void onModel(EpoxyModel model, Object boundObject, View view);
-  }
-
   @Override
   public int getSpanSize(int totalSpanCount, int position, int itemCount) {
     // Defaults to using the span size of the first model. Override this if you need to customize it
@@ -229,6 +225,47 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
   @Override
   protected final Holder createNewHolder() {
     return new Holder();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof EpoxyModelGroup)) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+
+    EpoxyModelGroup that = (EpoxyModelGroup) o;
+
+    return models.equals(that.models);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + models.hashCode();
+    return result;
+  }
+
+  private interface IterateModelsCallback {
+    void onModel(EpoxyModel model, Object boundObject, View view);
+  }
+
+  private static class ViewStubData {
+
+    private final ViewGroup viewGroup;
+    private final ViewStub viewStub;
+    private final int position;
+
+    private ViewStubData(ViewGroup viewGroup, ViewStub viewStub, int position) {
+      this.viewGroup = viewGroup;
+      this.viewStub = viewStub;
+      this.position = position;
+    }
   }
 
   protected class Holder extends EpoxyHolder {
@@ -327,42 +364,5 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
 
       return null;
     }
-  }
-
-  private static class ViewStubData {
-
-    private final ViewGroup viewGroup;
-    private final ViewStub viewStub;
-    private final int position;
-
-    private ViewStubData(ViewGroup viewGroup, ViewStub viewStub, int position) {
-      this.viewGroup = viewGroup;
-      this.viewStub = viewStub;
-      this.position = position;
-    }
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof EpoxyModelGroup)) {
-      return false;
-    }
-    if (!super.equals(o)) {
-      return false;
-    }
-
-    EpoxyModelGroup that = (EpoxyModelGroup) o;
-
-    return models.equals(that.models);
-  }
-
-  @Override
-  public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + models.hashCode();
-    return result;
   }
 }

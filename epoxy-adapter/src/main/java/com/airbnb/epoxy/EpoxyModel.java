@@ -1,6 +1,9 @@
 package com.airbnb.epoxy;
 
+import android.animation.Animator;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +24,11 @@ public abstract class EpoxyModel<T> {
    * set with {@link #id(long)}
    */
   private static long idCounter = -1;
-
+  /**
+   * Set to true once this model is diffed in an adapter. Used to ensure that this model's id
+   * doesn't change after being diffed.
+   */
+  boolean addedToAdapter;
   /**
    * An id that can be used to uniquely identify this {@link EpoxyModel} for use in RecyclerView
    * stable ids. It defaults to a unique id for this object instance, if you want to maintain the
@@ -30,11 +37,6 @@ public abstract class EpoxyModel<T> {
   private long id;
   @LayoutRes private int layout;
   private boolean shown = true;
-  /**
-   * Set to true once this model is diffed in an adapter. Used to ensure that this model's id
-   * doesn't change after being diffed.
-   */
-  boolean addedToAdapter;
   /**
    * The first controller this model was added to. A reference is kept in debug mode in order to run
    * validations. The model is allowed to be added to other controllers, but we only keep a
@@ -58,6 +60,51 @@ public abstract class EpoxyModel<T> {
   public EpoxyModel() {
     this(idCounter--);
     hasDefaultId = true;
+  }
+
+  /**
+   * Hash a long into 64 bits instead of the normal 32. This uses a xor shift implementation to
+   * attempt psuedo randomness so object ids have an even spread for less chance of collisions.
+   * <p>
+   * From http://stackoverflow.com/a/11554034
+   * <p>
+   * http://www.javamex.com/tutorials/random_numbers/xorshift.shtml
+   */
+  private static long hashLong64Bit(long value) {
+    value ^= (value << 21);
+    value ^= (value >>> 35);
+    value ^= (value << 4);
+    return value;
+  }
+
+  /**
+   * Hash a string into 64 bits instead of the normal 32. This allows us to better use strings as a
+   * model id with less chance of collisions. This uses the FNV-1a algorithm for a good mix of speed
+   * and distribution.
+   * <p>
+   * Performance comparisons found at http://stackoverflow.com/a/1660613
+   * <p>
+   * Hash implementation from http://www.isthe.com/chongo/tech/comp/fnv/index.html#FNV-1a
+   */
+  private static long hashString64Bit(CharSequence str) {
+    long result = 0xcbf29ce484222325L;
+    final int len = str.length();
+    for (int i = 0; i < len; i++) {
+      result ^= str.charAt(i);
+      result *= 0x100000001b3L;
+    }
+    return result;
+  }
+
+  private static int getPosition(EpoxyController controller, EpoxyModel<?> model) {
+    // If the model was added to multiple controllers, or was removed from the controller and then
+    // modified, this won't be correct. But those should be very rare cases that we don't need to
+    // worry about
+    if (controller.isBuildingModels()) {
+      return controller.getFirstIndexOfModelInBuildingList(model);
+    }
+
+    return controller.getAdapter().getModelPosition(model);
   }
 
   boolean hasDefaultId() {
@@ -129,8 +176,7 @@ public abstract class EpoxyModel<T> {
    *                             process, and follows the same general conditions for all
    *                             recyclerview change payloads.
    */
-  public void bind(T view, EpoxyModel<?> previouslyBoundModel) {
-    bind(view);
+  public void bindChanges(@NonNull T view, @NonNull EpoxyModel<?> previouslyBoundModel) {
   }
 
   /**
@@ -143,7 +189,54 @@ public abstract class EpoxyModel<T> {
    *
    * @see EpoxyAdapter#onViewRecycled(EpoxyViewHolder)
    */
-  public void unbind(T view) {
+  public void unbind(@NonNull T view) {
+  }
+
+  /**
+   * Called when the model has changed but still represents the same item. Return true if you want
+   * to animate these changes manually in the viewholder instead of simple cross fading or whatever
+   * animation the {@link android.support.v7.widget.RecyclerView.ItemAnimator) does by default.
+   *
+   * @return true if you wish to animate changes in the model
+   */
+  public boolean canBindChanges(@NonNull EpoxyModel<?> previouslyBoundModel) {
+    return false;
+  }
+
+  /**
+   * Called if you returned true in {@link #canAnimateChanges()}
+   * Animate your changes in here so that the viewHolder will reflect the model after animation is
+   * finished, but do not start the animation yourself. Basically like {@link #bind(T)} but with
+   * animations.
+   * Duration will not be changed by the ItemAnimator or any calls to
+   * {@link android.support.v7.widget.RecyclerView.ItemAnimator#setChangeDuration(long)}, but start
+   * delay may be overwritten.
+   * Note that any listeners you set may be removed or the animation canceled at any time.
+   *
+   * @return non-null animator to be started by the ItemAnimator when it sees fit
+   */
+  @Nullable
+  public EpoxyItemAnimation bindChangesAnimated(@NonNull T view,
+      @NonNull EpoxyModel<?> previouslyBoundModel) {
+    return null;
+  }
+
+  /**
+   * Override this function if you want to handle interrupted change animations yourself.
+   * This function will be called when an already running custom change animation is interrupted by
+   * a more recent model change. If you do not implement special behaviour, unfinished animations
+   * will be run in sequence.
+   *
+   * @param interruptedAnimation the interrupted running change animation you returned in the
+   *                             previous call to {@link #animateChanges(), or null if no animation
+   *                             was running already. Guaranteed to be of the same type, so casting
+   *                             is safe.
+   * @return non-null animator to be started by the ItemAnimator when it sees fit
+   */
+  @Nullable
+  public EpoxyItemAnimation bindChangesAnimated(@NonNull T view,
+      @NonNull EpoxyModel<?> previouslyBoundModel, @Nullable EpoxyItemAnimation interruptedAnimation) {
+    return interruptedAnimation == null ? bindChangesAnimated(view, previouslyBoundModel) : null;
   }
 
   public long id() {
@@ -228,40 +321,6 @@ public abstract class EpoxyModel<T> {
     return this;
   }
 
-  /**
-   * Hash a long into 64 bits instead of the normal 32. This uses a xor shift implementation to
-   * attempt psuedo randomness so object ids have an even spread for less chance of collisions.
-   * <p>
-   * From http://stackoverflow.com/a/11554034
-   * <p>
-   * http://www.javamex.com/tutorials/random_numbers/xorshift.shtml
-   */
-  private static long hashLong64Bit(long value) {
-    value ^= (value << 21);
-    value ^= (value >>> 35);
-    value ^= (value << 4);
-    return value;
-  }
-
-  /**
-   * Hash a string into 64 bits instead of the normal 32. This allows us to better use strings as a
-   * model id with less chance of collisions. This uses the FNV-1a algorithm for a good mix of speed
-   * and distribution.
-   * <p>
-   * Performance comparisons found at http://stackoverflow.com/a/1660613
-   * <p>
-   * Hash implementation from http://www.isthe.com/chongo/tech/comp/fnv/index.html#FNV-1a
-   */
-  private static long hashString64Bit(CharSequence str) {
-    long result = 0xcbf29ce484222325L;
-    final int len = str.length();
-    for (int i = 0; i < len; i++) {
-      result ^= str.charAt(i);
-      result *= 0x100000001b3L;
-    }
-    return result;
-  }
-
   @LayoutRes
   protected abstract int getDefaultLayout();
 
@@ -322,13 +381,6 @@ public abstract class EpoxyModel<T> {
    */
   public void addIf(AddPredicate predicate, EpoxyController controller) {
     addIf(predicate.addIf(), controller);
-  }
-
-  /**
-   * @see #addIf(AddPredicate, EpoxyController)
-   */
-  public interface AddPredicate {
-    boolean addIf();
   }
 
   /**
@@ -398,17 +450,6 @@ public abstract class EpoxyModel<T> {
     if (controllerToStageTo != null) {
       controllerToStageTo.setStagedModel(this);
     }
-  }
-
-  private static int getPosition(EpoxyController controller, EpoxyModel<?> model) {
-    // If the model was added to multiple controllers, or was removed from the controller and then
-    // modified, this won't be correct. But those should be very rare cases that we don't need to
-    // worry about
-    if (controller.isBuildingModels()) {
-      return controller.getFirstIndexOfModelInBuildingList(model);
-    }
-
-    return controller.getAdapter().getModelPosition(model);
   }
 
   /**
@@ -552,5 +593,12 @@ public abstract class EpoxyModel<T> {
         + ", shown=" + shown
         + ", addedToAdapter=" + addedToAdapter
         + '}';
+  }
+
+  /**
+   * @see #addIf(AddPredicate, EpoxyController)
+   */
+  public interface AddPredicate {
+    boolean addIf();
   }
 }

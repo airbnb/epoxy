@@ -5,6 +5,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ItemAnimator;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -13,17 +14,13 @@ import java.util.List;
 
 abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
   private static final String SAVED_STATE_ARG_VIEW_HOLDERS = "saved_state_view_holders";
-
-  private int spanCount = 1;
-
   private final ViewTypeManager viewTypeManager = new ViewTypeManager();
   /**
    * Keeps track of view holders that are currently bound so we can save their state in {@link
    * #onSaveInstanceState(Bundle)}.
    */
   private final BoundViewHolders boundViewHolders = new BoundViewHolders();
-  private ViewHolderState viewHolderState = new ViewHolderState();
-
+  private int spanCount = 1;
   private final SpanSizeLookup spanSizeLookup = new SpanSizeLookup() {
 
     @Override
@@ -43,6 +40,7 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
       }
     }
   };
+  private ViewHolderState viewHolderState = new ViewHolderState();
 
   public BaseEpoxyAdapter() {
     // Defaults to stable ids since view models generate unique ids. Set this to false in the
@@ -138,6 +136,32 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
    */
   protected void onModelBound(EpoxyViewHolder holder, EpoxyModel<?> model, int position) {
 
+  }
+
+  @CallSuper
+  @Override
+  public void onAttachedToRecyclerView(RecyclerView recycler) {
+    super.onAttachedToRecyclerView(recycler);
+
+    // set our item animator decorator so we can intercept calls to the item animator
+    // and the user doesn't have to worry about setting the decorator himself
+    if (!(recycler.getItemAnimator() instanceof EpoxyAnimationDelegator)) {
+      recycler.setItemAnimator(new EpoxyAnimationDelegator(recycler.getItemAnimator()));
+    }
+  }
+
+  @CallSuper
+  @Override
+  public void onDetachedFromRecyclerView(RecyclerView recycler) {
+    super.onDetachedFromRecyclerView(recycler);
+
+    // remove our item animator decorator when the adapter is detached so there are no problems if
+    // the user decides to attach a non-epoxy adapter afterwards
+    ItemAnimator itemAnimator = recycler.getItemAnimator();
+
+    if (itemAnimator instanceof EpoxyAnimationDelegator) {
+      recycler.setItemAnimator(((EpoxyAnimationDelegator) itemAnimator).getDecoratedAnimator());
+    }
   }
 
   /**
@@ -266,6 +290,10 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
     return spanSizeLookup;
   }
 
+  public int getSpanCount() {
+    return spanCount;
+  }
+
   /**
    * If you are using a grid layout manager you must call this to set the span count of the grid.
    * This span count will be passed on to the models so models can choose what span count to be.
@@ -275,10 +303,6 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
    */
   public void setSpanCount(int spanCount) {
     this.spanCount = spanCount;
-  }
-
-  public int getSpanCount() {
-    return spanCount;
   }
 
   public boolean isMultiSpan() {
