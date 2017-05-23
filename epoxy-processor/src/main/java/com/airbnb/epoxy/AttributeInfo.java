@@ -131,7 +131,7 @@ abstract class AttributeInfo {
 
   // Special case to avoid generating recursive getter if field and its getter names are the same
   String superGetterCode() {
-    return isPrivate ? String.format("super.%s()", getterMethodName) : name;
+    return isPrivate ? String.format("super.%s()", getterMethodName) : fieldName;
   }
 
   String setterCode() {

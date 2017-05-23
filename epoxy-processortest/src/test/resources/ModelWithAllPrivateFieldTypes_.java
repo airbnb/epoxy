@@ -89,7 +89,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public int valueInt() {
-    return getValueInt();
+    return super.getValueInt();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueInteger(Integer valueInteger) {
@@ -112,29 +112,6 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return super.getValueShort();
   }
 
-<<<<<<< e7b3eb19affa21347704121137fa908199b6a83a
-  public ModelWithAllPrivateFieldTypes_ valueLong(long valueLong) {
-    onMutation();
-    super.setValueLong(valueLong);
-    return this;
-  }
-
-  public long valueLong() {
-    return super.getValueLong();
-  }
-
-  public ModelWithAllPrivateFieldTypes_ valueList(List<String> valueList) {
-    onMutation();
-    super.setValueList(valueList);
-    return this;
-  }
-
-  public List<String> valueList() {
-    return super.getValueList();
-  }
-
-=======
->>>>>>> Use view annotations to completely generate models
   public ModelWithAllPrivateFieldTypes_ valueShortWrapper(Short valueShortWrapper) {
     onMutation();
     super.setValueShortWrapper(valueShortWrapper);
@@ -145,19 +122,6 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return super.getValueShortWrapper();
   }
 
-<<<<<<< e7b3eb19affa21347704121137fa908199b6a83a
-  public ModelWithAllPrivateFieldTypes_ valueDouble(double valueDouble) {
-    onMutation();
-    super.setValueDouble(valueDouble);
-    return this;
-  }
-
-  public double valueDouble() {
-    return super.getValueDouble();
-  }
-
-=======
->>>>>>> Use view annotations to completely generate models
   public ModelWithAllPrivateFieldTypes_ valueChar(char valueChar) {
     onMutation();
     super.setValueChar(valueChar);
@@ -168,43 +132,14 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return super.getValueChar();
   }
 
-<<<<<<< e7b3eb19affa21347704121137fa908199b6a83a
-  public ModelWithAllPrivateFieldTypes_ valueInt(int valueInt) {
-    onMutation();
-    super.setValueInt(valueInt);
-    return this;
-  }
-
-  public int valueInt() {
-    return super.getValueInt();
-  }
-
-  public ModelWithAllPrivateFieldTypes_ valueDoubleWrapper(Double valueDoubleWrapper) {
-    onMutation();
-    super.setValueDoubleWrapper(valueDoubleWrapper);
-    return this;
-  }
-
-  public Double valueDoubleWrapper() {
-    return super.getValueDoubleWrapper();
-  }
-
-  public ModelWithAllPrivateFieldTypes_ valueFloatWrapper(Float valueFloatWrapper) {
-=======
   public ModelWithAllPrivateFieldTypes_ valueCharacter(Character valueCharacter) {
->>>>>>> Use view annotations to completely generate models
     onMutation();
     super.setValueCharacter(valueCharacter);
     return this;
   }
 
-<<<<<<< e7b3eb19affa21347704121137fa908199b6a83a
-  public Float valueFloatWrapper() {
-    return super.getValueFloatWrapper();
-=======
   public Character valueCharacter() {
-    return getValueCharacter();
->>>>>>> Use view annotations to completely generate models
+    return super.getValueCharacter();
   }
 
   public ModelWithAllPrivateFieldTypes_ valuebByte(byte valuebByte) {
@@ -213,13 +148,8 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return this;
   }
 
-<<<<<<< e7b3eb19affa21347704121137fa908199b6a83a
-  public Boolean valueBooleanWrapper() {
-    return super.getValueBooleanWrapper();
-=======
   public byte valuebByte() {
-    return getValuebByte();
->>>>>>> Use view annotations to completely generate models
+    return super.getValuebByte();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueByteWrapper(Byte valueByteWrapper) {
@@ -238,13 +168,8 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return this;
   }
 
-<<<<<<< e7b3eb19affa21347704121137fa908199b6a83a
-  public byte valuebByte() {
-    return super.getValuebByte();
-=======
   public long valueLong() {
-    return getValueLong();
->>>>>>> Use view annotations to completely generate models
+    return super.getValueLong();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueLongWrapper(Long valueLongWrapper) {
@@ -263,13 +188,8 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return this;
   }
 
-<<<<<<< e7b3eb19affa21347704121137fa908199b6a83a
-  public Character valueCharacter() {
-    return super.getValueCharacter();
-=======
   public double valueDouble() {
-    return getValueDouble();
->>>>>>> Use view annotations to completely generate models
+    return super.getValueDouble();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueDoubleWrapper(Double valueDoubleWrapper) {
@@ -278,13 +198,8 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return this;
   }
 
-<<<<<<< e7b3eb19affa21347704121137fa908199b6a83a
-  public String valueString() {
-    return super.getValueString();
-=======
   public Double valueDoubleWrapper() {
-    return getValueDoubleWrapper();
->>>>>>> Use view annotations to completely generate models
+    return super.getValueDoubleWrapper();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueFloat(float valueFloat) {
@@ -304,7 +219,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public Float valueFloatWrapper() {
-    return getValueFloatWrapper();
+    return super.getValueFloatWrapper();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueBoolean(boolean valueBoolean) {
@@ -324,7 +239,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public Boolean valueBooleanWrapper() {
-    return getValueBooleanWrapper();
+    return super.getValueBooleanWrapper();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueIntArray(int[] valueIntArray) {
@@ -334,7 +249,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public int[] valueIntArray() {
-    return getValueIntArray();
+    return super.getValueIntArray();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueObjectArray(Object[] valueObjectArray) {
@@ -354,7 +269,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   public String valueString() {
-    return getValueString();
+    return super.getValueString();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueObject(Object valueObject) {
@@ -373,13 +288,8 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return this;
   }
 
-<<<<<<< e7b3eb19affa21347704121137fa908199b6a83a
-  public int[] valueIntArray() {
-    return super.getValueIntArray();
-=======
   public List<String> valueList() {
-    return getValueList();
->>>>>>> Use view annotations to completely generate models
+    return super.getValueList();
   }
 
   @Override
