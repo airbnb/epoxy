@@ -13,6 +13,7 @@ import java.util.Set;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Parameterizable;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
@@ -53,7 +54,7 @@ class ModelViewInfo extends GeneratedModelInfo {
     generatedClassName = buildGeneratedModelName(viewElement, elementUtils);
     // We don't have any type parameters on our generated model
     this.parametrizedClassName = generatedClassName;
-    shouldGenerateModel = true;
+    shouldGenerateModel = !viewElement.getModifiers().contains(Modifier.ABSTRACT);
 
     collectMethodsReturningClassType(superClassElement, typeUtils);
 

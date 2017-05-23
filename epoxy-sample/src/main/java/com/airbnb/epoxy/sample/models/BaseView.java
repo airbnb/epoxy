@@ -8,7 +8,7 @@ import com.airbnb.epoxy.ModelView;
 import com.airbnb.epoxy.R;
 
 @ModelView(defaultLayout = R.layout.model_header)
-public class BaseView extends AppCompatTextView {
+public abstract class BaseView extends AppCompatTextView {
 
   public BaseView(Context context) {
     super(context);

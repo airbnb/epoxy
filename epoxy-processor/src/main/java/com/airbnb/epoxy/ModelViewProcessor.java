@@ -37,7 +37,6 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
-// TODO: (eli_hart 5/22/17) don't built model for abstract views
 // TODO: (eli_hart 5/23/17) support inheriting attributes from model base class
 // TODO: (eli_hart 5/14/17) Support multiple layouts for different styles?
 // TODO: (eli_hart 5/15/17) how to support divider type setting?
