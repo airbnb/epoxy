@@ -37,7 +37,9 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
-// TODO: (eli_hart 5/23/17) handle case of 0 StringRes value, both for required and non required
+// // TODO: (eli_hart 5/23/17) generate string res overload with arguments
+// TODO: (eli_hart 5/23/17) generate string res overload for quantity string
+// TODO: (eli_hart 5/23/17) how to support overriding default values in subclasses?
 // TODO: (eli_hart 5/14/17) Support multiple layouts for different styles?
 // TODO: (eli_hart 5/15/17) how to support divider type setting?
 class ModelViewProcessor {

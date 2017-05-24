@@ -42,6 +42,7 @@ import static com.airbnb.epoxy.Utils.implementsMethod;
 import static com.airbnb.epoxy.Utils.isDataBindingModel;
 import static com.airbnb.epoxy.Utils.isEpoxyModel;
 import static com.airbnb.epoxy.Utils.isEpoxyModelWithHolder;
+import static com.airbnb.epoxy.Utils.notNull;
 import static com.squareup.javapoet.TypeName.BOOLEAN;
 import static com.squareup.javapoet.TypeName.BYTE;
 import static com.squareup.javapoet.TypeName.CHAR;
@@ -197,6 +198,10 @@ class GeneratedModelWriter {
             PRIVATE
         )
             .addAnnotations(attributeInfo.getSetterAnnotations());
+
+        if (shouldUseBitSet(classInfo)) {
+          builder.addJavadoc("Bitset index: $L", attributeIndex(classInfo, attributeInfo));
+        }
 
         if (attributeInfo.defaultValue != null) {
           builder.initializer(attributeInfo.defaultValue);
@@ -1031,7 +1036,12 @@ class GeneratedModelWriter {
     }
 
     if (attribute.isOverload()) {
-      for (AttributeInfo overload : attribute.overloadedAttributesInSameGroup) {
+      for (AttributeInfo overload : attribute.getAttributeGroup().attributes) {
+        if (overload == attribute) {
+          // Need to clear the other attributes in the group
+          continue;
+        }
+
         if (shouldUseBitSet(helperClass)) {
           builder.addStatement("$L.clear($L)", ATTRIBUTES_BITSET_FIELD_NAME,
               attributeIndex(helperClass, overload));
@@ -1056,6 +1066,29 @@ class GeneratedModelWriter {
     // set it
     if (!attribute.isPrivate && attribute.hasSuperSetterMethod()) {
       builder.addStatement("super.$L($L)", attributeName, paramName);
+    }
+
+    // If a string res is set then make sure it isn't 0
+    if ((attribute instanceof ViewAttributeStringResOverload)) {
+      builder.beginControlFlow("if ($L == 0)", paramName);
+
+      AttributeGroup group = notNull(attribute.getAttributeGroup());
+      if (group.isRequired) {
+        builder.addStatement("\tthrow new $T(\"A string resource value of 0 was set for $L\")",
+            IllegalArgumentException.class, attribute.generatedSetterName());
+      } else if (shouldUseBitSet(helperClass)) {
+        // If 0 was set then we assume they want to clear and use the default.
+        // We simply clear the bitset value so the model thinks this attribute was never set and
+        // it will use the default instead
+        builder
+            .addComment(
+                "Since this is an optional attribute we'll use the default value instead by not "
+                    + "marking this as attribute as set.")
+            .addStatement("$L.clear($L)", ATTRIBUTES_BITSET_FIELD_NAME,
+                attributeIndex(helperClass, attribute));
+      }
+
+      builder.endControlFlow();
     }
 
     return builder

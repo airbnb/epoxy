@@ -45,14 +45,13 @@ class ViewAttributeInfo extends AttributeInfo {
     ModelProp annotation = setterMethod.getAnnotation(ModelProp.class);
     groupKey = annotation.group();
 
-    defaultValue = getDefaultValue(annotation, errorLogger, types);
-
     VariableElement paramElement = setterMethod.getParameters().get(0);
     parseAnnotations(paramElement, types);
 
-    setJavaDocString(elements.getDocComment(setterMethod));
-
+    defaultValue = getDefaultValue(annotation, errorLogger, types);
     assignNullability(paramElement);
+
+    setJavaDocString(elements.getDocComment(setterMethod));
 
     Set<Option> options = new HashSet<>(Arrays.asList(annotation.options()));
     validatePropOptions(errorLogger, options, types, elements);
@@ -231,10 +230,10 @@ class ViewAttributeInfo extends AttributeInfo {
       builder.add("<i>Required.</i>");
     } else {
       builder.add("<i>Optional</i>: ");
-      if (defaultValue == null) {
+      if (constantFieldNameForDefaultValue == null) {
         builder.add("Default value is null");
       } else {
-        builder.add("Default value is {@value $T#$L}", ClassName.get(modelInfo.viewElement),
+        builder.add("Default value is <b>{@value $T#$L}</b>", ClassName.get(modelInfo.viewElement),
             constantFieldNameForDefaultValue);
       }
     }

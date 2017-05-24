@@ -246,9 +246,6 @@ abstract class GeneratedModelInfo {
     AttributeInfo nullableAttribute = null;
     boolean isRequired = true;
     for (AttributeInfo attribute : attributes) {
-      List<AttributeInfo> otherAttributes = new ArrayList<>(attributes);
-      otherAttributes.remove(attribute);
-      attribute.setAttributesInSameGroup(otherAttributes);
       isRequired &= attribute.isRequired();
 
       if (attribute.isNullable != null && attribute.isNullable) {
@@ -265,15 +262,17 @@ abstract class GeneratedModelInfo {
       }
     }
 
-    CodeBlock codeToSetDefaultValue = null;
     if (defaultAttribute == null && nullableAttribute != null) {
       defaultAttribute = nullableAttribute;
     }
 
     // TODO: (eli_hart 5/17/17) clean up null/default code architecture
 
-    attributeGroups
-        .add(new AttributeGroup(groupName, attributes, isRequired, defaultAttribute));
+    AttributeGroup group = new AttributeGroup(groupName, attributes, isRequired, defaultAttribute);
+    attributeGroups.add(group);
+    for (AttributeInfo attribute : attributes) {
+      attribute.setAttributeGroup(group);
+    }
   }
 
   static class AttributeGroup {

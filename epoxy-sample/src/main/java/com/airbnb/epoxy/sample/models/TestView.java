@@ -29,7 +29,7 @@ public class TestView extends BaseView {
   }
 
   /** Sets a subtitle. */
-  @ModelProp
+  @ModelProp(options = Option.GenerateStringOverloads)
   public void setSubtitle(@Nullable String text) {
   }
 

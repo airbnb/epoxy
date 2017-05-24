@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import com.airbnb.epoxy.GeneratedModelInfo.AttributeGroup;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;
@@ -31,7 +32,7 @@ abstract class AttributeInfo {
 
   /** If this attribute is in an attribute group this is the name of the group. */
   String groupKey;
-  List<AttributeInfo> overloadedAttributesInSameGroup;
+  private AttributeGroup attributeGroup;
 
   /**
    * Track whether there is a setter method for this attribute on a super class so that we can call
@@ -188,19 +189,19 @@ abstract class AttributeInfo {
     return getFieldName() + GeneratedModelWriter.GENERATED_FIELD_SUFFIX;
   }
 
-  String getModelName() {
-    return modelName;
-  }
-
   String getPackageName() {
     return modelPackageName;
   }
 
-  void setAttributesInSameGroup(List<AttributeInfo> attributes) {
-    overloadedAttributesInSameGroup = attributes;
+  void setAttributeGroup(AttributeGroup group) {
+    attributeGroup = group;
+  }
+
+  public AttributeGroup getAttributeGroup() {
+    return attributeGroup;
   }
 
   boolean isOverload() {
-    return overloadedAttributesInSameGroup != null && !overloadedAttributesInSameGroup.isEmpty();
+    return attributeGroup != null && attributeGroup.attributes.size() > 1;
   }
 }
