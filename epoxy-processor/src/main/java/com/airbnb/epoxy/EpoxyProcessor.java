@@ -153,7 +153,7 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     generatedModels.addAll(lithoSpecProcessor.processSpecs(roundEnv));
 
-    generatedModels.addAll(modelViewProcessor.process(roundEnv));
+    generatedModels.addAll(modelViewProcessor.process(roundEnv, generatedModels));
 
     controllerProcessor.process(roundEnv);
 

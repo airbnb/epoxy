@@ -37,7 +37,7 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
-// TODO: (eli_hart 5/23/17) support inheriting attributes from model base class
+// TODO: (eli_hart 5/23/17) handle case of 0 StringRes value, both for required and non required
 // TODO: (eli_hart 5/14/17) Support multiple layouts for different styles?
 // TODO: (eli_hart 5/15/17) how to support divider type setting?
 class ModelViewProcessor {
@@ -58,7 +58,8 @@ class ModelViewProcessor {
     this.modelWriter = modelWriter;
   }
 
-  Collection<? extends GeneratedModelInfo> process(RoundEnvironment roundEnv) {
+  Collection<? extends GeneratedModelInfo> process(RoundEnvironment roundEnv,
+      List<GeneratedModelInfo> otherGeneratedModels) {
     modelClassMap.clear();
 
     processViewAnnotations(roundEnv);
@@ -66,11 +67,16 @@ class ModelViewProcessor {
     processSetterAnnotations(roundEnv);
     processResetAnnotations(roundEnv);
 
-    updateViewsForInheritedAnnotations();
+    updateViewsForInheritedViewAnnotations();
 
     // Group overloads after inheriting methods from super classes so those can be included in
-    // the groups as well
+    // the groups as well.
     groupOverloads();
+
+    // Our code generation assumes that all attributes in a group are view attributes (and not
+    // attributes inherited from a base model class), so this should be done after grouping
+    // attributes, and these attributes should not be grouped.
+    updatesViewsForInheritedBaseModelAttributes(otherGeneratedModels);
 
     writeJava();
 
@@ -242,7 +248,7 @@ class ModelViewProcessor {
   }
 
   /** Include props and reset methods from super class views. */
-  private void updateViewsForInheritedAnnotations() {
+  private void updateViewsForInheritedViewAnnotations() {
     for (ModelViewInfo view : modelClassMap.values()) {
       Set<ModelViewInfo> otherViews = new HashSet<>(modelClassMap.values());
       otherViews.remove(view);
@@ -273,6 +279,24 @@ class ModelViewProcessor {
             // different annotation parameter settings.
             view.addAttributeIfNotExists(otherAttribute);
           }
+        }
+      }
+    }
+  }
+
+  /**
+   * If a view defines a base model that it's generated model should extend we need to check if that
+   * base model has {@link com.airbnb.epoxy.EpoxyAttribute} fields and include those in our model if
+   * so.
+   */
+  private void updatesViewsForInheritedBaseModelAttributes(
+      List<GeneratedModelInfo> otherGeneratedModels) {
+
+    for (ModelViewInfo modelViewInfo : modelClassMap.values()) {
+      for (GeneratedModelInfo otherGeneratedModel : otherGeneratedModels) {
+        if (isSubtype(modelViewInfo.superClassElement, otherGeneratedModel.superClassElement,
+            types)) {
+          modelViewInfo.addAttributes(otherGeneratedModel.attributeInfo);
         }
       }
     }
@@ -411,8 +435,7 @@ class ModelViewProcessor {
 
           @Override
           void addToUnbindMethod(MethodSpec.Builder unbindBuilder, String unbindParamName) {
-            for (AttributeInfo attributeInfo : modelInfo.attributeInfo) {
-              ViewAttributeInfo viewAttribute = (ViewAttributeInfo) attributeInfo;
+            for (ViewAttributeInfo viewAttribute : modelInfo.getViewAttributes()) {
               if (viewAttribute.resetWithNull) {
                 unbindBuilder.addStatement("$L.$L(null)", unbindParamName,
                     viewAttribute.viewSetterMethodName);

@@ -45,11 +45,10 @@ class ModelViewInfo extends GeneratedModelInfo {
     this.elementUtils = elementUtils;
     this.errorLogger = errorLogger;
     this.configManager = configManager;
-    superClassElement =
-        (TypeElement) Utils.getElementByName(ClassNames.EPOXY_MODEL_UNTYPED,
-            elementUtils, typeUtils);
 
-    this.superClassName = getSuperClass();
+    superClassElement = lookUpSuperClassElement();
+    this.superClassName = ParameterizedTypeName
+        .get(ClassName.get(superClassElement), TypeName.get(viewElement.asType()));
 
     generatedClassName = buildGeneratedModelName(viewElement, elementUtils);
     // We don't have any type parameters on our generated model
@@ -65,9 +64,9 @@ class ModelViewInfo extends GeneratedModelInfo {
     fullSpanSize = viewAnnotation.fullSpan();
   }
 
-  private TypeName getSuperClass() {
-    ParameterizedTypeName defaultSuper = ParameterizedTypeName
-        .get(ClassNames.EPOXY_MODEL_UNTYPED, TypeName.get(viewElement.asType()));
+  private TypeElement lookUpSuperClassElement() {
+    TypeElement defaultSuper = (TypeElement) Utils.getElementByName(ClassNames.EPOXY_MODEL_UNTYPED,
+        elementUtils, typeUtils);
 
     // Unfortunately we have to do this weird try/catch to get the class type
     TypeMirror classToExtend = null;
@@ -96,9 +95,7 @@ class ModelViewInfo extends GeneratedModelInfo {
       return defaultSuper;
     }
 
-    TypeElement classElement = (TypeElement) typeUtils.asElement(classToExtend);
-    return ParameterizedTypeName
-        .get(ClassName.get(classElement), TypeName.get(viewElement.asType()));
+    return (TypeElement) typeUtils.asElement(classToExtend);
   }
 
   /** The super class that our generated model extends from must have View as its only type. */
@@ -169,5 +166,16 @@ class ModelViewInfo extends GeneratedModelInfo {
 
   List<String> getResetMethodNames() {
     return resetMethodNames;
+  }
+
+  List<ViewAttributeInfo> getViewAttributes() {
+    List<ViewAttributeInfo> result = new ArrayList<>(attributeInfo.size());
+    for (AttributeInfo info : attributeInfo) {
+      if (info instanceof ViewAttributeInfo) {
+        result.add((ViewAttributeInfo) info);
+      }
+    }
+
+    return result;
   }
 }

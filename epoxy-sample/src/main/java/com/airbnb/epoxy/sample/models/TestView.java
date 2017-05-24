@@ -11,7 +11,7 @@ import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.ResetView;
 
 // TODO: (eli_hart 5/22/17) delete this before public release
-@ModelView(defaultLayout = R.layout.model_header)
+@ModelView(defaultLayout = R.layout.model_header, baseModelClass = BaseTestModel.class)
 public class TestView extends BaseView {
   static final String DEFAULT_TITLE = "hello world!";
 
@@ -23,12 +23,12 @@ public class TestView extends BaseView {
   public void setTitle(CharSequence tex) {
   }
 
-  /** Sets a description. */
+  /** Sets a description */
   @ModelProp(defaultValue = "DEFAULT_TITLE")
   public void setDescription(String text) {
   }
 
-  /** Sets a subtitle */
+  /** Sets a subtitle. */
   @ModelProp
   public void setSubtitle(@Nullable String text) {
   }

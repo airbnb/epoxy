@@ -112,7 +112,8 @@ class ConfigManager {
       ClassName rLayoutClassName =
           ClassName.get((TypeElement) typeUtils.asElement(rLayoutClassType));
 
-      if (!rLayoutClassName.reflectionName().endsWith(".R$layout")) {
+      if (!rLayoutClassName.reflectionName().endsWith(".R$layout")
+          || !rLayoutClassName.reflectionName().endsWith(".R2$layout")) {
         errors.add(buildEpoxyException(
             "Layout class in %s must be of the form 'R.layout' (package: %s)",
             PackageModelViewLayoutNaming.class.getSimpleName(), packageName));
