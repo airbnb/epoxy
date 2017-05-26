@@ -28,7 +28,7 @@ public class TestView extends BaseView {
   public void setDescription(String text) {
   }
 
-  /** Sets a subtitle. */
+  /** Sets a subtitle */
   @ModelProp(options = Option.GenerateStringOverloads)
   public void setSubtitle(@Nullable String text) {
   }
@@ -39,6 +39,11 @@ public class TestView extends BaseView {
 
   @ModelProp(group = "image")
   public void setImage(@DrawableRes int imageRes) {
+  }
+
+  @ModelProp(options = Option.DoNotHash)
+  public void setListener(@Nullable OnClickListener listener) {
+
   }
 
   @ResetView

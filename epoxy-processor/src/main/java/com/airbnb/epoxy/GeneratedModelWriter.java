@@ -771,6 +771,11 @@ class GeneratedModelWriter {
         .addParameter(param)
         .addAnnotations(attribute.getSetterAnnotations());
 
+    if (shouldUseBitSet(classInfo)) {
+      builder.addStatement("$L.set($L)", ATTRIBUTES_BITSET_FIELD_NAME,
+          attributeIndex(classInfo, attribute));
+    }
+
     ClassName viewType = getClassName("android.view.View");
     ClassName clickWrapperType = getClassName(WRAPPED_LISTENER_TYPE);
     ClassName modelClickListenerType = getClassName(MODEL_CLICK_LISTENER_TYPE);
