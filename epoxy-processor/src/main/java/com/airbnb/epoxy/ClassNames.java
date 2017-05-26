@@ -23,4 +23,6 @@ final class ClassNames {
   static final ClassName EPOXY_DATA_BINDING_HOLDER = get(PKG_EPOXY,
       "DataBindingEpoxyModel.DataBindingHolder");
   static final ClassName EPOXY_STRING_RES_ATTRIBUTE = get(PKG_EPOXY, "StringResAttribute");
+  static final ClassName EPOXY_QUANTITY_STRING_RES_ATTRIBUTE =
+      get(PKG_EPOXY, "QuantityStringResAttribute");
 }

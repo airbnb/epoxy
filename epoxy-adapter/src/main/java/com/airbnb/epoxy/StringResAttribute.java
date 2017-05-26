@@ -9,7 +9,7 @@ public class StringResAttribute {
   @StringRes private final int id;
   private final Object[] formatArgs;
 
-  public StringResAttribute(int id, Object[] formatArgs) {
+  public StringResAttribute(@StringRes int id, Object[] formatArgs) {
     if (id <= 0) {
       throw new IllegalArgumentException("Id must be greater than 0");
     }

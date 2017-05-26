@@ -12,7 +12,7 @@ public class TestNullStringOverloadsView extends View {
   }
 
   @ModelProp(options = ModelProp.Option.GenerateStringOverloads)
-  public void setTitle(@Nullable String title) {
+  public void setTitle(@Nullable CharSequence title) {
 
   }
 }

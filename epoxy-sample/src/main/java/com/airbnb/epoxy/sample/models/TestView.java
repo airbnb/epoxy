@@ -20,21 +20,21 @@ public class TestView extends BaseView {
   }
 
   @ModelProp(options = Option.GenerateStringOverloads)
-  public void setTitle(CharSequence tex) {
+  public void setTitle(CharSequence text) {
   }
 
-  /** Sets a description. */
+  /** Sets a description */
   @ModelProp(defaultValue = "DEFAULT_TITLE")
-  public void setDescription(String text) {
+  public void setDescription(CharSequence text) {
   }
 
   /** Sets a subtitle */
   @ModelProp(options = Option.GenerateStringOverloads)
-  public void setSubtitle(@Nullable String text) {
+  public void setSubtitle(@Nullable CharSequence text) {
   }
 
   @ModelProp(group = "image", options = Option.ResetWithNull)
-  public void setImageUrl(@Nullable String url) {
+  public void setImageUrl(@Nullable CharSequence url) {
   }
 
   @ModelProp(group = "image")

@@ -42,9 +42,9 @@ public @interface ModelProp {
      */
     IgnoreRequireHashCode,
     /**
-     * Setters with a type of String can add this option to have {@link
-     * android.support.annotation.StringRes} overload methods generated on the model, so users can
-     * set the string via a resource.
+     * Setters with a type of {@link CharSequence} can add this option to have {@link
+     * android.support.annotation.StringRes} and {@link android.support.annotation.PluralsRes}
+     * overload methods generated on the model, so users can set the string via a resource.
      */
     GenerateStringOverloads,
     /**

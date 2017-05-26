@@ -140,6 +140,7 @@ class ModelViewInfo extends GeneratedModelInfo {
     if (options.contains(Option.GenerateStringOverloads)) {
       addAttribute(new ViewAttributeStringResOverload(this, attributeInfo, types));
       addAttribute(new ViewAttributeStringResWithArgumentsOverload(this, attributeInfo, elements));
+      addAttribute(new QuantityStringViewAttributeOverload(this, attributeInfo, elements));
     }
   }
 

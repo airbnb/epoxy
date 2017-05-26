@@ -154,9 +154,9 @@ class ViewAttributeInfo extends AttributeInfo {
     }
 
     if (options.contains(Option.GenerateStringOverloads)
-        && !types.isAssignable(Utils.getTypeMirror(String.class, elements), typeMirror)) {
+        && !types.isAssignable(Utils.getTypeMirror(CharSequence.class, elements), typeMirror)) {
       errorLogger
-          .logError("Setters with %s option must have a type that is assignable to String. (%s#%s)",
+          .logError("Setters with %s option must be a CharSequence. (%s#%s)",
               Option.GenerateStringOverloads, modelName, viewSetterMethodName);
     }
 

@@ -11,7 +11,7 @@ public class TestStringOverloadsView extends View {
   }
 
   @ModelProp(options = ModelProp.Option.GenerateStringOverloads)
-  public void setTitle(String title) {
+  public void setTitle(CharSequence title) {
 
   }
 }

@@ -38,8 +38,6 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
 // TODO: (eli_hart 5/26/17) Default model base class
-// // TODO: (eli_hart 5/23/17) generate string res overload with arguments
-// TODO: (eli_hart 5/23/17) generate string res overload for quantity string
 // TODO: (eli_hart 5/23/17) how to support overriding default values in subclasses?
 // TODO: (eli_hart 5/14/17) Support multiple layouts for different styles?
 // TODO: (eli_hart 5/15/17) how to support divider type setting?
@@ -477,8 +475,9 @@ class ModelViewProcessor {
     String fieldName = viewAttribute.getFieldName();
 
     if (viewAttribute instanceof ViewAttributeStringResOverload) {
-      return boundObjectParam.name + ".getContext().getString(" + fieldName + ")";
-    } else if (viewAttribute instanceof ViewAttributeStringResWithArgumentsOverload) {
+      return boundObjectParam.name + ".getContext().getText(" + fieldName + ")";
+    } else if (viewAttribute instanceof ViewAttributeStringResWithArgumentsOverload
+        || viewAttribute instanceof QuantityStringViewAttributeOverload) {
       return fieldName + ".toString(" + boundObjectParam.name + ".getContext())";
     } else {
       return fieldName;
