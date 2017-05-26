@@ -1087,8 +1087,8 @@ class GeneratedModelWriter {
         // it will use the default instead
         builder
             .addComment(
-                "Since this is an optional attribute we'll use the default value instead by not "
-                    + "marking this as attribute as set.")
+                "Since this is an optional attribute we'll use the default value instead by "
+                    + "marking this attribute as not set.")
             .addStatement("$L.clear($L)", ATTRIBUTES_BITSET_FIELD_NAME,
                 attributeIndex(helperClass, attribute));
       }
