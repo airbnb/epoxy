@@ -13,7 +13,7 @@ import java.util.BitSet;
 /**
  * Generated file. Do not modify! */
 public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullStringOverloadsView> implements GeneratedModel<TestNullStringOverloadsView> {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(2);
+  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(3);
 
   private OnModelBoundListener<TestNullStringOverloadsViewModel_, TestNullStringOverloadsView> onModelBoundListener_epoxyGeneratedModel;
 
@@ -28,6 +28,10 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
    * Bitset index: 1 */
   @StringRes
   private int title_Int;
+
+  /**
+   * Bitset index: 2 */
+  private StringResAttribute title_StringResAttribute;
 
   @Override
   public void addTo(EpoxyController controller) {
@@ -49,6 +53,9 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
     }
     else if (assignedAttributes_epoxyGeneratedModel.get(1)) {
       object.setTitle(object.getContext().getString(title_Int));
+    }
+    else if (assignedAttributes_epoxyGeneratedModel.get(2)) {
+      object.setTitle(title_StringResAttribute.toString(object.getContext()));
     }
     else {
       this.title_String = null;
@@ -74,6 +81,11 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
           object.setTitle(object.getContext().getString(title_Int));
         }
       }
+       else if (assignedAttributes_epoxyGeneratedModel.get(2)) {
+        if (title_StringResAttribute != null ? !title_StringResAttribute.equals(that.title_StringResAttribute) : that.title_StringResAttribute != null) {
+          object.setTitle(title_StringResAttribute.toString(object.getContext()));
+        }
+      }
     }
     else {
       if (assignedAttributes_epoxyGeneratedModel.get(0) && !that.assignedAttributes_epoxyGeneratedModel.get(0)) {
@@ -81,6 +93,9 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
       }
        else if (assignedAttributes_epoxyGeneratedModel.get(1) && !that.assignedAttributes_epoxyGeneratedModel.get(1)) {
         object.setTitle(object.getContext().getString(title_Int));
+      }
+       else if (assignedAttributes_epoxyGeneratedModel.get(2) && !that.assignedAttributes_epoxyGeneratedModel.get(2)) {
+        object.setTitle(title_StringResAttribute.toString(object.getContext()));
       }
       else {
         object.setTitle(null);
@@ -139,6 +154,8 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
     assignedAttributes_epoxyGeneratedModel.set(0);
     assignedAttributes_epoxyGeneratedModel.clear(1);
     this.title_Int = 0;
+    assignedAttributes_epoxyGeneratedModel.clear(2);
+    this.title_StringResAttribute = null;
     onMutation();
     this.title_String = title;
     return this;
@@ -158,10 +175,12 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
     assignedAttributes_epoxyGeneratedModel.set(1);
     assignedAttributes_epoxyGeneratedModel.clear(0);
     this.title_String = null;
+    assignedAttributes_epoxyGeneratedModel.clear(2);
+    this.title_StringResAttribute = null;
     onMutation();
     this.title_Int = title;
     if (title == 0) {
-      // Since this is an optional attribute we'll use the default value instead by not marking this as attribute as set.
+      // Since this is an optional attribute we'll use the default value instead by marking this attribute as not set.
       assignedAttributes_epoxyGeneratedModel.clear(1);
     }
     return this;
@@ -170,6 +189,26 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   @StringRes
   public int titleInt() {
     return title_Int;
+  }
+
+  /**
+   * <i>Optional</i>: Default value is null
+   *
+   * @see TestNullStringOverloadsView#setTitle(String)
+   */
+  public TestNullStringOverloadsViewModel_ title(@StringRes int stringRes, Object... formatArgs) {
+    assignedAttributes_epoxyGeneratedModel.set(2);
+    assignedAttributes_epoxyGeneratedModel.clear(0);
+    this.title_String = null;
+    assignedAttributes_epoxyGeneratedModel.clear(1);
+    this.title_Int = 0;
+    onMutation();
+    this.title_StringResAttribute = new StringResAttribute(stringRes, formatArgs);
+    return this;
+  }
+
+  public StringResAttribute titleStringResAttribute() {
+    return title_StringResAttribute;
   }
 
   @Override
@@ -245,6 +284,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
     assignedAttributes_epoxyGeneratedModel.clear();
     this.title_String = null;
     this.title_Int = 0;
+    this.title_StringResAttribute = null;
     super.reset();
     return this;
   }
@@ -273,6 +313,9 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
     if (title_Int != that.title_Int) {
       return false;
     }
+    if (title_StringResAttribute != null ? !title_StringResAttribute.equals(that.title_StringResAttribute) : that.title_StringResAttribute != null) {
+      return false;
+    }
     return true;
   }
 
@@ -283,6 +326,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (title_String != null ? title_String.hashCode() : 0);
     result = 31 * result + title_Int;
+    result = 31 * result + (title_StringResAttribute != null ? title_StringResAttribute.hashCode() : 0);
     return result;
   }
 
@@ -291,6 +335,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
     return "TestNullStringOverloadsViewModel_{" +
         "title_String=" + title_String +
         ", title_Int=" + title_Int +
+        ", title_StringResAttribute=" + title_StringResAttribute +
         "}" + super.toString();
   }
 

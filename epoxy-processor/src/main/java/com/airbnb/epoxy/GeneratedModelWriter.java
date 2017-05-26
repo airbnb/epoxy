@@ -1011,21 +1011,29 @@ class GeneratedModelWriter {
         .build();
   }
 
-  private MethodSpec generateSetter(GeneratedModelInfo helperClass, AttributeInfo attribute) {
+  private MethodSpec generateSetter(GeneratedModelInfo modelInfo, AttributeInfo attribute) {
     String attributeName = attribute.getFieldName();
     String paramName = attribute.generatedSetterName();
-    Builder builder = MethodSpec.methodBuilder(paramName)
+    Builder builder = MethodSpec.methodBuilder(attribute.generatedSetterName())
         .addModifiers(PUBLIC)
-        .returns(helperClass.getParameterizedGeneratedName())
-        .addParameter(
-            ParameterSpec.builder(attribute.getTypeName(), paramName)
-                .addAnnotations(attribute.getSetterAnnotations()).build());
+        .returns(modelInfo.getParameterizedGeneratedName());
+
+    boolean hasMultipleParams = attribute instanceof MultiParamAttribute;
+    if (hasMultipleParams) {
+      builder.addParameters(((MultiParamAttribute) attribute).getParams());
+      builder.varargs(((MultiParamAttribute) attribute).varargs());
+    } else {
+      builder.addParameter(
+          ParameterSpec.builder(attribute.getTypeName(), paramName)
+              .addAnnotations(attribute.getSetterAnnotations()).build());
+    }
 
     if (attribute.javaDoc != null) {
       builder.addJavadoc(attribute.javaDoc);
     }
 
-    if (configManager.shouldValidateModelUsage()
+    if (!hasMultipleParams
+        && configManager.shouldValidateModelUsage()
         && attribute.isNullable != null
         && !attribute.isNullable) {
 
@@ -1035,9 +1043,9 @@ class GeneratedModelWriter {
           .endControlFlow();
     }
 
-    if (shouldUseBitSet(helperClass)) {
+    if (shouldUseBitSet(modelInfo)) {
       builder.addStatement("$L.set($L)", ATTRIBUTES_BITSET_FIELD_NAME,
-          attributeIndex(helperClass, attribute));
+          attributeIndex(modelInfo, attribute));
     }
 
     if (attribute.isOverload()) {
@@ -1047,9 +1055,9 @@ class GeneratedModelWriter {
           continue;
         }
 
-        if (shouldUseBitSet(helperClass)) {
+        if (shouldUseBitSet(modelInfo)) {
           builder.addStatement("$L.clear($L)", ATTRIBUTES_BITSET_FIELD_NAME,
-              attributeIndex(helperClass, overload));
+              attributeIndex(modelInfo, overload));
         }
 
         builder.addStatement(overload.setterCode(),
@@ -1059,7 +1067,9 @@ class GeneratedModelWriter {
     }
 
     addOnMutationCall(builder)
-        .addStatement(attribute.setterCode(), paramName);
+        .addStatement(attribute.setterCode(),
+            hasMultipleParams ? ((MultiParamAttribute) attribute).getValueToSetOnAttribute()
+                : paramName);
 
     if (attribute.isViewClickListener()) {
       // Null out the model click listener since this view click listener should replace it
@@ -1070,35 +1080,45 @@ class GeneratedModelWriter {
     // No need to do this if the attribute is private since we already called the super setter to
     // set it
     if (!attribute.isPrivate && attribute.hasSuperSetterMethod()) {
+      if (hasMultipleParams) {
+        errorLogger
+            .logError("Multi params not supported for methods that call super (%s)", attribute);
+      }
+
       builder.addStatement("super.$L($L)", attributeName, paramName);
     }
 
     // If a string res is set then make sure it isn't 0
     if ((attribute instanceof ViewAttributeStringResOverload)) {
-      builder.beginControlFlow("if ($L == 0)", paramName);
-
-      AttributeGroup group = notNull(attribute.getAttributeGroup());
-      if (group.isRequired) {
-        builder.addStatement("\tthrow new $T(\"A string resource value of 0 was set for $L\")",
-            IllegalArgumentException.class, attribute.generatedSetterName());
-      } else if (shouldUseBitSet(helperClass)) {
-        // If 0 was set then we assume they want to clear and use the default.
-        // We simply clear the bitset value so the model thinks this attribute was never set and
-        // it will use the default instead
-        builder
-            .addComment(
-                "Since this is an optional attribute we'll use the default value instead by "
-                    + "marking this attribute as not set.")
-            .addStatement("$L.clear($L)", ATTRIBUTES_BITSET_FIELD_NAME,
-                attributeIndex(helperClass, attribute));
-      }
-
-      builder.endControlFlow();
+      addStringResCheckForInvalidId(modelInfo, attribute, paramName, builder);
     }
 
     return builder
         .addStatement("return this")
         .build();
+  }
+
+  private void addStringResCheckForInvalidId(GeneratedModelInfo modelInfo, AttributeInfo attribute,
+      String stringResParamName, Builder builder) {
+    builder.beginControlFlow("if ($L == 0)", stringResParamName);
+
+    AttributeGroup group = notNull(attribute.getAttributeGroup());
+    if (group.isRequired) {
+      builder.addStatement("\tthrow new $T(\"A string resource value of 0 was set for $L\")",
+          IllegalArgumentException.class, attribute);
+    } else if (shouldUseBitSet(modelInfo)) {
+      // If 0 was set then we assume they want to clear and use the default.
+      // We simply clear the bitset value so the model thinks this attribute was never set and
+      // it will use the default instead
+      builder
+          .addComment(
+              "Since this is an optional attribute we'll use the default value instead by "
+                  + "marking this attribute as not set.")
+          .addStatement("$L.clear($L)", ATTRIBUTES_BITSET_FIELD_NAME,
+              attributeIndex(modelInfo, attribute));
+    }
+
+    builder.endControlFlow();
   }
 
   private MethodSpec generateReset(GeneratedModelInfo helperClass) {

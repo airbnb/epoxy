@@ -29,20 +29,20 @@ class ModelViewInfo extends GeneratedModelInfo {
   final List<String> resetMethodNames = new ArrayList<>();
   final TypeElement viewElement;
   final Types typeUtils;
-  final Elements elementUtils;
+  final Elements elements;
   final ErrorLogger errorLogger;
   final ConfigManager configManager;
   final boolean saveViewState;
   final ModelView viewAnnotation;
   final boolean fullSpanSize;
 
-  ModelViewInfo(TypeElement viewElement, Types typeUtils, Elements elementUtils,
+  ModelViewInfo(TypeElement viewElement, Types typeUtils, Elements elements,
       ErrorLogger errorLogger, ConfigManager configManager) {
 
     viewAnnotation = viewElement.getAnnotation(ModelView.class);
     this.viewElement = viewElement;
     this.typeUtils = typeUtils;
-    this.elementUtils = elementUtils;
+    this.elements = elements;
     this.errorLogger = errorLogger;
     this.configManager = configManager;
 
@@ -50,7 +50,7 @@ class ModelViewInfo extends GeneratedModelInfo {
     this.superClassName = ParameterizedTypeName
         .get(ClassName.get(superClassElement), TypeName.get(viewElement.asType()));
 
-    generatedClassName = buildGeneratedModelName(viewElement, elementUtils);
+    generatedClassName = buildGeneratedModelName(viewElement, elements);
     // We don't have any type parameters on our generated model
     this.parametrizedClassName = generatedClassName;
     shouldGenerateModel = !viewElement.getModifiers().contains(Modifier.ABSTRACT);
@@ -66,7 +66,7 @@ class ModelViewInfo extends GeneratedModelInfo {
 
   private TypeElement lookUpSuperClassElement() {
     TypeElement defaultSuper = (TypeElement) Utils.getElementByName(ClassNames.EPOXY_MODEL_UNTYPED,
-        elementUtils, typeUtils);
+        elements, typeUtils);
 
     // Unfortunately we have to do this weird try/catch to get the class type
     TypeMirror classToExtend = null;
@@ -132,13 +132,14 @@ class ModelViewInfo extends GeneratedModelInfo {
 
   void addProp(ExecutableElement propMethod, Types types) {
     ViewAttributeInfo attributeInfo =
-        new ViewAttributeInfo(this, propMethod, typeUtils, elementUtils, errorLogger);
+        new ViewAttributeInfo(this, propMethod, typeUtils, elements, errorLogger);
     addAttribute(attributeInfo);
 
     ModelProp annotation = propMethod.getAnnotation(ModelProp.class);
     Set<Option> options = new HashSet<>(Arrays.asList(annotation.options()));
     if (options.contains(Option.GenerateStringOverloads)) {
       addAttribute(new ViewAttributeStringResOverload(this, attributeInfo, types));
+      addAttribute(new ViewAttributeStringResWithArgumentsOverload(this, attributeInfo, elements));
     }
   }
 

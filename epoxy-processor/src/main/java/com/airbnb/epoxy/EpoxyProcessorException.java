@@ -26,7 +26,8 @@ class EpoxyProcessorException extends Exception {
       if (stackTrace.length > 0) {
         for (StackTraceElement stackTraceElement : stackTrace) {
           if (stackTraceElement.getClassName().contains("epoxy")
-              && !stackTraceElement.getClassName().contains(ErrorLogger.class.getSimpleName())) {
+              && !stackTraceElement.getClassName().contains(ErrorLogger.class.getSimpleName())
+              && !stackTraceElement.getClassName().contains("buildEpoxyException")) {
 
             // We can't include new line characters in the annotation error output (they cause
             // the text to be cut off), so we just use big spaces to separate sections:

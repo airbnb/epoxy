@@ -23,7 +23,7 @@ public class TestView extends BaseView {
   public void setTitle(CharSequence tex) {
   }
 
-  /** Sets a description */
+  /** Sets a description. */
   @ModelProp(defaultValue = "DEFAULT_TITLE")
   public void setDescription(String text) {
   }
