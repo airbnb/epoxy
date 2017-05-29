@@ -37,6 +37,8 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
+// TODO: (eli_hart 5/28/17) add 0 handling to string res overloads javadoc 
+// TODO: (eli_hart 5/28/17) One getter method for string overloads
 // TODO: (eli_hart 5/26/17) Default model base class
 // TODO: (eli_hart 5/23/17) how to support overriding default values in subclasses?
 // TODO: (eli_hart 5/14/17) Support multiple layouts for different styles?

@@ -1089,8 +1089,9 @@ class GeneratedModelWriter {
     }
 
     // If a string res is set then make sure it isn't 0
-    if ((attribute instanceof ViewAttributeStringResOverload)) {
-      addStringResCheckForInvalidId(modelInfo, attribute, paramName, builder);
+    if ((attribute instanceof StringAttributeOverload)) {
+      ParameterSpec stringParam = builder.build().parameters.get(0);
+      addStringResCheckForInvalidId(modelInfo, attribute, stringParam.name, builder);
     }
 
     return builder

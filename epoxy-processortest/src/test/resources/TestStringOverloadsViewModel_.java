@@ -225,6 +225,9 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     this.title_QuantityStringResAttribute = null;
     onMutation();
     this.title_StringResAttribute = new StringResAttribute(stringRes, formatArgs);
+    if (stringRes == 0) {
+      	throw new IllegalArgumentException("A string resource value of 0 was set for View Prop {view='TestStringOverloadsView', name='setTitle', type=com.airbnb.epoxy.StringResAttribute}");
+    }
     return this;
   }
 
@@ -248,6 +251,9 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     this.title_StringResAttribute = null;
     onMutation();
     this.title_QuantityStringResAttribute = new QuantityStringResAttribute(stringRes, quantity, formatArgs);
+    if (stringRes == 0) {
+      	throw new IllegalArgumentException("A string resource value of 0 was set for View Prop {view='TestStringOverloadsView', name='setTitle', type=com.airbnb.epoxy.QuantityStringResAttribute}");
+    }
     return this;
   }
 

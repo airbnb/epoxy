@@ -226,6 +226,10 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
     this.title_QuantityStringResAttribute = null;
     onMutation();
     this.title_StringResAttribute = new StringResAttribute(stringRes, formatArgs);
+    if (stringRes == 0) {
+      // Since this is an optional attribute we'll use the default value instead by marking this attribute as not set.
+      assignedAttributes_epoxyGeneratedModel.clear(2);
+    }
     return this;
   }
 
@@ -249,6 +253,10 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
     this.title_StringResAttribute = null;
     onMutation();
     this.title_QuantityStringResAttribute = new QuantityStringResAttribute(stringRes, quantity, formatArgs);
+    if (stringRes == 0) {
+      // Since this is an optional attribute we'll use the default value instead by marking this attribute as not set.
+      assignedAttributes_epoxyGeneratedModel.clear(3);
+    }
     return this;
   }
 

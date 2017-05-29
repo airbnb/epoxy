@@ -10,8 +10,9 @@ public class StringResAttribute {
   private final Object[] formatArgs;
 
   public StringResAttribute(@StringRes int id, Object[] formatArgs) {
-    if (id <= 0) {
-      throw new IllegalArgumentException("Id must be greater than 0");
+    if (id < 0) {
+      // A 0 value is ignored since the generated code handles 0 as null/default
+      throw new IllegalArgumentException("Id cannot be negative");
     }
 
     this.id = id;

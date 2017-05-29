@@ -7,7 +7,7 @@ import com.squareup.javapoet.AnnotationSpec;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.Types;
 
-class ViewAttributeStringResOverload extends ViewAttributeInfo {
+class ViewAttributeStringResOverload extends ViewAttributeInfo implements StringAttributeOverload {
 
   ViewAttributeStringResOverload(ModelViewInfo viewInfo, ViewAttributeInfo info, Types types) {
     super(viewInfo, types.getPrimitiveType(TypeKind.INT), info.viewSetterMethodName);

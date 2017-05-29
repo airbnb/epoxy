@@ -13,7 +13,7 @@ import java.util.List;
 import javax.lang.model.util.Elements;
 
 class QuantityStringViewAttributeOverload extends ViewAttributeInfo
-    implements MultiParamAttribute {
+    implements MultiParamAttribute, StringAttributeOverload {
 
   private static final String PLURAL_RES_PARAM = "stringRes";
   private static final String ARGS_PARAM = "formatArgs";
