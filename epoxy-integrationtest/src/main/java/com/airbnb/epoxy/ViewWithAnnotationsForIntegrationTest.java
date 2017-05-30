@@ -12,9 +12,9 @@ public class ViewWithAnnotationsForIntegrationTest extends View {
   public static final String DEFAULT_STRING = "hello world";
 
   public CharSequence requiredText;
-  private CharSequence nullableText;
-  private CharSequence textWithDefault;
-  private CharSequence nullableTextWithDefault;
+  public CharSequence nullableText;
+  public CharSequence textWithDefault;
+  public CharSequence nullableTextWithDefault;
 
   public ViewWithAnnotationsForIntegrationTest(Context context) {
     super(context);

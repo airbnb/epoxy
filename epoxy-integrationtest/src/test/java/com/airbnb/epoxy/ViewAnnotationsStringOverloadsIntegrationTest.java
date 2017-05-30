@@ -6,6 +6,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -93,41 +94,74 @@ public class ViewAnnotationsStringOverloadsIntegrationTest {
 
   @Test(expected = IllegalStateException.class)
   public void requiredTextThrowsWhenNotSet() {
-
     ViewWithAnnotationsForIntegrationTestModel_ model =
         new ViewWithAnnotationsForIntegrationTestModel_();
 
     bind(model);
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void requiredTextThrowsOnBadStringRes() {
-
+    new ViewWithAnnotationsForIntegrationTestModel_()
+        .requiredText(0);
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void requiredTextThrowsOnBadStringResWithArgs() {
-
+    new ViewWithAnnotationsForIntegrationTestModel_()
+        .requiredText(0, "args");
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void requiredTextThrowsOnBadQuantityString() {
-
+    new ViewWithAnnotationsForIntegrationTestModel_()
+        .requiredTextQuantityRes(0, 23, "args");
   }
 
   @Test
   public void nullableTextSetsNullWhenNotSet() {
+    ViewWithAnnotationsForIntegrationTestModel_ model =
+        new ViewWithAnnotationsForIntegrationTestModel_().requiredText("required");
 
+    ViewWithAnnotationsForIntegrationTest view = bind(model);
+
+    assertNull(view.nullableText);
   }
 
   @Test
   public void nullableTextAllowsNull() {
+    ViewWithAnnotationsForIntegrationTestModel_ model =
+        new ViewWithAnnotationsForIntegrationTestModel_()
+            .requiredText("required")
+            .nullableText(null);
 
+    ViewWithAnnotationsForIntegrationTest view = bind(model);
+
+    assertNull(view.nullableText);
   }
 
   @Test
   public void nullableTextAllowsZeroStringRes() {
+    ViewWithAnnotationsForIntegrationTestModel_ model =
+        new ViewWithAnnotationsForIntegrationTestModel_()
+            .requiredText("required")
+            .nullableText(0);
 
+    ViewWithAnnotationsForIntegrationTest view = bind(model);
+
+    assertNull(view.nullableText);
+  }
+
+  @Test
+  public void nullableTextAllowsZeroQuantityRes() {
+    ViewWithAnnotationsForIntegrationTestModel_ model =
+        new ViewWithAnnotationsForIntegrationTestModel_()
+            .requiredText("required")
+            .nullableTextQuantityRes(0, 1);
+
+    ViewWithAnnotationsForIntegrationTest view = bind(model);
+
+    assertNull(view.nullableText);
   }
 
   @Test

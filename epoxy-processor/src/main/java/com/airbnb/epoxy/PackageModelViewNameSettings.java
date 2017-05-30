@@ -9,7 +9,8 @@ class PackageModelViewNameSettings {
   final String layoutName;
 
   PackageModelViewNameSettings(ClassName rLayoutClass, String layoutName) {
-    this.rLayoutClass = rLayoutClass;
+    // The R class may be R or R2. We create the class name again to make sure we don't use R2.
+    this.rLayoutClass = ClassName.get(rLayoutClass.packageName(), "R", "layout");
     this.layoutName = layoutName;
   }
 
