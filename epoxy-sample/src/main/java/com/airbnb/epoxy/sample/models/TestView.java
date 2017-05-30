@@ -24,8 +24,8 @@ public class TestView extends BaseView {
   }
 
   /** Sets a description. */
-  @ModelProp(defaultValue = "DEFAULT_TITLE")
-  public void setDescription(CharSequence text) {
+  @ModelProp(defaultValue = "DEFAULT_TITLE", options = Option.GenerateStringOverloads)
+  public void setDescription(@Nullable CharSequence text) {
   }
 
   /** Sets a subtitle */

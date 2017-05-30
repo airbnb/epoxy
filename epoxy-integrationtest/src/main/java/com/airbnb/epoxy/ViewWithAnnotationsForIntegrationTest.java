@@ -9,7 +9,12 @@ import com.airbnb.epoxy.ModelProp.Option;
 
 @ModelView(defaultLayout = R.layout.view_with_annotations_for_integration_test)
 public class ViewWithAnnotationsForIntegrationTest extends View {
-  public CharSequence text;
+  public static final String DEFAULT_STRING = "hello world";
+
+  public CharSequence requiredText;
+  private CharSequence nullableText;
+  private CharSequence textWithDefault;
+  private CharSequence nullableTextWithDefault;
 
   public ViewWithAnnotationsForIntegrationTest(Context context) {
     super(context);
@@ -26,7 +31,22 @@ public class ViewWithAnnotationsForIntegrationTest extends View {
   }
 
   @ModelProp(options = Option.GenerateStringOverloads)
-  public void setText(CharSequence text) {
-    this.text = text;
+  public void setRequiredText(CharSequence text) {
+    this.requiredText = text;
+  }
+
+  @ModelProp(options = Option.GenerateStringOverloads)
+  public void setNullableText(CharSequence text) {
+    nullableText = text;
+  }
+
+  @ModelProp(options = Option.GenerateStringOverloads, defaultValue = "DEFAULT_STRING")
+  public void setTextWithDefault(CharSequence text) {
+    textWithDefault = text;
+  }
+
+  @ModelProp(options = Option.GenerateStringOverloads, defaultValue = "DEFAULT_STRING")
+  public void setNullableTextWithDefault(@Nullable CharSequence text) {
+    nullableTextWithDefault = text;
   }
 }

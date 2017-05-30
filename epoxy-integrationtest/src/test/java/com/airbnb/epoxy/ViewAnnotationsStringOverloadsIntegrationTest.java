@@ -24,17 +24,23 @@ public class ViewAnnotationsStringOverloadsIntegrationTest {
     String text = "hello world";
 
     ViewWithAnnotationsForIntegrationTestModel_ model =
-        new ViewWithAnnotationsForIntegrationTestModel_().text(text);
+        new ViewWithAnnotationsForIntegrationTestModel_().requiredText(text);
 
     ViewWithAnnotationsForIntegrationTest view = bind(model);
 
-
-    assertEquals(text, view.text);
+    assertEquals(text, view.requiredText);
   }
 
   @Test
   public void stringResIsSet() {
+    String text = "hello world";
 
+    ViewWithAnnotationsForIntegrationTestModel_ model =
+        new ViewWithAnnotationsForIntegrationTestModel_().requiredText(text);
+
+    ViewWithAnnotationsForIntegrationTest view = bind(model);
+
+    assertEquals(text, view.requiredText);
   }
 
   @Test
@@ -49,6 +55,66 @@ public class ViewAnnotationsStringOverloadsIntegrationTest {
 
   @Test
   public void quantityStringWithArgsIsSet() {
+
+  }
+
+  @Test
+  public void requiredTextThrowsOnNull() {
+
+  }
+
+  @Test
+  public void requiredTextThrowsOnBadStringRes() {
+
+  }
+
+  @Test
+  public void requiredTextThrowsOnBadStringResWithArgs() {
+
+  }
+
+  @Test
+  public void requiredTextThrowsOnBadQuantityString() {
+
+  }
+
+  @Test
+  public void nullableTextSetsNullWhenNotSet() {
+
+  }
+
+  @Test
+  public void nullableTextAllowsNull() {
+
+  }
+
+  @Test
+  public void nullableTextAllowsZeroStringRes() {
+
+  }
+
+  @Test
+  public void defaultStringValueSetIfNothingElseIsSet() {
+
+  }
+
+  @Test
+  public void nullableStringOverridesDefaultWithNull() {
+
+  }
+
+  @Test
+  public void zeroStringResSetsDefault() {
+
+  }
+
+  @Test
+  public void zeroQuantityStringResSetsDefault() {
+
+  }
+
+  @Test
+  public void stringOverloadsResetEachOther() {
 
   }
 }
