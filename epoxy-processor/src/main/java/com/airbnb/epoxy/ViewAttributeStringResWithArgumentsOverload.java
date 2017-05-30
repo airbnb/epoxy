@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 
 class ViewAttributeStringResWithArgumentsOverload extends ViewAttributeInfo
     implements MultiParamAttribute, StringAttributeOverload {
@@ -19,8 +20,8 @@ class ViewAttributeStringResWithArgumentsOverload extends ViewAttributeInfo
   private static final String ARGS_PARAM = "formatArgs";
 
   ViewAttributeStringResWithArgumentsOverload(ModelViewInfo viewInfo, ViewAttributeInfo info,
-      Elements elements) {
-    super(viewInfo, Utils.getTypeMirror(ClassNames.EPOXY_STRING_RES_ATTRIBUTE, elements),
+      Elements elements, Types types) {
+    super(viewInfo, Utils.getTypeMirror(ClassNames.EPOXY_STRING_RES_ATTRIBUTE, elements, types),
         info.viewSetterMethodName);
     useInHash = info.useInHash;
     ignoreRequireHashCode = info.ignoreRequireHashCode;

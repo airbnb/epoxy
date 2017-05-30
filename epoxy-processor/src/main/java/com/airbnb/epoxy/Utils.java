@@ -72,17 +72,13 @@ class Utils {
     }
   }
 
-  static TypeMirror getTypeMirror(ClassName className, Elements elements) {
-    try {
-      Class<?> clazz = getClass(className);
-      if (clazz == null) {
-        throw new IllegalArgumentException("Unknown class: " + className);
-      }
-
-      return elements.getTypeElement(clazz.getCanonicalName()).asType();
-    } catch (MirroredTypeException mte) {
-      return mte.getTypeMirror();
+  static TypeMirror getTypeMirror(ClassName className, Elements elements, Types types) {
+    Element classElement = getElementByName(className.reflectionName(), elements, types);
+    if (classElement == null) {
+      throw new IllegalArgumentException("Unknown class: " + className);
     }
+
+    return classElement.asType();
   }
 
   static TypeMirror getTypeMirror(Class<?> clazz, Elements elements) {

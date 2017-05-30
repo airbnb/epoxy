@@ -139,8 +139,9 @@ class ModelViewInfo extends GeneratedModelInfo {
     Set<Option> options = new HashSet<>(Arrays.asList(annotation.options()));
     if (options.contains(Option.GenerateStringOverloads)) {
       addAttribute(new ViewAttributeStringResOverload(this, attributeInfo, types));
-      addAttribute(new ViewAttributeStringResWithArgumentsOverload(this, attributeInfo, elements));
-      addAttribute(new QuantityStringViewAttributeOverload(this, attributeInfo, elements));
+      addAttribute(
+          new ViewAttributeStringResWithArgumentsOverload(this, attributeInfo, elements, types));
+      addAttribute(new QuantityStringViewAttributeOverload(this, attributeInfo, elements, types));
     }
   }
 

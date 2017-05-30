@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 
 class QuantityStringViewAttributeOverload extends ViewAttributeInfo
     implements MultiParamAttribute, StringAttributeOverload {
@@ -20,8 +21,9 @@ class QuantityStringViewAttributeOverload extends ViewAttributeInfo
   private static final String QUANTITY_PARAM = "quantity";
 
   QuantityStringViewAttributeOverload(ModelViewInfo viewInfo, ViewAttributeInfo info,
-      Elements elements) {
-    super(viewInfo, Utils.getTypeMirror(ClassNames.EPOXY_QUANTITY_STRING_RES_ATTRIBUTE, elements),
+      Elements elements, Types types) {
+    super(viewInfo,
+        Utils.getTypeMirror(ClassNames.EPOXY_QUANTITY_STRING_RES_ATTRIBUTE, elements, types),
         info.viewSetterMethodName);
     useInHash = info.useInHash;
     ignoreRequireHashCode = info.ignoreRequireHashCode;
