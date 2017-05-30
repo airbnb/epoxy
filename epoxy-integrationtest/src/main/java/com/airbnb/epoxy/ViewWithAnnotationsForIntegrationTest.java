@@ -36,7 +36,7 @@ public class ViewWithAnnotationsForIntegrationTest extends View {
   }
 
   @ModelProp(options = Option.GenerateStringOverloads)
-  public void setNullableText(CharSequence text) {
+  public void setNullableText(@Nullable CharSequence text) {
     nullableText = text;
   }
 

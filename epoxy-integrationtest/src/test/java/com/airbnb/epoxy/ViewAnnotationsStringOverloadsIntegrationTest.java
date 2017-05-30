@@ -33,29 +33,56 @@ public class ViewAnnotationsStringOverloadsIntegrationTest {
 
   @Test
   public void stringResIsSet() {
-    String text = "hello world";
+    int stringWithNoArgs = R.string.string_with_no_args;
 
     ViewWithAnnotationsForIntegrationTestModel_ model =
-        new ViewWithAnnotationsForIntegrationTestModel_().requiredText(text);
+        new ViewWithAnnotationsForIntegrationTestModel_()
+            .requiredText(stringWithNoArgs);
 
     ViewWithAnnotationsForIntegrationTest view = bind(model);
 
-    assertEquals(text, view.requiredText);
+    assertEquals(view.getContext().getText(stringWithNoArgs), view.requiredText);
   }
 
   @Test
   public void stringResWithArgsIsSet() {
+    int stringWithNoArgs = R.string.string_with_args;
 
+    ViewWithAnnotationsForIntegrationTestModel_ model =
+        new ViewWithAnnotationsForIntegrationTestModel_()
+            .requiredText(stringWithNoArgs, 3);
+
+    ViewWithAnnotationsForIntegrationTest view = bind(model);
+
+    assertEquals(view.getContext().getString(stringWithNoArgs, 3), view.requiredText);
   }
 
   @Test
   public void quantityStringIsSet() {
+    int pluralString = R.plurals.plural_test_string;
 
+    ViewWithAnnotationsForIntegrationTestModel_ model =
+        new ViewWithAnnotationsForIntegrationTestModel_()
+            .requiredTextQuantityRes(pluralString, 1);
+
+    ViewWithAnnotationsForIntegrationTest view = bind(model);
+
+    assertEquals(view.getContext().getResources().getQuantityString(pluralString, 1),
+        view.requiredText);
   }
 
   @Test
   public void quantityStringWithArgsIsSet() {
+    int pluralString = R.plurals.plural_test_string_with_args;
 
+    ViewWithAnnotationsForIntegrationTestModel_ model =
+        new ViewWithAnnotationsForIntegrationTestModel_()
+            .requiredTextQuantityRes(pluralString, 1, 3);
+
+    ViewWithAnnotationsForIntegrationTest view = bind(model);
+
+    assertEquals(view.getContext().getResources().getQuantityString(pluralString, 1, 3),
+        view.requiredText);
   }
 
   @Test

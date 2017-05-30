@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="plural_test_string">
+        <item quantity="one">@string/plural_test_string_one</item>
+    </plurals>
+    <plurals name="plural_test_string_with_args">
+        <item quantity="one">@string/plural_test_string_with_args_one</item>
+    </plurals>
+</resources>
