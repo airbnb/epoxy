@@ -114,7 +114,7 @@ class ConfigManager {
 
       String rLayoutClassString = rLayoutClassName.reflectionName();
       if (!rLayoutClassString.endsWith(".R$layout")
-          || !rLayoutClassString.endsWith(".R2$layout")) {
+          && !rLayoutClassString.endsWith(".R2$layout")) {
         errors.add(buildEpoxyException(
             "Layout class in %s must be of the form 'R.layout', but was '%s' (package: %s)",
             PackageModelViewLayoutNaming.class.getSimpleName(), rLayoutClassString, packageName));
