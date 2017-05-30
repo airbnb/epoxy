@@ -145,7 +145,7 @@ class ModelViewInfo extends GeneratedModelInfo {
     }
   }
 
-  void addResetMethod(ExecutableElement resetMethod) {
+  void addOnRecycleMethod(ExecutableElement resetMethod) {
     resetMethodNames.add(resetMethod.getSimpleName().toString());
   }
 

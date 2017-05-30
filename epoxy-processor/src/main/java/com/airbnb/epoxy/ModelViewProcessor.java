@@ -239,19 +239,19 @@ class ModelViewProcessor {
   }
 
   private void processResetAnnotations(RoundEnvironment roundEnv) {
-    for (Element resetMethod : roundEnv.getElementsAnnotatedWith(ResetView.class)) {
-      if (!validateResetElement(resetMethod)) {
+    for (Element recycleMethod : roundEnv.getElementsAnnotatedWith(OnViewRecycled.class)) {
+      if (!validateResetElement(recycleMethod)) {
         continue;
       }
 
-      ModelViewInfo info = getModelInfoForMethodElement(resetMethod);
+      ModelViewInfo info = getModelInfoForMethodElement(recycleMethod);
       if (info == null) {
         errorLogger.logError("%s annotation can only be used in classes annotated with %s",
             ModelProp.class, ModelView.class);
         continue;
       }
 
-      info.addResetMethod((ExecutableElement) resetMethod);
+      info.addOnRecycleMethod((ExecutableElement) recycleMethod);
     }
   }
 
@@ -311,7 +311,7 @@ class ModelViewProcessor {
   }
 
   private boolean validateResetElement(Element resetMethod) {
-    return validateExecutableElement(resetMethod, ResetView.class, 0);
+    return validateExecutableElement(resetMethod, OnViewRecycled.class, 0);
   }
 
   private void writeJava() {

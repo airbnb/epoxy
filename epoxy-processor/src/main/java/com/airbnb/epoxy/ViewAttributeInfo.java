@@ -58,7 +58,7 @@ class ViewAttributeInfo extends AttributeInfo {
 
     useInHash = !options.contains(Option.DoNotHash);
     ignoreRequireHashCode = options.contains(Option.IgnoreRequireHashCode);
-    resetWithNull = options.contains(Option.ResetWithNull);
+    resetWithNull = options.contains(Option.NullOnRecycle);
   }
 
   private void assignNullability(VariableElement paramElement) {
@@ -160,11 +160,11 @@ class ViewAttributeInfo extends AttributeInfo {
               Option.GenerateStringOverloads, modelName, viewSetterMethodName);
     }
 
-    if (options.contains(Option.ResetWithNull) && (isNullable == null || !isNullable)) {
+    if (options.contains(Option.NullOnRecycle) && (isNullable == null || !isNullable)) {
       errorLogger
           .logError(
               "Setters with %s option must have a type that is annotated with @Nullable. (%s#%s)",
-              Option.ResetWithNull, modelName, viewSetterMethodName);
+              Option.NullOnRecycle, modelName, viewSetterMethodName);
     }
   }
 

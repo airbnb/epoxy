@@ -8,7 +8,7 @@ import com.airbnb.epoxy.ModelProp;
 import com.airbnb.epoxy.ModelProp.Option;
 import com.airbnb.epoxy.ModelView;
 import com.airbnb.epoxy.R;
-import com.airbnb.epoxy.ResetView;
+import com.airbnb.epoxy.OnViewRecycled;
 
 // TODO: (eli_hart 5/22/17) delete this before public release
 @ModelView(defaultLayout = R.layout.model_header, baseModelClass = BaseTestModel.class)
@@ -33,7 +33,7 @@ public class TestView extends BaseView {
   public void setSubtitle(@Nullable CharSequence text) {
   }
 
-  @ModelProp(group = "image", options = Option.ResetWithNull)
+  @ModelProp(group = "image", options = Option.NullOnRecycle)
   public void setImageUrl(@Nullable CharSequence url) {
   }
 
@@ -46,7 +46,7 @@ public class TestView extends BaseView {
 
   }
 
-  @ResetView
+  @OnViewRecycled
   public void clear() {
 
   }

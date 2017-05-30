@@ -49,9 +49,9 @@ public @interface ModelProp {
     GenerateStringOverloads,
     /**
      * Setters with a param annotated with @Nullable can use this to have null set when the view is
-     * unbound.
+     * recycled.
      */
-    ResetWithNull
+    NullOnRecycle
   }
 
   /** Specify any {@link Option} values that should be used when generating the model class. */
