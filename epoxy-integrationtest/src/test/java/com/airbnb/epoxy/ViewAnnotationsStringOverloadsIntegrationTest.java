@@ -85,9 +85,19 @@ public class ViewAnnotationsStringOverloadsIntegrationTest {
         view.requiredText);
   }
 
-  @Test
-  public void requiredTextThrowsOnNull() {
+  @Test(expected = IllegalArgumentException.class)
+  public void requiredTextThrowsWhenSetWithNull() {
+    new ViewWithAnnotationsForIntegrationTestModel_()
+        .requiredText(null);
+  }
 
+  @Test(expected = IllegalStateException.class)
+  public void requiredTextThrowsWhenNotSet() {
+
+    ViewWithAnnotationsForIntegrationTestModel_ model =
+        new ViewWithAnnotationsForIntegrationTestModel_();
+
+    bind(model);
   }
 
   @Test
