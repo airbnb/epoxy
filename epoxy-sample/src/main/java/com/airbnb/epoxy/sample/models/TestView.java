@@ -28,7 +28,7 @@ public class TestView extends BaseView {
   public void setDescription(@Nullable CharSequence text) {
   }
 
-  /** Sets a subtitle. */
+  /** Sets a subtitle */
   @ModelProp(options = Option.GenerateStringOverloads)
   public void setSubtitle(@Nullable CharSequence text) {
   }

@@ -37,6 +37,7 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
+// TODO: (eli_hart 5/30/17) How to handle binding diff in base model?
 // TODO: (eli_hart 5/30/17) model wrapper for long click listener too?
 // TODO: (eli_hart 5/30/17) investigate storing string overloads in one field
 // TODO: (eli_hart 5/28/17) One getter method for string overloads
@@ -349,9 +350,12 @@ class ModelViewProcessor {
                 }
 
                 if (!attributeGroup.isRequired) {
+                  ViewAttributeInfo defaultAttribute =
+                      (ViewAttributeInfo) attributeGroup.defaultAttribute;
+
                   methodBuilder.beginControlFlow("else")
-                      .addCode(attributeGroup.codeToSetDefaultValue())
-                      .addCode(";\n")
+                      .addStatement("$L.$L($L)", boundObjectParam.name,
+                          defaultAttribute.viewSetterMethodName, defaultAttribute.defaultValue)
                       .endControlFlow();
                 }
               }

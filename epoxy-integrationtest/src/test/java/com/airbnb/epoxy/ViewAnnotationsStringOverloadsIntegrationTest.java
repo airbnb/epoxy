@@ -166,26 +166,90 @@ public class ViewAnnotationsStringOverloadsIntegrationTest {
 
   @Test
   public void defaultStringValueSetIfNothingElseIsSet() {
+    ViewWithAnnotationsForIntegrationTestModel_ model =
+        new ViewWithAnnotationsForIntegrationTestModel_()
+            .requiredText("required");
 
+    ViewWithAnnotationsForIntegrationTest view = bind(model);
+
+    assertEquals(ViewWithAnnotationsForIntegrationTest.DEFAULT_STRING, view.textWithDefault);
+    assertEquals(ViewWithAnnotationsForIntegrationTest.DEFAULT_STRING,
+        view.nullableTextWithDefault);
+  }
+
+  @Test
+  public void stringOverridesDefault() {
+    String text = "hello world";
+
+    ViewWithAnnotationsForIntegrationTestModel_ model =
+        new ViewWithAnnotationsForIntegrationTestModel_()
+            .requiredText("required")
+            .textWithDefault(text)
+            .nullableTextWithDefault(text);
+
+    ViewWithAnnotationsForIntegrationTest view = bind(model);
+
+    assertEquals(text, view.nullableTextWithDefault);
+    assertEquals(text, view.textWithDefault);
   }
 
   @Test
   public void nullableStringOverridesDefaultWithNull() {
+    ViewWithAnnotationsForIntegrationTestModel_ model =
+        new ViewWithAnnotationsForIntegrationTestModel_()
+            .requiredText("required")
+            .nullableTextWithDefault(null);
 
+    ViewWithAnnotationsForIntegrationTest view = bind(model);
+
+    assertEquals(null, view.nullableTextWithDefault);
   }
 
   @Test
   public void zeroStringResSetsDefault() {
+    ViewWithAnnotationsForIntegrationTestModel_ model =
+        new ViewWithAnnotationsForIntegrationTestModel_()
+            .requiredText("required")
+            .textWithDefault(0)
+            .nullableTextWithDefault(0);
 
+    ViewWithAnnotationsForIntegrationTest view = bind(model);
+
+    assertEquals(ViewWithAnnotationsForIntegrationTest.DEFAULT_STRING, view.textWithDefault);
+    assertEquals(ViewWithAnnotationsForIntegrationTest.DEFAULT_STRING,
+        view.nullableTextWithDefault);
   }
 
   @Test
   public void zeroQuantityStringResSetsDefault() {
+    ViewWithAnnotationsForIntegrationTestModel_ model =
+        new ViewWithAnnotationsForIntegrationTestModel_()
+            .requiredText("required")
+            .textWithDefaultQuantityRes(0, 1)
+            .nullableTextWithDefaultQuantityRes(0, 1);
 
+    ViewWithAnnotationsForIntegrationTest view = bind(model);
+
+    assertEquals(ViewWithAnnotationsForIntegrationTest.DEFAULT_STRING, view.textWithDefault);
+    assertEquals(ViewWithAnnotationsForIntegrationTest.DEFAULT_STRING,
+        view.nullableTextWithDefault);
   }
 
   @Test
   public void stringOverloadsResetEachOther() {
+    ViewWithAnnotationsForIntegrationTest view =
+        bind(new ViewWithAnnotationsForIntegrationTestModel_()
+            .requiredText("required")
+            .nullableText(R.string.string_with_no_args)
+            .nullableText("test"));
 
+    assertEquals("test", view.nullableText);
+
+    view = bind(new ViewWithAnnotationsForIntegrationTestModel_()
+        .requiredText("required")
+        .nullableText("test")
+        .nullableText(R.string.string_with_no_args));
+
+    assertEquals(view.getContext().getString(R.string.string_with_no_args), view.nullableText);
   }
 }
