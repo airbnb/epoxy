@@ -27,6 +27,14 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.squareup.javapoet.TypeName.BOOLEAN;
+import static com.squareup.javapoet.TypeName.BYTE;
+import static com.squareup.javapoet.TypeName.CHAR;
+import static com.squareup.javapoet.TypeName.DOUBLE;
+import static com.squareup.javapoet.TypeName.FLOAT;
+import static com.squareup.javapoet.TypeName.INT;
+import static com.squareup.javapoet.TypeName.LONG;
+import static com.squareup.javapoet.TypeName.SHORT;
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PROTECTED;
@@ -463,4 +471,26 @@ class Utils {
 
     return object;
   }
+
+  static String getDefaultValue(TypeName attributeType) {
+   if (attributeType == BOOLEAN) {
+     return "false";
+   } else if (attributeType == INT) {
+     return "0";
+   } else if (attributeType == BYTE) {
+     return "(byte) 0";
+   } else if (attributeType == CHAR) {
+     return "(char) 0";
+   } else if (attributeType == SHORT) {
+     return "(short) 0";
+   } else if (attributeType == LONG) {
+     return "0L";
+   } else if (attributeType == FLOAT) {
+     return "0.0f";
+   } else if (attributeType == DOUBLE) {
+     return "0.0d";
+   } else {
+     return "null";
+   }
+ }
 }

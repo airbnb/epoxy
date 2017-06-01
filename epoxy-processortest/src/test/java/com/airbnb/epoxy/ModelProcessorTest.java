@@ -723,4 +723,19 @@ public class ModelProcessorTest {
         .and()
         .generatesSources(generatedModel);
   }
+
+  @Test
+  public void testViewAnnotations_manyTypes() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("TestManyTypesView.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("TestManyTypesViewModel_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
 }

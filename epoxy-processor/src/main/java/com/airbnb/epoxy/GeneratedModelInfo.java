@@ -266,8 +266,6 @@ abstract class GeneratedModelInfo {
       defaultAttribute = nullableAttribute;
     }
 
-    // TODO: (eli_hart 5/17/17) clean up null/default code architecture
-
     AttributeGroup group = new AttributeGroup(groupName, attributes, isRequired, defaultAttribute);
     attributeGroups.add(group);
     for (AttributeInfo attribute : attributes) {

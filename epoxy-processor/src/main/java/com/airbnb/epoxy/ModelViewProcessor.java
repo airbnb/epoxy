@@ -39,13 +39,9 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 // TODO: (eli_hart 5/30/17) How to handle binding diff in base model?
 // TODO: (eli_hart 5/30/17) model wrapper for long click listener too?
-// TODO: (eli_hart 5/30/17) investigate storing string overloads in one field
-// TODO: (eli_hart 5/28/17) One getter method for string overloads
-// TODO: (eli_hart 5/30/17) string varargs id
-// TODO: (eli_hart 5/30/17) allow param counts > 0 in setters?
-// TODO: (eli_hart 5/30/17) Rename reset annotations
 // TODO: (eli_hart 5/28/17) add 0 handling to string res overloads javadoc
 // TODO: (eli_hart 5/26/17) Default model base class
+// TODO: (eli_hart 5/30/17) allow param counts > 0 in setters?
 // TODO: (eli_hart 5/23/17) how to support overriding default values in subclasses?
 // TODO: (eli_hart 5/14/17) Support multiple layouts for different styles?
 // TODO: (eli_hart 5/15/17) how to support divider type setting?

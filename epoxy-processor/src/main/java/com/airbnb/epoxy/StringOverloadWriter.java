@@ -5,6 +5,7 @@ import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
 
 import com.squareup.javapoet.ArrayTypeName;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.MethodSpec.Builder;
 import com.squareup.javapoet.ParameterSpec;
@@ -16,7 +17,6 @@ import java.util.List;
 import static com.airbnb.epoxy.GeneratedModelWriter.addOnMutationCall;
 import static com.airbnb.epoxy.GeneratedModelWriter.addParameterNullCheckIfNeeded;
 import static com.airbnb.epoxy.GeneratedModelWriter.setBitSetIfNeeded;
-import static com.airbnb.epoxy.GeneratedModelWriter.shouldUseBitSet;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 class StringOverloadWriter {
@@ -50,12 +50,6 @@ class StringOverloadWriter {
     methods.add(finishSetter(buildStringResWithArgsSetter(baseSetter())));
     methods.add(finishSetter(buildQuantityStringResSetter(baseSetter("QuantityRes"))));
 
-    // If a string res is set then make sure it isn't 0
-//    if ((attr instanceof StringAttributeOverload)) {
-//      ParameterSpec stringParam = stringSetter.build().parameters.get(0);
-//      addStringResCheckForInvalidId(modelInfo, attr, stringParam.name, stringSetter);
-//    }
-
     return methods;
   }
 
@@ -66,6 +60,8 @@ class StringOverloadWriter {
     if (nullable) {
       paramBuilder.addAnnotation(Nullable.class);
     }
+
+    addJavaDoc(builder, false);
 
     builder.addParameter(paramBuilder.build());
 
@@ -80,6 +76,7 @@ class StringOverloadWriter {
         .addAnnotation(StringRes.class)
         .build());
 
+    addJavaDoc(builder, true);
     builder.addStatement("$L.setValue($L)", fieldName, STRING_RES_PARAM);
 
     return builder;
@@ -89,6 +86,8 @@ class StringOverloadWriter {
     builder.addParameter(ParameterSpec.builder(TypeName.INT, STRING_RES_PARAM)
         .addAnnotation(StringRes.class)
         .build());
+
+    addJavaDoc(builder, true);
 
     builder
         .addParameter(ParameterSpec.builder(ArrayTypeName.of(TypeName.OBJECT), ARGS_PARAM).build());
@@ -105,6 +104,8 @@ class StringOverloadWriter {
         .addAnnotation(PluralsRes.class)
         .build());
 
+    addJavaDoc(builder, true);
+
     builder.addParameter(ParameterSpec.builder(TypeName.INT, QUANTITY_PARAM).build());
 
     builder
@@ -115,25 +116,6 @@ class StringOverloadWriter {
         .varargs();
 
     return builder;
-  }
-
-  private void addStringResCheckForInvalidId(GeneratedModelInfo modelInfo, AttributeInfo attribute,
-      String stringResParamName, Builder builder) {
-    builder.beginControlFlow("if ($L == 0)", stringResParamName);
-
-    if (attribute.isRequired()) {
-      builder.addStatement(
-          "\tthrow new $T(\"A string resource value of 0 was set for the required attribute $L\")",
-          IllegalArgumentException.class, attribute);
-    } else if (shouldUseBitSet(modelInfo)) {
-      // If 0 was set then we assume they want to clear and use the default.
-      // We simply clear the bitset value so the model thinks this attribute was never set and
-      // it will use the default instead
-      builder.addComment("Since this is an optional attribute we'll revert to the default value");
-      GeneratedModelWriter.clearBitSetIfNeeded(modelInfo, attribute, builder);
-    }
-
-    builder.endControlFlow();
   }
 
   private static MethodSpec finishSetter(MethodSpec.Builder builder) {
@@ -153,13 +135,27 @@ class StringOverloadWriter {
         .addModifiers(PUBLIC)
         .returns(modelInfo.getParameterizedGeneratedName());
 
-    if (attr.javaDoc != null) {
-      builder.addJavadoc(attr.javaDoc);
-    }
-
     addOnMutationCall(builder);
     setBitSetIfNeeded(modelInfo, attr, builder);
     return builder;
+  }
+
+  private void addJavaDoc(Builder builder, boolean forStringRes) {
+    if (attr.javaDoc == null) {
+      return;
+    }
+
+    CodeBlock.Builder javaDoc = CodeBlock.builder();
+
+    if (forStringRes) {
+      if (attr.isRequired()) {
+        javaDoc.add("Throws if a value <= 0 is set.\n\n");
+      } else {
+        javaDoc.add("If a value of 0 is set then this attribute will revert to its default value.\n\n");
+      }
+    }
+
+    builder.addJavadoc(javaDoc.add(attr.javaDoc).build());
   }
 
   private MethodSpec buildGetter() {
