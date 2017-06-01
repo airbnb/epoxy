@@ -155,7 +155,7 @@ class ModelViewProcessor {
         continue;
       }
 
-      info.addProp((ExecutableElement) propMethod, types);
+      info.addProp((ExecutableElement) propMethod);
     }
   }
 
@@ -384,9 +384,17 @@ class ModelViewProcessor {
               if (attributeGroup.attributes.size() == 1) {
                 AttributeInfo attributeInfo = attributeGroup.attributes.get(0);
 
-                GeneratedModelWriter.startNotEqualsControlFlow(methodBuilder, attributeInfo)
-                    .addCode(buildCodeBlockToSetAttribute(boundObjectParam,
-                        (ViewAttributeInfo) attributeInfo))
+                if (attributeInfo instanceof ViewAttributeInfo
+                    && ((ViewAttributeInfo) attributeInfo).generateStringOverloads) {
+                  methodBuilder
+                      .beginControlFlow("if (!$L.equals(that.$L))", attributeInfo.getterCode(),
+                          attributeInfo.getterCode());
+                } else {
+                  GeneratedModelWriter.startNotEqualsControlFlow(methodBuilder, attributeInfo);
+                }
+
+                methodBuilder.addCode(buildCodeBlockToSetAttribute(boundObjectParam,
+                    (ViewAttributeInfo) attributeInfo))
                     .endControlFlow();
               } else {
                 methodBuilder.beginControlFlow("if ($L.equals(that.$L))",
@@ -485,10 +493,7 @@ class ModelViewProcessor {
       ParameterSpec boundObjectParam) {
     String fieldName = viewAttribute.getFieldName();
 
-    if (viewAttribute instanceof ViewAttributeStringResOverload) {
-      return boundObjectParam.name + ".getContext().getText(" + fieldName + ")";
-    } else if (viewAttribute instanceof ViewAttributeStringResWithArgumentsOverload
-        || viewAttribute instanceof QuantityStringViewAttributeOverload) {
+    if (viewAttribute.generateStringOverloads) {
       return fieldName + ".toString(" + boundObjectParam.name + ".getContext())";
     } else {
       return fieldName;

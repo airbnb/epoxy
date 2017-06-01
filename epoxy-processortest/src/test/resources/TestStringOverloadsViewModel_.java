@@ -33,7 +33,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
 
   /**
    * Bitset index: 2 */
-  private StringResAttribute title_StringResAttribute;
+  private StringAttributeData title_StringResAttribute;
 
   /**
    * Bitset index: 3 */
@@ -224,14 +224,13 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     assignedAttributes_epoxyGeneratedModel.clear(3);
     this.title_QuantityStringResAttribute = null;
     onMutation();
-    this.title_StringResAttribute = new StringResAttribute(stringRes, formatArgs);
     if (stringRes == 0) {
       	throw new IllegalArgumentException("A string resource value of 0 was set for View Prop {view='TestStringOverloadsView', name='setTitle', type=com.airbnb.epoxy.StringResAttribute}");
     }
     return this;
   }
 
-  public StringResAttribute titleStringResAttribute() {
+  public StringAttributeData titleStringResAttribute() {
     return title_StringResAttribute;
   }
 

@@ -23,7 +23,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
@@ -34,31 +33,71 @@ class ViewAttributeInfo extends AttributeInfo {
   private final ModelViewInfo modelInfo;
   final String propName;
   final String viewSetterMethodName;
+  final boolean resetWithNull;
+  final boolean generateStringOverloads;
   String constantFieldNameForDefaultValue;
-  boolean resetWithNull;
 
   ViewAttributeInfo(ModelViewInfo modelInfo, ExecutableElement setterMethod, Types types,
       Elements elements, ErrorLogger errorLogger) {
-    this(modelInfo, setterMethod.getParameters().get(0).asType(),
-        setterMethod.getSimpleName().toString());
+
+    this.viewSetterMethodName = setterMethod.getSimpleName().toString();
+    propName = removeSetPrefix(viewSetterMethodName);
+    this.modelInfo = modelInfo;
+    typeMirror = setterMethod.getParameters().get(0).asType();
+    typeName = TypeName.get(typeMirror);
 
     ModelProp annotation = setterMethod.getAnnotation(ModelProp.class);
-    groupKey = annotation.group();
-
-    VariableElement paramElement = setterMethod.getParameters().get(0);
-    parseAnnotations(paramElement, types);
 
     defaultValue = getDefaultValue(annotation, errorLogger, types);
+    VariableElement paramElement = setterMethod.getParameters().get(0);
     assignNullability(paramElement);
-
-    setJavaDocString(elements.getDocComment(setterMethod));
 
     Set<Option> options = new HashSet<>(Arrays.asList(annotation.options()));
     validatePropOptions(errorLogger, options, types, elements);
 
+    generateStringOverloads = options.contains(Option.GenerateStringOverloads);
+    if (generateStringOverloads) {
+      typeMirror = Utils.getTypeMirror(ClassNames.EPOXY_STRING_ATTRIBUTE_DATA, elements, types);
+      typeName = TypeName.get(typeMirror);
+
+      if (defaultValue != null) {
+        defaultValue = CodeBlock.of(" new $T($L)", typeMirror, defaultValue);
+      } else {
+        defaultValue = CodeBlock.of(" new $T()", typeMirror);
+      }
+    }
+
+    // Suffix the field name with the type to prevent collisions from overloaded setter methods
+    this.fieldName = propName + "_" + getSimpleName(typeName);
+    modelName = modelInfo.getGeneratedName().simpleName();
+    modelPackageName = modelInfo.generatedClassName.packageName();
+    generateSetter = true;
+    generateGetter = true;
+    hasFinalModifier = false;
+    packagePrivate = false;
+    isGenerated = true;
+
+    groupKey = annotation.group();
+
+    parseAnnotations(paramElement, types);
+    if (generateStringOverloads) {
+      setterAnnotations.clear();
+      getterAnnotations.clear();
+    }
+
+    setJavaDocString(elements.getDocComment(setterMethod));
+
     useInHash = !options.contains(Option.DoNotHash);
     ignoreRequireHashCode = options.contains(Option.IgnoreRequireHashCode);
     resetWithNull = options.contains(Option.NullOnRecycle);
+  }
+
+  @Override
+  boolean isRequired() {
+    if (generateStringOverloads) {
+      return (isNullable == null || !isNullable) && constantFieldNameForDefaultValue == null;
+    }
+    return super.isRequired();
   }
 
   private void assignNullability(VariableElement paramElement) {
@@ -123,25 +162,6 @@ class ViewAttributeInfo extends AttributeInfo {
             + "view class.",
         modelInfo.viewElement.getSimpleName(), viewSetterMethodName);
     return null;
-  }
-
-  ViewAttributeInfo(ModelViewInfo modelInfo, TypeMirror type, String viewSetterMethodName) {
-    this.modelInfo = modelInfo;
-    typeMirror = type;
-    typeName = TypeName.get(type);
-
-    this.viewSetterMethodName = viewSetterMethodName;
-    propName = removeSetPrefix(viewSetterMethodName);
-
-    // Suffix the field name with the type to prevent collisions from overloaded setter methods
-    this.fieldName = propName + "_" + getSimpleName(typeName);
-    modelName = modelInfo.getGeneratedName().simpleName();
-    modelPackageName = modelInfo.generatedClassName.packageName();
-    generateSetter = true;
-    generateGetter = true;
-    hasFinalModifier = false;
-    packagePrivate = false;
-    isGenerated = true;
   }
 
   private void validatePropOptions(ErrorLogger errorLogger, Set<Option> options, Types types,
@@ -255,6 +275,8 @@ class ViewAttributeInfo extends AttributeInfo {
     if (isOverload()) {
       // Avoid method name collisions for overloaded method by appending the return type
       return propName + getSimpleName(typeName);
+    } else if (generateStringOverloads) {
+      return "get" + capitalizeFirstLetter(propName);
     }
 
     return propName;

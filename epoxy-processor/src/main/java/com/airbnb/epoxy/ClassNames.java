@@ -11,6 +11,10 @@ final class ClassNames {
   private static final String PKG_EPOXY = "com.airbnb.epoxy";
   private static final String PKG_LITHO = "com.facebook.litho";
   private static final String PKG_LITHO_ANNOTATIONS = "com.facebook.litho.annotations";
+  private static final String PKG_JAVA_LANG = "java.lang";
+  private static final String PKG_ANDROID_CONTENT = "android.content";
+
+  static final ClassName ANDROID_CONTEXT = get(PKG_ANDROID_CONTENT, "Context");
 
   static final ClassName LITHO_COMPONENT = get(PKG_LITHO, "Component");
   static final ClassName LITHO_COMPONENT_CONTEXT = get(PKG_LITHO, "ComponentContext");
@@ -22,7 +26,5 @@ final class ClassNames {
   static final ClassName EPOXY_DATA_BINDING_MODEL = get(PKG_EPOXY, "DataBindingEpoxyModel");
   static final ClassName EPOXY_DATA_BINDING_HOLDER = get(PKG_EPOXY,
       "DataBindingEpoxyModel.DataBindingHolder");
-  static final ClassName EPOXY_STRING_RES_ATTRIBUTE = get(PKG_EPOXY, "StringResAttribute");
-  static final ClassName EPOXY_QUANTITY_STRING_RES_ATTRIBUTE =
-      get(PKG_EPOXY, "QuantityStringResAttribute");
+  static final ClassName EPOXY_STRING_ATTRIBUTE_DATA = get(PKG_EPOXY, "StringAttributeData");
 }

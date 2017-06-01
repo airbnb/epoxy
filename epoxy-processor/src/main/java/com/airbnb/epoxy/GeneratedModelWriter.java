@@ -42,7 +42,6 @@ import static com.airbnb.epoxy.Utils.implementsMethod;
 import static com.airbnb.epoxy.Utils.isDataBindingModel;
 import static com.airbnb.epoxy.Utils.isEpoxyModel;
 import static com.airbnb.epoxy.Utils.isEpoxyModelWithHolder;
-import static com.airbnb.epoxy.Utils.notNull;
 import static com.squareup.javapoet.TypeName.BOOLEAN;
 import static com.squareup.javapoet.TypeName.BYTE;
 import static com.squareup.javapoet.TypeName.CHAR;
@@ -149,7 +148,7 @@ class GeneratedModelWriter {
         .writeTo(filer);
   }
 
-  private boolean shouldUseBitSet(GeneratedModelInfo info) {
+  static boolean shouldUseBitSet(GeneratedModelInfo info) {
     return info instanceof ModelViewInfo;
   }
 
@@ -736,23 +735,59 @@ class GeneratedModelWriter {
     statementBuilder.append(")");
   }
 
-  private List<MethodSpec> generateSettersAndGetters(GeneratedModelInfo helperClass) {
+  private List<MethodSpec> generateSettersAndGetters(GeneratedModelInfo modelInfo) {
     List<MethodSpec> methods = new ArrayList<>();
 
-    for (AttributeInfo attributeInfo : helperClass.getAttributeInfo()) {
-      if (attributeInfo.isViewClickListener()) {
-        methods.add(generateSetClickModelListener(helperClass, attributeInfo));
-      }
-      if (attributeInfo.generateSetter() && !attributeInfo.hasFinalModifier()) {
-        methods.add(generateSetter(helperClass, attributeInfo));
-      }
+    for (AttributeInfo attr : modelInfo.getAttributeInfo()) {
+      if (attr instanceof ViewAttributeInfo
+          && ((ViewAttributeInfo) attr).generateStringOverloads) {
+        methods.addAll(new StringOverloadWriter(modelInfo, attr, configManager).buildMethods());
+      } else {
+        if (attr.isViewClickListener()) {
+          methods.add(generateSetClickModelListener(modelInfo, attr));
+        }
 
-      if (attributeInfo.generateGetter()) {
-        methods.add(generateGetter(attributeInfo));
+        if (attr.generateSetter() && !attr.hasFinalModifier()) {
+          methods.add(generateSetter(modelInfo, attr));
+        }
+
+        if (attr.generateGetter()) {
+          methods.add(generateGetter(attr));
+        }
       }
     }
 
     return methods;
+  }
+
+  static void setBitSetIfNeeded(GeneratedModelInfo modelInfo, AttributeInfo attr,
+      Builder stringSetter) {
+    if (shouldUseBitSet(modelInfo)) {
+      stringSetter.addStatement("$L.set($L)", ATTRIBUTES_BITSET_FIELD_NAME,
+          attributeIndex(modelInfo, attr));
+    }
+  }
+
+  static void clearBitSetIfNeeded(GeneratedModelInfo modelInfo, AttributeInfo attr,
+      Builder stringSetter) {
+    if (shouldUseBitSet(modelInfo)) {
+      stringSetter.addStatement("$L.clear($L)", ATTRIBUTES_BITSET_FIELD_NAME,
+          attributeIndex(modelInfo, attr));
+    }
+  }
+
+  static void addParameterNullCheckIfNeeded(ConfigManager configManager, AttributeInfo attr,
+      String paramName, Builder builder) {
+
+    if (configManager.shouldValidateModelUsage()
+        && attr.isNullable != null
+        && !attr.isNullable) {
+
+      builder.beginControlFlow("if ($L == null)", paramName)
+          .addStatement("throw new $T(\"$L cannot be null\")",
+              IllegalArgumentException.class, paramName)
+          .endControlFlow();
+    }
   }
 
   private MethodSpec generateSetClickModelListener(GeneratedModelInfo classInfo,
@@ -771,10 +806,7 @@ class GeneratedModelWriter {
         .addParameter(param)
         .addAnnotations(attribute.getSetterAnnotations());
 
-    if (shouldUseBitSet(classInfo)) {
-      builder.addStatement("$L.set($L)", ATTRIBUTES_BITSET_FIELD_NAME,
-          attributeIndex(classInfo, attribute));
-    }
+    setBitSetIfNeeded(classInfo, attribute, builder);
 
     ClassName viewType = getClassName("android.view.View");
     ClassName clickWrapperType = getClassName(WRAPPED_LISTENER_TYPE);
@@ -1032,21 +1064,11 @@ class GeneratedModelWriter {
       builder.addJavadoc(attribute.javaDoc);
     }
 
-    if (!hasMultipleParams
-        && configManager.shouldValidateModelUsage()
-        && attribute.isNullable != null
-        && !attribute.isNullable) {
-
-      builder.beginControlFlow("if ($L == null)", paramName)
-          .addStatement("throw new $T(\"$L cannot be null\")",
-              IllegalArgumentException.class, paramName)
-          .endControlFlow();
+    if (!hasMultipleParams) {
+      addParameterNullCheckIfNeeded(configManager, attribute, paramName, builder);
     }
 
-    if (shouldUseBitSet(modelInfo)) {
-      builder.addStatement("$L.set($L)", ATTRIBUTES_BITSET_FIELD_NAME,
-          attributeIndex(modelInfo, attribute));
-    }
+    setBitSetIfNeeded(modelInfo, attribute, builder);
 
     if (attribute.isOverload()) {
       for (AttributeInfo overload : attribute.getAttributeGroup().attributes) {
@@ -1088,38 +1110,9 @@ class GeneratedModelWriter {
       builder.addStatement("super.$L($L)", attributeName, paramName);
     }
 
-    // If a string res is set then make sure it isn't 0
-    if ((attribute instanceof StringAttributeOverload)) {
-      ParameterSpec stringParam = builder.build().parameters.get(0);
-      addStringResCheckForInvalidId(modelInfo, attribute, stringParam.name, builder);
-    }
-
     return builder
         .addStatement("return this")
         .build();
-  }
-
-  private void addStringResCheckForInvalidId(GeneratedModelInfo modelInfo, AttributeInfo attribute,
-      String stringResParamName, Builder builder) {
-    builder.beginControlFlow("if ($L == 0)", stringResParamName);
-
-    AttributeGroup group = notNull(attribute.getAttributeGroup());
-    if (group.isRequired) {
-      builder.addStatement("\tthrow new $T(\"A string resource value of 0 was set for $L\")",
-          IllegalArgumentException.class, attribute);
-    } else if (shouldUseBitSet(modelInfo)) {
-      // If 0 was set then we assume they want to clear and use the default.
-      // We simply clear the bitset value so the model thinks this attribute was never set and
-      // it will use the default instead
-      builder
-          .addComment(
-              "Since this is an optional attribute we'll use the default value instead by "
-                  + "marking this attribute as not set.")
-          .addStatement("$L.clear($L)", ATTRIBUTES_BITSET_FIELD_NAME,
-              attributeIndex(modelInfo, attribute));
-    }
-
-    builder.endControlFlow();
   }
 
   private MethodSpec generateReset(GeneratedModelInfo helperClass) {
@@ -1153,7 +1146,7 @@ class GeneratedModelWriter {
         .build();
   }
 
-  private MethodSpec.Builder addOnMutationCall(MethodSpec.Builder method) {
+  static MethodSpec.Builder addOnMutationCall(MethodSpec.Builder method) {
     return method.addStatement("onMutation()");
   }
 

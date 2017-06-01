@@ -32,7 +32,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
 
   /**
    * Bitset index: 2 */
-  private StringResAttribute title_StringResAttribute;
+  private StringAttributeData title_StringResAttribute;
 
   /**
    * Bitset index: 3 */
@@ -225,7 +225,6 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
     assignedAttributes_epoxyGeneratedModel.clear(3);
     this.title_QuantityStringResAttribute = null;
     onMutation();
-    this.title_StringResAttribute = new StringResAttribute(stringRes, formatArgs);
     if (stringRes == 0) {
       // Since this is an optional attribute we'll use the default value instead by marking this attribute as not set.
       assignedAttributes_epoxyGeneratedModel.clear(2);
@@ -233,7 +232,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
     return this;
   }
 
-  public StringResAttribute titleStringResAttribute() {
+  public StringAttributeData titleStringResAttribute() {
     return title_StringResAttribute;
   }
 

@@ -1,15 +1,11 @@
 package com.airbnb.epoxy;
 
-import com.airbnb.epoxy.ModelProp.Option;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -130,19 +126,8 @@ class ModelViewInfo extends GeneratedModelInfo {
     return ClassName.get(packageName, className);
   }
 
-  void addProp(ExecutableElement propMethod, Types types) {
-    ViewAttributeInfo attributeInfo =
-        new ViewAttributeInfo(this, propMethod, typeUtils, elements, errorLogger);
-    addAttribute(attributeInfo);
-
-    ModelProp annotation = propMethod.getAnnotation(ModelProp.class);
-    Set<Option> options = new HashSet<>(Arrays.asList(annotation.options()));
-    if (options.contains(Option.GenerateStringOverloads)) {
-      addAttribute(new ViewAttributeStringResOverload(this, attributeInfo, types));
-      addAttribute(
-          new ViewAttributeStringResWithArgumentsOverload(this, attributeInfo, elements, types));
-      addAttribute(new QuantityStringViewAttributeOverload(this, attributeInfo, elements, types));
-    }
+  void addProp(ExecutableElement propMethod) {
+    addAttribute(new ViewAttributeInfo(this, propMethod, typeUtils, elements, errorLogger));
   }
 
   void addOnRecycleMethod(ExecutableElement resetMethod) {
