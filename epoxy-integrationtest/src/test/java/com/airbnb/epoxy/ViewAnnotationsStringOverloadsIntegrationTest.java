@@ -1,8 +1,11 @@
 package com.airbnb.epoxy;
 
+import android.content.res.Resources;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
@@ -30,6 +33,18 @@ public class ViewAnnotationsStringOverloadsIntegrationTest {
     ViewWithAnnotationsForIntegrationTest view = bind(model);
 
     assertEquals(text, view.requiredText);
+  }
+
+  @Test
+  public void getStringOffModel() {
+    String text = "hello world";
+
+    ViewWithAnnotationsForIntegrationTestModel_ model =
+        new ViewWithAnnotationsForIntegrationTestModel_().requiredText(text);
+
+    ViewWithAnnotationsForIntegrationTest view = bind(model);
+
+    assertEquals(model.getRequiredText(view.getContext()), view.requiredText);
   }
 
   @Test
@@ -116,6 +131,30 @@ public class ViewAnnotationsStringOverloadsIntegrationTest {
   public void requiredTextThrowsOnBadQuantityString() {
     new ViewWithAnnotationsForIntegrationTestModel_()
         .requiredTextQuantityRes(0, 23, "args");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void nullableTextThrowsOnNegativeString() {
+    new ViewWithAnnotationsForIntegrationTestModel_()
+        .nullableText(-1, "args");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void requiredTextThrowsOnNegativeString() {
+    new ViewWithAnnotationsForIntegrationTestModel_()
+        .nullableText(-1, "args");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void nullableTextThrowsOnNegativeQuantityString() {
+    new ViewWithAnnotationsForIntegrationTestModel_()
+        .nullableTextQuantityRes(-1, 1, "args");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void requiredTextThrowsOnNegativeQuantityString() {
+    new ViewWithAnnotationsForIntegrationTestModel_()
+        .requiredTextQuantityRes(-1, 1, "args");
   }
 
   @Test
@@ -237,6 +276,8 @@ public class ViewAnnotationsStringOverloadsIntegrationTest {
 
   @Test
   public void stringOverloadsResetEachOther() {
+    Resources r = RuntimeEnvironment.application.getResources();
+
     ViewWithAnnotationsForIntegrationTest view =
         bind(new ViewWithAnnotationsForIntegrationTestModel_()
             .requiredText("required")
@@ -250,6 +291,48 @@ public class ViewAnnotationsStringOverloadsIntegrationTest {
         .nullableText("test")
         .nullableText(R.string.string_with_no_args));
 
-    assertEquals(view.getContext().getString(R.string.string_with_no_args), view.nullableText);
+    assertEquals(r.getString(R.string.string_with_no_args), view.nullableText);
+
+    view = bind(new ViewWithAnnotationsForIntegrationTestModel_()
+        .requiredText("required")
+        .nullableText(R.string.string_with_no_args)
+        .nullableTextQuantityRes(R.plurals.plural_test_string, 1));
+
+    assertEquals(r.getQuantityString(R.plurals.plural_test_string, 1), view.nullableText);
+
+    view = bind(new ViewWithAnnotationsForIntegrationTestModel_()
+        .requiredText("required")
+        .nullableText(R.string.string_with_no_args)
+        .nullableTextQuantityRes(0, 1));
+
+    assertNull(view.nullableText);
+
+    view = bind(new ViewWithAnnotationsForIntegrationTestModel_()
+        .requiredText("required")
+        .nullableTextQuantityRes(R.plurals.plural_test_string, 1)
+        .nullableText(R.string.string_with_args, 2));
+
+    assertEquals(r.getString(R.string.string_with_args, 2), view.nullableText);
+
+    view = bind(new ViewWithAnnotationsForIntegrationTestModel_()
+        .requiredText("required")
+        .nullableText(0)
+        .nullableText(R.string.string_with_args, 2));
+
+    assertEquals(r.getString(R.string.string_with_args, 2), view.nullableText);
+
+    view = bind(new ViewWithAnnotationsForIntegrationTestModel_()
+        .requiredText("required")
+        .nullableText(0)
+        .nullableText(R.string.string_with_args, 2));
+
+    assertEquals(r.getString(R.string.string_with_args, 2), view.nullableText);
+
+    view = bind(new ViewWithAnnotationsForIntegrationTestModel_()
+        .requiredText("required")
+        .nullableText(R.string.string_with_args, 2)
+        .nullableText(0));
+
+    assertNull(view.nullableText);
   }
 }
