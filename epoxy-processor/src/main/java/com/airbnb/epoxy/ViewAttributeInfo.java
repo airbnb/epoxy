@@ -23,6 +23,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
@@ -39,26 +40,40 @@ class ViewAttributeInfo extends AttributeInfo {
 
   ViewAttributeInfo(ModelViewInfo modelInfo, ExecutableElement setterMethod, Types types,
       Elements elements, ErrorLogger errorLogger) {
+    ModelProp annotation = setterMethod.getAnnotation(ModelProp.class);
+    Set<Option> options = new HashSet<>(Arrays.asList(annotation.options()));
 
+    generateSetter = true;
+    generateGetter = true;
+    hasFinalModifier = false;
+    packagePrivate = false;
+    isGenerated = true;
+
+    useInHash = !options.contains(Option.DoNotHash);
+    ignoreRequireHashCode = options.contains(Option.IgnoreRequireHashCode);
+    resetWithNull = options.contains(Option.NullOnRecycle);
+    generateStringOverloads = options.contains(Option.GenerateStringOverloads);
+
+    modelName = modelInfo.getGeneratedName().simpleName();
+    modelPackageName = modelInfo.generatedClassName.packageName();
+
+    groupKey = annotation.group();
     this.viewSetterMethodName = setterMethod.getSimpleName().toString();
     propName = removeSetPrefix(viewSetterMethodName);
     this.modelInfo = modelInfo;
     typeMirror = setterMethod.getParameters().get(0).asType();
-    typeName = TypeName.get(typeMirror);
-
-    ModelProp annotation = setterMethod.getAnnotation(ModelProp.class);
 
     defaultValue = getDefaultValue(annotation, errorLogger, types);
     VariableElement paramElement = setterMethod.getParameters().get(0);
     assignNullability(paramElement);
 
-    Set<Option> options = new HashSet<>(Arrays.asList(annotation.options()));
+    createJavaDoc(elements.getDocComment(setterMethod), constantFieldNameForDefaultValue,
+        modelInfo.viewElement, typeMirror, viewSetterMethodName);
+
     validatePropOptions(errorLogger, options, types, elements);
 
-    generateStringOverloads = options.contains(Option.GenerateStringOverloads);
     if (generateStringOverloads) {
       typeMirror = Utils.getTypeMirror(ClassNames.EPOXY_STRING_ATTRIBUTE_DATA, elements, types);
-      typeName = TypeName.get(typeMirror);
 
       if (defaultValue != null) {
         defaultValue = CodeBlock.of(" new $T($L)", typeMirror, defaultValue);
@@ -68,43 +83,30 @@ class ViewAttributeInfo extends AttributeInfo {
     }
 
     // Suffix the field name with the type to prevent collisions from overloaded setter methods
-    this.fieldName = propName + "_" + getSimpleName(typeName);
-    modelName = modelInfo.getGeneratedName().simpleName();
-    modelPackageName = modelInfo.generatedClassName.packageName();
-    generateSetter = true;
-    generateGetter = true;
-    hasFinalModifier = false;
-    packagePrivate = false;
-    isGenerated = true;
-
-    groupKey = annotation.group();
+    this.fieldName = propName + "_" + getSimpleName(getTypeName());
 
     parseAnnotations(paramElement, types);
     if (generateStringOverloads) {
       setterAnnotations.clear();
       getterAnnotations.clear();
     }
-
-    setJavaDocString(elements.getDocComment(setterMethod));
-
-    useInHash = !options.contains(Option.DoNotHash);
-    ignoreRequireHashCode = options.contains(Option.IgnoreRequireHashCode);
-    resetWithNull = options.contains(Option.NullOnRecycle);
   }
 
   @Override
   boolean isRequired() {
     if (generateStringOverloads) {
-      return (isNullable == null || !isNullable) && constantFieldNameForDefaultValue == null;
+      return !isNullable() && constantFieldNameForDefaultValue == null;
     }
     return super.isRequired();
   }
 
   private void assignNullability(VariableElement paramElement) {
-    if (!typeName.isPrimitive()) {
-      // Default to not nullable
-      isNullable = false;
+    if (isPrimitive()) {
+      return;
     }
+
+    // Default to not nullable
+    setNullable(false);
 
     // Set to nullable if we find a @Nullable annotation
     for (AnnotationMirror annotationMirror : paramElement.getAnnotationMirrors()) {
@@ -113,7 +115,7 @@ class ViewAttributeInfo extends AttributeInfo {
       if (annotationMirror.getAnnotationType().asElement().getSimpleName().toString()
           .equals("Nullable")) {
 
-        isNullable = true;
+        setNullable(true);
         if (defaultValue == null) {
           defaultValue = CodeBlock.of("null");
         }
@@ -180,7 +182,7 @@ class ViewAttributeInfo extends AttributeInfo {
               Option.GenerateStringOverloads, modelName, viewSetterMethodName);
     }
 
-    if (options.contains(Option.NullOnRecycle) && (isNullable == null || !isNullable)) {
+    if (options.contains(Option.NullOnRecycle) && (!hasSetNullability() || !isNullable())) {
       errorLogger
           .logError(
               "Setters with %s option must have a type that is annotated with @Nullable. (%s#%s)",
@@ -232,9 +234,9 @@ class ViewAttributeInfo extends AttributeInfo {
     }
   }
 
-  @Override
-  protected void setJavaDocString(String docComment) {
-    super.setJavaDocString(docComment);
+  private void createJavaDoc(String docComment, String constantFieldNameForDefaultValue,
+      TypeElement viewElement, TypeMirror typeMirror, String viewSetterMethodName) {
+    setJavaDocString(docComment);
 
     if (javaDoc == null) {
       javaDoc = CodeBlock.of("");
@@ -253,13 +255,12 @@ class ViewAttributeInfo extends AttributeInfo {
       if (constantFieldNameForDefaultValue == null) {
         builder.add("Default value is null");
       } else {
-        builder.add("Default value is <b>{@value $T#$L}</b>", ClassName.get(modelInfo.viewElement),
+        builder.add("Default value is <b>{@value $T#$L}</b>", ClassName.get(viewElement),
             constantFieldNameForDefaultValue);
       }
     }
 
-    builder.add("\n\n@see $T#$L($T)", modelInfo.viewElement.asType(), viewSetterMethodName,
-        typeMirror);
+    builder.add("\n\n@see $T#$L($T)", viewElement.asType(), viewSetterMethodName, typeMirror);
 
     javaDoc = builder
         .add("\n").build();
@@ -274,7 +275,7 @@ class ViewAttributeInfo extends AttributeInfo {
   String generatedGetterName() {
     if (isOverload()) {
       // Avoid method name collisions for overloaded method by appending the return type
-      return propName + getSimpleName(typeName);
+      return propName + getSimpleName(getTypeName());
     } else if (generateStringOverloads) {
       return "get" + capitalizeFirstLetter(propName);
     }
@@ -287,7 +288,7 @@ class ViewAttributeInfo extends AttributeInfo {
     return "View Prop {"
         + "view='" + modelInfo.viewElement.getSimpleName() + '\''
         + ", name='" + viewSetterMethodName + '\''
-        + ", type=" + typeName
+        + ", type=" + getTypeName()
         + '}';
   }
 }

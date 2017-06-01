@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
@@ -16,7 +17,7 @@ import java.util.BitSet;
 /**
  * Generated file. Do not modify! */
 public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverloadsView> implements GeneratedModel<TestStringOverloadsView> {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(4);
+  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
   private OnModelBoundListener<TestStringOverloadsViewModel_, TestStringOverloadsView> onModelBoundListener_epoxyGeneratedModel;
 
@@ -24,26 +25,13 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
 
   /**
    * Bitset index: 0 */
-  private CharSequence title_CharSequence;
-
-  /**
-   * Bitset index: 1 */
-  @StringRes
-  private int title_Int;
-
-  /**
-   * Bitset index: 2 */
-  private StringAttributeData title_StringResAttribute;
-
-  /**
-   * Bitset index: 3 */
-  private QuantityStringResAttribute title_QuantityStringResAttribute;
+  private StringAttributeData title_StringAttributeData =  new StringAttributeData();
 
   @Override
   public void addTo(EpoxyController controller) {
     super.addTo(controller);
     addWithDebugValidation(controller);
-    if (!assignedAttributes_epoxyGeneratedModel.get(0) && !assignedAttributes_epoxyGeneratedModel.get(1) && !assignedAttributes_epoxyGeneratedModel.get(2) && !assignedAttributes_epoxyGeneratedModel.get(3)) {
+    if (!assignedAttributes_epoxyGeneratedModel.get(0)) {
     	throw new IllegalStateException("A value is required for setTitle");
     }
   }
@@ -57,18 +45,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
   @Override
   public void bind(final TestStringOverloadsView object) {
     super.bind(object);
-    if (assignedAttributes_epoxyGeneratedModel.get(0)) {
-      object.setTitle(title_CharSequence);
-    }
-    else if (assignedAttributes_epoxyGeneratedModel.get(1)) {
-      object.setTitle(object.getContext().getText(title_Int));
-    }
-    else if (assignedAttributes_epoxyGeneratedModel.get(2)) {
-      object.setTitle(title_StringResAttribute.toString(object.getContext()));
-    }
-    else {
-      object.setTitle(title_QuantityStringResAttribute.toString(object.getContext()));
-    }
+    object.setTitle(title_StringAttributeData.toString(object.getContext()));
   }
 
   @Override
@@ -79,41 +56,8 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     }
     TestStringOverloadsViewModel_ that = (TestStringOverloadsViewModel_) previousModel;
 
-    if (assignedAttributes_epoxyGeneratedModel.equals(that.assignedAttributes_epoxyGeneratedModel)) {
-      if (assignedAttributes_epoxyGeneratedModel.get(0)) {
-        if (title_CharSequence != null ? !title_CharSequence.equals(that.title_CharSequence) : that.title_CharSequence != null) {
-          object.setTitle(title_CharSequence);
-        }
-      }
-       else if (assignedAttributes_epoxyGeneratedModel.get(1)) {
-        if (title_Int != that.title_Int) {
-          object.setTitle(object.getContext().getText(title_Int));
-        }
-      }
-       else if (assignedAttributes_epoxyGeneratedModel.get(2)) {
-        if (title_StringResAttribute != null ? !title_StringResAttribute.equals(that.title_StringResAttribute) : that.title_StringResAttribute != null) {
-          object.setTitle(title_StringResAttribute.toString(object.getContext()));
-        }
-      }
-       else if (assignedAttributes_epoxyGeneratedModel.get(3)) {
-        if (title_QuantityStringResAttribute != null ? !title_QuantityStringResAttribute.equals(that.title_QuantityStringResAttribute) : that.title_QuantityStringResAttribute != null) {
-          object.setTitle(title_QuantityStringResAttribute.toString(object.getContext()));
-        }
-      }
-    }
-    else {
-      if (assignedAttributes_epoxyGeneratedModel.get(0) && !that.assignedAttributes_epoxyGeneratedModel.get(0)) {
-        object.setTitle(title_CharSequence);
-      }
-       else if (assignedAttributes_epoxyGeneratedModel.get(1) && !that.assignedAttributes_epoxyGeneratedModel.get(1)) {
-        object.setTitle(object.getContext().getText(title_Int));
-      }
-       else if (assignedAttributes_epoxyGeneratedModel.get(2) && !that.assignedAttributes_epoxyGeneratedModel.get(2)) {
-        object.setTitle(title_StringResAttribute.toString(object.getContext()));
-      }
-       else if (assignedAttributes_epoxyGeneratedModel.get(3) && !that.assignedAttributes_epoxyGeneratedModel.get(3)) {
-        object.setTitle(title_QuantityStringResAttribute.toString(object.getContext()));
-      }
+    if (!title_StringAttributeData.equals(that.title_StringAttributeData)) {
+      object.setTitle(title_StringAttributeData.toString(object.getContext()));
     }
   }
 
@@ -159,105 +103,60 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     return this;
   }
 
+  public CharSequence getTitle(Context context) {
+    return title_StringAttributeData.toString(context);
+  }
+
   /**
    * <i>Required.</i>
    *
-   * @see TestStringOverloadsView#setTitle(CharSequence)
+   * @see TestStringOverloadsView#setTitle(StringAttributeData)
    */
   public TestStringOverloadsViewModel_ title(CharSequence title) {
+    onMutation();
+    assignedAttributes_epoxyGeneratedModel.set(0);
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
     }
-    assignedAttributes_epoxyGeneratedModel.set(0);
-    assignedAttributes_epoxyGeneratedModel.clear(1);
-    this.title_Int = 0;
-    assignedAttributes_epoxyGeneratedModel.clear(2);
-    this.title_StringResAttribute = null;
-    assignedAttributes_epoxyGeneratedModel.clear(3);
-    this.title_QuantityStringResAttribute = null;
-    onMutation();
-    this.title_CharSequence = title;
+    title_StringAttributeData.setValue(title);
     return this;
-  }
-
-  public CharSequence titleCharSequence() {
-    return title_CharSequence;
   }
 
   /**
    * <i>Required.</i>
    *
-   * @see TestStringOverloadsView#setTitle(CharSequence)
+   * @see TestStringOverloadsView#setTitle(StringAttributeData)
    */
-  public TestStringOverloadsViewModel_ title(@StringRes int title) {
-    assignedAttributes_epoxyGeneratedModel.set(1);
-    assignedAttributes_epoxyGeneratedModel.clear(0);
-    this.title_CharSequence = null;
-    assignedAttributes_epoxyGeneratedModel.clear(2);
-    this.title_StringResAttribute = null;
-    assignedAttributes_epoxyGeneratedModel.clear(3);
-    this.title_QuantityStringResAttribute = null;
+  public TestStringOverloadsViewModel_ title(@StringRes int stringRes) {
     onMutation();
-    this.title_Int = title;
-    if (title == 0) {
-      	throw new IllegalArgumentException("A string resource value of 0 was set for View Prop {view='TestStringOverloadsView', name='setTitle', type=int}");
-    }
+    assignedAttributes_epoxyGeneratedModel.set(0);
+    title_StringAttributeData.setValue(stringRes);
     return this;
-  }
-
-  @StringRes
-  public int titleInt() {
-    return title_Int;
   }
 
   /**
    * <i>Required.</i>
    *
-   * @see TestStringOverloadsView#setTitle(CharSequence)
+   * @see TestStringOverloadsView#setTitle(StringAttributeData)
    */
   public TestStringOverloadsViewModel_ title(@StringRes int stringRes, Object... formatArgs) {
-    assignedAttributes_epoxyGeneratedModel.set(2);
-    assignedAttributes_epoxyGeneratedModel.clear(0);
-    this.title_CharSequence = null;
-    assignedAttributes_epoxyGeneratedModel.clear(1);
-    this.title_Int = 0;
-    assignedAttributes_epoxyGeneratedModel.clear(3);
-    this.title_QuantityStringResAttribute = null;
     onMutation();
-    if (stringRes == 0) {
-      	throw new IllegalArgumentException("A string resource value of 0 was set for View Prop {view='TestStringOverloadsView', name='setTitle', type=com.airbnb.epoxy.StringResAttribute}");
-    }
+    assignedAttributes_epoxyGeneratedModel.set(0);
+    title_StringAttributeData.setValue(stringRes, formatArgs);
     return this;
-  }
-
-  public StringAttributeData titleStringResAttribute() {
-    return title_StringResAttribute;
   }
 
   /**
    * <i>Required.</i>
    *
-   * @see TestStringOverloadsView#setTitle(CharSequence)
+   * @see TestStringOverloadsView#setTitle(StringAttributeData)
    */
-  public TestStringOverloadsViewModel_ titleQuantityRes(@PluralsRes int stringRes, int quantity,
+  public TestStringOverloadsViewModel_ titleQuantityRes(@PluralsRes int pluralRes, int quantity,
       Object... formatArgs) {
-    assignedAttributes_epoxyGeneratedModel.set(3);
-    assignedAttributes_epoxyGeneratedModel.clear(0);
-    this.title_CharSequence = null;
-    assignedAttributes_epoxyGeneratedModel.clear(1);
-    this.title_Int = 0;
-    assignedAttributes_epoxyGeneratedModel.clear(2);
-    this.title_StringResAttribute = null;
     onMutation();
-    this.title_QuantityStringResAttribute = new QuantityStringResAttribute(stringRes, quantity, formatArgs);
-    if (stringRes == 0) {
-      	throw new IllegalArgumentException("A string resource value of 0 was set for View Prop {view='TestStringOverloadsView', name='setTitle', type=com.airbnb.epoxy.QuantityStringResAttribute}");
-    }
+    assignedAttributes_epoxyGeneratedModel.set(0);
+    title_StringAttributeData.setValue(pluralRes, quantity, formatArgs);
     return this;
-  }
-
-  public QuantityStringResAttribute titleQuantityStringResAttribute() {
-    return title_QuantityStringResAttribute;
   }
 
   @Override
@@ -331,10 +230,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
-    this.title_CharSequence = null;
-    this.title_Int = 0;
-    this.title_StringResAttribute = null;
-    this.title_QuantityStringResAttribute = null;
+    this.title_StringAttributeData =  new StringAttributeData();
     super.reset();
     return this;
   }
@@ -357,16 +253,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
       return false;
     }
-    if (title_CharSequence != null ? !title_CharSequence.equals(that.title_CharSequence) : that.title_CharSequence != null) {
-      return false;
-    }
-    if (title_Int != that.title_Int) {
-      return false;
-    }
-    if (title_StringResAttribute != null ? !title_StringResAttribute.equals(that.title_StringResAttribute) : that.title_StringResAttribute != null) {
-      return false;
-    }
-    if (title_QuantityStringResAttribute != null ? !title_QuantityStringResAttribute.equals(that.title_QuantityStringResAttribute) : that.title_QuantityStringResAttribute != null) {
+    if (title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null) {
       return false;
     }
     return true;
@@ -377,20 +264,14 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (title_CharSequence != null ? title_CharSequence.hashCode() : 0);
-    result = 31 * result + title_Int;
-    result = 31 * result + (title_StringResAttribute != null ? title_StringResAttribute.hashCode() : 0);
-    result = 31 * result + (title_QuantityStringResAttribute != null ? title_QuantityStringResAttribute.hashCode() : 0);
+    result = 31 * result + (title_StringAttributeData != null ? title_StringAttributeData.hashCode() : 0);
     return result;
   }
 
   @Override
   public String toString() {
     return "TestStringOverloadsViewModel_{" +
-        "title_CharSequence=" + title_CharSequence +
-        ", title_Int=" + title_Int +
-        ", title_StringResAttribute=" + title_StringResAttribute +
-        ", title_QuantityStringResAttribute=" + title_QuantityStringResAttribute +
+        "title_StringAttributeData=" + title_StringAttributeData +
         "}" + super.toString();
   }
 

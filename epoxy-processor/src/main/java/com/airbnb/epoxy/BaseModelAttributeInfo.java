@@ -38,7 +38,6 @@ class BaseModelAttributeInfo extends AttributeInfo {
       ErrorLogger errorLogger) {
     this.typeUtils = typeUtils;
     this.fieldName = attribute.getSimpleName().toString();
-    this.typeName = TypeName.get(attribute.asType());
     typeMirror = attribute.asType();
     setJavaDocString(elements.getDocComment(attribute));
 
@@ -148,7 +147,7 @@ class BaseModelAttributeInfo extends AttributeInfo {
             && !method.getModifiers().contains(PRIVATE)
             && !method.getModifiers().contains(STATIC)
             && method.getParameters().isEmpty()
-            && TypeName.get(method.getReturnType()).equals(typeName)) {
+            && TypeName.get(method.getReturnType()).equals(getTypeName())) {
           getterMethodName = methodName;
         }
         // check if it is a valid setter
@@ -158,7 +157,7 @@ class BaseModelAttributeInfo extends AttributeInfo {
             && !method.getModifiers().contains(PRIVATE)
             && !method.getModifiers().contains(STATIC)
             && method.getParameters().size() == 1
-            && TypeName.get(method.getParameters().get(0).asType()).equals(typeName)) {
+            && TypeName.get(method.getParameters().get(0).asType()).equals(getTypeName())) {
           setterMethodName = methodName;
         }
       }

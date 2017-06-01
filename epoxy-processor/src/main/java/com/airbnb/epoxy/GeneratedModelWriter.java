@@ -780,8 +780,8 @@ class GeneratedModelWriter {
       String paramName, Builder builder) {
 
     if (configManager.shouldValidateModelUsage()
-        && attr.isNullable != null
-        && !attr.isNullable) {
+        && attr.hasSetNullability()
+        && !attr.isNullable()) {
 
       builder.beginControlFlow("if ($L == null)", paramName)
           .addStatement("throw new $T(\"$L cannot be null\")",

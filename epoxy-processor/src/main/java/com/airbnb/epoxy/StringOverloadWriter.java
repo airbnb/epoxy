@@ -38,7 +38,7 @@ class StringOverloadWriter {
     this.attr = attr;
     this.configManager = configManager;
     fieldName = attr.getFieldName();
-    nullable = attr.isNullable != null && attr.isNullable;
+    nullable = attr.hasSetNullability() && attr.isNullable();
   }
 
   List<MethodSpec> buildMethods() {

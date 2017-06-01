@@ -248,7 +248,7 @@ abstract class GeneratedModelInfo {
     for (AttributeInfo attribute : attributes) {
       isRequired &= attribute.isRequired();
 
-      if (attribute.isNullable != null && attribute.isNullable) {
+      if (attribute.hasSetNullability() && attribute.isNullable()) {
         nullableAttribute = attribute;
       }
 

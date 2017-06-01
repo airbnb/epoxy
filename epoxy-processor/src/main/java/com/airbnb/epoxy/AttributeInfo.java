@@ -15,7 +15,6 @@ import static com.airbnb.epoxy.Utils.isViewClickListenerType;
 abstract class AttributeInfo {
 
   protected String fieldName;
-  protected TypeName typeName;
   protected TypeMirror typeMirror;
   protected String modelName;
   protected String modelPackageName;
@@ -60,7 +59,7 @@ abstract class AttributeInfo {
    * This is Boolean to have null represent that nullability was not explicitly set, eg for
    * primitives or legacy attributes that weren't made with nullability support in mind.
    */
-  protected Boolean isNullable;
+  private Boolean isNullable;
 
   protected void setJavaDocString(String docComment) {
     if (docComment != null && !docComment.trim().isEmpty()) {
@@ -68,6 +67,30 @@ abstract class AttributeInfo {
     } else {
       javaDoc = null;
     }
+  }
+
+  public boolean isNullable() {
+    if (!hasSetNullability()) {
+      throw new IllegalStateException("Nullability has not been set");
+    }
+
+    return isNullable;
+  }
+
+  public boolean hasSetNullability() {
+    return isNullable != null;
+  }
+
+  public void setNullable(boolean nullable) {
+    if (isPrimitive()) {
+      throw new IllegalStateException("Primitives cannot be nullable");
+    }
+
+    isNullable = nullable;
+  }
+
+  public boolean isPrimitive() {
+    return getTypeName().isPrimitive();
   }
 
   boolean isRequired() {
@@ -79,7 +102,7 @@ abstract class AttributeInfo {
   }
 
   TypeName getTypeName() {
-    return typeName;
+    return TypeName.get(typeMirror);
   }
 
   public TypeMirror getTypeMirror() {
@@ -153,7 +176,7 @@ abstract class AttributeInfo {
     return "Attribute {"
         + "model='" + modelName + '\''
         + ", name='" + fieldName + '\''
-        + ", type=" + typeName
+        + ", type=" + getTypeName()
         + '}';
   }
 
@@ -171,13 +194,13 @@ abstract class AttributeInfo {
     if (!fieldName.equals(that.fieldName)) {
       return false;
     }
-    return typeName.equals(that.typeName);
+    return getTypeName().equals(that.getTypeName());
   }
 
   @Override
   public int hashCode() {
     int result = fieldName.hashCode();
-    result = 31 * result + typeName.hashCode();
+    result = 31 * result + getTypeName().hashCode();
     return result;
   }
 
