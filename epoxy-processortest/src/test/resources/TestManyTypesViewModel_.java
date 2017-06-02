@@ -34,7 +34,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
 
   /**
    * Bitset index: 1 */
-  private int intValue_Int;
+  private int intValue_Int = 0;
 
   /**
    * Bitset index: 2 */
@@ -42,7 +42,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
 
   /**
    * Bitset index: 3 */
-  private boolean boolValue_Boolean;
+  private boolean boolValue_Boolean = false;
 
   /**
    * Bitset index: 4 */
@@ -82,17 +82,11 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     if (!assignedAttributes_epoxyGeneratedModel.get(6)) {
     	throw new IllegalStateException("A value is required for setListValue");
     }
-    if (!assignedAttributes_epoxyGeneratedModel.get(1)) {
-    	throw new IllegalStateException("A value is required for setIntValue");
-    }
     if (!assignedAttributes_epoxyGeneratedModel.get(7)) {
     	throw new IllegalStateException("A value is required for setClickListener");
     }
     if (!assignedAttributes_epoxyGeneratedModel.get(4)) {
     	throw new IllegalStateException("A value is required for setBooleanValue");
-    }
-    if (!assignedAttributes_epoxyGeneratedModel.get(3)) {
-    	throw new IllegalStateException("A value is required for setBoolValue");
     }
   }
 
@@ -132,6 +126,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
       return;
     }
     TestManyTypesViewModel_ that = (TestManyTypesViewModel_) previousModel;
+    super.bind(object);
 
     if (stringValue_String != null ? !stringValue_String.equals(that.stringValue_String) : that.stringValue_String != null) {
       object.setStringValue(stringValue_String);
@@ -232,7 +227,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   /**
-   * <i>Required.</i>
+   * <i>Optional</i>: Default value is null
    *
    * @see TestManyTypesView#setIntValue(int)
    */
@@ -267,7 +262,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   /**
-   * <i>Required.</i>
+   * <i>Optional</i>: Default value is null
    *
    * @see TestManyTypesView#setBoolValue(boolean)
    */
@@ -397,6 +392,8 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   /**
+   * If a value of 0 is set then this attribute will revert to its default value.
+   * <p>
    * <i>Optional</i>: Default value is null
    *
    * @see TestManyTypesView#setTitle(CharSequence)
@@ -409,6 +406,8 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   /**
+   * If a value of 0 is set then this attribute will revert to its default value.
+   * <p>
    * <i>Optional</i>: Default value is null
    *
    * @see TestManyTypesView#setTitle(CharSequence)
@@ -421,6 +420,8 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   /**
+   * If a value of 0 is set then this attribute will revert to its default value.
+   * <p>
    * <i>Optional</i>: Default value is null
    *
    * @see TestManyTypesView#setTitle(CharSequence)

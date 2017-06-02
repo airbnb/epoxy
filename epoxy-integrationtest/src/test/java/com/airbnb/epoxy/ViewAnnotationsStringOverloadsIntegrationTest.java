@@ -37,7 +37,7 @@ public class ViewAnnotationsStringOverloadsIntegrationTest {
 
   @Test
   public void getStringOffModel() {
-    String text = "hello world";
+    String text = "hello world!";
 
     ViewWithAnnotationsForIntegrationTestModel_ model =
         new ViewWithAnnotationsForIntegrationTestModel_().requiredText(text);

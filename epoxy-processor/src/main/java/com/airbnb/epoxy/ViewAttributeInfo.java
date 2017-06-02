@@ -28,6 +28,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.Utils.capitalizeFirstLetter;
+import static com.airbnb.epoxy.Utils.getDefaultValue;
 import static com.airbnb.epoxy.Utils.removeSetPrefix;
 
 class ViewAttributeInfo extends AttributeInfo {
@@ -63,11 +64,12 @@ class ViewAttributeInfo extends AttributeInfo {
     this.modelInfo = modelInfo;
     typeMirror = setterMethod.getParameters().get(0).asType();
 
-    defaultValue = getDefaultValue(annotation, errorLogger, types);
+    assignDefaultValue(annotation, errorLogger, types);
     VariableElement paramElement = setterMethod.getParameters().get(0);
     assignNullability(paramElement);
 
-    createJavaDoc(elements.getDocComment(setterMethod), constantFieldNameForDefaultValue,
+    createJavaDoc(elements.getDocComment(setterMethod), codeToSetDefault,
+        constantFieldNameForDefaultValue,
         modelInfo.viewElement, typeMirror, viewSetterMethodName);
 
     validatePropOptions(errorLogger, options, types, elements);
@@ -75,10 +77,18 @@ class ViewAttributeInfo extends AttributeInfo {
     if (generateStringOverloads) {
       typeMirror = Utils.getTypeMirror(ClassNames.EPOXY_STRING_ATTRIBUTE_DATA, elements, types);
 
-      if (defaultValue != null) {
-        defaultValue = CodeBlock.of(" new $T($L)", typeMirror, defaultValue);
+      if (codeToSetDefault.isPresent()) {
+        if (codeToSetDefault.explicit != null) {
+          codeToSetDefault.explicit =
+              CodeBlock.of(" new $T($L)", typeMirror, codeToSetDefault.explicit);
+        }
+
+        if (codeToSetDefault.implicit != null) {
+          codeToSetDefault.implicit =
+              CodeBlock.of(" new $T($L)", typeMirror, codeToSetDefault.implicit);
+        }
       } else {
-        defaultValue = CodeBlock.of(" new $T()", typeMirror);
+        codeToSetDefault.implicit = CodeBlock.of(" new $T()", typeMirror);
       }
     }
 
@@ -116,20 +126,22 @@ class ViewAttributeInfo extends AttributeInfo {
           .equals("Nullable")) {
 
         setNullable(true);
-        if (defaultValue == null) {
-          defaultValue = CodeBlock.of("null");
-        }
+        codeToSetDefault.implicit = CodeBlock.of("null");
         break;
       }
     }
   }
 
-  private CodeBlock getDefaultValue(ModelProp annotation,
+  private void assignDefaultValue(ModelProp annotation,
       ErrorLogger errorLogger, Types types) {
 
     String constantName = annotation.defaultValue();
     if (constantName.isEmpty()) {
-      return null;
+      if (isPrimitive()) {
+        codeToSetDefault.implicit = CodeBlock.of(getDefaultValue(getTypeName()));
+      }
+
+      return;
     }
 
     for (Element element : modelInfo.viewElement.getEnclosedElements()) {
@@ -144,7 +156,7 @@ class ViewAttributeInfo extends AttributeInfo {
           errorLogger.logError(
               "Default values for view props must be static, final, and not private. (%s#%s)",
               modelInfo.viewElement.getSimpleName(), viewSetterMethodName);
-          return null;
+          return;
         }
 
         // Make sure that the type of the default value is a valid type for the prop
@@ -152,10 +164,14 @@ class ViewAttributeInfo extends AttributeInfo {
           errorLogger.logError(
               "The default value for (%s#%s) must be a %s.",
               modelInfo.viewElement.getSimpleName(), viewSetterMethodName, typeMirror);
-          return null;
+          return;
         }
         constantFieldNameForDefaultValue = constantName;
-        return CodeBlock.of("$T.$L", ClassName.get(modelInfo.viewElement), constantName);
+
+        codeToSetDefault.explicit =
+            CodeBlock.of("$T.$L", ClassName.get(modelInfo.viewElement), constantName);
+
+        return;
       }
     }
 
@@ -163,7 +179,6 @@ class ViewAttributeInfo extends AttributeInfo {
         "The default value for (%s#%s) could not be found. It must be a constant field in the "
             + "view class.",
         modelInfo.viewElement.getSimpleName(), viewSetterMethodName);
-    return null;
   }
 
   private void validatePropOptions(ErrorLogger errorLogger, Set<Option> options, Types types,
@@ -234,7 +249,8 @@ class ViewAttributeInfo extends AttributeInfo {
     }
   }
 
-  private void createJavaDoc(String docComment, String constantFieldNameForDefaultValue,
+  private void createJavaDoc(String docComment, DefaultValue codeToSetDefault,
+      String constantFieldNameForDefaultValue,
       TypeElement viewElement, TypeMirror typeMirror, String viewSetterMethodName) {
     setJavaDocString(docComment);
 
@@ -253,7 +269,7 @@ class ViewAttributeInfo extends AttributeInfo {
     } else {
       builder.add("<i>Optional</i>: ");
       if (constantFieldNameForDefaultValue == null) {
-        builder.add("Default value is null");
+          builder.add("Default value is $L", codeToSetDefault.value());
       } else {
         builder.add("Default value is <b>{@value $T#$L}</b>", ClassName.get(viewElement),
             constantFieldNameForDefaultValue);

@@ -50,6 +50,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
       return;
     }
     TestNullStringOverloadsViewModel_ that = (TestNullStringOverloadsViewModel_) previousModel;
+    super.bind(object);
 
     if (!title_StringAttributeData.equals(that.title_StringAttributeData)) {
       object.setTitle(title_StringAttributeData.toString(object.getContext()));
@@ -106,7 +107,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   /**
    * <i>Optional</i>: Default value is null
    *
-   * @see TestNullStringOverloadsView#setTitle(StringAttributeData)
+   * @see TestNullStringOverloadsView#setTitle(CharSequence)
    */
   public TestNullStringOverloadsViewModel_ title(@Nullable CharSequence title) {
     onMutation();
@@ -116,9 +117,11 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   /**
+   * If a value of 0 is set then this attribute will revert to its default value.
+   * <p>
    * <i>Optional</i>: Default value is null
    *
-   * @see TestNullStringOverloadsView#setTitle(StringAttributeData)
+   * @see TestNullStringOverloadsView#setTitle(CharSequence)
    */
   public TestNullStringOverloadsViewModel_ title(@StringRes int stringRes) {
     onMutation();
@@ -128,9 +131,11 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   /**
+   * If a value of 0 is set then this attribute will revert to its default value.
+   * <p>
    * <i>Optional</i>: Default value is null
    *
-   * @see TestNullStringOverloadsView#setTitle(StringAttributeData)
+   * @see TestNullStringOverloadsView#setTitle(CharSequence)
    */
   public TestNullStringOverloadsViewModel_ title(@StringRes int stringRes, Object... formatArgs) {
     onMutation();
@@ -140,9 +145,11 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   /**
+   * If a value of 0 is set then this attribute will revert to its default value.
+   * <p>
    * <i>Optional</i>: Default value is null
    *
-   * @see TestNullStringOverloadsView#setTitle(StringAttributeData)
+   * @see TestNullStringOverloadsView#setTitle(CharSequence)
    */
   public TestNullStringOverloadsViewModel_ titleQuantityRes(@PluralsRes int pluralRes, int quantity,
       Object... formatArgs) {

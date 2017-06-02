@@ -149,9 +149,10 @@ class StringOverloadWriter {
 
     if (forStringRes) {
       if (attr.isRequired()) {
-        javaDoc.add("Throws if a value <= 0 is set.\n\n");
+        javaDoc.add("Throws if a value <= 0 is set.\n<p>\n");
       } else {
-        javaDoc.add("If a value of 0 is set then this attribute will revert to its default value.\n\n");
+        javaDoc.add(
+            "If a value of 0 is set then this attribute will revert to its default value.\n<p>\n");
       }
     }
 

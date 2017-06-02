@@ -23,7 +23,7 @@ public class TestView extends BaseView {
   public void setTitle(CharSequence text) {
   }
 
-  /** Sets a description. */
+  /** Sets a description */
   @ModelProp(defaultValue = "DEFAULT_TITLE", options = Option.GenerateStringOverloads)
   public void setDescription(@Nullable CharSequence text) {
   }
@@ -44,6 +44,10 @@ public class TestView extends BaseView {
   @ModelProp(options = Option.DoNotHash)
   public void setListener(@Nullable OnClickListener listener) {
 
+  }
+
+  @ModelProp
+  public void setBooleanValue(boolean value) {
   }
 
   @OnViewRecycled

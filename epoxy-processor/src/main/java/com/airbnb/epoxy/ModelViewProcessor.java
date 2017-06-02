@@ -37,9 +37,7 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
-// TODO: (eli_hart 5/30/17) How to handle binding diff in base model?
 // TODO: (eli_hart 5/30/17) model wrapper for long click listener too?
-// TODO: (eli_hart 5/28/17) add 0 handling to string res overloads javadoc
 // TODO: (eli_hart 5/26/17) Default model base class
 // TODO: (eli_hart 5/30/17) allow param counts > 0 in setters?
 // TODO: (eli_hart 5/23/17) how to support overriding default values in subclasses?
@@ -351,7 +349,8 @@ class ModelViewProcessor {
 
                   methodBuilder.beginControlFlow("else")
                       .addStatement("$L.$L($L)", boundObjectParam.name,
-                          defaultAttribute.viewSetterMethodName, defaultAttribute.defaultValue)
+                          defaultAttribute.viewSetterMethodName,
+                          defaultAttribute.codeToSetDefault.value())
                       .endControlFlow();
                 }
               }
@@ -372,7 +371,14 @@ class ModelViewProcessor {
                 .addStatement("return")
                 .endControlFlow()
                 .addStatement("$T that = ($T) previousModel", generatedModelClass,
-                    generatedModelClass);
+                    generatedModelClass)
+                .addStatement("super.bind($L)", boundObjectParam.name);
+            // TODO: (eli_hart 6/1/17) We call super.bind in case there are any attributes in a
+            // custom base class. To be more efficient we could call that class's bind method
+            // with the previous model, but if that method isn't implmented it will default to
+            // the full bind method. We need some way to only call the super.bind(view,
+            // previousModel) method if it is implemented. This is a pretty minor optimization
+            // and maybe not worth the time or complexity
 
             for (AttributeGroup attributeGroup : modelInfo.attributeGroups) {
               methodBuilder.addCode("\n");
@@ -438,7 +444,8 @@ class ModelViewProcessor {
 
                   methodBuilder.beginControlFlow("else")
                       .addStatement("$L.$L($L)", boundObjectParam.name,
-                          defaultAttribute.viewSetterMethodName, defaultAttribute.defaultValue)
+                          defaultAttribute.viewSetterMethodName,
+                          defaultAttribute.codeToSetDefault.value())
                       .endControlFlow();
                 }
 

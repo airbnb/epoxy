@@ -55,6 +55,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
       return;
     }
     TestStringOverloadsViewModel_ that = (TestStringOverloadsViewModel_) previousModel;
+    super.bind(object);
 
     if (!title_StringAttributeData.equals(that.title_StringAttributeData)) {
       object.setTitle(title_StringAttributeData.toString(object.getContext()));
@@ -110,7 +111,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
   /**
    * <i>Required.</i>
    *
-   * @see TestStringOverloadsView#setTitle(StringAttributeData)
+   * @see TestStringOverloadsView#setTitle(CharSequence)
    */
   public TestStringOverloadsViewModel_ title(CharSequence title) {
     onMutation();
@@ -123,9 +124,11 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
   }
 
   /**
+   * Throws if a value <= 0 is set.
+   * <p>
    * <i>Required.</i>
    *
-   * @see TestStringOverloadsView#setTitle(StringAttributeData)
+   * @see TestStringOverloadsView#setTitle(CharSequence)
    */
   public TestStringOverloadsViewModel_ title(@StringRes int stringRes) {
     onMutation();
@@ -135,9 +138,11 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
   }
 
   /**
+   * Throws if a value <= 0 is set.
+   * <p>
    * <i>Required.</i>
    *
-   * @see TestStringOverloadsView#setTitle(StringAttributeData)
+   * @see TestStringOverloadsView#setTitle(CharSequence)
    */
   public TestStringOverloadsViewModel_ title(@StringRes int stringRes, Object... formatArgs) {
     onMutation();
@@ -147,9 +152,11 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
   }
 
   /**
+   * Throws if a value <= 0 is set.
+   * <p>
    * <i>Required.</i>
    *
-   * @see TestStringOverloadsView#setTitle(StringAttributeData)
+   * @see TestStringOverloadsView#setTitle(CharSequence)
    */
   public TestStringOverloadsViewModel_ titleQuantityRes(@PluralsRes int pluralRes, int quantity,
       Object... formatArgs) {

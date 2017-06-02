@@ -28,6 +28,8 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.Utils.buildEpoxyException;
+
 abstract class GeneratedModelInfo {
   private static final String RESET_METHOD = "reset";
   protected static final String GENERATED_CLASS_NAME_SUFFIX = "_";
@@ -243,30 +245,25 @@ abstract class GeneratedModelInfo {
       throws EpoxyProcessorException {
 
     AttributeInfo defaultAttribute = null;
-    AttributeInfo nullableAttribute = null;
-    boolean isRequired = true;
     for (AttributeInfo attribute : attributes) {
-      isRequired &= attribute.isRequired();
-
-      if (attribute.hasSetNullability() && attribute.isNullable()) {
-        nullableAttribute = attribute;
+      if (attribute.isRequired() || attribute.codeToSetDefault.isEmpty()) {
+        continue;
       }
 
-      if (attribute.defaultValue != null) {
-        if (defaultAttribute != null) {
-          throw Utils.buildEpoxyException(
-              "Only one default value can exist for a group of attributes that set the same value: "
-                  + attributes);
-        }
+      if (defaultAttribute != null
+          && defaultAttribute.codeToSetDefault.explicit != null
+          && attribute.codeToSetDefault.explicit != null) {
+        throw buildEpoxyException(
+            "Only one default value can exist for a group of attributes: " + attributes);
+      }
+
+      // Have the one explicit default value in the group trump everything else
+      if (defaultAttribute == null || defaultAttribute.codeToSetDefault.explicit == null) {
         defaultAttribute = attribute;
       }
     }
 
-    if (defaultAttribute == null && nullableAttribute != null) {
-      defaultAttribute = nullableAttribute;
-    }
-
-    AttributeGroup group = new AttributeGroup(groupName, attributes, isRequired, defaultAttribute);
+    AttributeGroup group = new AttributeGroup(groupName, attributes, defaultAttribute);
     attributeGroups.add(group);
     for (AttributeInfo attribute : attributes) {
       attribute.setAttributeGroup(group);
@@ -279,28 +276,28 @@ abstract class GeneratedModelInfo {
     final boolean isRequired;
     final AttributeInfo defaultAttribute;
 
-    AttributeGroup(String groupName, List<AttributeInfo> attributes, boolean isRequired,
+    AttributeGroup(String groupName, List<AttributeInfo> attributes,
         AttributeInfo defaultAttribute) throws EpoxyProcessorException {
       if (attributes.isEmpty()) {
-        throw Utils.buildEpoxyException("Attributes cannot be empty");
+        throw buildEpoxyException("Attributes cannot be empty");
       }
 
-      if (!isRequired && defaultAttribute == null) {
-        throw Utils.buildEpoxyException("Default attribute must be set if group is not required");
+      if (defaultAttribute != null && defaultAttribute.codeToSetDefault.isEmpty()) {
+        throw buildEpoxyException("Default attribute has no default code");
       }
 
+      this.defaultAttribute = defaultAttribute;
+      isRequired = defaultAttribute == null;
       this.name = groupName;
       this.attributes = new ArrayList<>(attributes);
-      this.isRequired = isRequired;
-      this.defaultAttribute = defaultAttribute;
     }
 
     CodeBlock codeToSetDefaultValue() {
-      if (defaultAttribute == null) {
+      if (defaultAttribute == null || defaultAttribute.codeToSetDefault.isEmpty()) {
         throw new IllegalStateException("No default value exists");
       }
 
-      return CodeBlock.of(defaultAttribute.setterCode(), defaultAttribute.defaultValue);
+      return CodeBlock.of(defaultAttribute.setterCode(), defaultAttribute.codeToSetDefault.value());
     }
   }
 }

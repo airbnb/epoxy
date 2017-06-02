@@ -202,8 +202,8 @@ class GeneratedModelWriter {
           builder.addJavadoc("Bitset index: $L", attributeIndex(classInfo, attributeInfo));
         }
 
-        if (attributeInfo.defaultValue != null) {
-          builder.initializer(attributeInfo.defaultValue);
+        if (attributeInfo.codeToSetDefault.isPresent()) {
+          builder.initializer(attributeInfo.codeToSetDefault.value());
         }
 
         fields.add(builder.build()
@@ -1083,7 +1083,7 @@ class GeneratedModelWriter {
         }
 
         builder.addStatement(overload.setterCode(),
-            overload.defaultValue != null ? overload.defaultValue
+            overload.codeToSetDefault.isPresent() ? overload.codeToSetDefault.value()
                 : Utils.getDefaultValue(overload.getTypeName()));
       }
     }
@@ -1131,7 +1131,7 @@ class GeneratedModelWriter {
       if (!attributeInfo.hasFinalModifier()) {
 
         builder.addStatement(attributeInfo.setterCode(),
-            attributeInfo.defaultValue != null ? attributeInfo.defaultValue
+            attributeInfo.codeToSetDefault.isPresent() ? attributeInfo.codeToSetDefault.value()
                 : Utils.getDefaultValue(attributeInfo.getTypeName()));
       }
 

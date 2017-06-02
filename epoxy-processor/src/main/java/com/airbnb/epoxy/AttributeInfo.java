@@ -50,11 +50,34 @@ abstract class AttributeInfo {
    */
   protected boolean isGenerated;
   /** If {@link #isGenerated} is true, a default value for the field can be set here. */
-  protected CodeBlock defaultValue;
+  final DefaultValue codeToSetDefault = new DefaultValue();
+
+  static class DefaultValue {
+    /** An explicitly defined default via the default param in the prop annotation. */
+    CodeBlock explicit;
+    /**
+     * An implicitly assumed default, either via an @Nullable annotation or a primitive's default
+     * value. This is overridden if an explicit value is set.
+     */
+    CodeBlock implicit;
+
+    boolean isPresent() {
+      return explicit != null || implicit != null;
+    }
+
+    boolean isEmpty() {
+      return !isPresent();
+    }
+
+    public CodeBlock value() {
+      return explicit != null ? explicit : implicit;
+    }
+  }
+
   /**
    * If {@link #isGenerated} is true, this represents whether null is a valid value to set on the
-   * attribute. If this is true, then the {@link #defaultValue} should be null unless a different
-   * default value is explicitly set.
+   * attribute. If this is true, then the {@link #codeToSetDefault} should be null unless a
+   * different default value is explicitly set.
    * <p>
    * This is Boolean to have null represent that nullability was not explicitly set, eg for
    * primitives or legacy attributes that weren't made with nullability support in mind.
@@ -94,7 +117,7 @@ abstract class AttributeInfo {
   }
 
   boolean isRequired() {
-    return isGenerated && defaultValue == null;
+    return isGenerated && codeToSetDefault.isEmpty();
   }
 
   String getFieldName() {
