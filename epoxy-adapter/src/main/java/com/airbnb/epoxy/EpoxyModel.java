@@ -51,7 +51,7 @@ public abstract class EpoxyModel<T> {
   private boolean currentlyInInterceptors;
   private int hashCodeWhenAdded;
   private boolean hasDefaultId;
-  private SpanSizeCallback spanSizeCallback;
+  private SpanSizeOverrideCallback spanSizeOverride;
 
   protected EpoxyModel(long id) {
     id(id);
@@ -471,18 +471,18 @@ public abstract class EpoxyModel<T> {
     return 1;
   }
 
-  public EpoxyModel<T> spanSizeCallback(@Nullable SpanSizeCallback spanSizeCallback) {
-    this.spanSizeCallback = spanSizeCallback;
+  public EpoxyModel<T> spanSizeOverride(@Nullable SpanSizeOverrideCallback spanSizeCallback) {
+    this.spanSizeOverride = spanSizeCallback;
     return this;
   }
 
-  public interface SpanSizeCallback {
+  public interface SpanSizeOverrideCallback {
     int getSpanSize(int totalSpanCount, int position, int itemCount);
   }
 
   int getSpanSizeInternal(int totalSpanCount, int position, int itemCount) {
-    if (spanSizeCallback != null) {
-      return spanSizeCallback.getSpanSize(totalSpanCount, position, itemCount);
+    if (spanSizeOverride != null) {
+      return spanSizeOverride.getSpanSize(totalSpanCount, position, itemCount);
     }
 
     return getSpanSize(totalSpanCount, position, itemCount);

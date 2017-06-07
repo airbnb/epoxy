@@ -196,8 +196,8 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   @Override
-  public TestNullStringOverloadsViewModel_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public TestNullStringOverloadsViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

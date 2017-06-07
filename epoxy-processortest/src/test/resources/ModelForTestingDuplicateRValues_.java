@@ -120,8 +120,8 @@ public class ModelForTestingDuplicateRValues_ extends ModelForTestingDuplicateRV
   }
 
   @Override
-  public ModelForTestingDuplicateRValues_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public ModelForTestingDuplicateRValues_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

@@ -111,8 +111,8 @@ public class ModelNoValidation_ extends ModelNoValidation implements GeneratedMo
   }
 
   @Override
-  public ModelNoValidation_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public ModelNoValidation_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

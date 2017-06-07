@@ -119,8 +119,8 @@ public class ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ extends Mo
   }
 
   @Override
-  public ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

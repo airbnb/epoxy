@@ -119,8 +119,8 @@ public class ModelForRProcessingTest_ extends ModelForRProcessingTest implements
   }
 
   @Override
-  public ModelForRProcessingTest_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public ModelForRProcessingTest_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

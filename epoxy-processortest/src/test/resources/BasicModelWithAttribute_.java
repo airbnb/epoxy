@@ -119,8 +119,8 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
   }
 
   @Override
-  public BasicModelWithAttribute_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public BasicModelWithAttribute_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

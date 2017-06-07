@@ -120,8 +120,8 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
   }
 
   @Override
-  public ModelWithDataBindingBindingModel_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public ModelWithDataBindingBindingModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

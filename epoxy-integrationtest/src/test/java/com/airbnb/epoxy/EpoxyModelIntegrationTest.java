@@ -2,7 +2,7 @@ package com.airbnb.epoxy;
 
 import android.view.View;
 
-import com.airbnb.epoxy.EpoxyModel.SpanSizeCallback;
+import com.airbnb.epoxy.EpoxyModel.SpanSizeOverrideCallback;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +43,7 @@ public class EpoxyModelIntegrationTest {
   @Test
   public void modelReturnsSpanCountFromCallback() {
     ModelWithSpanCountCallback model = new ModelWithSpanCountCallback();
-    model.spanSizeCallback(new SpanSizeCallback() {
+    model.spanSizeOverride(new SpanSizeOverrideCallback() {
       @Override
       public int getSpanSize(int totalSpanCount, int position, int itemCount) {
         return 7;

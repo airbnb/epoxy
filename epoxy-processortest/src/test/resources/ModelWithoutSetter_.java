@@ -113,8 +113,8 @@ public class ModelWithoutSetter_ extends ModelWithoutSetter implements Generated
   }
 
   @Override
-  public ModelWithoutSetter_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public ModelWithoutSetter_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

@@ -131,8 +131,8 @@ public class ModelReturningClassTypeWithVarargs_ extends ModelReturningClassType
   }
 
   @Override
-  public ModelReturningClassTypeWithVarargs_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public ModelReturningClassTypeWithVarargs_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

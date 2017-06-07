@@ -113,8 +113,8 @@ public class ModelWithFinalField_ extends ModelWithFinalField implements Generat
   }
 
   @Override
-  public ModelWithFinalField_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public ModelWithFinalField_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

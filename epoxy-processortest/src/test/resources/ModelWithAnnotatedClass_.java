@@ -109,8 +109,8 @@ public class ModelWithAnnotatedClass_ extends ModelWithAnnotatedClass implements
   }
 
   @Override
-  public ModelWithAnnotatedClass_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public ModelWithAnnotatedClass_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

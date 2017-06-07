@@ -119,8 +119,8 @@ public class ModelWithSuperAttributes_ extends ModelWithSuperAttributes implemen
   }
 
   @Override
-  public ModelWithSuperAttributes_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public ModelWithSuperAttributes_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

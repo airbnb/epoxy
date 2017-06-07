@@ -332,8 +332,8 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   @Override
-  public DataBindingModelWithAllFieldTypes_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public DataBindingModelWithAllFieldTypes_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

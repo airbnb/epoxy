@@ -127,8 +127,8 @@ public class ModelWithConstructors_ extends ModelWithConstructors implements Gen
   }
 
   @Override
-  public ModelWithConstructors_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public ModelWithConstructors_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

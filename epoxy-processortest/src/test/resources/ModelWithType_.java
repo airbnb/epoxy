@@ -119,8 +119,8 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> implement
   }
 
   @Override
-  public ModelWithType_<T> spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public ModelWithType_<T> spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

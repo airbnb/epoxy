@@ -126,8 +126,8 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
   }
 
   @Override
-  public ModelWithIntDef_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public ModelWithIntDef_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

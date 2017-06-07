@@ -109,8 +109,8 @@ public class GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ extends 
   }
 
   @Override
-  public GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ spanSizeCallback(@Nullable EpoxyModel.SpanSizeCallback arg0) {
-    super.spanSizeCallback(arg0);
+  public GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 
