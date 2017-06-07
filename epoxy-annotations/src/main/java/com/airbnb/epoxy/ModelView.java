@@ -10,8 +10,25 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
 public @interface ModelView {
+  /**
+   * The layout file to use in the generated model to inflate the view. This is required unless a
+   * default pattern is set via {@link PackageModelViewConfig}.
+   * <p>
+   * Overrides any default set in {@link PackageModelViewConfig}
+   */
   @LayoutRes int defaultLayout() default 0;
+  /**
+   * An optional EpoxyModel subclass to use as the base class of the generated view. A default can
+   * also be set with {@link PackageModelViewConfig}
+   * <p>
+   * * Overrides any default set in {@link PackageModelViewConfig}
+   */
   Class<?> baseModelClass() default Void.class;
+  /**
+   * Whether the model should save view state when unbound.
+   * <p>
+   * see: EpoxyModel#shouldSaveViewState
+   */
   boolean saveViewState() default false;
   /**
    * True to have the generated model take up the total available span count. False to instead use a

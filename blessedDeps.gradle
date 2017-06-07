@@ -27,7 +27,8 @@ rootProject.ext.MOCKITO_VERSION = "2.7.7"
 rootProject.ext.ROBOLECTRIC_VERSION = "3.4-rc2"
 
 rootProject.ext.LOTTIE_VERSION = "2.0.0-beta3"
-rootProject.ext.LITHO_VERSION = "0.2.0"
+rootProject.ext.LITHO_VERSION = "0.3.1"
+rootProject.ext.SO_LOADER_VERSION = "0.2.0"
 
 rootProject.ext.deps = [
     androidSupportLibrary: "com.android.support:appcompat-v7:$ANDROID_SUPPORT_LIBS_VERSION",
@@ -46,7 +47,7 @@ rootProject.ext.deps = [
     robolectric          : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION",
     lottie               : "com.airbnb.android:lottie:$LOTTIE_VERSION",
     lithoProcessor       : "com.facebook.litho:litho-processor:$LITHO_VERSION",
-    lithoSoloader        : "com.facebook.soloader:soloader:$LITHO_VERSION",
+    lithoSoloader        : "com.facebook.soloader:soloader:$SO_LOADER_VERSION",
     lithoCore            : "com.facebook.litho:litho-core:$LITHO_VERSION",
     lithoWidget          : "com.facebook.litho:litho-widget:$LITHO_VERSION",
     lithoAnnotations     : "com.facebook.litho:litho-annotations:$LITHO_VERSION"

@@ -37,12 +37,11 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
+// TODO: (eli_hart 6/6/17) consider binding base model after view so the model can override view
+// behavior (like changing width dynamically or styles)
 // TODO: (eli_hart 5/30/17) model wrapper for long click listener too?
-// TODO: (eli_hart 5/26/17) Default model base class
 // TODO: (eli_hart 5/30/17) allow param counts > 0 in setters?
 // TODO: (eli_hart 5/23/17) how to support overriding default values in subclasses?
-// TODO: (eli_hart 5/14/17) Support multiple layouts for different styles?
-// TODO: (eli_hart 5/15/17) how to support divider type setting?
 class ModelViewProcessor {
   private final Elements elements;
   private final Types types;

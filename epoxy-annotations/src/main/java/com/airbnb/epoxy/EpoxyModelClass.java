@@ -21,4 +21,14 @@ public @interface EpoxyModelClass {
    * don't have to implement `getDefaultLayout`; it will be generated for you.
    */
   @LayoutRes int layout() default 0;
+
+  /**
+   * If true, any layout file name that has {@link #layout()} as a prefix will be included as a
+   * method on the generated model.
+   * <p>
+   * For example, if the layout is "R.layout.my_view" then any layouts in the form of
+   * "R.layout.my_view_*" will result in a generated method like "with*Layout" that will apply that
+   * other layout instead of the default.
+   */
+  boolean useLayoutOverloads() default false;
 }

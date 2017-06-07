@@ -9,6 +9,7 @@ import com.sun.tools.javac.tree.TreeScanner;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,8 @@ class LayoutResourceProcessor {
 
   private Trees trees;
   private final Map<String, ClassName> rClassNameMap = new HashMap<>();
+  /** Maps the name of an R class to a list of all of the layout resources in that class. */
+  private final Map<String, List<LayoutResource>> rClassLayoutResources = new HashMap<>();
   private final AnnotationLayoutParamScanner scanner = new AnnotationLayoutParamScanner();
 
   LayoutResourceProcessor(ProcessingEnvironment processingEnv, ErrorLogger errorLogger,
@@ -153,6 +156,24 @@ class LayoutResourceProcessor {
     return new ArrayList<>(rClassNameMap.values());
   }
 
+   List<LayoutResource> getAlternateLayouts(LayoutResource layout) {
+     String rClass = layout.className.topLevelClassName().reflectionName();
+     List<LayoutResource> layouts = rClassLayoutResources.get(rClass);
+     if (layouts == null) {
+       return Collections.emptyList();
+     }
+
+     List<LayoutResource> result = new ArrayList<>();
+     String target = layout.resourceName + "_";
+     for (LayoutResource otherLayout : layouts) {
+       if (otherLayout.resourceName.startsWith(target)) {
+         result.add(otherLayout);
+       }
+     }
+
+     return result;
+   }
+
   /**
    * Scans annotations that have layout resources as parameters. It supports both one layout
    * parameter, and parameters in an array. The R class, resource name, and value, is extract from
@@ -194,13 +215,14 @@ class LayoutResourceProcessor {
 
     private ScannerResult parseResourceSymbol(VarSymbol symbol) {
       // eg com.airbnb.epoxy.R
-      String rClass = symbol.getEnclosingElement().getEnclosingElement().enclClass().className();
+      Symbol layoutClass = symbol.getEnclosingElement();
+      String rClass = layoutClass.getEnclosingElement().enclClass().className();
 
       // eg com.airbnb.epoxy.R.layout
-      String layoutClass = symbol.getEnclosingElement().getQualifiedName().toString();
+      String layoutClassName = layoutClass.getQualifiedName().toString();
 
       // Make sure this is a layout resource
-      if (!(rClass + ".layout").equals(layoutClass)) {
+      if (!(rClass + ".layout").equals(layoutClassName)) {
         errorLogger
             .logError("%s annotation requires a layout resource but received %s. (Element: %s)",
                 annotationClass.getSimpleName(), layoutClass, element.getSimpleName());
@@ -217,7 +239,32 @@ class LayoutResourceProcessor {
         return null;
       }
 
+      saveLayoutValuesForRClass(rClass, layoutClass);
+
       return new ScannerResult(rClass, layoutResourceName, (int) layoutValue);
+    }
+
+    private void saveLayoutValuesForRClass(String rClass, Symbol layoutClass) {
+      if (rClassLayoutResources.containsKey(rClass)) {
+        return;
+      }
+
+      List<Symbol> layoutElements = layoutClass.getEnclosedElements();
+      List<LayoutResource> layoutNames = new ArrayList<>(layoutElements.size());
+      for (Symbol layoutResource : layoutElements) {
+        if (!(layoutResource instanceof VarSymbol)) {
+          continue;
+        }
+
+        String resourceName = layoutResource.getSimpleName().toString();
+        layoutNames.add(new LayoutResource(
+            getClassName(rClass),
+            resourceName,
+            0 // Don't care about this for our use case
+        ));
+      }
+
+      rClassLayoutResources.put(rClass, layoutNames);
     }
 
     void setCurrentAnnotationDetails(Element element, Class annotationClass) {

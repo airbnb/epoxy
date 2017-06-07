@@ -1,5 +1,7 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.Nullable;
+
 import com.squareup.javapoet.ClassName;
 
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ class ConfigManager {
   private static final PackageConfigSettings
       DEFAULT_PACKAGE_CONFIG_SETTINGS = PackageConfigSettings.forDefaults();
   private final Map<String, PackageConfigSettings> configurationMap = new HashMap<>();
-  private final Map<String, PackageModelViewNameSettings> modelViewNamingMap = new HashMap<>();
+  private final Map<String, PackageModelViewSettings> modelViewNamingMap = new HashMap<>();
   private final Elements elementUtils;
   private final boolean validateModelUsage;
   private final boolean globalRequireHashCode;
@@ -91,40 +93,40 @@ class ConfigManager {
       configurationMap.put(packageName, PackageConfigSettings.create(annotation));
     }
 
-    for (Element element : roundEnv.getElementsAnnotatedWith(PackageModelViewLayoutNaming.class)) {
+    for (Element element : roundEnv.getElementsAnnotatedWith(PackageModelViewConfig.class)) {
       String packageName = elementUtils.getPackageOf(element).getQualifiedName().toString();
 
       if (modelViewNamingMap.containsKey(packageName)) {
         errors.add(buildEpoxyException("Only one %s annotation is allowed per package (%s)",
-            PackageModelViewLayoutNaming.class.getSimpleName(), packageName));
+            PackageModelViewConfig.class.getSimpleName(), packageName));
         continue;
       }
 
-      TypeMirror rLayoutClassType =
-          getClassParamFromAnnotation(element, PackageModelViewLayoutNaming.class, "rLayoutClass");
-      if (rLayoutClassType == null) {
+      TypeMirror rClassType =
+          getClassParamFromAnnotation(element, PackageModelViewConfig.class, "rClass");
+      if (rClassType == null) {
         errors.add(buildEpoxyException(
             "Unable to get R class details from annotation %s (package: %s)",
-            PackageModelViewLayoutNaming.class.getSimpleName(), packageName));
+            PackageModelViewConfig.class.getSimpleName(), packageName));
         continue;
       }
 
-      ClassName rLayoutClassName =
-          ClassName.get((TypeElement) typeUtils.asElement(rLayoutClassType));
+      ClassName rClassName =
+          ClassName.get((TypeElement) typeUtils.asElement(rClassType));
 
-      String rLayoutClassString = rLayoutClassName.reflectionName();
-      if (!rLayoutClassString.endsWith(".R$layout")
-          && !rLayoutClassString.endsWith(".R2$layout")) {
+      String rLayoutClassString = rClassName.reflectionName();
+      if (!rLayoutClassString.endsWith(".R")
+          && !rLayoutClassString.endsWith(".R2")) {
         errors.add(buildEpoxyException(
-            "Layout class in %s must be of the form 'R.layout', but was '%s' (package: %s)",
-            PackageModelViewLayoutNaming.class.getSimpleName(), rLayoutClassString, packageName));
+            "Invalid R class in %s. Was '%s' (package: %s)",
+            PackageModelViewConfig.class.getSimpleName(), rLayoutClassString, packageName));
         continue;
       }
 
-      PackageModelViewLayoutNaming annotation =
-          element.getAnnotation(PackageModelViewLayoutNaming.class);
-      modelViewNamingMap.put(packageName,
-          new PackageModelViewNameSettings(rLayoutClassName, annotation.layoutName()));
+      PackageModelViewConfig annotation =
+          element.getAnnotation(PackageModelViewConfig.class);
+
+      modelViewNamingMap.put(packageName, new PackageModelViewSettings(rClassName, annotation));
     }
 
     return errors;
@@ -149,9 +151,28 @@ class ConfigManager {
     return validateModelUsage;
   }
 
-  PackageModelViewNameSettings getModelViewNamingSettings(Element viewElement) {
+  PackageModelViewSettings getModelViewConfig(Element viewElement) {
     String packageName = elementUtils.getPackageOf(viewElement).getQualifiedName().toString();
     return getObjectFromPackageMap(modelViewNamingMap, packageName, null);
+  }
+
+  @Nullable
+  TypeMirror getDefaultBaseModel(TypeElement viewElement) {
+    PackageModelViewSettings modelViewConfig = getModelViewConfig(viewElement);
+    if (modelViewConfig == null) {
+      return null;
+    }
+
+    return modelViewConfig.defaultBaseModel;
+  }
+
+  boolean includeAlternateLayoutsForViews(TypeElement viewElement) {
+    PackageModelViewSettings modelViewConfig = getModelViewConfig(viewElement);
+    if (modelViewConfig == null) {
+      return false;
+    }
+
+    return modelViewConfig.includeAlternateLayouts;
   }
 
   private PackageConfigSettings getConfigurationForElement(Element element) {

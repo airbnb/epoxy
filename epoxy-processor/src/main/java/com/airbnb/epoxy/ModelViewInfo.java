@@ -58,6 +58,7 @@ class ModelViewInfo extends GeneratedModelInfo {
 
     saveViewState = viewAnnotation.saveViewState();
     fullSpanSize = viewAnnotation.fullSpan();
+    includeOtherLayoutOptions = configManager.includeAlternateLayoutsForViews(viewElement);
   }
 
   private TypeElement lookUpSuperClassElement() {
@@ -72,10 +73,11 @@ class ModelViewInfo extends GeneratedModelInfo {
       classToExtend = mte.getTypeMirror();
     }
 
-    if (classToExtend == null || classToExtend.toString().equals("java.lang.Void")) {
-      // The default value of the annotation parameter is Void.class to signal that the user
-      // does not want to provide a custom base class
-      return defaultSuper;
+    if (classToExtend == null
+        || classToExtend.toString().equals(Void.class.getCanonicalName())) {
+      TypeMirror defaultBaseModel = configManager.getDefaultBaseModel(viewElement);
+      return defaultBaseModel != null
+          ? (TypeElement) typeUtils.asElement(defaultBaseModel) : defaultSuper;
     }
 
     if (!isEpoxyModel(classToExtend)) {
@@ -141,11 +143,11 @@ class ModelViewInfo extends GeneratedModelInfo {
       return layoutResourceProcessor.getLayoutInAnnotation(viewElement, ModelView.class);
     }
 
-    PackageModelViewNameSettings namingSettings =
-        configManager.getModelViewNamingSettings(viewElement);
+    PackageModelViewSettings modelViewConfig =
+        configManager.getModelViewConfig(viewElement);
 
-    if (namingSettings != null) {
-      return namingSettings.getNameForView(viewElement);
+    if (modelViewConfig != null) {
+      return modelViewConfig.getNameForView(viewElement);
     }
 
     errorLogger.logError("Unable to get layout resource for view %s", viewElement.getSimpleName());

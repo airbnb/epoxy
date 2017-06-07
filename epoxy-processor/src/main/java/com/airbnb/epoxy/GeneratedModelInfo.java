@@ -40,6 +40,11 @@ abstract class GeneratedModelInfo {
   protected ClassName generatedClassName;
   protected TypeName boundObjectTypeName;
   protected boolean shouldGenerateModel;
+  /**
+   * If true, any layout classes that exist that are prefixed by the default layout are included in
+   * the generated model as other layout options via a generated method for each alternate layout.
+   */
+  protected boolean includeOtherLayoutOptions;
   // TODO: (eli_hart 5/16/17) Sort attributes alphabetically so overloaded setters are together
   protected final List<AttributeInfo> attributeInfo = new ArrayList<>();
   protected final List<TypeVariableName> typeVariableNames = new ArrayList<>();

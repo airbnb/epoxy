@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.airbnb.epoxy.GeneratedModelInfo.AttributeGroup;
 import com.squareup.javapoet.ArrayTypeName;
@@ -135,6 +136,7 @@ class GeneratedModelWriter {
         .addMethods(generateSettersAndGetters(info))
         .addMethods(generateMethodsReturningClassType(info))
         .addMethods(generateDefaultMethodImplementations(info))
+        .addMethods(generateOtherLayoutOptions(info))
         .addMethods(generateDataBindingMethodsIfNeeded(info))
         .addMethod(generateReset(info))
         .addMethod(generateEquals(info))
@@ -146,6 +148,41 @@ class GeneratedModelWriter {
     JavaFile.builder(info.getGeneratedName().packageName(), builder.build())
         .build()
         .writeTo(filer);
+  }
+
+  private Iterable<MethodSpec> generateOtherLayoutOptions(GeneratedModelInfo info) {
+    if (!info.includeOtherLayoutOptions) {
+      return Collections.emptyList();
+    }
+
+    List<MethodSpec> result = new ArrayList<>();
+    LayoutResource layout = getDefaultLayoutResource(info);
+    if (layout == null || !layout.qualifed) {
+      return Collections.emptyList();
+    }
+
+    int defaultLayoutNameLength = layout.resourceName.length();
+
+    for (LayoutResource otherLayout : layoutResourceProcessor.getAlternateLayouts(layout)) {
+      if (!otherLayout.qualifed) {
+        continue;
+      }
+
+      String layoutDescription = "";
+      for (String namePart
+          : otherLayout.resourceName.substring(defaultLayoutNameLength).split("_")) {
+        layoutDescription += Utils.capitalizeFirstLetter(namePart);
+      }
+
+      result.add(MethodSpec.methodBuilder("with" + layoutDescription + "Layout")
+          .returns(info.getParameterizedGeneratedName())
+          .addModifiers(PUBLIC)
+          .addStatement("layout($L)", otherLayout.code)
+          .addStatement("return this")
+          .build());
+    }
+
+    return result;
   }
 
   static boolean shouldUseBitSet(GeneratedModelInfo info) {
@@ -560,47 +597,56 @@ class GeneratedModelWriter {
   private void addDefaultLayoutMethodIfNeeded(GeneratedModelInfo modelInfo,
       List<MethodSpec> methods) {
 
-    MethodSpec getDefaultLayoutMethod = MethodSpec.methodBuilder(
-        GET_DEFAULT_LAYOUT_METHOD_NAME)
+    LayoutResource layout = getDefaultLayoutResource(modelInfo);
+    if (layout == null) {
+      return;
+    }
+
+    methods.add(buildDefaultLayoutMethodBase()
+        .toBuilder()
+        .addStatement("return $L", layout.code)
+        .build());
+  }
+
+  private MethodSpec buildDefaultLayoutMethodBase() {
+    return MethodSpec.methodBuilder(GET_DEFAULT_LAYOUT_METHOD_NAME)
         .addAnnotation(Override.class)
         .addAnnotation(LayoutRes.class)
         .addModifiers(Modifier.PROTECTED)
         .returns(TypeName.INT)
         .build();
+  }
 
+  @Nullable
+  private LayoutResource getDefaultLayoutResource(GeneratedModelInfo modelInfo) {
     // TODO: This is pretty ugly and could be abstracted/decomposed better. We could probably
     // make a small class to contain this logic, or build it into the model info classes
-    LayoutResource layout;
+
     if (modelInfo instanceof DataBindingModelInfo) {
-      layout = ((DataBindingModelInfo) modelInfo).getLayoutResource();
-    } else if (modelInfo instanceof ModelViewInfo) {
-      layout = ((ModelViewInfo) modelInfo).getLayoutResource(layoutResourceProcessor);
-    } else {
-
-      TypeElement superClassElement = modelInfo.getSuperClassElement();
-      if (implementsMethod(superClassElement, getDefaultLayoutMethod, typeUtils)) {
-        return;
-      }
-
-      TypeElement modelClassWithAnnotation = findSuperClassWithClassAnnotation(superClassElement);
-      if (modelClassWithAnnotation == null) {
-        errorLogger
-            .logError("Model must use %s annotation if it does not implement %s. (class: %s)",
-                EpoxyModelClass.class,
-                GET_DEFAULT_LAYOUT_METHOD_NAME,
-                modelInfo.getSuperClassName());
-        return;
-      }
-
-      layout = layoutResourceProcessor
-          .getLayoutInAnnotation(modelClassWithAnnotation, EpoxyModelClass.class);
+      return ((DataBindingModelInfo) modelInfo).getLayoutResource();
     }
 
-    getDefaultLayoutMethod = getDefaultLayoutMethod.toBuilder()
-        .addStatement("return $L", layout.code)
-        .build();
+    if (modelInfo instanceof ModelViewInfo) {
+      return ((ModelViewInfo) modelInfo).getLayoutResource(layoutResourceProcessor);
+    }
 
-    methods.add(getDefaultLayoutMethod);
+    TypeElement superClassElement = modelInfo.getSuperClassElement();
+    if (implementsMethod(superClassElement, buildDefaultLayoutMethodBase(), typeUtils)) {
+      return null;
+    }
+
+    TypeElement modelClassWithAnnotation = findSuperClassWithClassAnnotation(superClassElement);
+    if (modelClassWithAnnotation == null) {
+      errorLogger
+          .logError("Model must use %s annotation if it does not implement %s. (class: %s)",
+              EpoxyModelClass.class,
+              GET_DEFAULT_LAYOUT_METHOD_NAME,
+              modelInfo.getSuperClassName());
+      return null;
+    }
+
+    return layoutResourceProcessor
+        .getLayoutInAnnotation(modelClassWithAnnotation, EpoxyModelClass.class);
   }
 
   /**

@@ -11,7 +11,7 @@ import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.OnViewRecycled;
 
 // TODO: (eli_hart 5/22/17) delete this before public release
-@ModelView(defaultLayout = R.layout.model_header, baseModelClass = BaseTestModel.class)
+@ModelView(defaultLayout = R.layout.model_header)
 public class TestView extends BaseView {
   static final String DEFAULT_TITLE = "hello world!";
 
