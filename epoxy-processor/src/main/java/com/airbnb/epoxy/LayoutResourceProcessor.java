@@ -38,7 +38,7 @@ class LayoutResourceProcessor {
   private Trees trees;
   private final Map<String, ClassName> rClassNameMap = new HashMap<>();
   /** Maps the name of an R class to a list of all of the layout resources in that class. */
-  private final Map<String, List<LayoutResource>> rClassLayoutResources = new HashMap<>();
+  private final Map<ClassName, List<LayoutResource>> rClassLayoutResources = new HashMap<>();
   private final AnnotationLayoutParamScanner scanner = new AnnotationLayoutParamScanner();
 
   LayoutResourceProcessor(ProcessingEnvironment processingEnv, ErrorLogger errorLogger,
@@ -90,7 +90,7 @@ class LayoutResourceProcessor {
 
       for (ScannerResult scannerResult : scannerResults) {
         resources.add(new LayoutResource(
-            getClassName(scannerResult.rClass),
+            scannerResult.rClass,
             scannerResult.resourceName,
             scannerResult.resourceValue
         ));
@@ -157,8 +157,7 @@ class LayoutResourceProcessor {
   }
 
    List<LayoutResource> getAlternateLayouts(LayoutResource layout) {
-     String rClass = layout.className.topLevelClassName().reflectionName();
-     List<LayoutResource> layouts = rClassLayoutResources.get(rClass);
+     List<LayoutResource> layouts = rClassLayoutResources.get(layout.className);
      if (layouts == null) {
        return Collections.emptyList();
      }
@@ -239,12 +238,13 @@ class LayoutResourceProcessor {
         return null;
       }
 
-      saveLayoutValuesForRClass(rClass, layoutClass);
+      ClassName rClassName = getClassName(rClass);
+      saveLayoutValuesForRClass(rClassName, layoutClass);
 
-      return new ScannerResult(rClass, layoutResourceName, (int) layoutValue);
+      return new ScannerResult(rClassName, layoutResourceName, (int) layoutValue);
     }
 
-    private void saveLayoutValuesForRClass(String rClass, Symbol layoutClass) {
+    private void saveLayoutValuesForRClass(ClassName rClass, Symbol layoutClass) {
       if (rClassLayoutResources.containsKey(rClass)) {
         return;
       }
@@ -258,7 +258,7 @@ class LayoutResourceProcessor {
 
         String resourceName = layoutResource.getSimpleName().toString();
         layoutNames.add(new LayoutResource(
-            getClassName(rClass),
+            rClass,
             resourceName,
             0 // Don't care about this for our use case
         ));
@@ -274,11 +274,11 @@ class LayoutResourceProcessor {
   }
 
   private static class ScannerResult {
-    final String rClass;
+    final ClassName rClass;
     final String resourceName;
     final int resourceValue;
 
-    private ScannerResult(String rClass, String resourceName, int resourceValue) {
+    private ScannerResult(ClassName rClass, String resourceName, int resourceValue) {
       this.rClass = rClass;
       this.resourceName = resourceName;
       this.resourceValue = resourceValue;
