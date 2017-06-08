@@ -5,9 +5,8 @@ import android.support.v7.widget.AppCompatTextView;
 
 import com.airbnb.epoxy.ModelProp;
 import com.airbnb.epoxy.ModelView;
-import com.airbnb.epoxy.R;
 
-@ModelView(defaultLayout = R.layout.model_header)
+@ModelView
 public abstract class BaseView extends AppCompatTextView {
 
   public BaseView(Context context) {

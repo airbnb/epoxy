@@ -18,8 +18,11 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+
+import static com.airbnb.epoxy.Utils.getElementByName;
 
 /**
  * Scans R files and and compiles layout resource values in those R classes. This allows us to look
@@ -156,22 +159,55 @@ class LayoutResourceProcessor {
     return new ArrayList<>(rClassNameMap.values());
   }
 
-   List<LayoutResource> getAlternateLayouts(LayoutResource layout) {
-     List<LayoutResource> layouts = rClassLayoutResources.get(layout.className);
-     if (layouts == null) {
-       return Collections.emptyList();
-     }
+  List<LayoutResource> getAlternateLayouts(LayoutResource layout) {
+    if (rClassLayoutResources.isEmpty()) {
+      // This will only have been filled if at least one view has a layout in it's annotation.
+      // If all view's use their default layout then resources haven't been parsed yet and we can
+      // do it now
+      Element rLayoutClassElement = getElementByName(layout.className, elementUtils, typeUtils);
+      saveLayoutValuesForRClass(layout.className, rLayoutClassElement);
+    }
 
-     List<LayoutResource> result = new ArrayList<>();
-     String target = layout.resourceName + "_";
-     for (LayoutResource otherLayout : layouts) {
-       if (otherLayout.resourceName.startsWith(target)) {
-         result.add(otherLayout);
-       }
-     }
+    List<LayoutResource> layouts = rClassLayoutResources.get(layout.className);
+    if (layouts == null) {
+      errorLogger.logError("No layout files found for R class: %s", layout.className);
+      return Collections.emptyList();
+    }
 
-     return result;
-   }
+    List<LayoutResource> result = new ArrayList<>();
+    String target = layout.resourceName + "_";
+    for (LayoutResource otherLayout : layouts) {
+      if (otherLayout.resourceName.startsWith(target)) {
+        result.add(otherLayout);
+      }
+    }
+
+    return result;
+  }
+
+  private void saveLayoutValuesForRClass(ClassName rClass, Element layoutClass) {
+    if (rClassLayoutResources.containsKey(rClass)) {
+      return;
+    }
+
+    List<? extends Element> layoutElements = layoutClass.getEnclosedElements();
+    List<LayoutResource> layoutNames = new ArrayList<>(layoutElements.size());
+    for (Element layoutResource : layoutElements) {
+      if (!(layoutResource instanceof VariableElement)) {
+        continue;
+      }
+
+      String resourceName = layoutResource.getSimpleName().toString();
+      layoutNames.add(new LayoutResource(
+          rClass,
+          resourceName,
+          0 // Don't care about this for our use case
+      ));
+    }
+
+    rClassLayoutResources.put(rClass, layoutNames);
+  }
+
 
   /**
    * Scans annotations that have layout resources as parameters. It supports both one layout
@@ -244,28 +280,6 @@ class LayoutResourceProcessor {
       return new ScannerResult(rClassName, layoutResourceName, (int) layoutValue);
     }
 
-    private void saveLayoutValuesForRClass(ClassName rClass, Symbol layoutClass) {
-      if (rClassLayoutResources.containsKey(rClass)) {
-        return;
-      }
-
-      List<Symbol> layoutElements = layoutClass.getEnclosedElements();
-      List<LayoutResource> layoutNames = new ArrayList<>(layoutElements.size());
-      for (Symbol layoutResource : layoutElements) {
-        if (!(layoutResource instanceof VarSymbol)) {
-          continue;
-        }
-
-        String resourceName = layoutResource.getSimpleName().toString();
-        layoutNames.add(new LayoutResource(
-            rClass,
-            resourceName,
-            0 // Don't care about this for our use case
-        ));
-      }
-
-      rClassLayoutResources.put(rClass, layoutNames);
-    }
 
     void setCurrentAnnotationDetails(Element element, Class annotationClass) {
       this.element = element;
@@ -293,7 +307,7 @@ class LayoutResourceProcessor {
     ClassName className = rClassNameMap.get(rClass);
 
     if (className == null) {
-      Element rClassElement = Utils.getElementByName(rClass, elementUtils, typeUtils);
+      Element rClassElement = getElementByName(rClass, elementUtils, typeUtils);
 
       String rClassPackageName =
           elementUtils.getPackageOf(rClassElement).getQualifiedName().toString();

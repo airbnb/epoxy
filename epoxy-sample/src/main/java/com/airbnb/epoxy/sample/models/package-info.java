@@ -1,4 +1,5 @@
-@PackageModelViewConfig(rClass = R.class, defaultBaseModelClass = BaseTestModel.class)
+@PackageModelViewConfig(rClass = R.class, defaultBaseModelClass = BaseTestModel.class,
+    useLayoutOverloads = true)
 package com.airbnb.epoxy.sample.models;
 
 import com.airbnb.epoxy.PackageModelViewConfig;

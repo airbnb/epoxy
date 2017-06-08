@@ -7,11 +7,10 @@ import android.support.annotation.Nullable;
 import com.airbnb.epoxy.ModelProp;
 import com.airbnb.epoxy.ModelProp.Option;
 import com.airbnb.epoxy.ModelView;
-import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.OnViewRecycled;
 
-// TODO: (eli_hart 5/22/17) delete this before public release
-@ModelView(defaultLayout = R.layout.model_header)
+// TODO: (eli_hart 5/22/17) delete this before public release.
+@ModelView
 public class TestView extends BaseView {
   static final String DEFAULT_TITLE = "hello world!";
 
@@ -28,7 +27,7 @@ public class TestView extends BaseView {
   public void setDescription(@Nullable CharSequence text) {
   }
 
-  /** Sets a subtitle */
+  /** Sets a subtitle. */
   @ModelProp(options = Option.GenerateStringOverloads)
   public void setSubtitle(@Nullable CharSequence text) {
   }
