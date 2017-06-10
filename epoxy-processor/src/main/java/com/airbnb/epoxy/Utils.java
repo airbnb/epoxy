@@ -81,7 +81,7 @@ class Utils {
   }
 
   static TypeMirror getTypeMirror(ClassName className, Elements elements, Types types) {
-    Element classElement = getElementByName(className.reflectionName(), elements, types);
+    Element classElement = getElementByName(className, elements, types);
     if (classElement == null) {
       throw new IllegalArgumentException("Unknown class: " + className);
     }
@@ -90,8 +90,12 @@ class Utils {
   }
 
   static TypeMirror getTypeMirror(Class<?> clazz, Elements elements) {
+    return getTypeMirror(clazz.getCanonicalName(), elements);
+  }
+
+  static TypeMirror getTypeMirror(String canonicalName, Elements elements) {
     try {
-      return elements.getTypeElement(clazz.getCanonicalName()).asType();
+      return elements.getTypeElement(canonicalName).asType();
     } catch (MirroredTypeException mte) {
       return mte.getTypeMirror();
     }
@@ -217,8 +221,9 @@ class Utils {
    * @return True if the clazz (or one of its superclasses) implements the given method. Returns
    * false if the method doesn't exist anywhere in the class hierarchy or it is abstract.
    */
-  static boolean implementsMethod(TypeElement clazz, MethodSpec method, Types typeUtils) {
-    ExecutableElement methodOnClass = getMethodOnClass(clazz, method, typeUtils);
+  static boolean implementsMethod(TypeElement clazz, MethodSpec method, Types typeUtils,
+      Elements elements) {
+    ExecutableElement methodOnClass = getMethodOnClass(clazz, method, typeUtils, elements);
     if (methodOnClass == null) {
       return false;
     }
@@ -227,21 +232,12 @@ class Utils {
     return !modifiers.contains(Modifier.ABSTRACT);
   }
 
-  static TypeMirror getMethodReturnType(TypeElement clazz, MethodSpec method, Types typeUtils) {
-    ExecutableElement methodOnClass = getMethodOnClass(clazz, method, typeUtils);
-
-    if (methodOnClass == null) {
-      return null;
-    }
-
-    return methodOnClass.getReturnType();
-  }
-
   /**
    * @return The first element matching the given method in the class's hierarchy, or null if there
    * is no match.
    */
-  static ExecutableElement getMethodOnClass(TypeElement clazz, MethodSpec method, Types typeUtils) {
+  static ExecutableElement getMethodOnClass(TypeElement clazz, MethodSpec method, Types typeUtils,
+      Elements elements) {
     if (clazz.asType().getKind() != TypeKind.DECLARED) {
       return null;
     }
@@ -253,7 +249,7 @@ class Utils {
           continue;
         }
 
-        if (!areParamsTheSame(methodElement, method)) {
+        if (!areParamsTheSame(methodElement, method, typeUtils, elements)) {
           continue;
         }
 
@@ -265,10 +261,11 @@ class Utils {
     if (superClazz == null) {
       return null;
     }
-    return getMethodOnClass(superClazz, method, typeUtils);
+    return getMethodOnClass(superClazz, method, typeUtils, elements);
   }
 
-  private static boolean areParamsTheSame(ExecutableElement method1, MethodSpec method2) {
+  private static boolean areParamsTheSame(ExecutableElement method1, MethodSpec method2,
+      Types types, Elements elements) {
     List<? extends VariableElement> params1 = method1.getParameters();
     List<ParameterSpec> params2 = method2.parameters;
 
@@ -280,7 +277,16 @@ class Utils {
       VariableElement param1 = params1.get(i);
       ParameterSpec param2 = params2.get(i);
 
-      if (!TypeName.get(param1.asType()).equals(param2.type)) {
+      TypeMirror param1Type = types.erasure(param1.asType());
+      TypeMirror param2Type = types.erasure(getTypeMirror(param2.type.toString(), elements));
+
+      // If a param is a type variable then we don't need an exact type match, it just needs to
+      // be assignable
+      if (param1.asType().getKind() == TypeKind.TYPEVAR) {
+        if (!types.isAssignable(param2Type, param1Type)) {
+          return false;
+        }
+      } else if (!param1Type.toString().equals(param1Type.toString())) {
         return false;
       }
     }
@@ -474,24 +480,24 @@ class Utils {
   }
 
   static String getDefaultValue(TypeName attributeType) {
-   if (attributeType == BOOLEAN) {
-     return "false";
-   } else if (attributeType == INT) {
-     return "0";
-   } else if (attributeType == BYTE) {
-     return "(byte) 0";
-   } else if (attributeType == CHAR) {
-     return "(char) 0";
-   } else if (attributeType == SHORT) {
-     return "(short) 0";
-   } else if (attributeType == LONG) {
-     return "0L";
-   } else if (attributeType == FLOAT) {
-     return "0.0f";
-   } else if (attributeType == DOUBLE) {
-     return "0.0d";
-   } else {
-     return "null";
-   }
- }
+    if (attributeType == BOOLEAN) {
+      return "false";
+    } else if (attributeType == INT) {
+      return "0";
+    } else if (attributeType == BYTE) {
+      return "(byte) 0";
+    } else if (attributeType == CHAR) {
+      return "(char) 0";
+    } else if (attributeType == SHORT) {
+      return "(short) 0";
+    } else if (attributeType == LONG) {
+      return "0L";
+    } else if (attributeType == FLOAT) {
+      return "0.0f";
+    } else if (attributeType == DOUBLE) {
+      return "0.0d";
+    } else {
+      return "null";
+    }
+  }
 }

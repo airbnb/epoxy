@@ -29,7 +29,9 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.Utils.UNTYPED_EPOXY_MODEL_TYPE;
 import static com.airbnb.epoxy.Utils.belongToTheSamePackage;
+import static com.airbnb.epoxy.Utils.getMethodOnClass;
 import static com.airbnb.epoxy.Utils.isSubtype;
 import static com.airbnb.epoxy.Utils.isSubtypeOfType;
 import static com.airbnb.epoxy.Utils.notNull;
@@ -37,9 +39,9 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
+// TODO: (eli_hart 6/10/17) Default model props to requiring hashcode
 // TODO: (eli_hart 6/6/17) consider binding base model after view so the model can override view
 // behavior (like changing width dynamically or styles)
-// TODO: (eli_hart 5/30/17) model wrapper for long click listener too?
 // TODO: (eli_hart 5/30/17) allow param counts > 0 in setters?
 // TODO: (eli_hart 5/23/17) how to support overriding default values in subclasses?
 class ModelViewProcessor {
@@ -370,14 +372,20 @@ class ModelViewProcessor {
                 .addStatement("return")
                 .endControlFlow()
                 .addStatement("$T that = ($T) previousModel", generatedModelClass,
-                    generatedModelClass)
-                .addStatement("super.bind($L)", boundObjectParam.name);
-            // TODO: (eli_hart 6/1/17) We call super.bind in case there are any attributes in a
-            // custom base class. To be more efficient we could call that class's bind method
-            // with the previous model, but if that method isn't implmented it will default to
-            // the full bind method. We need some way to only call the super.bind(view,
-            // previousModel) method if it is implemented. This is a pretty minor optimization
-            // and maybe not worth the time or complexity
+                    generatedModelClass);
+
+            // We want to make sure the base model has its bind method called as well. Since the
+            // user can provide a custom base class we aren't sure if it implements diff binding.
+            // If so we should call it, but if not, calling it would invoke the default
+            // EpoxyModel implementation which calls normal "bind". Doing that would force a full
+            // bind!!! So we mustn't do that. So, we only call the super diff binding if we think
+            // it's a custom implementation.
+            if (modelImplementsBindWithDiff(modelInfo.superClassElement, methodBuilder.build())) {
+              methodBuilder.addStatement("super.bind($L, $L)", boundObjectParam.name,
+                  previousModelParam.name);
+            } else {
+              methodBuilder.addStatement("super.bind($L)", boundObjectParam.name);
+            }
 
             for (AttributeGroup attributeGroup : modelInfo.attributeGroups) {
               methodBuilder.addCode("\n");
@@ -482,6 +490,27 @@ class ModelViewProcessor {
         errorLogger.logError(new EpoxyProcessorException(e, "Error generating model view classes"));
       }
     }
+  }
+
+  boolean modelImplementsBindWithDiff(TypeElement clazz, MethodSpec bindWithDiffMethod) {
+    ExecutableElement methodOnClass = getMethodOnClass(clazz, bindWithDiffMethod, types, elements);
+    if (methodOnClass == null) {
+      return false;
+    }
+
+    Set<Modifier> modifiers = methodOnClass.getModifiers();
+    if (modifiers.contains(Modifier.ABSTRACT)) {
+      return false;
+    }
+
+    TypeElement enclosingElement = (TypeElement) methodOnClass.getEnclosingElement();
+    if (enclosingElement == null) {
+      return false;
+    }
+
+    // As long as the implementation is not on the base EpoxyModel we consider it a custom
+    // implementation
+    return !enclosingElement.getQualifiedName().toString().equals(UNTYPED_EPOXY_MODEL_TYPE);
   }
 
   private static CodeBlock buildCodeBlockToSetAttribute(ParameterSpec boundObjectParam,

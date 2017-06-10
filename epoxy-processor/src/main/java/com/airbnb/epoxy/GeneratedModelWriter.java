@@ -28,6 +28,7 @@ import java.util.List;
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.Utils.EPOXY_CONTROLLER_TYPE;
@@ -71,6 +72,7 @@ class GeneratedModelWriter {
   private final LayoutResourceProcessor layoutResourceProcessor;
   private final ConfigManager configManager;
   private final DataBindingModuleLookup dataBindingModuleLookup;
+  private final Elements elements;
   private BuilderHooks builderHooks;
 
   static class BuilderHooks {
@@ -100,13 +102,14 @@ class GeneratedModelWriter {
 
   GeneratedModelWriter(Filer filer, Types typeUtils, ErrorLogger errorLogger,
       LayoutResourceProcessor layoutResourceProcessor, ConfigManager configManager,
-      DataBindingModuleLookup dataBindingModuleLookup) {
+      DataBindingModuleLookup dataBindingModuleLookup, Elements elements) {
     this.filer = filer;
     this.typeUtils = typeUtils;
     this.errorLogger = errorLogger;
     this.layoutResourceProcessor = layoutResourceProcessor;
     this.configManager = configManager;
     this.dataBindingModuleLookup = dataBindingModuleLookup;
+    this.elements = elements;
   }
 
   void generateClassForModel(GeneratedModelInfo info) throws IOException {
@@ -578,7 +581,7 @@ class GeneratedModelWriter {
         .addModifiers(Modifier.PROTECTED)
         .build();
 
-    if (implementsMethod(originalClassElement, createHolderMethod, typeUtils)) {
+    if (implementsMethod(originalClassElement, createHolderMethod, typeUtils, elements)) {
       return;
     }
 
@@ -631,7 +634,7 @@ class GeneratedModelWriter {
     }
 
     TypeElement superClassElement = modelInfo.getSuperClassElement();
-    if (implementsMethod(superClassElement, buildDefaultLayoutMethodBase(), typeUtils)) {
+    if (implementsMethod(superClassElement, buildDefaultLayoutMethodBase(), typeUtils, elements)) {
       return null;
     }
 
@@ -667,7 +670,7 @@ class GeneratedModelWriter {
         .build();
 
     // If the base method is already implemented don't bother checking for the payload method
-    if (implementsMethod(info.getSuperClassElement(), bindVariablesMethod, typeUtils)) {
+    if (implementsMethod(info.getSuperClassElement(), bindVariablesMethod, typeUtils, elements)) {
       return Collections.emptyList();
     }
 

@@ -100,7 +100,7 @@ public class EpoxyProcessor extends AbstractProcessor {
     modelWriter =
         new GeneratedModelWriter(filer, typeUtils, errorLogger,
             layoutResourceProcessor,
-            configManager, dataBindingModuleLookup);
+            configManager, dataBindingModuleLookup, elementUtils);
 
     controllerProcessor = new ControllerProcessor(filer, elementUtils, typeUtils, errorLogger,
         configManager);
@@ -181,7 +181,7 @@ public class EpoxyProcessor extends AbstractProcessor {
 
   private void validateAttributesImplementHashCode(
       Collection<GeneratedModelInfo> generatedClasses) {
-    HashCodeValidator hashCodeValidator = new HashCodeValidator(typeUtils);
+    HashCodeValidator hashCodeValidator = new HashCodeValidator(typeUtils, elementUtils);
 
     for (GeneratedModelInfo generatedClass : generatedClasses) {
       for (AttributeInfo attributeInfo : generatedClass.getAttributeInfo()) {
