@@ -108,6 +108,12 @@ public class ModelForTestingDuplicateRValues_ extends ModelForTestingDuplicateRV
   }
 
   @Override
+  public ModelForTestingDuplicateRValues_ id(CharSequence key, CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public ModelForTestingDuplicateRValues_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;

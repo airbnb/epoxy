@@ -107,6 +107,12 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> implement
   }
 
   @Override
+  public ModelWithType_<T> id(CharSequence key, CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public ModelWithType_<T> id(CharSequence key, long id) {
     super.id(key, id);
     return this;

@@ -139,6 +139,12 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   }
 
   @Override
+  public ModelWithViewClickListener_ id(CharSequence key, CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public ModelWithViewClickListener_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;

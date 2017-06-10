@@ -127,6 +127,12 @@ public class ModelDoNotUseInToString_ extends ModelDoNotUseInToString implements
   }
 
   @Override
+  public ModelDoNotUseInToString_ id(CharSequence key, CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public ModelDoNotUseInToString_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;

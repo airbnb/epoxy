@@ -108,6 +108,12 @@ public class AbstractModelWithHolder_ extends AbstractModelWithHolder implements
   }
 
   @Override
+  public AbstractModelWithHolder_ id(CharSequence key, CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public AbstractModelWithHolder_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;

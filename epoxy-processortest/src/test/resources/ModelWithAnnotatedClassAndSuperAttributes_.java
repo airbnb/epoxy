@@ -107,6 +107,13 @@ public class ModelWithAnnotatedClassAndSuperAttributes_ extends ModelWithAnnotat
   }
 
   @Override
+  public ModelWithAnnotatedClassAndSuperAttributes_ id(CharSequence key,
+      CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public ModelWithAnnotatedClassAndSuperAttributes_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;
