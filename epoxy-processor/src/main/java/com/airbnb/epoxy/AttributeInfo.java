@@ -231,10 +231,6 @@ abstract class AttributeInfo {
     return isViewClickListenerType(getTypeMirror());
   }
 
-  String getModelClickListenerName() {
-    return getFieldName() + GeneratedModelWriter.GENERATED_FIELD_SUFFIX;
-  }
-
   String getPackageName() {
     return modelPackageName;
   }

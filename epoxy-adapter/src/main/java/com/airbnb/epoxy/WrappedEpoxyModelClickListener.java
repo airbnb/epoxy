@@ -7,23 +7,35 @@ import android.view.View.OnClickListener;
  * Used in the generated models to transform normal view click listeners to model click
  * listeners.
  */
-public abstract class WrappedEpoxyModelClickListener implements OnClickListener {
-  // Save the original click listener so if it gets changed on
-  // the generated model this click listener won't be affected
-  // if it is still bound to a view. This also lets us call back to the original hashCode and
-  // equals methods
-  private final OnModelClickListener originalClickListener;
+public class WrappedEpoxyModelClickListener<T extends EpoxyModel<?>, V> implements OnClickListener {
+  // Save the original click listener to call back to when clicked.
+  // This also lets us call back to the original hashCode and equals methods
+  private final OnModelClickListener<T, V> originalClickListener;
+  private EpoxyViewHolder holder;
+  private final T model;
+  private V object;
 
-  public WrappedEpoxyModelClickListener(OnModelClickListener originalClickListener) {
+  public WrappedEpoxyModelClickListener(T model, OnModelClickListener<T, V> originalClickListener) {
+    this.model = model;
     this.originalClickListener = originalClickListener;
   }
 
-  @Override
-  public void onClick(View v) {
-    wrappedOnClick(v, originalClickListener);
+  public void bind(EpoxyViewHolder holder, V object) {
+    this.holder = holder;
+    this.object = object;
   }
 
-  protected abstract void wrappedOnClick(View v, OnModelClickListener originalClickListener);
+
+  @Override
+  public void onClick(View v) {
+    if (holder == null) {
+      throw new IllegalStateException("Holder was not bound");
+    }
+    if (object == null) {
+      throw new IllegalStateException("Object was not bound");
+    }
+    originalClickListener.onClick(model, object, v, holder.getAdapterPosition());
+  }
 
   @Override
   public boolean equals(Object o) {

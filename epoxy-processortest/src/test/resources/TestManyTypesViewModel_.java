@@ -60,8 +60,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * Bitset index: 7 */
   private View.OnClickListener clickListener_OnClickListener;
 
-  private OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener_OnClickListener_epoxyGeneratedModel;
-
   /**
    * Bitset index: 8 */
   private StringAttributeData title_StringAttributeData =  new StringAttributeData(null);
@@ -94,14 +92,8 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   public void handlePreBind(final EpoxyViewHolder holder, final TestManyTypesView object,
       int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
-    if (clickListener_OnClickListener_epoxyGeneratedModel != null) {
-      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(clickListener_OnClickListener_epoxyGeneratedModel) {
-              @Override
-              protected void wrappedOnClick(View v, OnModelClickListener originalClickListener) {
-                 originalClickListener.onClick(com.airbnb.epoxy.TestManyTypesViewModel_.this, object, v,
-                        holder.getAdapterPosition());
-                 }
-              };
+    if (clickListener_OnClickListener instanceof WrappedEpoxyModelClickListener) {
+      ((com.airbnb.epoxy.WrappedEpoxyModelClickListener) clickListener_OnClickListener).bind(holder, object);
     }
   }
 
@@ -339,17 +331,11 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   public TestManyTypesViewModel_ clickListener_OnClickListener(final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener_OnClickListener) {
     assignedAttributes_epoxyGeneratedModel.set(7);
     onMutation();
-    this.clickListener_OnClickListener_epoxyGeneratedModel = clickListener_OnClickListener;
     if (clickListener_OnClickListener == null) {
       this.clickListener_OnClickListener = null;
     }
     else {
-      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(clickListener_OnClickListener)  {
-                  @Override
-                  protected void wrappedOnClick(View v, OnModelClickListener originalClickListener) {
-                    
-                  }
-                };
+      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(this, clickListener_OnClickListener);
     }
     return this;
   }
@@ -366,7 +352,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     assignedAttributes_epoxyGeneratedModel.set(7);
     onMutation();
     this.clickListener_OnClickListener = clickListener;
-    this.clickListener_OnClickListener_epoxyGeneratedModel = null;
     return this;
   }
 
@@ -519,7 +504,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     this.arrayValue_StringArray = null;
     this.listValue_List = null;
     this.clickListener_OnClickListener = null;
-    clickListener_OnClickListener_epoxyGeneratedModel = null;
     this.title_StringAttributeData =  new StringAttributeData(null);
     super.reset();
     return this;

@@ -16,8 +16,6 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
 
   private OnModelUnboundListener<ModelWithViewClickListener_, Object> onModelUnboundListener_epoxyGeneratedModel;
 
-  private OnModelClickListener<ModelWithViewClickListener_, Object> clickListener_epoxyGeneratedModel;
-
   public ModelWithViewClickListener_() {
     super();
   }
@@ -31,14 +29,8 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
-    if (clickListener_epoxyGeneratedModel != null) {
-      super.clickListener = new WrappedEpoxyModelClickListener(clickListener_epoxyGeneratedModel) {
-              @Override
-              protected void wrappedOnClick(View v, OnModelClickListener originalClickListener) {
-                 originalClickListener.onClick(com.airbnb.epoxy.ModelWithViewClickListener_.this, object, v,
-                        holder.getAdapterPosition());
-                 }
-              };
+    if (clickListener instanceof WrappedEpoxyModelClickListener) {
+      ((com.airbnb.epoxy.WrappedEpoxyModelClickListener) clickListener).bind(holder, object);
     }
   }
 
@@ -88,17 +80,11 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
   public ModelWithViewClickListener_ clickListener(final OnModelClickListener<ModelWithViewClickListener_, Object> clickListener) {
     onMutation();
-    this.clickListener_epoxyGeneratedModel = clickListener;
     if (clickListener == null) {
       super.clickListener = null;
     }
     else {
-      super.clickListener = new WrappedEpoxyModelClickListener(clickListener)  {
-                  @Override
-                  protected void wrappedOnClick(View v, OnModelClickListener originalClickListener) {
-                    
-                  }
-                };
+      super.clickListener = new WrappedEpoxyModelClickListener(this, clickListener);
     }
     return this;
   }
@@ -106,7 +92,6 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   public ModelWithViewClickListener_ clickListener(View.OnClickListener clickListener) {
     onMutation();
     super.clickListener = clickListener;
-    this.clickListener_epoxyGeneratedModel = null;
     return this;
   }
 
@@ -185,7 +170,6 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
     super.clickListener = null;
-    clickListener_epoxyGeneratedModel = null;
     super.reset();
     return this;
   }
