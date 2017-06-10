@@ -489,6 +489,22 @@ public class ModelProcessorTest {
   }
 
   @Test
+  public void modelWithViewClickLongListener() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithViewLongClickListener.java");
+
+    JavaFileObject generatedNoLayoutModel = JavaFileObjects
+        .forResource("ModelWithViewLongClickListener_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedNoLayoutModel);
+  }
+
+  @Test
   public void testModelWithPrivateAttributeWithoutGetterAndSetterFails() {
     JavaFileObject model = JavaFileObjects
         .forResource("ModelWithPrivateFieldWithoutGetterAndSetter.java");

@@ -11,6 +11,7 @@ import java.util.List;
 import javax.lang.model.type.TypeMirror;
 
 import static com.airbnb.epoxy.Utils.isViewClickListenerType;
+import static com.airbnb.epoxy.Utils.isViewLongClickListenerType;
 
 abstract class AttributeInfo {
 
@@ -228,7 +229,7 @@ abstract class AttributeInfo {
   }
 
   boolean isViewClickListener() {
-    return isViewClickListenerType(getTypeMirror());
+    return isViewClickListenerType(getTypeMirror()) || isViewLongClickListenerType(getTypeMirror());
   }
 
   String getPackageName() {

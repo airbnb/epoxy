@@ -33,14 +33,14 @@ public class ModelClickListenerTest {
   private ControllerLifecycleHelper lifecycleHelper = new ControllerLifecycleHelper();
 
   static class TestController extends EpoxyController {
-    private ModelWithClickListener_ model;
+    private EpoxyModel<?> model;
 
     @Override
     protected void buildModels() {
       add(model.id(1));
     }
 
-    void setModel(ModelWithClickListener_ model) {
+    void setModel(EpoxyModel<?> model) {
       this.model = model;
     }
   }
@@ -51,6 +51,16 @@ public class ModelClickListenerTest {
     @Override
     public void onClick(ModelWithClickListener_ model, View view, View v, int position) {
       clicked = true;
+    }
+  }
+
+  static class ModelLongClickListener implements OnModelLongClickListener<ModelWithLongClickListener_, View> {
+    boolean clicked;
+
+    @Override
+    public boolean onLongClick(ModelWithLongClickListener_ model, View view, View v, int position) {
+      clicked = true;
+      return true;
     }
   }
 
@@ -80,6 +90,25 @@ public class ModelClickListenerTest {
 
     verify(modelClickListener)
         .onClick(eq(model), any(View.class), nullable(View.class), anyInt());
+  }
+
+  @Test
+  public void basicModelLongClickListener() {
+    final ModelWithLongClickListener_ model = new ModelWithLongClickListener_();
+    ModelLongClickListener modelClickListener = spy(new ModelLongClickListener());
+    model.clickListener(modelClickListener);
+
+    TestController controller = new TestController();
+    controller.setModel(model);
+
+    lifecycleHelper.buildModelsAndBind(controller);
+
+    View view = new View(RuntimeEnvironment.application);
+    model.clickListener().onLongClick(view);
+    assertTrue(modelClickListener.clicked);
+
+    verify(modelClickListener)
+        .onLongClick(eq(model), any(View.class), nullable(View.class), anyInt());
   }
 
   @Test

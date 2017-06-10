@@ -34,6 +34,7 @@ import static com.airbnb.epoxy.Utils.EPOXY_CONTROLLER_TYPE;
 import static com.airbnb.epoxy.Utils.EPOXY_VIEW_HOLDER_TYPE;
 import static com.airbnb.epoxy.Utils.GENERATED_MODEL_INTERFACE;
 import static com.airbnb.epoxy.Utils.MODEL_CLICK_LISTENER_TYPE;
+import static com.airbnb.epoxy.Utils.MODEL_LONG_CLICK_LISTENER_TYPE;
 import static com.airbnb.epoxy.Utils.ON_BIND_MODEL_LISTENER_TYPE;
 import static com.airbnb.epoxy.Utils.ON_UNBIND_MODEL_LISTENER_TYPE;
 import static com.airbnb.epoxy.Utils.UNTYPED_EPOXY_MODEL_TYPE;
@@ -43,6 +44,7 @@ import static com.airbnb.epoxy.Utils.implementsMethod;
 import static com.airbnb.epoxy.Utils.isDataBindingModel;
 import static com.airbnb.epoxy.Utils.isEpoxyModel;
 import static com.airbnb.epoxy.Utils.isEpoxyModelWithHolder;
+import static com.airbnb.epoxy.Utils.isViewLongClickListenerType;
 import static com.squareup.javapoet.TypeName.BOOLEAN;
 import static com.squareup.javapoet.TypeName.BYTE;
 import static com.squareup.javapoet.TypeName.CHAR;
@@ -264,6 +266,13 @@ class GeneratedModelWriter {
   private ParameterizedTypeName getModelClickListenerType(GeneratedModelInfo classInfo) {
     return ParameterizedTypeName.get(
         getClassName(MODEL_CLICK_LISTENER_TYPE),
+        classInfo.getParameterizedGeneratedName(),
+        classInfo.getModelType());
+  }
+
+  private ParameterizedTypeName getModelLongClickListenerType(GeneratedModelInfo classInfo) {
+    return ParameterizedTypeName.get(
+        getClassName(MODEL_LONG_CLICK_LISTENER_TYPE),
         classInfo.getParameterizedGeneratedName(),
         classInfo.getModelType());
   }
@@ -813,8 +822,13 @@ class GeneratedModelWriter {
       AttributeInfo attribute) {
     String attributeName = attribute.getFieldName();
 
+    ParameterizedTypeName clickListenerType =
+        isViewLongClickListenerType(attribute.getTypeMirror())
+            ? getModelLongClickListenerType(classInfo)
+            : getModelClickListenerType(classInfo);
+
     ParameterSpec param =
-        ParameterSpec.builder(getModelClickListenerType(classInfo), attributeName, FINAL).build();
+        ParameterSpec.builder(clickListenerType, attributeName, FINAL).build();
 
     Builder builder = MethodSpec.methodBuilder(attributeName)
         .addJavadoc("Set a click listener that will provide the parent view, model, and adapter "

@@ -52,8 +52,10 @@ class Utils {
   static final String ANDROID_VIEW_TYPE = "android.view.View";
   static final String EPOXY_CONTROLLER_TYPE = "com.airbnb.epoxy.EpoxyController";
   static final String VIEW_CLICK_LISTENER_TYPE = "android.view.View.OnClickListener";
+  static final String VIEW_LONG_CLICK_LISTENER_TYPE = "android.view.View.OnLongClickListener";
   static final String GENERATED_MODEL_INTERFACE = "com.airbnb.epoxy.GeneratedModel";
   static final String MODEL_CLICK_LISTENER_TYPE = "com.airbnb.epoxy.OnModelClickListener";
+  static final String MODEL_LONG_CLICK_LISTENER_TYPE = "com.airbnb.epoxy.OnModelLongClickListener";
   static final String ON_BIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelBoundListener";
   static final String ON_UNBIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelUnboundListener";
   static final String WRAPPED_LISTENER_TYPE = "com.airbnb.epoxy.WrappedEpoxyModelClickListener";
@@ -120,6 +122,10 @@ class Utils {
 
   static boolean isViewClickListenerType(TypeMirror type) {
     return isSubtypeOfType(type, VIEW_CLICK_LISTENER_TYPE);
+  }
+
+  static boolean isViewLongClickListenerType(TypeMirror type) {
+    return isSubtypeOfType(type, VIEW_LONG_CLICK_LISTENER_TYPE);
   }
 
   static boolean isIterableType(TypeElement element) {
