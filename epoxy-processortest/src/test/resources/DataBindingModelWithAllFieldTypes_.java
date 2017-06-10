@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.databinding.ViewDataBinding;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import java.lang.Boolean;
 import java.lang.Byte;
 import java.lang.CharSequence;
@@ -84,6 +85,16 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
     return this;
   }
 
+  public DataBindingModelWithAllFieldTypes_ valueInt(int valueInt) {
+    onMutation();
+    super.valueInt = valueInt;
+    return this;
+  }
+
+  public int valueInt() {
+    return valueInt;
+  }
+
   public DataBindingModelWithAllFieldTypes_ valueInteger(Integer valueInteger) {
     onMutation();
     super.valueInteger = valueInteger;
@@ -104,26 +115,6 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
     return valueShort;
   }
 
-  public DataBindingModelWithAllFieldTypes_ valueLong(long valueLong) {
-    onMutation();
-    super.valueLong = valueLong;
-    return this;
-  }
-
-  public long valueLong() {
-    return valueLong;
-  }
-
-  public DataBindingModelWithAllFieldTypes_ valueList(List<String> valueList) {
-    onMutation();
-    super.valueList = valueList;
-    return this;
-  }
-
-  public List<String> valueList() {
-    return valueList;
-  }
-
   public DataBindingModelWithAllFieldTypes_ valueShortWrapper(Short valueShortWrapper) {
     onMutation();
     super.valueShortWrapper = valueShortWrapper;
@@ -132,16 +123,6 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
 
   public Short valueShortWrapper() {
     return valueShortWrapper;
-  }
-
-  public DataBindingModelWithAllFieldTypes_ valueDouble(double valueDouble) {
-    onMutation();
-    super.valueDouble = valueDouble;
-    return this;
-  }
-
-  public double valueDouble() {
-    return valueDouble;
   }
 
   public DataBindingModelWithAllFieldTypes_ valueChar(char valueChar) {
@@ -154,54 +135,14 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
     return valueChar;
   }
 
-  public DataBindingModelWithAllFieldTypes_ valueInt(int valueInt) {
+  public DataBindingModelWithAllFieldTypes_ valueCharacter(Character valueCharacter) {
     onMutation();
-    super.valueInt = valueInt;
+    super.valueCharacter = valueCharacter;
     return this;
   }
 
-  public int valueInt() {
-    return valueInt;
-  }
-
-  public DataBindingModelWithAllFieldTypes_ valueDoubleWrapper(Double valueDoubleWrapper) {
-    onMutation();
-    super.valueDoubleWrapper = valueDoubleWrapper;
-    return this;
-  }
-
-  public Double valueDoubleWrapper() {
-    return valueDoubleWrapper;
-  }
-
-  public DataBindingModelWithAllFieldTypes_ valueFloatWrapper(Float valueFloatWrapper) {
-    onMutation();
-    super.valueFloatWrapper = valueFloatWrapper;
-    return this;
-  }
-
-  public Float valueFloatWrapper() {
-    return valueFloatWrapper;
-  }
-
-  public DataBindingModelWithAllFieldTypes_ valueBooleanWrapper(Boolean valueBooleanWrapper) {
-    onMutation();
-    super.valueBooleanWrapper = valueBooleanWrapper;
-    return this;
-  }
-
-  public Boolean valueBooleanWrapper() {
-    return valueBooleanWrapper;
-  }
-
-  public DataBindingModelWithAllFieldTypes_ valueByteWrapper(Byte valueByteWrapper) {
-    onMutation();
-    super.valueByteWrapper = valueByteWrapper;
-    return this;
-  }
-
-  public Byte valueByteWrapper() {
-    return valueByteWrapper;
+  public Character valueCharacter() {
+    return valueCharacter;
   }
 
   public DataBindingModelWithAllFieldTypes_ valuebByte(byte valuebByte) {
@@ -214,6 +155,26 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
     return valuebByte;
   }
 
+  public DataBindingModelWithAllFieldTypes_ valueByteWrapper(Byte valueByteWrapper) {
+    onMutation();
+    super.valueByteWrapper = valueByteWrapper;
+    return this;
+  }
+
+  public Byte valueByteWrapper() {
+    return valueByteWrapper;
+  }
+
+  public DataBindingModelWithAllFieldTypes_ valueLong(long valueLong) {
+    onMutation();
+    super.valueLong = valueLong;
+    return this;
+  }
+
+  public long valueLong() {
+    return valueLong;
+  }
+
   public DataBindingModelWithAllFieldTypes_ valueLongWrapper(Long valueLongWrapper) {
     onMutation();
     super.valueLongWrapper = valueLongWrapper;
@@ -224,24 +185,24 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
     return valueLongWrapper;
   }
 
-  public DataBindingModelWithAllFieldTypes_ valueCharacter(Character valueCharacter) {
+  public DataBindingModelWithAllFieldTypes_ valueDouble(double valueDouble) {
     onMutation();
-    super.valueCharacter = valueCharacter;
+    super.valueDouble = valueDouble;
     return this;
   }
 
-  public Character valueCharacter() {
-    return valueCharacter;
+  public double valueDouble() {
+    return valueDouble;
   }
 
-  public DataBindingModelWithAllFieldTypes_ valueString(String valueString) {
+  public DataBindingModelWithAllFieldTypes_ valueDoubleWrapper(Double valueDoubleWrapper) {
     onMutation();
-    super.valueString = valueString;
+    super.valueDoubleWrapper = valueDoubleWrapper;
     return this;
   }
 
-  public String valueString() {
-    return valueString;
+  public Double valueDoubleWrapper() {
+    return valueDoubleWrapper;
   }
 
   public DataBindingModelWithAllFieldTypes_ valueFloat(float valueFloat) {
@@ -254,6 +215,16 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
     return valueFloat;
   }
 
+  public DataBindingModelWithAllFieldTypes_ valueFloatWrapper(Float valueFloatWrapper) {
+    onMutation();
+    super.valueFloatWrapper = valueFloatWrapper;
+    return this;
+  }
+
+  public Float valueFloatWrapper() {
+    return valueFloatWrapper;
+  }
+
   public DataBindingModelWithAllFieldTypes_ valueBoolean(boolean valueBoolean) {
     onMutation();
     super.valueBoolean = valueBoolean;
@@ -262,6 +233,26 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
 
   public boolean valueBoolean() {
     return valueBoolean;
+  }
+
+  public DataBindingModelWithAllFieldTypes_ valueBooleanWrapper(Boolean valueBooleanWrapper) {
+    onMutation();
+    super.valueBooleanWrapper = valueBooleanWrapper;
+    return this;
+  }
+
+  public Boolean valueBooleanWrapper() {
+    return valueBooleanWrapper;
+  }
+
+  public DataBindingModelWithAllFieldTypes_ valueIntArray(int[] valueIntArray) {
+    onMutation();
+    super.valueIntArray = valueIntArray;
+    return this;
+  }
+
+  public int[] valueIntArray() {
+    return valueIntArray;
   }
 
   public DataBindingModelWithAllFieldTypes_ valueObjectArray(Object[] valueObjectArray) {
@@ -274,6 +265,16 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
     return valueObjectArray;
   }
 
+  public DataBindingModelWithAllFieldTypes_ valueString(String valueString) {
+    onMutation();
+    super.valueString = valueString;
+    return this;
+  }
+
+  public String valueString() {
+    return valueString;
+  }
+
   public DataBindingModelWithAllFieldTypes_ valueObject(Object valueObject) {
     onMutation();
     super.valueObject = valueObject;
@@ -284,14 +285,14 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
     return valueObject;
   }
 
-  public DataBindingModelWithAllFieldTypes_ valueIntArray(int[] valueIntArray) {
+  public DataBindingModelWithAllFieldTypes_ valueList(List<String> valueList) {
     onMutation();
-    super.valueIntArray = valueIntArray;
+    super.valueList = valueList;
     return this;
   }
 
-  public int[] valueIntArray() {
-    return valueIntArray;
+  public List<String> valueList() {
+    return valueList;
   }
 
   @Override
@@ -331,6 +332,12 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   @Override
+  public DataBindingModelWithAllFieldTypes_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
+    return this;
+  }
+
+  @Override
   public DataBindingModelWithAllFieldTypes_ show() {
     super.show();
     return this;
@@ -350,68 +357,68 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
 
   @Override
   protected void setDataBindingVariables(ViewDataBinding binding) {
+    if (!binding.setVariable(BR.valueInt, valueInt)) {
+      throw new IllegalStateException("The attribute valueInt was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
+    }
     if (!binding.setVariable(BR.valueInteger, valueInteger)) {
       throw new IllegalStateException("The attribute valueInteger was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
     }
     if (!binding.setVariable(BR.valueShort, valueShort)) {
       throw new IllegalStateException("The attribute valueShort was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
     }
-    if (!binding.setVariable(BR.valueLong, valueLong)) {
-      throw new IllegalStateException("The attribute valueLong was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
-    }
-    if (!binding.setVariable(BR.valueList, valueList)) {
-      throw new IllegalStateException("The attribute valueList was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
-    }
     if (!binding.setVariable(BR.valueShortWrapper, valueShortWrapper)) {
       throw new IllegalStateException("The attribute valueShortWrapper was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
-    }
-    if (!binding.setVariable(BR.valueDouble, valueDouble)) {
-      throw new IllegalStateException("The attribute valueDouble was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
     }
     if (!binding.setVariable(BR.valueChar, valueChar)) {
       throw new IllegalStateException("The attribute valueChar was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
     }
-    if (!binding.setVariable(BR.valueInt, valueInt)) {
-      throw new IllegalStateException("The attribute valueInt was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
-    }
-    if (!binding.setVariable(BR.valueDoubleWrapper, valueDoubleWrapper)) {
-      throw new IllegalStateException("The attribute valueDoubleWrapper was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
-    }
-    if (!binding.setVariable(BR.valueFloatWrapper, valueFloatWrapper)) {
-      throw new IllegalStateException("The attribute valueFloatWrapper was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
-    }
-    if (!binding.setVariable(BR.valueBooleanWrapper, valueBooleanWrapper)) {
-      throw new IllegalStateException("The attribute valueBooleanWrapper was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
-    }
-    if (!binding.setVariable(BR.valueByteWrapper, valueByteWrapper)) {
-      throw new IllegalStateException("The attribute valueByteWrapper was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
+    if (!binding.setVariable(BR.valueCharacter, valueCharacter)) {
+      throw new IllegalStateException("The attribute valueCharacter was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
     }
     if (!binding.setVariable(BR.valuebByte, valuebByte)) {
       throw new IllegalStateException("The attribute valuebByte was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
     }
+    if (!binding.setVariable(BR.valueByteWrapper, valueByteWrapper)) {
+      throw new IllegalStateException("The attribute valueByteWrapper was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
+    }
+    if (!binding.setVariable(BR.valueLong, valueLong)) {
+      throw new IllegalStateException("The attribute valueLong was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
+    }
     if (!binding.setVariable(BR.valueLongWrapper, valueLongWrapper)) {
       throw new IllegalStateException("The attribute valueLongWrapper was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
     }
-    if (!binding.setVariable(BR.valueCharacter, valueCharacter)) {
-      throw new IllegalStateException("The attribute valueCharacter was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
+    if (!binding.setVariable(BR.valueDouble, valueDouble)) {
+      throw new IllegalStateException("The attribute valueDouble was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
     }
-    if (!binding.setVariable(BR.valueString, valueString)) {
-      throw new IllegalStateException("The attribute valueString was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
+    if (!binding.setVariable(BR.valueDoubleWrapper, valueDoubleWrapper)) {
+      throw new IllegalStateException("The attribute valueDoubleWrapper was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
     }
     if (!binding.setVariable(BR.valueFloat, valueFloat)) {
       throw new IllegalStateException("The attribute valueFloat was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
     }
+    if (!binding.setVariable(BR.valueFloatWrapper, valueFloatWrapper)) {
+      throw new IllegalStateException("The attribute valueFloatWrapper was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
+    }
     if (!binding.setVariable(BR.valueBoolean, valueBoolean)) {
       throw new IllegalStateException("The attribute valueBoolean was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
+    }
+    if (!binding.setVariable(BR.valueBooleanWrapper, valueBooleanWrapper)) {
+      throw new IllegalStateException("The attribute valueBooleanWrapper was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
+    }
+    if (!binding.setVariable(BR.valueIntArray, valueIntArray)) {
+      throw new IllegalStateException("The attribute valueIntArray was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
     }
     if (!binding.setVariable(BR.valueObjectArray, valueObjectArray)) {
       throw new IllegalStateException("The attribute valueObjectArray was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
     }
+    if (!binding.setVariable(BR.valueString, valueString)) {
+      throw new IllegalStateException("The attribute valueString was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
+    }
     if (!binding.setVariable(BR.valueObject, valueObject)) {
       throw new IllegalStateException("The attribute valueObject was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
     }
-    if (!binding.setVariable(BR.valueIntArray, valueIntArray)) {
-      throw new IllegalStateException("The attribute valueIntArray was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
+    if (!binding.setVariable(BR.valueList, valueList)) {
+      throw new IllegalStateException("The attribute valueList was defined in your data binding model (com.airbnb.epoxy.DataBindingModelWithAllFieldTypes) but a data variable of that name was not found in the layout.");
     }
   }
 
@@ -422,68 +429,68 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
       return;
     }
     DataBindingModelWithAllFieldTypes_ that = (DataBindingModelWithAllFieldTypes_) previousModel;
+    if (valueInt != that.valueInt) {
+      binding.setVariable(BR.valueInt, valueInt);
+    }
     if (valueInteger != null ? !valueInteger.equals(that.valueInteger) : that.valueInteger != null) {
       binding.setVariable(BR.valueInteger, valueInteger);
     }
     if (valueShort != that.valueShort) {
       binding.setVariable(BR.valueShort, valueShort);
     }
-    if (valueLong != that.valueLong) {
-      binding.setVariable(BR.valueLong, valueLong);
-    }
-    if (valueList != null ? !valueList.equals(that.valueList) : that.valueList != null) {
-      binding.setVariable(BR.valueList, valueList);
-    }
     if (valueShortWrapper != null ? !valueShortWrapper.equals(that.valueShortWrapper) : that.valueShortWrapper != null) {
       binding.setVariable(BR.valueShortWrapper, valueShortWrapper);
-    }
-    if (Double.compare(that.valueDouble, valueDouble) != 0) {
-      binding.setVariable(BR.valueDouble, valueDouble);
     }
     if (valueChar != that.valueChar) {
       binding.setVariable(BR.valueChar, valueChar);
     }
-    if (valueInt != that.valueInt) {
-      binding.setVariable(BR.valueInt, valueInt);
-    }
-    if (valueDoubleWrapper != null ? !valueDoubleWrapper.equals(that.valueDoubleWrapper) : that.valueDoubleWrapper != null) {
-      binding.setVariable(BR.valueDoubleWrapper, valueDoubleWrapper);
-    }
-    if (valueFloatWrapper != null ? !valueFloatWrapper.equals(that.valueFloatWrapper) : that.valueFloatWrapper != null) {
-      binding.setVariable(BR.valueFloatWrapper, valueFloatWrapper);
-    }
-    if (valueBooleanWrapper != null ? !valueBooleanWrapper.equals(that.valueBooleanWrapper) : that.valueBooleanWrapper != null) {
-      binding.setVariable(BR.valueBooleanWrapper, valueBooleanWrapper);
-    }
-    if (valueByteWrapper != null ? !valueByteWrapper.equals(that.valueByteWrapper) : that.valueByteWrapper != null) {
-      binding.setVariable(BR.valueByteWrapper, valueByteWrapper);
+    if (valueCharacter != null ? !valueCharacter.equals(that.valueCharacter) : that.valueCharacter != null) {
+      binding.setVariable(BR.valueCharacter, valueCharacter);
     }
     if (valuebByte != that.valuebByte) {
       binding.setVariable(BR.valuebByte, valuebByte);
     }
+    if (valueByteWrapper != null ? !valueByteWrapper.equals(that.valueByteWrapper) : that.valueByteWrapper != null) {
+      binding.setVariable(BR.valueByteWrapper, valueByteWrapper);
+    }
+    if (valueLong != that.valueLong) {
+      binding.setVariable(BR.valueLong, valueLong);
+    }
     if (valueLongWrapper != null ? !valueLongWrapper.equals(that.valueLongWrapper) : that.valueLongWrapper != null) {
       binding.setVariable(BR.valueLongWrapper, valueLongWrapper);
     }
-    if (valueCharacter != null ? !valueCharacter.equals(that.valueCharacter) : that.valueCharacter != null) {
-      binding.setVariable(BR.valueCharacter, valueCharacter);
+    if (Double.compare(that.valueDouble, valueDouble) != 0) {
+      binding.setVariable(BR.valueDouble, valueDouble);
     }
-    if (valueString != null ? !valueString.equals(that.valueString) : that.valueString != null) {
-      binding.setVariable(BR.valueString, valueString);
+    if (valueDoubleWrapper != null ? !valueDoubleWrapper.equals(that.valueDoubleWrapper) : that.valueDoubleWrapper != null) {
+      binding.setVariable(BR.valueDoubleWrapper, valueDoubleWrapper);
     }
     if (Float.compare(that.valueFloat, valueFloat) != 0) {
       binding.setVariable(BR.valueFloat, valueFloat);
     }
+    if (valueFloatWrapper != null ? !valueFloatWrapper.equals(that.valueFloatWrapper) : that.valueFloatWrapper != null) {
+      binding.setVariable(BR.valueFloatWrapper, valueFloatWrapper);
+    }
     if (valueBoolean != that.valueBoolean) {
       binding.setVariable(BR.valueBoolean, valueBoolean);
+    }
+    if (valueBooleanWrapper != null ? !valueBooleanWrapper.equals(that.valueBooleanWrapper) : that.valueBooleanWrapper != null) {
+      binding.setVariable(BR.valueBooleanWrapper, valueBooleanWrapper);
+    }
+    if (!Arrays.equals(valueIntArray, that.valueIntArray)) {
+      binding.setVariable(BR.valueIntArray, valueIntArray);
     }
     if (!Arrays.equals(valueObjectArray, that.valueObjectArray)) {
       binding.setVariable(BR.valueObjectArray, valueObjectArray);
     }
+    if (valueString != null ? !valueString.equals(that.valueString) : that.valueString != null) {
+      binding.setVariable(BR.valueString, valueString);
+    }
     if (valueObject != null ? !valueObject.equals(that.valueObject) : that.valueObject != null) {
       binding.setVariable(BR.valueObject, valueObject);
     }
-    if (!Arrays.equals(valueIntArray, that.valueIntArray)) {
-      binding.setVariable(BR.valueIntArray, valueIntArray);
+    if (valueList != null ? !valueList.equals(that.valueList) : that.valueList != null) {
+      binding.setVariable(BR.valueList, valueList);
     }
   }
 
@@ -491,27 +498,27 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   public DataBindingModelWithAllFieldTypes_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    super.valueInt = 0;
     super.valueInteger = null;
     super.valueShort = (short) 0;
-    super.valueLong = 0L;
-    super.valueList = null;
     super.valueShortWrapper = null;
-    super.valueDouble = 0.0d;
     super.valueChar = (char) 0;
-    super.valueInt = 0;
-    super.valueDoubleWrapper = null;
-    super.valueFloatWrapper = null;
-    super.valueBooleanWrapper = null;
-    super.valueByteWrapper = null;
-    super.valuebByte = (byte) 0;
-    super.valueLongWrapper = null;
     super.valueCharacter = null;
-    super.valueString = null;
+    super.valuebByte = (byte) 0;
+    super.valueByteWrapper = null;
+    super.valueLong = 0L;
+    super.valueLongWrapper = null;
+    super.valueDouble = 0.0d;
+    super.valueDoubleWrapper = null;
     super.valueFloat = 0.0f;
+    super.valueFloatWrapper = null;
     super.valueBoolean = false;
-    super.valueObjectArray = null;
-    super.valueObject = null;
+    super.valueBooleanWrapper = null;
     super.valueIntArray = null;
+    super.valueObjectArray = null;
+    super.valueString = null;
+    super.valueObject = null;
+    super.valueList = null;
     super.reset();
     return this;
   }
@@ -534,67 +541,67 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
     if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
       return false;
     }
+    if (valueInt != that.valueInt) {
+      return false;
+    }
     if (valueInteger != null ? !valueInteger.equals(that.valueInteger) : that.valueInteger != null) {
       return false;
     }
     if (valueShort != that.valueShort) {
       return false;
     }
-    if (valueLong != that.valueLong) {
-      return false;
-    }
-    if (valueList != null ? !valueList.equals(that.valueList) : that.valueList != null) {
-      return false;
-    }
     if (valueShortWrapper != null ? !valueShortWrapper.equals(that.valueShortWrapper) : that.valueShortWrapper != null) {
-      return false;
-    }
-    if (Double.compare(that.valueDouble, valueDouble) != 0) {
       return false;
     }
     if (valueChar != that.valueChar) {
       return false;
     }
-    if (valueInt != that.valueInt) {
-      return false;
-    }
-    if (valueDoubleWrapper != null ? !valueDoubleWrapper.equals(that.valueDoubleWrapper) : that.valueDoubleWrapper != null) {
-      return false;
-    }
-    if (valueFloatWrapper != null ? !valueFloatWrapper.equals(that.valueFloatWrapper) : that.valueFloatWrapper != null) {
-      return false;
-    }
-    if (valueBooleanWrapper != null ? !valueBooleanWrapper.equals(that.valueBooleanWrapper) : that.valueBooleanWrapper != null) {
-      return false;
-    }
-    if (valueByteWrapper != null ? !valueByteWrapper.equals(that.valueByteWrapper) : that.valueByteWrapper != null) {
+    if (valueCharacter != null ? !valueCharacter.equals(that.valueCharacter) : that.valueCharacter != null) {
       return false;
     }
     if (valuebByte != that.valuebByte) {
       return false;
     }
+    if (valueByteWrapper != null ? !valueByteWrapper.equals(that.valueByteWrapper) : that.valueByteWrapper != null) {
+      return false;
+    }
+    if (valueLong != that.valueLong) {
+      return false;
+    }
     if (valueLongWrapper != null ? !valueLongWrapper.equals(that.valueLongWrapper) : that.valueLongWrapper != null) {
       return false;
     }
-    if (valueCharacter != null ? !valueCharacter.equals(that.valueCharacter) : that.valueCharacter != null) {
+    if (Double.compare(that.valueDouble, valueDouble) != 0) {
       return false;
     }
-    if (valueString != null ? !valueString.equals(that.valueString) : that.valueString != null) {
+    if (valueDoubleWrapper != null ? !valueDoubleWrapper.equals(that.valueDoubleWrapper) : that.valueDoubleWrapper != null) {
       return false;
     }
     if (Float.compare(that.valueFloat, valueFloat) != 0) {
       return false;
     }
+    if (valueFloatWrapper != null ? !valueFloatWrapper.equals(that.valueFloatWrapper) : that.valueFloatWrapper != null) {
+      return false;
+    }
     if (valueBoolean != that.valueBoolean) {
+      return false;
+    }
+    if (valueBooleanWrapper != null ? !valueBooleanWrapper.equals(that.valueBooleanWrapper) : that.valueBooleanWrapper != null) {
+      return false;
+    }
+    if (!Arrays.equals(valueIntArray, that.valueIntArray)) {
       return false;
     }
     if (!Arrays.equals(valueObjectArray, that.valueObjectArray)) {
       return false;
     }
+    if (valueString != null ? !valueString.equals(that.valueString) : that.valueString != null) {
+      return false;
+    }
     if (valueObject != null ? !valueObject.equals(that.valueObject) : that.valueObject != null) {
       return false;
     }
-    if (!Arrays.equals(valueIntArray, that.valueIntArray)) {
+    if (valueList != null ? !valueList.equals(that.valueList) : that.valueList != null) {
       return false;
     }
     return true;
@@ -606,55 +613,55 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
     long temp;
+    result = 31 * result + valueInt;
     result = 31 * result + (valueInteger != null ? valueInteger.hashCode() : 0);
     result = 31 * result + valueShort;
-    result = 31 * result + (int) (valueLong ^ (valueLong >>> 32));
-    result = 31 * result + (valueList != null ? valueList.hashCode() : 0);
     result = 31 * result + (valueShortWrapper != null ? valueShortWrapper.hashCode() : 0);
+    result = 31 * result + valueChar;
+    result = 31 * result + (valueCharacter != null ? valueCharacter.hashCode() : 0);
+    result = 31 * result + valuebByte;
+    result = 31 * result + (valueByteWrapper != null ? valueByteWrapper.hashCode() : 0);
+    result = 31 * result + (int) (valueLong ^ (valueLong >>> 32));
+    result = 31 * result + (valueLongWrapper != null ? valueLongWrapper.hashCode() : 0);
     temp = Double.doubleToLongBits(valueDouble);
     result = 31 * result + (int) (temp ^ (temp >>> 32));
-    result = 31 * result + valueChar;
-    result = 31 * result + valueInt;
     result = 31 * result + (valueDoubleWrapper != null ? valueDoubleWrapper.hashCode() : 0);
-    result = 31 * result + (valueFloatWrapper != null ? valueFloatWrapper.hashCode() : 0);
-    result = 31 * result + (valueBooleanWrapper != null ? valueBooleanWrapper.hashCode() : 0);
-    result = 31 * result + (valueByteWrapper != null ? valueByteWrapper.hashCode() : 0);
-    result = 31 * result + valuebByte;
-    result = 31 * result + (valueLongWrapper != null ? valueLongWrapper.hashCode() : 0);
-    result = 31 * result + (valueCharacter != null ? valueCharacter.hashCode() : 0);
-    result = 31 * result + (valueString != null ? valueString.hashCode() : 0);
     result = 31 * result + (valueFloat != +0.0f ? Float.floatToIntBits(valueFloat) : 0);
+    result = 31 * result + (valueFloatWrapper != null ? valueFloatWrapper.hashCode() : 0);
     result = 31 * result + (valueBoolean ? 1 : 0);
-    result = 31 * result + Arrays.hashCode(valueObjectArray);
-    result = 31 * result + (valueObject != null ? valueObject.hashCode() : 0);
+    result = 31 * result + (valueBooleanWrapper != null ? valueBooleanWrapper.hashCode() : 0);
     result = 31 * result + Arrays.hashCode(valueIntArray);
+    result = 31 * result + Arrays.hashCode(valueObjectArray);
+    result = 31 * result + (valueString != null ? valueString.hashCode() : 0);
+    result = 31 * result + (valueObject != null ? valueObject.hashCode() : 0);
+    result = 31 * result + (valueList != null ? valueList.hashCode() : 0);
     return result;
   }
 
   @Override
   public String toString() {
     return "DataBindingModelWithAllFieldTypes_{" +
-        "valueInteger=" + valueInteger +
+        "valueInt=" + valueInt +
+        ", valueInteger=" + valueInteger +
         ", valueShort=" + valueShort +
-        ", valueLong=" + valueLong +
-        ", valueList=" + valueList +
         ", valueShortWrapper=" + valueShortWrapper +
-        ", valueDouble=" + valueDouble +
         ", valueChar=" + valueChar +
-        ", valueInt=" + valueInt +
-        ", valueDoubleWrapper=" + valueDoubleWrapper +
-        ", valueFloatWrapper=" + valueFloatWrapper +
-        ", valueBooleanWrapper=" + valueBooleanWrapper +
-        ", valueByteWrapper=" + valueByteWrapper +
-        ", valuebByte=" + valuebByte +
-        ", valueLongWrapper=" + valueLongWrapper +
         ", valueCharacter=" + valueCharacter +
-        ", valueString=" + valueString +
+        ", valuebByte=" + valuebByte +
+        ", valueByteWrapper=" + valueByteWrapper +
+        ", valueLong=" + valueLong +
+        ", valueLongWrapper=" + valueLongWrapper +
+        ", valueDouble=" + valueDouble +
+        ", valueDoubleWrapper=" + valueDoubleWrapper +
         ", valueFloat=" + valueFloat +
+        ", valueFloatWrapper=" + valueFloatWrapper +
         ", valueBoolean=" + valueBoolean +
-        ", valueObjectArray=" + valueObjectArray +
-        ", valueObject=" + valueObject +
+        ", valueBooleanWrapper=" + valueBooleanWrapper +
         ", valueIntArray=" + valueIntArray +
+        ", valueObjectArray=" + valueObjectArray +
+        ", valueString=" + valueString +
+        ", valueObject=" + valueObject +
+        ", valueList=" + valueList +
         "}" + super.toString();
   }
 }

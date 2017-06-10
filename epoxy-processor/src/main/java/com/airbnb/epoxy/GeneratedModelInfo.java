@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterSpec.Builder;
 import com.squareup.javapoet.TypeName;
@@ -10,7 +11,6 @@ import com.squareup.javapoet.TypeVariableName;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -28,20 +28,29 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.Utils.buildEpoxyException;
+
 abstract class GeneratedModelInfo {
   private static final String RESET_METHOD = "reset";
   protected static final String GENERATED_CLASS_NAME_SUFFIX = "_";
 
   protected TypeName superClassName;
   protected TypeElement superClassElement;
-  protected TypeName parameterizedClassName;
+  protected TypeName parametrizedClassName;
   protected ClassName generatedClassName;
   protected TypeName boundObjectTypeName;
   protected boolean shouldGenerateModel;
-  protected final Set<AttributeInfo> attributeInfo = new HashSet<>();
+  /**
+   * If true, any layout classes that exist that are prefixed by the default layout are included in
+   * the generated model as other layout options via a generated method for each alternate layout.
+   */
+  protected boolean includeOtherLayoutOptions;
+  // TODO: (eli_hart 5/16/17) Sort attributes alphabetically so overloaded setters are together
+  protected final List<AttributeInfo> attributeInfo = new ArrayList<>();
   protected final List<TypeVariableName> typeVariableNames = new ArrayList<>();
   protected final List<ConstructorInfo> constructors = new ArrayList<>();
   protected final Set<MethodInfo> methodsReturningClassType = new LinkedHashSet<>();
+  protected final List<AttributeGroup> attributeGroups = new ArrayList<>();
 
   /**
    * Get information about methods returning class type of the original class so we can duplicate
@@ -93,9 +102,23 @@ abstract class GeneratedModelInfo {
     addAttributes(Collections.singletonList(attributeInfo));
   }
 
-  void addAttributes(Collection<AttributeInfo> attributeInfo) {
-    removeMethodIfDuplicatedBySetter(attributeInfo);
-    this.attributeInfo.addAll(attributeInfo);
+  void addAttributes(Collection<AttributeInfo> attributesToAdd) {
+    removeMethodIfDuplicatedBySetter(attributesToAdd);
+    for (AttributeInfo info : attributesToAdd) {
+      int existingIndex = attributeInfo.indexOf(info);
+      if (existingIndex > -1) {
+        // Don't allow duplicates.
+        attributeInfo.set(existingIndex, info);
+      } else {
+        attributeInfo.add(info);
+      }
+    }
+  }
+
+  void addAttributeIfNotExists(AttributeInfo attributeToAdd) {
+    if (!attributeInfo.contains(attributeToAdd)) {
+      addAttribute(attributeToAdd);
+    }
   }
 
   private void removeMethodIfDuplicatedBySetter(Collection<AttributeInfo> attributeInfos) {
@@ -103,7 +126,7 @@ abstract class GeneratedModelInfo {
       Iterator<MethodInfo> iterator = methodsReturningClassType.iterator();
       while (iterator.hasNext()) {
         MethodInfo methodInfo = iterator.next();
-        if (methodInfo.name.equals(attributeInfo.getName())
+        if (methodInfo.name.equals(attributeInfo.getFieldName())
             // checking for overloads
             && methodInfo.params.size() == 1
             && methodInfo.params.get(0).type.equals(attributeInfo.getTypeName())) {
@@ -133,7 +156,7 @@ abstract class GeneratedModelInfo {
     return generatedClassName;
   }
 
-  Set<AttributeInfo> getAttributeInfo() {
+  List<AttributeInfo> getAttributeInfo() {
     return attributeInfo;
   }
 
@@ -146,7 +169,7 @@ abstract class GeneratedModelInfo {
   }
 
   TypeName getParameterizedGeneratedName() {
-    return parameterizedClassName;
+    return parametrizedClassName;
   }
 
   /**
@@ -221,5 +244,65 @@ abstract class GeneratedModelInfo {
         + "attributeInfo=" + attributeInfo
         + ", superClassName=" + superClassName
         + '}';
+  }
+
+  void addAttributeGroup(String groupName, List<AttributeInfo> attributes)
+      throws EpoxyProcessorException {
+
+    AttributeInfo defaultAttribute = null;
+    for (AttributeInfo attribute : attributes) {
+      if (attribute.isRequired() || attribute.codeToSetDefault.isEmpty()) {
+        continue;
+      }
+
+      if (defaultAttribute != null
+          && defaultAttribute.codeToSetDefault.explicit != null
+          && attribute.codeToSetDefault.explicit != null) {
+        throw buildEpoxyException(
+            "Only one default value can exist for a group of attributes: " + attributes);
+      }
+
+      // Have the one explicit default value in the group trump everything else
+      if (defaultAttribute == null || defaultAttribute.codeToSetDefault.explicit == null) {
+        defaultAttribute = attribute;
+      }
+    }
+
+    AttributeGroup group = new AttributeGroup(groupName, attributes, defaultAttribute);
+    attributeGroups.add(group);
+    for (AttributeInfo attribute : attributes) {
+      attribute.setAttributeGroup(group);
+    }
+  }
+
+  static class AttributeGroup {
+    final String name;
+    final List<AttributeInfo> attributes;
+    final boolean isRequired;
+    final AttributeInfo defaultAttribute;
+
+    AttributeGroup(String groupName, List<AttributeInfo> attributes,
+        AttributeInfo defaultAttribute) throws EpoxyProcessorException {
+      if (attributes.isEmpty()) {
+        throw buildEpoxyException("Attributes cannot be empty");
+      }
+
+      if (defaultAttribute != null && defaultAttribute.codeToSetDefault.isEmpty()) {
+        throw buildEpoxyException("Default attribute has no default code");
+      }
+
+      this.defaultAttribute = defaultAttribute;
+      isRequired = defaultAttribute == null;
+      this.name = groupName;
+      this.attributes = new ArrayList<>(attributes);
+    }
+
+    CodeBlock codeToSetDefaultValue() {
+      if (defaultAttribute == null || defaultAttribute.codeToSetDefault.isEmpty()) {
+        throw new IllegalStateException("No default value exists");
+      }
+
+      return CodeBlock.of(defaultAttribute.setterCode(), defaultAttribute.codeToSetDefault.value());
+    }
   }
 }

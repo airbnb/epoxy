@@ -43,7 +43,7 @@ public class DataBindingModelIntegrationTest {
     DataBindingHolder dataBindingHolder = ((DataBindingHolder) viewHolder.objectToBind());
     assertNotNull(dataBindingHolder.getDataBinding());
 
-    // Check that the text was set on the view
+    // Check that the requiredText was set on the view
     assertEquals(firstModel.stringValue(), ((Button) viewHolder.itemView).getText());
 
     TestDataBindingModel_ secondModel = new TestDataBindingModel_()
@@ -54,7 +54,7 @@ public class DataBindingModelIntegrationTest {
     List<Object> payloads = DiffPayloadTestUtil.payloadsWithChangedModels(firstModel);
     controller.getAdapter().onBindViewHolder(viewHolder, 0, payloads);
 
-    // Check that the text was updated after the change payload
+    // Check that the requiredText was updated after the change payload
     assertEquals(secondModel.stringValue(), ((Button) viewHolder.itemView).getText());
   }
 
@@ -74,7 +74,7 @@ public class DataBindingModelIntegrationTest {
     DataBindingHolder dataBindingHolder = ((DataBindingHolder) viewHolder.objectToBind());
     assertNotNull(dataBindingHolder.getDataBinding());
 
-    // Check that the text was set on the view
+    // Check that the requiredText was set on the view
     assertEquals(firstModel.stringValue(), ((Button) viewHolder.itemView).getText());
 
     ModelWithDataBindingBindingModel_ secondModel = new ModelWithDataBindingBindingModel_()
@@ -85,7 +85,7 @@ public class DataBindingModelIntegrationTest {
     List<Object> payloads = DiffPayloadTestUtil.payloadsWithChangedModels(firstModel);
     controller.getAdapter().onBindViewHolder(viewHolder, 0, payloads);
 
-    // Check that the text was updated after the change payload
+    // Check that the requiredText was updated after the change payload
     assertEquals(secondModel.stringValue(), ((Button) viewHolder.itemView).getText());
   }
 

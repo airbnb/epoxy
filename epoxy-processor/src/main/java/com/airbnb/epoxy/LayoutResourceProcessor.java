@@ -9,6 +9,7 @@ import com.sun.tools.javac.tree.TreeScanner;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,11 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+
+import static com.airbnb.epoxy.Utils.getElementByName;
 
 /**
  * Scans R files and and compiles layout resource values in those R classes. This allows us to look
@@ -36,6 +40,8 @@ class LayoutResourceProcessor {
 
   private Trees trees;
   private final Map<String, ClassName> rClassNameMap = new HashMap<>();
+  /** Maps the name of an R class to a list of all of the layout resources in that class. */
+  private final Map<ClassName, List<LayoutResource>> rClassLayoutResources = new HashMap<>();
   private final AnnotationLayoutParamScanner scanner = new AnnotationLayoutParamScanner();
 
   LayoutResourceProcessor(ProcessingEnvironment processingEnv, ErrorLogger errorLogger,
@@ -87,7 +93,7 @@ class LayoutResourceProcessor {
 
       for (ScannerResult scannerResult : scannerResults) {
         resources.add(new LayoutResource(
-            getClassName(scannerResult.rClass),
+            scannerResult.rClass,
             scannerResult.resourceName,
             scannerResult.resourceValue
         ));
@@ -128,6 +134,8 @@ class LayoutResourceProcessor {
       for (int layoutRes : ((EpoxyDataBindingLayouts) annotation).value()) {
         layoutResources.add(layoutRes);
       }
+    } else if (annotation instanceof ModelView) {
+      layoutResources.add(((ModelView) annotation).defaultLayout());
     }
 
     return layoutResources;
@@ -150,6 +158,56 @@ class LayoutResourceProcessor {
   List<ClassName> getRClassNames() {
     return new ArrayList<>(rClassNameMap.values());
   }
+
+  List<LayoutResource> getAlternateLayouts(LayoutResource layout) {
+    if (rClassLayoutResources.isEmpty()) {
+      // This will only have been filled if at least one view has a layout in it's annotation.
+      // If all view's use their default layout then resources haven't been parsed yet and we can
+      // do it now
+      Element rLayoutClassElement = getElementByName(layout.className, elementUtils, typeUtils);
+      saveLayoutValuesForRClass(layout.className, rLayoutClassElement);
+    }
+
+    List<LayoutResource> layouts = rClassLayoutResources.get(layout.className);
+    if (layouts == null) {
+      errorLogger.logError("No layout files found for R class: %s", layout.className);
+      return Collections.emptyList();
+    }
+
+    List<LayoutResource> result = new ArrayList<>();
+    String target = layout.resourceName + "_";
+    for (LayoutResource otherLayout : layouts) {
+      if (otherLayout.resourceName.startsWith(target)) {
+        result.add(otherLayout);
+      }
+    }
+
+    return result;
+  }
+
+  private void saveLayoutValuesForRClass(ClassName rClass, Element layoutClass) {
+    if (rClassLayoutResources.containsKey(rClass)) {
+      return;
+    }
+
+    List<? extends Element> layoutElements = layoutClass.getEnclosedElements();
+    List<LayoutResource> layoutNames = new ArrayList<>(layoutElements.size());
+    for (Element layoutResource : layoutElements) {
+      if (!(layoutResource instanceof VariableElement)) {
+        continue;
+      }
+
+      String resourceName = layoutResource.getSimpleName().toString();
+      layoutNames.add(new LayoutResource(
+          rClass,
+          resourceName,
+          0 // Don't care about this for our use case
+      ));
+    }
+
+    rClassLayoutResources.put(rClass, layoutNames);
+  }
+
 
   /**
    * Scans annotations that have layout resources as parameters. It supports both one layout
@@ -192,13 +250,14 @@ class LayoutResourceProcessor {
 
     private ScannerResult parseResourceSymbol(VarSymbol symbol) {
       // eg com.airbnb.epoxy.R
-      String rClass = symbol.getEnclosingElement().getEnclosingElement().enclClass().className();
+      Symbol layoutClass = symbol.getEnclosingElement();
+      String rClass = layoutClass.getEnclosingElement().enclClass().className();
 
       // eg com.airbnb.epoxy.R.layout
-      String layoutClass = symbol.getEnclosingElement().getQualifiedName().toString();
+      String layoutClassName = layoutClass.getQualifiedName().toString();
 
       // Make sure this is a layout resource
-      if (!(rClass + ".layout").equals(layoutClass)) {
+      if (!(rClass + ".layout").equals(layoutClassName)) {
         errorLogger
             .logError("%s annotation requires a layout resource but received %s. (Element: %s)",
                 annotationClass.getSimpleName(), layoutClass, element.getSimpleName());
@@ -215,8 +274,12 @@ class LayoutResourceProcessor {
         return null;
       }
 
-      return new ScannerResult(rClass, layoutResourceName, (int) layoutValue);
+      ClassName rClassName = getClassName(rClass);
+      saveLayoutValuesForRClass(rClassName, layoutClass);
+
+      return new ScannerResult(rClassName, layoutResourceName, (int) layoutValue);
     }
+
 
     void setCurrentAnnotationDetails(Element element, Class annotationClass) {
       this.element = element;
@@ -225,11 +288,11 @@ class LayoutResourceProcessor {
   }
 
   private static class ScannerResult {
-    final String rClass;
+    final ClassName rClass;
     final String resourceName;
     final int resourceValue;
 
-    private ScannerResult(String rClass, String resourceName, int resourceValue) {
+    private ScannerResult(ClassName rClass, String resourceName, int resourceValue) {
       this.rClass = rClass;
       this.resourceName = resourceName;
       this.resourceValue = resourceValue;
@@ -244,7 +307,7 @@ class LayoutResourceProcessor {
     ClassName className = rClassNameMap.get(rClass);
 
     if (className == null) {
-      Element rClassElement = Utils.getElementByName(rClass, elementUtils, typeUtils);
+      Element rClassElement = getElementByName(rClass, elementUtils, typeUtils);
 
       String rClassPackageName =
           elementUtils.getPackageOf(rClassElement).getQualifiedName().toString();

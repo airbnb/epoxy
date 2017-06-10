@@ -1,7 +1,5 @@
 package com.airbnb.epoxy;
 
-import com.squareup.javapoet.TypeName;
-
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
@@ -12,8 +10,7 @@ class DataBindingAttributeInfo extends AttributeInfo {
   DataBindingAttributeInfo(DataBindingModelInfo modelInfo, ExecutableElement setterMethod,
       HashCodeValidator hashCodeValidator) {
     VariableElement paramElement = setterMethod.getParameters().get(0);
-    this.name = removeSetPrefix(setterMethod.getSimpleName().toString());
-    typeName = TypeName.get(paramElement.asType());
+    this.fieldName = removeSetPrefix(setterMethod.getSimpleName().toString());
     typeMirror = paramElement.asType();
     modelName = modelInfo.getGeneratedName().simpleName();
     modelPackageName = modelInfo.getGeneratedName().packageName();

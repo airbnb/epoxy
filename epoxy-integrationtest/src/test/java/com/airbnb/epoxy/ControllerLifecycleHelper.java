@@ -1,9 +1,11 @@
 package com.airbnb.epoxy;
 
+import android.view.View;
 import android.widget.FrameLayout;
 
 import org.robolectric.RuntimeEnvironment;
 
+import java.util.Collections;
 import java.util.List;
 
 class ControllerLifecycleHelper {
@@ -24,6 +26,13 @@ class ControllerLifecycleHelper {
       viewHolder = createViewHolder(adapter, i);
       adapter.onBindViewHolder(viewHolder, i);
     }
+  }
+
+  public View bindModel(EpoxyModel<?> model) {
+    SimpleEpoxyController controller = new SimpleEpoxyController();
+    controller.setModels(Collections.singletonList(model));
+    bindModels(controller);
+    return viewHolder.itemView;
   }
 
   static EpoxyViewHolder createViewHolder(BaseEpoxyAdapter adapter, int position) {

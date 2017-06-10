@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import com.airbnb.epoxy.othermodule.R;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -115,6 +116,12 @@ public class ModelForTestingDuplicateRValues_ extends ModelForTestingDuplicateRV
   @Override
   public ModelForTestingDuplicateRValues_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
+    return this;
+  }
+
+  @Override
+  public ModelForTestingDuplicateRValues_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
     return this;
   }
 

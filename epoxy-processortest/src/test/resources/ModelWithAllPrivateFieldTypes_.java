@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import java.lang.Boolean;
 import java.lang.Byte;
 import java.lang.CharSequence;
@@ -81,6 +82,16 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return this;
   }
 
+  public ModelWithAllPrivateFieldTypes_ valueInt(int valueInt) {
+    onMutation();
+    super.setValueInt(valueInt);
+    return this;
+  }
+
+  public int valueInt() {
+    return super.getValueInt();
+  }
+
   public ModelWithAllPrivateFieldTypes_ valueInteger(Integer valueInteger) {
     onMutation();
     super.setValueInteger(valueInteger);
@@ -101,26 +112,6 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return super.getValueShort();
   }
 
-  public ModelWithAllPrivateFieldTypes_ valueLong(long valueLong) {
-    onMutation();
-    super.setValueLong(valueLong);
-    return this;
-  }
-
-  public long valueLong() {
-    return super.getValueLong();
-  }
-
-  public ModelWithAllPrivateFieldTypes_ valueList(List<String> valueList) {
-    onMutation();
-    super.setValueList(valueList);
-    return this;
-  }
-
-  public List<String> valueList() {
-    return super.getValueList();
-  }
-
   public ModelWithAllPrivateFieldTypes_ valueShortWrapper(Short valueShortWrapper) {
     onMutation();
     super.setValueShortWrapper(valueShortWrapper);
@@ -129,16 +120,6 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public Short valueShortWrapper() {
     return super.getValueShortWrapper();
-  }
-
-  public ModelWithAllPrivateFieldTypes_ valueDouble(double valueDouble) {
-    onMutation();
-    super.setValueDouble(valueDouble);
-    return this;
-  }
-
-  public double valueDouble() {
-    return super.getValueDouble();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueChar(char valueChar) {
@@ -151,54 +132,14 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return super.getValueChar();
   }
 
-  public ModelWithAllPrivateFieldTypes_ valueInt(int valueInt) {
+  public ModelWithAllPrivateFieldTypes_ valueCharacter(Character valueCharacter) {
     onMutation();
-    super.setValueInt(valueInt);
+    super.setValueCharacter(valueCharacter);
     return this;
   }
 
-  public int valueInt() {
-    return super.getValueInt();
-  }
-
-  public ModelWithAllPrivateFieldTypes_ valueDoubleWrapper(Double valueDoubleWrapper) {
-    onMutation();
-    super.setValueDoubleWrapper(valueDoubleWrapper);
-    return this;
-  }
-
-  public Double valueDoubleWrapper() {
-    return super.getValueDoubleWrapper();
-  }
-
-  public ModelWithAllPrivateFieldTypes_ valueFloatWrapper(Float valueFloatWrapper) {
-    onMutation();
-    super.setValueFloatWrapper(valueFloatWrapper);
-    return this;
-  }
-
-  public Float valueFloatWrapper() {
-    return super.getValueFloatWrapper();
-  }
-
-  public ModelWithAllPrivateFieldTypes_ valueBooleanWrapper(Boolean valueBooleanWrapper) {
-    onMutation();
-    super.setValueBooleanWrapper(valueBooleanWrapper);
-    return this;
-  }
-
-  public Boolean valueBooleanWrapper() {
-    return super.getValueBooleanWrapper();
-  }
-
-  public ModelWithAllPrivateFieldTypes_ valueByteWrapper(Byte valueByteWrapper) {
-    onMutation();
-    super.setValueByteWrapper(valueByteWrapper);
-    return this;
-  }
-
-  public Byte valueByteWrapper() {
-    return super.getValueByteWrapper();
+  public Character valueCharacter() {
+    return super.getValueCharacter();
   }
 
   public ModelWithAllPrivateFieldTypes_ valuebByte(byte valuebByte) {
@@ -211,6 +152,26 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return super.getValuebByte();
   }
 
+  public ModelWithAllPrivateFieldTypes_ valueByteWrapper(Byte valueByteWrapper) {
+    onMutation();
+    super.setValueByteWrapper(valueByteWrapper);
+    return this;
+  }
+
+  public Byte valueByteWrapper() {
+    return super.getValueByteWrapper();
+  }
+
+  public ModelWithAllPrivateFieldTypes_ valueLong(long valueLong) {
+    onMutation();
+    super.setValueLong(valueLong);
+    return this;
+  }
+
+  public long valueLong() {
+    return super.getValueLong();
+  }
+
   public ModelWithAllPrivateFieldTypes_ valueLongWrapper(Long valueLongWrapper) {
     onMutation();
     super.setValueLongWrapper(valueLongWrapper);
@@ -221,24 +182,24 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return super.getValueLongWrapper();
   }
 
-  public ModelWithAllPrivateFieldTypes_ valueCharacter(Character valueCharacter) {
+  public ModelWithAllPrivateFieldTypes_ valueDouble(double valueDouble) {
     onMutation();
-    super.setValueCharacter(valueCharacter);
+    super.setValueDouble(valueDouble);
     return this;
   }
 
-  public Character valueCharacter() {
-    return super.getValueCharacter();
+  public double valueDouble() {
+    return super.getValueDouble();
   }
 
-  public ModelWithAllPrivateFieldTypes_ valueString(String valueString) {
+  public ModelWithAllPrivateFieldTypes_ valueDoubleWrapper(Double valueDoubleWrapper) {
     onMutation();
-    super.setValueString(valueString);
+    super.setValueDoubleWrapper(valueDoubleWrapper);
     return this;
   }
 
-  public String valueString() {
-    return super.getValueString();
+  public Double valueDoubleWrapper() {
+    return super.getValueDoubleWrapper();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueFloat(float valueFloat) {
@@ -251,6 +212,16 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return super.getValueFloat();
   }
 
+  public ModelWithAllPrivateFieldTypes_ valueFloatWrapper(Float valueFloatWrapper) {
+    onMutation();
+    super.setValueFloatWrapper(valueFloatWrapper);
+    return this;
+  }
+
+  public Float valueFloatWrapper() {
+    return super.getValueFloatWrapper();
+  }
+
   public ModelWithAllPrivateFieldTypes_ valueBoolean(boolean valueBoolean) {
     onMutation();
     super.setValueBoolean(valueBoolean);
@@ -259,6 +230,26 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   public boolean valueBoolean() {
     return super.isValueBoolean();
+  }
+
+  public ModelWithAllPrivateFieldTypes_ valueBooleanWrapper(Boolean valueBooleanWrapper) {
+    onMutation();
+    super.setValueBooleanWrapper(valueBooleanWrapper);
+    return this;
+  }
+
+  public Boolean valueBooleanWrapper() {
+    return super.getValueBooleanWrapper();
+  }
+
+  public ModelWithAllPrivateFieldTypes_ valueIntArray(int[] valueIntArray) {
+    onMutation();
+    super.setValueIntArray(valueIntArray);
+    return this;
+  }
+
+  public int[] valueIntArray() {
+    return super.getValueIntArray();
   }
 
   public ModelWithAllPrivateFieldTypes_ valueObjectArray(Object[] valueObjectArray) {
@@ -271,6 +262,16 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return super.getValueObjectArray();
   }
 
+  public ModelWithAllPrivateFieldTypes_ valueString(String valueString) {
+    onMutation();
+    super.setValueString(valueString);
+    return this;
+  }
+
+  public String valueString() {
+    return super.getValueString();
+  }
+
   public ModelWithAllPrivateFieldTypes_ valueObject(Object valueObject) {
     onMutation();
     super.setValueObject(valueObject);
@@ -281,14 +282,14 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     return super.getValueObject();
   }
 
-  public ModelWithAllPrivateFieldTypes_ valueIntArray(int[] valueIntArray) {
+  public ModelWithAllPrivateFieldTypes_ valueList(List<String> valueList) {
     onMutation();
-    super.setValueIntArray(valueIntArray);
+    super.setValueList(valueList);
     return this;
   }
 
-  public int[] valueIntArray() {
-    return super.getValueIntArray();
+  public List<String> valueList() {
+    return super.getValueList();
   }
 
   @Override
@@ -334,6 +335,12 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   @Override
+  public ModelWithAllPrivateFieldTypes_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
+    return this;
+  }
+
+  @Override
   public ModelWithAllPrivateFieldTypes_ show() {
     super.show();
     return this;
@@ -355,27 +362,27 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   public ModelWithAllPrivateFieldTypes_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    super.setValueInt(0);
     super.setValueInteger(null);
     super.setValueShort((short) 0);
-    super.setValueLong(0L);
-    super.setValueList(null);
     super.setValueShortWrapper(null);
-    super.setValueDouble(0.0d);
     super.setValueChar((char) 0);
-    super.setValueInt(0);
-    super.setValueDoubleWrapper(null);
-    super.setValueFloatWrapper(null);
-    super.setValueBooleanWrapper(null);
-    super.setValueByteWrapper(null);
-    super.setValuebByte((byte) 0);
-    super.setValueLongWrapper(null);
     super.setValueCharacter(null);
-    super.setValueString(null);
+    super.setValuebByte((byte) 0);
+    super.setValueByteWrapper(null);
+    super.setValueLong(0L);
+    super.setValueLongWrapper(null);
+    super.setValueDouble(0.0d);
+    super.setValueDoubleWrapper(null);
     super.setValueFloat(0.0f);
+    super.setValueFloatWrapper(null);
     super.setValueBoolean(false);
-    super.setValueObjectArray(null);
-    super.setValueObject(null);
+    super.setValueBooleanWrapper(null);
     super.setValueIntArray(null);
+    super.setValueObjectArray(null);
+    super.setValueString(null);
+    super.setValueObject(null);
+    super.setValueList(null);
     super.reset();
     return this;
   }
@@ -398,67 +405,67 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
       return false;
     }
+    if (getValueInt() != that.getValueInt()) {
+      return false;
+    }
     if (getValueInteger() != null ? !getValueInteger().equals(that.getValueInteger()) : that.getValueInteger() != null) {
       return false;
     }
     if (getValueShort() != that.getValueShort()) {
       return false;
     }
-    if (getValueLong() != that.getValueLong()) {
-      return false;
-    }
-    if (getValueList() != null ? !getValueList().equals(that.getValueList()) : that.getValueList() != null) {
-      return false;
-    }
     if (getValueShortWrapper() != null ? !getValueShortWrapper().equals(that.getValueShortWrapper()) : that.getValueShortWrapper() != null) {
-      return false;
-    }
-    if (Double.compare(that.getValueDouble(), getValueDouble()) != 0) {
       return false;
     }
     if (getValueChar() != that.getValueChar()) {
       return false;
     }
-    if (getValueInt() != that.getValueInt()) {
-      return false;
-    }
-    if (getValueDoubleWrapper() != null ? !getValueDoubleWrapper().equals(that.getValueDoubleWrapper()) : that.getValueDoubleWrapper() != null) {
-      return false;
-    }
-    if (getValueFloatWrapper() != null ? !getValueFloatWrapper().equals(that.getValueFloatWrapper()) : that.getValueFloatWrapper() != null) {
-      return false;
-    }
-    if (getValueBooleanWrapper() != null ? !getValueBooleanWrapper().equals(that.getValueBooleanWrapper()) : that.getValueBooleanWrapper() != null) {
-      return false;
-    }
-    if (getValueByteWrapper() != null ? !getValueByteWrapper().equals(that.getValueByteWrapper()) : that.getValueByteWrapper() != null) {
+    if (getValueCharacter() != null ? !getValueCharacter().equals(that.getValueCharacter()) : that.getValueCharacter() != null) {
       return false;
     }
     if (getValuebByte() != that.getValuebByte()) {
       return false;
     }
+    if (getValueByteWrapper() != null ? !getValueByteWrapper().equals(that.getValueByteWrapper()) : that.getValueByteWrapper() != null) {
+      return false;
+    }
+    if (getValueLong() != that.getValueLong()) {
+      return false;
+    }
     if (getValueLongWrapper() != null ? !getValueLongWrapper().equals(that.getValueLongWrapper()) : that.getValueLongWrapper() != null) {
       return false;
     }
-    if (getValueCharacter() != null ? !getValueCharacter().equals(that.getValueCharacter()) : that.getValueCharacter() != null) {
+    if (Double.compare(that.getValueDouble(), getValueDouble()) != 0) {
       return false;
     }
-    if (getValueString() != null ? !getValueString().equals(that.getValueString()) : that.getValueString() != null) {
+    if (getValueDoubleWrapper() != null ? !getValueDoubleWrapper().equals(that.getValueDoubleWrapper()) : that.getValueDoubleWrapper() != null) {
       return false;
     }
     if (Float.compare(that.getValueFloat(), getValueFloat()) != 0) {
       return false;
     }
+    if (getValueFloatWrapper() != null ? !getValueFloatWrapper().equals(that.getValueFloatWrapper()) : that.getValueFloatWrapper() != null) {
+      return false;
+    }
     if (isValueBoolean() != that.isValueBoolean()) {
+      return false;
+    }
+    if (getValueBooleanWrapper() != null ? !getValueBooleanWrapper().equals(that.getValueBooleanWrapper()) : that.getValueBooleanWrapper() != null) {
+      return false;
+    }
+    if (!Arrays.equals(getValueIntArray(), that.getValueIntArray())) {
       return false;
     }
     if (!Arrays.equals(getValueObjectArray(), that.getValueObjectArray())) {
       return false;
     }
+    if (getValueString() != null ? !getValueString().equals(that.getValueString()) : that.getValueString() != null) {
+      return false;
+    }
     if (getValueObject() != null ? !getValueObject().equals(that.getValueObject()) : that.getValueObject() != null) {
       return false;
     }
-    if (!Arrays.equals(getValueIntArray(), that.getValueIntArray())) {
+    if (getValueList() != null ? !getValueList().equals(that.getValueList()) : that.getValueList() != null) {
       return false;
     }
     return true;
@@ -470,55 +477,55 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
     long temp;
+    result = 31 * result + getValueInt();
     result = 31 * result + (getValueInteger() != null ? getValueInteger().hashCode() : 0);
     result = 31 * result + getValueShort();
-    result = 31 * result + (int) (getValueLong() ^ (getValueLong() >>> 32));
-    result = 31 * result + (getValueList() != null ? getValueList().hashCode() : 0);
     result = 31 * result + (getValueShortWrapper() != null ? getValueShortWrapper().hashCode() : 0);
+    result = 31 * result + getValueChar();
+    result = 31 * result + (getValueCharacter() != null ? getValueCharacter().hashCode() : 0);
+    result = 31 * result + getValuebByte();
+    result = 31 * result + (getValueByteWrapper() != null ? getValueByteWrapper().hashCode() : 0);
+    result = 31 * result + (int) (getValueLong() ^ (getValueLong() >>> 32));
+    result = 31 * result + (getValueLongWrapper() != null ? getValueLongWrapper().hashCode() : 0);
     temp = Double.doubleToLongBits(getValueDouble());
     result = 31 * result + (int) (temp ^ (temp >>> 32));
-    result = 31 * result + getValueChar();
-    result = 31 * result + getValueInt();
     result = 31 * result + (getValueDoubleWrapper() != null ? getValueDoubleWrapper().hashCode() : 0);
-    result = 31 * result + (getValueFloatWrapper() != null ? getValueFloatWrapper().hashCode() : 0);
-    result = 31 * result + (getValueBooleanWrapper() != null ? getValueBooleanWrapper().hashCode() : 0);
-    result = 31 * result + (getValueByteWrapper() != null ? getValueByteWrapper().hashCode() : 0);
-    result = 31 * result + getValuebByte();
-    result = 31 * result + (getValueLongWrapper() != null ? getValueLongWrapper().hashCode() : 0);
-    result = 31 * result + (getValueCharacter() != null ? getValueCharacter().hashCode() : 0);
-    result = 31 * result + (getValueString() != null ? getValueString().hashCode() : 0);
     result = 31 * result + (getValueFloat() != +0.0f ? Float.floatToIntBits(getValueFloat()) : 0);
+    result = 31 * result + (getValueFloatWrapper() != null ? getValueFloatWrapper().hashCode() : 0);
     result = 31 * result + (isValueBoolean() ? 1 : 0);
-    result = 31 * result + Arrays.hashCode(getValueObjectArray());
-    result = 31 * result + (getValueObject() != null ? getValueObject().hashCode() : 0);
+    result = 31 * result + (getValueBooleanWrapper() != null ? getValueBooleanWrapper().hashCode() : 0);
     result = 31 * result + Arrays.hashCode(getValueIntArray());
+    result = 31 * result + Arrays.hashCode(getValueObjectArray());
+    result = 31 * result + (getValueString() != null ? getValueString().hashCode() : 0);
+    result = 31 * result + (getValueObject() != null ? getValueObject().hashCode() : 0);
+    result = 31 * result + (getValueList() != null ? getValueList().hashCode() : 0);
     return result;
   }
 
   @Override
   public String toString() {
     return "ModelWithAllPrivateFieldTypes_{" +
-        "valueInteger=" + getValueInteger() +
+        "valueInt=" + getValueInt() +
+        ", valueInteger=" + getValueInteger() +
         ", valueShort=" + getValueShort() +
-        ", valueLong=" + getValueLong() +
-        ", valueList=" + getValueList() +
         ", valueShortWrapper=" + getValueShortWrapper() +
-        ", valueDouble=" + getValueDouble() +
         ", valueChar=" + getValueChar() +
-        ", valueInt=" + getValueInt() +
-        ", valueDoubleWrapper=" + getValueDoubleWrapper() +
-        ", valueFloatWrapper=" + getValueFloatWrapper() +
-        ", valueBooleanWrapper=" + getValueBooleanWrapper() +
-        ", valueByteWrapper=" + getValueByteWrapper() +
-        ", valuebByte=" + getValuebByte() +
-        ", valueLongWrapper=" + getValueLongWrapper() +
         ", valueCharacter=" + getValueCharacter() +
-        ", valueString=" + getValueString() +
+        ", valuebByte=" + getValuebByte() +
+        ", valueByteWrapper=" + getValueByteWrapper() +
+        ", valueLong=" + getValueLong() +
+        ", valueLongWrapper=" + getValueLongWrapper() +
+        ", valueDouble=" + getValueDouble() +
+        ", valueDoubleWrapper=" + getValueDoubleWrapper() +
         ", valueFloat=" + getValueFloat() +
+        ", valueFloatWrapper=" + getValueFloatWrapper() +
         ", valueBoolean=" + isValueBoolean() +
-        ", valueObjectArray=" + getValueObjectArray() +
-        ", valueObject=" + getValueObject() +
+        ", valueBooleanWrapper=" + getValueBooleanWrapper() +
         ", valueIntArray=" + getValueIntArray() +
+        ", valueObjectArray=" + getValueObjectArray() +
+        ", valueString=" + getValueString() +
+        ", valueObject=" + getValueObject() +
+        ", valueList=" + getValueList() +
         "}" + super.toString();
   }
 }

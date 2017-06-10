@@ -29,7 +29,8 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
     @Override
     public int getSpanSize(int position) {
       try {
-        return getModelForPosition(position).getSpanSize(spanCount, position, getItemCount());
+        return getModelForPosition(position)
+            .getSpanSizeInternal(spanCount, position, getItemCount());
       } catch (IndexOutOfBoundsException e) {
         // There seems to be a GridLayoutManager bug where when the user is in accessibility mode
         // it incorrectly uses an outdated view position

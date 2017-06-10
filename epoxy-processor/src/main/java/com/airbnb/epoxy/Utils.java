@@ -7,9 +7,12 @@ import com.squareup.javapoet.TypeName;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -24,6 +27,14 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.squareup.javapoet.TypeName.BOOLEAN;
+import static com.squareup.javapoet.TypeName.BYTE;
+import static com.squareup.javapoet.TypeName.CHAR;
+import static com.squareup.javapoet.TypeName.DOUBLE;
+import static com.squareup.javapoet.TypeName.FLOAT;
+import static com.squareup.javapoet.TypeName.INT;
+import static com.squareup.javapoet.TypeName.LONG;
+import static com.squareup.javapoet.TypeName.SHORT;
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PROTECTED;
@@ -69,12 +80,26 @@ class Utils {
     }
   }
 
-  static Element getElementByName(ClassName name, Elements elements, Types types) {
-    try {
-      return elements.getTypeElement(name.reflectionName());
-    } catch (MirroredTypeException mte) {
-      return types.asElement(mte.getTypeMirror());
+  static TypeMirror getTypeMirror(ClassName className, Elements elements, Types types) {
+    Element classElement = getElementByName(className.reflectionName(), elements, types);
+    if (classElement == null) {
+      throw new IllegalArgumentException("Unknown class: " + className);
     }
+
+    return classElement.asType();
+  }
+
+  static TypeMirror getTypeMirror(Class<?> clazz, Elements elements) {
+    try {
+      return elements.getTypeElement(clazz.getCanonicalName()).asType();
+    } catch (MirroredTypeException mte) {
+      return mte.getTypeMirror();
+    }
+  }
+
+  static Element getElementByName(ClassName name, Elements elements, Types types) {
+    String canonicalName = name.reflectionName().replace("$", ".");
+    return getElementByName(canonicalName, elements, types);
   }
 
   static Element getElementByName(String name, Elements elements, Types types) {
@@ -101,12 +126,12 @@ class Utils {
     return isSubtypeOfType(element.asType(), "java.lang.Iterable<?>");
   }
 
-  static boolean isEpoxyModel(TypeMirror type) {
-    return isSubtypeOfType(type, EPOXY_MODEL_TYPE);
-  }
-
   static boolean isController(TypeElement element) {
     return isSubtypeOfType(element.asType(), EPOXY_CONTROLLER_TYPE);
+  }
+
+  static boolean isEpoxyModel(TypeMirror type) {
+    return isSubtypeOfType(type, EPOXY_MODEL_TYPE);
   }
 
   static boolean isEpoxyModel(TypeElement type) {
@@ -379,6 +404,94 @@ class Utils {
   }
 
   static String removeSetPrefix(String string) {
+    if (!PATTERN_STARTS_WITH_SET.matcher(string).matches()) {
+      return string;
+    }
+
     return String.valueOf(string.charAt(3)).toLowerCase() + string.substring(4);
   }
+
+  static boolean isType(Elements elements, Types types, TypeMirror typeMirror, Class<?> clazz) {
+    TypeMirror classType = getTypeMirror(clazz, elements);
+    return types.isSameType(typeMirror, classType);
+  }
+
+  static boolean isType(Elements elements, Types types, TypeMirror typeMirror,
+      Class<?>... typeNames) {
+    for (Class<?> clazz : typeNames) {
+      if (isType(elements, types, typeMirror, clazz)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  static <T extends Annotation> TypeMirror getClassParamFromAnnotation(
+      Element annotatedElement, Class<T> annotationClass, String paramName) {
+    AnnotationMirror am = getAnnotationMirror(annotatedElement, annotationClass);
+    if (am == null) {
+      return null;
+    }
+    AnnotationValue av = getAnnotationValue(am, paramName);
+    if (av == null) {
+      return null;
+    } else {
+      return (TypeMirror) av.getValue();
+    }
+  }
+
+  private static AnnotationMirror getAnnotationMirror(Element typeElement,
+      Class<? extends Annotation> annotationClass) {
+    String clazzName = annotationClass.getName();
+    for (AnnotationMirror m : typeElement.getAnnotationMirrors()) {
+      if (m.getAnnotationType().toString().equals(clazzName)) {
+        return m;
+      }
+    }
+    return null;
+  }
+
+  private static AnnotationValue getAnnotationValue(AnnotationMirror annotationMirror, String key) {
+    for (Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror
+        .getElementValues().entrySet()) {
+      if (entry.getKey().getSimpleName().toString().equals(key)) {
+        return entry.getValue();
+      }
+    }
+    return null;
+  }
+
+  static String toSnakeCase(String s) {
+    return s.replaceAll("([^_A-Z])([A-Z])", "$1_$2").toLowerCase();
+  }
+
+  static <T> T notNull(T object) {
+    if (object == null) {
+      throw new NullPointerException();
+    }
+
+    return object;
+  }
+
+  static String getDefaultValue(TypeName attributeType) {
+   if (attributeType == BOOLEAN) {
+     return "false";
+   } else if (attributeType == INT) {
+     return "0";
+   } else if (attributeType == BYTE) {
+     return "(byte) 0";
+   } else if (attributeType == CHAR) {
+     return "(char) 0";
+   } else if (attributeType == SHORT) {
+     return "(short) 0";
+   } else if (attributeType == LONG) {
+     return "0L";
+   } else if (attributeType == FLOAT) {
+     return "0.0f";
+   } else if (attributeType == DOUBLE) {
+     return "0.0d";
+   } else {
+     return "null";
+   }
+ }
 }

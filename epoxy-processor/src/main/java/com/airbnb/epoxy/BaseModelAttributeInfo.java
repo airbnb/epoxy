@@ -37,9 +37,9 @@ class BaseModelAttributeInfo extends AttributeInfo {
   BaseModelAttributeInfo(Element attribute, Types typeUtils, Elements elements,
       ErrorLogger errorLogger) {
     this.typeUtils = typeUtils;
-    this.name = attribute.getSimpleName().toString();
-    this.typeName = TypeName.get(attribute.asType());
+    this.fieldName = attribute.getSimpleName().toString();
     typeMirror = attribute.asType();
+    setJavaDocString(elements.getDocComment(attribute));
 
     classElement = (TypeElement) attribute.getEnclosingElement();
     modelName = classElement.getSimpleName().toString();
@@ -105,7 +105,7 @@ class BaseModelAttributeInfo extends AttributeInfo {
               Option.IgnoreRequireHashCode,
               EpoxyAttribute.class.getSimpleName(),
               classElement.getSimpleName(),
-              name);
+              fieldName);
     }
 
     // Don't let legacy values be mixed with the new Options values
@@ -117,7 +117,7 @@ class BaseModelAttributeInfo extends AttributeInfo {
                 EpoxyAttribute.class.getSimpleName(),
                 Option.DoNotHash,
                 classElement.getSimpleName(),
-                name);
+                fieldName);
       }
 
       if (!annotation.setter()) {
@@ -127,7 +127,7 @@ class BaseModelAttributeInfo extends AttributeInfo {
                 EpoxyAttribute.class.getSimpleName(),
                 Option.NoSetter,
                 classElement.getSimpleName(),
-                name);
+                fieldName);
       }
     }
   }
@@ -141,23 +141,23 @@ class BaseModelAttributeInfo extends AttributeInfo {
         ExecutableElement method = (ExecutableElement) element;
         String methodName = method.getSimpleName().toString();
         // check if it is a valid getter
-        if ((methodName.equals(String.format("get%s", capitalizeFirstLetter(name)))
-            || methodName.equals(String.format("is%s", capitalizeFirstLetter(name)))
-            || (methodName.equals(name) && startsWithIs(name)))
+        if ((methodName.equals(String.format("get%s", capitalizeFirstLetter(fieldName)))
+            || methodName.equals(String.format("is%s", capitalizeFirstLetter(fieldName)))
+            || (methodName.equals(fieldName) && startsWithIs(fieldName)))
             && !method.getModifiers().contains(PRIVATE)
             && !method.getModifiers().contains(STATIC)
             && method.getParameters().isEmpty()
-            && TypeName.get(method.getReturnType()).equals(typeName)) {
+            && TypeName.get(method.getReturnType()).equals(getTypeName())) {
           getterMethodName = methodName;
         }
         // check if it is a valid setter
-        if ((methodName.equals(String.format("set%s", capitalizeFirstLetter(name)))
-            || (startsWithIs(name) && methodName.equals(String.format("set%s",
-            name.substring(2, name.length())))))
+        if ((methodName.equals(String.format("set%s", capitalizeFirstLetter(fieldName)))
+            || (startsWithIs(fieldName) && methodName.equals(String.format("set%s",
+            fieldName.substring(2, fieldName.length())))))
             && !method.getModifiers().contains(PRIVATE)
             && !method.getModifiers().contains(STATIC)
             && method.getParameters().size() == 1
-            && TypeName.get(method.getParameters().get(0).asType()).equals(typeName)) {
+            && TypeName.get(method.getParameters().get(0).asType()).equals(getTypeName())) {
           setterMethodName = methodName;
         }
       }
@@ -168,7 +168,7 @@ class BaseModelAttributeInfo extends AttributeInfo {
                   + " without proper getter and setter methods. (class: %s, field: %s)",
               EpoxyAttribute.class,
               classElement.getSimpleName(),
-              name);
+              fieldName);
     }
   }
 

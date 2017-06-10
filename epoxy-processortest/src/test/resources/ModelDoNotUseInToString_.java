@@ -1,11 +1,12 @@
 package com.airbnb.epoxy;
 
-    import android.support.annotation.LayoutRes;
-    import java.lang.CharSequence;
-    import java.lang.Number;
-    import java.lang.Object;
-    import java.lang.Override;
-    import java.lang.String;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
+import java.lang.CharSequence;
+import java.lang.Number;
+import java.lang.Object;
+import java.lang.Override;
+import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
@@ -71,16 +72,6 @@ public class ModelDoNotUseInToString_ extends ModelDoNotUseInToString implements
     return this;
   }
 
-  public ModelDoNotUseInToString_ value2(int value2) {
-    onMutation();
-    super.value2 = value2;
-    return this;
-  }
-
-  public int value2() {
-    return value2;
-  }
-
   public ModelDoNotUseInToString_ value(int value) {
     onMutation();
     super.value = value;
@@ -89,6 +80,16 @@ public class ModelDoNotUseInToString_ extends ModelDoNotUseInToString implements
 
   public int value() {
     return value;
+  }
+
+  public ModelDoNotUseInToString_ value2(int value2) {
+    onMutation();
+    super.value2 = value2;
+    return this;
+  }
+
+  public int value2() {
+    return value2;
   }
 
   public ModelDoNotUseInToString_ value3(String value3) {
@@ -138,6 +139,12 @@ public class ModelDoNotUseInToString_ extends ModelDoNotUseInToString implements
   }
 
   @Override
+  public ModelDoNotUseInToString_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
+    return this;
+  }
+
+  @Override
   public ModelDoNotUseInToString_ show() {
     super.show();
     return this;
@@ -159,8 +166,8 @@ public class ModelDoNotUseInToString_ extends ModelDoNotUseInToString implements
   public ModelDoNotUseInToString_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    super.value2 = 0;
     super.value = 0;
+    super.value2 = 0;
     super.value3 = null;
     super.reset();
     return this;
@@ -184,10 +191,10 @@ public class ModelDoNotUseInToString_ extends ModelDoNotUseInToString implements
     if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
       return false;
     }
-    if (value2 != that.value2) {
+    if (value != that.value) {
       return false;
     }
-    if (value != that.value) {
+    if (value2 != that.value2) {
       return false;
     }
     if (value3 != null ? !value3.equals(that.value3) : that.value3 != null) {
@@ -201,8 +208,8 @@ public class ModelDoNotUseInToString_ extends ModelDoNotUseInToString implements
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + value2;
     result = 31 * result + value;
+    result = 31 * result + value2;
     result = 31 * result + (value3 != null ? value3.hashCode() : 0);
     return result;
   }

@@ -42,9 +42,9 @@ import static com.airbnb.epoxy.Utils.getEpoxyObjectType;
     if (!typeVariableNames.isEmpty()) {
       TypeVariableName[] typeArguments =
           typeVariableNames.toArray(new TypeVariableName[typeVariableNames.size()]);
-      this.parameterizedClassName = ParameterizedTypeName.get(generatedClassName, typeArguments);
+      this.parametrizedClassName = ParameterizedTypeName.get(generatedClassName, typeArguments);
     } else {
-      this.parameterizedClassName = generatedClassName;
+      this.parametrizedClassName = generatedClassName;
     }
 
     TypeMirror boundObjectTypeMirror = getEpoxyObjectType(superClassElement, typeUtils);
@@ -58,14 +58,15 @@ import static com.airbnb.epoxy.Utils.getEpoxyObjectType;
     }
     boundObjectTypeName = TypeName.get(boundObjectTypeMirror);
 
-    boolean hasEpoxyClassAnnotation =
-        superClassElement.getAnnotation(EpoxyModelClass.class) != null;
+    EpoxyModelClass annotation = superClassElement.getAnnotation(EpoxyModelClass.class);
+    boolean hasEpoxyClassAnnotation = annotation != null;
     boolean isAbstract = superClassElement.getModifiers().contains(Modifier.ABSTRACT);
 
     // By default we don't extend classes that are abstract; if they don't contain all required
     // methods then our generated class won't compile. If there is a EpoxyModelClass annotation
     // though we will always generate the subclass
     shouldGenerateModel = !isAbstract || hasEpoxyClassAnnotation;
+    includeOtherLayoutOptions = hasEpoxyClassAnnotation && annotation.useLayoutOverloads();
   }
 
   protected ClassName buildGeneratedModelName(TypeElement classElement) {

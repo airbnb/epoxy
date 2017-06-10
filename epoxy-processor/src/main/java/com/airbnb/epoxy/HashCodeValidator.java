@@ -61,13 +61,11 @@ class HashCodeValidator {
     } catch (EpoxyProcessorException e) {
       // Append information about the attribute and class to the existing exception
       throwError(e.getMessage()
-              + " (%s#%s) Epoxy requires every field annotated with "
-              + "@EpoxyAttribute to implement equals and hashCode so that changes in the model "
-              + "can be tracked. "
-              + "If you want the attribute to be excluded, use "
-              + "@EpoxyAttribute(DoNotHash). If you want to ignore this warning use "
-              + "@EpoxyAttribute(IgnoreRequireHashCode)",
-          attribute.getModelName(), attribute.getName());
+              + " (%s) Epoxy requires every model attribute to implement equals and hashCode "
+              + "so that changes in the model "
+              + "can be tracked. If you want the attribute to be excluded, use "
+              + "the option 'DoNotHash'. If you want to ignore this warning use "
+              + "the option 'IgnoreRequireHashCode'", attribute);
     }
   }
 

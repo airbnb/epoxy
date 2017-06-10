@@ -37,7 +37,7 @@ class DataBindingModelInfo extends GeneratedModelInfo {
         elementUtils, typeUtils);
     superClassName = EPOXY_DATA_BINDING_MODEL;
     generatedClassName = buildGeneratedModelName();
-    parameterizedClassName = generatedClassName;
+    parametrizedClassName = generatedClassName;
     boundObjectTypeName = EPOXY_DATA_BINDING_HOLDER;
     shouldGenerateModel = true;
 

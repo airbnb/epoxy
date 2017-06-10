@@ -1,6 +1,8 @@
 package com.airbnb.epoxy;
 
+import com.airbnb.epoxy.GeneratedModelInfo.AttributeGroup;
 import com.squareup.javapoet.AnnotationSpec;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;
 
 import java.util.ArrayList;
@@ -12,8 +14,7 @@ import static com.airbnb.epoxy.Utils.isViewClickListenerType;
 
 abstract class AttributeInfo {
 
-  protected String name;
-  protected TypeName typeName;
+  protected String fieldName;
   protected TypeMirror typeMirror;
   protected String modelName;
   protected String modelPackageName;
@@ -26,15 +27,21 @@ abstract class AttributeInfo {
   protected List<AnnotationSpec> getterAnnotations = new ArrayList<>();
   protected boolean hasFinalModifier;
   protected boolean packagePrivate;
+  protected CodeBlock javaDoc;
+
+  /** If this attribute is in an attribute group this is the name of the group. */
+  String groupKey;
+  private AttributeGroup attributeGroup;
+
   /**
    * Track whether there is a setter method for this attribute on a super class so that we can call
    * through to super.
    */
   protected boolean hasSuperSetter;
-
   // for private fields (Kotlin case)
   protected boolean isPrivate;
   protected String getterMethodName;
+
   protected String setterMethodName;
 
   /**
@@ -42,13 +49,83 @@ abstract class AttributeInfo {
    * exists as a user defined attribute in a model super class.
    */
   protected boolean isGenerated;
+  /** If {@link #isGenerated} is true, a default value for the field can be set here. */
+  final DefaultValue codeToSetDefault = new DefaultValue();
 
-  String getName() {
-    return name;
+  static class DefaultValue {
+    /** An explicitly defined default via the default param in the prop annotation. */
+    CodeBlock explicit;
+    /**
+     * An implicitly assumed default, either via an @Nullable annotation or a primitive's default
+     * value. This is overridden if an explicit value is set.
+     */
+    CodeBlock implicit;
+
+    boolean isPresent() {
+      return explicit != null || implicit != null;
+    }
+
+    boolean isEmpty() {
+      return !isPresent();
+    }
+
+    public CodeBlock value() {
+      return explicit != null ? explicit : implicit;
+    }
+  }
+
+  /**
+   * If {@link #isGenerated} is true, this represents whether null is a valid value to set on the
+   * attribute. If this is true, then the {@link #codeToSetDefault} should be null unless a
+   * different default value is explicitly set.
+   * <p>
+   * This is Boolean to have null represent that nullability was not explicitly set, eg for
+   * primitives or legacy attributes that weren't made with nullability support in mind.
+   */
+  private Boolean isNullable;
+
+  protected void setJavaDocString(String docComment) {
+    if (docComment != null && !docComment.trim().isEmpty()) {
+      javaDoc = CodeBlock.of(docComment);
+    } else {
+      javaDoc = null;
+    }
+  }
+
+  public boolean isNullable() {
+    if (!hasSetNullability()) {
+      throw new IllegalStateException("Nullability has not been set");
+    }
+
+    return isNullable;
+  }
+
+  public boolean hasSetNullability() {
+    return isNullable != null;
+  }
+
+  public void setNullable(boolean nullable) {
+    if (isPrimitive()) {
+      throw new IllegalStateException("Primitives cannot be nullable");
+    }
+
+    isNullable = nullable;
+  }
+
+  public boolean isPrimitive() {
+    return getTypeName().isPrimitive();
+  }
+
+  boolean isRequired() {
+    return isGenerated && codeToSetDefault.isEmpty();
+  }
+
+  String getFieldName() {
+    return fieldName;
   }
 
   TypeName getTypeName() {
-    return typeName;
+    return TypeName.get(typeMirror);
   }
 
   public TypeMirror getTypeMirror() {
@@ -96,24 +173,33 @@ abstract class AttributeInfo {
   }
 
   String getterCode() {
-    return isPrivate ? getterMethodName + "()" : name;
+    return isPrivate ? getterMethodName + "()" : fieldName;
   }
 
   // Special case to avoid generating recursive getter if field and its getter names are the same
   String superGetterCode() {
-    return isPrivate ? String.format("super.%s()", getterMethodName) : name;
+    return isPrivate ? String.format("super.%s()", getterMethodName) : fieldName;
   }
 
   String setterCode() {
     return (isGenerated ? "this." : "super.")
-        + (isPrivate ? setterMethodName + "($L)" : name + " = $L");
+        + (isPrivate ? setterMethodName + "($L)" : fieldName + " = $L");
+  }
+
+  String generatedSetterName() {
+    return fieldName;
+  }
+
+  String generatedGetterName() {
+    return fieldName;
   }
 
   @Override
   public String toString() {
-    return "ModelAttributeData{"
-        + "name='" + name + '\''
-        + ", type=" + typeName
+    return "Attribute {"
+        + "model='" + modelName + '\''
+        + ", name='" + fieldName + '\''
+        + ", type=" + getTypeName()
         + '}';
   }
 
@@ -128,16 +214,16 @@ abstract class AttributeInfo {
 
     AttributeInfo that = (AttributeInfo) o;
 
-    if (!name.equals(that.name)) {
+    if (!fieldName.equals(that.fieldName)) {
       return false;
     }
-    return typeName.equals(that.typeName);
+    return getTypeName().equals(that.getTypeName());
   }
 
   @Override
   public int hashCode() {
-    int result = name.hashCode();
-    result = 31 * result + typeName.hashCode();
+    int result = fieldName.hashCode();
+    result = 31 * result + getTypeName().hashCode();
     return result;
   }
 
@@ -146,14 +232,22 @@ abstract class AttributeInfo {
   }
 
   String getModelClickListenerName() {
-    return getName() + GeneratedModelWriter.GENERATED_FIELD_SUFFIX;
-  }
-
-  String getModelName() {
-    return modelName;
+    return getFieldName() + GeneratedModelWriter.GENERATED_FIELD_SUFFIX;
   }
 
   String getPackageName() {
     return modelPackageName;
+  }
+
+  void setAttributeGroup(AttributeGroup group) {
+    attributeGroup = group;
+  }
+
+  public AttributeGroup getAttributeGroup() {
+    return attributeGroup;
+  }
+
+  boolean isOverload() {
+    return attributeGroup != null && attributeGroup.attributes.size() > 1;
   }
 }

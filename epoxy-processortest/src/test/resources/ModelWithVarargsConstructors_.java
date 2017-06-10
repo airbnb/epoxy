@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
 import java.lang.Object;
@@ -76,16 +77,6 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
     return this;
   }
 
-  public ModelWithVarargsConstructors_ varargs(String[] varargs) {
-    onMutation();
-    super.varargs = varargs;
-    return this;
-  }
-
-  public String[] varargs() {
-    return varargs;
-  }
-
   public ModelWithVarargsConstructors_ valueInt(int valueInt) {
     onMutation();
     super.valueInt = valueInt;
@@ -94,6 +85,16 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
 
   public int valueInt() {
     return valueInt;
+  }
+
+  public ModelWithVarargsConstructors_ varargs(String[] varargs) {
+    onMutation();
+    super.varargs = varargs;
+    return this;
+  }
+
+  public String[] varargs() {
+    return varargs;
   }
 
   @Override
@@ -133,6 +134,12 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
   }
 
   @Override
+  public ModelWithVarargsConstructors_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+    super.spanSizeOverride(arg0);
+    return this;
+  }
+
+  @Override
   public ModelWithVarargsConstructors_ show() {
     super.show();
     return this;
@@ -154,8 +161,8 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
   public ModelWithVarargsConstructors_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
-    super.varargs = null;
     super.valueInt = 0;
+    super.varargs = null;
     super.reset();
     return this;
   }
@@ -178,10 +185,10 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
     if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
       return false;
     }
-    if (!Arrays.equals(varargs, that.varargs)) {
+    if (valueInt != that.valueInt) {
       return false;
     }
-    if (valueInt != that.valueInt) {
+    if (!Arrays.equals(varargs, that.varargs)) {
       return false;
     }
     return true;
@@ -192,16 +199,16 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + Arrays.hashCode(varargs);
     result = 31 * result + valueInt;
+    result = 31 * result + Arrays.hashCode(varargs);
     return result;
   }
 
   @Override
   public String toString() {
     return "ModelWithVarargsConstructors_{" +
-        "varargs=" + varargs +
-        ", valueInt=" + valueInt +
+        "valueInt=" + valueInt +
+        ", varargs=" + varargs +
         "}" + super.toString();
   }
 }

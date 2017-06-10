@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Epoxy Integration test</string>
+    <string name="string_with_no_args">String with args</string>
+    <string name="string_with_args">String with args %d</string>
+    <string name="plural_test_string_one">plural test string one</string>
+    <string name="plural_test_string_with_args_one">plural test string with args %d</string>
 </resources>

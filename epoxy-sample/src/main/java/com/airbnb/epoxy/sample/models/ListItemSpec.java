@@ -6,6 +6,7 @@ import com.facebook.litho.ComponentLayout;
 import com.facebook.litho.annotations.LayoutSpec;
 import com.facebook.litho.annotations.OnCreateLayout;
 import com.facebook.litho.annotations.Prop;
+import com.facebook.litho.annotations.ResType;
 import com.facebook.litho.widget.Text;
 
 import static com.facebook.yoga.YogaEdge.ALL;
@@ -21,8 +22,8 @@ public class ListItemSpec {
   @OnCreateLayout
   static ComponentLayout onCreateLayout(
       ComponentContext c,
-      @Prop int color,
-      @Prop String title,
+      @Prop(optional = true) int color,
+      @Prop(optional = true, resType = ResType.STRING) String title,
       @Prop String subtitle) {
 
     return Column.create(c)
