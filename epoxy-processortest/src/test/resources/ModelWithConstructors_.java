@@ -115,6 +115,12 @@ public class ModelWithConstructors_ extends ModelWithConstructors implements Gen
   }
 
   @Override
+  public ModelWithConstructors_ id(CharSequence key, CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public ModelWithConstructors_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;

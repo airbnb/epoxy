@@ -107,6 +107,12 @@ public class ModelWithSuperAttributes_ extends ModelWithSuperAttributes implemen
   }
 
   @Override
+  public ModelWithSuperAttributes_ id(CharSequence key, CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public ModelWithSuperAttributes_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;

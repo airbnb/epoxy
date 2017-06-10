@@ -107,6 +107,12 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
   }
 
   @Override
+  public BasicModelWithAttribute_ id(CharSequence key, CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public BasicModelWithAttribute_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;

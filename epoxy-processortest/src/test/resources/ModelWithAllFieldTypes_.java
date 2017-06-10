@@ -317,6 +317,12 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   @Override
+  public ModelWithAllFieldTypes_ id(CharSequence key, CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public ModelWithAllFieldTypes_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;

@@ -184,6 +184,12 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   @Override
+  public TestNullStringOverloadsViewModel_ id(CharSequence key, CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public TestNullStringOverloadsViewModel_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;

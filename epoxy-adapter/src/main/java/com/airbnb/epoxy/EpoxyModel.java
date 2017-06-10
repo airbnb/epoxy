@@ -212,6 +212,19 @@ public abstract class EpoxyModel<T> {
   }
 
   /**
+   * Use several strings to define the id of the model.
+   * <p>
+   * Similar to {@link #id(CharSequence)}, but with additional strings.
+   */
+  public EpoxyModel<T> id(CharSequence key, CharSequence... otherKeys) {
+    long result = hashString64Bit(key);
+    for (CharSequence otherKey : otherKeys) {
+      result = 31 * result + hashString64Bit(otherKey);
+    }
+    return id(result);
+  }
+
+  /**
    * Set an id that is namespaced with a string. This is useful when you need to show models of
    * multiple types, side by side and don't want to risk id collisions.
    * <p>
