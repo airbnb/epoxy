@@ -124,6 +124,12 @@ public class ModelWithViewLongClickListener_ extends ModelWithViewLongClickListe
   }
 
   @Override
+  public ModelWithViewLongClickListener_ id(CharSequence key, CharSequence... otherKeys) {
+    super.id(key, otherKeys);
+    return this;
+  }
+
+  @Override
   public ModelWithViewLongClickListener_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;
