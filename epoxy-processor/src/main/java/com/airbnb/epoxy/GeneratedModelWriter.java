@@ -34,6 +34,7 @@ import static com.airbnb.epoxy.Utils.EPOXY_CONTROLLER_TYPE;
 import static com.airbnb.epoxy.Utils.EPOXY_VIEW_HOLDER_TYPE;
 import static com.airbnb.epoxy.Utils.GENERATED_MODEL_INTERFACE;
 import static com.airbnb.epoxy.Utils.MODEL_CLICK_LISTENER_TYPE;
+import static com.airbnb.epoxy.Utils.MODEL_LONG_CLICK_LISTENER_TYPE;
 import static com.airbnb.epoxy.Utils.ON_BIND_MODEL_LISTENER_TYPE;
 import static com.airbnb.epoxy.Utils.ON_UNBIND_MODEL_LISTENER_TYPE;
 import static com.airbnb.epoxy.Utils.UNTYPED_EPOXY_MODEL_TYPE;
@@ -43,6 +44,7 @@ import static com.airbnb.epoxy.Utils.implementsMethod;
 import static com.airbnb.epoxy.Utils.isDataBindingModel;
 import static com.airbnb.epoxy.Utils.isEpoxyModel;
 import static com.airbnb.epoxy.Utils.isEpoxyModelWithHolder;
+import static com.airbnb.epoxy.Utils.isViewLongClickListenerType;
 import static com.squareup.javapoet.TypeName.BOOLEAN;
 import static com.squareup.javapoet.TypeName.BYTE;
 import static com.squareup.javapoet.TypeName.CHAR;
@@ -246,18 +248,6 @@ class GeneratedModelWriter {
         fields.add(builder.build()
         );
       }
-
-      if (attributeInfo.isViewClickListener()) {
-        // Create our own field to store a model click listener. We will later wrap the model click
-        // listener in a view click listener to set on the original model's View.OnClickListener
-        // field
-        fields.add(FieldSpec.builder(
-            getModelClickListenerType(classInfo),
-            attributeInfo.getModelClickListenerName(),
-            PRIVATE
-            ).build()
-        );
-      }
     }
 
     return fields;
@@ -276,6 +266,13 @@ class GeneratedModelWriter {
   private ParameterizedTypeName getModelClickListenerType(GeneratedModelInfo classInfo) {
     return ParameterizedTypeName.get(
         getClassName(MODEL_CLICK_LISTENER_TYPE),
+        classInfo.getParameterizedGeneratedName(),
+        classInfo.getModelType());
+  }
+
+  private ParameterizedTypeName getModelLongClickListenerType(GeneratedModelInfo classInfo) {
+    return ParameterizedTypeName.get(
+        getClassName(MODEL_LONG_CLICK_LISTENER_TYPE),
         classInfo.getParameterizedGeneratedName(),
         classInfo.getModelType());
   }
@@ -377,32 +374,17 @@ class GeneratedModelWriter {
     addHashCodeValidationIfNecessary(preBindBuilder,
         "The model was changed between being added to the controller and being bound.");
 
-    ClassName viewType = getClassName("android.view.View");
     ClassName clickWrapperType = getClassName(WRAPPED_LISTENER_TYPE);
-    ClassName modelClickListenerType = getClassName(MODEL_CLICK_LISTENER_TYPE);
     for (AttributeInfo attribute : classInfo.getAttributeInfo()) {
       if (!attribute.isViewClickListener()) {
         continue;
       }
-      // Generate a View.OnClickListener that wraps the model click listener and set it as the
-      // view click listener of the original model.
-
-      String modelClickListenerField = attribute.getModelClickListenerName();
-      preBindBuilder.beginControlFlow("if ($L != null)", modelClickListenerField);
-
-      CodeBlock clickListenerCodeBlock = CodeBlock.of(
-          "new $T($L) {\n"
-              + "    @Override\n"
-              + "    protected void wrappedOnClick($T v, $T originalClickListener) {\n"
-              + "       originalClickListener.onClick($L.this, object, v,\n"
-              + "              holder.getAdapterPosition());\n"
-              + "       }\n"
-              + "    }",
-          clickWrapperType, modelClickListenerField, viewType, modelClickListenerType,
-          classInfo.getGeneratedName());
+      // Pass the view holder and bound object on to the wrapped click listener
 
       preBindBuilder
-          .addStatement(attribute.setterCode(), clickListenerCodeBlock)
+          .beginControlFlow("if ($L instanceof $T)", attribute.superGetterCode(), clickWrapperType)
+          .addStatement("(($L) $L).bind($L, $L)", clickWrapperType, attribute.superGetterCode(),
+              viewHolderParam.name, boundObjectParam.name)
           .endControlFlow();
     }
 
@@ -840,8 +822,13 @@ class GeneratedModelWriter {
       AttributeInfo attribute) {
     String attributeName = attribute.getFieldName();
 
+    ParameterizedTypeName clickListenerType =
+        isViewLongClickListenerType(attribute.getTypeMirror())
+            ? getModelLongClickListenerType(classInfo)
+            : getModelClickListenerType(classInfo);
+
     ParameterSpec param =
-        ParameterSpec.builder(getModelClickListenerType(classInfo), attributeName, FINAL).build();
+        ParameterSpec.builder(clickListenerType, attributeName, FINAL).build();
 
     Builder builder = MethodSpec.methodBuilder(attributeName)
         .addJavadoc("Set a click listener that will provide the parent view, model, and adapter "
@@ -854,34 +841,15 @@ class GeneratedModelWriter {
 
     setBitSetIfNeeded(classInfo, attribute, builder);
 
-    ClassName viewType = getClassName("android.view.View");
-    ClassName clickWrapperType = getClassName(WRAPPED_LISTENER_TYPE);
-    ClassName modelClickListenerType = getClassName(MODEL_CLICK_LISTENER_TYPE);
-
-    // This creates a View.OnClickListener and sets it on the original model's click listener field.
-    // This click listener has an empty onClick implementation, and will be replaced in
-    // `handlePreBind`
-    // when we can create a functional click listener with the view holder we bind to.
-    // However, we use this stub version for now since it has the same hashCode implementation
-    // as the future click listener, so when we create the real click listener in `handlePreBind`
-    // it won't change the hashCode of the model.
-    CodeBlock clickListenerCodeBlock = CodeBlock.of(
-        "new $T($L)  {\n"
-            + "        @Override\n"
-            + "        protected void wrappedOnClick($T v, $T "
-            + "originalClickListener) {\n"
-            + "          \n"
-            + "        }\n"
-            + "      }",
-        clickWrapperType, attributeName, viewType, modelClickListenerType);
+    CodeBlock wrapperClickListenerConstructor =
+        CodeBlock.of("new $T(this, $L)", getClassName(WRAPPED_LISTENER_TYPE), param.name);
 
     addOnMutationCall(builder)
-        .addStatement("this.$L = $L", attribute.getModelClickListenerName(), attributeName)
         .beginControlFlow("if ($L == null)", attributeName)
         .addStatement(attribute.setterCode(), "null")
         .endControlFlow()
         .beginControlFlow("else")
-        .addStatement(attribute.setterCode(), clickListenerCodeBlock)
+        .addStatement(attribute.setterCode(), wrapperClickListenerConstructor)
         .endControlFlow()
         .addStatement("return this");
 
@@ -1139,11 +1107,6 @@ class GeneratedModelWriter {
             hasMultipleParams ? ((MultiParamAttribute) attribute).getValueToSetOnAttribute()
                 : paramName);
 
-    if (attribute.isViewClickListener()) {
-      // Null out the model click listener since this view click listener should replace it
-      builder.addStatement("this.$L = null", attribute.getModelClickListenerName());
-    }
-
     // Call the super setter if it exists.
     // No need to do this if the attribute is private since we already called the super setter to
     // set it
@@ -1179,10 +1142,6 @@ class GeneratedModelWriter {
         builder.addStatement(attributeInfo.setterCode(),
             attributeInfo.codeToSetDefault.isPresent() ? attributeInfo.codeToSetDefault.value()
                 : Utils.getDefaultValue(attributeInfo.getTypeName()));
-      }
-
-      if (attributeInfo.isViewClickListener()) {
-        builder.addStatement("$L = null", attributeInfo.getModelClickListenerName());
       }
     }
 

@@ -11,12 +11,12 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithViewClickListener_ extends ModelWithViewClickListener implements GeneratedModel<Object> {
-  private OnModelBoundListener<ModelWithViewClickListener_, Object> onModelBoundListener_epoxyGeneratedModel;
+public class ModelWithViewLongClickListener_ extends ModelWithViewLongClickListener implements GeneratedModel<Object> {
+  private OnModelBoundListener<ModelWithViewLongClickListener_, Object> onModelBoundListener_epoxyGeneratedModel;
 
-  private OnModelUnboundListener<ModelWithViewClickListener_, Object> onModelUnboundListener_epoxyGeneratedModel;
+  private OnModelUnboundListener<ModelWithViewLongClickListener_, Object> onModelUnboundListener_epoxyGeneratedModel;
 
-  public ModelWithViewClickListener_() {
+  public ModelWithViewLongClickListener_() {
     super();
   }
 
@@ -49,7 +49,7 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ModelWithViewClickListener_ onBind(OnModelBoundListener<ModelWithViewClickListener_, Object> listener) {
+  public ModelWithViewLongClickListener_ onBind(OnModelBoundListener<ModelWithViewLongClickListener_, Object> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -70,7 +70,7 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ModelWithViewClickListener_ onUnbind(OnModelUnboundListener<ModelWithViewClickListener_, Object> listener) {
+  public ModelWithViewLongClickListener_ onUnbind(OnModelUnboundListener<ModelWithViewLongClickListener_, Object> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
@@ -78,7 +78,7 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  public ModelWithViewClickListener_ clickListener(final OnModelClickListener<ModelWithViewClickListener_, Object> clickListener) {
+  public ModelWithViewLongClickListener_ clickListener(final OnModelLongClickListener<ModelWithViewLongClickListener_, Object> clickListener) {
     onMutation();
     if (clickListener == null) {
       super.clickListener = null;
@@ -89,84 +89,84 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
     return this;
   }
 
-  public ModelWithViewClickListener_ clickListener(View.OnClickListener clickListener) {
+  public ModelWithViewLongClickListener_ clickListener(View.OnLongClickListener clickListener) {
     onMutation();
     super.clickListener = clickListener;
     return this;
   }
 
-  public View.OnClickListener clickListener() {
+  public View.OnLongClickListener clickListener() {
     return clickListener;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(long id) {
+  public ModelWithViewLongClickListener_ id(long id) {
     super.id(id);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(Number... ids) {
+  public ModelWithViewLongClickListener_ id(Number... ids) {
     super.id(ids);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(long id1, long id2) {
+  public ModelWithViewLongClickListener_ id(long id1, long id2) {
     super.id(id1, id2);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(CharSequence key) {
+  public ModelWithViewLongClickListener_ id(CharSequence key) {
     super.id(key);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(CharSequence key, CharSequence... otherKeys) {
+  public ModelWithViewLongClickListener_ id(CharSequence key, CharSequence... otherKeys) {
     super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(CharSequence key, long id) {
+  public ModelWithViewLongClickListener_ id(CharSequence key, long id) {
     super.id(key, id);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ layout(@LayoutRes int arg0) {
+  public ModelWithViewLongClickListener_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public ModelWithViewLongClickListener_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ show() {
+  public ModelWithViewLongClickListener_ show() {
     super.show();
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ show(boolean show) {
+  public ModelWithViewLongClickListener_ show(boolean show) {
     super.show(show);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ hide() {
+  public ModelWithViewLongClickListener_ hide() {
     super.hide();
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ reset() {
+  public ModelWithViewLongClickListener_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
     super.clickListener = null;
@@ -179,13 +179,13 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelWithViewClickListener_)) {
+    if (!(o instanceof ModelWithViewLongClickListener_)) {
       return false;
     }
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithViewClickListener_ that = (ModelWithViewClickListener_) o;
+    ModelWithViewLongClickListener_ that = (ModelWithViewLongClickListener_) o;
     if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
       return false;
     }
@@ -209,7 +209,7 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
 
   @Override
   public String toString() {
-    return "ModelWithViewClickListener_{" +
+    return "ModelWithViewLongClickListener_{" +
         "clickListener=" + clickListener +
         "}" + super.toString();
   }
