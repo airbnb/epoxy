@@ -49,7 +49,7 @@ class DataBindingModelInfo extends GeneratedModelInfo {
     // it is generated in the first round.
     Element dataBindingClass = getElementByName(dataBindingClassName, elementUtils, typeUtils);
 
-    HashCodeValidator hashCodeValidator = new HashCodeValidator(typeUtils);
+    HashCodeValidator hashCodeValidator = new HashCodeValidator(typeUtils, elementUtils);
     for (Element element : dataBindingClass.getEnclosedElements()) {
       if (Utils.isSetterMethod(element)) {
         addAttribute(

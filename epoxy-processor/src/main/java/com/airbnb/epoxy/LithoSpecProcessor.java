@@ -67,7 +67,7 @@ class LithoSpecProcessor {
     }
 
     Class<? extends Annotation> propClass = getAnnotationClass(ClassNames.LITHO_ANNOTATION_PROP);
-    HashCodeValidator hashCodeValidator = new HashCodeValidator(typeUtils);
+    HashCodeValidator hashCodeValidator = new HashCodeValidator(typeUtils, elementUtils);
     for (Element propElement : roundEnv.getElementsAnnotatedWith(propClass)) {
       LithoModelInfo lithoModelInfo = getModelInfoForProp(modelInfoMap, propElement);
       if (lithoModelInfo != null) {

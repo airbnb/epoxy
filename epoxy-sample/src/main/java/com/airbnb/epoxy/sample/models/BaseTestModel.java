@@ -8,4 +8,9 @@ import com.airbnb.epoxy.EpoxyModel;
 
 public abstract class BaseTestModel<T extends View> extends EpoxyModel<T> {
   @EpoxyAttribute @Nullable Boolean showDivider;
+
+  @Override
+  public void bind(T view, EpoxyModel<?> previouslyBoundModel) {
+
+  }
 }

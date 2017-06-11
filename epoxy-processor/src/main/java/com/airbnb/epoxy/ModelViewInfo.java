@@ -75,9 +75,13 @@ class ModelViewInfo extends GeneratedModelInfo {
 
     if (classToExtend == null
         || classToExtend.toString().equals(Void.class.getCanonicalName())) {
+
       TypeMirror defaultBaseModel = configManager.getDefaultBaseModel(viewElement);
-      return defaultBaseModel != null
-          ? (TypeElement) typeUtils.asElement(defaultBaseModel) : defaultSuper;
+      if (defaultBaseModel != null) {
+        classToExtend = defaultBaseModel;
+      } else {
+        return defaultSuper;
+      }
     }
 
     if (!isEpoxyModel(classToExtend)) {
