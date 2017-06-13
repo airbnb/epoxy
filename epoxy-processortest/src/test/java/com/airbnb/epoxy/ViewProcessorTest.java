@@ -70,4 +70,19 @@ public class ViewProcessorTest {
         .and()
         .generatesSources(generatedModel);
   }
+
+  @Test
+  public void defaults() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("PropDefaultsView.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("PropDefaultsViewModel_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
 }
