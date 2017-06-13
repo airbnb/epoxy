@@ -255,15 +255,26 @@ abstract class GeneratedModelInfo {
         continue;
       }
 
-      if (defaultAttribute != null
-          && defaultAttribute.codeToSetDefault.explicit != null
-          && attribute.codeToSetDefault.explicit != null) {
+      boolean hasSetExplicitDefault =
+          defaultAttribute != null && defaultAttribute.codeToSetDefault.explicit != null;
+
+      if (hasSetExplicitDefault && attribute.codeToSetDefault.explicit != null) {
         throw buildEpoxyException(
             "Only one default value can exist for a group of attributes: " + attributes);
       }
 
-      // Have the one explicit default value in the group trump everything else
-      if (defaultAttribute == null || defaultAttribute.codeToSetDefault.explicit == null) {
+      // Have the one explicit default value in the group trump everything else.
+      if (hasSetExplicitDefault) {
+        continue;
+      }
+
+      // If only implicit
+      // defaults exist, have a null default trump default primitives. This makes it so if there
+      // is a nullable object and a primitive in a group, the default value will be to null out the
+      // object.
+      if (defaultAttribute == null
+          || attribute.codeToSetDefault.explicit != null
+          || attribute.hasSetNullability()) {
         defaultAttribute = attribute;
       }
     }

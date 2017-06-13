@@ -709,49 +709,4 @@ public class ModelProcessorTest {
         .and()
         .generatesSources(generatedModel);
   }
-
-  @Test
-  public void testViewAnnotations_stringOverloads() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("TestStringOverloadsView.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("TestStringOverloadsViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
-  }
-
-  @Test
-  public void testViewAnnotations_nullStringOverloads() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("TestNullStringOverloadsView.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("TestNullStringOverloadsViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
-  }
-
-  @Test
-  public void testViewAnnotations_manyTypes() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("TestManyTypesView.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("TestManyTypesViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
-  }
 }
