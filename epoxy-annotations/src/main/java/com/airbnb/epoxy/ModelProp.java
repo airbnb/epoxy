@@ -70,5 +70,13 @@ public @interface ModelProp {
    */
   String defaultValue() default "";
 
+  /**
+   * Specify an optional group name. Multiple props with the same group name will only allow one of
+   * the props to be set on the view.
+   * <p>
+   * See
+   * <a href="https://github.com/airbnb/epoxy/wiki/Generating-Models-from-View-Annotations#prop-groups">Epoxy
+   * Wiki on Groups</a>
+   */
   String group() default "";
 }
