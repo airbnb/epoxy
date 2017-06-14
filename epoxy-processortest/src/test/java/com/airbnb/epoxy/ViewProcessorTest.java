@@ -16,7 +16,8 @@ public class ViewProcessorTest {
     JavaFileObject model = JavaFileObjects
         .forResource("TestStringOverloadsView.java");
 
-    JavaFileObject generatedModel = JavaFileObjects.forResource("TestStringOverloadsViewModel_.java");
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("TestStringOverloadsViewModel_.java");
 
     assert_().about(javaSource())
         .that(model)
@@ -31,7 +32,8 @@ public class ViewProcessorTest {
     JavaFileObject model = JavaFileObjects
         .forResource("TestNullStringOverloadsView.java");
 
-    JavaFileObject generatedModel = JavaFileObjects.forResource("TestNullStringOverloadsViewModel_.java");
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("TestNullStringOverloadsViewModel_.java");
 
     assert_().about(javaSource())
         .that(model)
@@ -84,5 +86,53 @@ public class ViewProcessorTest {
         .compilesWithoutError()
         .and()
         .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void defaults_throwsForNonStaticValue() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("PropDefaultsView_throwsForNonStaticValue.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("static");
+  }
+
+  @Test
+  public void defaults_throwsForNonFinalValue() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("PropDefaultsView_throwsForNonFinalValue.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("final");
+  }
+
+  @Test
+  public void defaults_throwsForPrivateValue() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("PropDefaultsView_throwsForPrivateValue.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("final");
+  }
+
+  @Test
+  public void defaults_throwsForWrongType() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("PropDefaultsView_throwsForWrongType.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("must be a int");
   }
 }
