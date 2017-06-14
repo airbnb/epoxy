@@ -246,4 +246,31 @@ public class ViewProcessorTest {
         .failsToCompile()
         .withErrorContaining("must have exactly 0 parameter");
   }
+
+  @Test
+  public void nullOnRecycle() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("NullOnRecycleView.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("NullOnRecycleViewModel_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void nullOnRecycle_throwsIfNotNullable() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("NullOnRecycleView_throwsIfNotNullable.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("@Nullable");
+  }
 }
