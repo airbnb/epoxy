@@ -15,23 +15,24 @@ public class TestManyTypesView extends View {
     super(context);
   }
 
+  // Also testing package private setters
   @ModelProp
-  public void setStringValue(String value) {
+  void setStringValue(String value) {
 
   }
 
   @ModelProp
-  public void setIntValue(int value) {
+  void setIntValue(int value) {
 
   }
 
   @ModelProp
-  public void setIntegerValue(Integer value) {
+  void setIntegerValue(Integer value) {
 
   }
 
   @ModelProp
-  public void setBoolValue(boolean value) {
+  void setBoolValue(boolean value) {
 
   }
 

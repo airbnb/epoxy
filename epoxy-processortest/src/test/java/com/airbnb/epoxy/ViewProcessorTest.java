@@ -28,6 +28,18 @@ public class ViewProcessorTest {
   }
 
   @Test
+  public void stringOverloads_throwsIfNotCharsequence() {
+//    JavaFileObject model = JavaFileObjects
+//        .forResource("PropDefaultsView_throwsForNonStaticValue.java");
+//
+//    assert_().about(javaSource())
+//        .that(model)
+//        .processedWith(new EpoxyProcessor())
+//        .failsToCompile()
+//        .withErrorContaining("static");
+  }
+
+  @Test
   public void nullStringOverloads() {
     JavaFileObject model = JavaFileObjects
         .forResource("TestNullStringOverloadsView.java");
@@ -56,6 +68,42 @@ public class ViewProcessorTest {
         .compilesWithoutError()
         .and()
         .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void prop_throwsIfPrivate() {
+//    JavaFileObject model = JavaFileObjects
+//        .forResource("PropDefaultsView_throwsForNonStaticValue.java");
+//
+//    assert_().about(javaSource())
+//        .that(model)
+//        .processedWith(new EpoxyProcessor())
+//        .failsToCompile()
+//        .withErrorContaining("static");
+  }
+
+  @Test
+  public void prop_throwsIfNoParams() {
+//    JavaFileObject model = JavaFileObjects
+//        .forResource("PropDefaultsView_throwsForNonStaticValue.java");
+//
+//    assert_().about(javaSource())
+//        .that(model)
+//        .processedWith(new EpoxyProcessor())
+//        .failsToCompile()
+//        .withErrorContaining("static");
+  }
+
+  @Test
+  public void prop_throwsIfOneParam() {
+//    JavaFileObject model = JavaFileObjects
+//        .forResource("PropDefaultsView_throwsForNonStaticValue.java");
+//
+//    assert_().about(javaSource())
+//        .that(model)
+//        .processedWith(new EpoxyProcessor())
+//        .failsToCompile()
+//        .withErrorContaining("static");
   }
 
   @Test
@@ -134,5 +182,30 @@ public class ViewProcessorTest {
         .processedWith(new EpoxyProcessor())
         .failsToCompile()
         .withErrorContaining("must be a int");
+  }
+
+  @Test
+  public void onViewRecycled() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("OnViewRecycledView.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("OnViewRecycledViewModel_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void onViewRecycled_throwsIfPrivate() {
+
+  }
+
+  @Test
+  public void onViewRecycled_throwsIfHasParams() {
+
   }
 }
