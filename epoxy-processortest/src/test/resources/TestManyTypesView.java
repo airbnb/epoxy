@@ -51,6 +51,11 @@ public class TestManyTypesView extends View {
   }
 
   @ModelProp
+  void setIntWithMultipleAnnotations(@IntRange(from = 0, to = TO_RANGE) @Dimension(unit = Dimension.DP) int value) {
+
+  }
+
+  @ModelProp
   void setIntegerValue(Integer value) {
 
   }

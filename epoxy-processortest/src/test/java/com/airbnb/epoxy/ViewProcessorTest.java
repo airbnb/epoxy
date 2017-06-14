@@ -273,4 +273,49 @@ public class ViewProcessorTest {
         .failsToCompile()
         .withErrorContaining("@Nullable");
   }
+
+  @Test
+  public void doNotHash() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("DoNotHashView.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("DoNotHashViewModel_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void objectWithoutEqualsThrows() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ObjectWithoutEqualsThrowsView.java");
+
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("Attribute does not implement hashCode");
+  }
+
+  @Test
+  public void ignoreRequireHashCode() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("IgnoreRequireHashCodeView.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("IgnoreRequireHashCodeViewModel_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+
 }
