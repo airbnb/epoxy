@@ -37,4 +37,9 @@ public class PropDefaultsView extends View {
   public void objectWithDefault(String title) {
 
   }
+
+  @ModelProp(defaultValue = "STRING_DEFAULT")
+  public void objectWithDefaultAndNullable(@Nullable String title) {
+
+  }
 }

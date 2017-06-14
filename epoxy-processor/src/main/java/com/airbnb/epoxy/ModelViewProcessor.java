@@ -39,11 +39,12 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
-// TODO: (eli_hart 6/10/17) Default model props to requiring hashcode
+// TODO: (eli_hart 6/14/17) change string res overload param to enum to allow for other dimens in
+// the future
 // TODO: (eli_hart 6/6/17) consider binding base model after view so the model can override view
 // behavior (like changing width dynamically or styles)
-// TODO: (eli_hart 5/30/17) allow param counts > 0 in setters?
-// TODO: (eli_hart 5/23/17) how to support overriding default values in subclasses?
+// TODO: (eli_hart 5/30/17) allow param counts > 0 in setters
+// TODO: (eli_hart 5/23/17) Allow default values to be methods
 class ModelViewProcessor {
   private final Elements elements;
   private final Types types;

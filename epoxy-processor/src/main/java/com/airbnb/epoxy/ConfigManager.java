@@ -133,6 +133,12 @@ class ConfigManager {
   }
 
   boolean requiresHashCode(AttributeInfo attributeInfo) {
+    if (attributeInfo instanceof ViewAttributeInfo) {
+      // View props are forced to implement hash and equals since it is a safer pattern
+      return true;
+    }
+
+    // Legacy models can choose whether they want to require it
     return globalRequireHashCode
         || getConfigurationForPackage(attributeInfo.getPackageName()).requireHashCode;
   }

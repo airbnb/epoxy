@@ -14,7 +14,7 @@ import java.util.BitSet;
 /**
  * Generated file. Do not modify! */
 public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> implements GeneratedModel<PropDefaultsView> {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(5);
+  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(6);
 
   private OnModelBoundListener<PropDefaultsViewModel_, PropDefaultsView> onModelBoundListener_epoxyGeneratedModel;
 
@@ -41,6 +41,11 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
    * Bitset index: 4 */
   private String objectWithDefault_String = PropDefaultsView.STRING_DEFAULT;
 
+  /**
+   * Bitset index: 5 */
+  @Nullable
+  private String objectWithDefaultAndNullable_String = PropDefaultsView.STRING_DEFAULT;
+
   @Override
   public void addTo(EpoxyController controller) {
     super.addTo(controller);
@@ -62,6 +67,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
     object.primitiveWithExplicitDefault(primitiveWithExplicitDefault_Int);
     object.defaultsToNull(defaultsToNull_CharSequence);
     object.noDefaultSoItIsRequired(noDefaultSoItIsRequired_CharSequence);
+    object.objectWithDefaultAndNullable(objectWithDefaultAndNullable_String);
     object.objectWithDefault(objectWithDefault_String);
     object.primitivesHaveImplicitDefaultsAndCannotBeRequired(primitivesHaveImplicitDefaultsAndCannotBeRequired_Int);
   }
@@ -85,6 +91,10 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
 
     if (noDefaultSoItIsRequired_CharSequence != null ? !noDefaultSoItIsRequired_CharSequence.equals(that.noDefaultSoItIsRequired_CharSequence) : that.noDefaultSoItIsRequired_CharSequence != null) {
       object.noDefaultSoItIsRequired(noDefaultSoItIsRequired_CharSequence);
+    }
+
+    if (objectWithDefaultAndNullable_String != null ? !objectWithDefaultAndNullable_String.equals(that.objectWithDefaultAndNullable_String) : that.objectWithDefaultAndNullable_String != null) {
+      object.objectWithDefaultAndNullable(objectWithDefaultAndNullable_String);
     }
 
     if (objectWithDefault_String != null ? !objectWithDefault_String.equals(that.objectWithDefault_String) : that.objectWithDefault_String != null) {
@@ -225,6 +235,23 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
     return objectWithDefault_String;
   }
 
+  /**
+   * <i>Optional</i>: Default value is <b>{@value PropDefaultsView#STRING_DEFAULT}</b>
+   *
+   * @see PropDefaultsView#objectWithDefaultAndNullable(String)
+   */
+  public PropDefaultsViewModel_ objectWithDefaultAndNullable(@Nullable String objectWithDefaultAndNullable) {
+    assignedAttributes_epoxyGeneratedModel.set(5);
+    onMutation();
+    this.objectWithDefaultAndNullable_String = objectWithDefaultAndNullable;
+    return this;
+  }
+
+  @Nullable
+  public String objectWithDefaultAndNullable() {
+    return objectWithDefaultAndNullable_String;
+  }
+
   @Override
   public PropDefaultsViewModel_ id(long id) {
     super.id(id);
@@ -307,6 +334,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
     this.primitivesHaveImplicitDefaultsAndCannotBeRequired_Int = 0;
     this.primitiveWithExplicitDefault_Int = PropDefaultsView.PRIMITIVE_DEFAULT;
     this.objectWithDefault_String = PropDefaultsView.STRING_DEFAULT;
+    this.objectWithDefaultAndNullable_String = PropDefaultsView.STRING_DEFAULT;
     super.reset();
     return this;
   }
@@ -344,6 +372,9 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
     if (objectWithDefault_String != null ? !objectWithDefault_String.equals(that.objectWithDefault_String) : that.objectWithDefault_String != null) {
       return false;
     }
+    if (objectWithDefaultAndNullable_String != null ? !objectWithDefaultAndNullable_String.equals(that.objectWithDefaultAndNullable_String) : that.objectWithDefaultAndNullable_String != null) {
+      return false;
+    }
     return true;
   }
 
@@ -357,6 +388,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
     result = 31 * result + primitivesHaveImplicitDefaultsAndCannotBeRequired_Int;
     result = 31 * result + primitiveWithExplicitDefault_Int;
     result = 31 * result + (objectWithDefault_String != null ? objectWithDefault_String.hashCode() : 0);
+    result = 31 * result + (objectWithDefaultAndNullable_String != null ? objectWithDefaultAndNullable_String.hashCode() : 0);
     return result;
   }
 
@@ -368,6 +400,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
         ", primitivesHaveImplicitDefaultsAndCannotBeRequired_Int=" + primitivesHaveImplicitDefaultsAndCannotBeRequired_Int +
         ", primitiveWithExplicitDefault_Int=" + primitiveWithExplicitDefault_Int +
         ", objectWithDefault_String=" + objectWithDefault_String +
+        ", objectWithDefaultAndNullable_String=" + objectWithDefaultAndNullable_String +
         "}" + super.toString();
   }
 
