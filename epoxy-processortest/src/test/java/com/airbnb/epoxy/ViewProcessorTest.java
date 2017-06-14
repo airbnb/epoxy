@@ -28,15 +28,15 @@ public class ViewProcessorTest {
   }
 
   @Test
-  public void stringOverloads_throwsIfNotCharsequence() {
-//    JavaFileObject model = JavaFileObjects
-//        .forResource("PropDefaultsView_throwsForNonStaticValue.java");
-//
-//    assert_().about(javaSource())
-//        .that(model)
-//        .processedWith(new EpoxyProcessor())
-//        .failsToCompile()
-//        .withErrorContaining("static");
+  public void stringOverloads_throwsIfNotCharSequence() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("StringOverloads_throwsIfNotCharSequence.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("must be a CharSequence");
   }
 
   @Test
@@ -72,38 +72,50 @@ public class ViewProcessorTest {
 
   @Test
   public void prop_throwsIfPrivate() {
-//    JavaFileObject model = JavaFileObjects
-//        .forResource("PropDefaultsView_throwsForNonStaticValue.java");
-//
-//    assert_().about(javaSource())
-//        .that(model)
-//        .processedWith(new EpoxyProcessor())
-//        .failsToCompile()
-//        .withErrorContaining("static");
+    JavaFileObject model = JavaFileObjects
+        .forResource("Prop_throwsIfPrivate.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("private");
+  }
+
+  @Test
+  public void prop_throwsIfStatic() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("Prop_throwsIfStatic.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("static");
   }
 
   @Test
   public void prop_throwsIfNoParams() {
-//    JavaFileObject model = JavaFileObjects
-//        .forResource("PropDefaultsView_throwsForNonStaticValue.java");
-//
-//    assert_().about(javaSource())
-//        .that(model)
-//        .processedWith(new EpoxyProcessor())
-//        .failsToCompile()
-//        .withErrorContaining("static");
+    JavaFileObject model = JavaFileObjects
+        .forResource("Prop_throwsIfNoParams.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("must have exactly 1 parameter");
   }
 
   @Test
-  public void prop_throwsIfOneParam() {
-//    JavaFileObject model = JavaFileObjects
-//        .forResource("PropDefaultsView_throwsForNonStaticValue.java");
-//
-//    assert_().about(javaSource())
-//        .that(model)
-//        .processedWith(new EpoxyProcessor())
-//        .failsToCompile()
-//        .withErrorContaining("static");
+  public void prop_throwsIfMultipleParams() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("Prop_throwsIfMultipleParams.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("must have exactly 1 parameter");
   }
 
   @Test
@@ -201,11 +213,37 @@ public class ViewProcessorTest {
 
   @Test
   public void onViewRecycled_throwsIfPrivate() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("OnViewRecycledView_throwsIfPrivate.java");
 
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("private");
+  }
+
+  @Test
+  public void onViewRecycled_throwsIfStatic() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("OnViewRecycledView_throwsIfStatic.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("static");
   }
 
   @Test
   public void onViewRecycled_throwsIfHasParams() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("OnViewRecycledView_throwsIfHasParams.java");
 
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("must have exactly 0 parameter");
   }
 }
