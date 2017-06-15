@@ -317,5 +317,34 @@ public class ViewProcessorTest {
         .generatesSources(generatedModel);
   }
 
+  @Test
+  public void savedState() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("SavedStateView.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("SavedStateViewModel_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void gridSpanCount() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("GridSpanCountView.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("GridSpanCountViewModel_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
 
 }
