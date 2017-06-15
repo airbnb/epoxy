@@ -8,6 +8,8 @@ import javax.tools.JavaFileObject;
 
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
+import static com.google.testing.compile.JavaSourcesSubjectFactory.javaSources;
+import static java.util.Arrays.asList;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class ViewProcessorTest {
@@ -294,7 +296,6 @@ public class ViewProcessorTest {
     JavaFileObject model = JavaFileObjects
         .forResource("ObjectWithoutEqualsThrowsView.java");
 
-
     assert_().about(javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
@@ -307,7 +308,8 @@ public class ViewProcessorTest {
     JavaFileObject model = JavaFileObjects
         .forResource("IgnoreRequireHashCodeView.java");
 
-    JavaFileObject generatedModel = JavaFileObjects.forResource("IgnoreRequireHashCodeViewModel_.java");
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("IgnoreRequireHashCodeViewModel_.java");
 
     assert_().about(javaSource())
         .that(model)
@@ -347,4 +349,66 @@ public class ViewProcessorTest {
         .generatesSources(generatedModel);
   }
 
+  @Test
+  public void baseModel() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("BaseModelView.java");
+
+    JavaFileObject baseModel = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import android.widget.FrameLayout;\n"
+            + "\n"
+            + "import java.util.List;\n"
+            + "\n"
+            + "public abstract class TestBaseModel<T extends FrameLayout> extends EpoxyModel<T> {\n"
+            + "\n"
+            + "  @Override\n"
+            + "  public void bind(T view) {\n"
+            + "    super.bind(view);\n"
+            + "  }\n"
+            + "\n"
+            + "  @Override\n"
+            + "  public void bind(T view, List<Object> payloads) {\n"
+            + "    super.bind(view, payloads);\n"
+            + "  }\n"
+            + "}\n");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("BaseModelViewModel_.java");
+
+    assert_().about(javaSources())
+        .that(asList(baseModel, model))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void baseModelWithDiffBind() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("BaseModelView.java");
+
+    JavaFileObject baseModel = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import android.widget.FrameLayout;\n"
+            + "\n"
+            + "public abstract class TestBaseModel<T extends FrameLayout> extends EpoxyModel<T> {\n"
+            + "@Override\n"
+            + "  public void bind(T view, EpoxyModel<?> previouslyBoundModel) {\n"
+            + "    super.bind(view, previouslyBoundModel);\n"
+            + "  }"
+            + "}");
+
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("BaseModelViewWithSuperDiffBindModel_.java");
+
+    assert_().about(javaSources())
+        .that(asList(baseModel, model))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
 }
