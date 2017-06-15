@@ -436,4 +436,39 @@ public class ViewProcessorTest {
         .and()
         .generatesSources(generatedModel);
   }
+
+  @Test
+  public void throwsIfBaseModelNotEpoxyModel() {
+    JavaFileObject model = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.BaseModelView", "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import android.content.Context;\n"
+            + "import android.widget.FrameLayout;\n"
+            + "\n"
+            + "@ModelView(defaultLayout = 1, baseModelClass = TestBaseModel.class)\n"
+            + "public class BaseModelView extends FrameLayout {\n"
+            + "\n"
+            + "  public BaseModelView(Context context) {\n"
+            + "    super(context);\n"
+            + "  }\n"
+            + "\n"
+            + "  @ModelProp\n"
+            + "  public void setClickListener(String title) {\n"
+            + "\n"
+            + "  }\n"
+            + "}");
+
+    JavaFileObject baseModel = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "public abstract class TestBaseModel{\n"
+            + "}\n");
+
+    assert_().about(javaSources())
+        .that(asList(baseModel, model))
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining(
+            "The base model provided to an ModelView must extend EpoxyModel (BaseModelView)");
+  }
 }
