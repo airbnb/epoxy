@@ -52,7 +52,7 @@ public class BaseModelViewModel_ extends TestBaseModel<BaseModelView> implements
       return;
     }
     BaseModelViewModel_ that = (BaseModelViewModel_) previousModel;
-    super.bind(object, previousModel);
+    super.bind(object);
 
     if (clickListener_String != null ? !clickListener_String.equals(that.clickListener_String) : that.clickListener_String != null) {
       object.setClickListener(clickListener_String);

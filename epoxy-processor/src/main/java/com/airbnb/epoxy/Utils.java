@@ -292,7 +292,7 @@ class Utils {
         if (!types.isAssignable(param2Type, param1Type)) {
           return false;
         }
-      } else if (!param1Type.toString().equals(param1Type.toString())) {
+      } else if (!param1Type.toString().equals(param2Type.toString())) {
         return false;
       }
     }
