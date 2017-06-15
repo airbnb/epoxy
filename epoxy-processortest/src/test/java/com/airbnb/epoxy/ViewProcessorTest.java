@@ -411,4 +411,29 @@ public class ViewProcessorTest {
         .and()
         .generatesSources(generatedModel);
   }
+
+  @Test
+  public void baseModelWithAttribute() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("BaseModelView.java");
+
+    JavaFileObject baseModel = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import android.widget.FrameLayout;\n"
+            + "\n"
+            + "public abstract class TestBaseModel<T extends FrameLayout> extends EpoxyModel<T> {\n"
+            + "  @EpoxyAttribute String baseModelString;\n"
+            + "}\n");
+
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("BaseModelWithAttributeViewModel_.java");
+
+    assert_().about(javaSources())
+        .that(asList(baseModel, model))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
 }
