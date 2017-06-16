@@ -86,8 +86,8 @@ class ModelViewInfo extends GeneratedModelInfo {
 
     if (!isEpoxyModel(classToExtend)) {
       errorLogger
-          .logError("The base model provided to an %s must extend EpoxyModel (%s).",
-              ModelView.class.getSimpleName(), viewElement.getSimpleName());
+          .logError("The base model provided to an %s must extend EpoxyModel, but was %s (%s).",
+              ModelView.class.getSimpleName() , classToExtend, viewElement.getSimpleName());
       return defaultSuper;
     }
 

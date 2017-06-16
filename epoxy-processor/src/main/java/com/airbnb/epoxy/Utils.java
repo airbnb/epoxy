@@ -1,5 +1,7 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.Nullable;
+
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -141,7 +143,8 @@ class Utils {
   }
 
   static boolean isEpoxyModel(TypeMirror type) {
-    return isSubtypeOfType(type, EPOXY_MODEL_TYPE);
+    return isSubtypeOfType(type, EPOXY_MODEL_TYPE)
+        || isSubtypeOfType(type, UNTYPED_EPOXY_MODEL_TYPE);
   }
 
   static boolean isEpoxyModel(TypeElement type) {
@@ -438,6 +441,7 @@ class Utils {
     return false;
   }
 
+  @Nullable
   static <T extends Annotation> TypeMirror getClassParamFromAnnotation(
       Element annotatedElement, Class<T> annotationClass, String paramName) {
     AnnotationMirror am = getAnnotationMirror(annotatedElement, annotationClass);
@@ -448,7 +452,12 @@ class Utils {
     if (av == null) {
       return null;
     } else {
-      return (TypeMirror) av.getValue();
+      Object value = av.getValue();
+      if (value instanceof TypeMirror) {
+        return (TypeMirror) value;
+      }
+      // Couldn't resolve R class
+      return null;
     }
   }
 

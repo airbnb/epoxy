@@ -13,6 +13,55 @@ import static java.util.Arrays.asList;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class ViewProcessorTest {
+
+  private static final JavaFileObject R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
+      + "package com.airbnb.epoxy;\n"
+      + "public final class R {\n"
+      + "  public static final class array {\n"
+      + "    public static final int res = 0x7f040001;\n"
+      + "  }\n"
+      + "  public static final class bool {\n"
+      + "    public static final int res = 0x7f040002;\n"
+      + "  }\n"
+      + "  public static final class color {\n"
+      + "    public static final int res = 0x7f040003;\n"
+      + "  }\n"
+      + "  public static final class layout {\n"
+      + "    public static final int res = 0x7f040008;\n"
+      + "  }\n"
+      + "  public static final class integer {\n"
+      + "    public static final int res = 0x7f040004;\n"
+      + "  }\n"
+      + "  public static final class styleable {\n"
+      + "    public static final int[] ActionBar = { 0x7f010001, 0x7f010003 };\n"
+      + "  }\n"
+      + "}"
+  );
+
+  private static final JavaFileObject R2 = JavaFileObjects.forSourceString("com.airbnb.epoxy.R2", ""
+      + "package com.airbnb.epoxy;\n"
+      + "public final class R2 {\n"
+      + "  public static final class array {\n"
+      + "    public static final int res = 0x7f040001;\n"
+      + "  }\n"
+      + "  public static final class bool {\n"
+      + "    public static final int res = 0x7f040002;\n"
+      + "  }\n"
+      + "  public static final class color {\n"
+      + "    public static final int res = 0x7f040003;\n"
+      + "  }\n"
+      + "  public static final class layout {\n"
+      + "    public static final int res = 0x7f040008;\n"
+      + "  }\n"
+      + "  public static final class integer {\n"
+      + "    public static final int res = 0x7f040004;\n"
+      + "  }\n"
+      + "  public static final class styleable {\n"
+      + "    public static final int[] ActionBar = { 0x7f010001, 0x7f010003 };\n"
+      + "  }\n"
+      + "}"
+  );
+
   @Test
   public void stringOverloads() {
     JavaFileObject model = JavaFileObjects
@@ -470,5 +519,162 @@ public class ViewProcessorTest {
         .failsToCompile()
         .withErrorContaining(
             "The base model provided to an ModelView must extend EpoxyModel (BaseModelView)");
+  }
+
+  @Test
+  public void baseModelFromPackageConfig() {
+    JavaFileObject model = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.BaseModelView", "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import android.content.Context;\n"
+            + "import android.widget.FrameLayout;\n"
+            + "\n"
+            + "@ModelView(defaultLayout = 1)\n"
+            + "public class BaseModelView extends FrameLayout {\n"
+            + "\n"
+            + "  public BaseModelView(Context context) {\n"
+            + "    super(context);\n"
+            + "  }\n"
+            + "\n"
+            + "  @ModelProp\n"
+            + "  public void setClickListener(String title) {\n"
+            + "\n"
+            + "  }\n"
+            + "}");
+
+    JavaFileObject configClass = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.package-info", "@PackageModelViewConfig(rClass = R"
+            + ".class, defaultBaseModelClass = TestBaseModel.class)\n"
+            + "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
+            + "import com.airbnb.epoxy.R;\n"
+            + "import com.airbnb.epoxy.TestBaseModel;\n");
+
+    JavaFileObject baseModel = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import android.widget.FrameLayout;\n"
+            + "\n"
+            + "public abstract class TestBaseModel<T extends FrameLayout> extends EpoxyModel<T> {\n"
+            + "}\n");
+
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("BaseModelFromPackageConfigViewModel_.java");
+
+    assert_().about(javaSources())
+        .that(asList(baseModel, model, configClass, R))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void baseModelFromPackageConfigIsOverridenByViewSetting() {
+    // If a package default is set for the base model it can be overridden if the view sets its
+    // own base model
+
+    JavaFileObject model = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.BaseModelView", "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import android.content.Context;\n"
+            + "import android.widget.FrameLayout;\n"
+            + "\n"
+            + "@ModelView(defaultLayout = 1, baseModelClass = EpoxyModel.class)\n"
+            + "public class BaseModelView extends FrameLayout {\n"
+            + "\n"
+            + "  public BaseModelView(Context context) {\n"
+            + "    super(context);\n"
+            + "  }\n"
+            + "\n"
+            + "  @ModelProp\n"
+            + "  public void setClickListener(String title) {\n"
+            + "\n"
+            + "  }\n"
+            + "}");
+
+    JavaFileObject configClass = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.package-info", "@PackageModelViewConfig(rClass = R"
+            + ".class, defaultBaseModelClass = TestBaseModel.class)\n"
+            + "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
+            + "import com.airbnb.epoxy.R;\n"
+            + "import com.airbnb.epoxy.TestBaseModel;\n");
+
+    JavaFileObject baseModel = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import android.widget.FrameLayout;\n"
+            + "\n"
+            + "public abstract class TestBaseModel<T extends FrameLayout> extends EpoxyModel<T> {\n"
+            + "}\n");
+
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("BaseModelOverridesPackageConfigViewModel_.java");
+
+    assert_().about(javaSources())
+        .that(asList(baseModel, model, configClass, R))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void throwsIfBaseModelNotEpoxyModelInPackageConfig() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("BaseModelView.java");
+
+    JavaFileObject baseModel = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "public abstract class TestBaseModel{\n"
+            + "}\n");
+
+    JavaFileObject configClass = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.package-info", "@PackageModelViewConfig(rClass = R"
+            + ".class, defaultBaseModelClass = TestBaseModel.class)\n"
+            + "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
+            + "import com.airbnb.epoxy.R;\n"
+            + "import com.airbnb.epoxy.TestBaseModel;\n");
+
+    assert_().about(javaSources())
+        .that(asList(baseModel, model, configClass, R))
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining(
+            "The base model provided to an ModelView must extend EpoxyModel (BaseModelView)");
+  }
+
+  @Test
+  public void rLayoutInViewModelAnnotationWorks() {
+    JavaFileObject model = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.RLayoutInViewModelAnnotationWorksView",
+            "package com.airbnb.epoxy;\n"
+                + "\n"
+                + "import android.content.Context;\n"
+                + "import android.view.View;\n"
+                + "\n"
+                + "@ModelView(defaultLayout = R.layout.res)\n"
+                + "public class RLayoutInViewModelAnnotationWorksView extends View {\n"
+                + "\n"
+                + "  public RLayoutInViewModelAnnotationWorksView(Context context) {\n"
+                + "    super(context);\n"
+                + "  }\n"
+                + "}");
+
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("RLayoutInViewModelAnnotationWorksViewModel_.java");
+
+    assert_().about(javaSources())
+        .that(asList(model, R))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
   }
 }
