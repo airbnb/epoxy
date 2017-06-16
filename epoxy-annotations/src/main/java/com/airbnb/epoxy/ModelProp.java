@@ -59,16 +59,22 @@ public @interface ModelProp {
 
   /**
    * The name of the constant field that should be used as the default value for this prop. The
-   * default value will be used if it isn't otherwise set.
+   * default value will be used if the prop value isn't set on the model.
    * <p>
    * For example, you would define a constant in your view class like <code>static final int
    * DEFAULT_NUM_LINES = 3</code>, and then set this parameter to "DEFAULT_NUM_LINES" so that the
    * annotation processor knows what constant to reference.
    * <p>
    * The name of the constant must be used instead of referencing the constant directly since
-   * objects are not valid annotation processor parameters.
+   * objects are not valid annotation parameters.
    */
   String defaultValue() default "";
 
+  /**
+   * Specify an optional group name. Multiple props with the same group name will only allow one of
+   * the props to be set on the view.
+   * <p>
+   * https://github.com/airbnb/epoxy/wiki/Generating-Models-from-View-Annotations#prop-groups
+   */
   String group() default "";
 }

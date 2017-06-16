@@ -4,13 +4,14 @@ import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 
+import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.ModelProp;
 import com.airbnb.epoxy.ModelProp.Option;
 import com.airbnb.epoxy.ModelView;
 import com.airbnb.epoxy.OnViewRecycled;
 
 // TODO: (eli_hart 5/22/17) delete this before public release.
-@ModelView
+@ModelView(baseModelClass = EpoxyModel.class)
 public class TestView extends BaseView {
   static final String DEFAULT_TITLE = "hello world!";
 

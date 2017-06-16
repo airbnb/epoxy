@@ -1,5 +1,7 @@
 package com.airbnb.epoxy.sample.models;
 
+import android.graphics.drawable.Drawable;
+
 import com.facebook.litho.Column;
 import com.facebook.litho.ComponentContext;
 import com.facebook.litho.ComponentLayout;
@@ -24,6 +26,14 @@ public class ListItemSpec {
       ComponentContext c,
       @Prop(optional = true) int color,
       @Prop(optional = true, resType = ResType.STRING) String title,
+      @Prop(resType = ResType.DIMEN_TEXT) int dimenText,
+      @Prop(resType = ResType.DIMEN_OFFSET) int dimenOffset,
+      @Prop(resType = ResType.DIMEN_SIZE) int dimenSizes,
+      @Prop(resType = ResType.COLOR) int resColor,
+      @Prop(resType = ResType.INT) int resInt,
+      @Prop(resType = ResType.BOOL) boolean resBool,
+      @Prop(resType = ResType.DRAWABLE) Drawable resDrawable,
+      @Prop(resType = ResType.FLOAT) float resFloat,
       @Prop String subtitle) {
 
     return Column.create(c)

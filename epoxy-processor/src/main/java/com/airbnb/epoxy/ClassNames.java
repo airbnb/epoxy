@@ -13,8 +13,10 @@ final class ClassNames {
   private static final String PKG_LITHO_ANNOTATIONS = "com.facebook.litho.annotations";
   private static final String PKG_JAVA_LANG = "java.lang";
   private static final String PKG_ANDROID_CONTENT = "android.content";
+  private static final String PKG_ANDROID_VIEW = "android.view";
 
   static final ClassName ANDROID_CONTEXT = get(PKG_ANDROID_CONTENT, "Context");
+  static final ClassName ANDROID_VIEW = get(PKG_ANDROID_VIEW, "View");
 
   static final ClassName LITHO_COMPONENT = get(PKG_LITHO, "Component");
   static final ClassName LITHO_COMPONENT_CONTEXT = get(PKG_LITHO, "ComponentContext");
