@@ -87,7 +87,7 @@ class ModelViewInfo extends GeneratedModelInfo {
     if (!isEpoxyModel(classToExtend)) {
       errorLogger
           .logError("The base model provided to an %s must extend EpoxyModel, but was %s (%s).",
-              ModelView.class.getSimpleName() , classToExtend, viewElement.getSimpleName());
+              ModelView.class.getSimpleName(), classToExtend, viewElement.getSimpleName());
       return defaultSuper;
     }
 
@@ -110,17 +110,22 @@ class ModelViewInfo extends GeneratedModelInfo {
     Parameterizable parameterizable = (Parameterizable) classElement;
     List<? extends TypeParameterElement> typeParameters = parameterizable.getTypeParameters();
     if (typeParameters.size() != 1) {
+      // TODO: (eli_hart 6/15/17) It should be valid to have multiple or no types as long as they
+      // are correct, but that should be a rare case
       return false;
     }
 
     TypeParameterElement typeParam = typeParameters.get(0);
     List<? extends TypeMirror> bounds = typeParam.getBounds();
     if (bounds.isEmpty()) {
-      return false;
+      // Any type is allowed, so View wil work
+      return true;
     }
 
     TypeMirror typeMirror = bounds.get(0);
-    return isSubtypeOfType(typeMirror, Utils.ANDROID_VIEW_TYPE);
+    TypeMirror viewType = Utils.getTypeMirror(ClassNames.ANDROID_VIEW, elements, typeUtils);
+    return typeUtils.isAssignable(viewType, typeMirror)
+        || typeUtils.isSubtype(typeMirror, viewType);
   }
 
   private ClassName buildGeneratedModelName(TypeElement viewElement, Elements elementUtils) {

@@ -13,7 +13,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class BaseModelViewModel_ extends TestBaseModel<BaseModelView> implements GeneratedModel<BaseModelView> {
+public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements GeneratedModel<BaseModelView> {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
   private OnModelBoundListener<BaseModelViewModel_, BaseModelView> onModelBoundListener_epoxyGeneratedModel;
@@ -29,7 +29,7 @@ public class BaseModelViewModel_ extends TestBaseModel<BaseModelView> implements
     super.addTo(controller);
     addWithDebugValidation(controller);
     if (!assignedAttributes_epoxyGeneratedModel.get(0)) {
-      throw new IllegalStateException("A value is required for setClickListener");
+    	throw new IllegalStateException("A value is required for setClickListener");
     }
   }
 

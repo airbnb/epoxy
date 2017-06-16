@@ -518,7 +518,7 @@ public class ViewProcessorTest {
         .processedWith(new EpoxyProcessor())
         .failsToCompile()
         .withErrorContaining(
-            "The base model provided to an ModelView must extend EpoxyModel (BaseModelView)");
+            "The base model provided to an ModelView must extend EpoxyModel");
   }
 
   @Test
@@ -571,7 +571,7 @@ public class ViewProcessorTest {
   }
 
   @Test
-  public void baseModelFromPackageConfigIsOverridenByViewSetting() {
+  public void baseModelFromPackageConfigIsOverriddenByViewSetting() {
     // If a package default is set for the base model it can be overridden if the view sets its
     // own base model
 
@@ -647,7 +647,7 @@ public class ViewProcessorTest {
         .processedWith(new EpoxyProcessor())
         .failsToCompile()
         .withErrorContaining(
-            "The base model provided to an ModelView must extend EpoxyModel (BaseModelView)");
+            "The base model provided to an ModelView must extend EpoxyModel");
   }
 
   @Test
