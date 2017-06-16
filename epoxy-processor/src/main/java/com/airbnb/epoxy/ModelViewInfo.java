@@ -19,7 +19,6 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.Utils.isEpoxyModel;
-import static com.airbnb.epoxy.Utils.isSubtypeOfType;
 
 class ModelViewInfo extends GeneratedModelInfo {
   final List<String> resetMethodNames = new ArrayList<>();
