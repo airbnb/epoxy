@@ -17,23 +17,8 @@ public class ViewProcessorTest {
   private static final JavaFileObject R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
       + "package com.airbnb.epoxy;\n"
       + "public final class R {\n"
-      + "  public static final class array {\n"
-      + "    public static final int res = 0x7f040001;\n"
-      + "  }\n"
-      + "  public static final class bool {\n"
-      + "    public static final int res = 0x7f040002;\n"
-      + "  }\n"
-      + "  public static final class color {\n"
-      + "    public static final int res = 0x7f040003;\n"
-      + "  }\n"
       + "  public static final class layout {\n"
       + "    public static final int res = 0x7f040008;\n"
-      + "  }\n"
-      + "  public static final class integer {\n"
-      + "    public static final int res = 0x7f040004;\n"
-      + "  }\n"
-      + "  public static final class styleable {\n"
-      + "    public static final int[] ActionBar = { 0x7f010001, 0x7f010003 };\n"
       + "  }\n"
       + "}"
   );
@@ -672,6 +657,201 @@ public class ViewProcessorTest {
 
     assert_().about(javaSources())
         .that(asList(model, R))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void packageLayoutPatternDefault() {
+    JavaFileObject model = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.DefaultPackageLayoutPatternView",
+            "package com.airbnb.epoxy;\n"
+                + "\n"
+                + "import android.content.Context;\n"
+                + "import android.view.View;\n"
+                + "\n"
+                + "@ModelView\n"
+                + "public class DefaultPackageLayoutPatternView extends View {\n"
+                + "\n"
+                + "  public DefaultPackageLayoutPatternView(Context context) {\n"
+                + "    super(context);\n"
+                + "  }\n"
+                + "\n"
+                + "}");
+
+    JavaFileObject R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
+        + "package com.airbnb.epoxy;\n"
+        + "public final class R {\n"
+        + "  public static final class layout {\n"
+        + "    public static final int default_package_layout_pattern_view = 0x7f040008;\n"
+        + "  }\n"
+        + "}"
+    );
+
+    JavaFileObject configClass = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.package-info", "@PackageModelViewConfig(rClass = R"
+            + ".class)\n"
+            + "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
+            + "import com.airbnb.epoxy.R;\n");
+
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("DefaultPackageLayoutPatternViewModel_.java");
+
+    assert_().about(javaSources())
+        .that(asList(model, configClass, R))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void packageLayoutPatternDefaultWithR2() {
+    JavaFileObject model = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.DefaultPackageLayoutPatternView",
+            "package com.airbnb.epoxy;\n"
+                + "\n"
+                + "import android.content.Context;\n"
+                + "import android.view.View;\n"
+                + "\n"
+                + "@ModelView\n"
+                + "public class DefaultPackageLayoutPatternView extends View {\n"
+                + "\n"
+                + "  public DefaultPackageLayoutPatternView(Context context) {\n"
+                + "    super(context);\n"
+                + "  }\n"
+                + "\n"
+                + "}");
+
+    JavaFileObject R2 = JavaFileObjects.forSourceString("com.airbnb.epoxy.R2", ""
+        + "package com.airbnb.epoxy;\n"
+        + "public final class R2 {\n"
+        + "  public static final class layout {\n"
+        + "    public static final int default_package_layout_pattern_view = 0x7f040008;\n"
+        + "  }\n"
+        + "}"
+    );
+
+    JavaFileObject R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
+        + "package com.airbnb.epoxy;\n"
+        + "public final class R {\n"
+        + "  public static final class layout {\n"
+        + "    public static final int default_package_layout_pattern_view = 0x7f040008;\n"
+        + "  }\n"
+        + "}"
+    );
+
+    JavaFileObject configClass = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.package-info", "@PackageModelViewConfig(rClass = R2"
+            + ".class)\n"
+            + "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
+            + "import com.airbnb.epoxy.R2;\n");
+
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("DefaultPackageLayoutPatternViewModel_.java");
+
+    assert_().about(javaSources())
+        .that(asList(model, configClass, R2, R))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void packageLayoutCustomPattern() {
+    JavaFileObject model = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.CustomPackageLayoutPatternView",
+            "package com.airbnb.epoxy;\n"
+                + "\n"
+                + "import android.content.Context;\n"
+                + "import android.view.View;\n"
+                + "\n"
+                + "@ModelView\n"
+                + "public class CustomPackageLayoutPatternView extends View {\n"
+                + "\n"
+                + "  public CustomPackageLayoutPatternView(Context context) {\n"
+                + "    super(context);\n"
+                + "  }\n"
+                + "\n"
+                + "}");
+
+    JavaFileObject R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
+        + "package com.airbnb.epoxy;\n"
+        + "public final class R {\n"
+        + "  public static final class layout {\n"
+        + "    public static final int hello_custom_package_layout_pattern_view_me = 0x7f040008;\n"
+        + "  }\n"
+        + "}"
+    );
+
+    JavaFileObject configClass = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.package-info", "@PackageModelViewConfig(rClass = R"
+            + ".class, defaultLayoutPattern = \"hello_%s_me\")\n"
+            + "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
+            + "import com.airbnb.epoxy.R;\n");
+
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("CustomPackageLayoutPatternViewModel_.java");
+
+    assert_().about(javaSources())
+        .that(asList(model, configClass, R))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void layoutOverloads() {
+    JavaFileObject model = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.LayoutOverloadsView",
+            "package com.airbnb.epoxy;\n"
+                + "\n"
+                + "import android.content.Context;\n"
+                + "import android.view.View;\n"
+                + "\n"
+                + "@ModelView\n"
+                + "public class LayoutOverloadsView extends View {\n"
+                + "\n"
+                + "  public LayoutOverloadsView(Context context) {\n"
+                + "    super(context);\n"
+                + "  }\n"
+                + "\n"
+                + "}");
+
+    JavaFileObject R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
+        + "package com.airbnb.epoxy;\n"
+        + "public final class R {\n"
+        + "  public static final class layout {\n"
+        + "    public static final int layout_overloads_view = 0x7f040008;\n"
+        + "    public static final int layout_overloads_view_one = 0x7f040009;\n"
+        + "    public static final int layout_overloads_view_two = 0x7f04000a;\n"
+        + "  }\n"
+        + "}"
+    );
+
+    JavaFileObject configClass = JavaFileObjects
+        .forSourceLines("com.airbnb.epoxy.package-info", "@PackageModelViewConfig(rClass = R"
+            + ".class, useLayoutOverloads = true)\n"
+            + "package com.airbnb.epoxy;\n"
+            + "\n"
+            + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
+            + "import com.airbnb.epoxy.R;\n");
+
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("LayoutOverloadsViewModel_.java");
+
+    assert_().about(javaSources())
+        .that(asList(model, configClass, R))
         .processedWith(new EpoxyProcessor())
         .compilesWithoutError()
         .and()
