@@ -1,16 +1,19 @@
 package com.airbnb.epoxy.sample.views;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.airbnb.epoxy.ModelProp;
+import com.airbnb.epoxy.ModelProp.Option;
+import com.airbnb.epoxy.ModelView;
 import com.airbnb.epoxy.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+@ModelView
 public class HeaderView extends LinearLayout {
 
   @BindView(R.id.title_text) TextView title;
@@ -27,11 +30,13 @@ public class HeaderView extends LinearLayout {
     ButterKnife.bind(this);
   }
 
-  public void setTitle(@StringRes int title) {
+  @ModelProp(options = Option.GenerateStringOverloads)
+  public void setTitle(CharSequence title) {
     this.title.setText(title);
   }
 
-  public void setCaption(@StringRes int caption) {
+  @ModelProp(options = Option.GenerateStringOverloads)
+  public void setCaption(CharSequence caption) {
     this.caption.setText(caption);
   }
 }
