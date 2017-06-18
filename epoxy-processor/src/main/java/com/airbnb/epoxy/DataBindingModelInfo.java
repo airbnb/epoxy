@@ -1,5 +1,7 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.Nullable;
+
 import com.squareup.javapoet.ClassName;
 
 import javax.lang.model.element.Element;
@@ -44,10 +46,14 @@ class DataBindingModelInfo extends GeneratedModelInfo {
     collectMethodsReturningClassType(superClassElement, typeUtils);
   }
 
+  /**
+   * Look up the DataBinding class generated for this model's layout file and parse the attributes
+   * for it.
+   */
   void parseDataBindingClass() {
     // This databinding class won't exist until the second round of annotation processing since
     // it is generated in the first round.
-    Element dataBindingClass = getElementByName(dataBindingClassName, elementUtils, typeUtils);
+    Element dataBindingClass = getDataBindingClassElement();
 
     HashCodeValidator hashCodeValidator = new HashCodeValidator(typeUtils, elementUtils);
     for (Element element : dataBindingClass.getEnclosedElements()) {
@@ -56,6 +62,11 @@ class DataBindingModelInfo extends GeneratedModelInfo {
             new DataBindingAttributeInfo(this, ((ExecutableElement) element), hashCodeValidator));
       }
     }
+  }
+
+  @Nullable
+  Element getDataBindingClassElement() {
+    return getElementByName(dataBindingClassName, elementUtils, typeUtils);
   }
 
   private ClassName getDataBindingClassNameForResource(LayoutResource layoutResource,

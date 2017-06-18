@@ -17,12 +17,15 @@ import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedOptions;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import static com.airbnb.epoxy.ConfigManager.PROCESSOR_IMPLICITLY_ADD_AUTO_MODELS;
+import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS;
+import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS;
+import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_REQUIRE_HASHCODE;
 import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_VALIDATE_MODEL_USAGE;
 
 /**
@@ -33,6 +36,12 @@ import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_VALIDATE_MODEL_USA
  * reduces their usefulness and doesn't make as much sense to support.
  */
 @AutoService(Processor.class)
+@SupportedOptions({
+    PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS,
+    PROCESSOR_OPTION_VALIDATE_MODEL_USAGE,
+    PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS,
+    PROCESSOR_OPTION_REQUIRE_HASHCODE
+})
 public class EpoxyProcessor extends AbstractProcessor {
 
   private final Map<String, String> testOptions;
@@ -52,6 +61,7 @@ public class EpoxyProcessor extends AbstractProcessor {
   private ModelProcessor modelProcessor;
   private LithoSpecProcessor lithoSpecProcessor;
   private ModelViewProcessor modelViewProcessor;
+  private boolean hasWrittenDataBindingModels;
 
   public EpoxyProcessor() {
     this(Collections.<String, String>emptyMap());
@@ -75,7 +85,7 @@ public class EpoxyProcessor extends AbstractProcessor {
   /** For testing. */
   public static EpoxyProcessor withImplicitAdding() {
     HashMap<String, String> options = new HashMap<>();
-    options.put(PROCESSOR_IMPLICITLY_ADD_AUTO_MODELS, "true");
+    options.put(PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS, "true");
     return new EpoxyProcessor(options);
   }
 
@@ -157,27 +167,34 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     controllerProcessor.process(roundEnv);
 
+    if (dataBindingProcessor.hasModelsToWrite()
+        && dataBindingProcessor.isDataBindingClassesGenerated()) {
+      generatedModels.addAll(dataBindingProcessor.resolveDataBindingClassesAndWriteJava());
+      hasWrittenDataBindingModels = true;
+    }
 
+    if (controllerProcessor.hasControllersToGenerate()
+        && (!dataBindingProcessor.hasModelsToWrite() || roundEnv.processingOver())) {
+      // This must be done after all generated model info is collected so we must wait until
+      // databinding is resolved.
+      // However, if there was an error with the databinding resolution we can at least try to
+      // finish writing the controllers before processing ends
+      controllerProcessor.resolveGeneratedModelsAndWriteJava(generatedModels);
+    }
 
     if (roundEnv.processingOver()) {
-      generatedModels.addAll(dataBindingProcessor.resolveDataBindingClassesAndWriteJava());
-
-      // This must be done after all generated model info is collected
-      controllerProcessor.resolveGeneratedModelsAndWriteJava(generatedModels);
-
-      validateAttributesImplementHashCode(generatedModels);
-
       // We wait until the very end to log errors so that all the generated classes are still
       // created.
       // Otherwise the compiler error output is clogged with lots of errors from the generated
       // classes  not existing, which makes it hard to see the actual errors.
+
+      validateAttributesImplementHashCode(generatedModels);
       errorLogger.writeExceptions(messager);
     }
 
     // Let any other annotation processors use our annotations if they want to
     return false;
   }
-
 
   private void validateAttributesImplementHashCode(
       Collection<GeneratedModelInfo> generatedClasses) {
