@@ -28,7 +28,7 @@ android {
 
   defaultConfig {
     applicationId "com.airbnb.android.epoxysample"
-    minSdkVersion rootProject.MIN_SDK_VERSION
+    minSdkVersion rootProject.MIN_SDK_VERSION_LITHO
     targetSdkVersion rootProject.TARGET_SDK_VERSION
     vectorDrawables.useSupportLibrary = true
     versionCode 1

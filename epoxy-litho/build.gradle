@@ -5,7 +5,7 @@ android {
   buildToolsVersion rootProject.ANDROID_BUILD_TOOLS_VERSION
 
   defaultConfig {
-    minSdkVersion rootProject.MIN_SDK_VERSION
+    minSdkVersion rootProject.MIN_SDK_VERSION_LITHO
     targetSdkVersion rootProject.TARGET_SDK_VERSION
   }
 }
