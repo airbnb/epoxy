@@ -35,6 +35,12 @@ android {
     versionName "1.0"
   }
 
+  lintOptions {
+    // DataBinding is pulling in an old version of the support library which makes lint complain.
+    // Ignoring it for now until we can figure out how to fix it.
+    disable 'GradleCompatible'
+  }
+
   dataBinding {
     enabled = true
   }
