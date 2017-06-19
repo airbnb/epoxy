@@ -10,6 +10,8 @@ android {
   }
 
   dataBinding {
+    // DataBinding is pulling in an old version of the support library which makes lint complain.
+    // Ignoring it for now until we can figure out how to fix it.
     enabled = true
   }
 }

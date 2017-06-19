@@ -1,3 +1,13 @@
+# 2.2.0 (June 19, 2017)
+* **Main Feature** Models can now be completely generated from a custom view via annotations on the view. This should completely remove the overhead of creating a model manually in many cases! For more info, see [the wiki](https://github.com/airbnb/epoxy/wiki/Generating-Models-from-View-Annotations)
+
+* **New** Lowered the minimum SDK from 16 to 14.
+* **New** Models that have a `View.OnLongClickListener` as an EpoxyAttribute will now have an overloaded setter on the generated model that allows you to set a long click listener that will return the model, view, and adapter position. This is very similar to the `View.OnClickListener` support added in 2.0.0, but for long click listeners. **Upgrade Note** If you were setting a long click listener value to null anywhere you will need to now cast that to `View.OnLongClickListener` because of the new overloaded method.
+* **New** `id` overload on EpoxyModel to define a model id with multiple strings
+* **New** Option in `EpoxyAttribute` to not include the attribute in the generated `toString` method (Thanks to @geralt-encore!)
+* **New** @AutoModel models are now inherited from usages in super classes (Thanks to @geralt-encore!)
+* **Fixed** Generated getters could recursively call themselves (Thanks to @geralt-encore!)
+
 # 2.1.0 (May 9, 2017)
 
 * **New**: Support for Android Data Binding! Epoxy will now generate an EpoxyModel directly from a Data Binding xml layout, and handle all data binding details automatically. Thanks to @geralt-encore for helping with this! See more details in [the wiki](https://github.com/airbnb/epoxy/wiki/Data-Binding-Support).

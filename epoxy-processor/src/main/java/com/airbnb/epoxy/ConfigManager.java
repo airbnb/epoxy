@@ -26,7 +26,7 @@ class ConfigManager {
   static final String PROCESSOR_OPTION_VALIDATE_MODEL_USAGE = "validateEpoxyModelUsage";
   static final String PROCESSOR_OPTION_REQUIRE_HASHCODE = "requireHashCodeInEpoxyModels";
   static final String PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS = "requireAbstractEpoxyModels";
-  static final String PROCESSOR_IMPLICITLY_ADD_AUTO_MODELS = "implicitlyAddAutoModels";
+  static final String PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS = "implicitlyAddAutoModels";
 
   private static final PackageConfigSettings
       DEFAULT_PACKAGE_CONFIG_SETTINGS = PackageConfigSettings.forDefaults();
@@ -51,7 +51,7 @@ class ConfigManager {
             PackageEpoxyConfig.REQUIRE_ABSTRACT_MODELS_DEFAULT);
 
     globalImplicitlyAddAutoModels =
-        getBooleanOption(options, PROCESSOR_IMPLICITLY_ADD_AUTO_MODELS,
+        getBooleanOption(options, PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS,
             PackageEpoxyConfig.IMPLICITLY_ADD_AUTO_MODELS_DEFAULT);
     this.typeUtils = typeUtils;
   }

@@ -3,11 +3,11 @@ package com.airbnb.epoxy.sample;
 import android.support.v7.widget.RecyclerView.RecycledViewPool;
 
 import com.airbnb.epoxy.AutoModel;
+import com.airbnb.epoxy.ButtonBindingModel_;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.TypedEpoxyController;
-import com.airbnb.epoxy.sample.models.ButtonModel_;
 import com.airbnb.epoxy.sample.models.CarouselModelGroup;
-import com.airbnb.epoxy.sample.models.HeaderModel_;
+import com.airbnb.epoxy.sample.views.HeaderViewModel_;
 
 import java.util.List;
 
@@ -24,11 +24,11 @@ public class SampleController extends TypedEpoxyController<List<CarouselData>> {
     void onColorClicked(CarouselData carousel, int colorPosition);
   }
 
-  @AutoModel HeaderModel_ header;
-  @AutoModel ButtonModel_ addButton;
-  @AutoModel ButtonModel_ clearButton;
-  @AutoModel ButtonModel_ shuffleButton;
-  @AutoModel ButtonModel_ changeColorsButton;
+  @AutoModel HeaderViewModel_ header;
+  @AutoModel ButtonBindingModel_ addButton;
+  @AutoModel ButtonBindingModel_ clearButton;
+  @AutoModel ButtonBindingModel_ shuffleButton;
+  @AutoModel ButtonBindingModel_ changeColorsButton;
 
   private final AdapterCallbacks callbacks;
   private final RecycledViewPool recycledViewPool;
