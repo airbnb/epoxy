@@ -33,7 +33,7 @@ kapt {
 }
 ```
 
-so that `AutoModel` annotations properly. More information [here](https://github.com/airbnb/epoxy/wiki/Epoxy-Controller#usage-with-kotlin)
+so that `AutoModel` annotations work properly. More information [here](https://github.com/airbnb/epoxy/wiki/Epoxy-Controller#usage-with-kotlin)
 
 ## Basic Usage
 There are two main components of Epoxy:
