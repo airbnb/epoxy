@@ -28,6 +28,8 @@ dependencies {
 #### Kotlin
 If you are using Kotlin you should also add
 ```
+apply plugin: 'kotlin-kapt'
+
 kapt {
     correctErrorTypes = true
 }
