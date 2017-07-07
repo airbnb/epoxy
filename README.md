@@ -37,6 +37,34 @@ kapt {
 
 so that `AutoModel` annotations work properly. More information [here](https://github.com/airbnb/epoxy/wiki/Epoxy-Controller#usage-with-kotlin)
 
+## Library Projects
+To use Epoxy in a library or module add [Butterknife's gradle plugin](https://github.com/JakeWharton/butterknife#library-projects) to your `buildscript`.
+
+```yaml
+buildscript {
+  repositories {
+    mavenCentral()
+   }
+  dependencies {
+    classpath 'com.jakewharton:butterknife-gradle-plugin:8.7.0'
+  }
+}
+```
+
+and then apply it in your module:
+```yaml
+apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.butterknife'
+```
+
+Now make sure you use R2 instead of R inside all Epoxy annotations.
+```java
+@ModelView(defaultLayout = R2.layout.view_holder_header)
+public class HeaderView extends LinearLayout {
+   ....
+}
+```
+
 ## Basic Usage
 There are two main components of Epoxy:
 
