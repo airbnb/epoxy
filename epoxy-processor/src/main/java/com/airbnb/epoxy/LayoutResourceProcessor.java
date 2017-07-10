@@ -164,7 +164,8 @@ class LayoutResourceProcessor {
       // This will only have been filled if at least one view has a layout in it's annotation.
       // If all view's use their default layout then resources haven't been parsed yet and we can
       // do it now
-      Element rLayoutClassElement = getElementByName(layout.getClassName(), elementUtils, typeUtils);
+      Element rLayoutClassElement = getElementByName(layout.getClassName(), elementUtils,
+          typeUtils);
       saveLayoutValuesForRClass(layout.getClassName(), rLayoutClassElement);
     }
 
