@@ -103,9 +103,9 @@ class ControllerProcessor {
       List<GeneratedModelInfo> generatedModels) {
 
     for (ControllerClassInfo controllerClassInfo : controllerClassMap.values()) {
-      for (ControllerModelField model : controllerClassInfo.models) {
+      for (ControllerModelField model : controllerClassInfo.getModels()) {
         if (!hasFullyQualifiedName(model)) {
-          model.typeName = getFullyQualifiedModelTypeName(model, generatedModels);
+          model.setTypeName(getFullyQualifiedModelTypeName(model, generatedModels));
         }
       }
     }
@@ -116,7 +116,7 @@ class ControllerProcessor {
    * is from this module we will just have the simple name.
    */
   private boolean hasFullyQualifiedName(ControllerModelField model) {
-    return model.typeName.toString().contains(".");
+    return model.getTypeName().toString().contains(".");
   }
 
   /**
@@ -125,7 +125,7 @@ class ControllerProcessor {
    */
   private TypeName getFullyQualifiedModelTypeName(ControllerModelField model,
       List<GeneratedModelInfo> generatedModels) {
-    String modelName = model.typeName.toString();
+    String modelName = model.getTypeName().toString();
     for (GeneratedModelInfo generatedModel : generatedModels) {
       String generatedName = generatedModel.getGeneratedName().toString();
       if (generatedName.endsWith("." + modelName)) {
@@ -134,7 +134,7 @@ class ControllerProcessor {
     }
 
     // Fallback to using the same name
-    return model.typeName;
+    return model.getTypeName();
   }
 
   private void addFieldToControllerClass(Element modelField,
@@ -171,13 +171,13 @@ class ControllerProcessor {
           continue;
         }
 
-        Set<ControllerModelField> otherControllerModelFields = otherEntry.getValue().models;
+        Set<ControllerModelField> otherControllerModelFields = otherEntry.getValue().getModels();
 
         if (belongToTheSamePackage(thisClass, otherClass, elementUtils)) {
           entry.getValue().addModels(otherControllerModelFields);
         } else {
           for (ControllerModelField controllerModelField : otherControllerModelFields) {
-            if (!controllerModelField.packagePrivate) {
+            if (!controllerModelField.getPackagePrivate()) {
               entry.getValue().addModel(controllerModelField);
             }
           }
@@ -239,13 +239,13 @@ class ControllerProcessor {
       throws IOException {
     ClassName superclass = ClassName.get(elementUtils.getTypeElement(CONTROLLER_HELPER_INTERFACE));
     ParameterizedTypeName parameterizeSuperClass =
-        ParameterizedTypeName.get(superclass, controllerInfo.controllerClassType);
+        ParameterizedTypeName.get(superclass, controllerInfo.getControllerClassType());
 
-    TypeSpec.Builder builder = TypeSpec.classBuilder(controllerInfo.generatedClassName)
+    TypeSpec.Builder builder = TypeSpec.classBuilder(controllerInfo.getGeneratedClassName())
         .addJavadoc("Generated file. Do not modify!")
         .addModifiers(Modifier.PUBLIC)
         .superclass(parameterizeSuperClass)
-        .addField(controllerInfo.controllerClassType, "controller", Modifier.FINAL,
+        .addField(controllerInfo.getControllerClassType(), "controller", Modifier.FINAL,
             Modifier.PRIVATE)
         .addMethod(buildConstructor(controllerInfo))
         .addMethod(buildResetModelsMethod(controllerInfo));
@@ -257,14 +257,14 @@ class ControllerProcessor {
           .addMethod(buildSaveModelsForNextValidationMethod(controllerInfo));
     }
 
-    JavaFile.builder(controllerInfo.generatedClassName.packageName(), builder.build())
+    JavaFile.builder(controllerInfo.getGeneratedClassName().packageName(), builder.build())
         .build()
         .writeTo(filer);
   }
 
   private MethodSpec buildConstructor(ControllerClassInfo controllerInfo) {
     ParameterSpec controllerParam = ParameterSpec
-        .builder(controllerInfo.controllerClassType, "controller")
+        .builder(controllerInfo.getControllerClassType(), "controller")
         .build();
 
     return MethodSpec.constructorBuilder()
@@ -283,9 +283,9 @@ class ControllerProcessor {
       ControllerClassInfo controllerInfo) {
     List<FieldSpec> fields = new ArrayList<>();
 
-    for (ControllerModelField model : controllerInfo.models) {
+    for (ControllerModelField model : controllerInfo.getModels()) {
       fields.add(FieldSpec.builder(getClassName(UNTYPED_EPOXY_MODEL_TYPE),
-          model.fieldName, Modifier.PRIVATE).build());
+          model.getFieldName(), Modifier.PRIVATE).build());
     }
 
     return fields;
@@ -297,9 +297,9 @@ class ControllerProcessor {
 
     // Validate that annotated fields have not been reassigned or had their id changed
     long id = -1;
-    for (ControllerModelField model : controllerInfo.models) {
+    for (ControllerModelField model : controllerInfo.getModels()) {
       builder.addStatement("validateSameModel($L, controller.$L, $S, $L)",
-          model.fieldName, model.fieldName, model.fieldName, id--);
+          model.getFieldName(), model.getFieldName(), model.getFieldName(), id--);
     }
 
     return builder
@@ -337,8 +337,8 @@ class ControllerProcessor {
     Builder builder = MethodSpec.methodBuilder("saveModelsForNextValidation")
         .addModifiers(Modifier.PRIVATE);
 
-    for (ControllerModelField model : controllerInfo.models) {
-      builder.addStatement("$L = controller.$L", model.fieldName, model.fieldName);
+    for (ControllerModelField model : controllerInfo.getModels()) {
+      builder.addStatement("$L = controller.$L", model.getFieldName(), model.getFieldName());
     }
 
     return builder.build();
@@ -355,12 +355,13 @@ class ControllerProcessor {
 
     boolean implicitlyAddAutoModels = configManager.implicitlyAddAutoModels(controllerInfo);
     long id = -1;
-    for (ControllerModelField model : controllerInfo.models) {
-      builder.addStatement("controller.$L = new $T()", model.fieldName, model.typeName)
-          .addStatement("controller.$L.id($L)", model.fieldName, id--);
+    for (ControllerModelField model : controllerInfo.getModels()) {
+      builder.addStatement("controller.$L = new $T()", model.getFieldName(), model.getTypeName())
+          .addStatement("controller.$L.id($L)", model.getFieldName(), id--);
 
       if (implicitlyAddAutoModels) {
-        builder.addStatement("setControllerToStageTo(controller.$L, controller)", model.fieldName);
+        builder.addStatement("setControllerToStageTo(controller.$L, controller)",
+            model.getFieldName());
       }
     }
 

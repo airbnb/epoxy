@@ -104,10 +104,10 @@ class LithoSpecProcessor {
         .addAnnotation(Override.class)
         .addModifiers(Modifier.PROTECTED)
         .returns(
-            ParameterizedTypeName.get(ClassNames.LITHO_COMPONENT, modelInfo.lithoComponentName)
+            ParameterizedTypeName.get(ClassNames.LITHO_COMPONENT, modelInfo.getLithoComponentName())
         )
         .addParameter(ClassNames.LITHO_COMPONENT_CONTEXT, "context")
-        .addCode("return $T.create(context)", modelInfo.lithoComponentName);
+        .addCode("return $T.create(context)", modelInfo.getLithoComponentName());
 
     for (AttributeInfo attributeInfo : modelInfo.attributeInfo) {
       methodBuilder.addCode(".$L($L)", attributeInfo.getFieldName(), attributeInfo.getFieldName());

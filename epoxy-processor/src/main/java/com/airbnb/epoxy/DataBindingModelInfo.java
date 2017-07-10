@@ -72,7 +72,7 @@ class DataBindingModelInfo extends GeneratedModelInfo {
   private ClassName getDataBindingClassNameForResource(LayoutResource layoutResource,
       String moduleName) {
     StringBuilder builder = new StringBuilder();
-    String[] parts = layoutResource.resourceName.split("_");
+    String[] parts = layoutResource.getResourceName().split("_");
     for (String part : parts) {
       builder.append(capitalizeFirstLetter(part));
     }

@@ -115,7 +115,7 @@ class LayoutResourceProcessor {
 
   private boolean isLayoutValueInResources(List<LayoutResource> resources, int layoutValue) {
     for (LayoutResource resource : resources) {
-      if (resource.value == layoutValue) {
+      if (resource.getValue() == layoutValue) {
         return true;
       }
     }
@@ -164,20 +164,20 @@ class LayoutResourceProcessor {
       // This will only have been filled if at least one view has a layout in it's annotation.
       // If all view's use their default layout then resources haven't been parsed yet and we can
       // do it now
-      Element rLayoutClassElement = getElementByName(layout.className, elementUtils, typeUtils);
-      saveLayoutValuesForRClass(layout.className, rLayoutClassElement);
+      Element rLayoutClassElement = getElementByName(layout.getClassName(), elementUtils, typeUtils);
+      saveLayoutValuesForRClass(layout.getClassName(), rLayoutClassElement);
     }
 
-    List<LayoutResource> layouts = rClassLayoutResources.get(layout.className);
+    List<LayoutResource> layouts = rClassLayoutResources.get(layout.getClassName());
     if (layouts == null) {
-      errorLogger.logError("No layout files found for R class: %s", layout.className);
+      errorLogger.logError("No layout files found for R class: %s", layout.getClassName());
       return Collections.emptyList();
     }
 
     List<LayoutResource> result = new ArrayList<>();
-    String target = layout.resourceName + "_";
+    String target = layout.getResourceName() + "_";
     for (LayoutResource otherLayout : layouts) {
-      if (otherLayout.resourceName.startsWith(target)) {
+      if (otherLayout.getResourceName().startsWith(target)) {
         result.add(otherLayout);
       }
     }
