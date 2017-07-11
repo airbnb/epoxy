@@ -2,23 +2,20 @@ package com.airbnb.epoxy
 
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.TypeName
+import java.util.HashSet
+
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 
-private const val GENERATED_HELPER_CLASS_SUFFIX = "_EpoxyHelper"
+private val GENERATED_HELPER_CLASS_SUFFIX = "_EpoxyHelper"
 
 class ControllerClassInfo(
         private val elementUtils: Elements,
         val controllerClassElement: TypeElement) {
 
-    val models: MutableSet<ControllerModelField> = mutableSetOf()
-    val generatedClassName: ClassName
-    val controllerClassType: TypeName
-
-    init {
-        generatedClassName = getGeneratedClassName(controllerClassElement)
-        controllerClassType = TypeName.get(controllerClassElement.asType())
-    }
+    val models: MutableSet<ControllerModelField> = HashSet()
+    val generatedClassName: ClassName = getGeneratedClassName(controllerClassElement)
+    val controllerClassType: TypeName = TypeName.get(controllerClassElement.asType())
 
     fun addModel(controllerModelField: ControllerModelField) {
         models.add(controllerModelField)
