@@ -22,6 +22,7 @@ import static com.airbnb.epoxy.Utils.isEpoxyModel;
 
 class ModelViewInfo extends GeneratedModelInfo {
   final List<String> resetMethodNames = new ArrayList<>();
+  final List<String> afterPropsSetMethodNames = new ArrayList<>();
   final TypeElement viewElement;
   final Types typeUtils;
   final Elements elements;
@@ -144,6 +145,10 @@ class ModelViewInfo extends GeneratedModelInfo {
     resetMethodNames.add(resetMethod.getSimpleName().toString());
   }
 
+  void addAfterPropsSetMethod(ExecutableElement afterPropsSetMethod) {
+    afterPropsSetMethodNames.add(afterPropsSetMethod.getSimpleName().toString());
+  }
+
   LayoutResource getLayoutResource(LayoutResourceProcessor layoutResourceProcessor) {
     ModelView annotation = viewElement.getAnnotation(ModelView.class);
     int layoutValue = annotation.defaultLayout();
@@ -164,6 +169,10 @@ class ModelViewInfo extends GeneratedModelInfo {
 
   List<String> getResetMethodNames() {
     return resetMethodNames;
+  }
+
+  List<String> getAfterPropsSetMethodNames() {
+    return afterPropsSetMethodNames;
   }
 
   List<ViewAttributeInfo> getViewAttributes() {

@@ -69,6 +69,7 @@ class ModelViewProcessor {
 
     processSetterAnnotations(roundEnv);
     processResetAnnotations(roundEnv);
+    processAfterBindAnnotations(roundEnv);
 
     updateViewsForInheritedViewAnnotations();
 
@@ -242,12 +243,33 @@ class ModelViewProcessor {
       ModelViewInfo info = getModelInfoForMethodElement(recycleMethod);
       if (info == null) {
         errorLogger.logError("%s annotation can only be used in classes annotated with %s",
-            ModelProp.class, ModelView.class);
+            OnViewRecycled.class, ModelView.class);
         continue;
       }
 
       info.addOnRecycleMethod((ExecutableElement) recycleMethod);
     }
+  }
+
+  private void processAfterBindAnnotations(RoundEnvironment roundEnv) {
+    for (Element afterPropsMethod : roundEnv.getElementsAnnotatedWith(AfterPropsSet.class)) {
+      if (!validateAfterPropsMethod(afterPropsMethod)) {
+        continue;
+      }
+
+      ModelViewInfo info = getModelInfoForMethodElement(afterPropsMethod);
+      if (info == null) {
+        errorLogger.logError("%s annotation can only be used in classes annotated with %s",
+            AfterPropsSet.class, ModelView.class);
+        continue;
+      }
+
+      info.addAfterPropsSetMethod((ExecutableElement) afterPropsMethod);
+    }
+  }
+
+  private boolean validateAfterPropsMethod(Element resetMethod) {
+    return validateExecutableElement(resetMethod, AfterPropsSet.class, 0);
   }
 
   /** Include props and reset methods from super class views. */
@@ -262,6 +284,7 @@ class ModelViewProcessor {
         }
 
         view.resetMethodNames.addAll(otherView.resetMethodNames);
+        view.afterPropsSetMethodNames.addAll(otherView.afterPropsSetMethodNames);
 
         boolean samePackage =
             belongToTheSamePackage(view.viewElement, otherView.viewElement, elements);
@@ -463,6 +486,13 @@ class ModelViewProcessor {
           }
 
           @Override
+          public void addToHandlePostBindMethod(Builder postBindBuilder,
+              ParameterSpec boundObjectParam) {
+
+            addAfterPropsAddedMethodsToBuilder(postBindBuilder, modelInfo, boundObjectParam);
+          }
+
+          @Override
           void addToUnbindMethod(MethodSpec.Builder unbindBuilder, String unbindParamName) {
             for (ViewAttributeInfo viewAttribute : modelInfo.getViewAttributes()) {
               if (viewAttribute.resetWithNull) {
@@ -555,6 +585,13 @@ class ModelViewProcessor {
       String unbindParamName) {
     for (String methodName : modelViewInfo.getResetMethodNames()) {
       builder.addStatement(unbindParamName + "." + methodName + "()");
+    }
+  }
+
+  private void addAfterPropsAddedMethodsToBuilder(Builder methodBuilder, ModelViewInfo modelInfo,
+      ParameterSpec boundObjectParam) {
+    for (String methodName : modelInfo.getAfterPropsSetMethodNames()) {
+      methodBuilder.addStatement(boundObjectParam.name + "." + methodName + "()");
     }
   }
 

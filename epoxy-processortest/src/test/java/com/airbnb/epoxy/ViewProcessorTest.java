@@ -857,4 +857,23 @@ public class ViewProcessorTest {
         .and()
         .generatesSources(generatedModel);
   }
+
+  @Test
+  public void afterBindProps() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("TestAfterBindPropsView.java");
+
+    JavaFileObject superModel = JavaFileObjects
+        .forResource("TestAfterBindPropsSuperView.java");
+
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("TestAfterBindPropsViewModel_.java");
+
+    assert_().about(javaSources())
+        .that(asList(model, superModel))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
 }
