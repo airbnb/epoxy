@@ -1,14 +1,13 @@
 package com.airbnb.epoxy
 
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.VariableElement
-
 import com.airbnb.epoxy.Utils.removeSetPrefix
+import javax.lang.model.element.ExecutableElement
 
 internal class DataBindingAttributeInfo(
         modelInfo: DataBindingModelInfo,
         setterMethod: ExecutableElement,
-        hashCodeValidator: HashCodeValidator) : AttributeInfo() {
+        hashCodeValidator: HashCodeValidator
+) : AttributeInfo() {
 
     init {
         fieldName = removeSetPrefix(setterMethod.simpleName.toString())
