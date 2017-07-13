@@ -162,27 +162,27 @@ class GeneratedModelWriter {
 
     List<MethodSpec> result = new ArrayList<>();
     LayoutResource layout = getDefaultLayoutResource(info);
-    if (layout == null || !layout.qualifed) {
+    if (layout == null || !layout.getQualified()) {
       return Collections.emptyList();
     }
 
-    int defaultLayoutNameLength = layout.resourceName.length();
+    int defaultLayoutNameLength = layout.getResourceName().length();
 
     for (LayoutResource otherLayout : layoutResourceProcessor.getAlternateLayouts(layout)) {
-      if (!otherLayout.qualifed) {
+      if (!otherLayout.getQualified()) {
         continue;
       }
 
       String layoutDescription = "";
       for (String namePart
-          : otherLayout.resourceName.substring(defaultLayoutNameLength).split("_")) {
+          : otherLayout.getResourceName().substring(defaultLayoutNameLength).split("_")) {
         layoutDescription += Utils.capitalizeFirstLetter(namePart);
       }
 
       result.add(MethodSpec.methodBuilder("with" + layoutDescription + "Layout")
           .returns(info.getParameterizedGeneratedName())
           .addModifiers(PUBLIC)
-          .addStatement("layout($L)", otherLayout.code)
+          .addStatement("layout($L)", otherLayout.getCode())
           .addStatement("return this")
           .build());
     }
@@ -589,7 +589,7 @@ class GeneratedModelWriter {
 
     methods.add(buildDefaultLayoutMethodBase()
         .toBuilder()
-        .addStatement("return $L", layout.code)
+        .addStatement("return $L", layout.getCode())
         .build());
   }
 

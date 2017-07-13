@@ -29,7 +29,7 @@ class ConfigManager {
   static final String PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS = "implicitlyAddAutoModels";
 
   private static final PackageConfigSettings
-      DEFAULT_PACKAGE_CONFIG_SETTINGS = PackageConfigSettings.forDefaults();
+      DEFAULT_PACKAGE_CONFIG_SETTINGS = PackageConfigSettings.Companion.forDefaults();
   private final Map<String, PackageConfigSettings> configurationMap = new HashMap<>();
   private final Map<String, PackageModelViewSettings> modelViewNamingMap = new HashMap<>();
   private final Elements elementUtils;
@@ -90,7 +90,7 @@ class ConfigManager {
       }
 
       PackageEpoxyConfig annotation = element.getAnnotation(PackageEpoxyConfig.class);
-      configurationMap.put(packageName, PackageConfigSettings.create(annotation));
+      configurationMap.put(packageName, PackageConfigSettings.Companion.create(annotation));
     }
 
     for (Element element : roundEnv.getElementsAnnotatedWith(PackageModelViewConfig.class)) {
@@ -140,17 +140,18 @@ class ConfigManager {
 
     // Legacy models can choose whether they want to require it
     return globalRequireHashCode
-        || getConfigurationForPackage(attributeInfo.getPackageName()).requireHashCode;
+        || getConfigurationForPackage(attributeInfo.getPackageName()).getRequireHashCode();
   }
 
   boolean requiresAbstractModels(TypeElement classElement) {
     return globalRequireAbstractModels
-        || getConfigurationForElement(classElement).requireAbstractModels;
+        || getConfigurationForElement(classElement).getRequireAbstractModels();
   }
 
   boolean implicitlyAddAutoModels(ControllerClassInfo controller) {
     return globalImplicitlyAddAutoModels
-        || getConfigurationForElement(controller.controllerClassElement).implicitlyAddAutoModels;
+        || getConfigurationForElement(controller.getControllerClassElement())
+        .getImplicitlyAddAutoModels();
   }
 
   boolean shouldValidateModelUsage() {
@@ -169,7 +170,7 @@ class ConfigManager {
       return null;
     }
 
-    return modelViewConfig.defaultBaseModel;
+    return modelViewConfig.getDefaultBaseModel();
   }
 
   boolean includeAlternateLayoutsForViews(TypeElement viewElement) {
@@ -178,7 +179,7 @@ class ConfigManager {
       return false;
     }
 
-    return modelViewConfig.includeAlternateLayouts;
+    return modelViewConfig.getIncludeAlternateLayouts();
   }
 
   private PackageConfigSettings getConfigurationForElement(Element element) {

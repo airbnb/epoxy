@@ -79,7 +79,7 @@ class DataBindingProcessor {
         errorLogger.logError(
             "Unable to find databinding class for layout %s, so an Epoxy model could not be "
                 + "generated.",
-            modelInfo.getLayoutResource().resourceName);
+            modelInfo.getLayoutResource().getResourceName());
         continue;
       }
 
