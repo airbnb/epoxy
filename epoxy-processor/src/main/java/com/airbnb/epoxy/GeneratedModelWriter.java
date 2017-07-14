@@ -100,6 +100,10 @@ class GeneratedModelWriter {
         ParameterSpec previousModelParam) {
       return false;
     }
+
+    public void addToHandlePostBindMethod(Builder postBindBuilder, ParameterSpec boundObjectParam) {
+
+    }
   }
 
   GeneratedModelWriter(Filer filer, Types typeUtils, ErrorLogger errorLogger,
@@ -428,6 +432,8 @@ class GeneratedModelWriter {
 
     addHashCodeValidationIfNecessary(postBindBuilder,
         "The model was changed during the bind call.");
+
+    builderHooks.addToHandlePostBindMethod(postBindBuilder, boundObjectParam);
 
     methods.add(postBindBuilder
         .build());

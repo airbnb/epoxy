@@ -1,19 +1,18 @@
 package com.airbnb.epoxy
 
+import com.airbnb.epoxy.ClassNames.EPOXY_LITHO_MODEL
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.ParameterizedTypeName
-
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
-import com.airbnb.epoxy.ClassNames.EPOXY_LITHO_MODEL
-
 internal class LithoModelInfo(
         typeUtils: Types,
         elementUtils: Elements,
-        layoutSpecClassElement: TypeElement) : GeneratedModelInfo() {
+        layoutSpecClassElement: TypeElement
+) : GeneratedModelInfo() {
 
     val lithoComponentName: ClassName
 
@@ -39,7 +38,7 @@ internal class LithoModelInfo(
      * package, and with the "Spec" term removed from the name.
      */
     fun getLithoComponentName(elementUtils: Elements,
-                                      layoutSpecClassElement: TypeElement): ClassName {
+                              layoutSpecClassElement: TypeElement): ClassName {
         val packageName = elementUtils.getPackageOf(layoutSpecClassElement).qualifiedName.toString()
 
         // Litho doesn't appear to allow specs as nested classes, so we don't check for nested
