@@ -77,7 +77,7 @@ There are two main components of Epoxy:
 There are a few ways to create models, depending on whether you prefer to use custom views, databinding, or other approaches.
 
 #### From Custom Views
-You can easily generate an EpoxyModel from your custom views by using the `@ViewModel` annotation on the class. Then, add a `ModelProp` annotation on each setter method to mark it as a property for the model.
+You can easily generate an EpoxyModel from your custom views by using the `@ModelView` annotation on the class. Then, add a `ModelProp` annotation on each setter method to mark it as a property for the model.
 
 ```java
 @ModelView(defaultLayout = R.layout.view_holder_header)
