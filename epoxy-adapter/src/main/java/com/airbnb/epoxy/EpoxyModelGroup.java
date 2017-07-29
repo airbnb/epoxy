@@ -237,7 +237,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
     private ViewGroup rootView;
 
     /**
-     * Get the root view group that holds all of the model views. You can override {@link
+     * Get the root Oview group that holds all of the model views. You can override {@link
      * EpoxyModelGroup#bind(Holder)} and use this method to make custom changes to the root view.
      */
     public ViewGroup getRootView() {

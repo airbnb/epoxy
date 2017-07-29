@@ -465,6 +465,30 @@ public abstract class EpoxyController {
   }
 
   /**
+   * An optimized way to move a model from one position to another without rebuilding all models.
+   * This is intended to be used with {@link android.support.v7.widget.helper.ItemTouchHelper} to
+   * allow for efficient item dragging and rearranging. It cannot be
+   * <p>
+   * If you call this you MUST also update the data backing your models as necessary.
+   * <p>
+   * This will immediately change the model's position and notify the change to the RecyclerView.
+   * However, a delayed request to rebuild models will be scheduled for the future to guarantee that
+   * models are in sync with data.
+   *
+   * @param fromPosition Previous position of the item.
+   * @param toPosition   New position of the item.
+   */
+  public void moveModel(int fromPosition, int toPosition) {
+    if (isBuildingModels()) {
+      throw new IllegalEpoxyUsage("Cannot call `moveModel` from inside `buildModels`");
+    }
+
+    adapter.moveModel(fromPosition, toPosition);
+
+    requestDelayedModelBuild(500);
+  }
+
+  /**
    * Get the underlying adapter built by this controller. Use this to get the adapter to set on a
    * RecyclerView, or to get information about models currently in use.
    */

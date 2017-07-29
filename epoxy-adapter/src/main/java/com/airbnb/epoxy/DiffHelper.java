@@ -22,28 +22,12 @@ class DiffHelper {
   private Map<Long, ModelState> currentStateMap = new HashMap<>();
   private final BaseEpoxyAdapter adapter;
   private final boolean immutableModels;
-  private final DifferModelListObserver modelListObserver = new DifferModelListObserver();
-  private final boolean usingModelListObserver;
-  /**
-   * Set to true if an end user notifies adapter changes. We track this because our {@link
-   * #modelListObserver} already tracks structural changes and we shouldn't double notify those
-   * changes if the user already manually notified them. This generally shouldn't happen for normal
-   * usage of the adapter, somebody would have to do something like notify an item insertion and
-   * then notify models changed. We expect them to always just notify models changed. We could
-   * automate this by updating the observer to remove operations from its list when it hears they
-   * were notified, but that does not seem worth the effort for this small case.
-   */
-  private boolean notifiedOfStructuralChanges;
+
 
   DiffHelper(BaseEpoxyAdapter adapter, boolean immutableModels) {
     this.adapter = adapter;
     this.immutableModels = immutableModels;
     adapter.registerAdapterDataObserver(observer);
-
-    usingModelListObserver = adapter instanceof EpoxyAdapter;
-    if (usingModelListObserver) {
-      ((ModelList) adapter.getCurrentModels()).setObserver(modelListObserver);
-    }
   }
 
   private final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
@@ -66,8 +50,6 @@ class DiffHelper {
         // no-op
         return;
       }
-
-      notifiedOfStructuralChanges = true;
 
       if (itemCount == 1 || positionStart == currentStateList.size()) {
         for (int i = positionStart; i < positionStart + itemCount; i++) {
@@ -97,8 +79,6 @@ class DiffHelper {
         return;
       }
 
-      notifiedOfStructuralChanges = true;
-
       List<ModelState> modelsToRemove =
           currentStateList.subList(positionStart, positionStart + itemCount);
       for (ModelState model : modelsToRemove) {
@@ -125,8 +105,6 @@ class DiffHelper {
             + "supported. Number of items moved: " + itemCount);
       }
 
-      notifiedOfStructuralChanges = true;
-
       ModelState model = currentStateList.remove(fromPosition);
       model.position = toPosition;
       currentStateList.add(toPosition, model);
@@ -152,56 +130,13 @@ class DiffHelper {
   void notifyModelChanges() {
     UpdateOpHelper updateOpHelper = new UpdateOpHelper();
 
-    if (usingModelListObserver && modelListObserver.hasNoChanges()) {
-      updateHashes(updateOpHelper);
-    } else if (!notifiedOfStructuralChanges
-        && (modelListObserver.hasOnlyInsertions() || modelListObserver.hasOnlyRemovals())) {
-      // If the list only had insertions OR removals then nothing could have moved, and the observer
-      // has an accurate record of the removals/insertions. We can use it to update the state list,
-      // and then just need to check for item updates. If the user already notified some of these
-      // changes then we don't know what is left to notify and don't want to duplicate the notify
-      // calls so we do a full diff instead.
-
-      // We don't suspend our own observer for this because they will update the models list
-      // for us to reflect the insertions or removals
-      notifyChanges(modelListObserver);
-      updateHashes(updateOpHelper);
-    } else {
-      // We need to run a full diff to figure out what changed
-      buildDiff(updateOpHelper);
-    }
+    buildDiff(updateOpHelper);
 
     // Send out the proper notify calls for the diff. We remove our
     // observer first so that we don't react to our own notify calls
     adapter.unregisterAdapterDataObserver(observer);
     notifyChanges(updateOpHelper);
     adapter.registerAdapterDataObserver(observer);
-
-    modelListObserver.reset();
-    notifiedOfStructuralChanges = false;
-  }
-
-  /**
-   * This updates our state list with the current model hashes and collects any update
-   * notifications. Used only when the state list is already up to date with the adapter models.
-   */
-  private void updateHashes(UpdateOpHelper updateOpHelper) {
-    int modelCount = adapter.getCurrentModels().size();
-
-    if (modelCount != currentStateList.size()) {
-      throw new IllegalStateException("State list does not match current models");
-    }
-
-    for (int i = 0; i < modelCount; i++) {
-      EpoxyModel<?> model = adapter.getCurrentModels().get(i);
-      ModelState state = currentStateList.get(i);
-      int newHash = model.hashCode();
-
-      if (state.hashCode != newHash) {
-        updateOpHelper.update(i, state.model);
-        state.hashCode = newHash;
-      }
-    }
   }
 
   private void notifyChanges(UpdateOpHelper opHelper) {
