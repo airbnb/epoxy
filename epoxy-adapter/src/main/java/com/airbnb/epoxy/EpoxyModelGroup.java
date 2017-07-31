@@ -234,6 +234,15 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
   protected class Holder extends EpoxyHolder {
     private List<View> views;
     private List<EpoxyHolder> holders;
+    private ViewGroup rootView;
+
+    /**
+     * Get the root view group that holds all of the model views. You can override {@link
+     * EpoxyModelGroup#bind(Holder)} and use this method to make custom changes to the root view.
+     */
+    public ViewGroup getRootView() {
+      return rootView;
+    }
 
     @Override
     protected void bindView(View itemView) {
@@ -241,20 +250,20 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
         throw new IllegalStateException(
             "The layout provided to EpoxyModelGroup must be a ViewGroup");
       }
-      ViewGroup groupView = (ViewGroup) itemView;
+      rootView = (ViewGroup) itemView;
 
       int modelCount = models.size();
       views = new ArrayList<>(modelCount);
       holders = new ArrayList<>(modelCount);
 
-      boolean useViewStubs = groupView.getChildCount() != 0;
+      boolean useViewStubs = rootView.getChildCount() != 0;
       for (int i = 0; i < models.size(); i++) {
         EpoxyModel model = models.get(i);
         View view;
         if (useViewStubs) {
-          view = replaceNextViewStub(groupView, model, useViewStubLayoutParams(model, i));
+          view = replaceNextViewStub(rootView, model, useViewStubLayoutParams(model, i));
         } else {
-          view = createAndAddView(groupView, model);
+          view = createAndAddView(rootView, model);
         }
 
         if (model instanceof EpoxyModelWithHolder) {
