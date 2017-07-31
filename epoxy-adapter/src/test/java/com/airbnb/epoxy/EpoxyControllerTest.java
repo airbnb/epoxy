@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -260,5 +261,106 @@ public class EpoxyControllerTest {
     controller.requestModelBuild();
 
     assertEquals(3, controller.getAdapter().getItemCount());
+  }
+
+  @Test
+  public void moveModel() {
+    AdapterDataObserver observer = mock(AdapterDataObserver.class);
+    final List<TestModel> testModels = new ArrayList<>();
+    testModels.add(new TestModel(1));
+    testModels.add(new TestModel(2));
+    testModels.add(new TestModel(3));
+
+    EpoxyController controller = new EpoxyController() {
+
+      @Override
+      protected void buildModels() {
+        add(testModels);
+      }
+    };
+
+    EpoxyControllerAdapter adapter = controller.getAdapter();
+    adapter.registerAdapterDataObserver(observer);
+    controller.requestModelBuild();
+
+    verify(observer).onItemRangeInserted(0, 3);
+
+    testModels.add(0, testModels.remove(1));
+
+    controller.moveModel(1, 0);
+    verify(observer).onItemRangeMoved(1, 0, 1);
+
+    assertEquals(testModels, adapter.getCurrentModels());
+
+    controller.requestModelBuild();
+    assertEquals(testModels, adapter.getCurrentModels());
+    verifyNoMoreInteractions(observer);
+  }
+
+  @Test
+  public void moveModelOtherWay() {
+    AdapterDataObserver observer = mock(AdapterDataObserver.class);
+    final List<TestModel> testModels = new ArrayList<>();
+    testModels.add(new TestModel(1));
+    testModels.add(new TestModel(2));
+    testModels.add(new TestModel(3));
+
+    EpoxyController controller = new EpoxyController() {
+
+      @Override
+      protected void buildModels() {
+        add(testModels);
+      }
+    };
+
+    EpoxyControllerAdapter adapter = controller.getAdapter();
+    adapter.registerAdapterDataObserver(observer);
+    controller.requestModelBuild();
+
+    verify(observer).onItemRangeInserted(0, 3);
+
+    testModels.add(2, testModels.remove(1));
+
+    controller.moveModel(1, 2);
+    verify(observer).onItemRangeMoved(1, 2, 1);
+
+    assertEquals(testModels, adapter.getCurrentModels());
+
+    controller.requestModelBuild();
+    assertEquals(testModels, adapter.getCurrentModels());
+    verifyNoMoreInteractions(observer);
+  }
+
+  @Test
+  public void multipleMoves() {
+    AdapterDataObserver observer = mock(AdapterDataObserver.class);
+    final List<TestModel> testModels = new ArrayList<>();
+    testModels.add(new TestModel(1));
+    testModels.add(new TestModel(2));
+    testModels.add(new TestModel(3));
+
+    EpoxyController controller = new EpoxyController() {
+
+      @Override
+      protected void buildModels() {
+        add(testModels);
+      }
+    };
+
+    EpoxyControllerAdapter adapter = controller.getAdapter();
+    adapter.registerAdapterDataObserver(observer);
+    controller.requestModelBuild();
+
+    testModels.add(0, testModels.remove(1));
+    controller.moveModel(1, 0);
+    verify(observer).onItemRangeMoved(1, 0, 1);
+
+    testModels.add(2, testModels.remove(1));
+    controller.moveModel(1, 2);
+    verify(observer).onItemRangeMoved(1, 2, 1);
+
+    assertEquals(testModels, adapter.getCurrentModels());
+    controller.requestModelBuild();
+    assertEquals(testModels, adapter.getCurrentModels());
   }
 }
