@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
@@ -7,6 +8,7 @@ import com.squareup.javapoet.TypeVariableName;
 
 import java.util.List;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -67,6 +69,8 @@ import static com.airbnb.epoxy.Utils.getEpoxyObjectType;
     // though we will always generate the subclass
     shouldGenerateModel = !isAbstract || hasEpoxyClassAnnotation;
     includeOtherLayoutOptions = hasEpoxyClassAnnotation && annotation.useLayoutOverloads();
+
+    buildAnnotationLists(superClassElement.getAnnotationMirrors());
   }
 
   protected ClassName buildGeneratedModelName(TypeElement classElement) {
@@ -95,4 +99,23 @@ import static com.airbnb.epoxy.Utils.getEpoxyObjectType;
       }
     }
   }
+
+   private void buildAnnotationLists(List<? extends AnnotationMirror> annotationMirrors) {
+     for (AnnotationMirror annotationMirror : annotationMirrors) {
+       if (!annotationMirror.getElementValues().isEmpty()) {
+         // Not supporting annotations with values for now
+         continue;
+       }
+
+       ClassName annotationClass =
+           ClassName.bestGuess(annotationMirror.getAnnotationType().toString());
+       if (annotationClass.equals(ClassName.get(EpoxyModelClass.class))) {
+         // Don't include our own annotation
+         continue;
+       }
+
+       AnnotationSpec annotationSpec = AnnotationSpec.builder(annotationClass).build();
+       annotations.add(annotationSpec);
+     }
+   }
 }

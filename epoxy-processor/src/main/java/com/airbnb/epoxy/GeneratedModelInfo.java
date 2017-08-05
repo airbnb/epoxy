@@ -51,6 +51,7 @@ abstract class GeneratedModelInfo {
   protected final List<ConstructorInfo> constructors = new ArrayList<>();
   protected final Set<MethodInfo> methodsReturningClassType = new LinkedHashSet<>();
   protected final List<AttributeGroup> attributeGroups = new ArrayList<>();
+  protected final List<AnnotationSpec> annotations = new ArrayList<>();
 
   /**
    * Get information about methods returning class type of the original class so we can duplicate
@@ -177,6 +178,10 @@ abstract class GeneratedModelInfo {
    */
   TypeName getModelType() {
     return boundObjectTypeName;
+  }
+
+  List<AnnotationSpec> getAnnotations() {
+    return annotations;
   }
 
   static class ConstructorInfo {
