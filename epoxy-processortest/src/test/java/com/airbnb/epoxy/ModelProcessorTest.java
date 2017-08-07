@@ -709,4 +709,19 @@ public class ModelProcessorTest {
         .and()
         .generatesSources(generatedModel);
   }
+
+  @Test
+  public void modelWithAnnotation() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("ModelWithAnnotation.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithAnnotation_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
 }

@@ -135,6 +135,7 @@ class GeneratedModelWriter {
         .superclass(info.getSuperClassName())
         .addSuperinterface(getGeneratedModelInterface(info))
         .addTypeVariables(info.getTypeVariables())
+        .addAnnotations(info.getAnnotations())
         .addFields(generateFields(info))
         .addMethods(generateConstructors(info));
 
