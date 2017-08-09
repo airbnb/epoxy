@@ -13,9 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CarouselModelGroup extends EpoxyModelGroup {
+  public final CarouselData data;
+
   public CarouselModelGroup(CarouselData carousel, AdapterCallbacks callbacks,
       RecycledViewPool recycledViewPool) {
     super(R.layout.model_carousel_group, buildModels(carousel, callbacks, recycledViewPool));
+    this.data = carousel;
     id(carousel.getId());
   }
 
