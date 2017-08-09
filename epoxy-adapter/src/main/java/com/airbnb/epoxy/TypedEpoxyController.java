@@ -18,18 +18,18 @@ import android.support.annotation.Nullable;
  */
 public abstract class TypedEpoxyController<T> extends EpoxyController {
   private T currentData;
-  private boolean insideSetData;
+  private boolean allowModelBuildRequests;
 
   public final void setData(T data) {
     currentData = data;
-    insideSetData = true;
+    allowModelBuildRequests = true;
     requestModelBuild();
-    insideSetData = false;
+    allowModelBuildRequests = false;
   }
 
   @Override
   public final void requestModelBuild() {
-    if (!insideSetData) {
+    if (!allowModelBuildRequests) {
       throw new IllegalStateException(
           "You cannot call `requestModelBuild` directly. Call `setData` instead to trigger a "
               + "model refresh with new data.");
@@ -38,8 +38,15 @@ public abstract class TypedEpoxyController<T> extends EpoxyController {
   }
 
   @Override
+  public void moveModel(int fromPosition, int toPosition) {
+    allowModelBuildRequests = true;
+    super.moveModel(fromPosition, toPosition);
+    allowModelBuildRequests = false;
+  }
+
+  @Override
   public void requestDelayedModelBuild(int delayMs) {
-    if (!insideSetData) {
+    if (!allowModelBuildRequests) {
       throw new IllegalStateException(
           "You cannot call `requestModelBuild` directly. Call `setData` instead to trigger a "
               + "model refresh with new data.");

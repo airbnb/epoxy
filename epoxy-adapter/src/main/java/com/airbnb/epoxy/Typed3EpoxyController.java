@@ -19,7 +19,7 @@ public abstract class Typed3EpoxyController<T, U, V> extends EpoxyController {
   private T data1;
   private U data2;
   private V data3;
-  private boolean insideSetData;
+  private boolean allowModelBuildRequests;
 
   /**
    * Call this with the latest data when you want models to be rebuilt. The data will be passed on
@@ -29,14 +29,14 @@ public abstract class Typed3EpoxyController<T, U, V> extends EpoxyController {
     this.data1 = data1;
     this.data2 = data2;
     this.data3 = data3;
-    insideSetData = true;
+    allowModelBuildRequests = true;
     requestModelBuild();
-    insideSetData = false;
+    allowModelBuildRequests = false;
   }
 
   @Override
   public final void requestModelBuild() {
-    if (!insideSetData) {
+    if (!allowModelBuildRequests) {
       throw new IllegalStateException(
           "You cannot call `requestModelBuild` directly. Call `setData` instead to trigger a "
               + "model refresh with new data.");
@@ -45,8 +45,15 @@ public abstract class Typed3EpoxyController<T, U, V> extends EpoxyController {
   }
 
   @Override
+  public void moveModel(int fromPosition, int toPosition) {
+    allowModelBuildRequests = true;
+    super.moveModel(fromPosition, toPosition);
+    allowModelBuildRequests = false;
+  }
+
+  @Override
   public void requestDelayedModelBuild(int delayMs) {
-    if (!insideSetData) {
+    if (!allowModelBuildRequests) {
       throw new IllegalStateException(
           "You cannot call `requestModelBuild` directly. Call `setData` instead to trigger a "
               + "model refresh with new data.");

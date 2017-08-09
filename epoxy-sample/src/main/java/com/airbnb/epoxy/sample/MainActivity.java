@@ -1,20 +1,31 @@
 package com.airbnb.epoxy.sample;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.ColorInt;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.RecycledViewPool;
+import android.view.View;
 
+import com.airbnb.epoxy.EpoxyTouchHelper;
+import com.airbnb.epoxy.EpoxyTouchHelper.DragCallback;
+import com.airbnb.epoxy.EpoxyTouchHelper.SwipeCallbacks;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.sample.SampleController.AdapterCallbacks;
+import com.airbnb.epoxy.sample.models.CarouselModelGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
+import static android.animation.ValueAnimator.ofObject;
 
 /**
  * Example activity usage for {@link com.airbnb.epoxy.EpoxyController}.
@@ -58,7 +69,101 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
       carousels = savedInstanceState.getParcelableArrayList(CAROUSEL_DATA_KEY);
     }
 
+    initTouch(recyclerView);
+
     updateController();
+  }
+
+  private void initTouch(final RecyclerView recyclerView) {
+    EpoxyTouchHelper.initSwiping(recyclerView)
+        .leftAndRight()
+        .withTarget(CarouselModelGroup.class)
+        .andCallbacks(new SwipeCallbacks<CarouselModelGroup>() {
+
+          @Override
+          public void onSwipeProgressChanged(CarouselModelGroup model, View itemView,
+              float swipeProgress) {
+
+            int alpha = (int) (Math.abs(swipeProgress) * 255);
+            if (swipeProgress > 0) {
+              itemView.setBackgroundColor(Color.argb(alpha, 0, 255, 0));
+            } else {
+              itemView.setBackgroundColor(Color.argb(alpha, 255, 0, 0));
+            }
+          }
+
+          @Override
+          public void onSwipeCompleted(CarouselModelGroup model, View itemView, int position,
+              int direction) {
+            carousels.remove(model.data);
+            updateController();
+          }
+
+          @Override
+          public void clearView(CarouselModelGroup model, View itemView) {
+            itemView.setBackgroundColor(Color.WHITE);
+          }
+        });
+
+    EpoxyTouchHelper.initDragging(controller)
+        .withRecyclerView(recyclerView)
+        .forVerticalList()
+        .withTarget(CarouselModelGroup.class)
+        .andCallbacks(new DragCallback<CarouselModelGroup>() {
+          final @ColorInt int selectedBackgroundColor = Color.argb(200, 200, 200, 200);
+          ValueAnimator backgroundAnimator = null;
+
+          @Override
+          public void onModelMoved(int fromPosition, int toPosition,
+              CarouselModelGroup modelBeingMoved, View itemView) {
+
+            int carouselIndex = carousels.indexOf(modelBeingMoved.data);
+            carousels
+                .add(carouselIndex + (toPosition - fromPosition), carousels.remove(carouselIndex));
+          }
+
+          @Override
+          public void onDragStarted(CarouselModelGroup model, View itemView, int adapterPosition) {
+            backgroundAnimator = ValueAnimator
+                .ofObject(new ArgbEvaluator(), Color.WHITE, selectedBackgroundColor);
+            backgroundAnimator.addUpdateListener(
+                animator -> itemView.setBackgroundColor((int) animator.getAnimatedValue())
+            );
+
+            backgroundAnimator.start();
+
+            itemView
+                .animate()
+                .scaleX(1.05f)
+                .scaleY(1.05f);
+          }
+
+          @Override
+          public void onDragReleased(CarouselModelGroup model, View itemView) {
+            if (backgroundAnimator != null) {
+              backgroundAnimator.cancel();
+            }
+
+            backgroundAnimator =
+                ofObject(new ArgbEvaluator(), ((ColorDrawable) itemView.getBackground()).getColor(),
+                    Color.WHITE);
+            backgroundAnimator.addUpdateListener(
+                animator -> itemView.setBackgroundColor((int) animator.getAnimatedValue())
+            );
+
+            backgroundAnimator.start();
+
+            itemView
+                .animate()
+                .scaleX(1f)
+                .scaleY(1f);
+          }
+
+          @Override
+          public void clearView(CarouselModelGroup model, View itemView) {
+            onDragReleased(model, itemView);
+          }
+        });
   }
 
   @Override
