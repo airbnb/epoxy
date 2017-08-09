@@ -1,7 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
 
 interface BaseEpoxyTouchCallback<T extends EpoxyModel> {
@@ -25,10 +23,8 @@ interface BaseEpoxyTouchCallback<T extends EpoxyModel> {
    * <p>
    * This is the last callback in the lifecycle of a touch event.
    *
-   * @param model           The model whose view is being cleared.
-   * @param itemView        The view being cleared.
-   * @see android.support.v7.widget.helper.ItemTouchHelper.Callback#clearView(RecyclerView,
-   * ViewHolder)
+   * @param model    The model whose view is being cleared.
+   * @param itemView The view being cleared.
    */
   void clearView(T model, View itemView);
 }

@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
         .forVerticalList()
         .withTarget(CarouselModelGroup.class)
         .andCallbacks(new DragCallback<CarouselModelGroup>() {
-          final @ColorInt int selectedBackgroundColor = Color.argb(200, 200, 200, 200);
+          @ColorInt final int selectedBackgroundColor = Color.argb(200, 200, 200, 200);
           ValueAnimator backgroundAnimator = null;
 
           @Override
