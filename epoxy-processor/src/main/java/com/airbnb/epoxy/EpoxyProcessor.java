@@ -157,6 +157,27 @@ public class EpoxyProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    try {
+      processRound(roundEnv);
+    } catch (Exception e) {
+      errorLogger.logError(e);
+    }
+
+    if (roundEnv.processingOver()) {
+      // We wait until the very end to log errors so that all the generated classes are still
+      // created.
+      // Otherwise the compiler error output is clogged with lots of errors from the generated
+      // classes  not existing, which makes it hard to see the actual errors.
+
+      validateAttributesImplementHashCode(generatedModels);
+      errorLogger.writeExceptions(messager);
+    }
+
+    // Let any other annotation processors use our annotations if they want to
+    return false;
+  }
+
+  private void processRound(RoundEnvironment roundEnv) {
     errorLogger.logErrors(configManager.processConfigurations(roundEnv));
 
     generatedModels.addAll(modelProcessor.processModels(roundEnv));
@@ -183,19 +204,6 @@ public class EpoxyProcessor extends AbstractProcessor {
       // finish writing the controllers before processing ends
       controllerProcessor.resolveGeneratedModelsAndWriteJava(generatedModels);
     }
-
-    if (roundEnv.processingOver()) {
-      // We wait until the very end to log errors so that all the generated classes are still
-      // created.
-      // Otherwise the compiler error output is clogged with lots of errors from the generated
-      // classes  not existing, which makes it hard to see the actual errors.
-
-      validateAttributesImplementHashCode(generatedModels);
-      errorLogger.writeExceptions(messager);
-    }
-
-    // Let any other annotation processors use our annotations if they want to
-    return false;
   }
 
   private void validateAttributesImplementHashCode(

@@ -10,6 +10,7 @@ import javax.lang.model.element.*
 import javax.lang.model.element.Modifier.*
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
+import kotlin.reflect.KClass
 
 // TODO: (eli_hart 6/6/17) consider binding base model after view so the model can override view
 // behavior (like changing width dynamically or styles)
@@ -102,20 +103,21 @@ internal class ModelViewProcessor(
     }
 
     private fun processSetterAnnotations(roundEnv: RoundEnvironment) {
-        for (propMethod in roundEnv.getElementsAnnotatedWith(ModelProp::class.java)) {
-            if (!validatePropElement(propMethod)) {
-                continue
-            }
 
-            val info = getModelInfoForMethodElement(propMethod)
-            if (info == null) {
-                errorLogger.logError("%s annotation can only be used in classes annotated with %s (%s#%s)",
-                        ModelProp::class.java.simpleName, ModelView::class.java.simpleName,
-                        propMethod.enclosingElement.simpleName, propMethod.simpleName)
-                continue
-            }
+        for (propAnnotation in listOf(ModelProp::class, TextProp::class, CallbackProp::class)) {
+            for (propMethod in roundEnv.getElementsAnnotatedWith(propAnnotation.java)) {
+                if (!validatePropElement(propMethod, propAnnotation)) {
+                    continue
+                }
 
-            info.addProp(propMethod as ExecutableElement)
+                val info = getModelInfoForMethodElement(propMethod)
+                if (info == null) {
+                    errorLogger.logError("${propAnnotation.simpleName} annotation can only be used in classes annotated with ${ModelView::class.simpleName} (${propMethod.enclosingElement.simpleName}#${propMethod.simpleName})")
+                    continue
+                }
+
+                info.addProp(propMethod as ExecutableElement)
+            }
         }
     }
 
@@ -170,8 +172,8 @@ internal class ModelViewProcessor(
         }
     }
 
-    private fun validatePropElement(methodElement: Element): Boolean {
-        return validateExecutableElement(methodElement, ModelProp::class.java, 1)
+    private fun validatePropElement(methodElement: Element, propAnnotation: KClass<out Annotation>): Boolean {
+        return validateExecutableElement(methodElement, propAnnotation.java, 1)
     }
 
     private fun validateExecutableElement(element: Element, annotationClass: Class<*>,
@@ -543,8 +545,6 @@ internal class ModelViewProcessor(
     }
 
     private fun getModelInfoForMethodElement(element: Element): ModelViewInfo? {
-        val enclosingElement = element.enclosingElement ?: return null
-
-        return modelClassMap[enclosingElement]
+        return element.enclosingElement?.let { modelClassMap[it] }
     }
 }

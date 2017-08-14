@@ -15,7 +15,6 @@ import android.view.View;
 
 import com.airbnb.epoxy.EpoxyTouchHelper;
 import com.airbnb.epoxy.EpoxyTouchHelper.DragCallback;
-import com.airbnb.epoxy.EpoxyTouchHelper.SwipeCallbacks;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.sample.SampleController.AdapterCallbacks;
 import com.airbnb.epoxy.sample.models.CarouselModelGroup;
@@ -87,8 +86,8 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
 //          public void onSwipeProgressChanged(CarouselModelGroup model, View itemView,
 //              float swipeProgress) {
 //
-              // Fades a background color in the further you swipe. A different color is used
-              // for swiping left vs right.
+    // Fades a background color in the further you swipe. A different color is used
+    // for swiping left vs right.
 //            int alpha = (int) (Math.abs(swipeProgress) * 255);
 //            if (swipeProgress > 0) {
 //              itemView.setBackgroundColor(Color.argb(alpha, 0, 255, 0));

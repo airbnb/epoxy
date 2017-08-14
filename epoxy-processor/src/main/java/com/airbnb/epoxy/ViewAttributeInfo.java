@@ -41,8 +41,30 @@ class ViewAttributeInfo extends AttributeInfo {
 
   ViewAttributeInfo(ModelViewInfo modelInfo, ExecutableElement setterMethod, Types types,
       Elements elements, ErrorLogger errorLogger) {
-    ModelProp annotation = setterMethod.getAnnotation(ModelProp.class);
-    Set<Option> options = new HashSet<>(Arrays.asList(annotation.options()));
+    ModelProp propAnnotation = setterMethod.getAnnotation(ModelProp.class);
+    TextProp textAnnotation = setterMethod.getAnnotation(TextProp.class);
+    CallbackProp callbackAnnotation = setterMethod.getAnnotation(CallbackProp.class);
+
+    final Set<Option> options = new HashSet<>();
+    VariableElement param = setterMethod.getParameters().get(0);
+
+    groupKey = "";
+    String defaultConstant = null;
+    if (propAnnotation != null) {
+      defaultConstant = propAnnotation.defaultValue();
+      groupKey = propAnnotation.group();
+      options.addAll(Arrays.asList(propAnnotation.options()));
+    } else if (textAnnotation != null) {
+      options.add(Option.GenerateStringOverloads);
+    } else if (callbackAnnotation != null) {
+      options.add(Option.DoNotHash);
+      if (isMarkedNullable(param)) {
+        options.add(Option.NullOnRecycle);
+      } else {
+        errorLogger.logError("Setters with %s must be marked Nullable",
+            CallbackProp.class.getSimpleName());
+      }
+    }
 
     generateSetter = true;
     generateGetter = true;
@@ -58,14 +80,13 @@ class ViewAttributeInfo extends AttributeInfo {
     modelName = modelInfo.getGeneratedName().simpleName();
     modelPackageName = modelInfo.generatedClassName.packageName();
 
-    groupKey = annotation.group();
     this.viewSetterMethodName = setterMethod.getSimpleName().toString();
     propName = removeSetPrefix(viewSetterMethodName);
     this.modelInfo = modelInfo;
-    typeMirror = setterMethod.getParameters().get(0).asType();
+    typeMirror = param.asType();
 
-    assignDefaultValue(annotation, errorLogger, types);
-    VariableElement paramElement = setterMethod.getParameters().get(0);
+    assignDefaultValue(defaultConstant, errorLogger, types);
+    VariableElement paramElement = param;
     assignNullability(paramElement);
 
     createJavaDoc(elements.getDocComment(setterMethod), codeToSetDefault,
@@ -118,25 +139,29 @@ class ViewAttributeInfo extends AttributeInfo {
     // Default to not nullable
     setNullable(false);
 
-    // Set to nullable if we find a @Nullable annotation
+    if (isMarkedNullable(paramElement)) {
+      setNullable(true);
+      codeToSetDefault.implicit = CodeBlock.of("null");
+    }
+  }
+
+  private boolean isMarkedNullable(VariableElement paramElement) {
     for (AnnotationMirror annotationMirror : paramElement.getAnnotationMirrors()) {
       // There are multiple packages/frameworks that define a Nullable annotation and we want to
       // support all of them. We just check for a class named Nullable and ignore the package.
       if (annotationMirror.getAnnotationType().asElement().getSimpleName().toString()
           .equals("Nullable")) {
-
-        setNullable(true);
-        codeToSetDefault.implicit = CodeBlock.of("null");
-        break;
+        return true;
       }
     }
+
+    return false;
   }
 
-  private void assignDefaultValue(ModelProp annotation,
+  private void assignDefaultValue(String defaultConstant,
       ErrorLogger errorLogger, Types types) {
 
-    String constantName = annotation.defaultValue();
-    if (constantName.isEmpty()) {
+    if (defaultConstant.isEmpty()) {
       if (isPrimitive()) {
         codeToSetDefault.implicit = CodeBlock.of(getDefaultValue(getTypeName()));
       }
@@ -146,7 +171,7 @@ class ViewAttributeInfo extends AttributeInfo {
 
     for (Element element : modelInfo.viewElement.getEnclosedElements()) {
       if (element.getKind() == ElementKind.FIELD
-          && element.getSimpleName().toString().equals(constantName)) {
+          && element.getSimpleName().toString().equals(defaultConstant)) {
 
         Set<Modifier> modifiers = element.getModifiers();
         if (!modifiers.contains(Modifier.FINAL)
@@ -166,10 +191,10 @@ class ViewAttributeInfo extends AttributeInfo {
               modelInfo.viewElement.getSimpleName(), viewSetterMethodName, typeMirror);
           return;
         }
-        constantFieldNameForDefaultValue = constantName;
+        constantFieldNameForDefaultValue = defaultConstant;
 
         codeToSetDefault.explicit =
-            CodeBlock.of("$T.$L", ClassName.get(modelInfo.viewElement), constantName);
+            CodeBlock.of("$T.$L", ClassName.get(modelInfo.viewElement), defaultConstant);
 
         return;
       }
@@ -269,7 +294,7 @@ class ViewAttributeInfo extends AttributeInfo {
     } else {
       builder.add("<i>Optional</i>: ");
       if (constantFieldNameForDefaultValue == null) {
-          builder.add("Default value is $L", codeToSetDefault.value());
+        builder.add("Default value is $L", codeToSetDefault.value());
       } else {
         builder.add("Default value is <b>{@value $T#$L}</b>", ClassName.get(viewElement),
             constantFieldNameForDefaultValue);
