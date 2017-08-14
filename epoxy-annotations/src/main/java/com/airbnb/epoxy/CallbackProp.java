@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * A convenient replacement for {@link ModelProp} when the prop represents a callback or listener.
  * <p>
  * This is the same as using {@link ModelProp} with the options {@link
- * com.airbnb.epoxy.ModelProp.Option#NullOnRecycle} and 
+ * com.airbnb.epoxy.ModelProp.Option#NullOnRecycle} and
  * {@link com.airbnb.epoxy.ModelProp.Option#DoNotHash}
  * <p>
  * This can only be used on setters who's parameter is marked as nullable. The prop will be set to
