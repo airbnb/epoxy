@@ -49,7 +49,7 @@ class ViewAttributeInfo extends AttributeInfo {
     VariableElement param = setterMethod.getParameters().get(0);
 
     groupKey = "";
-    String defaultConstant = null;
+    String defaultConstant = "";
     if (propAnnotation != null) {
       defaultConstant = propAnnotation.defaultValue();
       groupKey = propAnnotation.group();
