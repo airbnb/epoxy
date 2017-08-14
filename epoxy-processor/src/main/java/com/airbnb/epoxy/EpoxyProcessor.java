@@ -64,7 +64,7 @@ public class EpoxyProcessor extends AbstractProcessor {
   private boolean hasWrittenDataBindingModels;
 
   public EpoxyProcessor() {
-    this(Collections.<String, String>emptyMap());
+    this(Collections.emptyMap());
   }
 
   /**
@@ -142,6 +142,8 @@ public class EpoxyProcessor extends AbstractProcessor {
     types.add(EpoxyDataBindingLayouts.class.getCanonicalName());
     types.add(ModelView.class.getCanonicalName());
     types.add(PackageModelViewConfig.class.getCanonicalName());
+    types.add(TextProp.class.getCanonicalName());
+    types.add(CallbackProp.class.getCanonicalName());
 
     types.add(ClassNames.LITHO_ANNOTATION_LAYOUT_SPEC.reflectionName());
 
