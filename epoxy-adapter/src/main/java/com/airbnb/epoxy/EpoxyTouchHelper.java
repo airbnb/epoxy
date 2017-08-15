@@ -176,44 +176,54 @@ public abstract class EpoxyTouchHelper {
      * <p>
      * You can optionally implement the other callbacks to modify the view being dragged. This is
      * useful if you want to change things like the view background, size, color, etc
+     *
+     * @return An {@link ItemTouchHelper} instance that has been initialized and attached to a
+     * recyclerview. The touch helper has already been fully set up and can be ignored, but you may
+     * want to hold a reference to it if you need to later detach the recyclerview to disable touch
+     * events via setting null on {@link ItemTouchHelper#attachToRecyclerView(RecyclerView)}
      */
-    public void andCallbacks(final DragCallback<U> callbacks) {
-      new ItemTouchHelper(new EpoxyModelTouchCallback<U>(controller, targetModelClass) {
+    public ItemTouchHelper andCallbacks(final DragCallback<U> callbacks) {
+      ItemTouchHelper itemTouchHelper =
+          new ItemTouchHelper(new EpoxyModelTouchCallback<U>(controller, targetModelClass) {
 
-        @Override
-        public int getMovementFlagsForModel(U model, int adapterPosition) {
-          return movementFlags;
-        }
+            @Override
+            public int getMovementFlagsForModel(U model, int adapterPosition) {
+              return movementFlags;
+            }
 
-        @Override
-        protected boolean isTouchableModel(EpoxyModel<?> model) {
-          if (targetModelClasses.size() == 1) {
-            return super.isTouchableModel(model);
-          }
-          return targetModelClasses.contains(model.getClass());
-        }
+            @Override
+            protected boolean isTouchableModel(EpoxyModel<?> model) {
+              if (targetModelClasses.size() == 1) {
+                return super.isTouchableModel(model);
+              }
+              return targetModelClasses.contains(model.getClass());
+            }
 
-        @Override
-        public void onDragStarted(U model, View itemView, int adapterPosition) {
-          callbacks.onDragStarted(model, itemView, adapterPosition);
-        }
+            @Override
+            public void onDragStarted(U model, View itemView, int adapterPosition) {
+              callbacks.onDragStarted(model, itemView, adapterPosition);
+            }
 
-        @Override
-        public void onDragReleased(U model, View itemView) {
-          callbacks.onDragReleased(model, itemView);
-        }
+            @Override
+            public void onDragReleased(U model, View itemView) {
+              callbacks.onDragReleased(model, itemView);
+            }
 
-        @Override
-        public void onModelMoved(int fromPosition, int toPosition, U modelBeingMoved,
-            View itemView) {
-          callbacks.onModelMoved(fromPosition, toPosition, modelBeingMoved, itemView);
-        }
+            @Override
+            public void onModelMoved(int fromPosition, int toPosition, U modelBeingMoved,
+                View itemView) {
+              callbacks.onModelMoved(fromPosition, toPosition, modelBeingMoved, itemView);
+            }
 
-        @Override
-        public void clearView(U model, View itemView) {
-          callbacks.clearView(model, itemView);
-        }
-      }).attachToRecyclerView(recyclerView);
+            @Override
+            public void clearView(U model, View itemView) {
+              callbacks.clearView(model, itemView);
+            }
+          });
+
+      itemTouchHelper.attachToRecyclerView(recyclerView);
+
+      return itemTouchHelper;
     }
   }
 
@@ -361,48 +371,58 @@ public abstract class EpoxyTouchHelper {
      * remove the swiped item from your data and request a model build.
      * <p>
      * You can optionally implement the other callbacks to modify the view as it is being swiped.
+     *
+     * @return An {@link ItemTouchHelper} instance that has been initialized and attached to a
+     * recyclerview. The touch helper has already been fully set up and can be ignored, but you may
+     * want to hold a reference to it if you need to later detach the recyclerview to disable touch
+     * events via setting null on {@link ItemTouchHelper#attachToRecyclerView(RecyclerView)}
      */
-    public void andCallbacks(final SwipeCallbacks<U> callbacks) {
-      new ItemTouchHelper(new EpoxyModelTouchCallback<U>(null, targetModelClass) {
+    public ItemTouchHelper andCallbacks(final SwipeCallbacks<U> callbacks) {
+      ItemTouchHelper itemTouchHelper =
+          new ItemTouchHelper(new EpoxyModelTouchCallback<U>(null, targetModelClass) {
 
-        @Override
-        public int getMovementFlagsForModel(U model, int adapterPosition) {
-          return movementFlags;
-        }
+            @Override
+            public int getMovementFlagsForModel(U model, int adapterPosition) {
+              return movementFlags;
+            }
 
-        @Override
-        protected boolean isTouchableModel(EpoxyModel<?> model) {
-          if (targetModelClasses.size() == 1) {
-            return super.isTouchableModel(model);
-          }
-          return targetModelClasses.contains(model.getClass());
-        }
+            @Override
+            protected boolean isTouchableModel(EpoxyModel<?> model) {
+              if (targetModelClasses.size() == 1) {
+                return super.isTouchableModel(model);
+              }
+              return targetModelClasses.contains(model.getClass());
+            }
 
-        @Override
-        public void onSwipeStarted(U model, View itemView, int adapterPosition) {
-          callbacks.onSwipeStarted(model, itemView, adapterPosition);
-        }
+            @Override
+            public void onSwipeStarted(U model, View itemView, int adapterPosition) {
+              callbacks.onSwipeStarted(model, itemView, adapterPosition);
+            }
 
-        @Override
-        public void onSwipeProgressChanged(U model, View itemView, float swipeProgress) {
-          callbacks.onSwipeProgressChanged(model, itemView, swipeProgress);
-        }
+            @Override
+            public void onSwipeProgressChanged(U model, View itemView, float swipeProgress) {
+              callbacks.onSwipeProgressChanged(model, itemView, swipeProgress);
+            }
 
-        @Override
-        public void onSwipeCompleted(U model, View itemView, int position, int direction) {
-          callbacks.onSwipeCompleted(model, itemView, position, direction);
-        }
+            @Override
+            public void onSwipeCompleted(U model, View itemView, int position, int direction) {
+              callbacks.onSwipeCompleted(model, itemView, position, direction);
+            }
 
-        @Override
-        public void onSwipeReleased(U model, View itemView) {
-          callbacks.onSwipeReleased(model, itemView);
-        }
+            @Override
+            public void onSwipeReleased(U model, View itemView) {
+              callbacks.onSwipeReleased(model, itemView);
+            }
 
-        @Override
-        public void clearView(U model, View itemView) {
-          callbacks.clearView(model, itemView);
-        }
-      }).attachToRecyclerView(recyclerView);
+            @Override
+            public void clearView(U model, View itemView) {
+              callbacks.clearView(model, itemView);
+            }
+          });
+
+      itemTouchHelper.attachToRecyclerView(recyclerView);
+
+      return itemTouchHelper;
     }
   }
 
