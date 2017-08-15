@@ -5,6 +5,19 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Used in conjunction with {@link ModelView} to automatically generate EpoxyModels from custom
+ * views - https://github.com/airbnb/epoxy/wiki/Generating-Models-from-View-Annotations
+ * <p>
+ * This annotation should be used on setter methods within a custom view class. Setters annotated
+ * with this will have a corresponding field on the generated model.
+ * <p>
+ * For convenience you can use {@link TextProp} instead for props representing text.
+ * <p>
+ * Similarly you can use {@link CallbackProp} for props representing listeners or callbacks.
+ * <p>
+ * Alternatively, the {@link #options()} parameter can be used to configure a prop.
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.CLASS)
 public @interface ModelProp {

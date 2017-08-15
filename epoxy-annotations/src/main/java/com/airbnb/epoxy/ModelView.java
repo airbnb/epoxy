@@ -7,6 +7,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * An annotation on custom view classes to automatically generate an EpoxyModel for that view. Used
+ * in conjunction with {@link ModelProp}
+ * <p>
+ * See https://github.com/airbnb/epoxy/wiki/Generating-Models-from-View-Annotations
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
 public @interface ModelView {

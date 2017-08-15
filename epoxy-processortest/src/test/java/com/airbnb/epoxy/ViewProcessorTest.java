@@ -876,4 +876,60 @@ public class ViewProcessorTest {
         .and()
         .generatesSources(generatedModel);
   }
+
+  @Test
+  public void textProp() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("TestTextPropView.java");
+
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("TestTextPropViewModel_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void textPropMustBeCharSequence() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("TestTextPropMustBeCharSequenceView.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("must be a CharSequence");
+  }
+
+  @Test
+  public void callbackProp() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("TestCallbackPropView.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("TestCallbackPropViewModel_.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void callbackPropMustBeNullable() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("TestCallbackPropMustBeNullableView.java");
+
+    assert_().about(javaSource())
+        .that(model)
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("must be marked Nullable");
+
+  }
 }

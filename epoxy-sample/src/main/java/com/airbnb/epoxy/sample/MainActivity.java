@@ -15,7 +15,6 @@ import android.view.View;
 
 import com.airbnb.epoxy.EpoxyTouchHelper;
 import com.airbnb.epoxy.EpoxyTouchHelper.DragCallback;
-import com.airbnb.epoxy.EpoxyTouchHelper.SwipeCallbacks;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.sample.SampleController.AdapterCallbacks;
 import com.airbnb.epoxy.sample.models.CarouselModelGroup;
@@ -75,35 +74,40 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
   }
 
   private void initTouch(final RecyclerView recyclerView) {
-    EpoxyTouchHelper.initSwiping(recyclerView)
-        .leftAndRight()
-        .withTarget(CarouselModelGroup.class)
-        .andCallbacks(new SwipeCallbacks<CarouselModelGroup>() {
+    // Swiping is not used since it interferes with the carousels, but here is an example of
+    // how we would set it up.
 
-          @Override
-          public void onSwipeProgressChanged(CarouselModelGroup model, View itemView,
-              float swipeProgress) {
-
-            int alpha = (int) (Math.abs(swipeProgress) * 255);
-            if (swipeProgress > 0) {
-              itemView.setBackgroundColor(Color.argb(alpha, 0, 255, 0));
-            } else {
-              itemView.setBackgroundColor(Color.argb(alpha, 255, 0, 0));
-            }
-          }
-
-          @Override
-          public void onSwipeCompleted(CarouselModelGroup model, View itemView, int position,
-              int direction) {
-            carousels.remove(model.data);
-            updateController();
-          }
-
-          @Override
-          public void clearView(CarouselModelGroup model, View itemView) {
-            itemView.setBackgroundColor(Color.WHITE);
-          }
-        });
+//    EpoxyTouchHelper.initSwiping(recyclerView)
+//        .leftAndRight()
+//        .withTarget(CarouselModelGroup.class)
+//        .andCallbacks(new SwipeCallbacks<CarouselModelGroup>() {
+//
+//          @Override
+//          public void onSwipeProgressChanged(CarouselModelGroup model, View itemView,
+//              float swipeProgress) {
+//
+    // Fades a background color in the further you swipe. A different color is used
+    // for swiping left vs right.
+//            int alpha = (int) (Math.abs(swipeProgress) * 255);
+//            if (swipeProgress > 0) {
+//              itemView.setBackgroundColor(Color.argb(alpha, 0, 255, 0));
+//            } else {
+//              itemView.setBackgroundColor(Color.argb(alpha, 255, 0, 0));
+//            }
+//          }
+//
+//          @Override
+//          public void onSwipeCompleted(CarouselModelGroup model, View itemView, int position,
+//              int direction) {
+//            carousels.remove(model.data);
+//            updateController();
+//          }
+//
+//          @Override
+//          public void clearView(CarouselModelGroup model, View itemView) {
+//            itemView.setBackgroundColor(Color.WHITE);
+//          }
+//        });
 
     EpoxyTouchHelper.initDragging(controller)
         .withRecyclerView(recyclerView)
