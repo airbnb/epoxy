@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,8 +106,9 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
     shouldSaveViewState = saveState;
   }
 
+  @CallSuper
   @Override
-  public final void bind(Holder holder) {
+  public void bind(Holder holder) {
     iterateModels(holder, new IterateModelsCallback() {
       @Override
       public void onModel(EpoxyModel model, Object boundObject, View view) {
@@ -117,8 +119,9 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
     });
   }
 
+  @CallSuper
   @Override
-  public final void bind(Holder holder, final List<Object> payloads) {
+  public void bind(Holder holder, final List<Object> payloads) {
     iterateModels(holder, new IterateModelsCallback() {
       @Override
       public void onModel(EpoxyModel model, Object boundObject, View view) {
@@ -137,8 +140,9 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
     }
   }
 
+  @CallSuper
   @Override
-  public final void unbind(Holder holder) {
+  public void unbind(Holder holder) {
     iterateModels(holder, new IterateModelsCallback() {
       @Override
       public void onModel(EpoxyModel model, Object boundObject, View view) {
@@ -148,6 +152,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
     });
   }
 
+  @CallSuper
   @Override
   public void onViewAttachedToWindow(Holder holder) {
     iterateModels(holder, new IterateModelsCallback() {
@@ -159,6 +164,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
     });
   }
 
+  @CallSuper
   @Override
   public void onViewDetachedFromWindow(Holder holder) {
     iterateModels(holder, new IterateModelsCallback() {
