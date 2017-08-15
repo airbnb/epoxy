@@ -14,7 +14,7 @@ import android.support.v7.widget.RecyclerView.RecycledViewPool;
 import android.view.View;
 
 import com.airbnb.epoxy.EpoxyTouchHelper;
-import com.airbnb.epoxy.EpoxyTouchHelper.DragCallback;
+import com.airbnb.epoxy.EpoxyTouchHelper.DragCallbacks;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.sample.SampleController.AdapterCallbacks;
 import com.airbnb.epoxy.sample.models.CarouselModelGroup;
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
         .withRecyclerView(recyclerView)
         .forVerticalList()
         .withTarget(CarouselModelGroup.class)
-        .andCallbacks(new DragCallback<CarouselModelGroup>() {
+        .andCallbacks(new DragCallbacks<CarouselModelGroup>() {
           @ColorInt final int selectedBackgroundColor = Color.argb(200, 200, 200, 200);
           ValueAnimator backgroundAnimator = null;
 
