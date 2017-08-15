@@ -171,53 +171,65 @@ public abstract class EpoxyTouchHelper {
     /**
      * Set callbacks to handle drag actions and lifecycle events.
      * <p>
-     * You MUST implement {@link DragCallback#onModelMoved(int, int, EpoxyModel,
+     * You MUST implement {@link DragCallbacks#onModelMoved(int, int, EpoxyModel,
      * View)} to update your data to reflect an item move.
      * <p>
      * You can optionally implement the other callbacks to modify the view being dragged. This is
      * useful if you want to change things like the view background, size, color, etc
+     *
+     * @return An {@link ItemTouchHelper} instance that has been initialized and attached to a
+     * recyclerview. The touch helper has already been fully set up and can be ignored, but you may
+     * want to hold a reference to it if you need to later detach the recyclerview to disable touch
+     * events via setting null on {@link ItemTouchHelper#attachToRecyclerView(RecyclerView)}
      */
-    public void andCallbacks(final DragCallback<U> callbacks) {
-      new ItemTouchHelper(new EpoxyModelTouchCallback<U>(controller, targetModelClass) {
+    public ItemTouchHelper andCallbacks(final DragCallbacks<U> callbacks) {
+      ItemTouchHelper itemTouchHelper =
+          new ItemTouchHelper(new EpoxyModelTouchCallback<U>(controller, targetModelClass) {
 
-        @Override
-        public int getMovementFlagsForModel(U model, int adapterPosition) {
-          return movementFlags;
-        }
+            @Override
+            public int getMovementFlagsForModel(U model, int adapterPosition) {
+              return movementFlags;
+            }
 
-        @Override
-        protected boolean isTouchableModel(EpoxyModel<?> model) {
-          if (targetModelClasses.size() == 1) {
-            return super.isTouchableModel(model);
-          }
-          return targetModelClasses.contains(model.getClass());
-        }
+            @Override
+            protected boolean isTouchableModel(EpoxyModel<?> model) {
+              boolean isTargetType = targetModelClasses.size() == 1
+                  ? super.isTouchableModel(model)
+                  : targetModelClasses.contains(model.getClass());
 
-        @Override
-        public void onDragStarted(U model, View itemView, int adapterPosition) {
-          callbacks.onDragStarted(model, itemView, adapterPosition);
-        }
+              //noinspection unchecked
+              return isTargetType && callbacks.isDragEnabledForModel((U) model);
+            }
 
-        @Override
-        public void onDragReleased(U model, View itemView) {
-          callbacks.onDragReleased(model, itemView);
-        }
+            @Override
+            public void onDragStarted(U model, View itemView, int adapterPosition) {
+              callbacks.onDragStarted(model, itemView, adapterPosition);
+            }
 
-        @Override
-        public void onModelMoved(int fromPosition, int toPosition, U modelBeingMoved,
-            View itemView) {
-          callbacks.onModelMoved(fromPosition, toPosition, modelBeingMoved, itemView);
-        }
+            @Override
+            public void onDragReleased(U model, View itemView) {
+              callbacks.onDragReleased(model, itemView);
+            }
 
-        @Override
-        public void clearView(U model, View itemView) {
-          callbacks.clearView(model, itemView);
-        }
-      }).attachToRecyclerView(recyclerView);
+            @Override
+            public void onModelMoved(int fromPosition, int toPosition, U modelBeingMoved,
+                View itemView) {
+              callbacks.onModelMoved(fromPosition, toPosition, modelBeingMoved, itemView);
+            }
+
+            @Override
+            public void clearView(U model, View itemView) {
+              callbacks.clearView(model, itemView);
+            }
+          });
+
+      itemTouchHelper.attachToRecyclerView(recyclerView);
+
+      return itemTouchHelper;
     }
   }
 
-  public abstract static class DragCallback<T extends EpoxyModel>
+  public abstract static class DragCallbacks<T extends EpoxyModel>
       implements EpoxyDragCallback<T> {
 
     @Override
@@ -237,6 +249,15 @@ public abstract class EpoxyTouchHelper {
     @Override
     public void clearView(T model, View itemView) {
 
+    }
+
+    /**
+     * Whether the given model should be draggable.
+     * <p>
+     * True by default. You may override this to toggle draggability for a model.
+     */
+    public boolean isDragEnabledForModel(T model) {
+      return true;
     }
 
     @Override
@@ -361,48 +382,60 @@ public abstract class EpoxyTouchHelper {
      * remove the swiped item from your data and request a model build.
      * <p>
      * You can optionally implement the other callbacks to modify the view as it is being swiped.
+     *
+     * @return An {@link ItemTouchHelper} instance that has been initialized and attached to a
+     * recyclerview. The touch helper has already been fully set up and can be ignored, but you may
+     * want to hold a reference to it if you need to later detach the recyclerview to disable touch
+     * events via setting null on {@link ItemTouchHelper#attachToRecyclerView(RecyclerView)}
      */
-    public void andCallbacks(final SwipeCallbacks<U> callbacks) {
-      new ItemTouchHelper(new EpoxyModelTouchCallback<U>(null, targetModelClass) {
+    public ItemTouchHelper andCallbacks(final SwipeCallbacks<U> callbacks) {
+      ItemTouchHelper itemTouchHelper =
+          new ItemTouchHelper(new EpoxyModelTouchCallback<U>(null, targetModelClass) {
 
-        @Override
-        public int getMovementFlagsForModel(U model, int adapterPosition) {
-          return movementFlags;
-        }
+            @Override
+            public int getMovementFlagsForModel(U model, int adapterPosition) {
+              return movementFlags;
+            }
 
-        @Override
-        protected boolean isTouchableModel(EpoxyModel<?> model) {
-          if (targetModelClasses.size() == 1) {
-            return super.isTouchableModel(model);
-          }
-          return targetModelClasses.contains(model.getClass());
-        }
+            @Override
+            protected boolean isTouchableModel(EpoxyModel<?> model) {
+              boolean isTargetType = targetModelClasses.size() == 1
+                  ? super.isTouchableModel(model)
+                  : targetModelClasses.contains(model.getClass());
 
-        @Override
-        public void onSwipeStarted(U model, View itemView, int adapterPosition) {
-          callbacks.onSwipeStarted(model, itemView, adapterPosition);
-        }
+              //noinspection unchecked
+              return isTargetType && callbacks.isSwipeEnabledForModel((U) model);
+            }
 
-        @Override
-        public void onSwipeProgressChanged(U model, View itemView, float swipeProgress) {
-          callbacks.onSwipeProgressChanged(model, itemView, swipeProgress);
-        }
+            @Override
+            public void onSwipeStarted(U model, View itemView, int adapterPosition) {
+              callbacks.onSwipeStarted(model, itemView, adapterPosition);
+            }
 
-        @Override
-        public void onSwipeCompleted(U model, View itemView, int position, int direction) {
-          callbacks.onSwipeCompleted(model, itemView, position, direction);
-        }
+            @Override
+            public void onSwipeProgressChanged(U model, View itemView, float swipeProgress) {
+              callbacks.onSwipeProgressChanged(model, itemView, swipeProgress);
+            }
 
-        @Override
-        public void onSwipeReleased(U model, View itemView) {
-          callbacks.onSwipeReleased(model, itemView);
-        }
+            @Override
+            public void onSwipeCompleted(U model, View itemView, int position, int direction) {
+              callbacks.onSwipeCompleted(model, itemView, position, direction);
+            }
 
-        @Override
-        public void clearView(U model, View itemView) {
-          callbacks.clearView(model, itemView);
-        }
-      }).attachToRecyclerView(recyclerView);
+            @Override
+            public void onSwipeReleased(U model, View itemView) {
+              callbacks.onSwipeReleased(model, itemView);
+            }
+
+            @Override
+            public void clearView(U model, View itemView) {
+              callbacks.clearView(model, itemView);
+            }
+          });
+
+      itemTouchHelper.attachToRecyclerView(recyclerView);
+
+      return itemTouchHelper;
     }
   }
 
@@ -430,6 +463,15 @@ public abstract class EpoxyTouchHelper {
     @Override
     public void clearView(T model, View itemView) {
 
+    }
+
+    /**
+     * Whether the given model should be swipable.
+     * <p>
+     * True by default. You may override this to toggle swipabaility for a model.
+     */
+    public boolean isSwipeEnabledForModel(T model) {
+      return true;
     }
 
     @Override
