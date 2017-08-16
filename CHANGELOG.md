@@ -1,3 +1,10 @@
+# 2.3.0 (August 16, 2017)
+* **New** An `AfterPropsSet` annotation for use in `@ModelView` classes. This allows initialization work to be done after all properties are bound from the model. (https://github.com/airbnb/epoxy/pull/242)
+* **New** Annotations `TextProp` and `CallbackProp`  as convenient replacements for `ModelProp`. (https://github.com/airbnb/epoxy/pull/260)
+* **New** Easy support for dragging and swiping via the `EpoxyTouchHelper` class. https://github.com/airbnb/epoxy/wiki/Touch-Support
+* **Change** Added the method `getRootView` to the view holder class in `EpoxyModelGroup` and made the bind methods on `EpoxyModelGroup` non final. This allows access to the root view of the group.
+* **Change** Generated models will now inherit class annotations from the base class (https://github.com/airbnb/epoxy/pull/255 Thanks geralt-encore!)
+
 # 2.2.0 (June 19, 2017)
 * **Main Feature** Models can now be completely generated from a custom view via annotations on the view. This should completely remove the overhead of creating a model manually in many cases! For more info, see [the wiki](https://github.com/airbnb/epoxy/wiki/Generating-Models-from-View-Annotations)
 

@@ -19,9 +19,9 @@ Gradle is the only supported build configuration, so just add the dependency to 
 
 ```groovy
 dependencies {
-  compile 'com.airbnb.android:epoxy:2.2.0'
+  compile 'com.airbnb.android:epoxy:2.3.0'
   // Add the annotation processor if you are using Epoxy's annotations (recommended)
-  annotationProcessor 'com.airbnb.android:epoxy-processor:2.2.0' 
+  annotationProcessor 'com.airbnb.android:epoxy-processor:2.3.0'
 }
 ```
 
@@ -37,7 +37,7 @@ kapt {
 
 so that `AutoModel` annotations work properly. More information [here](https://github.com/airbnb/epoxy/wiki/Epoxy-Controller#usage-with-kotlin)
 
-Also, make sure to use `kapt` instead of `annotationProcessor` in your dependendies in the `build.gradle` file.
+Also, make sure to use `kapt` instead of `annotationProcessor` in your dependencies in the `build.gradle` file.
 
 ## Library Projects
 To use Epoxy in a library or module add [Butterknife's gradle plugin](https://github.com/JakeWharton/butterknife#library-projects) to your `buildscript`.
