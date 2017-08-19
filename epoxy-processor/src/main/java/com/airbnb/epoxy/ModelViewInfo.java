@@ -28,12 +28,14 @@ class ModelViewInfo extends GeneratedModelInfo {
   final Elements elements;
   final ErrorLogger errorLogger;
   final ConfigManager configManager;
+  private final LayoutResourceProcessor resourceProcessor;
   final boolean saveViewState;
   final ModelView viewAnnotation;
   final boolean fullSpanSize;
 
   ModelViewInfo(TypeElement viewElement, Types typeUtils, Elements elements,
-      ErrorLogger errorLogger, ConfigManager configManager) {
+      ErrorLogger errorLogger, ConfigManager configManager,
+      LayoutResourceProcessor resourceProcessor) {
 
     viewAnnotation = viewElement.getAnnotation(ModelView.class);
     this.viewElement = viewElement;
@@ -41,6 +43,7 @@ class ModelViewInfo extends GeneratedModelInfo {
     this.elements = elements;
     this.errorLogger = errorLogger;
     this.configManager = configManager;
+    this.resourceProcessor = resourceProcessor;
 
     superClassElement = lookUpSuperClassElement();
     this.superClassName = ParameterizedTypeName
@@ -138,7 +141,8 @@ class ModelViewInfo extends GeneratedModelInfo {
   }
 
   void addProp(ExecutableElement propMethod) {
-    addAttribute(new ViewAttributeInfo(this, propMethod, typeUtils, elements, errorLogger));
+    addAttribute(new ViewAttributeInfo(this, propMethod, typeUtils, elements, errorLogger,
+        resourceProcessor));
   }
 
   void addOnRecycleMethod(ExecutableElement resetMethod) {
@@ -149,7 +153,7 @@ class ModelViewInfo extends GeneratedModelInfo {
     afterPropsSetMethodNames.add(afterPropsSetMethod.getSimpleName().toString());
   }
 
-  LayoutResource getLayoutResource(LayoutResourceProcessor layoutResourceProcessor) {
+  ResourceValue getLayoutResource(LayoutResourceProcessor layoutResourceProcessor) {
     ModelView annotation = viewElement.getAnnotation(ModelView.class);
     int layoutValue = annotation.defaultLayout();
     if (layoutValue != 0) {
@@ -164,7 +168,7 @@ class ModelViewInfo extends GeneratedModelInfo {
     }
 
     errorLogger.logError("Unable to get layout resource for view %s", viewElement.getSimpleName());
-    return new LayoutResource(0);
+    return new ResourceValue(0);
   }
 
   List<String> getResetMethodNames() {

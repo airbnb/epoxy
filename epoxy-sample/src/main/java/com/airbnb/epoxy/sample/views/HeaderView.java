@@ -9,6 +9,7 @@ import com.airbnb.epoxy.ModelProp;
 import com.airbnb.epoxy.ModelProp.Option;
 import com.airbnb.epoxy.ModelView;
 import com.airbnb.epoxy.R;
+import com.airbnb.epoxy.TextProp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +31,7 @@ public class HeaderView extends LinearLayout {
     ButterKnife.bind(this);
   }
 
-  @ModelProp(options = Option.GenerateStringOverloads)
+  @TextProp(defaultRes = R.string.app_name)
   public void setTitle(CharSequence title) {
     this.title.setText(title);
   }

@@ -125,7 +125,7 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     modelViewProcessor = new ModelViewProcessor(
         elementUtils, typeUtils, configManager, errorLogger,
-        modelWriter);
+        modelWriter, layoutResourceProcessor);
 
     lithoSpecProcessor = new LithoSpecProcessor(
         elementUtils, typeUtils, configManager, errorLogger, modelWriter);

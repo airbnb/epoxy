@@ -10,6 +10,7 @@ import java.util.Arrays;
 public class StringAttributeData {
   private final boolean hasDefault;
   @Nullable private final CharSequence defaultString;
+  @StringRes private final int defaultStringRes;
 
   @Nullable private CharSequence string;
   @StringRes private int stringRes;
@@ -20,12 +21,21 @@ public class StringAttributeData {
   public StringAttributeData() {
     hasDefault = false;
     defaultString = null;
+    defaultStringRes = 0;
   }
 
   public StringAttributeData(@Nullable String defaultString) {
     hasDefault = true;
     this.defaultString = defaultString;
     string = defaultString;
+    defaultStringRes = 0;
+  }
+
+  public StringAttributeData(@StringRes int defaultStringRes) {
+    hasDefault = true;
+    this.defaultStringRes = defaultStringRes;
+    stringRes = defaultStringRes;
+    defaultString = null;
   }
 
   public void setValue(@Nullable CharSequence string) {
@@ -52,7 +62,11 @@ public class StringAttributeData {
   private void handleInvalidStringRes(int stringRes) {
     if (stringRes == 0) {
       if (hasDefault) {
-        setValue(defaultString);
+        if (defaultStringRes > 0) {
+          setValue(defaultStringRes);
+        } else {
+          setValue(defaultString);
+        }
       } else {
         throw new IllegalArgumentException("0 is an invalid value for required strings.");
       }

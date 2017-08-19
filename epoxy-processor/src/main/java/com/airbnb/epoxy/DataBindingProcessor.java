@@ -37,14 +37,14 @@ class DataBindingProcessor {
         roundEnv.getElementsAnnotatedWith(EpoxyDataBindingLayouts.class);
 
     for (Element packageElement : dataBindingLayoutPackageElements) {
-      List<LayoutResource> layoutResources = layoutResourceProcessor
+      List<ResourceValue> layoutResources = layoutResourceProcessor
           .getLayoutsInAnnotation(packageElement, EpoxyDataBindingLayouts.class);
 
       // Get the module name after parsing resources so we can use the resource classes to figure
       // out the module name
       String moduleName = dataBindingModuleLookup.getModuleName(packageElement);
 
-      for (LayoutResource layoutResource : layoutResources) {
+      for (ResourceValue layoutResource : layoutResources) {
         modelInfoList.add(new DataBindingModelInfo(typeUtils, elementUtils, layoutResource,
             moduleName));
       }

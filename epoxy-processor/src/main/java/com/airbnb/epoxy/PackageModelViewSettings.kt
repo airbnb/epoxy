@@ -33,9 +33,9 @@ class PackageModelViewSettings(
         return defaultBaseModel
     }
 
-    fun getNameForView(viewElement: TypeElement): LayoutResource {
+    fun getNameForView(viewElement: TypeElement): ResourceValue {
         val viewName = Utils.toSnakeCase(viewElement.simpleName.toString())
         val resourceName = layoutName.replace("%s", viewName)
-        return LayoutResource(rClass, resourceName, 0)
+        return ResourceValue(rClass, resourceName, 0)
     }
 }

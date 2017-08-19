@@ -22,7 +22,7 @@ internal class ModelViewProcessor(
         private val configManager: ConfigManager,
 
         private val errorLogger: ErrorLogger,
-        private val modelWriter: GeneratedModelWriter
+        private val modelWriter: GeneratedModelWriter, val layoutResourceProcessor: LayoutResourceProcessor
 ) {
 
     private val modelClassMap = LinkedHashMap<Element, ModelViewInfo>()
@@ -65,7 +65,7 @@ internal class ModelViewProcessor(
 
                 modelClassMap.put(viewElement,
                         ModelViewInfo(viewElement as TypeElement, types, elements, errorLogger,
-                                configManager))
+                                configManager, layoutResourceProcessor))
             } catch (e: Exception) {
                 errorLogger.logError(e, "Error creating model view info classes.")
             }
@@ -112,7 +112,7 @@ internal class ModelViewProcessor(
 
                 val info = getModelInfoForMethodElement(propMethod)
                 if (info == null) {
-                    errorLogger.logError("${propAnnotation.simpleName} annotation can only be used in classes annotated with ${ModelView::class.simpleName} (${propMethod.enclosingElement.simpleName}#${propMethod.simpleName})")
+                    errorLogger.logError("${propAnnotation.java.simpleName} annotation can only be used in classes annotated with ${ModelView::class.java.simpleName} (${propMethod.enclosingElement.simpleName}#${propMethod.simpleName})")
                     continue
                 }
 
@@ -144,7 +144,7 @@ internal class ModelViewProcessor(
 
                 var group: MutableList<AttributeInfo>? = attributeGroups[groupKey]
                 if (group == null) {
-                    group = ArrayList<AttributeInfo>()
+                    group = ArrayList()
                     attributeGroups.put(groupKey, group)
                 }
 
@@ -172,9 +172,8 @@ internal class ModelViewProcessor(
         }
     }
 
-    private fun validatePropElement(methodElement: Element, propAnnotation: KClass<out Annotation>): Boolean {
-        return validateExecutableElement(methodElement, propAnnotation.java, 1)
-    }
+    private fun validatePropElement(methodElement: Element, propAnnotation: KClass<out Annotation>): Boolean =
+            validateExecutableElement(methodElement, propAnnotation.java, 1)
 
     private fun validateExecutableElement(element: Element, annotationClass: Class<*>,
                                           paramCount: Int): Boolean {
@@ -234,9 +233,8 @@ internal class ModelViewProcessor(
         }
     }
 
-    private fun validateAfterPropsMethod(resetMethod: Element): Boolean {
-        return validateExecutableElement(resetMethod, AfterPropsSet::class.java, 0)
-    }
+    private fun validateAfterPropsMethod(resetMethod: Element): Boolean =
+            validateExecutableElement(resetMethod, AfterPropsSet::class.java, 0)
 
     /** Include props and reset methods from super class views.  */
     private fun updateViewsForInheritedViewAnnotations() {
@@ -292,9 +290,8 @@ internal class ModelViewProcessor(
         }
     }
 
-    private fun validateResetElement(resetMethod: Element): Boolean {
-        return validateExecutableElement(resetMethod, OnViewRecycled::class.java, 0)
-    }
+    private fun validateResetElement(resetMethod: Element): Boolean =
+            validateExecutableElement(resetMethod, OnViewRecycled::class.java, 0)
 
     private fun writeJava() {
         for (modelInfo in modelClassMap.values) {
@@ -309,7 +306,7 @@ internal class ModelViewProcessor(
                                 methodBuilder
                                         .addCode(buildCodeBlockToSetAttribute(boundObjectParam, viewAttribute))
                             } else {
-                                for (i in 0..attrCount - 1) {
+                                for (i in 0 until attrCount) {
                                     val viewAttribute = attributeGroup.attributes[i] as ViewAttributeInfo
 
                                     if (i == 0) {
@@ -502,10 +499,10 @@ internal class ModelViewProcessor(
                                     boundObjectParam: ParameterSpec): String {
         val fieldName = viewAttribute.getFieldName()
 
-        if (viewAttribute.generateStringOverloads) {
-            return fieldName + ".toString(" + boundObjectParam.name + ".getContext())"
+        return if (viewAttribute.generateStringOverloads) {
+            fieldName + ".toString(" + boundObjectParam.name + ".getContext())"
         } else {
-            return fieldName
+            fieldName
         }
     }
 
@@ -544,7 +541,6 @@ internal class ModelViewProcessor(
         }
     }
 
-    private fun getModelInfoForMethodElement(element: Element): ModelViewInfo? {
-        return element.enclosingElement?.let { modelClassMap[it] }
-    }
+    private fun getModelInfoForMethodElement(element: Element): ModelViewInfo? =
+            element.enclosingElement?.let { modelClassMap[it] }
 }
