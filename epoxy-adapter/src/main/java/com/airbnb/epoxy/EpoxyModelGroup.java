@@ -60,7 +60,8 @@ import java.util.List;
  * EpoxyModel#hide()} to have the associated view be set to GONE.
  */
 @SuppressWarnings("rawtypes")
-public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
+public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
+    implements GeneratedModel<Holder> {
 
   protected final List<? extends EpoxyModel<?>> models;
   /** By default we save view state if any of the models need to save state. */
@@ -104,6 +105,32 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder> {
     }
 
     shouldSaveViewState = saveState;
+  }
+
+  @Override
+  public void handlePostBind(Holder groupHolder, final int position) {
+    iterateModels(groupHolder, new IterateModelsCallback() {
+      @Override
+      public void onModel(EpoxyModel model, Object boundObject, View view) {
+        if (model instanceof GeneratedModel) {
+          //noinspection unchecked
+          ((GeneratedModel) model).handlePostBind(boundObject, position);
+        }
+      }
+    });
+  }
+
+  @Override
+  public void handlePreBind(final EpoxyViewHolder holder, Holder groupHolder, final int position) {
+    iterateModels(groupHolder, new IterateModelsCallback() {
+      @Override
+      public void onModel(EpoxyModel model, Object boundObject, View view) {
+        if (model instanceof GeneratedModel) {
+          //noinspection unchecked
+          ((GeneratedModel) model).handlePreBind(holder, boundObject, position);
+        }
+      }
+    });
   }
 
   @CallSuper
