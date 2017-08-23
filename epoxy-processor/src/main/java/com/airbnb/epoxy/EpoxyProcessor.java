@@ -27,6 +27,7 @@ import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_IMPLICITLY_ADD_AUT
 import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS;
 import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_REQUIRE_HASHCODE;
 import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_VALIDATE_MODEL_USAGE;
+import static com.airbnb.epoxy.EpoxyProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME;
 
 /**
  * Looks for {@link EpoxyAttribute} annotations and generates a subclass for all classes that have
@@ -40,9 +41,14 @@ import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_VALIDATE_MODEL_USA
     PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS,
     PROCESSOR_OPTION_VALIDATE_MODEL_USAGE,
     PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS,
-    PROCESSOR_OPTION_REQUIRE_HASHCODE
+    PROCESSOR_OPTION_REQUIRE_HASHCODE,
+    KAPT_KOTLIN_GENERATED_OPTION_NAME
 })
 public class EpoxyProcessor extends AbstractProcessor {
+
+  // https://github.com/JetBrains/kotlin-examples/blob/master/gradle/kotlin-code-generation
+  // /annotation-processor/src/main/java/TestAnnotationProcessor.kt
+  public static final String KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated";
 
   private final Map<String, String> testOptions;
   private Filer filer;
@@ -60,8 +66,8 @@ public class EpoxyProcessor extends AbstractProcessor {
   private final List<GeneratedModelInfo> generatedModels = new ArrayList<>();
   private ModelProcessor modelProcessor;
   private LithoSpecProcessor lithoSpecProcessor;
+  private KotlinExtensionGenerator kotlinExtensionGenerator;
   private ModelViewProcessor modelViewProcessor;
-  private boolean hasWrittenDataBindingModels;
 
   public EpoxyProcessor() {
     this(Collections.emptyMap());
@@ -129,6 +135,8 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     lithoSpecProcessor = new LithoSpecProcessor(
         elementUtils, typeUtils, configManager, errorLogger, modelWriter);
+
+    kotlinExtensionGenerator = new KotlinExtensionGenerator(processingEnv, errorLogger);
   }
 
   @Override
@@ -193,8 +201,13 @@ public class EpoxyProcessor extends AbstractProcessor {
     if (dataBindingProcessor.hasModelsToWrite()
         && dataBindingProcessor.isDataBindingClassesGenerated()) {
       generatedModels.addAll(dataBindingProcessor.resolveDataBindingClassesAndWriteJava());
-      hasWrittenDataBindingModels = true;
     }
+
+    // TODO: (eli_hart 8/23/17) Enable when ready
+    // TODO: (eli_hart 8/23/17) don't wait until round over?
+//    if (roundEnv.processingOver()) {
+//      kotlinExtensionGenerator.generateExtensionsForModels(generatedModels);
+//    }
 
     if (controllerProcessor.hasControllersToGenerate()
         && (!dataBindingProcessor.hasModelsToWrite() || roundEnv.processingOver())) {

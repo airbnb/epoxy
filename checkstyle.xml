@@ -92,10 +92,6 @@
         <!--module name="InnerAssignment"/-->
         <!--module name="MagicNumber"/-->
         <module name="MissingSwitchDefault" />
-        <module name="RedundantThrows">
-            <!-- Otherwise it throws `Unable to get class information` error -->
-            <property name="suppressLoadErrors" value="true"/>
-        </module>
         <module name="SimplifyBooleanExpression" />
         <module name="SimplifyBooleanReturn" />
 

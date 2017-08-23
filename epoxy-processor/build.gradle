@@ -5,7 +5,7 @@ import org.gradle.internal.jvm.Jvm
 apply plugin: 'kotlin'
 
 configurations.all { strategy ->
-  strategy.resolutionStrategy.force rootProject.deps.assertj, rootProject.deps.googleTestingCompile
+    strategy.resolutionStrategy.force rootProject.deps.assertj, rootProject.deps.googleTestingCompile
 }
 
 // Hack to allow us to use android support library annotations (@LayoutRes) in this project.
@@ -14,25 +14,26 @@ configurations.all { strategy ->
 def logger = new LoggerWrapper(project.logger)
 def sdkHandler = new SdkHandler(project, logger)
 for (File file : sdkHandler.sdkLoader.repositories) {
-  repositories.maven {
-    url = file.toURI()
-  }
+    repositories.maven {
+        url = file.toURI()
+    }
 }
 
 dependencies {
-  compile deps.kotlin
-  compile deps.squareJavaPoet
+    compile deps.kotlin
+    compile deps.squareJavaPoet
+    compile deps.squareKotlinPoet
 
-  compileOnly deps.googleAutoService
-  /** Provides the sun javac tools for looking up the R class trees. */
-  compileOnly files(Jvm.current().getToolsJar())
+    compileOnly deps.googleAutoService
+    /** Provides the sun javac tools for looking up the R class trees. */
+    compileOnly files(Jvm.current().getToolsJar())
 
-  compile project(':epoxy-annotations')
+    compile project(':epoxy-annotations')
 }
 
 checkstyle {
-  configFile rootProject.file('checkstyle.xml')
-  showViolations true
+    configFile rootProject.file('checkstyle.xml')
+    showViolations true
 }
 
 apply from: rootProject.file('gradle/gradle-maven-push.gradle')

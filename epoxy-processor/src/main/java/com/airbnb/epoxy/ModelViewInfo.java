@@ -135,7 +135,7 @@ class ModelViewInfo extends GeneratedModelInfo {
     String packageName = elementUtils.getPackageOf(viewElement).getQualifiedName().toString();
 
     String className = viewElement.getSimpleName().toString();
-    className += "Model" + GENERATED_CLASS_NAME_SUFFIX;
+    className += GENERATED_MODEL_SUFFIX;
 
     return ClassName.get(packageName, className);
   }
