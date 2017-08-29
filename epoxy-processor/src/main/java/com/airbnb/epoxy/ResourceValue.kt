@@ -5,12 +5,12 @@ import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 
 /**
- * Represents a layout resource used in an Epoxy model via the [EpoxyModelClass] annotation
+ * Represents a resource used as an annotation parameter.
  *
  *
  * Inpspired by Butterknife. https://github.com/JakeWharton/butterknife/pull/613
  */
-class LayoutResource {
+class ResourceValue {
 
     val className: ClassName?
     val resourceName: String?
@@ -41,7 +41,7 @@ class LayoutResource {
         if (this === other) return true
         if (other?.javaClass != javaClass) return false
 
-        other as LayoutResource
+        other as ResourceValue
 
         if (value != other.value) return false
         if (code != other.code) return false

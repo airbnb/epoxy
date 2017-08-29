@@ -21,11 +21,11 @@ class DataBindingModelInfo extends GeneratedModelInfo {
 
   private final Types typeUtils;
   private final Elements elementUtils;
-  private final LayoutResource layoutResource;
+  private final ResourceValue layoutResource;
   private final String moduleName;
   private final ClassName dataBindingClassName;
 
-  DataBindingModelInfo(Types typeUtils, Elements elementUtils, LayoutResource layoutResource,
+  DataBindingModelInfo(Types typeUtils, Elements elementUtils, ResourceValue layoutResource,
       String moduleName) {
     this.layoutResource = layoutResource;
     this.moduleName = moduleName;
@@ -69,7 +69,7 @@ class DataBindingModelInfo extends GeneratedModelInfo {
     return getElementByName(dataBindingClassName, elementUtils, typeUtils);
   }
 
-  private ClassName getDataBindingClassNameForResource(LayoutResource layoutResource,
+  private ClassName getDataBindingClassNameForResource(ResourceValue layoutResource,
       String moduleName) {
     StringBuilder builder = new StringBuilder();
     String[] parts = layoutResource.getResourceName().split("_");
@@ -86,7 +86,7 @@ class DataBindingModelInfo extends GeneratedModelInfo {
     return ClassName.get(moduleName, simpleName);
   }
 
-  LayoutResource getLayoutResource() {
+  ResourceValue getLayoutResource() {
     return layoutResource;
   }
 }

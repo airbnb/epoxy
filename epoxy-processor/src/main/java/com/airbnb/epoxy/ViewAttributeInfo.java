@@ -33,6 +33,7 @@ import static com.airbnb.epoxy.Utils.removeSetPrefix;
 
 class ViewAttributeInfo extends AttributeInfo {
   private final ModelViewInfo modelInfo;
+  private final LayoutResourceProcessor resourceProcessor;
   final String propName;
   final String viewSetterMethodName;
   final boolean resetWithNull;
@@ -40,7 +41,8 @@ class ViewAttributeInfo extends AttributeInfo {
   String constantFieldNameForDefaultValue;
 
   ViewAttributeInfo(ModelViewInfo modelInfo, ExecutableElement setterMethod, Types types,
-      Elements elements, ErrorLogger errorLogger) {
+      Elements elements, ErrorLogger errorLogger, LayoutResourceProcessor resourceProcessor) {
+    this.resourceProcessor = resourceProcessor;
     ModelProp propAnnotation = setterMethod.getAnnotation(ModelProp.class);
     TextProp textAnnotation = setterMethod.getAnnotation(TextProp.class);
     CallbackProp callbackAnnotation = setterMethod.getAnnotation(CallbackProp.class);
@@ -55,6 +57,12 @@ class ViewAttributeInfo extends AttributeInfo {
       groupKey = propAnnotation.group();
       options.addAll(Arrays.asList(propAnnotation.options()));
     } else if (textAnnotation != null) {
+      int stringResValue = textAnnotation.defaultRes();
+      if (stringResValue != 0) {
+        ResourceValue stringResource = resourceProcessor
+            .getStringResourceInAnnotation(setterMethod, TextProp.class, stringResValue);
+        codeToSetDefault.explicit = stringResource.getCode();
+      }
       options.add(Option.GenerateStringOverloads);
     } else if (callbackAnnotation != null) {
       options.add(Option.DoNotHash);
@@ -201,9 +209,9 @@ class ViewAttributeInfo extends AttributeInfo {
     }
 
     errorLogger.logError(
-        "The default value for (%s#%s) could not be found. It must be a constant field in the "
+        "The default value for (%s#%s) could not be found. Expected a constant named '%s' in the "
             + "view class.",
-        modelInfo.viewElement.getSimpleName(), viewSetterMethodName);
+        modelInfo.viewElement.getSimpleName(), viewSetterMethodName, defaultConstant);
   }
 
   private void validatePropOptions(ErrorLogger errorLogger, Set<Option> options, Types types,

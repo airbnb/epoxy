@@ -166,14 +166,14 @@ class GeneratedModelWriter {
     }
 
     List<MethodSpec> result = new ArrayList<>();
-    LayoutResource layout = getDefaultLayoutResource(info);
+    ResourceValue layout = getDefaultLayoutResource(info);
     if (layout == null || !layout.getQualified()) {
       return Collections.emptyList();
     }
 
     int defaultLayoutNameLength = layout.getResourceName().length();
 
-    for (LayoutResource otherLayout : layoutResourceProcessor.getAlternateLayouts(layout)) {
+    for (ResourceValue otherLayout : layoutResourceProcessor.getAlternateLayouts(layout)) {
       if (!otherLayout.getQualified()) {
         continue;
       }
@@ -589,7 +589,7 @@ class GeneratedModelWriter {
   private void addDefaultLayoutMethodIfNeeded(GeneratedModelInfo modelInfo,
       List<MethodSpec> methods) {
 
-    LayoutResource layout = getDefaultLayoutResource(modelInfo);
+    ResourceValue layout = getDefaultLayoutResource(modelInfo);
     if (layout == null) {
       return;
     }
@@ -610,7 +610,7 @@ class GeneratedModelWriter {
   }
 
   @Nullable
-  private LayoutResource getDefaultLayoutResource(GeneratedModelInfo modelInfo) {
+  private ResourceValue getDefaultLayoutResource(GeneratedModelInfo modelInfo) {
     // TODO: This is pretty ugly and could be abstracted/decomposed better. We could probably
     // make a small class to contain this logic, or build it into the model info classes
 

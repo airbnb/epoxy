@@ -20,29 +20,8 @@ public class ViewProcessorTest {
       + "  public static final class layout {\n"
       + "    public static final int res = 0x7f040008;\n"
       + "  }\n"
-      + "}"
-  );
-
-  private static final JavaFileObject R2 = JavaFileObjects.forSourceString("com.airbnb.epoxy.R2", ""
-      + "package com.airbnb.epoxy;\n"
-      + "public final class R2 {\n"
-      + "  public static final class array {\n"
-      + "    public static final int res = 0x7f040001;\n"
-      + "  }\n"
-      + "  public static final class bool {\n"
-      + "    public static final int res = 0x7f040002;\n"
-      + "  }\n"
-      + "  public static final class color {\n"
-      + "    public static final int res = 0x7f040003;\n"
-      + "  }\n"
-      + "  public static final class layout {\n"
-      + "    public static final int res = 0x7f040008;\n"
-      + "  }\n"
-      + "  public static final class integer {\n"
-      + "    public static final int res = 0x7f040004;\n"
-      + "  }\n"
-      + "  public static final class styleable {\n"
-      + "    public static final int[] ActionBar = { 0x7f010001, 0x7f010003 };\n"
+      + "  public static final class string {\n"
+      + "    public static final int string_resource_value = 0x7f040009;\n"
       + "  }\n"
       + "}"
   );
@@ -906,6 +885,33 @@ public class ViewProcessorTest {
   }
 
   @Test
+  public void textPropDefault() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("TextPropDefaultView.java");
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource("TextPropDefaultViewModel_.java");
+
+    assert_().about(javaSources())
+        .that(asList(model, R))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void textPropDefault_throwsForNonStringRes() {
+    JavaFileObject model = JavaFileObjects
+        .forResource("TextPropDefaultView_throwsForNonStringRes.java");
+
+    assert_().about(javaSources())
+        .that(asList(model, R))
+        .processedWith(new EpoxyProcessor())
+        .failsToCompile()
+        .withErrorContaining("requires a string resource");
+  }
+
+  @Test
   public void callbackProp() {
     JavaFileObject model = JavaFileObjects
         .forResource("TestCallbackPropView.java");
@@ -930,6 +936,5 @@ public class ViewProcessorTest {
         .processedWith(new EpoxyProcessor())
         .failsToCompile()
         .withErrorContaining("must be marked Nullable");
-
   }
 }
