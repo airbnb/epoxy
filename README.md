@@ -11,7 +11,7 @@ This abstracts the boilerplate of view holders, diffing items and binding payloa
 * [Documentation](#documentation)
 * [Min SDK](#min-sdk)
 * [Contributing](#contributing)
-* [Sample App](/epoxy-sample)
+* [Sample App](https://github.com/airbnb/epoxy/wiki/Sample-App)
 
 ## Installation
 
