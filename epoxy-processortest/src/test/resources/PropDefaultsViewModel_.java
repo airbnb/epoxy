@@ -23,7 +23,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   /**
    * Bitset index: 0 */
   @Nullable
-  private CharSequence defaultsToNull_CharSequence = null;
+  private CharSequence defaultsToNull_CharSequence = (CharSequence) null;
 
   /**
    * Bitset index: 1 */
@@ -149,7 +149,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   }
 
   /**
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see PropDefaultsView#defaultsToNull(CharSequence)
    */
@@ -329,7 +329,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
-    this.defaultsToNull_CharSequence = null;
+    this.defaultsToNull_CharSequence = (CharSequence) null;
     this.noDefaultSoItIsRequired_CharSequence = null;
     this.primitivesHaveImplicitDefaultsAndCannotBeRequired_Int = 0;
     this.primitiveWithExplicitDefault_Int = PropDefaultsView.PRIMITIVE_DEFAULT;

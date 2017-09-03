@@ -23,7 +23,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
   /**
    * Bitset index: 0 */
   @Nullable
-  private CharSequence something_CharSequence = null;
+  private CharSequence something_CharSequence = (CharSequence) null;
 
   /**
    * Bitset index: 1 */
@@ -135,7 +135,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
       object.setSomething(something_Int);
     }
     else {
-      object.setSomething(null);
+      object.setSomething((CharSequence) null);
     }
     if (assignedAttributes_epoxyGeneratedModel.get(2)) {
       object.setSomethingElse(somethingElse_CharSequence);
@@ -279,7 +279,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
         object.setSomething(something_Int);
       }
       else {
-        object.setSomething(null);
+        object.setSomething((CharSequence) null);
       }
     }
 
@@ -375,7 +375,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
   }
 
   /**
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see PropGroupsView#setSomething(CharSequence)
    */
@@ -401,7 +401,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
   public PropGroupsViewModel_ something(int something) {
     assignedAttributes_epoxyGeneratedModel.set(1);
     assignedAttributes_epoxyGeneratedModel.clear(0);
-    this.something_CharSequence = null;
+    this.something_CharSequence = (CharSequence) null;
     onMutation();
     this.something_Int = something;
     return this;
@@ -719,7 +719,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
-    this.something_CharSequence = null;
+    this.something_CharSequence = (CharSequence) null;
     this.something_Int = 0;
     this.somethingElse_CharSequence = null;
     this.somethingElse_Int = 0;

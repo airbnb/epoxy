@@ -37,7 +37,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   /**
    * Bitset index: 1 */
   @Nullable
-  private String nullableStringValue_String = null;
+  private String nullableStringValue_String = (String) null;
 
   /**
    * Bitset index: 2 */
@@ -100,7 +100,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
 
   /**
    * Bitset index: 13 */
-  private StringAttributeData title_StringAttributeData =  new StringAttributeData(null);
+  private StringAttributeData title_StringAttributeData =  new StringAttributeData((CharSequence) null);
 
   @Override
   public void addTo(EpoxyController controller) {
@@ -282,7 +282,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   /**
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (String) null
    *
    * @see TestManyTypesView#setNullableStringValue(String)
    */
@@ -524,7 +524,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   /**
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see TestManyTypesView#setTitle(CharSequence)
    */
@@ -538,7 +538,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   /**
    * If a value of 0 is set then this attribute will revert to its default value.
    * <p>
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see TestManyTypesView#setTitle(CharSequence)
    */
@@ -552,7 +552,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   /**
    * If a value of 0 is set then this attribute will revert to its default value.
    * <p>
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see TestManyTypesView#setTitle(CharSequence)
    */
@@ -566,7 +566,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   /**
    * If a value of 0 is set then this attribute will revert to its default value.
    * <p>
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see TestManyTypesView#setTitle(CharSequence)
    */
@@ -656,7 +656,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     onModelUnboundListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.stringValue_String = null;
-    this.nullableStringValue_String = null;
+    this.nullableStringValue_String = (String) null;
     this.intValue_Int = 0;
     this.intValueWithAnnotation_Int = 0;
     this.intValueWithRangeAnnotation_Int = 0;
@@ -668,7 +668,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     this.arrayValue_StringArray = null;
     this.listValue_List = null;
     this.clickListener_OnClickListener = null;
-    this.title_StringAttributeData =  new StringAttributeData(null);
+    this.title_StringAttributeData =  new StringAttributeData((CharSequence) null);
     super.reset();
     return this;
   }

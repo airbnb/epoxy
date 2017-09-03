@@ -7,17 +7,17 @@ import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
 import java.lang.CharSequence;
 import java.lang.IllegalArgumentException;
-import java.lang.IllegalStateException;
 import java.lang.Number;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.BitSet;
+import java.util.List;
 
 /**
  * Generated file. Do not modify! */
 public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverloadsView> implements GeneratedModel<TestStringOverloadsView> {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
+  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(2);
 
   private OnModelBoundListener<TestStringOverloadsViewModel_, TestStringOverloadsView> onModelBoundListener_epoxyGeneratedModel;
 
@@ -27,13 +27,15 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
    * Bitset index: 0 */
   private StringAttributeData title_StringAttributeData =  new StringAttributeData();
 
+  /**
+   * Bitset index: 1 */
+  @Nullable
+  private List<CharSequence> title_List = (List<CharSequence>) null;
+
   @Override
   public void addTo(EpoxyController controller) {
     super.addTo(controller);
     addWithDebugValidation(controller);
-    if (!assignedAttributes_epoxyGeneratedModel.get(0)) {
-    	throw new IllegalStateException("A value is required for setTitle");
-    }
   }
 
   @Override
@@ -45,7 +47,15 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
   @Override
   public void bind(final TestStringOverloadsView object) {
     super.bind(object);
-    object.setTitle(title_StringAttributeData.toString(object.getContext()));
+    if (assignedAttributes_epoxyGeneratedModel.get(0)) {
+      object.setTitle(title_StringAttributeData.toString(object.getContext()));
+    }
+    else if (assignedAttributes_epoxyGeneratedModel.get(1)) {
+      object.setTitle(title_List);
+    }
+    else {
+      object.setTitle((List<CharSequence>) null);
+    }
   }
 
   @Override
@@ -57,8 +67,28 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     TestStringOverloadsViewModel_ that = (TestStringOverloadsViewModel_) previousModel;
     super.bind(object);
 
-    if (!title_StringAttributeData.equals(that.title_StringAttributeData)) {
-      object.setTitle(title_StringAttributeData.toString(object.getContext()));
+    if (assignedAttributes_epoxyGeneratedModel.equals(that.assignedAttributes_epoxyGeneratedModel)) {
+      if (assignedAttributes_epoxyGeneratedModel.get(0)) {
+        if (title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null) {
+          object.setTitle(title_StringAttributeData.toString(object.getContext()));
+        }
+      }
+       else if (assignedAttributes_epoxyGeneratedModel.get(1)) {
+        if (title_List != null ? !title_List.equals(that.title_List) : that.title_List != null) {
+          object.setTitle(title_List);
+        }
+      }
+    }
+    else {
+      if (assignedAttributes_epoxyGeneratedModel.get(0) && !that.assignedAttributes_epoxyGeneratedModel.get(0)) {
+        object.setTitle(title_StringAttributeData.toString(object.getContext()));
+      }
+       else if (assignedAttributes_epoxyGeneratedModel.get(1) && !that.assignedAttributes_epoxyGeneratedModel.get(1)) {
+        object.setTitle(title_List);
+      }
+      else {
+        object.setTitle((List<CharSequence>) null);
+      }
     }
   }
 
@@ -104,7 +134,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     return this;
   }
 
-  public CharSequence getTitle(Context context) {
+  public CharSequence titleStringAttributeData(Context context) {
     return title_StringAttributeData.toString(context);
   }
 
@@ -164,6 +194,25 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     assignedAttributes_epoxyGeneratedModel.set(0);
     title_StringAttributeData.setValue(pluralRes, quantity, formatArgs);
     return this;
+  }
+
+  /**
+   * <i>Optional</i>: Default value is (List<CharSequence>) null
+   *
+   * @see TestStringOverloadsView#setTitle(List<CharSequence>)
+   */
+  public TestStringOverloadsViewModel_ title(@Nullable List<CharSequence> title) {
+    assignedAttributes_epoxyGeneratedModel.set(1);
+    assignedAttributes_epoxyGeneratedModel.clear(0);
+    this.title_StringAttributeData =  new StringAttributeData();
+    onMutation();
+    this.title_List = title;
+    return this;
+  }
+
+  @Nullable
+  public List<CharSequence> titleList() {
+    return title_List;
   }
 
   @Override
@@ -244,6 +293,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     onModelUnboundListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.title_StringAttributeData =  new StringAttributeData();
+    this.title_List = (List<CharSequence>) null;
     super.reset();
     return this;
   }
@@ -269,6 +319,9 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     if (title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null) {
       return false;
     }
+    if (title_List != null ? !title_List.equals(that.title_List) : that.title_List != null) {
+      return false;
+    }
     return true;
   }
 
@@ -278,6 +331,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (title_StringAttributeData != null ? title_StringAttributeData.hashCode() : 0);
+    result = 31 * result + (title_List != null ? title_List.hashCode() : 0);
     return result;
   }
 
@@ -285,6 +339,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
   public String toString() {
     return "TestStringOverloadsViewModel_{" +
         "title_StringAttributeData=" + title_StringAttributeData +
+        ", title_List=" + title_List +
         "}" + super.toString();
   }
 

@@ -21,7 +21,7 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
   /**
    * Bitset index: 0 */
   @Nullable
-  private CharSequence title_CharSequence = null;
+  private CharSequence title_CharSequence = (CharSequence) null;
 
   @Override
   public void addTo(EpoxyController controller) {
@@ -99,7 +99,7 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
   }
 
   /**
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see NullOnRecycleView#setTitle(CharSequence)
    */
@@ -192,7 +192,7 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
-    this.title_CharSequence = null;
+    this.title_CharSequence = (CharSequence) null;
     super.reset();
     return this;
   }

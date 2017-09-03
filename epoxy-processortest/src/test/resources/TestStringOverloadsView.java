@@ -1,7 +1,10 @@
 package com.airbnb.epoxy;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.View;
+
+import java.util.List;
 
 @ModelView(defaultLayout = 1)
 public class TestStringOverloadsView extends View {
@@ -13,5 +16,10 @@ public class TestStringOverloadsView extends View {
   @ModelProp(options = ModelProp.Option.GenerateStringOverloads)
   public void setTitle(CharSequence title) {
 
+  }
+
+  @ModelProp
+  public void setTitle(@Nullable List<CharSequence> title) {
+    // testing that a nullable overload works correctly
   }
 }

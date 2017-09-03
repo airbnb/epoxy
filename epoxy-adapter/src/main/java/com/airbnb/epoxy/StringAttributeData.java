@@ -24,7 +24,7 @@ public class StringAttributeData {
     defaultStringRes = 0;
   }
 
-  public StringAttributeData(@Nullable String defaultString) {
+  public StringAttributeData(@Nullable CharSequence defaultString) {
     hasDefault = true;
     this.defaultString = defaultString;
     string = defaultString;
