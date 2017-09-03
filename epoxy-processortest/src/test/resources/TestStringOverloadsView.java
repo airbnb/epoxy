@@ -23,9 +23,9 @@ public class TestStringOverloadsView extends View {
     // testing that a nullable overload works correctly
     // test setting options via the value param shortcut
   }
-  
+
   @ModelProp(ModelProp.Option.GenerateStringOverloads)
   public void setTitleViaValueShortcut(CharSequence title) {
-
+     // test setting options via the value param shortcut
   }
 }
