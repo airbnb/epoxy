@@ -11,7 +11,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class CustomPackageLayoutPatternViewModel_ extends EpoxyModel<CustomPackageLayoutPatternView> implements GeneratedModel<CustomPackageLayoutPatternView> {
+public class CustomPackageLayoutPatternViewModel_ extends EpoxyModel<CustomPackageLayoutPatternView> implements GeneratedModel<CustomPackageLayoutPatternView>, CustomPackageLayoutPatternViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(0);
 
   private OnModelBoundListener<CustomPackageLayoutPatternViewModel_, CustomPackageLayoutPatternView> onModelBoundListener_epoxyGeneratedModel;

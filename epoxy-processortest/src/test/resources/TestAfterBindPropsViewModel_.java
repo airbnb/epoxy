@@ -11,7 +11,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class TestAfterBindPropsViewModel_ extends EpoxyModel<TestAfterBindPropsView> implements GeneratedModel<TestAfterBindPropsView> {
+public class TestAfterBindPropsViewModel_ extends EpoxyModel<TestAfterBindPropsView> implements GeneratedModel<TestAfterBindPropsView>, TestAfterBindPropsViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(2);
 
   private OnModelBoundListener<TestAfterBindPropsViewModel_, TestAfterBindPropsView> onModelBoundListener_epoxyGeneratedModel;

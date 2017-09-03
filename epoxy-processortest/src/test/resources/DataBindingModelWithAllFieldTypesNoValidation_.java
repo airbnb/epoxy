@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * Generated file. Do not modify! */
-public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingModelWithAllFieldTypesNoValidation implements GeneratedModel<DataBindingEpoxyModel.DataBindingHolder> {
+public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingModelWithAllFieldTypesNoValidation implements GeneratedModel<DataBindingEpoxyModel.DataBindingHolder>, DataBindingModelWithAllFieldTypesNoValidationBuilder {
   private OnModelBoundListener<DataBindingModelWithAllFieldTypesNoValidation_, DataBindingEpoxyModel.DataBindingHolder> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<DataBindingModelWithAllFieldTypesNoValidation_, DataBindingEpoxyModel.DataBindingHolder> onModelUnboundListener_epoxyGeneratedModel;

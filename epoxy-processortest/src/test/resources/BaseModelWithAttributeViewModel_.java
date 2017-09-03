@@ -13,7 +13,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class BaseModelViewModel_ extends TestBaseModel<BaseModelView> implements GeneratedModel<BaseModelView> {
+public class BaseModelViewModel_ extends TestBaseModel<BaseModelView> implements GeneratedModel<BaseModelView>, BaseModelViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(2);
 
   private OnModelBoundListener<BaseModelViewModel_, BaseModelView> onModelBoundListener_epoxyGeneratedModel;

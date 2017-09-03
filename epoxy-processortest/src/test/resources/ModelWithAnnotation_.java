@@ -12,7 +12,7 @@ import java.lang.String;
 /**
  * Generated file. Do not modify! */
 @Deprecated
-public class ModelWithAnnotation_ extends ModelWithAnnotation implements GeneratedModel<Object> {
+public class ModelWithAnnotation_ extends ModelWithAnnotation implements GeneratedModel<Object>, ModelWithAnnotationBuilder {
   private OnModelBoundListener<ModelWithAnnotation_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithAnnotation_, Object> onModelUnboundListener_epoxyGeneratedModel;

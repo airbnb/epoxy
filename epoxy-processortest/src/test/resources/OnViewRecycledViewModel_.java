@@ -13,7 +13,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> implements GeneratedModel<OnViewRecycledView> {
+public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> implements GeneratedModel<OnViewRecycledView>, OnViewRecycledViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
   private OnModelBoundListener<OnViewRecycledViewModel_, OnViewRecycledView> onModelBoundListener_epoxyGeneratedModel;

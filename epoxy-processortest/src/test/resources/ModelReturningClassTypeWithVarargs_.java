@@ -10,7 +10,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelReturningClassTypeWithVarargs_ extends ModelReturningClassTypeWithVarargs implements GeneratedModel<Object> {
+public class ModelReturningClassTypeWithVarargs_ extends ModelReturningClassTypeWithVarargs implements GeneratedModel<Object>, ModelReturningClassTypeWithVarargsBuilder {
   private OnModelBoundListener<ModelReturningClassTypeWithVarargs_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelReturningClassTypeWithVarargs_, Object> onModelUnboundListener_epoxyGeneratedModel;

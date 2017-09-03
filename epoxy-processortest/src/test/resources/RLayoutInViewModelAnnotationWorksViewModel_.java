@@ -11,7 +11,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class RLayoutInViewModelAnnotationWorksViewModel_ extends EpoxyModel<RLayoutInViewModelAnnotationWorksView> implements GeneratedModel<RLayoutInViewModelAnnotationWorksView> {
+public class RLayoutInViewModelAnnotationWorksViewModel_ extends EpoxyModel<RLayoutInViewModelAnnotationWorksView> implements GeneratedModel<RLayoutInViewModelAnnotationWorksView>, RLayoutInViewModelAnnotationWorksViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(0);
 
   private OnModelBoundListener<RLayoutInViewModelAnnotationWorksViewModel_, RLayoutInViewModelAnnotationWorksView> onModelBoundListener_epoxyGeneratedModel;

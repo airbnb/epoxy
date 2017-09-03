@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors implements GeneratedModel<Object> {
+public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors implements GeneratedModel<Object>, ModelWithVarargsConstructorsBuilder {
   private OnModelBoundListener<ModelWithVarargsConstructors_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithVarargsConstructors_, Object> onModelUnboundListener_epoxyGeneratedModel;

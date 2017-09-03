@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * Generated file. Do not modify! */
-public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> implements GeneratedModel<TestManyTypesView> {
+public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> implements GeneratedModel<TestManyTypesView>, TestManyTypesViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(14);
 
   private OnModelBoundListener<TestManyTypesViewModel_, TestManyTypesView> onModelBoundListener_epoxyGeneratedModel;

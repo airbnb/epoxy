@@ -14,7 +14,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements GeneratedModel<DoNotHashView> {
+public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements GeneratedModel<DoNotHashView>, DoNotHashViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(3);
 
   private OnModelBoundListener<DoNotHashViewModel_, DoNotHashView> onModelBoundListener_epoxyGeneratedModel;

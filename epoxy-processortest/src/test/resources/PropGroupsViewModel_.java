@@ -13,7 +13,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements GeneratedModel<PropGroupsView> {
+public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements GeneratedModel<PropGroupsView>, PropGroupsViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(14);
 
   private OnModelBoundListener<PropGroupsViewModel_, PropGroupsView> onModelBoundListener_epoxyGeneratedModel;

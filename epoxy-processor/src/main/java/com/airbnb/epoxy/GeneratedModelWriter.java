@@ -63,7 +63,7 @@ class GeneratedModelWriter {
    * Use this suffix on helper fields added to the generated class so that we don't clash with
    * fields on the original model.
    */
-  static final String GENERATED_FIELD_SUFFIX = "_epoxyGeneratedModel";
+  private static final String GENERATED_FIELD_SUFFIX = "_epoxyGeneratedModel";
   private static final String CREATE_NEW_HOLDER_METHOD_NAME = "createNewHolder";
   private static final String GET_DEFAULT_LAYOUT_METHOD_NAME = "getDefaultLayout";
   static final String ATTRIBUTES_BITSET_FIELD_NAME = "assignedAttributes" + GENERATED_FIELD_SUFFIX;
@@ -129,7 +129,8 @@ class GeneratedModelWriter {
       return;
     }
 
-    TypeSpec.Builder builder = TypeSpec.classBuilder(info.getGeneratedName())
+    final ClassName generatedModelName = info.getGeneratedName();
+    TypeSpec.Builder builder = TypeSpec.classBuilder(generatedModelName)
         .addJavadoc("Generated file. Do not modify!")
         .addModifiers(PUBLIC)
         .superclass(info.getSuperClassName())
@@ -155,7 +156,11 @@ class GeneratedModelWriter {
 
     builderHooks.beforeFinalBuild(builder);
 
-    JavaFile.builder(info.getGeneratedName().packageName(), builder.build())
+
+    new ModelBuilderInterfaceWriter(filer, info, builder.build().methodSpecs)
+        .addInterface(builder);
+
+    JavaFile.builder(generatedModelName.packageName(), builder.build())
         .build()
         .writeTo(filer);
   }

@@ -10,7 +10,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class AbstractModelWithHolder_ extends AbstractModelWithHolder implements GeneratedModel<AbstractModelWithHolder.Holder> {
+public class AbstractModelWithHolder_ extends AbstractModelWithHolder implements GeneratedModel<AbstractModelWithHolder.Holder>, AbstractModelWithHolderBuilder {
   private OnModelBoundListener<AbstractModelWithHolder_, AbstractModelWithHolder.Holder> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<AbstractModelWithHolder_, AbstractModelWithHolder.Holder> onModelUnboundListener_epoxyGeneratedModel;

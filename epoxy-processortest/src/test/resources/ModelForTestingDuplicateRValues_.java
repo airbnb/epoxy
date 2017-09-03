@@ -11,7 +11,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelForTestingDuplicateRValues_ extends ModelForTestingDuplicateRValues implements GeneratedModel<Object> {
+public class ModelForTestingDuplicateRValues_ extends ModelForTestingDuplicateRValues implements GeneratedModel<Object>, ModelForTestingDuplicateRValuesBuilder {
   private OnModelBoundListener<ModelForTestingDuplicateRValues_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelForTestingDuplicateRValues_, Object> onModelUnboundListener_epoxyGeneratedModel;
