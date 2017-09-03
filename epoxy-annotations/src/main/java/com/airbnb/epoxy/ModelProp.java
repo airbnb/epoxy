@@ -71,6 +71,12 @@ public @interface ModelProp {
   Option[] options() default {};
 
   /**
+   * The same as {@link #options()}, but this allows the shortcut of setting an option eg
+   * "@ModelProp(DoNotHash)".
+   */
+  Option[] value() default {};
+
+  /**
    * The name of the constant field that should be used as the default value for this prop. The
    * default value will be used if the prop value isn't set on the model.
    * <p>

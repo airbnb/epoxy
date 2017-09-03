@@ -14,4 +14,10 @@ public class TestStringOverloadsView extends View {
   public void setTitle(CharSequence title) {
 
   }
+
+  // test setting options via the value param shortcut
+  @ModelProp(ModelProp.Option.GenerateStringOverloads)
+  public void setTitleViaValueShortcut(CharSequence title) {
+
+  }
 }

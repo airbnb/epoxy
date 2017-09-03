@@ -56,6 +56,7 @@ class ViewAttributeInfo extends AttributeInfo {
       defaultConstant = propAnnotation.defaultValue();
       groupKey = propAnnotation.group();
       options.addAll(Arrays.asList(propAnnotation.options()));
+      options.addAll(Arrays.asList(propAnnotation.value()));
     } else if (textAnnotation != null) {
       int stringResValue = textAnnotation.defaultRes();
       if (stringResValue != 0) {
