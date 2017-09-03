@@ -23,7 +23,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
 
   /**
    * Bitset index: 0 */
-  private StringAttributeData title_StringAttributeData =  new StringAttributeData(null);
+  private StringAttributeData title_StringAttributeData =  new StringAttributeData((CharSequence) null);
 
   @Override
   public void addTo(EpoxyController controller) {
@@ -105,7 +105,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   /**
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see TestNullStringOverloadsView#setTitle(CharSequence)
    */
@@ -119,7 +119,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   /**
    * If a value of 0 is set then this attribute will revert to its default value.
    * <p>
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see TestNullStringOverloadsView#setTitle(CharSequence)
    */
@@ -133,7 +133,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   /**
    * If a value of 0 is set then this attribute will revert to its default value.
    * <p>
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see TestNullStringOverloadsView#setTitle(CharSequence)
    */
@@ -147,7 +147,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   /**
    * If a value of 0 is set then this attribute will revert to its default value.
    * <p>
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (CharSequence) null
    *
    * @see TestNullStringOverloadsView#setTitle(CharSequence)
    */
@@ -236,7 +236,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
-    this.title_StringAttributeData =  new StringAttributeData(null);
+    this.title_StringAttributeData =  new StringAttributeData((CharSequence) null);
     super.reset();
     return this;
   }

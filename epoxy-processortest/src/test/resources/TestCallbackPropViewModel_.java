@@ -22,7 +22,7 @@ public class TestCallbackPropViewModel_ extends EpoxyModel<TestCallbackPropView>
   /**
    * Bitset index: 0 */
   @Nullable
-  private View.OnClickListener listener_OnClickListener = null;
+  private View.OnClickListener listener_OnClickListener = (View.OnClickListener) null;
 
   @Override
   public void addTo(EpoxyController controller) {
@@ -118,7 +118,7 @@ public class TestCallbackPropViewModel_ extends EpoxyModel<TestCallbackPropView>
   }
 
   /**
-   * <i>Optional</i>: Default value is null
+   * <i>Optional</i>: Default value is (View.OnClickListener) null
    *
    * @see TestCallbackPropView#setListener(View.OnClickListener)
    */
@@ -211,7 +211,7 @@ public class TestCallbackPropViewModel_ extends EpoxyModel<TestCallbackPropView>
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
-    this.listener_OnClickListener = null;
+    this.listener_OnClickListener = (View.OnClickListener) null;
     super.reset();
     return this;
   }

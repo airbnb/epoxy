@@ -96,7 +96,7 @@ class ViewAttributeInfo extends AttributeInfo {
 
     assignDefaultValue(defaultConstant, errorLogger, types);
     VariableElement paramElement = param;
-    assignNullability(paramElement);
+    assignNullability(paramElement, typeMirror);
 
     createJavaDoc(elements.getDocComment(setterMethod), codeToSetDefault,
         constantFieldNameForDefaultValue,
@@ -140,7 +140,7 @@ class ViewAttributeInfo extends AttributeInfo {
     return super.isRequired();
   }
 
-  private void assignNullability(VariableElement paramElement) {
+  private void assignNullability(VariableElement paramElement, TypeMirror typeMirror) {
     if (isPrimitive()) {
       return;
     }
@@ -150,7 +150,9 @@ class ViewAttributeInfo extends AttributeInfo {
 
     if (isMarkedNullable(paramElement)) {
       setNullable(true);
-      codeToSetDefault.implicit = CodeBlock.of("null");
+      // Need to cast the null because if there are other overloads with the same method
+      // name this can be ambiguous and fail to compile
+      codeToSetDefault.implicit = CodeBlock.of("($T) null", typeMirror);
     }
   }
 
