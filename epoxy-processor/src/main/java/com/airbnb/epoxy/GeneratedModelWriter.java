@@ -830,7 +830,7 @@ class GeneratedModelWriter {
 
   private MethodSpec generateSetClickModelListener(GeneratedModelInfo classInfo,
       AttributeInfo attribute) {
-    String attributeName = attribute.getFieldName();
+    String attributeName = attribute.generatedSetterName();
 
     ParameterizedTypeName clickListenerType =
         isViewLongClickListenerType(attribute.getTypeMirror())
