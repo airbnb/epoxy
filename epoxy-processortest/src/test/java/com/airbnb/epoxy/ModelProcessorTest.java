@@ -19,27 +19,27 @@ import static junit.framework.Assert.assertTrue;
 public class ModelProcessorTest {
   @Test
   public void testSimpleModel() {
-    testGeneration("BasicModelWithAttribute.java", "BasicModelWithAttribute_.java");
+    checkGeneration("BasicModelWithAttribute.java", "BasicModelWithAttribute_.java");
   }
 
   @Test
   public void testModelWithAllFieldTypes() {
-    testGeneration("ModelWithAllFieldTypes.java", "ModelWithAllFieldTypes_.java");
+    checkGeneration("ModelWithAllFieldTypes.java", "ModelWithAllFieldTypes_.java");
   }
 
   @Test
   public void testModelWithConstructors() {
-    testGeneration("ModelWithConstructors.java", "ModelWithConstructors_.java");
+    checkGeneration("ModelWithConstructors.java", "ModelWithConstructors_.java");
   }
 
   @Test
   public void testModelWithSuper() {
-    testGeneration("ModelWithSuper.java", "ModelWithSuper_.java");
+    checkGeneration("ModelWithSuper.java", "ModelWithSuper_.java");
   }
 
   @Test
   public void testModelWithFieldAnnotation() {
-    testGeneration("ModelWithFieldAnnotation.java", "ModelWithFieldAnnotation_.java");
+    checkGeneration("ModelWithFieldAnnotation.java", "ModelWithFieldAnnotation_.java");
   }
 
   @Test
@@ -61,91 +61,57 @@ public class ModelProcessorTest {
 
   @Test
   public void testModelWithType() {
-    testGeneration("ModelWithType.java", "ModelWithType_.java");
+    checkGeneration("ModelWithType.java", "ModelWithType_.java");
   }
 
   @Test
   public void testModelWithoutHash() {
-    testGeneration("ModelWithoutHash.java", "ModelWithoutHash_.java");
+    checkGeneration("ModelWithoutHash.java", "ModelWithoutHash_.java");
   }
 
   @Test
   public void testDoNotHashModel() {
-    testGeneration("ModelDoNotHash.java", "ModelDoNotHash_.java");
+    checkGeneration("ModelDoNotHash.java", "ModelDoNotHash_.java");
   }
 
   @Test
   public void testModelWithFinalAttribute() {
-    testGeneration("ModelWithFinalField.java", "ModelWithFinalField_.java");
+    checkGeneration("ModelWithFinalField.java", "ModelWithFinalField_.java");
   }
 
   @Test
   public void testModelWithStaticAttributeFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithStaticField.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("static");
+    checkFailure("ModelWithStaticField.java", "static");
   }
 
   @Test
   public void testModelWithPrivateClassFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateInnerClass.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("private classes");
+    checkFailure("ModelWithPrivateInnerClass.java", "private classes");
   }
 
   @Test
   public void testModelWithFinalClassFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithFinalClass.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile();
+    checkFailure("ModelWithFinalClass.java", "");
   }
 
   @Test
   public void testModelThatDoesNotExtendEpoxyModelFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithoutEpoxyExtension.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("must extend");
+    checkFailure("ModelWithoutEpoxyExtension.java", "must extend");
   }
 
   @Test
   public void testModelAsInnerClassFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelAsInnerClass.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("Nested classes");
+    checkFailure("ModelAsInnerClass.java", "Nested classes");
   }
 
   @Test
   public void testModelWithIntDefAnnotation() {
-    testGeneration("ModelWithIntDef.java", "ModelWithIntDef_.java");
+    checkGeneration("ModelWithIntDef.java", "ModelWithIntDef_.java");
   }
 
   @Test
   public void testModelWithAnnotatedClass() {
-    testGeneration("ModelWithAnnotatedClass.java", "ModelWithAnnotatedClass_.java");
+    checkGeneration("ModelWithAnnotatedClass.java", "ModelWithAnnotatedClass_.java");
   }
 
   @Test
@@ -172,7 +138,7 @@ public class ModelProcessorTest {
 
   @Test
   public void testModelWithAbstractClassAndAnnotation() {
-    testGeneration("ModelWithAbstractClassAndAnnotation.java",
+    checkGeneration("ModelWithAbstractClassAndAnnotation.java",
         "ModelWithAbstractClassAndAnnotation_.java");
   }
 
@@ -197,45 +163,39 @@ public class ModelProcessorTest {
 
   @Test
   public void testModelWithoutSetter() {
-    testGeneration("ModelWithoutSetter.java", "ModelWithoutSetter_.java");
+    checkGeneration("ModelWithoutSetter.java", "ModelWithoutSetter_.java");
   }
 
   @Test
   public void testModelReturningClassType() {
-    testGeneration("ModelReturningClassType.java", "ModelReturningClassType_.java");
+    checkGeneration("ModelReturningClassType.java", "ModelReturningClassType_.java");
   }
 
   @Test
   public void testModelReturningClassTypeWithVarargs() {
-    testGeneration("ModelReturningClassTypeWithVarargs.java",
+    checkGeneration("ModelReturningClassTypeWithVarargs.java",
         "ModelReturningClassTypeWithVarargs_.java");
   }
 
   @Test
   public void testModelWithVarargsConstructors() {
-    testGeneration("ModelWithVarargsConstructors.java", "ModelWithVarargsConstructors_.java");
+    checkGeneration("ModelWithVarargsConstructors.java", "ModelWithVarargsConstructors_.java");
   }
 
   @Test
   public void testModelWithHolderGeneratesNewHolderMethod() {
-    testGeneration("AbstractModelWithHolder.java", "AbstractModelWithHolder_.java");
+    checkGeneration("AbstractModelWithHolder.java", "AbstractModelWithHolder_.java");
   }
 
   @Test
   public void testGenerateDefaultLayoutMethod() {
-    testGeneration("GenerateDefaultLayoutMethod.java", "GenerateDefaultLayoutMethod_.java");
+    checkGeneration("GenerateDefaultLayoutMethod.java", "GenerateDefaultLayoutMethod_.java");
   }
 
   @Test
   public void testGenerateDefaultLayoutMethodFailsIfLayoutNotSpecified() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("GenerateDefaultLayoutMethodNoLayout.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("Model must specify a valid layout resource");
+    checkFailure("GenerateDefaultLayoutMethodNoLayout.java",
+        "Model must specify a valid layout resource");
   }
 
   @Test
@@ -279,30 +239,13 @@ public class ModelProcessorTest {
 
   @Test
   public void testGeneratedDefaultMethodWithLayoutFailsIfNotSpecifiedInParent() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("GenerateDefaultLayoutMethodParentStillNoLayout.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("Model must specify a valid layout resource");
+    checkFailure("GenerateDefaultLayoutMethodParentStillNoLayout.java",
+        "Model must specify a valid layout resource");
   }
 
   @Test
   public void modelWithViewClickListener() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithViewClickListener.java");
-
-    JavaFileObject generatedNoLayoutModel = JavaFileObjects
-        .forResource("ModelWithViewClickListener_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedNoLayoutModel);
+    checkGeneration("ModelWithViewClickListener.java", "ModelWithViewClickListener_.java");
   }
 
   @Test
@@ -323,44 +266,121 @@ public class ModelProcessorTest {
 
   @Test
   public void testModelWithPrivateAttributeWithoutGetterAndSetterFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateFieldWithoutGetterAndSetter.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("private fields without proper getter and setter");
+    checkFailure("ModelWithPrivateFieldWithoutGetterAndSetter.java",
+        "private fields without proper getter and setter");
   }
 
   @Test
   public void testModelWithPrivateAttributeWithoutSetterFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateFieldWithoutSetter.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("private fields without proper getter and setter");
+    checkFailure("ModelWithPrivateFieldWithoutSetter.java",
+        "private fields without proper getter and setter");
   }
 
   @Test
   public void testModelWithPrivateAttributeWithoutGetterFails() {
+    checkFailure("ModelWithPrivateFieldWithoutGetter.java",
+        "private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithIsPrefixGetter() {
+    checkFileCompiles("ModelWithPrivateFieldWithIsPrefixGetter.java");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithPrivateGetterFails() {
+    checkFailure("ModelWithPrivateFieldWithPrivateGetter.java",
+        "private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithStaticGetterFails() {
+    checkFailure("ModelWithPrivateFieldWithStaticGetter.java",
+        "private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithGetterWithParamsFails() {
+    checkFailure("ModelWithPrivateFieldWithGetterWithParams.java",
+        "private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithGetterWithWrongReturnTypeFails() {
+    checkFailure("ModelWithPrivateFieldWithGetterWithWrongReturnType.java",
+        "private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithPrivateSetterFails() {
+    checkFailure("ModelWithPrivateFieldWithPrivateSetter.java",
+        "private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithStaticSetterFails() {
+    checkFailure("ModelWithPrivateFieldWithStaticSetter.java",
+        "private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithGetterWithoutParamsFails() {
+    checkFailure("ModelWithPrivateFieldWithSettterWithoutParams.java",
+        "private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithPrivateAttributeWithSetterWithWrongReturnTypeFails() {
+    checkFailure("ModelWithPrivateFieldWithSetterWithWrongParamType.java",
+        "private fields without proper getter and setter");
+  }
+
+  @Test
+  public void testModelWithAllPrivateFieldTypes() {
+    checkGeneration("ModelWithAllPrivateFieldTypes.java", "ModelWithAllPrivateFieldTypes_.java");
+  }
+
+  @Test
+  public void modelWithViewPrivateClickListener() {
+    checkGeneration("ModelWithPrivateViewClickListener.java",
+        "ModelWithPrivateViewClickListener_.java");
+  }
+
+  @Test
+  public void modelWithPrivateFieldWithSameAsFieldGetterAndSetterName() {
+    checkGeneration("ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName.java",
+        "ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_.java");
+  }
+
+  @Test
+  public void testDoNotUseInToStringModel() {
+    checkGeneration("ModelDoNotUseInToString.java", "ModelDoNotUseInToString_.java");
+  }
+
+  @Test
+  public void modelWithAnnotation() {
+    checkGeneration("ModelWithAnnotation.java", "ModelWithAnnotation_.java");
+  }
+
+  @Test
+  public void testModelBuilderInterface() {
+    checkGeneration("ModelWithAllFieldTypes.java", "ModelWithAllFieldTypesBuilder.java");
+  }
+
+  private void checkFailure(String inputFile, String errorMessage) {
     JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateFieldWithoutGetter.java");
+        .forResource(inputFile);
 
     assert_().about(javaSource())
         .that(model)
         .processedWith(new EpoxyProcessor())
         .failsToCompile()
-        .withErrorContaining("private fields without proper getter and setter");
+        .withErrorContaining(errorMessage);
   }
 
-  @Test
-  public void testModelWithPrivateAttributeWithIsPrefixGetter() {
+  private void checkFileCompiles(String inputFile) {
     JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateFieldWithIsPrefixGetter.java");
+        .forResource(inputFile);
 
     assert_().about(javaSource())
         .that(model)
@@ -368,132 +388,7 @@ public class ModelProcessorTest {
         .compilesWithoutError();
   }
 
-  @Test
-  public void testModelWithPrivateAttributeWithPrivateGetterFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateFieldWithPrivateGetter.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("private fields without proper getter and setter");
-  }
-
-  @Test
-  public void testModelWithPrivateAttributeWithStaticGetterFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateFieldWithStaticGetter.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("private fields without proper getter and setter");
-  }
-
-  @Test
-  public void testModelWithPrivateAttributeWithGetterWithParamsFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateFieldWithGetterWithParams.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("private fields without proper getter and setter");
-  }
-
-  @Test
-  public void testModelWithPrivateAttributeWithGetterWithWrongReturnTypeFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateFieldWithGetterWithWrongReturnType.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("private fields without proper getter and setter");
-  }
-
-  @Test
-  public void testModelWithPrivateAttributeWithPrivateSetterFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateFieldWithPrivateSetter.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("private fields without proper getter and setter");
-  }
-
-  @Test
-  public void testModelWithPrivateAttributeWithStaticSetterFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateFieldWithStaticSetter.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("private fields without proper getter and setter");
-  }
-
-  @Test
-  public void testModelWithPrivateAttributeWithGetterWithoutParamsFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateFieldWithSettterWithoutParams.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("private fields without proper getter and setter");
-  }
-
-  @Test
-  public void testModelWithPrivateAttributeWithSetterWithWrongReturnTypeFails() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateFieldWithSetterWithWrongParamType.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("private fields without proper getter and setter");
-  }
-
-  @Test
-  public void testModelWithAllPrivateFieldTypes() {
-    testGeneration("ModelWithAllPrivateFieldTypes.java", "ModelWithAllPrivateFieldTypes_.java");
-  }
-
-  @Test
-  public void modelWithViewPrivateClickListener() {
-    testGeneration("ModelWithPrivateViewClickListener.java",
-        "ModelWithPrivateViewClickListener_.java");
-  }
-
-  @Test
-  public void modelWithPrivateFieldWithSameAsFieldGetterAndSetterName() {
-    testGeneration("ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName.java",
-        "ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_.java");
-  }
-
-  @Test
-  public void testDoNotUseInToStringModel() {
-    testGeneration("ModelDoNotUseInToString.java", "ModelDoNotUseInToString_.java");
-  }
-
-  @Test
-  public void modelWithAnnotation() {
-    testGeneration("ModelWithAnnotation.java", "ModelWithAnnotation_.java");
-
-
-  }
-
-  private void testGeneration(String inputFile, String generatedFile) {
+  private void checkGeneration(String inputFile, String generatedFile) {
     JavaFileObject model = JavaFileObjects
         .forResource(inputFile);
 
