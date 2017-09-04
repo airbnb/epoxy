@@ -698,6 +698,6 @@ public class ViewProcessorTest {
 
   @Test
   public void testModelBuilderInterface() {
-    assertGeneration("TestManyTypesView.java", "TestManyTypesViewBuilder.java");
+    assertGeneration("TestManyTypesView.java", "TestManyTypesViewModelBuilder.java");
   }
 }
