@@ -11,7 +11,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> implements GeneratedModel<NullOnRecycleView> {
+public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> implements GeneratedModel<NullOnRecycleView>, NullOnRecycleViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
   private OnModelBoundListener<NullOnRecycleViewModel_, NullOnRecycleView> onModelBoundListener_epoxyGeneratedModel;

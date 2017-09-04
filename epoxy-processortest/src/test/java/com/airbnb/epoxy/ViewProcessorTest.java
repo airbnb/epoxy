@@ -6,6 +6,8 @@ import org.junit.Test;
 
 import javax.tools.JavaFileObject;
 
+import static com.airbnb.epoxy.ProcessorTestUtils.assertGeneration;
+import static com.airbnb.epoxy.ProcessorTestUtils.assertGenerationError;
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static com.google.testing.compile.JavaSourcesSubjectFactory.javaSources;
@@ -28,338 +30,129 @@ public class ViewProcessorTest {
 
   @Test
   public void stringOverloads() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("TestStringOverloadsView.java");
-
-    JavaFileObject generatedModel =
-        JavaFileObjects.forResource("TestStringOverloadsViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    assertGeneration("TestStringOverloadsView.java", "TestStringOverloadsViewModel_.java");
   }
 
   @Test
   public void stringOverloads_throwsIfNotCharSequence() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("StringOverloads_throwsIfNotCharSequence.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("must be a CharSequence");
+    assertGenerationError("StringOverloads_throwsIfNotCharSequence.java", "must be a CharSequence");
   }
 
   @Test
   public void nullStringOverloads() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("TestNullStringOverloadsView.java");
-
-    JavaFileObject generatedModel =
-        JavaFileObjects.forResource("TestNullStringOverloadsViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    assertGeneration("TestNullStringOverloadsView.java", "TestNullStringOverloadsViewModel_.java");
   }
 
   @Test
   public void manyTypes() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("TestManyTypesView.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("TestManyTypesViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    assertGeneration("TestManyTypesView.java", "TestManyTypesViewModel_.java");
   }
 
   @Test
   public void prop_throwsIfPrivate() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("Prop_throwsIfPrivate.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("private");
+    assertGenerationError("Prop_throwsIfPrivate.java", "private");
   }
 
   @Test
   public void prop_throwsIfStatic() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("Prop_throwsIfStatic.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("static");
+    assertGenerationError("Prop_throwsIfStatic.java", "static");
   }
 
   @Test
   public void prop_throwsIfNoParams() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("Prop_throwsIfNoParams.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("must have exactly 1 parameter");
+    assertGenerationError("Prop_throwsIfNoParams.java", "must have exactly 1 parameter");
   }
 
   @Test
   public void prop_throwsIfMultipleParams() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("Prop_throwsIfMultipleParams.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("must have exactly 1 parameter");
+    assertGenerationError("Prop_throwsIfMultipleParams.java", "must have exactly 1 parameter");
   }
 
   @Test
   public void groups() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("PropGroupsView.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("PropGroupsViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    assertGeneration("PropGroupsView.java", "PropGroupsViewModel_.java");
   }
 
   @Test
   public void defaults() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("PropDefaultsView.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("PropDefaultsViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    assertGeneration("PropDefaultsView.java", "PropDefaultsViewModel_.java");
   }
 
   @Test
   public void defaults_throwsForNonStaticValue() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("PropDefaultsView_throwsForNonStaticValue.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("static");
+    assertGenerationError("PropDefaultsView_throwsForNonStaticValue.java", "static");
   }
 
   @Test
   public void defaults_throwsForNonFinalValue() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("PropDefaultsView_throwsForNonFinalValue.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("final");
+    assertGenerationError("PropDefaultsView_throwsForNonFinalValue.java", "final");
   }
 
   @Test
   public void defaults_throwsForPrivateValue() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("PropDefaultsView_throwsForPrivateValue.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("final");
+    assertGenerationError("PropDefaultsView_throwsForPrivateValue.java", "final");
   }
 
   @Test
   public void defaults_throwsForWrongType() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("PropDefaultsView_throwsForWrongType.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("must be a int");
+    assertGenerationError("PropDefaultsView_throwsForWrongType.java", "must be a int");
   }
 
   @Test
   public void onViewRecycled() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("OnViewRecycledView.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("OnViewRecycledViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    assertGeneration("OnViewRecycledView.java", "OnViewRecycledViewModel_.java");
   }
 
   @Test
   public void onViewRecycled_throwsIfPrivate() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("OnViewRecycledView_throwsIfPrivate.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("private");
+    assertGenerationError("OnViewRecycledView_throwsIfPrivate.java", "private");
   }
 
   @Test
   public void onViewRecycled_throwsIfStatic() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("OnViewRecycledView_throwsIfStatic.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("static");
+    assertGenerationError("OnViewRecycledView_throwsIfStatic.java", "static");
   }
 
   @Test
   public void onViewRecycled_throwsIfHasParams() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("OnViewRecycledView_throwsIfHasParams.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("must have exactly 0 parameter");
+    assertGenerationError("OnViewRecycledView_throwsIfHasParams.java",
+        "must have exactly 0 parameter");
   }
 
   @Test
   public void nullOnRecycle() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("NullOnRecycleView.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("NullOnRecycleViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    assertGeneration("NullOnRecycleView.java", "NullOnRecycleViewModel_.java");
   }
 
   @Test
   public void nullOnRecycle_throwsIfNotNullable() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("NullOnRecycleView_throwsIfNotNullable.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("@Nullable");
+    assertGenerationError("NullOnRecycleView_throwsIfNotNullable.java", "@Nullable");
   }
 
   @Test
   public void doNotHash() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("DoNotHashView.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("DoNotHashViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    assertGeneration("DoNotHashView.java", "DoNotHashViewModel_.java");
   }
 
   @Test
   public void objectWithoutEqualsThrows() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ObjectWithoutEqualsThrowsView.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("Attribute does not implement hashCode");
+    assertGenerationError("ObjectWithoutEqualsThrowsView.java",
+        "Attribute does not implement hashCode");
   }
 
   @Test
   public void ignoreRequireHashCode() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("IgnoreRequireHashCodeView.java");
-
-    JavaFileObject generatedModel =
-        JavaFileObjects.forResource("IgnoreRequireHashCodeViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    assertGeneration("IgnoreRequireHashCodeView.java", "IgnoreRequireHashCodeViewModel_.java");
   }
 
   @Test
   public void savedState() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("SavedStateView.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("SavedStateViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    assertGeneration("SavedStateView.java", "SavedStateViewModel_.java");
   }
 
   @Test
   public void gridSpanCount() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("GridSpanCountView.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("GridSpanCountViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    assertGeneration("GridSpanCountView.java", "GridSpanCountViewModel_.java");
   }
 
   @Test
@@ -858,30 +651,12 @@ public class ViewProcessorTest {
 
   @Test
   public void textProp() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("TestTextPropView.java");
-
-    JavaFileObject generatedModel =
-        JavaFileObjects.forResource("TestTextPropViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    assertGeneration("TestTextPropView.java", "TestTextPropViewModel_.java");
   }
 
   @Test
   public void textPropMustBeCharSequence() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("TestTextPropMustBeCharSequenceView.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("must be a CharSequence");
+    assertGenerationError("TestTextPropMustBeCharSequenceView.java", "must be a CharSequence");
   }
 
   @Test
@@ -913,28 +688,16 @@ public class ViewProcessorTest {
 
   @Test
   public void callbackProp() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("TestCallbackPropView.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("TestCallbackPropViewModel_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    assertGeneration("TestCallbackPropView.java", "TestCallbackPropViewModel_.java");
   }
 
   @Test
   public void callbackPropMustBeNullable() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("TestCallbackPropMustBeNullableView.java");
+    assertGenerationError("TestCallbackPropMustBeNullableView.java", "must be marked Nullable");
+  }
 
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .failsToCompile()
-        .withErrorContaining("must be marked Nullable");
+  @Test
+  public void testModelBuilderInterface() {
+    assertGeneration("TestManyTypesView.java", "TestManyTypesViewModelBuilder.java");
   }
 }

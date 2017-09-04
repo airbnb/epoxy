@@ -11,7 +11,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithViewLongClickListener_ extends ModelWithViewLongClickListener implements GeneratedModel<Object> {
+public class ModelWithViewLongClickListener_ extends ModelWithViewLongClickListener implements GeneratedModel<Object>, ModelWithViewLongClickListenerBuilder {
   private OnModelBoundListener<ModelWithViewLongClickListener_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithViewLongClickListener_, Object> onModelUnboundListener_epoxyGeneratedModel;

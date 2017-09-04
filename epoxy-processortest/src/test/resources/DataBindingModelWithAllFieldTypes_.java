@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * Generated file. Do not modify! */
-public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllFieldTypes implements GeneratedModel<DataBindingEpoxyModel.DataBindingHolder> {
+public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllFieldTypes implements GeneratedModel<DataBindingEpoxyModel.DataBindingHolder>, DataBindingModelWithAllFieldTypesBuilder {
   private OnModelBoundListener<DataBindingModelWithAllFieldTypes_, DataBindingEpoxyModel.DataBindingHolder> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<DataBindingModelWithAllFieldTypes_, DataBindingEpoxyModel.DataBindingHolder> onModelUnboundListener_epoxyGeneratedModel;

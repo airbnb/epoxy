@@ -11,7 +11,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class LayoutOverloadsViewModel_ extends EpoxyModel<LayoutOverloadsView> implements GeneratedModel<LayoutOverloadsView> {
+public class LayoutOverloadsViewModel_ extends EpoxyModel<LayoutOverloadsView> implements GeneratedModel<LayoutOverloadsView>, LayoutOverloadsViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(0);
 
   private OnModelBoundListener<LayoutOverloadsViewModel_, LayoutOverloadsView> onModelBoundListener_epoxyGeneratedModel;

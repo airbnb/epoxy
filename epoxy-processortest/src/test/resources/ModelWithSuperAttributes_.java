@@ -10,7 +10,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithSuperAttributes_ extends ModelWithSuperAttributes implements GeneratedModel<Object> {
+public class ModelWithSuperAttributes_ extends ModelWithSuperAttributes implements GeneratedModel<Object>, ModelWithSuperAttributesBuilder {
   private OnModelBoundListener<ModelWithSuperAttributes_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithSuperAttributes_, Object> onModelUnboundListener_epoxyGeneratedModel;

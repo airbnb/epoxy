@@ -13,7 +13,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements GeneratedModel<SavedStateView> {
+public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements GeneratedModel<SavedStateView>, SavedStateViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
   private OnModelBoundListener<SavedStateViewModel_, SavedStateView> onModelBoundListener_epoxyGeneratedModel;

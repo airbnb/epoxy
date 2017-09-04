@@ -16,7 +16,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> implements GeneratedModel<TextPropDefaultView> {
+public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> implements GeneratedModel<TextPropDefaultView>, TextPropDefaultViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(2);
 
   private OnModelBoundListener<TextPropDefaultViewModel_, TextPropDefaultView> onModelBoundListener_epoxyGeneratedModel;

@@ -16,7 +16,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> implements GeneratedModel<TestTextPropView> {
+public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> implements GeneratedModel<TestTextPropView>, TestTextPropViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
   private OnModelBoundListener<TestTextPropViewModel_, TestTextPropView> onModelBoundListener_epoxyGeneratedModel;
@@ -32,7 +32,7 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
     super.addTo(controller);
     addWithDebugValidation(controller);
     if (!assignedAttributes_epoxyGeneratedModel.get(0)) {
-      throw new IllegalStateException("A value is required for setTitle");
+    	throw new IllegalStateException("A value is required for setTitle");
     }
   }
 

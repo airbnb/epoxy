@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Generated file. Do not modify! */
-public class ModelReturningClassType_ extends ModelReturningClassType implements GeneratedModel<Object> {
+public class ModelReturningClassType_ extends ModelReturningClassType implements GeneratedModel<Object>, ModelReturningClassTypeBuilder {
   private OnModelBoundListener<ModelReturningClassType_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelReturningClassType_, Object> onModelUnboundListener_epoxyGeneratedModel;

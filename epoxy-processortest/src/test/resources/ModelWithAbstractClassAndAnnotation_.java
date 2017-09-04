@@ -10,7 +10,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithAbstractClassAndAnnotation_ extends ModelWithAbstractClassAndAnnotation implements GeneratedModel<Object> {
+public class ModelWithAbstractClassAndAnnotation_ extends ModelWithAbstractClassAndAnnotation implements GeneratedModel<Object>, ModelWithAbstractClassAndAnnotationBuilder {
   private OnModelBoundListener<ModelWithAbstractClassAndAnnotation_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithAbstractClassAndAnnotation_, Object> onModelUnboundListener_epoxyGeneratedModel;

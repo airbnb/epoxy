@@ -10,7 +10,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithoutHash_ extends ModelWithoutHash implements GeneratedModel<Object> {
+public class ModelWithoutHash_ extends ModelWithoutHash implements GeneratedModel<Object>, ModelWithoutHashBuilder {
   private OnModelBoundListener<ModelWithoutHash_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithoutHash_, Object> onModelUnboundListener_epoxyGeneratedModel;

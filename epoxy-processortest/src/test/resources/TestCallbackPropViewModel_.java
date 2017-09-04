@@ -12,7 +12,7 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class TestCallbackPropViewModel_ extends EpoxyModel<TestCallbackPropView> implements GeneratedModel<TestCallbackPropView> {
+public class TestCallbackPropViewModel_ extends EpoxyModel<TestCallbackPropView> implements GeneratedModel<TestCallbackPropView>, TestCallbackPropViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
   private OnModelBoundListener<TestCallbackPropViewModel_, TestCallbackPropView> onModelBoundListener_epoxyGeneratedModel;

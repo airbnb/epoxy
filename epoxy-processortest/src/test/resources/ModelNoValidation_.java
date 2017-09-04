@@ -10,7 +10,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelNoValidation_ extends ModelNoValidation implements GeneratedModel<Object> {
+public class ModelNoValidation_ extends ModelNoValidation implements GeneratedModel<Object>, ModelNoValidationBuilder {
   private OnModelBoundListener<ModelNoValidation_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelNoValidation_, Object> onModelUnboundListener_epoxyGeneratedModel;

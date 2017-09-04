@@ -10,7 +10,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithFinalField_ extends ModelWithFinalField implements GeneratedModel<Object> {
+public class ModelWithFinalField_ extends ModelWithFinalField implements GeneratedModel<Object>, ModelWithFinalFieldBuilder {
   private OnModelBoundListener<ModelWithFinalField_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithFinalField_, Object> onModelUnboundListener_epoxyGeneratedModel;

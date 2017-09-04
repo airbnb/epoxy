@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements GeneratedModel<Object> {
+public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements GeneratedModel<Object>, ModelWithAllFieldTypesBuilder {
   private OnModelBoundListener<ModelWithAllFieldTypes_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithAllFieldTypes_, Object> onModelUnboundListener_epoxyGeneratedModel;

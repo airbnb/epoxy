@@ -10,7 +10,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelForRProcessingTest_ extends ModelForRProcessingTest implements GeneratedModel<Object> {
+public class ModelForRProcessingTest_ extends ModelForRProcessingTest implements GeneratedModel<Object>, ModelForRProcessingTestBuilder {
   private OnModelBoundListener<ModelForRProcessingTest_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelForRProcessingTest_, Object> onModelUnboundListener_epoxyGeneratedModel;

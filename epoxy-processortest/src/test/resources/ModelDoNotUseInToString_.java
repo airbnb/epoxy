@@ -10,7 +10,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelDoNotUseInToString_ extends ModelDoNotUseInToString implements GeneratedModel<Object> {
+public class ModelDoNotUseInToString_ extends ModelDoNotUseInToString implements GeneratedModel<Object>, ModelDoNotUseInToStringBuilder {
   private OnModelBoundListener<ModelDoNotUseInToString_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelDoNotUseInToString_, Object> onModelUnboundListener_epoxyGeneratedModel;

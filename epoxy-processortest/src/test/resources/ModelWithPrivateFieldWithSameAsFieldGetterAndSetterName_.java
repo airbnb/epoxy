@@ -10,7 +10,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ extends ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName implements GeneratedModel<Object> {
+public class ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ extends ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName implements GeneratedModel<Object>, ModelWithPrivateFieldWithSameAsFieldGetterAndSetterNameBuilder {
   private OnModelBoundListener<ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_, Object> onModelUnboundListener_epoxyGeneratedModel;

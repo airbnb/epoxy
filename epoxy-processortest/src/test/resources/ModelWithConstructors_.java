@@ -10,7 +10,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithConstructors_ extends ModelWithConstructors implements GeneratedModel<Object> {
+public class ModelWithConstructors_ extends ModelWithConstructors implements GeneratedModel<Object>, ModelWithConstructorsBuilder {
   private OnModelBoundListener<ModelWithConstructors_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithConstructors_, Object> onModelUnboundListener_epoxyGeneratedModel;

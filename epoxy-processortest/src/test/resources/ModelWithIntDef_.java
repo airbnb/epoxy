@@ -16,7 +16,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<Object> {
+public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<Object>, ModelWithIntDefBuilder {
   private OnModelBoundListener<ModelWithIntDef_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelWithIntDef_, Object> onModelUnboundListener_epoxyGeneratedModel;
