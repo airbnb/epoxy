@@ -1,3 +1,16 @@
+# 2.4.0 (September 4, 2017)
+* **Improvement** If you are setting options on a @ModelProp and have no other annotation parameters you can now omit the explicit `options = ` param name (https://github.com/airbnb/epoxy/pull/268)
+* **Improvement** If you are using `@TextProp` you can now specify a default string via a string resource (https://github.com/airbnb/epoxy/pull/269)
+
+* **Fixed** EpoxyModelGroup was not binding model click listeners correctly (https://github.com/airbnb/epoxy/pull/267)
+* **Fixed** A model created with @ModelView could fail to compile if it had nullable prop overloads  (https://github.com/airbnb/epoxy/pull/274)
+
+#### Potentially Breaking Fix
+A model created with @ModelView with a click listener had the wrong setter name for the model click listener overload (https://github.com/airbnb/epoxy/pull/275)
+
+If you were setting this you will need to update the setter name. If you were setting the click listener to null you may now have to cast it.
+
+
 # 2.3.0 (August 16, 2017)
 * **New** An `AfterPropsSet` annotation for use in `@ModelView` classes. This allows initialization work to be done after all properties are bound from the model. (https://github.com/airbnb/epoxy/pull/242)
 * **New** Annotations `TextProp` and `CallbackProp`  as convenient replacements for `ModelProp`. (https://github.com/airbnb/epoxy/pull/260)
