@@ -66,7 +66,7 @@ public class EpoxyProcessor extends AbstractProcessor {
   private final List<GeneratedModelInfo> generatedModels = new ArrayList<>();
   private ModelProcessor modelProcessor;
   private LithoSpecProcessor lithoSpecProcessor;
-  private KotlinExtensionGenerator kotlinExtensionGenerator;
+  private KotlinExtensionWriter kotlinExtensionWriter;
   private ModelViewProcessor modelViewProcessor;
 
   public EpoxyProcessor() {
@@ -136,7 +136,7 @@ public class EpoxyProcessor extends AbstractProcessor {
     lithoSpecProcessor = new LithoSpecProcessor(
         elementUtils, typeUtils, configManager, errorLogger, modelWriter);
 
-    kotlinExtensionGenerator = new KotlinExtensionGenerator(processingEnv, errorLogger);
+    kotlinExtensionWriter = new KotlinExtensionWriter(processingEnv, errorLogger);
   }
 
   @Override
@@ -203,10 +203,9 @@ public class EpoxyProcessor extends AbstractProcessor {
       generatedModels.addAll(dataBindingProcessor.resolveDataBindingClassesAndWriteJava());
     }
 
-    // TODO: (eli_hart 8/23/17) Enable when ready
     // TODO: (eli_hart 8/23/17) don't wait until round over?
 //    if (roundEnv.processingOver()) {
-//      kotlinExtensionGenerator.generateExtensionsForModels(generatedModels);
+//      kotlinExtensionWriter.generateExtensionsForModels(generatedModels);
 //    }
 
     if (controllerProcessor.hasControllersToGenerate()

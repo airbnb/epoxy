@@ -14,42 +14,28 @@ const val MODEL_BUILDER_INTERFACE_SUFFIX = "Builder"
  * We can also hide the setters that are legacy from usage with EpoxyAdapter.
  */
 internal class ModelBuilderInterfaceWriter(
-        val filer: Filer,
-        val modelInfo: GeneratedModelInfo,
-        val methods: MutableList<MethodSpec>
+        private val filer: Filer,
+        private val modelInfo: GeneratedModelInfo,
+        private val methods: MutableList<MethodSpec>
 ) {
 
     /** These setters can't be used with models in an EpoxyController, they were made for EpoxyAdapter. */
-    val blackListedLegacySetterNames = setOf("hide", "show", "reset")
+    private val blackListedLegacySetterNames = setOf("hide", "show", "reset")
 
     fun addInterface(modelBuilder: TypeSpec.Builder) {
-        val generatedModelName = modelInfo.generatedClassName
+        modelBuilder.addSuperinterface(getBuilderInterfaceTypeName(modelInfo))
 
-        val interfaceClassName = ClassName.get(
-                generatedModelName.packageName(),
-                generatedModelName.simpleName().removeSuffix("_") + MODEL_BUILDER_INTERFACE_SUFFIX)
+        val modelInterface = TypeSpec.interfaceBuilder(getBuilderInterfaceClassName(modelInfo)).run {
+            addTypeVariables(modelInfo.typeVariables)
+            addMethods(getInterfaceMethods())
+            build()
+        }
 
-        modelBuilder.addSuperinterface(getInterfaceType(interfaceClassName))
-
-        val modelInterface = TypeSpec.interfaceBuilder(interfaceClassName)
-                .addTypeVariables(modelInfo.typeVariables)
-                .addMethods(getInterfaceMethods())
-                .build()
-
-        JavaFile.builder(generatedModelName.packageName(), modelInterface)
+        JavaFile.builder(modelInfo.generatedClassName.packageName(), modelInterface)
                 .build()
                 .writeTo(filer)
     }
 
-    private fun getInterfaceType(interfaceClassName: ClassName): TypeName {
-        val types: Array<TypeName> = modelInfo.typeVariableNames.toTypedArray()
-
-        return if (types.isEmpty()) {
-            interfaceClassName
-        } else {
-            ParameterizedTypeName.get(interfaceClassName, *types)
-        }
-    }
 
     private fun getInterfaceMethods(): List<MethodSpec> {
         return methods.filter {
@@ -71,4 +57,23 @@ internal class ModelBuilderInterfaceWriter(
             }
         }
     }
+}
+
+internal fun getBuilderInterfaceTypeName(modelInfo: GeneratedModelInfo): TypeName {
+    val interfaceClassName = getBuilderInterfaceClassName(modelInfo)
+
+    val types: Array<TypeName> = modelInfo.typeVariableNames.toTypedArray()
+    return if (types.isEmpty()) {
+        interfaceClassName
+    } else {
+        ParameterizedTypeName.get(interfaceClassName, *types)
+    }
+}
+
+internal fun getBuilderInterfaceClassName(modelInfo: GeneratedModelInfo): ClassName {
+    val generatedModelName = modelInfo.generatedClassName
+
+    return ClassName.get(
+            generatedModelName.packageName(),
+            generatedModelName.simpleName().removeSuffix("_") + MODEL_BUILDER_INTERFACE_SUFFIX)
 }
