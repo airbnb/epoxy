@@ -19,77 +19,27 @@ import static junit.framework.Assert.assertTrue;
 public class ModelProcessorTest {
   @Test
   public void testSimpleModel() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("BasicModelWithAttribute.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("BasicModelWithAttribute_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("BasicModelWithAttribute.java", "BasicModelWithAttribute_.java");
   }
 
   @Test
   public void testModelWithAllFieldTypes() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithAllFieldTypes.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithAllFieldTypes_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelWithAllFieldTypes.java", "ModelWithAllFieldTypes_.java");
   }
 
   @Test
   public void testModelWithConstructors() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithConstructors.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithConstructors_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelWithConstructors.java", "ModelWithConstructors_.java");
   }
 
   @Test
   public void testModelWithSuper() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithSuper.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithSuper_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelWithSuper.java", "ModelWithSuper_.java");
   }
 
   @Test
   public void testModelWithFieldAnnotation() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithFieldAnnotation.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithFieldAnnotation_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelWithFieldAnnotation.java", "ModelWithFieldAnnotation_.java");
   }
 
   @Test
@@ -111,62 +61,22 @@ public class ModelProcessorTest {
 
   @Test
   public void testModelWithType() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithType.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithType_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelWithType.java", "ModelWithType_.java");
   }
 
   @Test
   public void testModelWithoutHash() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithoutHash.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithoutHash_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelWithoutHash.java", "ModelWithoutHash_.java");
   }
 
   @Test
   public void testDoNotHashModel() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelDoNotHash.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelDoNotHash_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelDoNotHash.java", "ModelDoNotHash_.java");
   }
 
   @Test
   public void testModelWithFinalAttribute() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithFinalField.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithFinalField_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelWithFinalField.java", "ModelWithFinalField_.java");
   }
 
   @Test
@@ -230,32 +140,12 @@ public class ModelProcessorTest {
 
   @Test
   public void testModelWithIntDefAnnotation() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithIntDef.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithIntDef_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelWithIntDef.java", "ModelWithIntDef_.java");
   }
 
   @Test
   public void testModelWithAnnotatedClass() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithAnnotatedClass.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithAnnotatedClass_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelWithAnnotatedClass.java", "ModelWithAnnotatedClass_.java");
   }
 
   @Test
@@ -282,18 +172,8 @@ public class ModelProcessorTest {
 
   @Test
   public void testModelWithAbstractClassAndAnnotation() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithAbstractClassAndAnnotation.java");
-
-    JavaFileObject generatedModel =
-        JavaFileObjects.forResource("ModelWithAbstractClassAndAnnotation_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelWithAbstractClassAndAnnotation.java",
+        "ModelWithAbstractClassAndAnnotation_.java");
   }
 
   @Test
@@ -317,96 +197,33 @@ public class ModelProcessorTest {
 
   @Test
   public void testModelWithoutSetter() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithoutSetter.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithoutSetter_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelWithoutSetter.java", "ModelWithoutSetter_.java");
   }
 
   @Test
   public void testModelReturningClassType() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelReturningClassType.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelReturningClassType_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelReturningClassType.java", "ModelReturningClassType_.java");
   }
 
   @Test
   public void testModelReturningClassTypeWithVarargs() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelReturningClassTypeWithVarargs.java");
-
-    JavaFileObject generatedModel = JavaFileObjects
-        .forResource("ModelReturningClassTypeWithVarargs_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelReturningClassTypeWithVarargs.java",
+        "ModelReturningClassTypeWithVarargs_.java");
   }
 
   @Test
   public void testModelWithVarargsConstructors() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithVarargsConstructors.java");
-
-    JavaFileObject generatedModel = JavaFileObjects
-        .forResource("ModelWithVarargsConstructors_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelWithVarargsConstructors.java", "ModelWithVarargsConstructors_.java");
   }
 
   @Test
   public void testModelWithHolderGeneratesNewHolderMethod() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("AbstractModelWithHolder.java");
-
-    JavaFileObject generatedModel = JavaFileObjects
-        .forResource("AbstractModelWithHolder_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("AbstractModelWithHolder.java", "AbstractModelWithHolder_.java");
   }
 
   @Test
   public void testGenerateDefaultLayoutMethod() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("GenerateDefaultLayoutMethod.java");
-
-    JavaFileObject generatedModel = JavaFileObjects
-        .forResource("GenerateDefaultLayoutMethod_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("GenerateDefaultLayoutMethod.java", "GenerateDefaultLayoutMethod_.java");
   }
 
   @Test
@@ -649,73 +466,38 @@ public class ModelProcessorTest {
 
   @Test
   public void testModelWithAllPrivateFieldTypes() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithAllPrivateFieldTypes.java");
-
-    JavaFileObject generatedModel = JavaFileObjects
-        .forResource("ModelWithAllPrivateFieldTypes_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelWithAllPrivateFieldTypes.java", "ModelWithAllPrivateFieldTypes_.java");
   }
 
   @Test
   public void modelWithViewPrivateClickListener() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateViewClickListener.java");
-
-    JavaFileObject generatedModel = JavaFileObjects
-        .forResource("ModelWithPrivateViewClickListener_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelWithPrivateViewClickListener.java",
+        "ModelWithPrivateViewClickListener_.java");
   }
 
   @Test
   public void modelWithPrivateFieldWithSameAsFieldGetterAndSetterName() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName.java");
-
-    JavaFileObject generatedModel = JavaFileObjects
-        .forResource("ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName.java",
+        "ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_.java");
   }
 
   @Test
   public void testDoNotUseInToStringModel() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelDoNotUseInToString.java");
-
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelDoNotUseInToString_.java");
-
-    assert_().about(javaSource())
-        .that(model)
-        .processedWith(new EpoxyProcessor())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
+    testGeneration("ModelDoNotUseInToString.java", "ModelDoNotUseInToString_.java");
   }
 
   @Test
   public void modelWithAnnotation() {
-    JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithAnnotation.java");
+    testGeneration("ModelWithAnnotation.java", "ModelWithAnnotation_.java");
 
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithAnnotation_.java");
+
+  }
+
+  private void testGeneration(String inputFile, String generatedFile) {
+    JavaFileObject model = JavaFileObjects
+        .forResource(inputFile);
+
+    JavaFileObject generatedModel = JavaFileObjects.forResource(generatedFile);
 
     assert_().about(javaSource())
         .that(model)
