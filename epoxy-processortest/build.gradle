@@ -21,12 +21,15 @@ android {
 
 dependencies {
   compile rootProject.deps.kotlin
-  testCompile project(':epoxy-databinding')
-  testCompile project(':epoxy-processortest2')
+  compile project(':epoxy-adapter')
+  compile project(':epoxy-databinding')
+  compile project(':epoxy-processortest2')
+
+  kapt project(':epoxy-processor')
+  // Need to include the processor directly since we create an instance of it in code for testing
   testCompile project(':epoxy-processor')
 
   kapt rootProject.deps.dataBindingCompiler
-  kapt project(':epoxy-processor')
   kapt rootProject.deps.autoValue
 
   testCompile files(getRuntimeJar())
