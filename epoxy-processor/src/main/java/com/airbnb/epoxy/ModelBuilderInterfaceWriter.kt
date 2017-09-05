@@ -76,5 +76,5 @@ internal fun getBuilderInterfaceClassName(modelInfo: GeneratedModelInfo): ClassN
 
     return ClassName.get(
             generatedModelName.packageName(),
-            generatedModelName.simpleName().removeSuffix("_") + MODEL_BUILDER_INTERFACE_SUFFIX)
+            generatedModelName.simpleName().removeSuffix("_").replace("$", "_") + MODEL_BUILDER_INTERFACE_SUFFIX)
 }

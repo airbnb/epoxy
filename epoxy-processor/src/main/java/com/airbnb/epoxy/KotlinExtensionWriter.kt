@@ -3,6 +3,7 @@ package com.airbnb.epoxy
 import com.squareup.kotlinpoet.*
 import java.io.*
 import javax.annotation.processing.*
+import javax.lang.model.element.*
 
 private const val KOTLIN_EXTENSION_FILE_NAME = "EpoxyModelKotlinExtensions"
 
@@ -48,6 +49,13 @@ internal class KotlinExtensionWriter(
     }
 
     private fun buildExtensionForModel(model: GeneratedModelInfo): FunSpec {
+        val constructorIsNotPublic = model.constructors
+                .filter { it.params.isEmpty() }
+                .any { !it.modifiers.contains(Modifier.PUBLIC) }
+
+        // Kotlin cannot directly reference a class with a $ in the name. It must be wrapped in ticks (``)
+        val useTicksAroundModelName = model.generatedName.simpleName().contains("$")
+        val tick = if (useTicksAroundModelName) "`" else ""
 
         val initializerLambda = LambdaTypeName.get(
                 receiver = getBuilderInterfaceTypeName(model).toKPoet(),
@@ -58,15 +66,20 @@ internal class KotlinExtensionWriter(
             addParameter(
                     "modelInitializer",
                     initializerLambda)
+
             addModifiers(KModifier.INLINE)
+            if (constructorIsNotPublic) addModifiers(KModifier.INTERNAL)
+
             beginControlFlow(
-                    "%T().apply ",
+                    "$tick%T$tick().apply ",
                     model.generatedClassName.toKPoet())
             addStatement("modelInitializer()")
             endControlFlow()
             addStatement(".addTo(this)")
             return build()
         }
+
+
     }
 
     private fun getMethodName(model: GeneratedModelInfo)

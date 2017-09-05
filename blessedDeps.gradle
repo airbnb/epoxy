@@ -27,7 +27,7 @@ rootProject.ext.ASSERTJ_VERSION = "1.7.1"
 rootProject.ext.GOOGLE_TESTING_COMPILE_VERSION = "0.10"
 rootProject.ext.JUNIT_VERSION = "4.12"
 rootProject.ext.MOCKITO_VERSION = "2.7.7"
-rootProject.ext.ROBOLECTRIC_VERSION = "3.4-rc2"
+rootProject.ext.ROBOLECTRIC_VERSION = "3.4.2"
 
 rootProject.ext.LOTTIE_VERSION = "2.0.0-beta3"
 rootProject.ext.LITHO_VERSION = "0.3.1"

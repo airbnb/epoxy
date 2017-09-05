@@ -1,13 +1,7 @@
 package com.airbnb.epoxy
 
 import org.junit.*
-import org.junit.runner.*
-import org.robolectric.*
-import org.robolectric.annotation.*
-
-import com.airbnb.epoxy.model
-
-import org.junit.*
+import org.junit.Assert.*
 import org.junit.runner.*
 import org.robolectric.*
 import org.robolectric.annotation.*
@@ -18,15 +12,24 @@ class ModelBuilderExtensionIntegrationTest {
 
     @Test
     fun basicAutoModels() {
-        Controller().requestModelBuild()
+        Controller().run {
+            requestModelBuild()
+
+            assertEquals(adapter.copyOfModels.size, 1)
+
+            val model = adapter.copyOfModels.first() as Model
+            assertEquals(model.value, 5)
+            assertEquals(model.id(), 10)
+        }
+
     }
 }
 
-private class Controller: EpoxyController() {
+private class Controller : EpoxyController() {
     override fun buildModels() {
         model {
-            id("model")
-
+            id(10)
+            value(5)
         }
     }
 
