@@ -12,9 +12,9 @@ internal class KotlinExtensionWriter(
 ) {
 
     fun generateExtensionsForModels(generatedModels: List<GeneratedModelInfo>) {
-        val kaptGeneratedDirPath = processingEnv.options[EpoxyProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME]?.replace(
-                "kaptKotlin",
-                "kapt") ?: run {
+        val kaptGeneratedDirPath = processingEnv.options[EpoxyProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME]
+                ?.replace("kaptKotlin", "kapt")
+                ?: run {
             // Need to change the path because of https://youtrack.jetbrains.com/issue/KT-19097
 
             // If the option does not exist this is not being processed by kapt,
@@ -22,13 +22,15 @@ internal class KotlinExtensionWriter(
             return
         }
 
-        generatedModels.groupBy { it.generatedClassName.packageName() }.map { (packageName, models) ->
-            buildExtensionFile(
-                    packageName,
-                    models)
-        }.forEach {
-            it.writeTo(File(kaptGeneratedDirPath))
-        }
+        generatedModels.groupBy { it.generatedClassName.packageName() }
+                .map { (packageName, models) ->
+                    buildExtensionFile(
+                            packageName,
+                            models)
+                }
+                .forEach {
+                    it.writeTo(File(kaptGeneratedDirPath))
+                }
     }
 
     private fun buildExtensionFile(
@@ -39,7 +41,8 @@ internal class KotlinExtensionWriter(
                 packageName,
                 KOTLIN_EXTENSION_FILE_NAME)
 
-        models.map { buildExtensionForModel(it) }.forEach { fileBuilder.addFun(it) }
+        models.map { buildExtensionForModel(it) }
+                .forEach { fileBuilder.addFun(it) }
 
         return fileBuilder.build()
     }
