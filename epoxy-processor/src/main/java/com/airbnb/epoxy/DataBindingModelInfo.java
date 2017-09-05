@@ -82,7 +82,8 @@ class DataBindingModelInfo extends GeneratedModelInfo {
   }
 
   private ClassName buildGeneratedModelName() {
-    String simpleName = dataBindingClassName.simpleName() + GeneratedModelInfo.GENERATED_MODEL_SUFFIX;
+    String simpleName =
+        dataBindingClassName.simpleName() + GeneratedModelInfo.GENERATED_MODEL_SUFFIX;
     return ClassName.get(moduleName, simpleName);
   }
 
