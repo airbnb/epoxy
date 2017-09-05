@@ -16,7 +16,7 @@ import java.lang.Short;
 import java.lang.String;
 import java.util.List;
 
-interface ModelWithAllFieldTypesBuilder {
+public interface ModelWithAllFieldTypesBuilder {
   ModelWithAllFieldTypes_ onBind(OnModelBoundListener<ModelWithAllFieldTypes_, Object> listener);
 
   ModelWithAllFieldTypes_ onUnbind(OnModelUnboundListener<ModelWithAllFieldTypes_, Object> listener);
