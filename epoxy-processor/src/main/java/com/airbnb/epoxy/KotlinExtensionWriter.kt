@@ -58,13 +58,13 @@ internal class KotlinExtensionWriter(
             addParameter(
                     "modelInitializer",
                     initializerLambda)
-            addModifiers(listOf(KModifier.INLINE))
+            addModifiers(KModifier.INLINE)
             beginControlFlow(
-                    "%T().apply {",
+                    "%T().apply ",
                     model.generatedClassName.toKPoet())
             addStatement("modelInitializer()")
-            addStatement("addTo(this)")
             endControlFlow()
+            addStatement(".addTo(this)")
             return build()
         }
     }
@@ -76,6 +76,7 @@ internal class KotlinExtensionWriter(
             .removeSuffix(GeneratedModelInfo.GENERATED_MODEL_SUFFIX)
             .removeSuffix(DataBindingModelInfo.BINDING_SUFFIX)
             .removeSuffix(GeneratedModelInfo.GENERATED_CLASS_NAME_SUFFIX)
+            .replace("$", "")
             .removeSuffix("Epoxy")
 }
 

@@ -26,6 +26,7 @@ internal class ModelBuilderInterfaceWriter(
         modelBuilder.addSuperinterface(getBuilderInterfaceTypeName(modelInfo))
 
         val modelInterface = TypeSpec.interfaceBuilder(getBuilderInterfaceClassName(modelInfo)).run {
+            addModifiers(Modifier.PUBLIC)
             addTypeVariables(modelInfo.typeVariables)
             addMethods(getInterfaceMethods())
             build()

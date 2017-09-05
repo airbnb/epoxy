@@ -42,6 +42,6 @@ dependencies {
   compile project(':epoxy-adapter')
   kapt project(':epoxy-processor')
   testCompile rootProject.deps.junit
-  compile deps.kotlin
+  compile rootProject.deps.kotlin
 }
 

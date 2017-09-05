@@ -204,9 +204,9 @@ public class EpoxyProcessor extends AbstractProcessor {
     }
 
     // TODO: (eli_hart 8/23/17) don't wait until round over?
-//    if (roundEnv.processingOver()) {
-//      kotlinExtensionWriter.generateExtensionsForModels(generatedModels);
-//    }
+    if (roundEnv.processingOver()) {
+      kotlinExtensionWriter.generateExtensionsForModels(generatedModels);
+    }
 
     if (controllerProcessor.hasControllersToGenerate()
         && (!dataBindingProcessor.hasModelsToWrite() || roundEnv.processingOver())) {
