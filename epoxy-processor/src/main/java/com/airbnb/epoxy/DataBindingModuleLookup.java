@@ -14,10 +14,10 @@ class DataBindingModuleLookup {
   private final Elements elements;
   private final Types types;
   private final ErrorLogger errorLogger;
-  private final LayoutResourceProcessor resourceProcessor;
+  private final ResourceProcessor resourceProcessor;
 
   DataBindingModuleLookup(Elements elements, Types types, ErrorLogger errorLogger,
-      LayoutResourceProcessor resourceProcessor) {
+      ResourceProcessor resourceProcessor) {
 
     this.elements = elements;
     this.types = types;

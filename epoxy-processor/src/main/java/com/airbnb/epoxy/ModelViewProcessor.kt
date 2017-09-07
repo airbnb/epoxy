@@ -22,7 +22,7 @@ internal class ModelViewProcessor(
         private val configManager: ConfigManager,
 
         private val errorLogger: ErrorLogger,
-        private val modelWriter: GeneratedModelWriter, val layoutResourceProcessor: LayoutResourceProcessor
+        private val modelWriter: GeneratedModelWriter, val resourceProcessor: ResourceProcessor
 ) {
 
     private val modelClassMap = LinkedHashMap<Element, ModelViewInfo>()
@@ -65,7 +65,7 @@ internal class ModelViewProcessor(
 
                 modelClassMap.put(viewElement,
                         ModelViewInfo(viewElement as TypeElement, types, elements, errorLogger,
-                                configManager, layoutResourceProcessor))
+                                      configManager, resourceProcessor))
             } catch (e: Exception) {
                 errorLogger.logError(e, "Error creating model view info classes.")
             }

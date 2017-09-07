@@ -33,7 +33,7 @@ import static com.airbnb.epoxy.Utils.removeSetPrefix;
 
 class ViewAttributeInfo extends AttributeInfo {
   private final ModelViewInfo modelInfo;
-  private final LayoutResourceProcessor resourceProcessor;
+  private final ResourceProcessor resourceProcessor;
   final String propName;
   final String viewSetterMethodName;
   final boolean resetWithNull;
@@ -41,7 +41,7 @@ class ViewAttributeInfo extends AttributeInfo {
   String constantFieldNameForDefaultValue;
 
   ViewAttributeInfo(ModelViewInfo modelInfo, ExecutableElement setterMethod, Types types,
-      Elements elements, ErrorLogger errorLogger, LayoutResourceProcessor resourceProcessor) {
+      Elements elements, ErrorLogger errorLogger, ResourceProcessor resourceProcessor) {
     this.resourceProcessor = resourceProcessor;
     ModelProp propAnnotation = setterMethod.getAnnotation(ModelProp.class);
     TextProp textAnnotation = setterMethod.getAnnotation(TextProp.class);

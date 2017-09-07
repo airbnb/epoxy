@@ -71,7 +71,7 @@ class GeneratedModelWriter {
   private final Filer filer;
   private final Types typeUtils;
   private final ErrorLogger errorLogger;
-  private final LayoutResourceProcessor layoutResourceProcessor;
+  private final ResourceProcessor resourceProcessor;
   private final ConfigManager configManager;
   private final DataBindingModuleLookup dataBindingModuleLookup;
   private final Elements elements;
@@ -107,12 +107,12 @@ class GeneratedModelWriter {
   }
 
   GeneratedModelWriter(Filer filer, Types typeUtils, ErrorLogger errorLogger,
-      LayoutResourceProcessor layoutResourceProcessor, ConfigManager configManager,
+      ResourceProcessor resourceProcessor, ConfigManager configManager,
       DataBindingModuleLookup dataBindingModuleLookup, Elements elements) {
     this.filer = filer;
     this.typeUtils = typeUtils;
     this.errorLogger = errorLogger;
-    this.layoutResourceProcessor = layoutResourceProcessor;
+    this.resourceProcessor = resourceProcessor;
     this.configManager = configManager;
     this.dataBindingModuleLookup = dataBindingModuleLookup;
     this.elements = elements;
@@ -178,7 +178,7 @@ class GeneratedModelWriter {
 
     int defaultLayoutNameLength = layout.getResourceName().length();
 
-    for (ResourceValue otherLayout : layoutResourceProcessor.getAlternateLayouts(layout)) {
+    for (ResourceValue otherLayout : resourceProcessor.getAlternateLayouts(layout)) {
       if (!otherLayout.getQualified()) {
         continue;
       }
@@ -624,7 +624,7 @@ class GeneratedModelWriter {
     }
 
     if (modelInfo instanceof ModelViewInfo) {
-      return ((ModelViewInfo) modelInfo).getLayoutResource(layoutResourceProcessor);
+      return ((ModelViewInfo) modelInfo).getLayoutResource(resourceProcessor);
     }
 
     TypeElement superClassElement = modelInfo.getSuperClassElement();
@@ -642,7 +642,7 @@ class GeneratedModelWriter {
       return null;
     }
 
-    return layoutResourceProcessor
+    return resourceProcessor
         .getLayoutInAnnotation(modelClassWithAnnotation, EpoxyModelClass.class);
   }
 

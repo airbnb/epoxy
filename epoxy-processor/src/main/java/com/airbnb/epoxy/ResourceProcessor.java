@@ -31,7 +31,7 @@ import static com.airbnb.epoxy.Utils.getElementByName;
  * <p>
  * This is adapted from Butterknife. https://github.com/JakeWharton/butterknife/pull/613
  */
-class LayoutResourceProcessor {
+class ResourceProcessor {
 
   private final ErrorLogger errorLogger;
   private final Elements elementUtils;
@@ -43,7 +43,7 @@ class LayoutResourceProcessor {
   private final Map<ClassName, List<ResourceValue>> rClassResources = new HashMap<>();
   private final AnnotationResourceParamScanner scanner = new AnnotationResourceParamScanner();
 
-  LayoutResourceProcessor(ProcessingEnvironment processingEnv, ErrorLogger errorLogger,
+  ResourceProcessor(ProcessingEnvironment processingEnv, ErrorLogger errorLogger,
       Elements elementUtils, Types typeUtils) {
     this.errorLogger = errorLogger;
     this.elementUtils = elementUtils;

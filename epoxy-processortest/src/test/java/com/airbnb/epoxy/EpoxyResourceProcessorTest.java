@@ -11,7 +11,7 @@ import javax.tools.JavaFileObject;
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaSourcesSubjectFactory.javaSources;
 
-public class EpoxyLayoutResourceProcessorTest {
+public class EpoxyResourceProcessorTest {
 
   private static final JavaFileObject R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
       + "package com.airbnb.epoxy;\n"

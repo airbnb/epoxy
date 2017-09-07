@@ -28,14 +28,14 @@ class ModelViewInfo extends GeneratedModelInfo {
   final Elements elements;
   final ErrorLogger errorLogger;
   final ConfigManager configManager;
-  private final LayoutResourceProcessor resourceProcessor;
+  private final ResourceProcessor resourceProcessor;
   final boolean saveViewState;
   final ModelView viewAnnotation;
   final boolean fullSpanSize;
 
   ModelViewInfo(TypeElement viewElement, Types typeUtils, Elements elements,
       ErrorLogger errorLogger, ConfigManager configManager,
-      LayoutResourceProcessor resourceProcessor) {
+      ResourceProcessor resourceProcessor) {
 
     viewAnnotation = viewElement.getAnnotation(ModelView.class);
     this.viewElement = viewElement;
@@ -153,11 +153,11 @@ class ModelViewInfo extends GeneratedModelInfo {
     afterPropsSetMethodNames.add(afterPropsSetMethod.getSimpleName().toString());
   }
 
-  ResourceValue getLayoutResource(LayoutResourceProcessor layoutResourceProcessor) {
+  ResourceValue getLayoutResource(ResourceProcessor resourceProcessor) {
     ModelView annotation = viewElement.getAnnotation(ModelView.class);
     int layoutValue = annotation.defaultLayout();
     if (layoutValue != 0) {
-      return layoutResourceProcessor.getLayoutInAnnotation(viewElement, ModelView.class);
+      return resourceProcessor.getLayoutInAnnotation(viewElement, ModelView.class);
     }
 
     PackageModelViewSettings modelViewConfig =

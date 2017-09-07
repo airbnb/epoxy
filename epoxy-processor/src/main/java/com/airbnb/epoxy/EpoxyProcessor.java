@@ -46,6 +46,8 @@ import static com.airbnb.epoxy.EpoxyProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME;
 })
 public class EpoxyProcessor extends AbstractProcessor {
 
+  // This option will be presented when processed by kapt, and it tells us where to put our
+  // generated kotlin files
   // https://github.com/JetBrains/kotlin-examples/blob/master/gradle/kotlin-code-generation
   // /annotation-processor/src/main/java/TestAnnotationProcessor.kt
   public static final String KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated";
@@ -56,17 +58,14 @@ public class EpoxyProcessor extends AbstractProcessor {
   private Elements elementUtils;
   private Types typeUtils;
 
-  private LayoutResourceProcessor layoutResourceProcessor;
   private ConfigManager configManager;
-  private DataBindingModuleLookup dataBindingModuleLookup;
   private final ErrorLogger errorLogger = new ErrorLogger();
-  private GeneratedModelWriter modelWriter;
   private ControllerProcessor controllerProcessor;
   private DataBindingProcessor dataBindingProcessor;
   private final List<GeneratedModelInfo> generatedModels = new ArrayList<>();
   private ModelProcessor modelProcessor;
   private LithoSpecProcessor lithoSpecProcessor;
-  private KotlinExtensionWriter kotlinExtensionWriter;
+  private KotlinModelBuilderExtensionWriter kotlinExtensionWriter;
   private ModelViewProcessor modelViewProcessor;
 
   public EpoxyProcessor() {
@@ -103,27 +102,26 @@ public class EpoxyProcessor extends AbstractProcessor {
     elementUtils = processingEnv.getElementUtils();
     typeUtils = processingEnv.getTypeUtils();
 
-    layoutResourceProcessor =
-        new LayoutResourceProcessor(processingEnv, errorLogger, elementUtils, typeUtils);
+    ResourceProcessor resourceProcessor =
+        new ResourceProcessor(processingEnv, errorLogger, elementUtils, typeUtils);
 
     configManager =
         new ConfigManager(!testOptions.isEmpty() ? testOptions : processingEnv.getOptions(),
             elementUtils, typeUtils);
 
-    dataBindingModuleLookup =
-        new DataBindingModuleLookup(elementUtils, typeUtils, errorLogger, layoutResourceProcessor);
+    DataBindingModuleLookup dataBindingModuleLookup =
+        new DataBindingModuleLookup(elementUtils, typeUtils, errorLogger, resourceProcessor);
 
-    modelWriter =
-        new GeneratedModelWriter(filer, typeUtils, errorLogger,
-            layoutResourceProcessor,
-            configManager, dataBindingModuleLookup, elementUtils);
+    GeneratedModelWriter modelWriter = new GeneratedModelWriter(filer, typeUtils, errorLogger,
+        resourceProcessor,
+        configManager, dataBindingModuleLookup, elementUtils);
 
     controllerProcessor = new ControllerProcessor(filer, elementUtils, typeUtils, errorLogger,
         configManager);
 
     dataBindingProcessor =
         new DataBindingProcessor(elementUtils, typeUtils, errorLogger, configManager,
-            layoutResourceProcessor, dataBindingModuleLookup, modelWriter);
+            resourceProcessor, dataBindingModuleLookup, modelWriter);
 
     modelProcessor = new ModelProcessor(
         elementUtils, typeUtils, configManager, errorLogger,
@@ -131,12 +129,12 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     modelViewProcessor = new ModelViewProcessor(
         elementUtils, typeUtils, configManager, errorLogger,
-        modelWriter, layoutResourceProcessor);
+        modelWriter, resourceProcessor);
 
     lithoSpecProcessor = new LithoSpecProcessor(
         elementUtils, typeUtils, configManager, errorLogger, modelWriter);
 
-    kotlinExtensionWriter = new KotlinExtensionWriter(processingEnv, errorLogger);
+    kotlinExtensionWriter = new KotlinModelBuilderExtensionWriter(processingEnv);
   }
 
   @Override

@@ -7,9 +7,8 @@ import javax.lang.model.element.*
 
 private const val KOTLIN_EXTENSION_FILE_NAME = "EpoxyModelKotlinExtensions"
 
-internal class KotlinExtensionWriter(
-        private val processingEnv: ProcessingEnvironment,
-        private val errorLogger: ErrorLogger
+internal class KotlinModelBuilderExtensionWriter(
+        private val processingEnv: ProcessingEnvironment
 ) {
 
     fun generateExtensionsForModels(generatedModels: List<GeneratedModelInfo>) {
@@ -51,7 +50,7 @@ internal class KotlinExtensionWriter(
     private fun buildExtensionForModel(model: GeneratedModelInfo): FunSpec {
         val constructorIsNotPublic = model.constructors
                 .filter { it.params.isEmpty() }
-                .any { !it.modifiers.contains(Modifier.PUBLIC) }
+                .any { Modifier.PUBLIC !in it.modifiers }
 
         // Kotlin cannot directly reference a class with a $ in the name. It must be wrapped in ticks (``)
         val useTicksAroundModelName = model.generatedName.simpleName().contains("$")
