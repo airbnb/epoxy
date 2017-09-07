@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
 
@@ -20,12 +22,17 @@ android {
 }
 
 dependencies {
+  compile rootProject.deps.kotlin
+  testCompile rootProject.deps.junit
   compile project(':epoxy-adapter')
   compile project(':epoxy-annotations')
   compile project(':epoxy-databinding')
-  annotationProcessor project(':epoxy-processor')
+  kapt project(':epoxy-processor')
+  kapt rootProject.deps.dataBindingCompiler
 
-  testCompile rootProject.deps.junit
   testCompile rootProject.deps.robolectric
   testCompile rootProject.deps.mockito
+}
+repositories {
+  mavenCentral()
 }

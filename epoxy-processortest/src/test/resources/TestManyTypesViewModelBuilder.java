@@ -15,7 +15,7 @@ import java.lang.Object;
 import java.lang.String;
 import java.util.List;
 
-interface TestManyTypesViewModelBuilder {
+public interface TestManyTypesViewModelBuilder {
   TestManyTypesViewModel_ onBind(OnModelBoundListener<TestManyTypesViewModel_, TestManyTypesView> listener);
 
   TestManyTypesViewModel_ onUnbind(OnModelUnboundListener<TestManyTypesViewModel_, TestManyTypesView> listener);

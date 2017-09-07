@@ -14,20 +14,20 @@ class DataBindingProcessor {
   private final Types typeUtils;
   private final ErrorLogger errorLogger;
   private final ConfigManager configManager;
-  private final LayoutResourceProcessor layoutResourceProcessor;
+  private final ResourceProcessor resourceProcessor;
   private final DataBindingModuleLookup dataBindingModuleLookup;
   private final GeneratedModelWriter modelWriter;
   private final List<DataBindingModelInfo> modelInfoList = new ArrayList<>();
 
   DataBindingProcessor(Elements elementUtils, Types typeUtils, ErrorLogger errorLogger,
-      ConfigManager configManager, LayoutResourceProcessor layoutResourceProcessor,
+      ConfigManager configManager, ResourceProcessor resourceProcessor,
       DataBindingModuleLookup dataBindingModuleLookup, GeneratedModelWriter modelWriter) {
 
     this.elementUtils = elementUtils;
     this.typeUtils = typeUtils;
     this.errorLogger = errorLogger;
     this.configManager = configManager;
-    this.layoutResourceProcessor = layoutResourceProcessor;
+    this.resourceProcessor = resourceProcessor;
     this.dataBindingModuleLookup = dataBindingModuleLookup;
     this.modelWriter = modelWriter;
   }
@@ -37,7 +37,7 @@ class DataBindingProcessor {
         roundEnv.getElementsAnnotatedWith(EpoxyDataBindingLayouts.class);
 
     for (Element packageElement : dataBindingLayoutPackageElements) {
-      List<ResourceValue> layoutResources = layoutResourceProcessor
+      List<ResourceValue> layoutResources = resourceProcessor
           .getLayoutsInAnnotation(packageElement, EpoxyDataBindingLayouts.class);
 
       // Get the module name after parsing resources so we can use the resource classes to figure

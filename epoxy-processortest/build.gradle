@@ -2,6 +2,8 @@ import org.gradle.internal.jvm.Jvm
 
 apply plugin: 'com.android.library'
 apply from: 'build.workaround-missing-resource.gradle'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
@@ -18,9 +20,18 @@ android {
 }
 
 dependencies {
+  compile rootProject.deps.kotlin
+  compile project(':epoxy-adapter')
+  compile project(':epoxy-databinding')
+  compile project(':epoxy-processortest2')
+
+  kapt project(':epoxy-processor')
+  // Need to include the processor directly since we create an instance of it in code for testing
   testCompile project(':epoxy-processor')
-  testCompile project(':epoxy-databinding')
-  testCompile project(':epoxy-processortest2')
+
+  kapt rootProject.deps.dataBindingCompiler
+  kapt rootProject.deps.autoValue
+
   testCompile files(getRuntimeJar())
   testCompile files(Jvm.current().getToolsJar())
   testCompile rootProject.deps.googleTestingCompile
@@ -28,14 +39,14 @@ dependencies {
 
 static def getRuntimeJar() {
   try {
-    final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile();
-    File runtimeJar = new File(javaBase, "lib/rt.jar");
+    final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile()
+    File runtimeJar = new File(javaBase, "lib/rt.jar")
     if (runtimeJar.exists()) {
-      return runtimeJar;
+      return runtimeJar
     }
-    runtimeJar = new File(javaBase, "jre/lib/rt.jar");
-    return runtimeJar.exists() ? runtimeJar : null;
+    runtimeJar = new File(javaBase, "jre/lib/rt.jar")
+    return runtimeJar.exists() ? runtimeJar : null
   } catch (IOException e) {
-    throw new RuntimeException(e);
+    throw new RuntimeException(e)
   }
 }

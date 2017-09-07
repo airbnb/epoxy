@@ -32,7 +32,8 @@ import static com.airbnb.epoxy.Utils.buildEpoxyException;
 
 abstract class GeneratedModelInfo {
   private static final String RESET_METHOD = "reset";
-  protected static final String GENERATED_CLASS_NAME_SUFFIX = "_";
+  public static final String GENERATED_CLASS_NAME_SUFFIX = "_";
+  public static final String GENERATED_MODEL_SUFFIX = "Model" + GENERATED_CLASS_NAME_SUFFIX;
 
   protected TypeName superClassName;
   protected TypeElement superClassElement;

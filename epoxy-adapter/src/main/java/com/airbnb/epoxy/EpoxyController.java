@@ -348,7 +348,7 @@ public abstract class EpoxyController {
    * There are some edge cases for handling models that are added without modification, or models
    * that are modified but then fail an `addIf` check.
    * <p>
-   * This only works for AutoModels, and only if implicity adding is enabled in configuration.
+   * This only works for AutoModels, and only if implicitly adding is enabled in configuration.
    */
   void setStagedModel(EpoxyModel<?> model) {
     if (model != stagedModel) {

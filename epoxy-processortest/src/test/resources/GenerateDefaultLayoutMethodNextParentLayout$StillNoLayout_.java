@@ -10,7 +10,7 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ extends GenerateDefaultLayoutMethodNextParentLayout.StillNoLayout implements GeneratedModel<Object>, GenerateDefaultLayoutMethodNextParentLayout$StillNoLayoutBuilder {
+public class GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_ extends GenerateDefaultLayoutMethodNextParentLayout.StillNoLayout implements GeneratedModel<Object>, GenerateDefaultLayoutMethodNextParentLayout_StillNoLayoutBuilder {
   private OnModelBoundListener<GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_, Object> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_, Object> onModelUnboundListener_epoxyGeneratedModel;

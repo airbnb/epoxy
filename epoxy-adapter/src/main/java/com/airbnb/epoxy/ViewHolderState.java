@@ -32,7 +32,7 @@ import java.util.Collection;
  */
 @SuppressWarnings("WeakerAccess")
 class ViewHolderState extends LongSparseArray<ViewState> implements Parcelable {
-  public ViewHolderState() {
+  ViewHolderState() {
   }
 
   private ViewHolderState(int size) {
@@ -123,7 +123,7 @@ class ViewHolderState extends LongSparseArray<ViewState> implements Parcelable {
    */
   public static class ViewState extends SparseArray<Parcelable> implements Parcelable {
 
-    public ViewState() {
+    ViewState() {
     }
 
     private ViewState(int size, int[] keys, Parcelable[] values) {

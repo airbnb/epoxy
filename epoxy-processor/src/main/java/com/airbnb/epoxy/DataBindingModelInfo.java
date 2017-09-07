@@ -17,7 +17,7 @@ import static com.airbnb.epoxy.Utils.getElementByName;
 
 class DataBindingModelInfo extends GeneratedModelInfo {
 
-  private static final String BINDING_SUFFIX = "Binding";
+  public static final String BINDING_SUFFIX = "Binding";
 
   private final Types typeUtils;
   private final Elements elementUtils;
@@ -82,7 +82,8 @@ class DataBindingModelInfo extends GeneratedModelInfo {
   }
 
   private ClassName buildGeneratedModelName() {
-    String simpleName = dataBindingClassName.simpleName() + "Model" + GENERATED_CLASS_NAME_SUFFIX;
+    String simpleName =
+        dataBindingClassName.simpleName() + GeneratedModelInfo.GENERATED_MODEL_SUFFIX;
     return ClassName.get(moduleName, simpleName);
   }
 
