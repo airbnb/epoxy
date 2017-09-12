@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.graphics.Canvas;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
@@ -30,10 +31,13 @@ public interface EpoxySwipeCallback<T extends EpoxyModel> extends BaseEpoxyTouch
    * @param itemView      The view that is being swiped
    * @param swipeProgress A float from -1 to 1 representing the percentage that the view has been
    *                      swiped relative to its width. This will be positive if the view is being
-   *                      swiped to the right and negative if it is swiped to the left. For example,
-   *                      if the view has been swiped halfway to the right this will be 0.5
+   *                      swiped to the right and negative if it is swiped to the left. For
+   *                      example,
+   * @param canvas        The canvas on which RecyclerView is drawing its children. You can draw to
+   *                      this to support custom swipe animations.
    */
-  void onSwipeProgressChanged(T model, View itemView, float swipeProgress);
+  void onSwipeProgressChanged(T model, View itemView, float swipeProgress,
+      Canvas canvas);
 
   /**
    * Called when the user has released their touch on the view. If the displacement passed the swipe
