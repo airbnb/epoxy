@@ -2,7 +2,7 @@
 buildscript {
 
   ext.KOTLIN_VERSION = "1.1.4-3"
-  ext.ANDROID_PLUGIN_VERSION = "3.0.0-beta4"
+  ext.ANDROID_PLUGIN_VERSION = "3.0.0-beta5"
 
   repositories {
     google()

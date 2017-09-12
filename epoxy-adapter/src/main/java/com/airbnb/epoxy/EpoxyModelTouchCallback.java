@@ -228,11 +228,12 @@ public abstract class EpoxyModelTouchCallback<T extends EpoxyModel>
     float clampedProgress = Math.max(-1f, Math.min(1f, swipeProgress));
 
     //noinspection unchecked
-    onSwipeProgressChanged((T) model, itemView, clampedProgress);
+    onSwipeProgressChanged((T) model, itemView, clampedProgress, c);
   }
 
   @Override
-  public void onSwipeProgressChanged(T model, View itemView, float swipeProgress) {
+  public void onSwipeProgressChanged(T model, View itemView, float swipeProgress,
+      Canvas canvas) {
 
   }
 }

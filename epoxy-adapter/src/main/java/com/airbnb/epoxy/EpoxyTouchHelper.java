@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
@@ -413,8 +414,9 @@ public abstract class EpoxyTouchHelper {
             }
 
             @Override
-            public void onSwipeProgressChanged(U model, View itemView, float swipeProgress) {
-              callbacks.onSwipeProgressChanged(model, itemView, swipeProgress);
+            public void onSwipeProgressChanged(U model, View itemView, float swipeProgress,
+                Canvas canvas) {
+              callbacks.onSwipeProgressChanged(model, itemView, swipeProgress, canvas);
             }
 
             @Override
@@ -448,7 +450,8 @@ public abstract class EpoxyTouchHelper {
     }
 
     @Override
-    public void onSwipeProgressChanged(T model, View itemView, float swipeProgress) {
+    public void onSwipeProgressChanged(T model, View itemView, float swipeProgress,
+        Canvas canvas) {
 
     }
 
