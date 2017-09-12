@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 class ViewTypeManager {
-  private static Map<Class, Integer> viewTypeMap;
+  private static final Map<Class, Integer> VIEW_TYPE_MAP = new HashMap<>();
   /**
    * The last model that had its view type looked up. This is stored so in most cases we can quickly
    * look up what view type belongs to which model.
@@ -21,9 +21,7 @@ class ViewTypeManager {
    */
   @VisibleForTesting
   void resetMapForTesting() {
-    if (viewTypeMap != null) {
-      viewTypeMap.clear();
-    }
+    VIEW_TYPE_MAP.clear();
   }
 
   int getViewType(EpoxyModel<?> model) {
@@ -40,15 +38,12 @@ class ViewTypeManager {
     // If a model does not specify a view type then we generate a value to use for models of that
     // class.
     Class modelClass = model.getClass();
-    if (viewTypeMap == null) {
-      viewTypeMap = new HashMap<>();
-    }
 
-    Integer viewType = viewTypeMap.get(modelClass);
+    Integer viewType = VIEW_TYPE_MAP.get(modelClass);
 
     if (viewType == null) {
-      viewType = -viewTypeMap.size() - 1;
-      viewTypeMap.put(modelClass, viewType);
+      viewType = -VIEW_TYPE_MAP.size() - 1;
+      VIEW_TYPE_MAP.put(modelClass, viewType);
     }
 
     return viewType;
@@ -81,7 +76,7 @@ class ViewTypeManager {
 
     // To be extra safe in case RecyclerView implementation details change...
     for (EpoxyModel<?> model : adapter.getCurrentModels()) {
-      if (model.getViewType() == viewType) {
+      if (getViewTypeInternal(model) == viewType) {
         return model;
       }
     }

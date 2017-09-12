@@ -1,5 +1,7 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.Nullable;
+
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -7,6 +9,8 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterSpec.Builder;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeVariableName;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,6 +57,12 @@ abstract class GeneratedModelInfo {
   protected final Set<MethodInfo> methodsReturningClassType = new LinkedHashSet<>();
   protected final List<AttributeGroup> attributeGroups = new ArrayList<>();
   protected final List<AnnotationSpec> annotations = new ArrayList<>();
+
+  /**
+   * The info for the style builder if this is a model view annotated with @Styleable. Null
+   * otherwise.
+   */
+  private ParisStyleAttributeInfo styleBuilderInfo;
 
   /**
    * Get information about methods returning class type of the original class so we can duplicate
@@ -183,6 +193,21 @@ abstract class GeneratedModelInfo {
 
   List<AnnotationSpec> getAnnotations() {
     return annotations;
+  }
+
+  @Nullable
+  ParisStyleAttributeInfo getStyleBuilderInfo() {
+    return styleBuilderInfo;
+  }
+
+  boolean isStyleable() {
+    return getStyleBuilderInfo() != null;
+  }
+
+  public void setStyleable(
+      @NotNull ParisStyleAttributeInfo parisStyleAttributeInfo) {
+    styleBuilderInfo = parisStyleAttributeInfo;
+    addAttribute(parisStyleAttributeInfo);
   }
 
   static class ConstructorInfo {

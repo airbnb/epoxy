@@ -92,14 +92,6 @@ internal class KotlinModelBuilderExtensionWriter(
             .removeSuffix("Epoxy")
 }
 
-fun String.lowerCaseFirstLetter(): String {
-    if (isEmpty()) {
-        return this
-    }
-
-    return Character.toLowerCase(get(0)) + substring(1)
-}
-
 typealias JavaClassName = com.squareup.javapoet.ClassName
 typealias JavaTypeName = com.squareup.javapoet.TypeName
 typealias JavaWildcardTypeName = com.squareup.javapoet.WildcardTypeName
