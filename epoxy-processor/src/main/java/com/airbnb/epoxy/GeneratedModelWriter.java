@@ -622,23 +622,21 @@ class GeneratedModelWriter {
     addHashCodeValidationIfNecessary(preBindBuilder,
         "The model was changed between being added to the controller and being bound.");
 
-    // TODO: (eli_hart 9/8/17) uncomment once paris fixes its bug
-//    if (modelInfo.isStyleable() && configManager.shouldValidateModelUsage()) {
-//      preBindBuilder.beginControlFlow("try")
-//
-//          .addStatement("$T.assertSameAttributes(new $T($L), $L, $L)",
-//              ClassNames.PARIS_STYLE_UTILS, modelInfo.getStyleBuilderInfo()
-// .getStyleApplierClass(),
-//              boundObjectParam.name, PARIS_STYLE_ATTR_NAME, PARIS_DEFAULT_STYLE_CONSTANT_NAME)
-//          .endControlFlow()
-//          .beginControlFlow("catch($T e)", AssertionError.class)
-//          .addStatement(
-//              "throw new $T(\"$L model at position \" + $L + \" has an invalid style:\\n\\n\" + e"
-//                  + ".getMessage())",
-//              IllegalStateException.class, modelInfo.generatedClassName.simpleName(),
-//              positionParamName)
-//          .endControlFlow();
-//    }
+    if (modelInfo.isStyleable() && configManager.shouldValidateModelUsage()) {
+      preBindBuilder.beginControlFlow("try")
+
+          .addStatement("$T.assertSameAttributes(new $T($L), $L, $L)",
+              ClassNames.PARIS_STYLE_UTILS, modelInfo.getStyleBuilderInfo().getStyleApplierClass(),
+              boundObjectParam.name, PARIS_STYLE_ATTR_NAME, PARIS_DEFAULT_STYLE_CONSTANT_NAME)
+          .endControlFlow()
+          .beginControlFlow("catch($T e)", AssertionError.class)
+          .addStatement(
+              "throw new $T(\"$L model at position \" + $L + \" has an invalid style:\\n\\n\" + e"
+                  + ".getMessage())",
+              IllegalStateException.class, modelInfo.generatedClassName.simpleName(),
+              positionParamName)
+          .endControlFlow();
+    }
 
     ClassName clickWrapperType = getClassName(WRAPPED_LISTENER_TYPE);
     for (AttributeInfo attribute : modelInfo.getAttributeInfo()) {
