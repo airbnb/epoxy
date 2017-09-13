@@ -1,27 +1,27 @@
 package com.airbnb.epoxy.sample.views;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airbnb.epoxy.ModelProp;
 import com.airbnb.epoxy.ModelProp.Option;
 import com.airbnb.epoxy.ModelView;
+import com.airbnb.epoxy.ModelView.Size;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.TextProp;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-@ModelView
+@ModelView(autoLayout = Size.WRAP_WIDTH_WRAP_HEIGHT)
 public class HeaderView extends LinearLayout {
 
   @BindView(R.id.title_text) TextView title;
   @BindView(R.id.caption_text) TextView caption;
 
-  public HeaderView(Context context, AttributeSet attrs) {
-    super(context, attrs);
+  public HeaderView(Context context) {
+    super(context);
     init();
   }
 

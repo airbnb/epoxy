@@ -60,6 +60,7 @@ class ModelViewInfo extends GeneratedModelInfo {
     boundObjectTypeName = ClassName.get(viewElement.asType());
 
     saveViewState = viewAnnotation.saveViewState();
+    layoutParams = viewAnnotation.autoLayout();
     fullSpanSize = viewAnnotation.fullSpan();
     includeOtherLayoutOptions = configManager.includeAlternateLayoutsForViews(viewElement);
   }

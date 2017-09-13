@@ -700,4 +700,14 @@ public class ViewProcessorTest {
   public void testModelBuilderInterface() {
     assertGeneration("TestManyTypesView.java", "TestManyTypesViewModelBuilder.java");
   }
+
+  @Test
+  public void testAutoLayout() {
+    assertGeneration("AutoLayoutModelView.java", "AutoLayoutModelViewModel_.java");
+  }
+
+  @Test
+  public void testAutoLayoutMatchParent() {
+    assertGeneration("AutoLayoutModelViewMatchParent.java", "AutoLayoutModelViewMatchParentModel_.java");
+  }
 }

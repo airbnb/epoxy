@@ -75,6 +75,11 @@ class GeneratedModelWriter {
   private static final String GET_DEFAULT_LAYOUT_METHOD_NAME = "getDefaultLayout";
   static final String ATTRIBUTES_BITSET_FIELD_NAME = "assignedAttributes" + GENERATED_FIELD_SUFFIX;
 
+  private static final CodeBlock LAYOUT_PARAMS_MATCH_PARENT =
+      CodeBlock.of("$T.MATCH_PARENT", ClassNames.ANDROID_MARGIN_LAYOUT_PARAMS);
+  private static final CodeBlock LAYOUT_PARAMS_WRAP_CONTENT =
+      CodeBlock.of("$T.WRAP_CONTENT", ClassNames.ANDROID_MARGIN_LAYOUT_PARAMS);
+
   private final Filer filer;
   private final Types typeUtils;
   private final ErrorLogger errorLogger;
@@ -151,6 +156,7 @@ class GeneratedModelWriter {
     generateDebugAddToMethodIfNeeded(builder, info);
 
     builder
+        .addMethods(generateProgrammaticViewMethods(info))
         .addMethods(generateBindMethods(info))
         .addMethods(generateStyleableViewMethods(info))
         .addMethods(generateSettersAndGetters(info))
@@ -175,7 +181,7 @@ class GeneratedModelWriter {
 
   private Iterable<MethodSpec> generateOtherLayoutOptions(GeneratedModelInfo info) {
     if (!info.includeOtherLayoutOptions
-        || info.isStyleable()) { // Layout resources can't be mixed with programmatic styles
+        || info.isProgrammaticView()) { // Layout resources can't be mixed with programmatic views
       return Collections.emptyList();
     }
 
@@ -410,6 +416,67 @@ class GeneratedModelWriter {
     return index;
   }
 
+  private Iterable<MethodSpec> generateProgrammaticViewMethods(GeneratedModelInfo modelInfo) {
+
+    if (!modelInfo.isProgrammaticView()) {
+      return Collections.emptyList();
+    }
+
+    List<MethodSpec> methods = new ArrayList<>();
+
+    // getViewType method so that view type is generated at runtime
+    methods.add(MethodSpec.methodBuilder("getViewType")
+        .addAnnotation(Override.class)
+        .addModifiers(PROTECTED)
+        .returns(TypeName.INT)
+        .addStatement("return 0", modelInfo.boundObjectTypeName)
+        .build());
+
+    // buildView method to return new view instance
+    Builder builder = MethodSpec.methodBuilder("buildView")
+        .addAnnotation(Override.class)
+        .addParameter(ClassNames.ANDROID_VIEW_GROUP, "parent")
+        .addModifiers(PROTECTED)
+        .returns(modelInfo.boundObjectTypeName)
+        .addStatement("$T v = new $T(parent.getContext())", modelInfo.boundObjectTypeName,
+            modelInfo.boundObjectTypeName);
+
+    CodeBlock layoutWidth;
+    CodeBlock layoutHeight;
+    switch (modelInfo.layoutParams) {
+      case WRAP_WIDTH_MATCH_HEIGHT:
+        layoutWidth = LAYOUT_PARAMS_WRAP_CONTENT;
+        layoutHeight = LAYOUT_PARAMS_MATCH_PARENT;
+        break;
+      case MATCH_WIDTH_MATCH_HEIGHT:
+        layoutWidth = LAYOUT_PARAMS_MATCH_PARENT;
+        layoutHeight = LAYOUT_PARAMS_MATCH_PARENT;
+        break;
+      case MATCH_WIDTH_WRAP_HEIGHT:
+        layoutWidth = LAYOUT_PARAMS_MATCH_PARENT;
+        layoutHeight = LAYOUT_PARAMS_WRAP_CONTENT;
+        break;
+      case WRAP_WIDTH_WRAP_HEIGHT:
+      default:
+        // This will be used for Styleable views as the default
+        layoutWidth = LAYOUT_PARAMS_WRAP_CONTENT;
+        layoutHeight = LAYOUT_PARAMS_WRAP_CONTENT;
+    }
+
+    builder
+        .addStatement("v.setLayoutParams(new $T($L, $L))",
+            ClassNames.ANDROID_MARGIN_LAYOUT_PARAMS, layoutWidth, layoutHeight);
+
+    ParisStyleAttributeInfo styleBuilderInfo = modelInfo.getStyleBuilderInfo();
+    if (styleBuilderInfo != null) {
+      addStyleApplierCode(builder, styleBuilderInfo, "v");
+    }
+
+    methods.add(builder.addStatement("return v").build());
+
+    return methods;
+  }
+
   private Iterable<MethodSpec> generateBindMethods(GeneratedModelInfo classInfo) {
     List<MethodSpec> methods = new ArrayList<>();
 
@@ -600,28 +667,6 @@ class GeneratedModelWriter {
     TypeName styleType = styleBuilderInfo.getTypeName();
     ClassName styleBuilderClass = styleBuilderInfo.getStyleBuilderClass();
 
-    // buildView method to return new view instance
-    Builder buildViewMethodBuilder = MethodSpec.methodBuilder("buildView")
-        .addAnnotation(Override.class)
-        .addParameter(ClassNames.ANDROID_VIEW_GROUP, "parent")
-        .addModifiers(PROTECTED)
-        .returns(modelInfo.boundObjectTypeName)
-        .addStatement("$T v = new $T(parent.getContext())", modelInfo.boundObjectTypeName,
-            modelInfo.boundObjectTypeName)
-        .addStatement("v.setLayoutParams(parent.generateLayoutParams(null))");
-
-    addStyleApplierCode(buildViewMethodBuilder, styleBuilderInfo, "v");
-    buildViewMethodBuilder.addStatement("return v");
-    methods.add(buildViewMethodBuilder.build());
-
-    // getViewType method so that view type is generated at runtime
-    methods.add(MethodSpec.methodBuilder("getViewType")
-        .addAnnotation(Override.class)
-        .addModifiers(PROTECTED)
-        .returns(TypeName.INT)
-        .addStatement("return 0", modelInfo.boundObjectTypeName)
-        .build());
-
     // setter for style object
     Builder builder = MethodSpec.methodBuilder(PARIS_STYLE_ATTR_NAME)
         .addModifiers(PUBLIC)
@@ -684,13 +729,14 @@ class GeneratedModelWriter {
           .varargs(methodInfo.varargs)
           .returns(info.getParameterizedGeneratedName());
 
-      if (info.isStyleable()
+      if (info.isProgrammaticView()
           && "layout".equals(methodInfo.name)
           && methodInfo.params.size() == 1
           && methodInfo.params.get(0).type == TypeName.INT) {
 
         builder
-            .addStatement("throw new $T(\"Layout resources are unsupported in @Styleable views.\")",
+            .addStatement(
+                "throw new $T(\"Layout resources are unsupported with programmatic views.\")",
                 UnsupportedOperationException.class);
       } else {
 
@@ -716,10 +762,12 @@ class GeneratedModelWriter {
   private Iterable<MethodSpec> generateDefaultMethodImplementations(GeneratedModelInfo info) {
     List<MethodSpec> methods = new ArrayList<>();
 
-    if (info.isStyleable()) {
+    if (info.isProgrammaticView()) {
       methods.add(buildDefaultLayoutMethodBase()
           .toBuilder()
-          .addStatement("throw new $T(\"Layout resources are unsupported in @Styleable views\")",
+          .addStatement(
+              "throw new $T(\"Layout resources are unsupported for views created programmatically"
+                  + ".\")",
               UnsupportedOperationException.class)
           .build());
     } else {
