@@ -1,13 +1,5 @@
 apply plugin: 'com.android.library'
 
-buildscript {
-  repositories {
-    mavenCentral()
-    google()
-  }
-
-}
-
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
   buildToolsVersion rootProject.ANDROID_BUILD_TOOLS_VERSION
@@ -37,8 +29,6 @@ dependencies {
   compile rootProject.deps.androidSupportLibrary
   compile project(':epoxy-annotations')
   compile project(':epoxy-adapter')
-  implementation rootProject.deps.dataBindingLibrary
-  implementation rootProject.deps.dataBindingAdapters
 
   testCompile rootProject.deps.junit
   testCompile rootProject.deps.robolectric

@@ -68,15 +68,21 @@ public abstract class EpoxyModel<T> {
 
   /**
    * Get the view type to associate with this model in the recyclerview. For models that use a
-   * layout resource, the view type is simply the layout resource value.
+   * layout resource, the view type is simply the layout resource value by default.
+   * <p>
+   * If this returns 0 Epoxy will assign a unique view type for this model at run time.
    *
    * @see android.support.v7.widget.RecyclerView.Adapter#getItemViewType(int)
    */
-  int getViewType() {
+  protected int getViewType() {
     return getLayout();
   }
 
-  View buildView(ViewGroup parent) {
+  /**
+   * Create and return a new instance of a view for this model. By default a view is created by
+   * inflating the layout resource.
+   */
+  protected View buildView(ViewGroup parent) {
     return LayoutInflater.from(parent.getContext()).inflate(getLayout(), parent, false);
   }
 

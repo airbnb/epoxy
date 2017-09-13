@@ -1,13 +1,15 @@
 package com.airbnb.epoxy
 
-import com.airbnb.epoxy.GeneratedModelWriter.BuilderHooks
 import com.airbnb.epoxy.Utils.*
-import com.squareup.javapoet.*
-import com.squareup.javapoet.MethodSpec.Builder
+import com.squareup.javapoet.ClassName
 import java.util.*
 import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.element.*
-import javax.lang.model.element.Modifier.*
+import javax.lang.model.element.Element
+import javax.lang.model.element.ElementKind
+import javax.lang.model.element.ExecutableElement
+import javax.lang.model.element.Modifier.PRIVATE
+import javax.lang.model.element.Modifier.STATIC
+import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 import kotlin.reflect.KClass
@@ -22,10 +24,12 @@ internal class ModelViewProcessor(
         private val configManager: ConfigManager,
 
         private val errorLogger: ErrorLogger,
-        private val modelWriter: GeneratedModelWriter, val resourceProcessor: ResourceProcessor
+        private val modelWriter: GeneratedModelWriter,
+        private val resourceProcessor: ResourceProcessor
 ) {
 
     private val modelClassMap = LinkedHashMap<Element, ModelViewInfo>()
+    private val styleableModelsToWrite = mutableListOf<ModelViewInfo>()
 
     fun process(
             roundEnv: RoundEnvironment,
@@ -46,15 +50,17 @@ internal class ModelViewProcessor(
         // the groups as well.
         groupOverloads()
 
-        // Our code generation assumes that all attributes in a group are view attributes (and not
+        // Up until here our code generation has assumed that that all attributes in a group are view attributes (and not
         // attributes inherited from a base model class), so this should be done after grouping
         // attributes, and these attributes should not be grouped.
         updatesViewsForInheritedBaseModelAttributes(otherGeneratedModels)
+        addStyleAttributes()
 
         writeJava()
 
         return modelClassMap.values
     }
+
 
     private fun processViewAnnotations(roundEnv: RoundEnvironment) {
         for (viewElement in roundEnv.getElementsAnnotatedWith(ModelView::class.java)) {
@@ -290,257 +296,68 @@ internal class ModelViewProcessor(
         }
     }
 
+
+    private fun addStyleAttributes() {
+        modelClassMap
+                .values
+                .filter {
+                    it.viewElement
+                            .annotationMirrors
+                            .map { it.annotationType.asElement() }
+                            .any {
+                                it.simpleName.toString() == "Styleable"
+                                        && elements.getPackageOf(it).qualifiedName.contains("paris")
+                            }
+                }
+                .also {
+                    styleableModelsToWrite.addAll(it)
+                }
+
+    }
+
     private fun validateResetElement(resetMethod: Element): Boolean =
             validateExecutableElement(resetMethod, OnViewRecycled::class.java, 0)
 
     private fun writeJava() {
-        for (modelInfo in modelClassMap.values) {
-            try {
-                modelWriter.generateClassForModel(modelInfo, object : BuilderHooks() {
-                    internal override fun addToBindMethod(methodBuilder: Builder, boundObjectParam: ParameterSpec): Boolean {
+        val modelsToWrite = mutableListOf<ModelViewInfo>()
+        modelsToWrite.addAll(modelClassMap.values)
+        modelsToWrite.removeAll(styleableModelsToWrite)
 
-                        for (attributeGroup in modelInfo.attributeGroups) {
-                            val attrCount = attributeGroup.attributes.size
-                            if (attrCount == 1) {
-                                val viewAttribute = attributeGroup.attributes[0] as ViewAttributeInfo
-                                methodBuilder
-                                        .addCode(buildCodeBlockToSetAttribute(boundObjectParam, viewAttribute))
-                            } else {
-                                for (i in 0 until attrCount) {
-                                    val viewAttribute = attributeGroup.attributes[i] as ViewAttributeInfo
-
-                                    if (i == 0) {
-                                        methodBuilder.beginControlFlow("if (\$L)",
-                                                GeneratedModelWriter.isAttributeSetCode(modelInfo, viewAttribute))
-                                    } else if (i == attrCount - 1 && attributeGroup.isRequired) {
-                                        methodBuilder.beginControlFlow("else")
-                                    } else {
-                                        methodBuilder.beginControlFlow("else if (\$L)",
-                                                GeneratedModelWriter.isAttributeSetCode(modelInfo, viewAttribute))
-                                    }
-
-                                    methodBuilder
-                                            .addCode(buildCodeBlockToSetAttribute(boundObjectParam, viewAttribute))
-                                            .endControlFlow()
-                                }
-
-                                if (!attributeGroup.isRequired) {
-                                    val defaultAttribute = attributeGroup.defaultAttribute as ViewAttributeInfo
-
-                                    methodBuilder.beginControlFlow("else")
-                                            .addStatement("\$L.\$L(\$L)", boundObjectParam.name,
-                                                    defaultAttribute.viewSetterMethodName,
-                                                    defaultAttribute.codeToSetDefault.value())
-                                            .endControlFlow()
-                                }
-                            }
-                        }
-
-                        return true
-                    }
-
-                    internal override fun addToBindWithDiffMethod(methodBuilder: Builder, boundObjectParam: ParameterSpec,
-                                                                  previousModelParam: ParameterSpec): Boolean {
-
-                        val generatedModelClass = modelInfo.generatedClassName
-                        methodBuilder
-                                .beginControlFlow("if (!(\$L instanceof \$T))", previousModelParam.name,
-                                        generatedModelClass)
-                                .addStatement("bind(\$L)", boundObjectParam.name)
-                                .addStatement("return")
-                                .endControlFlow()
-                                .addStatement("\$T that = (\$T) previousModel", generatedModelClass,
-                                        generatedModelClass)
-
-                        // We want to make sure the base model has its bind method called as well. Since the
-                        // user can provide a custom base class we aren't sure if it implements diff binding.
-                        // If so we should call it, but if not, calling it would invoke the default
-                        // EpoxyModel implementation which calls normal "bind". Doing that would force a full
-                        // bind!!! So we mustn't do that. So, we only call the super diff binding if we think
-                        // it's a custom implementation.
-                        if (modelImplementsBindWithDiff(modelInfo.superClassElement, methodBuilder.build())) {
-                            methodBuilder.addStatement("super.bind(\$L, \$L)", boundObjectParam.name,
-                                    previousModelParam.name)
-                        } else {
-                            methodBuilder.addStatement("super.bind(\$L)", boundObjectParam.name)
-                        }
-
-                        for (attributeGroup in modelInfo.attributeGroups) {
-                            methodBuilder.addCode("\n")
-
-                            if (attributeGroup.attributes.size == 1) {
-                                val attributeInfo = attributeGroup.attributes[0]
-
-                                if (attributeInfo is ViewAttributeInfo && attributeInfo.generateStringOverloads) {
-                                    methodBuilder
-                                            .beginControlFlow("if (!\$L.equals(that.\$L))", attributeInfo.getterCode(),
-                                                    attributeInfo.getterCode())
-                                } else {
-                                    GeneratedModelWriter.startNotEqualsControlFlow(methodBuilder, attributeInfo)
-                                }
-
-                                methodBuilder.addCode(buildCodeBlockToSetAttribute(boundObjectParam,
-                                        attributeInfo as ViewAttributeInfo))
-                                        .endControlFlow()
-                            } else {
-                                methodBuilder.beginControlFlow("if (\$L.equals(that.\$L))",
-                                        GeneratedModelWriter.ATTRIBUTES_BITSET_FIELD_NAME,
-                                        GeneratedModelWriter.ATTRIBUTES_BITSET_FIELD_NAME)
-
-                                var firstAttribute = true
-                                for (attribute in attributeGroup.attributes) {
-                                    if (!firstAttribute) {
-                                        methodBuilder.addCode(" else ")
-                                    }
-                                    firstAttribute = false
-
-                                    methodBuilder.beginControlFlow("if (\$L)",
-                                            GeneratedModelWriter.isAttributeSetCode(modelInfo, attribute))
-
-                                    GeneratedModelWriter.startNotEqualsControlFlow(methodBuilder, attribute)
-                                            .addCode(buildCodeBlockToSetAttribute(boundObjectParam,
-                                                    attribute as ViewAttributeInfo))
-                                            .endControlFlow()
-                                            .endControlFlow()
-                                }
-
-                                methodBuilder.endControlFlow()
-                                        .beginControlFlow("else")
-
-                                firstAttribute = true
-                                for (attribute in attributeGroup.attributes) {
-                                    if (!firstAttribute) {
-                                        methodBuilder.addCode(" else ")
-                                    }
-                                    firstAttribute = false
-
-                                    methodBuilder.beginControlFlow("if (\$L && !that.\$L)",
-                                            GeneratedModelWriter.isAttributeSetCode(modelInfo, attribute),
-                                            GeneratedModelWriter.isAttributeSetCode(modelInfo, attribute))
-                                            .addCode(buildCodeBlockToSetAttribute(boundObjectParam,
-                                                    attribute as ViewAttributeInfo))
-                                            .endControlFlow()
-                                }
-
-                                if (!attributeGroup.isRequired) {
-                                    val defaultAttribute = attributeGroup.defaultAttribute as ViewAttributeInfo
-
-                                    methodBuilder.beginControlFlow("else")
-                                            .addStatement("\$L.\$L(\$L)", boundObjectParam.name,
-                                                    defaultAttribute.viewSetterMethodName,
-                                                    defaultAttribute.codeToSetDefault.value())
-                                            .endControlFlow()
-                                }
-
-                                methodBuilder.endControlFlow()
-                            }
-                        }
-
-                        return true
-                    }
-
-                    override fun addToHandlePostBindMethod(postBindBuilder: Builder,
-                                                           boundObjectParam: ParameterSpec) {
-
-                        addAfterPropsAddedMethodsToBuilder(postBindBuilder, modelInfo, boundObjectParam)
-                    }
-
-                    internal override fun addToUnbindMethod(unbindBuilder: MethodSpec.Builder, unbindParamName: String) {
-                        modelInfo.viewAttributes
-                                .filter { it.resetWithNull }
-                                .forEach {
-                                    unbindBuilder.addStatement("\$L.\$L(null)", unbindParamName,
-                                            it.viewSetterMethodName)
-                                }
-
-                        addResetMethodsToBuilder(unbindBuilder, modelInfo, unbindParamName)
-                    }
-
-                    internal override fun beforeFinalBuild(builder: TypeSpec.Builder) {
-                        if (modelInfo.saveViewState) {
-                            builder.addMethod(buildSaveStateMethod())
-                        }
-
-                        if (modelInfo.fullSpanSize) {
-                            builder.addMethod(buildFullSpanSizeMethod())
-                        }
-                    }
-                })
-            } catch (e: Exception) {
-                errorLogger.logError(EpoxyProcessorException(e, "Error generating model view classes"))
+        styleableModelsToWrite.forEach {
+            if (tryAddStyleBuilderAttribute(it)) {
+                modelsToWrite.add(it)
             }
-
         }
+
+        styleableModelsToWrite.removeAll(modelsToWrite)
+
+        ModelViewWriter(modelWriter, errorLogger, types, elements, configManager)
+                .writeModels(modelsToWrite)
     }
 
-    fun modelImplementsBindWithDiff(clazz: TypeElement, bindWithDiffMethod: MethodSpec): Boolean {
-        val methodOnClass = getMethodOnClass(clazz, bindWithDiffMethod, types, elements) ?: return false
+    private fun tryAddStyleBuilderAttribute(styleableModel: ModelViewInfo): Boolean {
+        // if style applier is generated
+        val modelPackageName = styleableModel.generatedClassName.packageName()
+        val styleBuilderClassName = ClassName.get(modelPackageName, "${styleableModel.viewElement.simpleName}StyleApplier", "StyleBuilder")
 
-        val modifiers = methodOnClass.modifiers
-        if (modifiers.contains(Modifier.ABSTRACT)) {
+        val styleBuilderElement = try {
+            Utils.getTypeMirror(styleBuilderClassName, elements, types)
+        } catch (e: IllegalArgumentException) {
             return false
         }
 
-        val enclosingElement = methodOnClass.enclosingElement as TypeElement
-
-        // As long as the implementation is not on the base EpoxyModel we consider it a custom
-        // implementation
-        return enclosingElement.qualifiedName.toString() != UNTYPED_EPOXY_MODEL_TYPE
-    }
-
-    private fun buildCodeBlockToSetAttribute(boundObjectParam: ParameterSpec,
-                                             viewAttribute: ViewAttributeInfo): CodeBlock {
-        return CodeBlock.of("\$L.\$L(\$L);\n", boundObjectParam.name,
-                viewAttribute.viewSetterMethodName,
-                getValueToSetOnView(viewAttribute, boundObjectParam))
-    }
-
-    private fun getValueToSetOnView(viewAttribute: ViewAttributeInfo,
-                                    boundObjectParam: ParameterSpec): String {
-        val fieldName = viewAttribute.getFieldName()
-
-        return if (viewAttribute.generateStringOverloads) {
-            fieldName + ".toString(" + boundObjectParam.name + ".getContext())"
-        } else {
-            fieldName
-        }
-    }
-
-    private fun buildSaveStateMethod(): MethodSpec {
-        return MethodSpec.methodBuilder("shouldSaveViewState")
-                .addAnnotation(Override::class.java)
-                .returns(TypeName.BOOLEAN)
-                .addModifiers(PUBLIC)
-                .addStatement("return true")
-                .build()
-    }
-
-    private fun buildFullSpanSizeMethod(): MethodSpec {
-        return MethodSpec.methodBuilder("getSpanSize")
-                .addAnnotation(Override::class.java)
-                .returns(TypeName.INT)
-                .addModifiers(PUBLIC)
-                .addParameter(TypeName.INT, "totalSpanCount")
-                .addParameter(TypeName.INT, "position")
-                .addParameter(TypeName.INT, "itemCount")
-                .addStatement("return totalSpanCount")
-                .build()
-    }
-
-    private fun addResetMethodsToBuilder(builder: Builder, modelViewInfo: ModelViewInfo,
-                                         unbindParamName: String) {
-        for (methodName in modelViewInfo.getResetMethodNames()) {
-            builder.addStatement("$unbindParamName.$methodName()")
-        }
-    }
-
-    private fun addAfterPropsAddedMethodsToBuilder(methodBuilder: Builder, modelInfo: ModelViewInfo,
-                                                   boundObjectParam: ParameterSpec) {
-        for (methodName in modelInfo.getAfterPropsSetMethodNames()) {
-            methodBuilder.addStatement(boundObjectParam.name + "." + methodName + "()")
-        }
+        styleableModel.setStyleable(ParisStyleAttributeInfo(
+                styleableModel,
+                elements,
+                types,
+                modelPackageName,
+                styleBuilderClassName,
+                styleBuilderElement
+        ))
+        return true
     }
 
     private fun getModelInfoForMethodElement(element: Element): ModelViewInfo? =
             element.enclosingElement?.let { modelClassMap[it] }
 }
+

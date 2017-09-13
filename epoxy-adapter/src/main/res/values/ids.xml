@@ -2,4 +2,5 @@
 <resources>
     <item name="view_model_state_saving_id" type="id" />
     <item name="epoxy_touch_helper_selection_status" type="id" />
+    <item name="epoxy_saved_view_style" type="id" />
 </resources>
