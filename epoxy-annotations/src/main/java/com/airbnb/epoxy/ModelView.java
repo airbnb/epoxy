@@ -17,6 +17,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 public @interface ModelView {
 
+  /**
+   * Use with {@link #autoLayout()} to declare what layout parameters should be used to size your
+   * view when it is added to a RecyclerView. This maps to the LayoutParams options {@code
+   * layout_width} and {@code layout_height}.
+   */
   enum Size {
     NONE,
     WRAP_WIDTH_WRAP_HEIGHT,
@@ -25,11 +30,20 @@ public @interface ModelView {
     MATCH_WIDTH_MATCH_HEIGHT
   }
 
+  /**
+   * If set to an option besides {@link Size#NONE} Epoxy will create an instance of this view
+   * programmatically at runtime instead of inflating the view from xml. This is an alternative to
+   * using {@link #defaultLayout()}, and is a good option if you just need to specify layout
+   * parameters on your view with no other styling.
+   * <p>
+   * The size option you choose will define which layout parameters Epoxy uses at runtime when
+   * creating the view.
+   */
   Size autoLayout() default Size.NONE;
 
   /**
    * The layout file to use in the generated model to inflate the view. This is required unless a
-   * default pattern is set via {@link PackageModelViewConfig}.
+   * default pattern is set via {@link PackageModelViewConfig} or {@link #autoLayout()} is used.
    * <p>
    * Overrides any default set in {@link PackageModelViewConfig}
    */

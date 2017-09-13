@@ -1,7 +1,6 @@
 package com.airbnb.epoxy.sample.views;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,11 +19,6 @@ public class HeaderView extends LinearLayout {
 
   @BindView(R.id.title_text) TextView title;
   @BindView(R.id.caption_text) TextView caption;
-
-  public HeaderView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    init();
-  }
 
   public HeaderView(Context context) {
     super(context);

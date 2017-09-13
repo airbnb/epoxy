@@ -65,6 +65,10 @@ abstract class GeneratedModelInfo {
    */
   private ParisStyleAttributeInfo styleBuilderInfo;
 
+  /**
+   * An option set via {@link ModelView#autoLayout()} to have Epoxy create the view programmatically
+   * instead of via xml layout resource inflation.
+   */
   Size layoutParams = Size.NONE;
 
   /**

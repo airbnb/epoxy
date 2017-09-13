@@ -458,6 +458,7 @@ class GeneratedModelWriter {
         break;
       case WRAP_WIDTH_WRAP_HEIGHT:
       default:
+        // This will be used for Styleable views as the default
         layoutWidth = LAYOUT_PARAMS_WRAP_CONTENT;
         layoutHeight = LAYOUT_PARAMS_WRAP_CONTENT;
     }
