@@ -16,6 +16,17 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
 public @interface ModelView {
+
+  enum Size {
+    NONE,
+    WRAP_WIDTH_WRAP_HEIGHT,
+    WRAP_WIDTH_MATCH_HEIGHT,
+    MATCH_WIDTH_WRAP_HEIGHT,
+    MATCH_WIDTH_MATCH_HEIGHT
+  }
+
+  Size autoLayout() default Size.NONE;
+
   /**
    * The layout file to use in the generated model to inflate the view. This is required unless a
    * default pattern is set via {@link PackageModelViewConfig}.

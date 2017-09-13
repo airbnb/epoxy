@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.support.annotation.Nullable;
 
+import com.airbnb.epoxy.ModelView.Size;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -63,6 +64,8 @@ abstract class GeneratedModelInfo {
    * otherwise.
    */
   private ParisStyleAttributeInfo styleBuilderInfo;
+
+  Size layoutParams = Size.NONE;
 
   /**
    * Get information about methods returning class type of the original class so we can duplicate
@@ -204,10 +207,14 @@ abstract class GeneratedModelInfo {
     return getStyleBuilderInfo() != null;
   }
 
-  public void setStyleable(
+  void setStyleable(
       @NotNull ParisStyleAttributeInfo parisStyleAttributeInfo) {
     styleBuilderInfo = parisStyleAttributeInfo;
     addAttribute(parisStyleAttributeInfo);
+  }
+
+  boolean isProgrammaticView() {
+    return isStyleable() || layoutParams != Size.NONE;
   }
 
   static class ConstructorInfo {
