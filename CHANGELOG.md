@@ -1,3 +1,11 @@
+# 2.5.0 (September 14, 2017)
+* **New Feature** Epoxy now generates a Kotlin DSL to use when building models in your EpoxyController! See [the wiki](https://github.com/airbnb/epoxy/wiki/Epoxy-Controller#usage-with-kotlin) for details
+* **New Feature** You can use the `autoLayout` parameter in `@ModelView` instead of needing to create a layout resource for `defaultLayout`. Epoxy will then create your view programmatically (https://github.com/airbnb/epoxy/pull/282).
+
+**Breaking**
+* The `onSwipeProgressChanged` callback in `EpoxyTouchHelper` had a `Canvas` parameter added (https://github.com/airbnb/epoxy/pull/280). You will need to update any of your usages to add this. Sorry for the inconvenience; this will hopefully help you add better swipe animations.
+
+
 # 2.4.0 (September 4, 2017)
 * **Improvement** If you are setting options on a @ModelProp and have no other annotation parameters you can now omit the explicit `options = ` param name (https://github.com/airbnb/epoxy/pull/268)
 * **Improvement** If you are using `@TextProp` you can now specify a default string via a string resource (https://github.com/airbnb/epoxy/pull/269)
