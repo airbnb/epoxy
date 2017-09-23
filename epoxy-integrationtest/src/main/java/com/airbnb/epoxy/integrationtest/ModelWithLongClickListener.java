@@ -1,6 +1,9 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.integrationtest;
 
 import android.view.View;
+
+import com.airbnb.epoxy.EpoxyAttribute;
+import com.airbnb.epoxy.EpoxyModel;
 
 public class ModelWithLongClickListener extends EpoxyModel<View> {
 

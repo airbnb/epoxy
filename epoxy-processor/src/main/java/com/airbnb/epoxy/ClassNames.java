@@ -34,8 +34,8 @@ final class ClassNames {
   // TODO: (eli_hart 9/8/17) Fix this package name
   static final ClassName EPOXY_R = get("com.airbnb.viewmodeladapter", "R");
   static final ClassName EPOXY_DATA_BINDING_MODEL = get(PKG_EPOXY, "DataBindingEpoxyModel");
-  static final ClassName EPOXY_DATA_BINDING_HOLDER = get(PKG_EPOXY,
-      "DataBindingEpoxyModel.DataBindingHolder");
+  static final ClassName EPOXY_DATA_BINDING_HOLDER =
+      get(PKG_EPOXY, "DataBindingEpoxyModel", "DataBindingHolder");
   static final ClassName EPOXY_STRING_ATTRIBUTE_DATA = get(PKG_EPOXY, "StringAttributeData");
   static final ClassName EPOXY_CONTROLLER = get(PKG_EPOXY, "EpoxyController");
   static final ClassName EPOXY_STYLE_BUILDER_CALLBACK = get(PKG_EPOXY, "StyleBuilderCallback");
