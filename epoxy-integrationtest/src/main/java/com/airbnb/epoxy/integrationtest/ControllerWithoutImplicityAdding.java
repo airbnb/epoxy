@@ -1,4 +1,7 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.integrationtest;
+
+import com.airbnb.epoxy.AutoModel;
+import com.airbnb.epoxy.EpoxyController;
 
 public class ControllerWithoutImplicityAdding extends EpoxyController {
   @AutoModel Model_ model1;

@@ -1,8 +1,8 @@
 package com.airbnb.epoxy
 
 import com.squareup.javapoet.*
-import javax.annotation.processing.Filer
-import javax.lang.model.element.Modifier
+import javax.annotation.processing.*
+import javax.lang.model.element.*
 
 const val MODEL_BUILDER_INTERFACE_SUFFIX = "Builder"
 
@@ -25,7 +25,8 @@ internal class ModelBuilderInterfaceWriter(
     fun addInterface(modelBuilder: TypeSpec.Builder) {
         modelBuilder.addSuperinterface(getBuilderInterfaceTypeName(modelInfo))
 
-        val modelInterface = TypeSpec.interfaceBuilder(getBuilderInterfaceClassName(modelInfo)).run {
+        val modelInterface = TypeSpec.interfaceBuilder(
+                getBuilderInterfaceClassName(modelInfo)).run {
             addModifiers(Modifier.PUBLIC)
             addTypeVariables(modelInfo.typeVariables)
             addMethods(getInterfaceMethods())
@@ -36,7 +37,6 @@ internal class ModelBuilderInterfaceWriter(
                 .build()
                 .writeTo(filer)
     }
-
 
     private fun getInterfaceMethods(): List<MethodSpec> {
         return methods.filter {
@@ -76,5 +76,6 @@ internal fun getBuilderInterfaceClassName(modelInfo: GeneratedModelInfo): ClassN
 
     return ClassName.get(
             generatedModelName.packageName(),
-            generatedModelName.simpleName().removeSuffix("_").replace("$", "_") + MODEL_BUILDER_INTERFACE_SUFFIX)
+            generatedModelName.simpleName().removeSuffix("_").replace("$",
+                                                                      "_") + MODEL_BUILDER_INTERFACE_SUFFIX)
 }

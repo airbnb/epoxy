@@ -1,8 +1,11 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.integrationtest;
 
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.airbnb.epoxy.EpoxyModel;
+import com.airbnb.epoxy.EpoxyModelClass;
 
 /**
  * This tests that the annotation processor looks up the correct bound object type on the model when

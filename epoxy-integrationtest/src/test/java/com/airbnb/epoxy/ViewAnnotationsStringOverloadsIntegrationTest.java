@@ -2,6 +2,11 @@ package com.airbnb.epoxy;
 
 import android.content.res.Resources;
 
+import com.airbnb.epoxy.integrationtest.BuildConfig;
+import com.airbnb.epoxy.integrationtest.R;
+import com.airbnb.epoxy.integrationtest.ViewWithAnnotationsForIntegrationTest;
+import com.airbnb.epoxy.integrationtest.ViewWithAnnotationsForIntegrationTestModel_;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;

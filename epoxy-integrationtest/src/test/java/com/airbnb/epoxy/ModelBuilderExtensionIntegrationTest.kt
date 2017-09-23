@@ -1,5 +1,6 @@
 package com.airbnb.epoxy
 
+import com.airbnb.epoxy.integrationtest.*
 import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.*

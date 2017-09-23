@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import android.view.View;
 
 import com.airbnb.epoxy.EpoxyModel.SpanSizeOverrideCallback;
+import com.airbnb.epoxy.integrationtest.BuildConfig;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

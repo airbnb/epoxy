@@ -1,9 +1,9 @@
-package com.airbnb.epoxy.autoaddautomodels;
+package com.airbnb.epoxy.integrationtest.autoaddautomodels;
 
 import com.airbnb.epoxy.AutoModel;
 import com.airbnb.epoxy.EpoxyController;
 import com.airbnb.epoxy.EpoxyModel.AddPredicate;
-import com.airbnb.epoxy.Model_;
+import com.airbnb.epoxy.integrationtest.Model_;
 
 import java.util.ArrayList;
 import java.util.List;

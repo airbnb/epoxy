@@ -1,8 +1,14 @@
 package com.airbnb.epoxy;
 
-import com.airbnb.epoxy.autoaddautomodels.ControllerWithImplicitlyAddedModels;
-import com.airbnb.epoxy.autoaddautomodels.ControllerWithImplicitlyAddedModels2;
-import com.airbnb.epoxy.autoaddautomodels.ControllerWithImplicitlyAddedModels3;
+import com.airbnb.epoxy.integrationtest.AdapterWithFieldAssigned;
+import com.airbnb.epoxy.integrationtest.AdapterWithIdChanged;
+import com.airbnb.epoxy.integrationtest.BasicAutoModelsAdapter;
+import com.airbnb.epoxy.integrationtest.BuildConfig;
+import com.airbnb.epoxy.integrationtest.ControllerWithoutImplicityAdding;
+import com.airbnb.epoxy.integrationtest.Model_;
+import com.airbnb.epoxy.integrationtest.autoaddautomodels.ControllerWithImplicitlyAddedModels;
+import com.airbnb.epoxy.integrationtest.autoaddautomodels.ControllerWithImplicitlyAddedModels2;
+import com.airbnb.epoxy.integrationtest.autoaddautomodels.ControllerWithImplicitlyAddedModels3;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
