@@ -77,33 +77,29 @@ There are two main components of Epoxy:
 There are a few ways to create models, depending on whether you prefer to use custom views, databinding, or other approaches.
 
 #### From Custom Views
-You can easily generate an EpoxyModel from your custom views by using the `@ModelView` annotation on the class. Then, add a `ModelProp` annotation on each setter method to mark it as a property for the model.
+You can easily generate an EpoxyModel from your custom views by using the `@ModelView` annotation on the class. Then, add a "prop" annotation on each setter method to mark it as a property for the model.
 
 ```java
-@ModelView(defaultLayout = R.layout.view_holder_header)
+@ModelView(autoLayout = Size.MATCH_WIDTH_WRAP_HEIGHT)
 public class HeaderView extends LinearLayout {
 
   ... // Initialization omitted
 
-  @ModelProp(options = Option.GenerateStringOverloads)
+  @TextProp // Use this annotation for text.
   public void setTitle(CharSequence text) {
     titleView.setText(text);
   }
 
-  @ModelProp(options = Option.GenerateStringOverloads)
-  public void setDescription(CharSequence text) {
-    captionView.setText(text);
+  @CallbackProp // Use this annotation for click listeners or other callbacks.
+  public void clickListener(@Nullable OnClickListener listener) {
+    setOnClickListener(listener
+  }
+
+  @ModelProp // Use this annotation for any other property type
+  public void setBackgroundUrl(String url) {
+    ...
   }
 }
-```
-
-The layout file (`R.layout.view_holder_header` in this case) simply describes the layout params and styling for how the view should be inflated.
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<com.airbnb.epoxy.sample.views.HeaderView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="120dp" />
 ```
 
 #### From DataBinding
@@ -173,6 +169,30 @@ public class PhotoController extends Typed2EpoxyController<List<Photo>, Boolean>
           .addIf(loadingMore, this);
     }
   }
+```
+
+#### Or with Kotlin
+An extension function is generated for each model so we can write this:
+```kotlin
+class PhotoController : Typed2EpoxyController<List<Photo>, Boolean>() {
+
+    override fun buildModels(photos: List<Photo>, loadingMore: Boolean) {
+        header {
+            id("header")
+            title("My Photos")
+            description("My album description!")
+        }
+
+        photos.forEach {
+            photo {
+                id(it.id())
+                url(it.url())
+            }
+        }
+
+        if (loadingMore) loader { id("loader") }
+    }
+}
 ```
 
 And that's it! The controller's declarative style makes it very easy to visualize what the RecyclerView will look like, even when many different view types or items are used. Epoxy handles everything else. If a view only partially changes, such as the description, only that new value is set on the view, so the system is very efficient
