@@ -37,6 +37,15 @@ public abstract class EpoxyController {
 
   private static final Timer NO_OP_TIMER = new NoOpTimer();
 
+  /**
+   * We check that the adapter is not connected to multiple recyclerviews, but when a fragment has
+   * its view quickly destroyed and recreated it may temporarily attach the same adapter to the
+   * previous view and the new view (eg because of fragment transitions) if the controller is reused
+   * across views. We want to allow this case since it is a brief transient state. This should be
+   * enough time for screen transitions to happen.
+   */
+  private static final int DELAY_TO_CHECK_ADAPTER_COUNT_MS = 3000;
+
   private final EpoxyControllerAdapter adapter = new EpoxyControllerAdapter(this);
   private final ControllerHelper helper = getHelperForController(this);
   private final Handler handler = new Handler();
@@ -542,16 +551,30 @@ public abstract class EpoxyController {
 
   void onAttachedToRecyclerViewInternal(RecyclerView recyclerView) {
     recyclerViewAttachCount++;
+
     if (recyclerViewAttachCount > 1) {
-      onExceptionSwallowed(new IllegalStateException(
-          "Epoxy does not support attaching an adapter to more than one RecyclerView because "
-              + "saved state will not work properly. If you did not intend to attach your adapter "
-              + "to multiple RecyclerViews you may be leaking a "
-              + "reference to a previous RecyclerView. Make sure to remove the adapter from any "
-              + "previous RecyclerViews (eg if the adapter is reused in a Fragment across "
-              + "multiple onCreateView/onDestroyView cycles). See https://github"
-              + ".com/airbnb/epoxy/wiki/Avoiding-Memory-Leaks for more information."));
+      handler.postDelayed(new Runnable() {
+        @Override
+        public void run() {
+          // Only warn if there are still multiple adapters attached after a delay, to allow for
+          // a grace period
+          if (recyclerViewAttachCount > 1) {
+            onExceptionSwallowed(new IllegalStateException(
+                "This EpoxyController had its adapter added to more than one ReyclerView. Epoxy "
+                    + "does not support attaching an adapter to multiple RecyclerViews because "
+                    + "saved state will not work properly. If you did not intend to attach your "
+                    + "adapter "
+                    + "to multiple RecyclerViews you may be leaking a "
+                    + "reference to a previous RecyclerView. Make sure to remove the adapter from "
+                    + "any "
+                    + "previous RecyclerViews (eg if the adapter is reused in a Fragment across "
+                    + "multiple onCreateView/onDestroyView cycles). See https://github"
+                    + ".com/airbnb/epoxy/wiki/Avoiding-Memory-Leaks for more information."));
+          }
+        }
+      }, DELAY_TO_CHECK_ADAPTER_COUNT_MS);
     }
+
     onAttachedToRecyclerView(recyclerView);
   }
 
