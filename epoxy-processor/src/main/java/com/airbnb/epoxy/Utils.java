@@ -127,11 +127,11 @@ class Utils {
   }
 
   static boolean isViewClickListenerType(TypeMirror type) {
-    return isSubtypeOfType(type, VIEW_CLICK_LISTENER_TYPE);
+    return isType(type, VIEW_CLICK_LISTENER_TYPE);
   }
 
   static boolean isViewLongClickListenerType(TypeMirror type) {
-    return isSubtypeOfType(type, VIEW_LONG_CLICK_LISTENER_TYPE);
+    return isType(type, VIEW_LONG_CLICK_LISTENER_TYPE);
   }
 
   static boolean isIterableType(TypeElement element) {
@@ -424,6 +424,10 @@ class Utils {
     }
 
     return String.valueOf(string.charAt(3)).toLowerCase() + string.substring(4);
+  }
+
+  static boolean isType(TypeMirror typeMirror, String otherType) {
+    return otherType.equals(typeMirror.toString());
   }
 
   static boolean isType(Elements elements, Types types, TypeMirror typeMirror, Class<?> clazz) {
