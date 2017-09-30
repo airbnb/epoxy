@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -54,7 +55,11 @@ public class WrappedEpoxyModelClickListener<T extends EpoxyModel<?>, V>
     if (originalClickListener == null) {
       throw new IllegalStateException("Long click listener was set.");
     }
-    originalClickListener.onClick(model, object, v, holder.getAdapterPosition());
+
+    final int adapterPosition = holder.getAdapterPosition();
+    if (adapterPosition != RecyclerView.NO_POSITION) {
+      originalClickListener.onClick(model, object, v, adapterPosition);
+    }
   }
 
   @Override
