@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
+import java.util.Collections;
 import java.util.List;
 
 public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
@@ -86,7 +87,7 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
   /** Get an unmodifiable copy of the current models set on the adapter. */
   public List<EpoxyModel<?>> getCopyOfModels() {
     if (copyOfCurrentModels == null) {
-      copyOfCurrentModels = new UnmodifiableList<>(currentModels);
+      copyOfCurrentModels = Collections.unmodifiableList(currentModels);
     }
 
     return copyOfCurrentModels;
