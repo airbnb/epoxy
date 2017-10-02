@@ -1,3 +1,8 @@
+# 2.5.1 (October 2, 2017)
+* **Fixed** The wrong import was being generated for models using a view holder in 2.5.0 (https://github.com/airbnb/epoxy/pull/294)
+* **Fixed** Fix generated code failing to compile if a subclass of View.OnClickListener is used as an attribute (https://github.com/airbnb/epoxy/pull/296)
+
+
 # 2.5.0 (September 14, 2017)
 * **New Feature** Epoxy now generates a Kotlin DSL to use when building models in your EpoxyController! See [the wiki](https://github.com/airbnb/epoxy/wiki/Epoxy-Controller#usage-with-kotlin) for details
 * **New Feature** You can use the `autoLayout` parameter in `@ModelView` instead of needing to create a layout resource for `defaultLayout`. Epoxy will then create your view programmatically (https://github.com/airbnb/epoxy/pull/282).
