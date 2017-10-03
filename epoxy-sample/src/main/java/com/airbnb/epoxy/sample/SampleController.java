@@ -1,7 +1,5 @@
 package com.airbnb.epoxy.sample;
 
-import android.support.v7.widget.RecyclerView.RecycledViewPool;
-
 import com.airbnb.epoxy.AutoModel;
 import com.airbnb.epoxy.ButtonBindingModel_;
 import com.airbnb.epoxy.R;
@@ -31,11 +29,9 @@ public class SampleController extends TypedEpoxyController<List<CarouselData>> {
   @AutoModel ButtonBindingModel_ changeColorsButton;
 
   private final AdapterCallbacks callbacks;
-  private final RecycledViewPool recycledViewPool;
 
-  SampleController(AdapterCallbacks callbacks, RecycledViewPool recycledViewPool) {
+  SampleController(AdapterCallbacks callbacks) {
     this.callbacks = callbacks;
-    this.recycledViewPool = recycledViewPool;
     setDebugLoggingEnabled(true);
   }
 
@@ -70,7 +66,7 @@ public class SampleController extends TypedEpoxyController<List<CarouselData>> {
 
     for (int i = 0; i < carousels.size(); i++) {
       CarouselData carousel = carousels.get(i);
-      add(new CarouselModelGroup(carousel, callbacks, recycledViewPool));
+      add(new CarouselModelGroup(carousel, callbacks));
     }
   }
 

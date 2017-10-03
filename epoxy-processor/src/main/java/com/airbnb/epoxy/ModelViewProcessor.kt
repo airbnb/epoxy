@@ -1,18 +1,13 @@
 package com.airbnb.epoxy
 
 import com.airbnb.epoxy.Utils.*
-import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.*
 import java.util.*
-import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.Modifier.PRIVATE
-import javax.lang.model.element.Modifier.STATIC
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
-import kotlin.reflect.KClass
+import javax.annotation.processing.*
+import javax.lang.model.element.*
+import javax.lang.model.element.Modifier.*
+import javax.lang.model.type.*
+import javax.lang.model.util.*
 
 // TODO: (eli_hart 6/6/17) consider binding base model after view so the model can override view
 // behavior (like changing width dynamically or styles)
@@ -27,6 +22,9 @@ internal class ModelViewProcessor(
         private val modelWriter: GeneratedModelWriter,
         private val resourceProcessor: ResourceProcessor
 ) {
+
+    private val modelPropAnnotations = listOf(ModelProp::class, TextProp::class,
+                                              CallbackProp::class).map { it.java }
 
     private val modelClassMap = LinkedHashMap<Element, ModelViewInfo>()
     private val styleableModelsToWrite = mutableListOf<ModelViewInfo>()
@@ -61,7 +59,6 @@ internal class ModelViewProcessor(
         return modelClassMap.values
     }
 
-
     private fun processViewAnnotations(roundEnv: RoundEnvironment) {
         for (viewElement in roundEnv.getElementsAnnotatedWith(ModelView::class.java)) {
             try {
@@ -70,8 +67,9 @@ internal class ModelViewProcessor(
                 }
 
                 modelClassMap.put(viewElement,
-                        ModelViewInfo(viewElement as TypeElement, types, elements, errorLogger,
-                                      configManager, resourceProcessor))
+                                  ModelViewInfo(viewElement as TypeElement, types, elements,
+                                                errorLogger,
+                                                configManager, resourceProcessor))
             } catch (e: Exception) {
                 errorLogger.logError(e, "Error creating model view info classes.")
             }
@@ -81,7 +79,8 @@ internal class ModelViewProcessor(
 
     private fun validateViewElement(viewElement: Element): Boolean {
         if (viewElement.kind != ElementKind.CLASS || viewElement !is TypeElement) {
-            errorLogger.logError("${ModelView::class.java} annotations can only be on a class (element: ${viewElement.simpleName})")
+            errorLogger.logError(
+                    "${ModelView::class.java} annotations can only be on a class (element: ${viewElement.simpleName})")
             return false
         }
 
@@ -110,15 +109,16 @@ internal class ModelViewProcessor(
 
     private fun processSetterAnnotations(roundEnv: RoundEnvironment) {
 
-        for (propAnnotation in listOf(ModelProp::class, TextProp::class, CallbackProp::class)) {
-            for (propMethod in roundEnv.getElementsAnnotatedWith(propAnnotation.java)) {
+        for (propAnnotation in modelPropAnnotations) {
+            for (propMethod in roundEnv.getElementsAnnotatedWith(propAnnotation)) {
                 if (!validatePropElement(propMethod, propAnnotation)) {
                     continue
                 }
 
                 val info = getModelInfoForMethodElement(propMethod)
                 if (info == null) {
-                    errorLogger.logError("${propAnnotation.java.simpleName} annotation can only be used in classes annotated with ${ModelView::class.java.simpleName} (${propMethod.enclosingElement.simpleName}#${propMethod.simpleName})")
+                    errorLogger.logError(
+                            "${propAnnotation.simpleName} annotation can only be used in classes annotated with ${ModelView::class.java.simpleName} (${propMethod.enclosingElement.simpleName}#${propMethod.simpleName})")
                     continue
                 }
 
@@ -178,26 +178,35 @@ internal class ModelViewProcessor(
         }
     }
 
-    private fun validatePropElement(methodElement: Element, propAnnotation: KClass<out Annotation>): Boolean =
-            validateExecutableElement(methodElement, propAnnotation.java, 1)
+    private fun validatePropElement(
+            methodElement: Element,
+            propAnnotation: Class<out Annotation>
+    ): Boolean =
+            validateExecutableElement(methodElement, propAnnotation, 1)
 
-    private fun validateExecutableElement(element: Element, annotationClass: Class<*>,
-                                          paramCount: Int): Boolean {
+    private fun validateExecutableElement(
+            element: Element,
+            annotationClass: Class<*>,
+            paramCount: Int
+    ): Boolean {
         if (element !is ExecutableElement) {
-            errorLogger.logError("%s annotations can only be on a method (element: %s)", annotationClass,
-                    element.simpleName)
+            errorLogger.logError("%s annotations can only be on a method (element: %s)",
+                                 annotationClass,
+                                 element.simpleName)
             return false
         }
 
         if (element.parameters.size != paramCount) {
-            errorLogger.logError("Methods annotated with %s must have exactly %s parameter (method: %s)",
+            errorLogger.logError(
+                    "Methods annotated with %s must have exactly %s parameter (method: %s)",
                     annotationClass, paramCount, element.getSimpleName())
             return false
         }
 
         val modifiers = element.getModifiers()
         if (modifiers.contains(STATIC) || modifiers.contains(PRIVATE)) {
-            errorLogger.logError("Methods annotated with %s cannot be private or static (method: %s)",
+            errorLogger.logError(
+                    "Methods annotated with %s cannot be private or static (method: %s)",
                     annotationClass, element.getSimpleName())
             return false
         }
@@ -214,11 +223,11 @@ internal class ModelViewProcessor(
             val info = getModelInfoForMethodElement(recycleMethod)
             if (info == null) {
                 errorLogger.logError("%s annotation can only be used in classes annotated with %s",
-                        OnViewRecycled::class.java, ModelView::class.java)
+                                     OnViewRecycled::class.java, ModelView::class.java)
                 continue
             }
 
-            info.addOnRecycleMethod(recycleMethod as ExecutableElement)
+            info.addOnRecycleMethodIfNotExists(recycleMethod as ExecutableElement)
         }
     }
 
@@ -231,11 +240,11 @@ internal class ModelViewProcessor(
             val info = getModelInfoForMethodElement(afterPropsMethod)
             if (info == null) {
                 errorLogger.logError("%s annotation can only be used in classes annotated with %s",
-                        AfterPropsSet::class.java, ModelView::class.java)
+                                     AfterPropsSet::class.java, ModelView::class.java)
                 continue
             }
 
-            info.addAfterPropsSetMethod(afterPropsMethod as ExecutableElement)
+            info.addAfterPropsSetMethodIfNotExists(afterPropsMethod as ExecutableElement)
         }
     }
 
@@ -245,38 +254,59 @@ internal class ModelViewProcessor(
     /** Include props and reset methods from super class views.  */
     private fun updateViewsForInheritedViewAnnotations() {
         for (view in modelClassMap.values) {
-            val otherViews = HashSet(modelClassMap.values)
-            otherViews.remove(view)
 
-            for (otherView in otherViews) {
-                if (!isSubtype(view.viewElement, otherView.viewElement, types)) {
-                    continue
+            // We walk up the super class tree and look for any elements with epoxy annotations.
+            // This approach lets us capture views that we've already processed as well as views
+            // in other libraries that we wouldn't have otherwise processed.
+
+            var superViewClass = view.viewElement.superclass
+            while (superViewClass.kind == TypeKind.DECLARED) {
+                val superViewElement = types.asElement(superViewClass) as TypeElement
+                val samePackage = belongToTheSamePackage(view.viewElement, superViewElement,
+                                                         elements)
+
+                fun forEachElementWithAnnotation(
+                        annotations: List<Class<out Annotation>>,
+                        function: (Element) -> Unit
+                ) {
+                    superViewElement.enclosedElements
+                            .filter {
+                                // Make sure we can access the method
+                                samePackage || !isFieldPackagePrivate(it)
+                            }
+                            .filter {
+                                hasAnnotation(it, annotations)
+                            }
+                            .forEach {
+                                function(it)
+                            }
                 }
 
-                view.resetMethodNames.addAll(otherView.resetMethodNames)
-                view.afterPropsSetMethodNames.addAll(otherView.afterPropsSetMethodNames)
+                // We don't want the attribute from the super class replacing an attribute in the
+                // subclass if the subclass overrides it, since the subclass definition could include
+                // different annotation parameter settings, or we could end up with duplicates
 
-                val samePackage = belongToTheSamePackage(view.viewElement, otherView.viewElement, elements)
-                for (otherAttribute in otherView.attributeInfo) {
-                    if (otherAttribute.packagePrivate && !samePackage) {
-                        val otherSetterInfo = otherAttribute as ViewAttributeInfo
-                        // It would be an unlikely case for someone to not want views to inherit superclass
-                        // setters, so if they are package private and can't be inherited it is probably
-                        // just accidental and we can point it out instead of silently excluding it
-                        errorLogger.logError(
-                                "View %s is in a different package then %s and cannot inherit its package " + "private setter %s",
-                                view.viewElement.simpleName, otherView.viewElement.simpleName,
-                                otherSetterInfo.viewSetterMethodName)
-                    } else {
-                        // We don't want the attribute from the super class replacing an attribute in the
-                        // subclass if the subclass overrides it, since the subclass definition could include
-                        // different annotation parameter settings.
-                        view.addAttributeIfNotExists(otherAttribute)
-                    }
+                forEachElementWithAnnotation(modelPropAnnotations) {
+                    view.addPropIfNotExists(it as ExecutableElement?)
                 }
+
+                forEachElementWithAnnotation(listOf(OnViewRecycled::class.java)) {
+                    view.addOnRecycleMethodIfNotExists(it)
+                }
+
+                forEachElementWithAnnotation(listOf(AfterPropsSet::class.java)) {
+                    view.addAfterPropsSetMethodIfNotExists(it)
+                }
+
+                superViewClass = superViewElement.superclass
             }
         }
     }
+
+    private fun hasAnnotation(
+            element: Element,
+            annotations: List<Class<out Annotation>>
+    ): Boolean = annotations.any { element.getAnnotation(it) != null }
 
     /**
      * If a view defines a base model that it's generated model should extend we need to check if that
@@ -295,7 +325,6 @@ internal class ModelViewProcessor(
                     .forEach { modelViewInfo.addAttributes(it.attributeInfo) }
         }
     }
-
 
     private fun addStyleAttributes() {
         modelClassMap
@@ -338,7 +367,9 @@ internal class ModelViewProcessor(
     private fun tryAddStyleBuilderAttribute(styleableModel: ModelViewInfo): Boolean {
         // if style applier is generated
         val modelPackageName = styleableModel.generatedClassName.packageName()
-        val styleBuilderClassName = ClassName.get(modelPackageName, "${styleableModel.viewElement.simpleName}StyleApplier", "StyleBuilder")
+        val styleBuilderClassName = ClassName.get(modelPackageName,
+                                                  "${styleableModel.viewElement.simpleName}StyleApplier",
+                                                  "StyleBuilder")
 
         val styleBuilderElement = try {
             Utils.getTypeMirror(styleBuilderClassName, elements, types)
@@ -360,4 +391,5 @@ internal class ModelViewProcessor(
     private fun getModelInfoForMethodElement(element: Element): ModelViewInfo? =
             element.enclosingElement?.let { modelClassMap[it] }
 }
+
 

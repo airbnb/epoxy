@@ -146,12 +146,24 @@ class ModelViewInfo extends GeneratedModelInfo {
         resourceProcessor));
   }
 
-  void addOnRecycleMethod(ExecutableElement resetMethod) {
-    resetMethodNames.add(resetMethod.getSimpleName().toString());
+  void addPropIfNotExists(ExecutableElement propMethod) {
+    addAttributeIfNotExists(
+        new ViewAttributeInfo(this, propMethod, typeUtils, elements, errorLogger,
+            resourceProcessor));
   }
 
-  void addAfterPropsSetMethod(ExecutableElement afterPropsSetMethod) {
-    afterPropsSetMethodNames.add(afterPropsSetMethod.getSimpleName().toString());
+  void addOnRecycleMethodIfNotExists(Element resetMethod) {
+    String methodName = resetMethod.getSimpleName().toString();
+    if (!resetMethodNames.contains(methodName)) {
+      resetMethodNames.add(methodName);
+    }
+  }
+
+  void addAfterPropsSetMethodIfNotExists(Element afterPropsSetMethod) {
+    String methodName = afterPropsSetMethod.getSimpleName().toString();
+    if (!afterPropsSetMethodNames.contains(methodName)) {
+      afterPropsSetMethodNames.add(methodName);
+    }
   }
 
   ResourceValue getLayoutResource(ResourceProcessor resourceProcessor) {

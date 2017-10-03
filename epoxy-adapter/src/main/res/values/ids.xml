@@ -3,4 +3,5 @@
     <item name="view_model_state_saving_id" type="id" />
     <item name="epoxy_touch_helper_selection_status" type="id" />
     <item name="epoxy_saved_view_style" type="id" />
+    <item name="epoxy_recycler_view_child_initial_size_id" type="id" />
 </resources>
