@@ -29,6 +29,8 @@ import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.Utils.capitalizeFirstLetter;
 import static com.airbnb.epoxy.Utils.getDefaultValue;
+import static com.airbnb.epoxy.Utils.getParentClassElement;
+import static com.airbnb.epoxy.Utils.isFieldPackagePrivate;
 import static com.airbnb.epoxy.Utils.removeSetPrefix;
 
 class ViewAttributeInfo extends AttributeInfo {
@@ -78,7 +80,7 @@ class ViewAttributeInfo extends AttributeInfo {
     generateSetter = true;
     generateGetter = true;
     hasFinalModifier = false;
-    packagePrivate = false;
+    packagePrivate = isFieldPackagePrivate(setterMethod);
     isGenerated = true;
 
     useInHash = !options.contains(Option.DoNotHash);
@@ -98,6 +100,8 @@ class ViewAttributeInfo extends AttributeInfo {
     VariableElement paramElement = param;
     assignNullability(paramElement, typeMirror);
 
+    // TODO: (eli_hart 9/26/17) Get the javadoc on the super method if this setter overrides
+    // something and doesn't have its own javadoc
     createJavaDoc(elements.getDocComment(setterMethod), codeToSetDefault,
         constantFieldNameForDefaultValue,
         modelInfo.viewElement, typeMirror, viewSetterMethodName);
@@ -180,41 +184,55 @@ class ViewAttributeInfo extends AttributeInfo {
       return;
     }
 
-    for (Element element : modelInfo.viewElement.getEnclosedElements()) {
-      if (element.getKind() == ElementKind.FIELD
-          && element.getSimpleName().toString().equals(defaultConstant)) {
-
-        Set<Modifier> modifiers = element.getModifiers();
-        if (!modifiers.contains(Modifier.FINAL)
-            || !modifiers.contains(Modifier.STATIC)
-            || modifiers.contains(Modifier.PRIVATE)) {
-
-          errorLogger.logError(
-              "Default values for view props must be static, final, and not private. (%s#%s)",
-              modelInfo.viewElement.getSimpleName(), viewSetterMethodName);
+    TypeElement viewClass = modelInfo.viewElement;
+    while (viewClass != null) {
+      for (Element element : viewClass.getEnclosedElements()) {
+        if (checkElementForConstant(element, defaultConstant, types, errorLogger)) {
           return;
         }
-
-        // Make sure that the type of the default value is a valid type for the prop
-        if (!types.isAssignable(element.asType(), typeMirror)) {
-          errorLogger.logError(
-              "The default value for (%s#%s) must be a %s.",
-              modelInfo.viewElement.getSimpleName(), viewSetterMethodName, typeMirror);
-          return;
-        }
-        constantFieldNameForDefaultValue = defaultConstant;
-
-        codeToSetDefault.explicit =
-            CodeBlock.of("$T.$L", ClassName.get(modelInfo.viewElement), defaultConstant);
-
-        return;
       }
+
+      viewClass = getParentClassElement(modelInfo.viewElement, types);
     }
 
     errorLogger.logError(
         "The default value for (%s#%s) could not be found. Expected a constant named '%s' in the "
             + "view class.",
         modelInfo.viewElement.getSimpleName(), viewSetterMethodName, defaultConstant);
+  }
+
+  private boolean checkElementForConstant(Element element, String constantName, Types types,
+      ErrorLogger errorLogger) {
+    if (element.getKind() == ElementKind.FIELD
+        && element.getSimpleName().toString().equals(constantName)) {
+
+      Set<Modifier> modifiers = element.getModifiers();
+      if (!modifiers.contains(Modifier.FINAL)
+          || !modifiers.contains(Modifier.STATIC)
+          || modifiers.contains(Modifier.PRIVATE)) {
+
+        errorLogger.logError(
+            "Default values for view props must be static, final, and not private. (%s#%s)",
+            modelInfo.viewElement.getSimpleName(), viewSetterMethodName);
+        return true;
+      }
+
+      // Make sure that the type of the default value is a valid type for the prop
+      if (!types.isAssignable(element.asType(), typeMirror)) {
+        errorLogger.logError(
+            "The default value for (%s#%s) must be a %s.",
+            modelInfo.viewElement.getSimpleName(), viewSetterMethodName, typeMirror);
+        return true;
+      }
+      constantFieldNameForDefaultValue = constantName;
+
+      codeToSetDefault.explicit =
+          CodeBlock.of("$T.$L", ClassName.get(modelInfo.viewElement), constantName);
+
+      return true;
+    }
+
+    return false;
   }
 
   private void validatePropOptions(ErrorLogger errorLogger, Set<Option> options, Types types,

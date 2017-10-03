@@ -24,6 +24,8 @@ dependencies {
   compile rootProject.deps.androidSupportLibrary
   compile project(':epoxy-annotations')
 
+  annotationProcessor project(':epoxy-processor')
+
   testCompile rootProject.deps.junit
   testCompile rootProject.deps.robolectric
   testCompile rootProject.deps.mockito

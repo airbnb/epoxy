@@ -1,13 +1,12 @@
 package com.airbnb.epoxy.sample.models;
 
-import android.support.v7.widget.RecyclerView.RecycledViewPool;
-
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.EpoxyModelGroup;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.sample.CarouselData;
 import com.airbnb.epoxy.sample.ColorData;
 import com.airbnb.epoxy.sample.SampleController.AdapterCallbacks;
+import com.airbnb.epoxy.sample.views.GridCarouselModel_;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +14,14 @@ import java.util.List;
 public class CarouselModelGroup extends EpoxyModelGroup {
   public final CarouselData data;
 
-  public CarouselModelGroup(CarouselData carousel, AdapterCallbacks callbacks,
-      RecycledViewPool recycledViewPool) {
-    super(R.layout.model_carousel_group, buildModels(carousel, callbacks, recycledViewPool));
+  public CarouselModelGroup(CarouselData carousel, AdapterCallbacks callbacks) {
+    super(R.layout.model_carousel_group, buildModels(carousel, callbacks));
     this.data = carousel;
     id(carousel.getId());
   }
 
-  private static List<EpoxyModel<?>> buildModels(CarouselData carousel, AdapterCallbacks callbacks,
-      RecycledViewPool recycledViewPool) {
+  private static List<EpoxyModel<?>> buildModels(CarouselData carousel,
+      AdapterCallbacks callbacks) {
     List<ColorData> colors = carousel.getColors();
     ArrayList<EpoxyModel<?>> models = new ArrayList<>();
 
@@ -61,9 +59,7 @@ public class CarouselModelGroup extends EpoxyModelGroup {
           }));
     }
 
-    models.add(new CarouselModel_()
-        .recycledViewPool(recycledViewPool)
-        .models(colorModels));
+    models.add(new GridCarouselModel_().models(colorModels));
 
     return models;
   }

@@ -10,9 +10,9 @@ import android.support.annotation.ColorInt;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.RecycledViewPool;
 import android.view.View;
 
+import com.airbnb.epoxy.EpoxyRecyclerView;
 import com.airbnb.epoxy.EpoxyTouchHelper;
 import com.airbnb.epoxy.EpoxyTouchHelper.DragCallbacks;
 import com.airbnb.epoxy.R;
@@ -32,10 +32,8 @@ import static android.animation.ValueAnimator.ofObject;
 public class MainActivity extends AppCompatActivity implements AdapterCallbacks {
   private static final Random RANDOM = new Random();
   private static final String CAROUSEL_DATA_KEY = "carousel_data_key";
-  private static final int SPAN_COUNT = 2;
 
-  private final RecycledViewPool recycledViewPool = new RecycledViewPool();
-  private final SampleController controller = new SampleController(this, recycledViewPool);
+  private final SampleController controller = new SampleController(this);
   private List<CarouselData> carousels = new ArrayList<>();
 
   @Override
@@ -43,26 +41,10 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // Many carousels and color models are shown on screen at once. The default recycled view
-    // pool size is only 5, so we manually set the pool size to avoid constantly creating new views
-    // We also use a shared view pool so that carousels can recycle items between themselves.
-    recycledViewPool.setMaxRecycledViews(R.layout.model_color, Integer.MAX_VALUE);
-    recycledViewPool.setMaxRecycledViews(R.layout.model_carousel_group, Integer.MAX_VALUE);
-    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-    recyclerView.setRecycledViewPool(recycledViewPool);
+    EpoxyRecyclerView recyclerView = (EpoxyRecyclerView) findViewById(R.id.recycler_view);
+    recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-    // We are using a multi span grid to allow two columns of buttons. To set this up we need
-    // to set our span count on the controller and then get the span size lookup object from
-    // the controller. This look up object will delegate span size lookups to each model.
-    controller.setSpanCount(SPAN_COUNT);
-    GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-    gridLayoutManager.setSpanSizeLookup(controller.getSpanSizeLookup());
-    recyclerView.setLayoutManager(gridLayoutManager);
-
-    recyclerView.setHasFixedSize(true);
-    recyclerView.addItemDecoration(new VerticalGridCardSpacingDecoration());
-    recyclerView.setItemAnimator(new SampleItemAnimator());
-    recyclerView.setAdapter(controller.getAdapter());
+    recyclerView.setController(controller);
 
     if (savedInstanceState != null) {
       carousels = savedInstanceState.getParcelableArrayList(CAROUSEL_DATA_KEY);

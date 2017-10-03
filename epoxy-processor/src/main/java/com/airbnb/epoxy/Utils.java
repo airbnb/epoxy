@@ -266,11 +266,16 @@ class Utils {
       }
     }
 
-    TypeElement superClazz = (TypeElement) typeUtils.asElement(clazz.getSuperclass());
+    TypeElement superClazz = getParentClassElement(clazz, typeUtils);
     if (superClazz == null) {
       return null;
     }
     return getMethodOnClass(superClazz, method, typeUtils, elements);
+  }
+
+  @Nullable
+  static TypeElement getParentClassElement(TypeElement element, Types types) {
+    return (TypeElement) types.asElement(element.getSuperclass());
   }
 
   private static boolean areParamsTheSame(ExecutableElement method1, MethodSpec method2,
