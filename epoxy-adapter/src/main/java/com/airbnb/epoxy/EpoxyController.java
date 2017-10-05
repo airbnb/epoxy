@@ -138,6 +138,7 @@ public abstract class EpoxyController {
   };
 
   private void dispatchModelBuild() {
+    hasPendingModelBuildRequest = false;
     helper.resetAutoModels();
 
     modelsBeingBuilt = new ControllerModelList(getExpectedModelCount());

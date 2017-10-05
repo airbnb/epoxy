@@ -138,7 +138,7 @@ class GeneratedModelWriter {
   void generateClassForModel(GeneratedModelInfo info, BuilderHooks builderHooks)
       throws IOException {
     this.builderHooks = builderHooks;
-    if (!info.shouldGenerateModel()) {
+    if (!info.shouldGenerateModel) {
       return;
     }
 

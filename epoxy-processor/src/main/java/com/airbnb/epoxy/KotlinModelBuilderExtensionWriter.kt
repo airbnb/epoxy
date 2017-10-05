@@ -22,7 +22,9 @@ internal class KotlinModelBuilderExtensionWriter(
             return
         }
 
-        generatedModels.groupBy { it.generatedClassName.packageName() }
+        generatedModels
+                .filter { it.shouldGenerateModel }
+                .groupBy { it.generatedClassName.packageName() }
                 .map { (packageName, models) ->
                     buildExtensionFile(
                             packageName,

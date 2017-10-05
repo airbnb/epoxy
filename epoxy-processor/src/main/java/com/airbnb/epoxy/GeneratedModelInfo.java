@@ -175,10 +175,6 @@ abstract class GeneratedModelInfo {
     return attributeInfo;
   }
 
-  boolean shouldGenerateModel() {
-    return shouldGenerateModel;
-  }
-
   Iterable<TypeVariableName> getTypeVariables() {
     return typeVariableNames;
   }
