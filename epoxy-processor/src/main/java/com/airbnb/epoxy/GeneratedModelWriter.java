@@ -629,10 +629,9 @@ class GeneratedModelWriter {
       // recycling will not work correctly. It is done in the background since it is fairly slow
       // and can noticeably add jank to scrolling in dev
       preBindBuilder
-          .beginControlFlow("new $T<$T, $T, $T>()", ANDROID_ASYNC_TASK, Void.class, Void.class,
-              Void.class)
-          .addCode("@$T\n", Override.class)
-          .beginControlFlow("protected $T doInBackground($T... voids)", Void.class, Void.class)
+          .beginControlFlow("$T.THREAD_POOL_EXECUTOR.execute(new $T()", ANDROID_ASYNC_TASK,
+              Runnable.class)
+          .beginControlFlow("public void run()")
           .beginControlFlow("try")
           .addStatement("$T.assertSameAttributes(new $T($L), $L, $L)",
               ClassNames.PARIS_STYLE_UTILS, modelInfo.getStyleBuilderInfo().getStyleApplierClass(),
@@ -645,10 +644,8 @@ class GeneratedModelWriter {
               IllegalStateException.class, modelInfo.generatedClassName.simpleName(),
               positionParamName)
           .endControlFlow()
-          .addStatement("return null")
           .endControlFlow()
-          .endControlFlow()
-          .addStatement(".executeOnExecutor($T.THREAD_POOL_EXECUTOR)", ANDROID_ASYNC_TASK);
+          .endControlFlow(")");
     }
 
     ClassName clickWrapperType = getClassName(WRAPPED_LISTENER_TYPE);
