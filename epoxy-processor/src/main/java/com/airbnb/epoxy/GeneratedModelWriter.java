@@ -32,6 +32,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.ClassNames.ANDROID_ASYNC_TASK;
 import static com.airbnb.epoxy.ModelViewWriterKt.addStyleApplierCode;
 import static com.airbnb.epoxy.ParisStyleAttributeInfoKt.PARIS_DEFAULT_STYLE_CONSTANT_NAME;
 import static com.airbnb.epoxy.ParisStyleAttributeInfoKt.PARIS_STYLE_ATTR_NAME;
@@ -623,8 +624,15 @@ class GeneratedModelWriter {
         "The model was changed between being added to the controller and being bound.");
 
     if (modelInfo.isStyleable() && configManager.shouldValidateModelUsage()) {
-      preBindBuilder.beginControlFlow("try")
 
+      // We validate that the style attributes are the same as in the default, otherwise
+      // recycling will not work correctly. It is done in the background since it is fairly slow
+      // and can noticeably add jank to scrolling in dev
+      preBindBuilder
+          .beginControlFlow("$T.THREAD_POOL_EXECUTOR.execute(new $T()", ANDROID_ASYNC_TASK,
+              Runnable.class)
+          .beginControlFlow("public void run()")
+          .beginControlFlow("try")
           .addStatement("$T.assertSameAttributes(new $T($L), $L, $L)",
               ClassNames.PARIS_STYLE_UTILS, modelInfo.getStyleBuilderInfo().getStyleApplierClass(),
               boundObjectParam.name, PARIS_STYLE_ATTR_NAME, PARIS_DEFAULT_STYLE_CONSTANT_NAME)
@@ -635,7 +643,9 @@ class GeneratedModelWriter {
                   + ".getMessage())",
               IllegalStateException.class, modelInfo.generatedClassName.simpleName(),
               positionParamName)
-          .endControlFlow();
+          .endControlFlow()
+          .endControlFlow()
+          .endControlFlow(")");
     }
 
     ClassName clickWrapperType = getClassName(WRAPPED_LISTENER_TYPE);
