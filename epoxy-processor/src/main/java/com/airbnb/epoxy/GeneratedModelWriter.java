@@ -33,7 +33,6 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.ClassNames.ANDROID_ASYNC_TASK;
-import static com.airbnb.epoxy.ModelViewWriterKt.addStyleApplierCode;
 import static com.airbnb.epoxy.ParisStyleAttributeInfoKt.PARIS_DEFAULT_STYLE_CONSTANT_NAME;
 import static com.airbnb.epoxy.ParisStyleAttributeInfoKt.PARIS_STYLE_ATTR_NAME;
 import static com.airbnb.epoxy.ParisStyleAttributeInfoKt.weakReferenceFieldForStyle;
@@ -251,11 +250,11 @@ class GeneratedModelWriter {
 
     // We store styles in a weak reference since if a controller uses it
     // once it is likely to be used in other models and when models are rebuilt
-    for (String styleName : styleBuilderInfo.getStyleNames()) {
+    for (ParisStyle style : styleBuilderInfo.getStyles()) {
       constantFields.add(
           FieldSpec.builder(
               ParameterizedTypeName.get(ClassName.get(WeakReference.class), ClassNames.PARIS_STYLE),
-              weakReferenceFieldForStyle(styleName),
+              weakReferenceFieldForStyle(style.getName()),
               PRIVATE, STATIC
           )
               .build());
@@ -468,11 +467,6 @@ class GeneratedModelWriter {
         .addStatement("v.setLayoutParams(new $T($L, $L))",
             ClassNames.ANDROID_MARGIN_LAYOUT_PARAMS, layoutWidth, layoutHeight);
 
-    ParisStyleAttributeInfo styleBuilderInfo = modelInfo.getStyleBuilderInfo();
-    if (styleBuilderInfo != null) {
-      addStyleApplierCode(builder, styleBuilderInfo, "v");
-    }
-
     methods.add(builder.addStatement("return v").build());
 
     return methods;
@@ -629,6 +623,8 @@ class GeneratedModelWriter {
       // recycling will not work correctly. It is done in the background since it is fairly slow
       // and can noticeably add jank to scrolling in dev
       preBindBuilder
+          .beginControlFlow("if ($L != $L.getTag($T.id.epoxy_saved_view_style))",
+              PARIS_STYLE_ATTR_NAME, boundObjectParam.name, ClassNames.EPOXY_R)
           .beginControlFlow("$T.THREAD_POOL_EXECUTOR.execute(new $T()", ANDROID_ASYNC_TASK,
               Runnable.class)
           .beginControlFlow("public void run()")
@@ -645,7 +641,8 @@ class GeneratedModelWriter {
               positionParamName)
           .endControlFlow()
           .endControlFlow()
-          .endControlFlow(")");
+          .endControlFlow(")")
+          .endControlFlow();
     }
 
     ClassName clickWrapperType = getClassName(WRAPPED_LISTENER_TYPE);
@@ -703,14 +700,20 @@ class GeneratedModelWriter {
         .build());
 
     // Methods for setting each defined style directly
-    for (String styleName : styleBuilderInfo.getStyleNames()) {
-      String capitalizedStyle = Utils.capitalizeFirstLetter(styleName);
+    for (ParisStyle style : styleBuilderInfo.getStyles()) {
+      String capitalizedStyle = Utils.capitalizeFirstLetter(style.getName());
       String methodName = "with" + capitalizedStyle + "Style";
-      String fieldName = weakReferenceFieldForStyle(styleName);
+      String fieldName = weakReferenceFieldForStyle(style.getName());
 
       // The style is stored in a static weak reference since it is likely to be reused in other
       // models are when models are rebuilt.
-      methods.add(MethodSpec.methodBuilder(methodName)
+      Builder styleMethodBuilder = MethodSpec.methodBuilder(methodName);
+
+      if (style.getJavadoc() != null) {
+        styleMethodBuilder.addJavadoc(style.getJavadoc());
+      }
+
+      methods.add(styleMethodBuilder
           .addModifiers(PUBLIC)
           .returns(modelInfo.getParameterizedGeneratedName())
           .addStatement("$T style = $L != null ? $L.get() : null", ClassNames.PARIS_STYLE,
