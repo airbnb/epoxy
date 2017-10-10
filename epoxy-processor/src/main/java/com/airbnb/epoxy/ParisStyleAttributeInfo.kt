@@ -17,14 +17,14 @@ fun weakReferenceFieldForStyle(styleName: String) = "parisStyleReference_$styleN
  */
 internal class ParisStyleAttributeInfo(
         modelInfo: ModelViewInfo,
-        elements: Elements,
+        val elements: Elements,
         val types: Types,
         packageName: String,
         styleBuilderClassName: ClassName,
         styleBuilderElement: TypeMirror
 ) : AttributeInfo() {
 
-    val styleNames: List<String>
+    val styles: List<ParisStyle>
     val styleApplierClass: ClassName
     val styleBuilderClass: ClassName
 
@@ -38,7 +38,7 @@ internal class ParisStyleAttributeInfo(
         isGenerated = true
         useInHash = true
         isNullable = false
-        styleNames = findStyleNames(styleBuilderElement)
+        styles = findStyleNames(styleBuilderElement)
 
         // the builder is nested in the style applier class
         styleApplierClass = styleBuilderClassName.topLevelClassName()
@@ -46,7 +46,7 @@ internal class ParisStyleAttributeInfo(
         codeToSetDefault.explicit = CodeBlock.of(PARIS_DEFAULT_STYLE_CONSTANT_NAME)
     }
 
-    private fun findStyleNames(typeMirror: TypeMirror): List<String> {
+    private fun findStyleNames(typeMirror: TypeMirror): List<ParisStyle> {
         return types.asElement(typeMirror)
                 .enclosedElements
                 .filter {
@@ -54,11 +54,18 @@ internal class ParisStyleAttributeInfo(
                             && it.simpleName.startsWith(BUILDER_STYLE_METHOD_PREFIX)
                 }
                 .map {
-                    it.simpleName
+                    val name = it.simpleName
                             .toString()
                             .removePrefix(BUILDER_STYLE_METHOD_PREFIX)
                             .lowerCaseFirstLetter()
+
+                    ParisStyle(name, elements.getDocComment(it))
                 }
     }
 
 }
+
+data class ParisStyle(
+        val name: String,
+        val javadoc: String?
+)

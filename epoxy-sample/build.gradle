@@ -12,7 +12,7 @@ android {
 
   defaultConfig {
     applicationId "com.airbnb.android.epoxysample"
-    minSdkVersion rootProject.MIN_SDK_VERSION_LITHO
+    minSdkVersion 16
     targetSdkVersion rootProject.TARGET_SDK_VERSION
     vectorDrawables.useSupportLibrary = true
     versionCode 1
@@ -43,6 +43,9 @@ dependencies {
   compile project(':epoxy-databinding')
   compile project(':epoxy-adapter')
   annotationProcessor project(':epoxy-processor')
+
+//  compile "com.airbnb.android:paris:0.2.0"
+//  annotationProcessor "com.airbnb.android:paris-processor:0.2.0"
 
   // Dependencies for the optional litho integration
   compile project(':epoxy-litho')
