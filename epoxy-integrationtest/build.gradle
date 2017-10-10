@@ -27,6 +27,8 @@ dependencies {
   compile project(':epoxy-adapter')
   compile project(':epoxy-annotations')
   compile project(':epoxy-databinding')
+  compile project(':epoxy-paging')
+
   kapt project(':epoxy-processor')
   kapt rootProject.deps.dataBindingCompiler
 

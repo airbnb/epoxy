@@ -145,7 +145,7 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
     numBoundModels--;
   }
 
-  public void setList(List<T> list) {
+  public void setList(@Nullable List<T> list) {
     if (list == this.list) {
       return;
     }
@@ -158,7 +158,7 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
     requestModelBuild();
   }
 
-  public void setList(PagedList<T> list) {
+  public void setList(@Nullable PagedList<T> list) {
     if (list == this.pagedList) {
       return;
     }
