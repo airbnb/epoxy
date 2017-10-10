@@ -8,7 +8,7 @@ android {
   buildToolsVersion rootProject.ANDROID_BUILD_TOOLS_VERSION
 
   defaultConfig {
-    applicationId "com.airbnb.android.epoxy"
+    applicationId "com.airbnb.epoxy.integrationtest"
     minSdkVersion rootProject.MIN_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
     vectorDrawables.useSupportLibrary = true
@@ -19,13 +19,15 @@ android {
   dataBinding {
     enabled = true
   }
+
+  dexOptions {
+    // Was getting this error otherwise - "Multiple dex files define Landroid/arch/core/BuildConfig"
+    preDexLibraries = false
+  }
 }
 
 dependencies {
   compile rootProject.deps.kotlin
-  testCompile rootProject.deps.junit
-  compile project(':epoxy-adapter')
-  compile project(':epoxy-annotations')
   compile project(':epoxy-databinding')
   compile project(':epoxy-paging')
 
@@ -33,8 +35,10 @@ dependencies {
   kapt rootProject.deps.dataBindingCompiler
 
   testCompile rootProject.deps.robolectric
+  testCompile rootProject.deps.junit
   testCompile rootProject.deps.mockito
 }
+
 repositories {
   mavenCentral()
 }

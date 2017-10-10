@@ -1,8 +1,6 @@
 package com.airbnb.epoxy.sample;
 
 import com.airbnb.epoxy.AutoModel;
-import com.airbnb.epoxy.ButtonBindingModel_;
-import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.TypedEpoxyController;
 import com.airbnb.epoxy.sample.models.CarouselModelGroup;
 import com.airbnb.epoxy.sample.views.HeaderViewModel_;

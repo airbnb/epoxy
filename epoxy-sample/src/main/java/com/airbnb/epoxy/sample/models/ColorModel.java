@@ -8,7 +8,7 @@ import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.EpoxyModelClass;
 import com.airbnb.epoxy.EpoxyModelWithHolder;
-import com.airbnb.epoxy.R;
+import com.airbnb.epoxy.sample.R;
 import com.airbnb.epoxy.sample.models.ColorModel.ColorHolder;
 import com.airbnb.lottie.LottieAnimationView;
 
