@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView;
@@ -48,7 +49,7 @@ public abstract class EpoxyController {
 
   private final EpoxyControllerAdapter adapter = new EpoxyControllerAdapter(this);
   private final ControllerHelper helper = getHelperForController(this);
-  private final Handler handler = new Handler();
+  private final Handler handler = new Handler(Looper.getMainLooper());
   private final List<Interceptor> interceptors = new ArrayList<>();
   private ControllerModelList modelsBeingBuilt;
   private boolean filterDuplicates;
@@ -56,15 +57,20 @@ public abstract class EpoxyController {
   private Timer timer = NO_OP_TIMER;
   private EpoxyDiffLogger debugObserver;
   private boolean hasBuiltModelsEver;
+  private boolean hasPendingModelBuildRequest;
   private List<ModelInterceptorCallback> modelInterceptorCallbacks;
   private int recyclerViewAttachCount = 0;
   private EpoxyModel<?> stagedModel;
 
   /**
    * Call this to request a model update. The controller will schedule a call to {@link
-   * #buildModels()} so that models can be rebuilt for the current data. All calls after the first
-   * are posted and debounced so that the calling code need not worry about calling this multiple
-   * times in a row.
+   * #buildModels()} so that models can be rebuilt for the current data. Once a build is requested
+   * all subsequent requests are ignored until the model build run. Therefore, the calling code need
+   * not worry about calling this multiple times in a row.
+   * <p>
+   * The exception is that the first time this is called on a new instance of {@link
+   * EpoxyController} it is run synchronously. This allows state to be restored and the initial view
+   * to be draw quicker.
    */
   public void requestModelBuild() {
     if (isBuildingModels()) {
@@ -94,7 +100,8 @@ public abstract class EpoxyController {
    * delaying the model build too long is that models will not be in sync with the data or view, and
    * scrolling the view offscreen and back onscreen will cause the model to bind old data.
    * <p>
-   * This will cancel any currently queued request to build models.
+   * If a model build was previously requested it will run as originally scheduled, and this new
+   * request will be dropped.
    * <p>
    * In most cases you should use {@link #requestModelBuild()} instead of this.
    *
@@ -108,8 +115,10 @@ public abstract class EpoxyController {
           "Cannot call `requestDelayedModelBuild` from inside `buildModels`");
     }
 
-    cancelPendingModelBuild();
-    handler.postDelayed(buildModelsRunnable, delayMs);
+    if (!hasPendingModelBuildRequest) {
+      hasPendingModelBuildRequest = true;
+      handler.postDelayed(buildModelsRunnable, delayMs);
+    }
   }
 
   /**
@@ -117,6 +126,7 @@ public abstract class EpoxyController {
    * #requestModelBuild()}.
    */
   public void cancelPendingModelBuild() {
+    hasPendingModelBuildRequest = false;
     handler.removeCallbacks(buildModelsRunnable);
   }
 
@@ -128,6 +138,7 @@ public abstract class EpoxyController {
   };
 
   private void dispatchModelBuild() {
+    hasPendingModelBuildRequest = false;
     helper.resetAutoModels();
 
     modelsBeingBuilt = new ControllerModelList(getExpectedModelCount());
