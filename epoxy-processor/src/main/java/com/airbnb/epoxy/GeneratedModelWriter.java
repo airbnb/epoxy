@@ -344,9 +344,9 @@ class GeneratedModelWriter {
 
   /** Include any constructors that are in the super class. */
   private Iterable<MethodSpec> generateConstructors(GeneratedModelInfo info) {
-    List<MethodSpec> constructors = new ArrayList<>(info.getConstructors().size());
+    List<MethodSpec> constructors = new ArrayList<>(info.constructors.size());
 
-    for (GeneratedModelInfo.ConstructorInfo constructorInfo : info.getConstructors()) {
+    for (GeneratedModelInfo.ConstructorInfo constructorInfo : info.constructors) {
       Builder builder = MethodSpec.constructorBuilder()
           .addModifiers(constructorInfo.modifiers)
           .addParameters(constructorInfo.params)

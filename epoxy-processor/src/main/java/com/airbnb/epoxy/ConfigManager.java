@@ -27,6 +27,8 @@ class ConfigManager {
   static final String PROCESSOR_OPTION_REQUIRE_HASHCODE = "requireHashCodeInEpoxyModels";
   static final String PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS = "requireAbstractEpoxyModels";
   static final String PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS = "implicitlyAddAutoModels";
+  static final String PROCESSOR_OPTION_DISABLE_KOTLIN_EXTENSION_GENERATION =
+      "disableEpoxyKotlinExtensionGeneration";
 
   private static final PackageConfigSettings
       DEFAULT_PACKAGE_CONFIG_SETTINGS = PackageConfigSettings.Companion.forDefaults();
@@ -37,6 +39,7 @@ class ConfigManager {
   private final boolean globalRequireHashCode;
   private final boolean globalRequireAbstractModels;
   private final boolean globalImplicitlyAddAutoModels;
+  private final boolean disableKotlinExtensionGeneration;
   private final Types typeUtils;
 
   ConfigManager(Map<String, String> options, Elements elementUtils, Types typeUtils) {
@@ -53,6 +56,10 @@ class ConfigManager {
     globalImplicitlyAddAutoModels =
         getBooleanOption(options, PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS,
             PackageEpoxyConfig.IMPLICITLY_ADD_AUTO_MODELS_DEFAULT);
+
+    disableKotlinExtensionGeneration =
+        getBooleanOption(options, PROCESSOR_OPTION_DISABLE_KOTLIN_EXTENSION_GENERATION, false);
+
     this.typeUtils = typeUtils;
   }
 
@@ -152,6 +159,10 @@ class ConfigManager {
     return globalImplicitlyAddAutoModels
         || getConfigurationForElement(controller.getControllerClassElement())
         .getImplicitlyAddAutoModels();
+  }
+
+  boolean disableKotlinExtensionGeneration() {
+    return disableKotlinExtensionGeneration;
   }
 
   boolean shouldValidateModelUsage() {

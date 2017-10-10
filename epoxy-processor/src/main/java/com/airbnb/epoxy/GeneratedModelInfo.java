@@ -163,10 +163,6 @@ abstract class GeneratedModelInfo {
     return superClassName;
   }
 
-  List<ConstructorInfo> getConstructors() {
-    return constructors;
-  }
-
   Set<MethodInfo> getMethodsReturningClassType() {
     return methodsReturningClassType;
   }
