@@ -1,5 +1,8 @@
 package com.airbnb.epoxy
 
+import com.squareup.kotlinpoet.*
+import javax.lang.model.element.*
+
 typealias JavaClassName = com.squareup.javapoet.ClassName
 typealias JavaTypeName = com.squareup.javapoet.TypeName
 typealias JavaWildcardTypeName = com.squareup.javapoet.WildcardTypeName
@@ -53,6 +56,16 @@ fun JavaTypeVariableName.toKPoet()
         *bounds.toKPoet().toTypedArray())
 
 fun JavaTypeName.toKPoet(): KotlinTypeName = when (this) {
+    JavaTypeName.BOOLEAN -> BOOLEAN
+    JavaTypeName.BYTE -> BYTE
+    JavaTypeName.SHORT -> SHORT
+    JavaTypeName.CHAR -> CHAR
+    JavaTypeName.INT -> INT
+    JavaTypeName.LONG -> LONG
+    JavaTypeName.FLOAT -> FLOAT
+    JavaTypeName.DOUBLE -> DOUBLE
+    JavaTypeName.OBJECT -> ANY
+    JavaTypeName.VOID -> UNIT
     is JavaClassName -> toKPoet()
     is JavaParametrizedTypeName -> toKPoet()
     is JavaArrayTypeName -> toKPoet()
@@ -62,3 +75,25 @@ fun JavaTypeName.toKPoet(): KotlinTypeName = when (this) {
 }
 
 fun <T : JavaTypeName> Iterable<T>.toKPoet() = map { it.toKPoet() }
+
+fun JavaParameterSpec.toKPoet(): KotlinParameterSpec
+        = KotlinParameterSpec.builder(
+        name,
+        type.toKPoet(),
+        *modifiers.toKModifier().toTypedArray()
+).build()
+
+fun Iterable<JavaParameterSpec>.toKParams() = map { it.toKPoet() }
+
+fun Iterable<Modifier>.toKModifier(): List<KModifier> =
+        map { it.toKModifier() }.filter { it != null }.map { it!! }
+
+fun Modifier.toKModifier() = when (this) {
+    Modifier.PUBLIC -> KModifier.PUBLIC
+    Modifier.PRIVATE -> KModifier.PRIVATE
+    Modifier.PROTECTED -> KModifier.PROTECTED
+    Modifier.FINAL -> KModifier.FINAL
+    Modifier.ABSTRACT -> KModifier.ABSTRACT
+    else -> null
+}
+

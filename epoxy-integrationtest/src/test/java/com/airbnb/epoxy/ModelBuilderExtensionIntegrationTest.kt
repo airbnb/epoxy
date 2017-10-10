@@ -12,15 +12,25 @@ import org.robolectric.annotation.*
 class ModelBuilderExtensionIntegrationTest {
 
     @Test
-    fun basicAutoModels() {
+    fun generatedExtensionFunction() {
         Controller().run {
             requestModelBuild()
 
-            assertEquals(adapter.copyOfModels.size, 1)
-
             val model = adapter.copyOfModels.first() as Model
             assertEquals(model.value, 5)
-            assertEquals(model.id(), 10)
+            assertEquals(model.id(), 1)
+        }
+
+    }
+
+    @Test
+    fun modelsWithConstructors() {
+        Controller().run {
+            requestModelBuild()
+
+            val model = adapter.copyOfModels.get(1) as ModelWithConstructors
+            assertEquals(model.value, 10)
+            assertEquals(model.id(), 2)
         }
 
     }
@@ -29,9 +39,11 @@ class ModelBuilderExtensionIntegrationTest {
 private class Controller : EpoxyController() {
     override fun buildModels() {
         model {
-            id(10)
+            id(1)
             value(5)
         }
+
+        modelWithConstructors(value = 10, id = 2) { }
     }
 
 }

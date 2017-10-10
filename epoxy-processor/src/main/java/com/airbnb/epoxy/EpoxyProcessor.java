@@ -23,6 +23,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_DISABLE_KOTLIN_EXTENSION_GENERATION;
 import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS;
 import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS;
 import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_REQUIRE_HASHCODE;
@@ -42,6 +43,7 @@ import static com.airbnb.epoxy.EpoxyProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME;
     PROCESSOR_OPTION_VALIDATE_MODEL_USAGE,
     PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS,
     PROCESSOR_OPTION_REQUIRE_HASHCODE,
+    PROCESSOR_OPTION_DISABLE_KOTLIN_EXTENSION_GENERATION,
     KAPT_KOTLIN_GENERATED_OPTION_NAME
 })
 public class EpoxyProcessor extends AbstractProcessor {
@@ -202,7 +204,7 @@ public class EpoxyProcessor extends AbstractProcessor {
     }
 
     // TODO: (eli_hart 8/23/17) don't wait until round over?
-    if (roundEnv.processingOver()) {
+    if (roundEnv.processingOver() && !configManager.disableKotlinExtensionGeneration()) {
       kotlinExtensionWriter.generateExtensionsForModels(generatedModels);
     }
 

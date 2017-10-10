@@ -41,16 +41,26 @@ internal class KotlinModelBuilderExtensionWriter(
                 packageName,
                 KOTLIN_EXTENSION_FILE_NAME)
 
-        models.map { buildExtensionForModel(it) }
+        models
+                .flatMap {
+                    if (it.constructors.isEmpty()) {
+                        listOf(buildExtensionsForModel(it, null))
+                    } else {
+                        it.constructors.map { constructor ->
+                            buildExtensionsForModel(it, constructor)
+                        }
+                    }
+                }
                 .forEach { fileBuilder.addFun(it) }
 
         return fileBuilder.build()
     }
 
-    private fun buildExtensionForModel(model: GeneratedModelInfo): FunSpec {
-        val constructorIsNotPublic = model.constructors
-                .filter { it.params.isEmpty() }
-                .any { Modifier.PUBLIC !in it.modifiers }
+    private fun buildExtensionsForModel(
+            model: GeneratedModelInfo,
+            constructor: GeneratedModelInfo.ConstructorInfo?
+    ): FunSpec {
+        val constructorIsNotPublic = constructor != null && Modifier.PUBLIC !in constructor.modifiers
 
         // Kotlin cannot directly reference a class with a $ in the name. It must be wrapped in ticks (``)
         val useTicksAroundModelName = model.generatedName.simpleName().contains("$")
@@ -62,6 +72,9 @@ internal class KotlinModelBuilderExtensionWriter(
 
         FunSpec.builder(getMethodName(model)).run {
             receiver(ClassNames.EPOXY_CONTROLLER.toKPoet())
+            val params = constructor?.params ?: listOf()
+            addParameters(params.toKParams())
+
             addParameter(
                     "modelInitializer",
                     initializerLambda)
@@ -70,7 +83,7 @@ internal class KotlinModelBuilderExtensionWriter(
             if (constructorIsNotPublic) addModifiers(KModifier.INTERNAL)
 
             beginControlFlow(
-                    "$tick%T$tick().apply ",
+                    "$tick%T$tick(${params.joinToString(", ") { it.name }}).apply ",
                     model.generatedClassName.toKPoet())
             addStatement("modelInitializer()")
             endControlFlow()
