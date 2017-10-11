@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.airbnb.epoxy"
+<manifest package="com.airbnb.epoxy.sample"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
-        android:name=".sample.SampleApplication"
+        android:name=".SampleApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light">
         <activity
-            android:name=".sample.MainActivity"
+            android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
             <intent-filter>

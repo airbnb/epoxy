@@ -1,3 +1,14 @@
+# 2.6.0 (October 10, 2017)
+* **Improvement** If a `OnModelClickListener` is used it will not be called if a view is clicked while it is being removed or otherwise has no position (https://github.com/airbnb/epoxy/issues/293 - Thanks @niccorder!)
+
+* **New** `EpoxyRecyclerView` and `Carousel` provide out of the box integration with Epoxy along with other enhancements over regular RecyclerView (https://github.com/airbnb/epoxy/wiki/EpoxyRecyclerView)
+* **New** `EpoxyPagingController` provides integration with the Android Paging architecture component as well as normal, large lists of items (https://github.com/airbnb/epoxy/wiki/Large-Data-Sets)
+
+#### Kotlin
+* **Improvement** Disable kotlin extension function generation with the annotation processor flag `disableEpoxyKotlinExtensionGeneration` (https://github.com/airbnb/epoxy/pull/309)
+* **Fix** If a model has a non empty constructor the generated extension function will now use it.
+
+
 # 2.5.1 (October 2, 2017)
 * **Fixed** The wrong import was being generated for models using a view holder in 2.5.0 (https://github.com/airbnb/epoxy/pull/294)
 * **Fixed** Fix generated code failing to compile if a subclass of View.OnClickListener is used as an attribute (https://github.com/airbnb/epoxy/pull/296)

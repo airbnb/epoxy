@@ -15,7 +15,6 @@ import android.view.View;
 import com.airbnb.epoxy.EpoxyRecyclerView;
 import com.airbnb.epoxy.EpoxyTouchHelper;
 import com.airbnb.epoxy.EpoxyTouchHelper.DragCallbacks;
-import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.sample.SampleController.AdapterCallbacks;
 import com.airbnb.epoxy.sample.models.CarouselModelGroup;
 

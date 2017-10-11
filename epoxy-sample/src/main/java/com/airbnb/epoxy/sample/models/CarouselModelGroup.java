@@ -2,9 +2,9 @@ package com.airbnb.epoxy.sample.models;
 
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.EpoxyModelGroup;
-import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.sample.CarouselData;
 import com.airbnb.epoxy.sample.ColorData;
+import com.airbnb.epoxy.sample.R;
 import com.airbnb.epoxy.sample.SampleController.AdapterCallbacks;
 import com.airbnb.epoxy.sample.views.GridCarouselModel_;
 

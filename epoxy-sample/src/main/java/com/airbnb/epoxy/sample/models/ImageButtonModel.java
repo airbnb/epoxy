@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyModelClass;
 import com.airbnb.epoxy.EpoxyModelWithHolder;
-import com.airbnb.epoxy.R;
+import com.airbnb.epoxy.sample.R;
 import com.airbnb.epoxy.sample.models.ImageButtonModel.ImageButtonHolder;
 
 import butterknife.BindView;
