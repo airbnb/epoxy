@@ -283,6 +283,17 @@ public abstract class EpoxyModel<T> {
     return result;
   }
 
+  /**
+   * Return the default layout resource to be used when creating views for this model. The resource
+   * will be inflated to create a view for the model; additionally the layout int is used as the
+   * views type in the RecyclerView.
+   * <p>
+   * This can be left unimplemented if you use the {@link EpoxyModelClass} annotation to define a
+   * layout.
+   * <p>
+   * This default value can be overridden with {@link #layout(int)} at runtime to change the layout
+   * dynamically.
+   */
   @LayoutRes
   protected abstract int getDefaultLayout();
 

@@ -126,7 +126,7 @@ public class TestAfterBindPropsViewModel_ extends EpoxyModel<TestAfterBindPropsV
   /**
    * <i>Optional</i>: Default value is false
    *
-   * @see TestAfterBindPropsSuperView#setFlagSuper(boolean)
+   * @see TestAfterBindPropsView#setFlagSuper(boolean)
    */
   public TestAfterBindPropsViewModel_ flagSuper(boolean flagSuper) {
     assignedAttributes_epoxyGeneratedModel.set(1);

@@ -9,13 +9,9 @@ import com.squareup.javapoet.TypeVariableName;
 import java.util.List;
 
 import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -23,7 +19,7 @@ import javax.lang.model.util.Types;
 import static com.airbnb.epoxy.Utils.getElementByName;
 import static com.airbnb.epoxy.Utils.getEpoxyObjectType;
 
- class BasicGeneratedModelInfo extends GeneratedModelInfo {
+class BasicGeneratedModelInfo extends GeneratedModelInfo {
 
   private final Elements elementUtils;
 
@@ -38,7 +34,7 @@ import static com.airbnb.epoxy.Utils.getEpoxyObjectType;
       typeVariableNames.add(TypeVariableName.get(typeParameterElement));
     }
 
-    collectOriginalClassConstructors(superClassElement);
+    constructors.addAll(getClassConstructors(superClassElement));
     collectMethodsReturningClassType(superClassElement, typeUtils);
 
     if (!typeVariableNames.isEmpty()) {
@@ -83,39 +79,22 @@ import static com.airbnb.epoxy.Utils.getEpoxyObjectType;
     return ClassName.get(packageName, className + GENERATED_CLASS_NAME_SUFFIX);
   }
 
-  /**
-   * Get information about constructors of the original class so we can duplicate them in the
-   * generated class and call through to super with the proper parameters
-   */
-  private void collectOriginalClassConstructors(TypeElement originalClass) {
-    for (Element subElement : originalClass.getEnclosedElements()) {
-      if (subElement.getKind() == ElementKind.CONSTRUCTOR
-          && !subElement.getModifiers().contains(Modifier.PRIVATE)) {
-        ExecutableElement castedSubElement = ((ExecutableElement) subElement);
-        List<? extends VariableElement> params = castedSubElement.getParameters();
-        constructors
-            .add(new ConstructorInfo(subElement.getModifiers(), buildParamSpecs(params),
-                castedSubElement.isVarArgs()));
+  private void buildAnnotationLists(List<? extends AnnotationMirror> annotationMirrors) {
+    for (AnnotationMirror annotationMirror : annotationMirrors) {
+      if (!annotationMirror.getElementValues().isEmpty()) {
+        // Not supporting annotations with values for now
+        continue;
       }
+
+      ClassName annotationClass =
+          ClassName.bestGuess(annotationMirror.getAnnotationType().toString());
+      if (annotationClass.equals(ClassName.get(EpoxyModelClass.class))) {
+        // Don't include our own annotation
+        continue;
+      }
+
+      AnnotationSpec annotationSpec = AnnotationSpec.builder(annotationClass).build();
+      annotations.add(annotationSpec);
     }
   }
-
-   private void buildAnnotationLists(List<? extends AnnotationMirror> annotationMirrors) {
-     for (AnnotationMirror annotationMirror : annotationMirrors) {
-       if (!annotationMirror.getElementValues().isEmpty()) {
-         // Not supporting annotations with values for now
-         continue;
-       }
-
-       ClassName annotationClass =
-           ClassName.bestGuess(annotationMirror.getAnnotationType().toString());
-       if (annotationClass.equals(ClassName.get(EpoxyModelClass.class))) {
-         // Don't include our own annotation
-         continue;
-       }
-
-       AnnotationSpec annotationSpec = AnnotationSpec.builder(annotationClass).build();
-       annotations.add(annotationSpec);
-     }
-   }
 }

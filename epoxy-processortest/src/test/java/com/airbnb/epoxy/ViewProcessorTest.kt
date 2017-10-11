@@ -151,6 +151,7 @@ class ViewProcessorTest {
                         + "import java.util.List;\n"
                         + "\n"
                         + "public abstract class TestBaseModel<T extends FrameLayout> extends EpoxyModel<T> {\n"
+                        + " public TestBaseModel(long id) { super(id); }"
                         + "\n"
                         + "  @Override\n"
                         + "  public void bind(T view) {\n"

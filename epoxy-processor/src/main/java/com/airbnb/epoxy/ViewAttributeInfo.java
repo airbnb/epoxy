@@ -104,7 +104,7 @@ class ViewAttributeInfo extends AttributeInfo {
     // something and doesn't have its own javadoc
     createJavaDoc(elements.getDocComment(setterMethod), codeToSetDefault,
         constantFieldNameForDefaultValue,
-        modelInfo.viewElement, typeMirror, viewSetterMethodName);
+        modelInfo.getViewElement(), typeMirror, viewSetterMethodName);
 
     validatePropOptions(errorLogger, options, types, elements);
 
@@ -184,7 +184,7 @@ class ViewAttributeInfo extends AttributeInfo {
       return;
     }
 
-    TypeElement viewClass = modelInfo.viewElement;
+    TypeElement viewClass = modelInfo.getViewElement();
     while (viewClass != null) {
       for (Element element : viewClass.getEnclosedElements()) {
         if (checkElementForConstant(element, defaultConstant, types, errorLogger)) {
@@ -192,13 +192,13 @@ class ViewAttributeInfo extends AttributeInfo {
         }
       }
 
-      viewClass = getParentClassElement(modelInfo.viewElement, types);
+      viewClass = getParentClassElement(modelInfo.getViewElement(), types);
     }
 
     errorLogger.logError(
         "The default value for (%s#%s) could not be found. Expected a constant named '%s' in the "
             + "view class.",
-        modelInfo.viewElement.getSimpleName(), viewSetterMethodName, defaultConstant);
+        modelInfo.getViewElement().getSimpleName(), viewSetterMethodName, defaultConstant);
   }
 
   private boolean checkElementForConstant(Element element, String constantName, Types types,
@@ -213,7 +213,7 @@ class ViewAttributeInfo extends AttributeInfo {
 
         errorLogger.logError(
             "Default values for view props must be static, final, and not private. (%s#%s)",
-            modelInfo.viewElement.getSimpleName(), viewSetterMethodName);
+            modelInfo.getViewElement().getSimpleName(), viewSetterMethodName);
         return true;
       }
 
@@ -221,13 +221,13 @@ class ViewAttributeInfo extends AttributeInfo {
       if (!types.isAssignable(element.asType(), typeMirror)) {
         errorLogger.logError(
             "The default value for (%s#%s) must be a %s.",
-            modelInfo.viewElement.getSimpleName(), viewSetterMethodName, typeMirror);
+            modelInfo.getViewElement().getSimpleName(), viewSetterMethodName, typeMirror);
         return true;
       }
       constantFieldNameForDefaultValue = constantName;
 
       codeToSetDefault.explicit =
-          CodeBlock.of("$T.$L", ClassName.get(modelInfo.viewElement), constantName);
+          CodeBlock.of("$T.$L", ClassName.get(modelInfo.getViewElement()), constantName);
 
       return true;
     }
@@ -356,7 +356,7 @@ class ViewAttributeInfo extends AttributeInfo {
   @Override
   public String toString() {
     return "View Prop {"
-        + "view='" + modelInfo.viewElement.getSimpleName() + '\''
+        + "view='" + modelInfo.getViewElement().getSimpleName() + '\''
         + ", name='" + viewSetterMethodName + '\''
         + ", type=" + getTypeName()
         + '}';

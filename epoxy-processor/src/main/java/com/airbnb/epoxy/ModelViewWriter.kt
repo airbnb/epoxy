@@ -372,7 +372,7 @@ internal class ModelViewWriter(
             modelViewInfo: ModelViewInfo,
             unbindParamName: String
     ) {
-        for (methodName in modelViewInfo.getResetMethodNames()) {
+        for (methodName in modelViewInfo.resetMethodNames) {
             builder.addStatement("$unbindParamName.$methodName()")
         }
     }
@@ -382,7 +382,7 @@ internal class ModelViewWriter(
             modelInfo: ModelViewInfo,
             boundObjectParam: ParameterSpec
     ) {
-        for (methodName in modelInfo.getAfterPropsSetMethodNames()) {
+        for (methodName in modelInfo.afterPropsSetMethodNames) {
             methodBuilder.addStatement(boundObjectParam.name + "." + methodName + "()")
         }
     }
