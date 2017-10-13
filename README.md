@@ -74,10 +74,10 @@ There are two main components of Epoxy:
 2. The `EpoxyController` where the models are used to describe what items to show and with what data.
 
 ### Creating Models
-There are a few ways to create models, depending on whether you prefer to use custom views, databinding, or other approaches.
+Epoxy generates models for you based on your view or layout. Generated model classes are suffixed with an underscore (`_`) are are used directly in your EpoxyController classes.
 
 #### From Custom Views
-You can easily generate an EpoxyModel from your custom views by using the `@ModelView` annotation on the class. Then, add a "prop" annotation on each setter method to mark it as a property for the model.
+Add the `@ModelView` annotation on a view class. Then, add a "prop" annotation on each setter method to mark it as a property for the model.
 
 ```java
 @ModelView(autoLayout = Size.MATCH_WIDTH_WRAP_HEIGHT)
@@ -85,22 +85,16 @@ public class HeaderView extends LinearLayout {
 
   ... // Initialization omitted
 
-  @TextProp // Use this annotation for text.
+  @TextProp
   public void setTitle(CharSequence text) {
     titleView.setText(text);
   }
-
-  @CallbackProp // Use this annotation for click listeners or other callbacks.
-  public void clickListener(@Nullable OnClickListener listener) {
-    setOnClickListener(listener
-  }
-
-  @ModelProp // Use this annotation for any other property type
-  public void setBackgroundUrl(String url) {
-    ...
-  }
 }
 ```
+
+A `HeaderViewModel_` is then generated in the same package.
+
+[More Details](https://github.com/airbnb/epoxy/wiki/Generating-Models-from-View-Annotations)
 
 #### From DataBinding
 
@@ -108,41 +102,59 @@ If you use Android DataBinding you can simply set up your xml layouts like norma
 
 ```xml
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-
     <data>
-        <variable
-            name="url"
-            type="String" />
-
+        <variable name="title" type="String" />
     </data>
 
-    <Button
+    <TextView
         android:layout_width="120dp"
         android:layout_height="40dp"
-        android:imageUrl="@{url}" />
+        android:text="@{title}" />
 </layout>
 ```
 
-Then, create a `package-info.java` class in the package you want the models generated and add an `EpoxyDataBindingLayouts` annotation to declare all of the databinding layouts that should be used to create models.
+Then, create a `package-info.java` file in any package and add an `EpoxyDataBindingLayouts` annotation to declare your databinding layouts.
 
 ```java
-@EpoxyDataBindingLayouts({R.layout.photo, ... // other layouts })
+@EpoxyDataBindingLayouts({R.layout.header_view, ... // other layouts })
 package com.airbnb.epoxy.sample;
 
 import com.airbnb.epoxy.EpoxyDataBindingLayouts;
 import com.airbnb.epoxy.R;
 ```
 
-Epoxy generates a model that includes all the variables for that layout.
+From this layout name Epoxy generates a `HeaderViewBindingModel_`.
 
-#### Other ways
-You can also create EpoxyModel's from Litho components, viewholders, or completely manually. See the wiki sidebar for more information on these approaches in depth.
+[More Details](https://github.com/airbnb/epoxy/wiki/Data-Binding-Support)
+
+#### From ViewHolders
+If you use xml layouts without databinding you can create a model class to do the  binding.
+
+```java
+@EpoxyModelClass(layout = R.layout.header_view)
+public abstract class HeaderModel extends EpoxyModelWithHolder<Holder> {
+  @EpoxyAttribute String title;
+
+  @Override
+  public void bind(Holder holder) {
+    holder.header.setText(title);
+  }
+
+  static class Holder extends BaseEpoxyHolder {
+    @BindView(R.id.text) TextView header;
+  }
+}
+```
+
+A `HeaderModel_` class is generated that subclasses HeaderModel and implements the model details.
+
+[More Details](https://github.com/airbnb/epoxy/wiki/ViewHolder-Models)
 
 ### Using your models in a controller
 
 A controller defines what items should be shown in the RecyclerView, by adding the corresponding models in the desired order.
 
- The controller's `buildModels` method declares the current view, and is called whenever the data backing the view changes. Epoxy tracks changes in the models and automatically binds and updates views.
+ The controller's `buildModels` method declares which items to show. You are responsible for calling `requestModelBuild` whenever your data changes, which triggers `buildModels` to run again. Epoxy tracks changes in the models and automatically binds and updates views.
 
 As an example, our `PhotoController` shows a header, a list of photos, and a loader (if more photos are being loaded). The controller's `setData(photos, loadingMore)` method is called whenever photos are loaded, which triggers a call to `buildModels` so models representing the state of the new data can be built.
 
@@ -184,20 +196,67 @@ class PhotoController : Typed2EpoxyController<List<Photo>, Boolean>() {
         }
 
         photos.forEach {
-            photo {
+            photoView {
                 id(it.id())
                 url(it.url())
             }
         }
 
-        if (loadingMore) loader { id("loader") }
+        if (loadingMore) loaderView { id("loader") }
     }
 }
 ```
 
+### Integrating with RecyclerView
+
+Get the backing adapter off the EpoxyController to set up your RecyclerView:
+```java
+MyController controller = new MyController();
+recyclerView.setAdapter(controller);
+
+// Request a model build whenever your data changes
+controller.requestModelBuild();
+
+// Or if you are using a TypedEpoxyController
+controller.setData(myData);
+```
+
+If you are using the [EpoxyRecyclerView](https://github.com/airbnb/epoxy/wiki/EpoxyRecyclerView) integration is easier.
+
+```java
+epoxyRecyclerView.setControllerAndBuildModels(new MyController());
+
+// Request a model build on the recyclerview when data changes
+epoxyRecyclerView.requestModelBuild();
+```
+
+#### Kotlin
+Or use [Kotlin Extensions](https://github.com/airbnb/epoxy/wiki/EpoxyRecyclerView#kotlin-extensions) to simplify further and remove the need for a controller class.
+```kotlin
+epoxyRecyclerView.withModels {
+        header {
+            id("header")
+            title("My Photos")
+            description("My album description!")
+        }
+
+        photos.forEach {
+            photoView {
+                id(it.id())
+                url(it.url())
+            }
+        }
+
+        if (loadingMore) loaderView { id("loader") }
+    }
+}
+```
+
+
+### More Reading
 And that's it! The controller's declarative style makes it very easy to visualize what the RecyclerView will look like, even when many different view types or items are used. Epoxy handles everything else. If a view only partially changes, such as the description, only that new value is set on the view, so the system is very efficient
 
-Epoxy handles much more than these basics, and is highly configurable. See the wiki for in depth documentation.
+Epoxy handles much more than these basics, and is highly configurable. See [the wiki](https://github.com/airbnb/epoxy/wiki) for in depth documentation.
 
 ## Documentation
 See examples and browse complete documentation at the [Epoxy Wiki](https://github.com/airbnb/epoxy/wiki)
