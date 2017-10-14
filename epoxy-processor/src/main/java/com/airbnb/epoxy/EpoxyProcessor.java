@@ -147,6 +147,7 @@ public class EpoxyProcessor extends AbstractProcessor {
     types.add(PackageEpoxyConfig.class.getCanonicalName());
     types.add(AutoModel.class.getCanonicalName());
     types.add(EpoxyDataBindingLayouts.class.getCanonicalName());
+    types.add(EpoxyDataBindingPattern.class.getCanonicalName());
     types.add(ModelView.class.getCanonicalName());
     types.add(PackageModelViewConfig.class.getCanonicalName());
     types.add(TextProp.class.getCanonicalName());
