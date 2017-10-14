@@ -176,7 +176,7 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
 
     updatePagedListSnapshot();
   }
-  
+
   /**
      * Returns the list currently being displayed by the EpoxyController.
      *
@@ -185,7 +185,7 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
   public List<T> getCurrentList() {
     return this.list == null ? Collections.<T>emptyList() : this.list;
   }
-  
+
   /**
      * Returns the pagedList currently being displayed by the EpoxyController.
      *
