@@ -55,7 +55,6 @@ public class EpoxyProcessor extends AbstractProcessor {
   public static final String KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated";
 
   private final Map<String, String> testOptions;
-  private Filer filer;
   private Messager messager;
   private Elements elementUtils;
   private Types typeUtils;
@@ -99,7 +98,7 @@ public class EpoxyProcessor extends AbstractProcessor {
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
     super.init(processingEnv);
-    filer = processingEnv.getFiler();
+    Filer filer = processingEnv.getFiler();
     messager = processingEnv.getMessager();
     elementUtils = processingEnv.getElementUtils();
     typeUtils = processingEnv.getTypeUtils();

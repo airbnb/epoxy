@@ -17,7 +17,7 @@ internal class ModelViewInfo(
     val resetMethodNames = mutableListOf<String>()
     val afterPropsSetMethodNames = mutableListOf<String>()
     val saveViewState: Boolean
-    val viewAnnotation: ModelView = viewElement.getAnnotation(ModelView::class.java)
+    private val viewAnnotation: ModelView = viewElement.getAnnotation(ModelView::class.java)
     val fullSpanSize: Boolean
 
     val viewAttributes: List<ViewAttributeInfo>

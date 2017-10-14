@@ -1,7 +1,6 @@
 package com.airbnb.epoxy
 
 import com.airbnb.epoxy.Utils.*
-import com.squareup.javapoet.*
 import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.element.*
@@ -9,8 +8,6 @@ import javax.lang.model.element.Modifier.*
 import javax.lang.model.type.*
 import javax.lang.model.util.*
 
-// TODO: (eli_hart 6/6/17) consider binding base model after view so the model can override view
-// behavior (like changing width dynamically or styles)
 // TODO: (eli_hart 5/30/17) allow param counts > 0 in setters
 // TODO: (eli_hart 5/23/17) Allow default values to be methods
 internal class ModelViewProcessor(
@@ -329,18 +326,8 @@ internal class ModelViewProcessor(
     private fun addStyleAttributes() {
         modelClassMap
                 .values
-                .filter {
-                    it.viewElement
-                            .annotationMirrors
-                            .map { it.annotationType.asElement() }
-                            .any {
-                                it.simpleName.toString() == "Styleable"
-                                        && elements.getPackageOf(it).qualifiedName.contains("paris")
-                            }
-                }
-                .also {
-                    styleableModelsToWrite.addAll(it)
-                }
+                .filter { it.viewElement.hasStyleableAnnotation(elements) }
+                .also { styleableModelsToWrite.addAll(it) }
 
     }
 
@@ -353,7 +340,7 @@ internal class ModelViewProcessor(
         modelsToWrite.removeAll(styleableModelsToWrite)
 
         styleableModelsToWrite.forEach {
-            if (tryAddStyleBuilderAttribute(it)) {
+            if (tryAddStyleBuilderAttribute(it, elements, types)) {
                 modelsToWrite.add(it)
             }
         }
@@ -364,29 +351,7 @@ internal class ModelViewProcessor(
                 .writeModels(modelsToWrite)
     }
 
-    private fun tryAddStyleBuilderAttribute(styleableModel: ModelViewInfo): Boolean {
-        // if style applier is generated
-        val modelPackageName = styleableModel.generatedClassName.packageName()
-        val styleBuilderClassName = ClassName.get(modelPackageName,
-                                                  "${styleableModel.viewElement.simpleName}StyleApplier",
-                                                  "StyleBuilder")
 
-        val styleBuilderElement = try {
-            Utils.getTypeMirror(styleBuilderClassName, elements, types)
-        } catch (e: IllegalArgumentException) {
-            return false
-        }
-
-        styleableModel.setStyleable(ParisStyleAttributeInfo(
-                styleableModel,
-                elements,
-                types,
-                modelPackageName,
-                styleBuilderClassName,
-                styleBuilderElement
-        ))
-        return true
-    }
 
     private fun getModelInfoForMethodElement(element: Element): ModelViewInfo? =
             element.enclosingElement?.let { modelClassMap[it] }

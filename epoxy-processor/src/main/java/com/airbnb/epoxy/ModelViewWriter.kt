@@ -8,7 +8,7 @@ import javax.lang.model.util.*
  * Used for writing the java code for models generated with @ModelView.
  */
 internal class ModelViewWriter(
-        val modelWriter: GeneratedModelWriter,
+        private val modelWriter: GeneratedModelWriter,
         val errorLogger: ErrorLogger,
         val types: Types,
         val elements: Elements,
@@ -28,10 +28,10 @@ internal class ModelViewWriter(
     }
 
     private fun generateBuilderHook(modelInfo: ModelViewInfo) = object : GeneratedModelWriter.BuilderHooks() {
-        internal override fun addToBindMethod(
+        override fun addToBindMethod(
                 methodBuilder: MethodSpec.Builder,
                 boundObjectParam: ParameterSpec
-        ): Boolean {
+        ) {
 
             for (attributeGroup in modelInfo.attributeGroups) {
                 val attrCount = attributeGroup.attributes.size
@@ -86,53 +86,13 @@ internal class ModelViewWriter(
                 }
             }
 
-            addBindStyleCodeIfNeeded(modelInfo,
-                                     methodBuilder,
-                                     boundObjectParam,
-                                     hasPreviousModel = false)
-
-            return true
         }
 
-        internal override fun addToBindWithDiffMethod(
+        override fun addToBindWithDiffMethod(
                 methodBuilder: MethodSpec.Builder,
                 boundObjectParam: ParameterSpec,
                 previousModelParam: ParameterSpec
-        ): Boolean {
-
-            val generatedModelClass = modelInfo.generatedClassName
-            methodBuilder
-                    .beginControlFlow(
-                            "if (!(\$L instanceof \$T))",
-                            previousModelParam.name,
-                            generatedModelClass)
-                    .addStatement("bind(\$L)",
-                                  boundObjectParam.name)
-                    .addStatement("return")
-                    .endControlFlow()
-                    .addStatement(
-                            "\$T that = (\$T) previousModel",
-                            generatedModelClass,
-                            generatedModelClass)
-
-            // We want to make sure the base model has its bind method called as well. Since the
-            // user can provide a custom base class we aren't sure if it implements diff binding.
-            // If so we should call it, but if not, calling it would invoke the default
-            // EpoxyModel implementation which calls normal "bind". Doing that would force a full
-            // bind!!! So we mustn't do that. So, we only call the super diff binding if we think
-            // it's a custom implementation.
-            if (modelImplementsBindWithDiff(
-                    modelInfo.superClassElement,
-                    methodBuilder.build())) {
-                methodBuilder.addStatement(
-                        "super.bind(\$L, \$L)",
-                        boundObjectParam.name,
-                        previousModelParam.name)
-            } else {
-                methodBuilder.addStatement(
-                        "super.bind(\$L)",
-                        boundObjectParam.name)
-            }
+        ) {
 
             for (attributeGroup in modelInfo.attributeGroups) {
                 methodBuilder.addCode("\n")
@@ -230,12 +190,6 @@ internal class ModelViewWriter(
                 }
             }
 
-            addBindStyleCodeIfNeeded(modelInfo,
-                                     methodBuilder,
-                                     boundObjectParam,
-                                     hasPreviousModel = true)
-
-            return true
         }
 
         override fun addToHandlePostBindMethod(
@@ -248,7 +202,7 @@ internal class ModelViewWriter(
                     boundObjectParam)
         }
 
-        internal override fun addToUnbindMethod(
+        override fun addToUnbindMethod(
                 unbindBuilder: MethodSpec.Builder,
                 unbindParamName: String
         ) {
@@ -266,7 +220,7 @@ internal class ModelViewWriter(
                                      unbindParamName)
         }
 
-        internal override fun beforeFinalBuild(builder: TypeSpec.Builder) {
+        override fun beforeFinalBuild(builder: TypeSpec.Builder) {
             if (modelInfo.saveViewState) {
                 builder.addMethod(
                         buildSaveStateMethod())
@@ -277,51 +231,6 @@ internal class ModelViewWriter(
                         buildFullSpanSizeMethod())
             }
         }
-    }
-
-    private fun addBindStyleCodeIfNeeded(
-            modelInfo: ModelViewInfo,
-            methodBuilder: MethodSpec.Builder,
-            boundObjectParam: ParameterSpec,
-            hasPreviousModel: Boolean
-    ) {
-        val styleInfo = modelInfo.styleBuilderInfo ?: return
-
-        methodBuilder.apply {
-            // Compare against the style on the previous model if it exists,
-            // otherwise we look up the saved style from the view tag
-            if (hasPreviousModel) {
-                beginControlFlow("\nif (\$L != that.\$L)",
-                                 PARIS_STYLE_ATTR_NAME, PARIS_STYLE_ATTR_NAME)
-            } else {
-                beginControlFlow("\nif (\$L != \$L.getTag(\$T.id.epoxy_saved_view_style))",
-                                 PARIS_STYLE_ATTR_NAME, boundObjectParam.name, ClassNames.EPOXY_R)
-            }
-
-            addStyleApplierCode(this, styleInfo, boundObjectParam.name)
-
-            endControlFlow()
-        }
-
-    }
-
-    fun modelImplementsBindWithDiff(
-            clazz: TypeElement,
-            bindWithDiffMethod: MethodSpec
-    ): Boolean {
-        val methodOnClass = Utils.getMethodOnClass(clazz, bindWithDiffMethod, types,
-                                                   elements) ?: return false
-
-        val modifiers = methodOnClass.modifiers
-        if (modifiers.contains(Modifier.ABSTRACT)) {
-            return false
-        }
-
-        val enclosingElement = methodOnClass.enclosingElement as TypeElement
-
-        // As long as the implementation is not on the base EpoxyModel we consider it a custom
-        // implementation
-        return enclosingElement.qualifiedName.toString() != Utils.UNTYPED_EPOXY_MODEL_TYPE
     }
 
     private fun buildCodeBlockToSetAttribute(
@@ -387,24 +296,4 @@ internal class ModelViewWriter(
         }
     }
 
-}
-
-internal fun addStyleApplierCode(
-        methodBuilder: MethodSpec.Builder,
-        styleInfo: ParisStyleAttributeInfo,
-        viewVariableName: String
-) {
-
-    methodBuilder.apply {
-
-        addStatement("\$T styleApplier = new \$T(\$L)",
-                     styleInfo.styleApplierClass, styleInfo.styleApplierClass, viewVariableName)
-
-        addStatement("styleApplier.apply(\$L)", PARIS_STYLE_ATTR_NAME)
-
-        // By saving the style as a tag we can prevent applying it
-        // again when the view is recycled and the same style is used
-        addStatement("\$L.setTag(\$T.id.epoxy_saved_view_style, \$L)",
-                     viewVariableName, ClassNames.EPOXY_R, PARIS_STYLE_ATTR_NAME)
-    }
 }

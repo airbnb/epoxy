@@ -8,7 +8,7 @@ import com.squareup.javapoet.CodeBlock
  * Represents a resource used as an annotation parameter.
  *
  *
- * Inpspired by Butterknife. https://github.com/JakeWharton/butterknife/pull/613
+ * Inspired by Butterknife. https://github.com/JakeWharton/butterknife/pull/613
  */
 class ResourceValue {
 
