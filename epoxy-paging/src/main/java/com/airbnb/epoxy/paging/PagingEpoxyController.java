@@ -42,7 +42,8 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
   private int pageSizeHint = DEFAULT_PAGE_SIZE_HINT;
   private int numPagesToLoad = DEFAULT_NUM_PAGES_T0_LOAD;
 
-  private int lastBoundPositionWithinList = -1;
+  // TODO: (eli_hart 10/13/17) Save this in saved state and restore in constructor
+  private int lastBoundPositionWithinList = 0;
   private boolean scrollingTowardsEnd = true;
   private int numBoundModels;
   private int lastBuiltLowerBound = 0;

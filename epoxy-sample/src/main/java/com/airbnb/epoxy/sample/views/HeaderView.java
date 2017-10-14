@@ -25,6 +25,11 @@ public class HeaderView extends LinearLayout {
     init();
   }
 
+//  @Style(isDefault = true)
+//  static void headerStyle(HeaderViewStyleApplier.StyleBuilder builder) {
+//
+//  }
+
   private void init() {
     setOrientation(VERTICAL);
     inflate(getContext(), R.layout.view_header, this);

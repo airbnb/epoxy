@@ -16,7 +16,7 @@ fun weakReferenceFieldForStyle(styleName: String) = "parisStyleReference_$styleN
  * This is added automatically for models generated with [ModelView] that also have Paris's Stylable annotation.
  */
 internal class ParisStyleAttributeInfo(
-        modelInfo: ModelViewInfo,
+        modelInfo: GeneratedModelInfo,
         val elements: Elements,
         val types: Types,
         packageName: String,
