@@ -72,6 +72,27 @@ abstract class GeneratedModelInfo {
   Size layoutParams = Size.NONE;
 
   /**
+   * Get information about constructors of the original class so we can duplicate them in the
+   * generated class and call through to super with the proper parameters
+   */
+  protected static List<ConstructorInfo> getClassConstructors(TypeElement classElement) {
+    List<ConstructorInfo> constructors = new ArrayList<>(2);
+
+    for (Element subElement : classElement.getEnclosedElements()) {
+      if (subElement.getKind() == ElementKind.CONSTRUCTOR
+          && !subElement.getModifiers().contains(Modifier.PRIVATE)) {
+
+        ExecutableElement constructor = ((ExecutableElement) subElement);
+        List<? extends VariableElement> params = constructor.getParameters();
+        constructors.add(new ConstructorInfo(subElement.getModifiers(), buildParamSpecs(params),
+            constructor.isVarArgs()));
+      }
+    }
+
+    return constructors;
+  }
+
+  /**
    * Get information about methods returning class type of the original class so we can duplicate
    * them in the generated class for chaining purposes
    */
@@ -102,7 +123,7 @@ abstract class GeneratedModelInfo {
     }
   }
 
-  protected List<ParameterSpec> buildParamSpecs(List<? extends VariableElement> params) {
+  protected static List<ParameterSpec> buildParamSpecs(List<? extends VariableElement> params) {
     List<ParameterSpec> result = new ArrayList<>();
 
     for (VariableElement param : params) {

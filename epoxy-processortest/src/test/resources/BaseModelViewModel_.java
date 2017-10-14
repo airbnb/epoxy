@@ -24,6 +24,10 @@ public class BaseModelViewModel_ extends TestBaseModel<BaseModelView> implements
    * Bitset index: 0 */
   private String clickListener_String;
 
+  public BaseModelViewModel_(long id) {
+    super(id);
+  }
+
   @Override
   public void addTo(EpoxyController controller) {
     super.addTo(controller);

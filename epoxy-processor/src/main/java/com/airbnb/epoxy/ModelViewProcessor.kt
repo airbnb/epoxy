@@ -287,7 +287,7 @@ internal class ModelViewProcessor(
                 // different annotation parameter settings, or we could end up with duplicates
 
                 forEachElementWithAnnotation(modelPropAnnotations) {
-                    view.addPropIfNotExists(it as ExecutableElement?)
+                    view.addPropIfNotExists(it as ExecutableElement)
                 }
 
                 forEachElementWithAnnotation(listOf(OnViewRecycled::class.java)) {
