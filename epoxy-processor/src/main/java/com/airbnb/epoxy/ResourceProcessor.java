@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -117,15 +118,7 @@ class ResourceProcessor {
       scanner.clearResults();
       scanner.setCurrentAnnotationDetails(element, annotationClass, resourceType);
       tree.accept(scanner);
-      List<ScannerResult> scannerResults = scanner.getResults();
-
-      for (ScannerResult scannerResult : scannerResults) {
-        resources.add(new ResourceValue(
-            scannerResult.rClass,
-            scannerResult.resourceName,
-            scannerResult.resourceValue
-        ));
-      }
+      resources.addAll(scanner.getResults());
     }
 
     // Resource values may not have been picked up by the scanner if they are hardcoded.
@@ -247,10 +240,10 @@ class ResourceProcessor {
   /**
    * Scans annotations that have resources as parameters. It supports both one resource parameter,
    * and parameters in an array. The R class, resource name, and value, is extracted to create a
-   * corresponding {@link ScannerResult} for each resource.
+   * corresponding {@link ResourceValue} for each resource.
    */
   private class AnnotationResourceParamScanner extends TreeScanner {
-    private final List<ScannerResult> results = new ArrayList<>();
+    private final List<ResourceValue> results = new ArrayList<>();
     private Element element;
     private Class annotationClass;
     /** Eg "string", "layout", etc */
@@ -260,8 +253,8 @@ class ResourceProcessor {
       results.clear();
     }
 
-    List<ScannerResult> getResults() {
-      return new ArrayList<>(results);
+    List<ResourceValue> getResults() {
+      return results;
     }
 
     @Override
@@ -278,17 +271,19 @@ class ResourceProcessor {
           && symbol.getEnclosingElement().getEnclosingElement() != null // The R class
           && symbol.getEnclosingElement().getEnclosingElement().enclClass() != null) {
 
-        ScannerResult result = parseResourceSymbol((VarSymbol) symbol);
+        ResourceValue result = parseResourceSymbol((VariableElement) symbol);
         if (result != null) {
           results.add(result);
         }
       }
     }
 
-    private ScannerResult parseResourceSymbol(VarSymbol symbol) {
-      Symbol resourceClass = symbol.getEnclosingElement();
+    private ResourceValue parseResourceSymbol(VariableElement symbol) {
+      TypeElement resourceClass = (TypeElement) symbol.getEnclosingElement();
+
       // eg com.airbnb.epoxy.R
-      String rClass = resourceClass.getEnclosingElement().enclClass().className();
+      String rClass =
+          ((TypeElement) resourceClass.getEnclosingElement()).getQualifiedName().toString();
 
       // eg com.airbnb.epoxy.R.layout
       String resourceClassName = resourceClass.getQualifiedName().toString();
@@ -308,32 +303,20 @@ class ResourceProcessor {
       Object resourceValue = symbol.getConstantValue();
       if (!(resourceValue instanceof Integer)) {
         errorLogger.logError("%s annotation requires an int value but received %s. (Element: %s)",
-            annotationClass.getSimpleName(), symbol.getQualifiedName(), element.getSimpleName());
+            annotationClass.getSimpleName(), symbol.getSimpleName(), element.getSimpleName());
         return null;
       }
 
       ClassName rClassName = getClassName(resourceClassName, resourceType);
       saveResourceValuesForRClass(rClassName, resourceClass);
 
-      return new ScannerResult(rClassName, resourceName, (int) resourceValue);
+      return new ResourceValue(rClassName, resourceName, (int) resourceValue);
     }
 
     void setCurrentAnnotationDetails(Element element, Class annotationClass, String resourceType) {
       this.element = element;
       this.annotationClass = annotationClass;
       this.resourceType = resourceType;
-    }
-  }
-
-  private static class ScannerResult {
-    final ClassName rClass;
-    final String resourceName;
-    final int resourceValue;
-
-    private ScannerResult(ClassName rClass, String resourceName, int resourceValue) {
-      this.rClass = rClass;
-      this.resourceName = resourceName;
-      this.resourceValue = resourceValue;
     }
   }
 

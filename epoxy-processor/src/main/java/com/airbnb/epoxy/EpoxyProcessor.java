@@ -190,7 +190,7 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     generatedModels.addAll(modelProcessor.processModels(roundEnv));
 
-    dataBindingProcessor.process(roundEnv);
+    generatedModels.addAll(dataBindingProcessor.process(roundEnv));
 
     generatedModels.addAll(lithoSpecProcessor.processSpecs(roundEnv));
 
@@ -198,24 +198,23 @@ public class EpoxyProcessor extends AbstractProcessor {
 
     controllerProcessor.process(roundEnv);
 
-    if (dataBindingProcessor.hasModelsToWrite()
-        && dataBindingProcessor.isDataBindingClassesGenerated()) {
-      generatedModels.addAll(dataBindingProcessor.resolveDataBindingClassesAndWriteJava());
-    }
-
     // TODO: (eli_hart 8/23/17) don't wait until round over?
     if (roundEnv.processingOver() && !configManager.disableKotlinExtensionGeneration()) {
       kotlinExtensionWriter.generateExtensionsForModels(generatedModels);
     }
 
     if (controllerProcessor.hasControllersToGenerate()
-        && (!dataBindingProcessor.hasModelsToWrite() || roundEnv.processingOver())) {
+        && (!areModelsWaitingToWrite() || roundEnv.processingOver())) {
       // This must be done after all generated model info is collected so we must wait until
       // databinding is resolved.
       // However, if there was an error with the databinding resolution we can at least try to
       // finish writing the controllers before processing ends
       controllerProcessor.resolveGeneratedModelsAndWriteJava(generatedModels);
     }
+  }
+
+  private boolean areModelsWaitingToWrite() {
+    return dataBindingProcessor.hasModelsToWrite() || modelProcessor.hasModelsToWrite();
   }
 
   private void validateAttributesImplementHashCode(

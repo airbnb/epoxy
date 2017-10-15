@@ -41,6 +41,7 @@ final class ClassNames {
   static final ClassName EPOXY_STRING_ATTRIBUTE_DATA = get(PKG_EPOXY, "StringAttributeData");
   static final ClassName EPOXY_CONTROLLER = get(PKG_EPOXY, "EpoxyController");
   static final ClassName EPOXY_STYLE_BUILDER_CALLBACK = get(PKG_EPOXY, "StyleBuilderCallback");
+  static final ClassName EPOXY_CONTROLLER_HELPER = get(PKG_EPOXY, "ControllerHelper");
 
   static final ClassName PARIS_STYLE_UTILS = get(PKG_PARIS, "StyleApplierUtils", "Companion");
   static final ClassName PARIS_STYLE = get(PKG_PARIS, "Style");

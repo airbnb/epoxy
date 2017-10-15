@@ -109,17 +109,16 @@ class ConfigManager {
         continue;
       }
 
-      TypeMirror rClassType =
-          getClassParamFromAnnotation(element, PackageModelViewConfig.class, "rClass");
-      if (rClassType == null) {
+      ClassName rClassName =
+          getClassParamFromAnnotation(element, PackageModelViewConfig.class, "rClass", typeUtils);
+
+      if (rClassName == null) {
         errors.add(buildEpoxyException(
             "Unable to get R class details from annotation %s (package: %s)",
             PackageModelViewConfig.class.getSimpleName(), packageName));
         continue;
       }
 
-      ClassName rClassName =
-          ClassName.get((TypeElement) typeUtils.asElement(rClassType));
 
       String rLayoutClassString = rClassName.reflectionName();
       if (!rLayoutClassString.endsWith(".R")

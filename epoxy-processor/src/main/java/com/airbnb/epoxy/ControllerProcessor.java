@@ -1,6 +1,5 @@
 package com.airbnb.epoxy;
 
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -39,7 +38,6 @@ import static com.airbnb.epoxy.Utils.isSubtype;
 import static com.airbnb.epoxy.Utils.validateFieldAccessibleViaGeneratedCode;
 
 class ControllerProcessor {
-  private static final String CONTROLLER_HELPER_INTERFACE = "com.airbnb.epoxy.ControllerHelper";
   private Filer filer;
   private Elements elementUtils;
   private Types typeUtils;
@@ -237,9 +235,9 @@ class ControllerProcessor {
 
   private void generateHelperClassForController(ControllerClassInfo controllerInfo)
       throws IOException {
-    ClassName superclass = ClassName.get(elementUtils.getTypeElement(CONTROLLER_HELPER_INTERFACE));
     ParameterizedTypeName parameterizeSuperClass =
-        ParameterizedTypeName.get(superclass, controllerInfo.getControllerClassType());
+        ParameterizedTypeName
+            .get(ClassNames.EPOXY_CONTROLLER_HELPER, controllerInfo.getControllerClassType());
 
     TypeSpec.Builder builder = TypeSpec.classBuilder(controllerInfo.getGeneratedClassName())
         .addJavadoc("Generated file. Do not modify!")

@@ -1,8 +1,7 @@
 package com.airbnb.epoxy
 
-import com.airbnb.epoxy.ClassNames.ANDROID_R
-import com.squareup.javapoet.ClassName
-import com.squareup.javapoet.CodeBlock
+import com.airbnb.epoxy.ClassNames.*
+import com.squareup.javapoet.*
 
 /**
  * Represents a resource used as an annotation parameter.
@@ -26,7 +25,14 @@ class ResourceValue {
         className = null
     }
 
-    constructor(className: ClassName, resourceName: String, value: Int) {
+    /**
+     * @param className eg com.airbnb.epoxy.R.layout
+     */
+    constructor(
+            className: ClassName,
+            resourceName: String,
+            value: Int
+    ) {
         this.className = className
         this.resourceName = resourceName
         this.value = value

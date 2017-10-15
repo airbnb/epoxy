@@ -451,8 +451,9 @@ class Utils {
   }
 
   @Nullable
-  static <T extends Annotation> TypeMirror getClassParamFromAnnotation(
-      Element annotatedElement, Class<T> annotationClass, String paramName) {
+  static <T extends Annotation> ClassName getClassParamFromAnnotation(
+      Element annotatedElement, Class<T> annotationClass, String paramName,
+      Types typeUtils) {
     AnnotationMirror am = getAnnotationMirror(annotatedElement, annotationClass);
     if (am == null) {
       return null;
@@ -463,7 +464,7 @@ class Utils {
     } else {
       Object value = av.getValue();
       if (value instanceof TypeMirror) {
-        return (TypeMirror) value;
+        return ClassName.get((TypeElement) typeUtils.asElement((TypeMirror) value));
       }
       // Couldn't resolve R class
       return null;
