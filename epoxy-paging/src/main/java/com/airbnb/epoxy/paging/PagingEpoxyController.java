@@ -178,6 +178,27 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
     updatePagedListSnapshot();
   }
 
+  /**
+     * Returns the list currently being displayed by the EpoxyController when you set data
+     * with an Android PagedList.
+     * <p>
+     * Or, the list inside EpoxyController when you set data with normal Java {@link List}.
+     *
+     * @return The list data.
+     */
+  public List<T> getCurrentList() {
+    return this.list;
+  }
+
+  /**
+     * Returns the pagedList currently being displayed by the EpoxyController.
+     *
+     * @return The pagedList currently being displayed.
+     */
+  public PagedList<T> getPagedList() {
+    return this.pagedList;
+  }
+
   private final Callback callback = new Callback() {
     @Override
     public void onChanged(int position, int count) {
