@@ -178,12 +178,15 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
   }
 
   /**
-     * Returns the list currently being displayed by the EpoxyController.
+     * Returns the list currently being displayed by the EpoxyController when you set data 
+     * with an Android PagedList.
+     * <p>
+     * Or, the list inside EpoxyController when you set data with normal Java {@link List}.
      *
-     * @return The list currently being displayed.
+     * @return The list data.
      */
   public List<T> getCurrentList() {
-    return this.list == null ? Collections.<T>emptyList() : this.list;
+    return this.list;
   }
 
   /**
@@ -192,7 +195,7 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
      * @return The pagedList currently being displayed.
      */
   public PagedList<T> getPagedList() {
-    return this.pagedList == null ? (PagedList<T>) Collections.<T>emptyList() : this.pagedList;
+    return this.pagedList;
   }
 
   private final Callback callback = new Callback() {
