@@ -2,7 +2,7 @@
 buildscript {
 
   ext.KOTLIN_VERSION = "1.1.51"
-  ext.ANDROID_PLUGIN_VERSION = "3.0.0-beta7"
+  ext.ANDROID_PLUGIN_VERSION = "3.0.0-rc1"
 
   repositories {
     google()
@@ -48,7 +48,7 @@ def isCi() {
 }
 
 def isReleaseBuild() {
-  return VERSION_NAME.contains("SNAPSHOT") == false
+  return !VERSION_NAME.contains("SNAPSHOT")
 }
 
 def getReleaseRepositoryUrl() {
