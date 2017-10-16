@@ -20,6 +20,8 @@ internal class ModelViewInfo(
     private val viewAnnotation: ModelView = viewElement.getAnnotation(ModelView::class.java)
     val fullSpanSize: Boolean
 
+    val viewInterfaces: List<DeclaredType>
+
     val viewAttributes: List<ViewAttributeInfo>
         get() = attributeInfo.filterIsInstance<ViewAttributeInfo>()
 
@@ -47,6 +49,18 @@ internal class ModelViewInfo(
         layoutParams = viewAnnotation.autoLayout
         fullSpanSize = viewAnnotation.fullSpan
         includeOtherLayoutOptions = configManager.includeAlternateLayoutsForViews(viewElement)
+
+        viewInterfaces = viewElement
+                .interfaces
+                .filterIsInstance<DeclaredType>()
+    }
+
+    /** We generate an interface on the model to represent each interface on the view.
+     * This lets models with the same view interface be grouped together. */
+    val generatedViewInterfaceNames: List<ClassName> by lazy {
+        viewInterfaces.map {
+            ClassName.get(it.asElement() as TypeElement).appendToName("Model_")
+        }
     }
 
     private fun lookUpSuperClassElement(): TypeElement {

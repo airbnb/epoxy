@@ -59,7 +59,16 @@ internal class DataBindingProcessor(
                     }
         }
 
-        return resolveDataBindingClassesAndWriteJava()
+        val modelsWritten = resolveDataBindingClassesAndWriteJava()
+        if (modelsWritten.isNotEmpty()) {
+            // All databinding classes are generated at the same time, so once one is ready they
+            // all should be. Since we infer databinding layouts based on a naming pattern we may
+            // have some false positives which we can clear from the list if we can't find a
+            // databinding class for them.
+            modelsToWrite.clear()
+        }
+
+        return modelsWritten
     }
 
     /**
@@ -69,7 +78,8 @@ internal class DataBindingProcessor(
     fun hasModelsToWrite() = modelsToWrite.isNotEmpty()
 
     private fun resolveDataBindingClassesAndWriteJava(): List<DataBindingModelInfo> {
-        return modelsToWrite.filter { it.dataBindingClassElement != null }
+        return modelsToWrite
+                .filter { it.dataBindingClassElement != null }
                 .onEach {
                     it.parseDataBindingClass()
 

@@ -214,7 +214,9 @@ public class EpoxyProcessor extends AbstractProcessor {
   }
 
   private boolean areModelsWaitingToWrite() {
-    return dataBindingProcessor.hasModelsToWrite() || modelProcessor.hasModelsToWrite();
+    return dataBindingProcessor.hasModelsToWrite()
+        || modelProcessor.hasModelsToWrite()
+        || modelViewProcessor.hasModelsToWrite();
   }
 
   private void validateAttributesImplementHashCode(

@@ -5,7 +5,6 @@ import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.element.*
 import javax.lang.model.element.Modifier.*
-import javax.lang.model.type.*
 import javax.lang.model.util.*
 
 // TODO: (eli_hart 5/30/17) allow param counts > 0 in setters
@@ -256,9 +255,7 @@ internal class ModelViewProcessor(
             // This approach lets us capture views that we've already processed as well as views
             // in other libraries that we wouldn't have otherwise processed.
 
-            var superViewClass = view.viewElement.superclass
-            while (superViewClass.kind == TypeKind.DECLARED) {
-                val superViewElement = types.asElement(superViewClass) as TypeElement
+            view.viewElement.iterateSuperClasses(types) { superViewElement ->
                 val samePackage = belongToTheSamePackage(view.viewElement, superViewElement,
                                                          elements)
 
@@ -284,6 +281,10 @@ internal class ModelViewProcessor(
                 // different annotation parameter settings, or we could end up with duplicates
 
                 forEachElementWithAnnotation(modelPropAnnotations) {
+                    // todo Include view interfaces for the super class in this model
+                    // 1. we should only do that if all methods in the super class are accessible to this (ie not package private and in a different package)
+                    // 2. We also need to handle the case the that super view is abstract - right now interfaces are not generated for abstract views
+                    // 3. If an abstract view only implements part of the interface it would mess up the way we check which methods count in the interface
                     view.addPropIfNotExists(it as ExecutableElement)
                 }
 
@@ -294,8 +295,6 @@ internal class ModelViewProcessor(
                 forEachElementWithAnnotation(listOf(AfterPropsSet::class.java)) {
                     view.addAfterPropsSetMethodIfNotExists(it)
                 }
-
-                superViewClass = superViewElement.superclass
             }
         }
     }
@@ -349,9 +348,14 @@ internal class ModelViewProcessor(
 
         ModelViewWriter(modelWriter, errorLogger, types, elements, configManager)
                 .writeModels(modelsToWrite)
+
+        if (styleableModelsToWrite.isEmpty()) {
+            // Make sure all models have been processed and written before we generate interface information
+            modelWriter.writeFilesForViewInterfaces()
+        }
     }
 
-
+    fun hasModelsToWrite() = styleableModelsToWrite.isNotEmpty()
 
     private fun getModelInfoForMethodElement(element: Element): ModelViewInfo? =
             element.enclosingElement?.let { modelClassMap[it] }

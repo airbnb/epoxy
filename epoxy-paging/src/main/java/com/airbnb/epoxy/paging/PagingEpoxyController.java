@@ -3,6 +3,7 @@ package com.airbnb.epoxy.paging;
 import android.arch.paging.PagedList;
 import android.arch.paging.PagedList.Callback;
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.airbnb.epoxy.EpoxyController;
@@ -36,8 +37,8 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
   private static final int DEFAULT_PAGE_SIZE_HINT = 10;
   private static final int DEFAULT_NUM_PAGES_T0_LOAD = 10;
 
-  private PagedList<T> pagedList;
-  private List<T> list = Collections.emptyList();
+  @Nullable private PagedList<T> pagedList;
+  @NonNull private List<T> list = Collections.emptyList();
 
   private int pageSizeHint = DEFAULT_PAGE_SIZE_HINT;
   private int numPagesToLoad = DEFAULT_NUM_PAGES_T0_LOAD;
@@ -179,22 +180,18 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
   }
 
   /**
-     * Returns the list currently being displayed by the EpoxyController when you set data
-     * with an Android PagedList.
-     * <p>
-     * Or, the list inside EpoxyController when you set data with normal Java {@link List}.
-     *
-     * @return The list data.
-     */
+   * @return The list currently being displayed by the EpoxyController. This is either the Java List
+   * set with {@link #setList(List)}, the latest snapshot if a PagedList is set, or an empty list if
+   * nothing was set.
+   */
   public List<T> getCurrentList() {
     return this.list;
   }
 
   /**
-     * Returns the pagedList currently being displayed by the EpoxyController.
-     *
-     * @return The pagedList currently being displayed.
-     */
+   * @return The pagedList currently being displayed. Null if one has not been set.
+   */
+  @Nullable
   public PagedList<T> getPagedList() {
     return this.pagedList;
   }
