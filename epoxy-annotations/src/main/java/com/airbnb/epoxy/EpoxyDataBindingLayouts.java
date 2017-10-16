@@ -14,6 +14,9 @@ import java.lang.annotation.Target;
  * <p>
  * The layouts must not specify a custom databinding class name or package via the
  * class="com.example.CustomClassName" override in the layout xml.
+ * <p>
+ * Alternatively you can use {@link EpoxyDataBindingPattern} to avoid explicitly declaring each
+ * layout.
  */
 @Target(ElementType.PACKAGE)
 @Retention(RetentionPolicy.CLASS)

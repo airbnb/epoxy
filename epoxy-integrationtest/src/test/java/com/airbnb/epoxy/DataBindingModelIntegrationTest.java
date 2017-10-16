@@ -7,13 +7,13 @@ import android.widget.Button;
 
 import com.airbnb.epoxy.DataBindingEpoxyModel.DataBindingHolder;
 import com.airbnb.epoxy.integrationtest.BuildConfig;
+import com.airbnb.epoxy.integrationtest.DatabindingTestBindingModel_;
 import com.airbnb.epoxy.integrationtest.ModelWithDataBindingBindingModel_;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
 
 import java.util.Collections;
 import java.util.List;
@@ -143,5 +143,11 @@ public class DataBindingModelIntegrationTest {
     controller.setModels(Collections.singletonList(secondModel));
     verify(observerMock).onItemRangeChanged(eq(0), eq(1), any());
     verifyNoMoreInteractions(observerMock);
+  }
+
+  @Test
+  public void generatesBindingModelFromNamingPattern() {
+    // Make sure that the model was generated from the annotation naming pattern
+    new DatabindingTestBindingModel_();
   }
 }

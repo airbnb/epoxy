@@ -15,6 +15,7 @@ internal class ModelProcessor(
         private val modelWriter: GeneratedModelWriter
 ) {
 
+    fun hasModelsToWrite() = styleableModelsToWrite.isNotEmpty()
     private val styleableModelsToWrite = mutableListOf<BasicGeneratedModelInfo>()
 
     fun processModels(roundEnv: RoundEnvironment): Collection<GeneratedModelInfo> {
