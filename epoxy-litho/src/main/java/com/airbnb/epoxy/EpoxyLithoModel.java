@@ -57,13 +57,13 @@ public abstract class EpoxyLithoModel<T extends ComponentLifecycle>
     if (payloads.isEmpty()) {
       bind(view);
     } else {
-      view.getComponentTree().setRoot(getComponent(view.getComponentContext()), true);
+      view.getComponentTree().setRoot(getComponent(view.getComponentContext()));
     }
   }
 
   @Override
   public void bind(LithoView view, EpoxyModel<?> previouslyBoundModel) {
-    view.getComponentTree().setRoot(getComponent(view.getComponentContext()), true);
+    view.getComponentTree().setRoot(getComponent(view.getComponentContext()));
   }
 
   @Override

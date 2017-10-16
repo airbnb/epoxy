@@ -38,8 +38,8 @@ internal class KotlinModelBuilderExtensionWriter(
     private fun buildExtensionFile(
             packageName: String,
             models: List<GeneratedModelInfo>
-    ): KotlinFile {
-        val fileBuilder = KotlinFile.builder(
+    ): FileSpec {
+        val fileBuilder = FileSpec.builder(
                 packageName,
                 KOTLIN_EXTENSION_FILE_NAME)
 
@@ -53,7 +53,7 @@ internal class KotlinModelBuilderExtensionWriter(
                         }
                     }
                 }
-                .forEach { fileBuilder.addFun(it) }
+                .forEach { fileBuilder.addFunction(it) }
 
         return fileBuilder.build()
     }
