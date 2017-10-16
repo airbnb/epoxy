@@ -31,7 +31,7 @@ rootProject.ext.MOCKITO_VERSION = "2.11.0"
 rootProject.ext.ROBOLECTRIC_VERSION = "3.4.2"
 
 rootProject.ext.LOTTIE_VERSION = "2.2.5"
-rootProject.ext.LITHO_VERSION = "0.3.1"
+rootProject.ext.LITHO_VERSION = "0.7.0"
 rootProject.ext.SO_LOADER_VERSION = "0.2.0"
 
 rootProject.ext.AUTO_VALUE_VERSION = "1.3"
