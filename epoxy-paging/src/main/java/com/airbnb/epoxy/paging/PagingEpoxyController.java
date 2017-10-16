@@ -178,7 +178,7 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
   }
 
   /**
-     * Returns the list currently being displayed by the EpoxyController when you set data 
+     * Returns the list currently being displayed by the EpoxyController when you set data
      * with an Android PagedList.
      * <p>
      * Or, the list inside EpoxyController when you set data with normal Java {@link List}.
