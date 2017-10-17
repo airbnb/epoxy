@@ -1,3 +1,12 @@
+# 2.7.0 (October 17, 2017)
+
+* **New** If a `@ModelView` generated model has a custom base class the generated model will now inherit constructors from the base class (https://github.com/airbnb/epoxy/pull/315)
+* **New** Use the `EpoxyDataBindingPattern` annotation to specify a naming pattern for databinding layouts. This removes the need to declare every databinding layout explicitly ([Wiki](https://github.com/airbnb/epoxy/wiki/Data-Binding-Support#automatic-based-on-naming-pattern) - https://github.com/airbnb/epoxy/pull/319)
+* **New** If a view with `@ModelView` implements an interface then the generated model will implement a similar interface, enabling polymorphism with models. [Wiki](https://github.com/airbnb/epoxy/wiki/Generating-Models-from-View-Annotations#view-interfaces)
+
+* **Improvement** `PagingEpoxyController` now has getters to access the underlying data lists (Thanks to @pcqpcq - https://github.com/airbnb/epoxy/pull/317)
+* **Improvement** `EpoxyModelGroup` now supports partial rebinds (https://github.com/airbnb/epoxy/pull/316)
+
 # 2.6.0 (October 10, 2017)
 * **Improvement** If a `OnModelClickListener` is used it will not be called if a view is clicked while it is being removed or otherwise has no position (https://github.com/airbnb/epoxy/issues/293 - Thanks @niccorder!)
 
