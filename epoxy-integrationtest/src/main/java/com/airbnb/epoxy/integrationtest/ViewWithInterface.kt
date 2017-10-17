@@ -7,7 +7,15 @@ import com.airbnb.epoxy.*
 import com.airbnb.epoxy.ModelView.Size
 
 @ModelView(autoLayout = Size.WRAP_WIDTH_MATCH_HEIGHT)
-class ViewWithInterface(context: Context) : View(context), InterfaceForView, InterfaceForView2 {
+class ViewWithInterface(context: Context) : View(
+        context), InterfaceForView, InterfaceForView2, ClassWithNestedInterface.NestedInterface, InterfaceWithNoPropMethods {
+
+    override fun getSomething() = 5
+
+//    @ModelProp
+    override fun valueOnNestedInterface(value: Int) {
+
+    }
 
     @ModelProp
     override fun setText(title: CharSequence?) {
@@ -19,8 +27,8 @@ class ViewWithInterface(context: Context) : View(context), InterfaceForView, Int
 
     }
 
-    @ModelProp
-    override fun setText3(title: String) {
+    @CallbackProp
+    override fun setListener(title: View.OnClickListener?) {
 
     }
 
@@ -28,6 +36,7 @@ class ViewWithInterface(context: Context) : View(context), InterfaceForView, Int
     fun nonInterfaceProp(title: Int) {
         // method has different type from method of same name in other view
     }
+
 }
 
 @ModelView(autoLayout = Size.WRAP_WIDTH_MATCH_HEIGHT)
@@ -43,8 +52,8 @@ class ViewWithInterface2(context: Context) : View(context), InterfaceForView, In
 
     }
 
-    @ModelProp
-    override fun setText3(title: String) {
+    @CallbackProp
+    override fun setListener(title: View.OnClickListener?) {
 
     }
 
@@ -60,5 +69,15 @@ interface InterfaceForView {
 }
 
 interface InterfaceForView2 {
-    fun setText3(title: String)
+    fun setListener(title: View.OnClickListener?)
+}
+
+interface InterfaceWithNoPropMethods {
+    fun getSomething(): Int
+}
+
+class ClassWithNestedInterface {
+    interface NestedInterface {
+        fun valueOnNestedInterface(value: Int)
+    }
 }

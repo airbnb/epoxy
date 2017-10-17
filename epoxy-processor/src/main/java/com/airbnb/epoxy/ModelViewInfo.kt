@@ -20,7 +20,8 @@ internal class ModelViewInfo(
     private val viewAnnotation: ModelView = viewElement.getAnnotation(ModelView::class.java)
     val fullSpanSize: Boolean
 
-    val viewInterfaces: List<DeclaredType>
+    /** All interfaces the view implements that have at least one prop set by the interface. */
+    val viewInterfaces: List<TypeElement>
 
     val viewAttributes: List<ViewAttributeInfo>
         get() = attributeInfo.filterIsInstance<ViewAttributeInfo>()
@@ -50,16 +51,29 @@ internal class ModelViewInfo(
         fullSpanSize = viewAnnotation.fullSpan
         includeOtherLayoutOptions = configManager.includeAlternateLayoutsForViews(viewElement)
 
+        val methodsOnView = viewElement.executableElements()
         viewInterfaces = viewElement
                 .interfaces
                 .filterIsInstance<DeclaredType>()
+                .map { it.asElement() }
+                .filterIsInstance<TypeElement>()
+                .filter { interfaceElement ->
+                    // Only include the interface if the view has one of the interface methods annotated with a prop annotation
+                    methodsOnView.any { viewMethod ->
+                        viewMethod.hasAnyAnnotation(ModelViewProcessor.modelPropAnnotations)
+                        && interfaceElement.executableElements().any { interfaceMethod ->
+                            // To keep this simple we only compare name and ignore parameters, should be close enough
+                             viewMethod.simpleName.toString() == interfaceMethod.simpleName.toString()
+                        }
+                    }
+                }
     }
 
     /** We generate an interface on the model to represent each interface on the view.
      * This lets models with the same view interface be grouped together. */
     val generatedViewInterfaceNames: List<ClassName> by lazy {
         viewInterfaces.map {
-            ClassName.get(it.asElement() as TypeElement).appendToName("Model_")
+            ClassName.get(it).appendToName("Model_")
         }
     }
 
@@ -181,3 +195,4 @@ internal class ModelViewInfo(
         return ResourceValue(0)
     }
 }
+

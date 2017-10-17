@@ -1,7 +1,9 @@
 package com.airbnb.epoxy
 
 import com.squareup.javapoet.*
+import javax.lang.model.*
 import javax.lang.model.element.*
+import javax.lang.model.type.*
 import javax.lang.model.util.*
 import kotlin.reflect.*
 
@@ -44,20 +46,29 @@ fun String.toUpperCamelCase(): String {
     }
 }
 
-/** Creates a new version of the classname where the simple name has the given suffix added to it. */
-fun ClassName.appendToName(suffix: String): ClassName {
-    val lastName = simpleNames().last().plus(suffix)
-    val simpleNames = simpleNames().dropLast(1) + lastName
+fun TypeElement.executableElements() = enclosedElements.filterIsInstance<ExecutableElement>()
 
-    val result = ClassName.get(
-            packageName(),
-            simpleNames.first(),
-            *simpleNames.drop(1).toTypedArray())
-
-    result.annotated(annotations)
-
-    return result
+/** @return Whether at least one of the given annotations is present on the receiver. */
+fun AnnotatedConstruct.hasAnyAnnotation(annotationClasses: List<Class<out Annotation>>)
+        = annotationClasses.any {
+    try {
+        getAnnotation(it) != null
+    } catch (e: MirroredTypeException) {
+        // This will be thrown if the annotation contains a param of type Class. This is fine,
+        // it still means that the annotation is present
+        true
+    }
 }
+
+/** Creates a new version of the classname where the simple name has the given suffix added to it.
+ *
+ * If there are multiple simple names they are combined into 1.
+ * */
+fun ClassName.appendToName(suffix: String)
+        = ClassName.get(
+        packageName(),
+        simpleNames().joinToString(separator = "$", postfix = suffix)
+).annotated(annotations)!!
 
 /** Iterates through each character, allowing you to build a string by transforming the characters as needed. */
 private fun String.transformEachChar(operation: StringBuilder.(Char?, Char, Char?) -> Unit): String {

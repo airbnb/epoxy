@@ -19,8 +19,7 @@ internal class ModelViewProcessor(
         private val resourceProcessor: ResourceProcessor
 ) {
 
-    private val modelPropAnnotations = listOf(ModelProp::class, TextProp::class,
-                                              CallbackProp::class).map { it.java }
+
 
     private val modelClassMap = LinkedHashMap<Element, ModelViewInfo>()
     private val styleableModelsToWrite = mutableListOf<ModelViewInfo>()
@@ -359,6 +358,11 @@ internal class ModelViewProcessor(
 
     private fun getModelInfoForMethodElement(element: Element): ModelViewInfo? =
             element.enclosingElement?.let { modelClassMap[it] }
+
+    companion object {
+        val modelPropAnnotations = listOf(ModelProp::class, TextProp::class,
+                                          CallbackProp::class).map { it.java }
+    }
 }
 
 

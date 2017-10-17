@@ -54,6 +54,6 @@ class ModelViewInterfaceTest {
         val interface2 = model as InterfaceForView2Model_
 
         interface1.text("")
-        interface2.text3("")
+        interface2.listener(null)
     }
 }
