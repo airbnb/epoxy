@@ -752,7 +752,7 @@ internal class GeneratedModelWriter(
             methods: MutableList<MethodSpec>
     ) {
 
-        val originalClassElement = modelClassInfo.getSuperClassElement()
+        val originalClassElement = modelClassInfo.superClassElement
         if (!isEpoxyModelWithHolder(originalClassElement)) {
             return
         }
@@ -813,9 +813,8 @@ internal class GeneratedModelWriter(
             return modelInfo.getLayoutResource(resourceProcessor)
         }
 
-        val superClassElement = modelInfo.getSuperClassElement()
-        if (implementsMethod(superClassElement, buildDefaultLayoutMethodBase(), types,
-                             elements)) {
+        val superClassElement = modelInfo.superClassElement
+        if (implementsMethod(superClassElement, buildDefaultLayoutMethodBase(), types, elements)) {
             return null
         }
 
@@ -840,7 +839,7 @@ internal class GeneratedModelWriter(
      * changed.
      */
     private fun generateDataBindingMethodsIfNeeded(info: GeneratedModelInfo): Iterable<MethodSpec> {
-        if (!isDataBindingModel(info.getSuperClassElement())) {
+        if (!isDataBindingModel(info.superClassElement)) {
             return emptyList()
         }
 
@@ -852,14 +851,14 @@ internal class GeneratedModelWriter(
                 .build()
 
         // If the base method is already implemented don't bother checking for the payload method
-        if (implementsMethod(info.getSuperClassElement(), bindVariablesMethod, types,
+        if (implementsMethod(info.superClassElement, bindVariablesMethod, types,
                              elements)) {
             return emptyList()
         }
 
         val generatedModelClass = info.generatedName
 
-        val moduleName = dataBindingModuleLookup.getModuleName(info.getSuperClassElement())
+        val moduleName = dataBindingModuleLookup.getModuleName(info.superClassElement)
 
         val baseMethodBuilder = bindVariablesMethod.toBuilder()
 
