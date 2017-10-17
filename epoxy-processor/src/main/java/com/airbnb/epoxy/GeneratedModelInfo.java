@@ -176,10 +176,6 @@ abstract class GeneratedModelInfo {
     }
   }
 
-  TypeElement getSuperClassElement() {
-    return superClassElement;
-  }
-
   TypeName getSuperClassName() {
     return superClassName;
   }

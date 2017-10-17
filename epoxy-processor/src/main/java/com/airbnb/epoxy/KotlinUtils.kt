@@ -60,6 +60,12 @@ fun AnnotatedConstruct.hasAnyAnnotation(annotationClasses: List<Class<out Annota
     }
 }
 
+fun AnnotatedConstruct.hasAnnotation(annotationClass: KClass<out Annotation>)
+        = hasAnyAnnotation(listOf(annotationClass.java))
+
+inline fun <reified T : Annotation> AnnotatedConstruct.annotation(): T?
+        = getAnnotation(T::class.java)
+
 /** Creates a new version of the classname where the simple name has the given suffix added to it.
  *
  * If there are multiple simple names they are combined into 1.
@@ -67,7 +73,7 @@ fun AnnotatedConstruct.hasAnyAnnotation(annotationClasses: List<Class<out Annota
 fun ClassName.appendToName(suffix: String)
         = ClassName.get(
         packageName(),
-        simpleNames().joinToString( separator = "_", postfix = suffix)
+        simpleNames().joinToString(separator = "_", postfix = suffix)
 ).annotated(annotations)!!
 
 /** Iterates through each character, allowing you to build a string by transforming the characters as needed. */

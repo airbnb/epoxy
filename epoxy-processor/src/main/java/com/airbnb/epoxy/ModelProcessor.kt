@@ -52,6 +52,7 @@ internal class ModelProcessor(
         for ((_, modelInfo) in modelClassMap) {
 
             if (modelInfo is BasicGeneratedModelInfo
+                    && modelInfo.superClassElement.annotation<EpoxyModelClass>()?.layout == 0
                     && modelInfo.boundObjectTypeElement?.hasStyleableAnnotation(elements) == true) {
                 styleableModelsToWrite.add(modelInfo)
             } else {
