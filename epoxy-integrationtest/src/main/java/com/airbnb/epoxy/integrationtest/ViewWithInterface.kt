@@ -7,12 +7,11 @@ import com.airbnb.epoxy.*
 import com.airbnb.epoxy.ModelView.Size
 
 @ModelView(autoLayout = Size.WRAP_WIDTH_MATCH_HEIGHT)
-class ViewWithInterface(context: Context) : View(
-        context), InterfaceForView, InterfaceForView2, ClassWithNestedInterface.NestedInterface, InterfaceWithNoPropMethods {
+class ViewWithInterface(context: Context) : View(context), InterfaceForView, InterfaceForView2, ClassWithNestedInterface.NestedInterface, InterfaceWithNoPropMethods {
 
     override fun getSomething() = 5
 
-//    @ModelProp
+    @ModelProp
     override fun valueOnNestedInterface(value: Int) {
 
     }
@@ -36,8 +35,8 @@ class ViewWithInterface(context: Context) : View(
     fun nonInterfaceProp(title: Int) {
         // method has different type from method of same name in other view
     }
-
 }
+
 
 @ModelView(autoLayout = Size.WRAP_WIDTH_MATCH_HEIGHT)
 class ViewWithInterface2(context: Context) : View(context), InterfaceForView, InterfaceForView2 {

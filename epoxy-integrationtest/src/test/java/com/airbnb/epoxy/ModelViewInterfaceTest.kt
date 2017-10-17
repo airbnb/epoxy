@@ -1,5 +1,6 @@
 package com.airbnb.epoxy
 
+import android.view.*
 import com.airbnb.epoxy.integrationtest.*
 import org.junit.*
 import org.junit.runner.*
@@ -55,5 +56,11 @@ class ModelViewInterfaceTest {
 
         interface1.text("")
         interface2.listener(null)
+    }
+
+    @Test
+    fun nestedInterfaceWorks() {
+        val model = ViewWithInterfaceModel_() as ClassWithNestedInterface_NestedInterfaceModel_
+        model.listener( View.OnClickListener {  })
     }
 }

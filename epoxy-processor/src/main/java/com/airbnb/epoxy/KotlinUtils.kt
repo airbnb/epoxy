@@ -67,7 +67,7 @@ fun AnnotatedConstruct.hasAnyAnnotation(annotationClasses: List<Class<out Annota
 fun ClassName.appendToName(suffix: String)
         = ClassName.get(
         packageName(),
-        simpleNames().joinToString(separator = "$", postfix = suffix)
+        simpleNames().joinToString( separator = "_", postfix = suffix)
 ).annotated(annotations)!!
 
 /** Iterates through each character, allowing you to build a string by transforming the characters as needed. */
