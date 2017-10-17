@@ -16,60 +16,60 @@ import java.lang.String;
 import java.util.List;
 
 public interface TestManyTypesViewModelBuilder {
-  TestManyTypesViewModel_ onBind(OnModelBoundListener<TestManyTypesViewModel_, TestManyTypesView> listener);
+  TestManyTypesViewModelBuilder onBind(OnModelBoundListener<TestManyTypesViewModel_, TestManyTypesView> listener);
 
-  TestManyTypesViewModel_ onUnbind(OnModelUnboundListener<TestManyTypesViewModel_, TestManyTypesView> listener);
+  TestManyTypesViewModelBuilder onUnbind(OnModelUnboundListener<TestManyTypesViewModel_, TestManyTypesView> listener);
 
-  TestManyTypesViewModel_ stringValue(String stringValue);
+  TestManyTypesViewModelBuilder stringValue(String stringValue);
 
-  TestManyTypesViewModel_ nullableStringValue(@Nullable String nullableStringValue);
+  TestManyTypesViewModelBuilder nullableStringValue(@Nullable String nullableStringValue);
 
-  TestManyTypesViewModel_ intValue(int intValue);
+  TestManyTypesViewModelBuilder intValue(int intValue);
 
-  TestManyTypesViewModel_ intValueWithAnnotation(@StringRes int intValueWithAnnotation);
+  TestManyTypesViewModelBuilder intValueWithAnnotation(@StringRes int intValueWithAnnotation);
 
-  TestManyTypesViewModel_ intValueWithRangeAnnotation(@IntRange(from = 0, to = 200) int intValueWithRangeAnnotation);
+  TestManyTypesViewModelBuilder intValueWithRangeAnnotation(@IntRange(from = 0, to = 200) int intValueWithRangeAnnotation);
 
-  TestManyTypesViewModel_ intValueWithDimenTypeAnnotation(@Dimension(unit = 0) int intValueWithDimenTypeAnnotation);
+  TestManyTypesViewModelBuilder intValueWithDimenTypeAnnotation(@Dimension(unit = 0) int intValueWithDimenTypeAnnotation);
 
-  TestManyTypesViewModel_ intWithMultipleAnnotations(@IntRange(from = 0, to = 200) @Dimension(unit = 0) int intWithMultipleAnnotations);
+  TestManyTypesViewModelBuilder intWithMultipleAnnotations(@IntRange(from = 0, to = 200) @Dimension(unit = 0) int intWithMultipleAnnotations);
 
-  TestManyTypesViewModel_ integerValue(Integer integerValue);
+  TestManyTypesViewModelBuilder integerValue(Integer integerValue);
 
-  TestManyTypesViewModel_ boolValue(boolean boolValue);
+  TestManyTypesViewModelBuilder boolValue(boolean boolValue);
 
-  TestManyTypesViewModel_ booleanValue(Boolean booleanValue);
+  TestManyTypesViewModelBuilder booleanValue(Boolean booleanValue);
 
-  TestManyTypesViewModel_ arrayValue(String[] arrayValue);
+  TestManyTypesViewModelBuilder arrayValue(String[] arrayValue);
 
-  TestManyTypesViewModel_ listValue(List<String> listValue);
+  TestManyTypesViewModelBuilder listValue(List<String> listValue);
 
-  TestManyTypesViewModel_ clickListener(final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener);
+  TestManyTypesViewModelBuilder clickListener(final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener);
 
-  TestManyTypesViewModel_ clickListener(View.OnClickListener clickListener);
+  TestManyTypesViewModelBuilder clickListener(View.OnClickListener clickListener);
 
-  TestManyTypesViewModel_ title(@Nullable CharSequence title);
+  TestManyTypesViewModelBuilder title(@Nullable CharSequence title);
 
-  TestManyTypesViewModel_ title(@StringRes int stringRes);
+  TestManyTypesViewModelBuilder title(@StringRes int stringRes);
 
-  TestManyTypesViewModel_ title(@StringRes int stringRes, Object... formatArgs);
+  TestManyTypesViewModelBuilder title(@StringRes int stringRes, Object... formatArgs);
 
-  TestManyTypesViewModel_ titleQuantityRes(@PluralsRes int pluralRes, int quantity,
+  TestManyTypesViewModelBuilder titleQuantityRes(@PluralsRes int pluralRes, int quantity,
       Object... formatArgs);
 
-  TestManyTypesViewModel_ id(long id);
+  TestManyTypesViewModelBuilder id(long id);
 
-  TestManyTypesViewModel_ id(Number... ids);
+  TestManyTypesViewModelBuilder id(Number... ids);
 
-  TestManyTypesViewModel_ id(long id1, long id2);
+  TestManyTypesViewModelBuilder id(long id1, long id2);
 
-  TestManyTypesViewModel_ id(CharSequence key);
+  TestManyTypesViewModelBuilder id(CharSequence key);
 
-  TestManyTypesViewModel_ id(CharSequence key, CharSequence... otherKeys);
+  TestManyTypesViewModelBuilder id(CharSequence key, CharSequence... otherKeys);
 
-  TestManyTypesViewModel_ id(CharSequence key, long id);
+  TestManyTypesViewModelBuilder id(CharSequence key, long id);
 
-  TestManyTypesViewModel_ layout(@LayoutRes int arg0);
+  TestManyTypesViewModelBuilder layout(@LayoutRes int arg0);
 
-  TestManyTypesViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0);
+  TestManyTypesViewModelBuilder spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0);
 }

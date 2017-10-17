@@ -1,6 +1,5 @@
 package com.airbnb.epoxy
 
-import com.airbnb.epoxy.Utils.*
 import com.squareup.javapoet.*
 import javax.lang.model.element.*
 import javax.lang.model.util.*
@@ -9,7 +8,10 @@ import kotlin.reflect.*
 fun Class<*>.asTypeElement(
         elements: Elements,
         types: Types
-) = getElementByName(ClassName.get(this), elements, types) as TypeElement
+): TypeElement {
+    val typeMirror = Utils.getTypeMirror(this, elements)
+    return types.asElement(typeMirror) as TypeElement
+}
 
 fun KClass<*>.asTypeElement(
         elements: Elements,
@@ -42,6 +44,21 @@ fun String.toUpperCamelCase(): String {
     }
 }
 
+/** Creates a new version of the classname where the simple name has the given suffix added to it. */
+fun ClassName.appendToName(suffix: String): ClassName {
+    val lastName = simpleNames().last().plus(suffix)
+    val simpleNames = simpleNames().dropLast(1) + lastName
+
+    val result = ClassName.get(
+            packageName(),
+            simpleNames.first(),
+            *simpleNames.drop(1).toTypedArray())
+
+    result.annotated(annotations)
+
+    return result
+}
+
 /** Iterates through each character, allowing you to build a string by transforming the characters as needed. */
 private fun String.transformEachChar(operation: StringBuilder.(Char?, Char, Char?) -> Unit): String {
     val stringBuilder = StringBuilder(length)
@@ -51,4 +68,52 @@ private fun String.transformEachChar(operation: StringBuilder.(Char?, Char, Char
     }
 
     return stringBuilder.toString()
+}
+
+/** Return each of the classes in the class hierarchy, starting with the initial receiver and working upwards until Any. */
+tailrec fun Element.iterateClassHierarchy(
+        types: Types,
+        classCallback: (classElement: TypeElement) -> Unit
+) {
+    if (this !is TypeElement) {
+        return
+    }
+
+    classCallback(this)
+
+    val superClazz = getParentClassElement(types) ?: return
+    superClazz.iterateClassHierarchy(types, classCallback)
+}
+
+/** Iterate each super class of the receiver, starting with the initial super class and going until Any. */
+fun Element.iterateSuperClasses(
+        types: Types,
+        classCallback: (classElement: TypeElement) -> Unit
+) {
+    iterateClassHierarchy(types) {
+        // Skip the original class so that only super classes are passed to the callback
+        if (it != this) {
+            classCallback(it)
+        }
+    }
+}
+
+fun TypeElement.getParentClassElement(
+        types: Types
+): TypeElement? = types.asElement(superclass) as? TypeElement
+
+/** Similar to the java 8 Map#merge method. */
+fun <K, V> MutableMap<K, V>.putOrMerge(
+        key: K,
+        value: V,
+        reduceFunction: (V, V) -> V
+) {
+    val oldValue = get(key)
+    val newValue = if (oldValue == null) {
+        value
+    } else {
+        reduceFunction(oldValue, value)
+    }
+
+    put(key, newValue)
 }

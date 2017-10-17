@@ -24,6 +24,9 @@ internal class GeneratedModelWriter(
         private val dataBindingModuleLookup: DataBindingModuleLookup,
         private val elements: Elements
 ) {
+
+    val modelInterfaceWriter = ModelBuilderInterfaceWriter(filer, types)
+
     private var builderHooks: BuilderHooks? = null
 
     internal open class BuilderHooks {
@@ -62,6 +65,10 @@ internal class GeneratedModelWriter(
         ) {
 
         }
+    }
+
+    fun writeFilesForViewInterfaces() {
+        modelInterfaceWriter.writeFilesForViewInterfaces()
     }
 
     @Throws(IOException::class)
@@ -105,12 +112,9 @@ internal class GeneratedModelWriter(
 
             builderHooks?.beforeFinalBuild(this)
 
-            ModelBuilderInterfaceWriter(filer, info, this.build().methodSpecs)
-                    .addInterface(this)
+
+            addSuperinterface(modelInterfaceWriter.writeInterface(info, this.build().methodSpecs))
         }
-
-
-
 
         JavaFile.builder(generatedModelName.packageName(), modelClass)
                 .build()

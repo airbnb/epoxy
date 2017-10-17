@@ -10,6 +10,16 @@ inline internal fun buildClass(
         initializer: TypeSpec.Builder.() -> Unit
 ): TypeSpec = TypeSpec.classBuilder(name).apply(initializer).build()
 
+inline internal fun buildInterface(
+        name: String,
+        initializer: TypeSpec.Builder.() -> Unit
+): TypeSpec = TypeSpec.interfaceBuilder(name).apply(initializer).build()
+
+inline internal fun buildInterface(
+        name: ClassName,
+        initializer: TypeSpec.Builder.() -> Unit
+): TypeSpec = TypeSpec.interfaceBuilder(name).apply(initializer).build()
+
 inline internal fun buildClass(
         className: ClassName,
         initializer: TypeSpec.Builder.() -> Unit
@@ -29,7 +39,6 @@ inline internal fun TypeSpec.Builder.addAnnotation(
     addAnnotation(AnnotationSpec.builder(type).apply(initializer).build())
 }
 
-
 inline internal fun buildConstructor(
         initializer: MethodSpec.Builder.() -> Unit
 ): MethodSpec = MethodSpec.constructorBuilder().apply(initializer).build()
@@ -38,6 +47,30 @@ inline internal fun buildMethod(
         name: String,
         initializer: MethodSpec.Builder.() -> Unit
 ): MethodSpec = MethodSpec.methodBuilder(name).apply(initializer).build()
+
+/** Copies all details of a methodspec besides the statement, allowing you to override any piece of the method. */
+internal fun MethodSpec.copy(
+        name: String? = null,
+        modifiers: Iterable<Modifier>? = null, // replaces all existing modifiers if not null
+        additionalModifiers: Iterable<Modifier>? = null, // Appends to existing modifiers if not null
+        returns: TypeName? = null,
+        params: Iterable<ParameterSpec>? = null,
+        varargs: Boolean? = null,
+        typeVariables: Iterable<TypeVariableName>? = null,
+        exceptions: Iterable<TypeName>? = null,
+        callback: MethodSpec.Builder.() -> Unit = {} // Any other custom init code, like adding statements
+): MethodSpec {
+    val builder = MethodSpec.methodBuilder(name ?: this.name)
+            .addModifiers(modifiers ?: this.modifiers)
+            .addModifiers(additionalModifiers ?: emptyList())
+            .returns(returns ?: this.returnType)
+            .addParameters(params ?: this.parameters)
+            .varargs(varargs ?: this.varargs)
+            .addTypeVariables(typeVariables ?: this.typeVariables)
+            .addExceptions(exceptions ?: this.exceptions)
+
+    return builder.apply(callback).build()
+}
 
 inline internal fun MethodSpec.Builder.addAnnotation(
         type: Class<*>,

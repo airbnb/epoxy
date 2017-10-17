@@ -29,6 +29,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.KotlinUtilsKt.getParentClassElement;
 import static com.squareup.javapoet.TypeName.BOOLEAN;
 import static com.squareup.javapoet.TypeName.BYTE;
 import static com.squareup.javapoet.TypeName.CHAR;
@@ -271,11 +272,6 @@ class Utils {
       return null;
     }
     return getMethodOnClass(superClazz, method, typeUtils, elements);
-  }
-
-  @Nullable
-  static TypeElement getParentClassElement(TypeElement element, Types types) {
-    return (TypeElement) types.asElement(element.getSuperclass());
   }
 
   private static boolean areParamsTheSame(ExecutableElement method1, MethodSpec method2,

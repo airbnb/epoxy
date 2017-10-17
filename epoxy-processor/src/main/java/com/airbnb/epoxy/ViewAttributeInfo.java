@@ -1,5 +1,7 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.Nullable;
+
 import com.airbnb.epoxy.ModelProp.Option;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.AnnotationSpec.Builder;
@@ -27,9 +29,9 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.KotlinUtilsKt.getParentClassElement;
 import static com.airbnb.epoxy.Utils.capitalizeFirstLetter;
 import static com.airbnb.epoxy.Utils.getDefaultValue;
-import static com.airbnb.epoxy.Utils.getParentClassElement;
 import static com.airbnb.epoxy.Utils.isFieldPackagePrivate;
 import static com.airbnb.epoxy.Utils.removeSetPrefix;
 
@@ -41,10 +43,12 @@ class ViewAttributeInfo extends AttributeInfo {
   final boolean resetWithNull;
   final boolean generateStringOverloads;
   String constantFieldNameForDefaultValue;
+  @Nullable ExecutableElement setterElementOnView;
 
   ViewAttributeInfo(ModelViewInfo modelInfo, ExecutableElement setterMethod, Types types,
       Elements elements, ErrorLogger errorLogger, ResourceProcessor resourceProcessor) {
     this.resourceProcessor = resourceProcessor;
+    setterElementOnView = setterMethod;
     ModelProp propAnnotation = setterMethod.getAnnotation(ModelProp.class);
     TextProp textAnnotation = setterMethod.getAnnotation(TextProp.class);
     CallbackProp callbackAnnotation = setterMethod.getAnnotation(CallbackProp.class);

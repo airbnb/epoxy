@@ -17,65 +17,65 @@ import java.lang.String;
 import java.util.List;
 
 public interface ModelWithAllFieldTypesBuilder {
-  ModelWithAllFieldTypes_ onBind(OnModelBoundListener<ModelWithAllFieldTypes_, Object> listener);
+  ModelWithAllFieldTypesBuilder onBind(OnModelBoundListener<ModelWithAllFieldTypes_, Object> listener);
 
-  ModelWithAllFieldTypes_ onUnbind(OnModelUnboundListener<ModelWithAllFieldTypes_, Object> listener);
+  ModelWithAllFieldTypesBuilder onUnbind(OnModelUnboundListener<ModelWithAllFieldTypes_, Object> listener);
 
-  ModelWithAllFieldTypes_ valueInt(int valueInt);
+  ModelWithAllFieldTypesBuilder valueInt(int valueInt);
 
-  ModelWithAllFieldTypes_ valueInteger(Integer valueInteger);
+  ModelWithAllFieldTypesBuilder valueInteger(Integer valueInteger);
 
-  ModelWithAllFieldTypes_ valueShort(short valueShort);
+  ModelWithAllFieldTypesBuilder valueShort(short valueShort);
 
-  ModelWithAllFieldTypes_ valueShortWrapper(Short valueShortWrapper);
+  ModelWithAllFieldTypesBuilder valueShortWrapper(Short valueShortWrapper);
 
-  ModelWithAllFieldTypes_ valueChar(char valueChar);
+  ModelWithAllFieldTypesBuilder valueChar(char valueChar);
 
-  ModelWithAllFieldTypes_ valueCharacter(Character valueCharacter);
+  ModelWithAllFieldTypesBuilder valueCharacter(Character valueCharacter);
 
-  ModelWithAllFieldTypes_ valuebByte(byte valuebByte);
+  ModelWithAllFieldTypesBuilder valuebByte(byte valuebByte);
 
-  ModelWithAllFieldTypes_ valueByteWrapper(Byte valueByteWrapper);
+  ModelWithAllFieldTypesBuilder valueByteWrapper(Byte valueByteWrapper);
 
-  ModelWithAllFieldTypes_ valueLong(long valueLong);
+  ModelWithAllFieldTypesBuilder valueLong(long valueLong);
 
-  ModelWithAllFieldTypes_ valueLongWrapper(Long valueLongWrapper);
+  ModelWithAllFieldTypesBuilder valueLongWrapper(Long valueLongWrapper);
 
-  ModelWithAllFieldTypes_ valueDouble(double valueDouble);
+  ModelWithAllFieldTypesBuilder valueDouble(double valueDouble);
 
-  ModelWithAllFieldTypes_ valueDoubleWrapper(Double valueDoubleWrapper);
+  ModelWithAllFieldTypesBuilder valueDoubleWrapper(Double valueDoubleWrapper);
 
-  ModelWithAllFieldTypes_ valueFloat(float valueFloat);
+  ModelWithAllFieldTypesBuilder valueFloat(float valueFloat);
 
-  ModelWithAllFieldTypes_ valueFloatWrapper(Float valueFloatWrapper);
+  ModelWithAllFieldTypesBuilder valueFloatWrapper(Float valueFloatWrapper);
 
-  ModelWithAllFieldTypes_ valueBoolean(boolean valueBoolean);
+  ModelWithAllFieldTypesBuilder valueBoolean(boolean valueBoolean);
 
-  ModelWithAllFieldTypes_ valueBooleanWrapper(Boolean valueBooleanWrapper);
+  ModelWithAllFieldTypesBuilder valueBooleanWrapper(Boolean valueBooleanWrapper);
 
-  ModelWithAllFieldTypes_ valueIntArray(int[] valueIntArray);
+  ModelWithAllFieldTypesBuilder valueIntArray(int[] valueIntArray);
 
-  ModelWithAllFieldTypes_ valueObjectArray(Object[] valueObjectArray);
+  ModelWithAllFieldTypesBuilder valueObjectArray(Object[] valueObjectArray);
 
-  ModelWithAllFieldTypes_ valueString(String valueString);
+  ModelWithAllFieldTypesBuilder valueString(String valueString);
 
-  ModelWithAllFieldTypes_ valueObject(Object valueObject);
+  ModelWithAllFieldTypesBuilder valueObject(Object valueObject);
 
-  ModelWithAllFieldTypes_ valueList(List<String> valueList);
+  ModelWithAllFieldTypesBuilder valueList(List<String> valueList);
 
-  ModelWithAllFieldTypes_ id(long id);
+  ModelWithAllFieldTypesBuilder id(long id);
 
-  ModelWithAllFieldTypes_ id(Number... ids);
+  ModelWithAllFieldTypesBuilder id(Number... ids);
 
-  ModelWithAllFieldTypes_ id(long id1, long id2);
+  ModelWithAllFieldTypesBuilder id(long id1, long id2);
 
-  ModelWithAllFieldTypes_ id(CharSequence key);
+  ModelWithAllFieldTypesBuilder id(CharSequence key);
 
-  ModelWithAllFieldTypes_ id(CharSequence key, CharSequence... otherKeys);
+  ModelWithAllFieldTypesBuilder id(CharSequence key, CharSequence... otherKeys);
 
-  ModelWithAllFieldTypes_ id(CharSequence key, long id);
+  ModelWithAllFieldTypesBuilder id(CharSequence key, long id);
 
-  ModelWithAllFieldTypes_ layout(@LayoutRes int arg0);
+  ModelWithAllFieldTypesBuilder layout(@LayoutRes int arg0);
 
-  ModelWithAllFieldTypes_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0);
+  ModelWithAllFieldTypesBuilder spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0);
 }
