@@ -1,5 +1,7 @@
 package com.airbnb.epoxy;
 
+import com.airbnb.epoxy.diff.DiffPayload;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

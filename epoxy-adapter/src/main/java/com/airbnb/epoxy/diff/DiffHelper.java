@@ -1,8 +1,13 @@
 
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.diff;
 
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
+import android.support.annotation.RestrictTo.Scope;
 import android.support.v7.widget.RecyclerView;
+
+import com.airbnb.epoxy.BaseEpoxyAdapter;
+import com.airbnb.epoxy.EpoxyModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +18,8 @@ import java.util.Map;
 /**
  * Helper to track changes in the models list.
  */
-class DiffHelper {
+@RestrictTo(Scope.LIBRARY_GROUP)
+public final class DiffHelper {
   private ArrayList<ModelState> oldStateList = new ArrayList<>();
   // Using a HashMap instead of a LongSparseArray to
   // have faster look up times at the expense of memory
@@ -224,7 +230,7 @@ class DiffHelper {
 
   private ModelState createStateForPosition(int position) {
     EpoxyModel<?> model = adapter.getCurrentModels().get(position);
-    model.addedToAdapter = true;
+    adapter.onModelAdded(model);
     ModelState state = ModelState.build(model, position, immutableModels);
 
     ModelState previousValue = currentStateMap.put(state.id, state);

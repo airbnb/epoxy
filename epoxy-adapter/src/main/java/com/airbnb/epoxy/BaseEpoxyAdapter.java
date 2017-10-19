@@ -3,15 +3,20 @@ package com.airbnb.epoxy;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
+import android.support.annotation.RestrictTo.Scope;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.airbnb.epoxy.diff.DiffPayload;
+
 import java.util.Collections;
 import java.util.List;
 
-abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
+@RestrictTo(Scope.LIBRARY_GROUP)
+public abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
   private static final String SAVED_STATE_ARG_VIEW_HOLDERS = "saved_state_view_holders";
 
   private int spanCount = 1;
@@ -66,7 +71,11 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
   }
 
   /** Return the models currently being used by the adapter to populate the recyclerview. */
-  abstract List<EpoxyModel<?>> getCurrentModels();
+  public abstract List<EpoxyModel<?>> getCurrentModels();
+
+  public void onModelAdded(EpoxyModel<?> model) {
+    model.addedToAdapter = true;
+  }
 
   public boolean isEmpty() {
     return getCurrentModels().isEmpty();

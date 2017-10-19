@@ -404,7 +404,7 @@ public abstract class EpoxyModel<T> {
     }
   }
 
-  boolean isDebugValidationEnabled() {
+  public final boolean isDebugValidationEnabled() {
     return firstControllerAddedTo != null;
   }
 
@@ -452,7 +452,7 @@ public abstract class EpoxyModel<T> {
    * us to catch more subtle changes, such as through setting a field directly or through changing
    * an object that is set on the model.
    */
-  protected final void validateStateHasNotChangedSinceAdded(String descriptionOfChange,
+  public final void validateStateHasNotChangedSinceAdded(String descriptionOfChange,
       int modelPosition) {
     if (isDebugValidationEnabled()
         && !currentlyInInterceptors

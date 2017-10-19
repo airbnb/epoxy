@@ -1,14 +1,19 @@
 
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.diff;
 
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
+import android.support.annotation.RestrictTo.Scope;
+
+import com.airbnb.epoxy.EpoxyModel;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
 /** Defines an operation that makes a change to the epoxy model list. */
+@RestrictTo(Scope.LIBRARY)
 class UpdateOp {
 
   @IntDef({ADD, REMOVE, UPDATE, MOVE})

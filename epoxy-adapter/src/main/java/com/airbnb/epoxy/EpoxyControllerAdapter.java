@@ -3,6 +3,8 @@ package com.airbnb.epoxy;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
+import com.airbnb.epoxy.diff.DiffHelper;
+
 import java.util.Collections;
 import java.util.List;
 

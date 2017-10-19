@@ -2,6 +2,9 @@ package com.airbnb.epoxy;
 
 import android.support.v7.widget.RecyclerView.AdapterDataObserver;
 
+import com.airbnb.epoxy.diff.DiffHelper;
+import com.airbnb.epoxy.diff.DiffPayload;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.airbnb.epoxy.DiffPayload.getModelFromPayload;
+import static com.airbnb.epoxy.diff.DiffPayload.getModelFromPayload;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.argThat;

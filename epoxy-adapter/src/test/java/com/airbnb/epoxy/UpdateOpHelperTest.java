@@ -1,5 +1,8 @@
 package com.airbnb.epoxy;
 
+import com.airbnb.epoxy.diff.UpdateOp;
+import com.airbnb.epoxy.diff.UpdateOpHelper;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.annotation.Config;

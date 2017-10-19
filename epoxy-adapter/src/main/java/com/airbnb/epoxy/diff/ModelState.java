@@ -1,4 +1,6 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.diff;
+
+import com.airbnb.epoxy.EpoxyModel;
 
 /** Helper to store relevant information about a model that we need to determine if it changed. */
 class ModelState {
