@@ -31,7 +31,7 @@ public abstract class EpoxyAdapter extends BaseEpoxyAdapter {
   private DiffHelper diffHelper;
 
   @Override
-  List<EpoxyModel<?>> getCurrentModels() {
+  public List<EpoxyModel<?>> getCurrentModels() {
     return models;
   }
 

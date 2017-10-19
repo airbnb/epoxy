@@ -27,7 +27,7 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
   }
 
   @Override
-  List<EpoxyModel<?>> getCurrentModels() {
+  public List<EpoxyModel<?>> getCurrentModels() {
     return currentModels;
   }
 

@@ -5,21 +5,21 @@ import android.support.v7.widget.RecyclerView.AdapterDataObserver;
 import java.util.ArrayList;
 import java.util.List;
 
-class TestObserver extends AdapterDataObserver {
-  List<TestModel> modelsAfterDiffing = new ArrayList<>();
-  List<TestModel> initialModels = new ArrayList<>();
-  int operationCount = 0;
+public class TestObserver extends AdapterDataObserver {
+  public List<TestModel> modelsAfterDiffing = new ArrayList<>();
+  public List<TestModel> initialModels = new ArrayList<>();
+  public int operationCount = 0;
   private boolean showLogs;
 
-  TestObserver(boolean showLogs) {
+  public TestObserver(boolean showLogs) {
     this.showLogs = showLogs;
   }
 
-  TestObserver() {
+  public TestObserver() {
     this(false);
   }
 
-  void setUpForNextDiff(List<TestModel> models) {
+  public void setUpForNextDiff(List<TestModel> models) {
     initialModels = new ArrayList<>(models);
     modelsAfterDiffing = new ArrayList<>(models);
   }

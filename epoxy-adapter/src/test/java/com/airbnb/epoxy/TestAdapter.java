@@ -1,8 +1,19 @@
 package com.airbnb.epoxy;
 
-class TestAdapter extends EpoxyAdapter {
+import java.util.List;
 
-  TestAdapter() {
+public class TestAdapter extends EpoxyAdapter {
+
+  public TestAdapter() {
     enableDiffing();
+  }
+
+  public List<EpoxyModel<?>> models() {
+    return models;
+  }
+
+  @Override
+  public void notifyModelsChanged() {
+    super.notifyModelsChanged();
   }
 }

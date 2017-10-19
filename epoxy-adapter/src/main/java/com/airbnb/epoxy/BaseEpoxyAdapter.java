@@ -50,7 +50,8 @@ public abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHol
     }
   };
 
-  BaseEpoxyAdapter() {
+  @RestrictTo(Scope.LIBRARY_GROUP)
+  public BaseEpoxyAdapter() {
     // Defaults to stable ids since view models generate unique ids. Set this to false in the
     // subclass if you don't want to support it
     setHasStableIds(true);

@@ -1,5 +1,12 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.diff;
 
+import com.airbnb.epoxy.EpoxyModel;
+import com.airbnb.epoxy.InsertedModel;
+import com.airbnb.epoxy.ModelTestUtils;
+import com.airbnb.epoxy.TestAdapter;
+import com.airbnb.epoxy.TestModel;
+import com.airbnb.epoxy.TestObserver;
+import com.airbnb.epoxy.TestRunner;
 import com.google.common.collect.Collections2;
 
 import junit.framework.Assert;
@@ -16,8 +23,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static com.airbnb.epoxy.ModelTestUtils.addModels;
-import static com.airbnb.epoxy.ModelTestUtils.changeValues;
 import static com.airbnb.epoxy.ModelTestUtils.convertToTestModels;
 import static com.airbnb.epoxy.ModelTestUtils.remove;
 import static com.airbnb.epoxy.ModelTestUtils.removeModelsAfterPosition;
@@ -34,7 +39,7 @@ public class DifferCorrectnessTest {
   private static final boolean SPEED_RUN = false;
   private final TestObserver testObserver = new TestObserver(SHOW_LOGS);
   private final TestAdapter testAdapter = new TestAdapter();
-  private final List<EpoxyModel<?>> models = testAdapter.models;
+  private final List<EpoxyModel<?>> models = testAdapter.models();
   private static long totalDiffMillis = 0;
   private static long totalDiffOperations = 0;
   private static long totalDiffs = 0;
@@ -72,37 +77,37 @@ public class DifferCorrectnessTest {
 
   @Test
   public void simpleUpdate() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
-    changeValues(models);
+    ModelTestUtils.changeValues(models);
     diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void updateStart() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
-    changeValues(models, 0, models.size() / 2);
+    ModelTestUtils.changeValues(models, 0, models.size() / 2);
     diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void updateMiddle() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
-    changeValues(models, models.size() / 3, models.size() * 2 / 3);
+    ModelTestUtils.changeValues(models, models.size() / 3, models.size() * 2 / 3);
     diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void updateEnd() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
-    changeValues(models, models.size() / 2, models.size());
+    ModelTestUtils.changeValues(models, models.size() / 2, models.size());
     diffAndValidateWithOpCount(1);
   }
 
@@ -112,7 +117,7 @@ public class DifferCorrectnessTest {
     // item values so that the diff must deal with both item updates and movements
     for (int i = 0; i < 9; i++) {
       List<EpoxyModel<?>> originalModels = new ArrayList<>();
-      addModels(i, originalModels);
+      ModelTestUtils.addModels(i, originalModels);
       int permutationNumber = 0;
       for (List<EpoxyModel<?>> permutedModels : Collections2.permutations(originalModels)) {
         permutationNumber++;
@@ -125,7 +130,7 @@ public class DifferCorrectnessTest {
 
         models.clear();
         models.addAll(permutedModels);
-        changeValues(models);
+        ModelTestUtils.changeValues(models);
 
         log("\n\n***** Permutation " + permutationNumber + " - List Size: " + i + " ****** \n");
         log("old models:\n" + models);
@@ -140,7 +145,7 @@ public class DifferCorrectnessTest {
 
   @Test
   public void swapEnds() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
     EpoxyModel<?> firstModel = models.remove(0);
@@ -153,7 +158,7 @@ public class DifferCorrectnessTest {
 
   @Test
   public void moveFrontToEnd() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
     EpoxyModel<?> firstModel = models.remove(0);
@@ -164,7 +169,7 @@ public class DifferCorrectnessTest {
 
   @Test
   public void moveEndToFront() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
     EpoxyModel<?> lastModel = models.remove(models.size() - 1);
@@ -175,19 +180,19 @@ public class DifferCorrectnessTest {
 
   @Test
   public void moveEndToFrontAndChangeValues() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
     EpoxyModel<?> lastModel = models.remove(models.size() - 1);
     models.add(0, lastModel);
-    changeValues(models);
+    ModelTestUtils.changeValues(models);
 
     diffAndValidateWithOpCount(2);
   }
 
   @Test
   public void swapHalf() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
     List<EpoxyModel<?>> firstHalf = models.subList(0, models.size() / 2);
@@ -200,7 +205,7 @@ public class DifferCorrectnessTest {
 
   @Test
   public void reverse() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
     Collections.reverse(models);
@@ -209,7 +214,7 @@ public class DifferCorrectnessTest {
 
   @Test
   public void removeAll() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
     models.clear();
@@ -218,7 +223,7 @@ public class DifferCorrectnessTest {
 
   @Test
   public void removeEnd() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
     int half = models.size() / 2;
@@ -229,7 +234,7 @@ public class DifferCorrectnessTest {
 
   @Test
   public void removeMiddle() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
     int third = models.size() / 3;
@@ -239,7 +244,7 @@ public class DifferCorrectnessTest {
 
   @Test
   public void removeStart() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
     int half = models.size() / 2;
@@ -249,7 +254,7 @@ public class DifferCorrectnessTest {
 
   @Test
   public void multipleRemovals() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
     int size = models.size();
@@ -264,55 +269,55 @@ public class DifferCorrectnessTest {
 
   @Test
   public void simpleAdd() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void addToStart() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
-    addModels(models, 0);
+    ModelTestUtils.addModels(models, 0);
     diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void addToMiddle() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
-    addModels(models, models.size() / 2);
+    ModelTestUtils.addModels(models, models.size() / 2);
     diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void addToEnd() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidateWithOpCount(1);
   }
 
   @Test
   public void multipleInsertions() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     diffAndValidate();
 
-    addModels(models, 0);
-    addModels(models, models.size() * 2 / 3);
-    addModels(models);
+    ModelTestUtils.addModels(models, 0);
+    ModelTestUtils.addModels(models, models.size() * 2 / 3);
+    ModelTestUtils.addModels(models);
 
     diffAndValidateWithOpCount(3);
   }
 
   @Test
   public void moveTwoInFrontOfInsertion() {
-    addModels(4, models);
+    ModelTestUtils.addModels(4, models);
     diffAndValidate();
 
-    addModels(1, models, 0);
+    ModelTestUtils.addModels(1, models, 0);
 
     EpoxyModel<?> lastModel = models.remove(models.size() - 1);
     models.add(0, lastModel);
@@ -339,7 +344,7 @@ public class DifferCorrectnessTest {
         // says the same by adding or removing if necessary
         int currentModelCount = models.size();
         if (currentModelCount < modelCount) {
-          addModels(modelCount - currentModelCount, models);
+          ModelTestUtils.addModels(modelCount - currentModelCount, models);
         } else if (currentModelCount > modelCount) {
           removeModelsAfterPosition(models, modelCount);
         }
@@ -359,7 +364,7 @@ public class DifferCorrectnessTest {
         case 0:
           // insert
           log("Inserting " + batchSize + " at " + i);
-          addModels(batchSize, models, i);
+          ModelTestUtils.addModels(batchSize, models, i);
           i += batchSize;
           break;
         case 1:
@@ -376,7 +381,7 @@ public class DifferCorrectnessTest {
           batchSize = numAvailableToChange < batchSize ? numAvailableToChange : batchSize;
 
           log("Changing " + batchSize + " at " + i);
-          changeValues(models, i, batchSize);
+          ModelTestUtils.changeValues(models, i, batchSize);
           break;
         case 3:
           // move

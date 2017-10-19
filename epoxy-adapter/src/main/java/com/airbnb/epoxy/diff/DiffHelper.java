@@ -29,8 +29,7 @@ public final class DiffHelper {
   private final BaseEpoxyAdapter adapter;
   private final boolean immutableModels;
 
-
-  DiffHelper(BaseEpoxyAdapter adapter, boolean immutableModels) {
+  public DiffHelper(BaseEpoxyAdapter adapter, boolean immutableModels) {
     this.adapter = adapter;
     this.immutableModels = immutableModels;
     adapter.registerAdapterDataObserver(observer);
@@ -133,7 +132,7 @@ public final class DiffHelper {
    * Set the current list of models. The diff callbacks will be notified of the changes between the
    * current list and the last list that was set.
    */
-  void notifyModelChanges() {
+  public void notifyModelChanges() {
     UpdateOpHelper updateOpHelper = new UpdateOpHelper();
 
     buildDiff(updateOpHelper);

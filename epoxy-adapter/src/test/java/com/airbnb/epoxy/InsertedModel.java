@@ -1,7 +1,7 @@
 package com.airbnb.epoxy;
 
-class InsertedModel extends TestModel {
-  static final InsertedModel INSTANCE = new InsertedModel();
+public class InsertedModel extends TestModel {
+  public static final InsertedModel INSTANCE = new InsertedModel();
 
   @Override
   public int getDefaultLayout() {
