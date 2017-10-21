@@ -173,7 +173,7 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
     }
 
     if (list != null) {
-      list.addWeakCallback(previousList, callback);
+      list.addWeakCallback(null, callback);
     }
 
     updatePagedListSnapshot();
