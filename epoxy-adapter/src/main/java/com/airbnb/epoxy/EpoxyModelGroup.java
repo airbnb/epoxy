@@ -297,7 +297,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
     return new Holder();
   }
 
-  protected class Holder extends EpoxyHolder {
+  public class Holder extends EpoxyHolder {
     private List<View> views;
     private List<EpoxyHolder> holders;
     private ViewGroup rootView;
