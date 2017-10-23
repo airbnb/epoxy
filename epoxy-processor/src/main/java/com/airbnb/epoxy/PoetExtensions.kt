@@ -1,5 +1,6 @@
 package com.airbnb.epoxy
 
+import com.squareup.javapoet.TypeName
 import com.squareup.kotlinpoet.*
 import javax.lang.model.element.*
 
@@ -25,9 +26,68 @@ typealias KotlinParameterSpec = com.squareup.kotlinpoet.ParameterSpec
 typealias KotlinAnnotationSpec = com.squareup.kotlinpoet.AnnotationSpec
 typealias KotlinTypeSpec = com.squareup.kotlinpoet.TypeSpec
 
-fun JavaClassName.toKPoet() = KotlinClassName(
-        packageName(),
-        simpleName())
+private val javaUtilPkg = "java.util"
+private val javaLangPkg = "java.lang"
+private val kotlinCollectionsPkg = "kotlin.collections"
+private val kotlinPkg = "kotlin"
+fun JavaClassName.toKPoet(): KotlinClassName {
+
+    val simpleNames = getSimpleNamesInKotlin()
+    val packageName = getPackageNameInKotlin()
+
+    return KotlinClassName(
+            packageName,
+            simpleNames.first(),
+            *simpleNames.drop(1).toTypedArray())
+}
+
+/** Some classes, like List or Byte have the same class name but a different package for their kotlin equivalent. */
+private fun JavaClassName.getPackageNameInKotlin(): String {
+    if (packageName() in listOf(javaUtilPkg, javaLangPkg) && simpleNames().size == 1) {
+
+        val transformedPkg = if (isBoxedPrimitive) {
+            kotlinPkg
+        } else {
+            when (simpleName()) {
+                "Collection",
+                "List",
+                "Map",
+                "Set",
+                "Iterable" -> kotlinCollectionsPkg
+                "String" -> kotlinPkg
+                else -> null
+            }
+        }
+
+        if (transformedPkg != null) {
+            return transformedPkg
+        }
+    }
+
+    return packageName()
+}
+
+/** Some classes, notably Integer and Character, have a different simple name in Kotlin. */
+private fun JavaClassName.getSimpleNamesInKotlin(): List<String> {
+    val originalNames = simpleNames()
+
+    if (isBoxedPrimitive) {
+        val transformedName = when (originalNames.first()) {
+            "Integer" -> "Int"
+            "Character" -> "Char"
+            else -> null
+        }
+
+        if (transformedName != null) {
+            return listOf(transformedName)
+        }
+    }
+
+    return originalNames
+}
+
+fun JavaClassName.setPackage(packageName: String)
+        = JavaClassName.get(packageName, simpleName(), *simpleNames().drop(1).toTypedArray())!!
 
 // Does not support transferring annotations
 fun JavaWildcardTypeName.toKPoet() =
@@ -44,10 +104,31 @@ fun JavaParametrizedTypeName.toKPoet()
         *typeArguments.toKPoet().toTypedArray())
 
 // Does not support transferring annotations
-fun JavaArrayTypeName.toKPoet()
-        = KotlinParameterizedTypeName.get(
-        KotlinClassName.bestGuess("kotlin.Array"),
-        this.componentType.toKPoet())
+fun JavaArrayTypeName.toKPoet(): KotlinTypeName {
+
+    // Kotlin has special classes for primitive arrays
+    if (componentType.isPrimitive) {
+        val kotlinArrayType = when (componentType) {
+            TypeName.BYTE -> "ByteArray"
+            TypeName.SHORT -> "ShortArray"
+            TypeName.CHAR -> "CharArray"
+            TypeName.INT -> "IntArray"
+            TypeName.FLOAT -> "FloatArray"
+            TypeName.DOUBLE -> "DoubleArray"
+            TypeName.LONG -> "LongArray"
+            TypeName.BOOLEAN -> "BooleanArray"
+            else -> null
+        }
+
+        if (kotlinArrayType != null) {
+            return KotlinClassName(kotlinPkg, kotlinArrayType)
+        }
+    }
+
+    return KotlinParameterizedTypeName.get(
+            KotlinClassName(kotlinPkg, "Array"),
+            this.componentType.toKPoet())
+}
 
 // Does not support transferring annotations
 fun JavaTypeVariableName.toKPoet()
@@ -76,12 +157,18 @@ fun JavaTypeName.toKPoet(): KotlinTypeName = when (this) {
 
 fun <T : JavaTypeName> Iterable<T>.toKPoet() = map { it.toKPoet() }
 
-fun JavaParameterSpec.toKPoet(): KotlinParameterSpec
-        = KotlinParameterSpec.builder(
-        name,
-        type.toKPoet(),
-        *modifiers.toKModifier().toTypedArray()
-).build()
+fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
+
+    // A param name in java might be reserved in kotlin
+    val paramName = if (name in KOTLIN_KEYWORDS) name + "Param" else name
+
+    return KotlinParameterSpec.builder(
+            paramName,
+            type.toKPoet(),
+            *modifiers.toKModifier().toTypedArray()
+    ).build()
+
+}
 
 fun Iterable<JavaParameterSpec>.toKParams() = map { it.toKPoet() }
 
@@ -96,4 +183,36 @@ fun Modifier.toKModifier() = when (this) {
     Modifier.ABSTRACT -> KModifier.ABSTRACT
     else -> null
 }
+
+// https://github.com/JetBrains/kotlin/blob/master/core/descriptors/src/org/jetbrains/kotlin/renderer/KeywordStringsGenerated.java
+private val KOTLIN_KEYWORDS = setOf(
+        "package",
+        "as",
+        "typealias",
+        "class",
+        "this",
+        "super",
+        "val",
+        "var",
+        "fun",
+        "for",
+        "null",
+        "true",
+        "false",
+        "is",
+        "in",
+        "throw",
+        "return",
+        "break",
+        "continue",
+        "object",
+        "if",
+        "try",
+        "else",
+        "while",
+        "do",
+        "when",
+        "interface",
+        "typeof"
+)
 
