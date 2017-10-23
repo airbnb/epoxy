@@ -1,4 +1,8 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.diff;
+
+import com.airbnb.epoxy.TestRunner;
+import com.airbnb.epoxy.diff.UpdateOp;
+import com.airbnb.epoxy.diff.UpdateOpHelper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

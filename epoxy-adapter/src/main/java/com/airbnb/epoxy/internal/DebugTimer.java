@@ -1,13 +1,16 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.internal;
 
+import android.support.annotation.RestrictTo;
+import android.support.annotation.RestrictTo.Scope;
 import android.util.Log;
 
-class DebugTimer implements Timer {
+@RestrictTo(Scope.LIBRARY_GROUP)
+public class DebugTimer implements Timer {
 
   private final String tag;
   private long startTime;
 
-  DebugTimer(String tag) {
+  public DebugTimer(String tag) {
     this.tag = tag;
     reset();
   }

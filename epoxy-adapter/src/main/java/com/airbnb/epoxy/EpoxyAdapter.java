@@ -3,6 +3,8 @@ package com.airbnb.epoxy;
 
 import android.support.annotation.Nullable;
 
+import com.airbnb.epoxy.diff.DiffHelper;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,7 +31,7 @@ public abstract class EpoxyAdapter extends BaseEpoxyAdapter {
   private DiffHelper diffHelper;
 
   @Override
-  List<EpoxyModel<?>> getCurrentModels() {
+  public List<EpoxyModel<?>> getCurrentModels() {
     return models;
   }
 

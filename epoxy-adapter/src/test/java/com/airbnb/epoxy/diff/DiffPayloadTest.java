@@ -1,6 +1,13 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.diff;
 
 import android.support.v7.widget.RecyclerView.AdapterDataObserver;
+
+import com.airbnb.epoxy.BaseEpoxyAdapter;
+import com.airbnb.epoxy.EpoxyModel;
+import com.airbnb.epoxy.TestModel;
+import com.airbnb.epoxy.TestRunner;
+import com.airbnb.epoxy.diff.DiffHelper;
+import com.airbnb.epoxy.diff.DiffPayload;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.airbnb.epoxy.DiffPayload.getModelFromPayload;
+import static com.airbnb.epoxy.diff.DiffPayload.getModelFromPayload;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -34,7 +41,7 @@ public class DiffPayloadTest {
     adapter = new BaseEpoxyAdapter() {
 
       @Override
-      List<EpoxyModel<?>> getCurrentModels() {
+      public List<EpoxyModel<?>> getCurrentModels() {
         return models;
       }
     };

@@ -1,4 +1,11 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.diff;
+
+import com.airbnb.epoxy.EpoxyAdapter;
+import com.airbnb.epoxy.EpoxyModel;
+import com.airbnb.epoxy.ModelTestUtils;
+import com.airbnb.epoxy.TestAdapter;
+import com.airbnb.epoxy.TestObserver;
+import com.airbnb.epoxy.TestRunner;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +31,7 @@ public class DifferNotifyTest {
   private static final boolean SHOW_LOGS = false;
   private final TestObserver testObserver = new TestObserver(SHOW_LOGS);
   private final TestAdapter adapter = new TestAdapter();
-  private final List<EpoxyModel<?>> models = adapter.models;
+  private final List<EpoxyModel<?>> models = adapter.models();
 
   @Test(expected = UnsupportedOperationException.class)
   public void notifyChange() {
@@ -33,7 +40,7 @@ public class DifferNotifyTest {
 
   @Test
   public void notifyAddedToEmpty() {
-    addModels(models);
+    ModelTestUtils.addModels(models);
     adapter.notifyItemRangeInserted(0, models.size());
     assertCorrectness();
   }
@@ -42,7 +49,7 @@ public class DifferNotifyTest {
   public void notifyAddedToStart() {
     addInitialModels();
 
-    addModels(models, 0);
+    ModelTestUtils.addModels(models, 0);
     adapter.notifyItemRangeInserted(0, models.size() - INITIAL_MODEL_COUNT);
     assertCorrectness();
   }
@@ -51,7 +58,7 @@ public class DifferNotifyTest {
   public void notifyAddedToEnd() {
     addInitialModels();
 
-    addModels(models, INITIAL_MODEL_COUNT);
+    ModelTestUtils.addModels(models, INITIAL_MODEL_COUNT);
     adapter.notifyItemRangeInserted(INITIAL_MODEL_COUNT, models.size() - INITIAL_MODEL_COUNT);
     assertCorrectness();
   }
@@ -60,7 +67,7 @@ public class DifferNotifyTest {
   public void notifyAddedToMiddle() {
     addInitialModels();
 
-    addModels(models, INITIAL_MODEL_COUNT / 2);
+    ModelTestUtils.addModels(models, INITIAL_MODEL_COUNT / 2);
     adapter.notifyItemRangeInserted(INITIAL_MODEL_COUNT / 2, models.size() - INITIAL_MODEL_COUNT);
     assertCorrectness();
   }
@@ -156,7 +163,7 @@ public class DifferNotifyTest {
   }
 
   private void addInitialModels() {
-    addModels(INITIAL_MODEL_COUNT, models);
+    ModelTestUtils.addModels(INITIAL_MODEL_COUNT, models);
     adapter.notifyModelsChanged();
   }
 

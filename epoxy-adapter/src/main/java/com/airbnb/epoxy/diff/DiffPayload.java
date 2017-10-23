@@ -1,13 +1,17 @@
-package com.airbnb.epoxy;
+package com.airbnb.epoxy.diff;
 
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
+import android.support.annotation.RestrictTo.Scope;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.LongSparseArray;
+
+import com.airbnb.epoxy.EpoxyModel;
 
 import java.util.List;
 
 /**
- * A helper class for tracking changed models found by the {@link com.airbnb.epoxy.DiffHelper} to
+ * A helper class for tracking changed models found by the {@link DiffHelper} to
  * be included as a payload in the
  * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int, Object)}
  * call.
@@ -16,7 +20,8 @@ public class DiffPayload {
   private final EpoxyModel<?> singleModel;
   private final LongSparseArray<EpoxyModel<?>> modelsById;
 
-  DiffPayload(List<? extends EpoxyModel<?>> models) {
+  @RestrictTo(Scope.LIBRARY_GROUP)
+  public DiffPayload(List<? extends EpoxyModel<?>> models) {
     if (models.isEmpty()) {
       throw new IllegalStateException("Models must not be empty");
     }

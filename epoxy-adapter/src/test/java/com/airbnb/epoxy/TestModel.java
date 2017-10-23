@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class TestModel extends EpoxyModel<View> {
   private static final Random RANDOM = new Random(10);
-  boolean updated;
+  public boolean updated;
   private int value;
 
   public TestModel() {
@@ -31,12 +31,12 @@ public class TestModel extends EpoxyModel<View> {
     return 0;
   }
 
-  TestModel value(int value) {
+  public TestModel value(int value) {
     this.value = value;
     return this;
   }
 
-  TestModel incrementValue() {
+  public TestModel incrementValue() {
     this.value++;
     return this;
   }

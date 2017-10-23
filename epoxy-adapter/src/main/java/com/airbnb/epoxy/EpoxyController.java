@@ -7,6 +7,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView;
 
+import com.airbnb.epoxy.diff.EpoxyDiffLogger;
+import com.airbnb.epoxy.internal.DebugTimer;
+import com.airbnb.epoxy.internal.NoOpTimer;
+import com.airbnb.epoxy.internal.Timer;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

@@ -37,7 +37,7 @@ public class BindModelIntegrationTest {
     }
 
     @Override
-    List<EpoxyModel<?>> getCurrentModels() {
+    public List<EpoxyModel<?>> getCurrentModels() {
       return models;
     }
 
