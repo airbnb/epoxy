@@ -1,3 +1,11 @@
+# 2.7.1 (October 24, 2017)
+Several fixes:
+
+- https://github.com/airbnb/epoxy/pull/332
+- https://github.com/airbnb/epoxy/pull/329
+- https://github.com/airbnb/epoxy/pull/330
+- https://github.com/airbnb/epoxy/pull/331
+
 # 2.7.0 (October 17, 2017)
 
 * **New** If a `@ModelView` generated model has a custom base class the generated model will now inherit constructors from the base class (https://github.com/airbnb/epoxy/pull/315)
