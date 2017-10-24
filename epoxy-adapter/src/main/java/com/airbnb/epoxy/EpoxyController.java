@@ -3,10 +3,13 @@ package com.airbnb.epoxy;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -57,16 +60,36 @@ public abstract class EpoxyController {
   private Timer timer = NO_OP_TIMER;
   private EpoxyDiffLogger debugObserver;
   private boolean hasBuiltModelsEver;
-  private boolean hasPendingModelBuildRequest;
   private List<ModelInterceptorCallback> modelInterceptorCallbacks;
   private int recyclerViewAttachCount = 0;
   private EpoxyModel<?> stagedModel;
 
   /**
+   * Posting and canceling runnables is a bit expensive - it is synchronizes and iterates the the
+   * list of runnables. We want clients to be able to request model builds as often as they want and
+   * have it act as a no-op if one is already requested, without being a performance hit. To do that
+   * we track whether we have a call to build models posted already so we can avoid canceling a
+   * current call and posting it again.
+   */
+  @RequestedModelBuildType private int requestedModelBuildType = RequestedModelBuildType.NONE;
+
+  @Retention(RetentionPolicy.SOURCE)
+  @IntDef({RequestedModelBuildType.NONE,
+      RequestedModelBuildType.NEXT_FRAME,
+      RequestedModelBuildType.DELAYED})
+  private @interface RequestedModelBuildType {
+    int NONE = 0;
+    /** A request has been made to build models immediately. It is posted. */
+    int NEXT_FRAME = 1;
+    /** A request has been made to build models after a delay. It is post delayed. */
+    int DELAYED = 2;
+  }
+
+  /**
    * Call this to request a model update. The controller will schedule a call to {@link
    * #buildModels()} so that models can be rebuilt for the current data. Once a build is requested
-   * all subsequent requests are ignored until the model build run. Therefore, the calling code need
-   * not worry about calling this multiple times in a row.
+   * all subsequent requests are ignored until the model build runs. Therefore, the calling code
+   * need not worry about calling this multiple times in a row.
    * <p>
    * The exception is that the first time this is called on a new instance of {@link
    * EpoxyController} it is run synchronously. This allows state to be restored and the initial view
@@ -85,8 +108,7 @@ public abstract class EpoxyController {
     if (hasBuiltModelsEver) {
       requestDelayedModelBuild(0);
     } else {
-      cancelPendingModelBuild();
-      dispatchModelBuild();
+      buildModelsRunnable.run();
     }
   }
 
@@ -100,14 +122,14 @@ public abstract class EpoxyController {
    * delaying the model build too long is that models will not be in sync with the data or view, and
    * scrolling the view offscreen and back onscreen will cause the model to bind old data.
    * <p>
-   * If a model build was previously requested it will run as originally scheduled, and this new
-   * request will be dropped.
+   * If a previous request is still pending it will be removed in favor of this new delay
+   * <p>
+   * Any call to {@link #requestModelBuild()} will override a delayed request.
    * <p>
    * In most cases you should use {@link #requestModelBuild()} instead of this.
    *
    * @param delayMs The time in milliseconds to delay the model build by. Should be greater than or
-   *                equal to 0. Even if a delay of 0 is given the model build will be posted to the
-   *                next frame.
+   *                equal to 0. A value of 0 is equivalent to calling {@link #requestModelBuild()}
    */
   public void requestDelayedModelBuild(int delayMs) {
     if (isBuildingModels()) {
@@ -115,10 +137,16 @@ public abstract class EpoxyController {
           "Cannot call `requestDelayedModelBuild` from inside `buildModels`");
     }
 
-    if (!hasPendingModelBuildRequest) {
-      hasPendingModelBuildRequest = true;
-      handler.postDelayed(buildModelsRunnable, delayMs);
+    if (requestedModelBuildType == RequestedModelBuildType.DELAYED) {
+      cancelPendingModelBuild();
+    } else if (requestedModelBuildType == RequestedModelBuildType.NEXT_FRAME) {
+      return;
     }
+
+    requestedModelBuildType =
+        delayMs == 0 ? RequestedModelBuildType.NEXT_FRAME : RequestedModelBuildType.DELAYED;
+
+    handler.postDelayed(buildModelsRunnable, delayMs);
   }
 
   /**
@@ -126,39 +154,37 @@ public abstract class EpoxyController {
    * #requestModelBuild()}.
    */
   public void cancelPendingModelBuild() {
-    hasPendingModelBuildRequest = false;
-    handler.removeCallbacks(buildModelsRunnable);
+    if (requestedModelBuildType != RequestedModelBuildType.NONE) {
+      requestedModelBuildType = RequestedModelBuildType.NONE;
+      handler.removeCallbacks(buildModelsRunnable);
+    }
   }
 
   private final Runnable buildModelsRunnable = new Runnable() {
     @Override
     public void run() {
-      dispatchModelBuild();
+      cancelPendingModelBuild();
+      helper.resetAutoModels();
+
+      modelsBeingBuilt = new ControllerModelList(getExpectedModelCount());
+
+      timer.start();
+      buildModels();
+      addCurrentlyStagedModelIfExists();
+      timer.stop("Models built");
+
+      runInterceptors();
+      filterDuplicatesIfNeeded(modelsBeingBuilt);
+      modelsBeingBuilt.freeze();
+
+      timer.start();
+      adapter.setModels(modelsBeingBuilt);
+      timer.stop("Models diffed");
+
+      modelsBeingBuilt = null;
+      hasBuiltModelsEver = true;
     }
   };
-
-  private void dispatchModelBuild() {
-    hasPendingModelBuildRequest = false;
-    helper.resetAutoModels();
-
-    modelsBeingBuilt = new ControllerModelList(getExpectedModelCount());
-
-    timer.start();
-    buildModels();
-    addCurrentlyStagedModelIfExists();
-    timer.stop("Models built");
-
-    runInterceptors();
-    filterDuplicatesIfNeeded(modelsBeingBuilt);
-    modelsBeingBuilt.freeze();
-
-    timer.start();
-    adapter.setModels(modelsBeingBuilt);
-    timer.stop("Models diffed");
-
-    modelsBeingBuilt = null;
-    hasBuiltModelsEver = true;
-  }
 
   /** An estimate for how many models will be built in the next {@link #buildModels()} phase. */
   private int getExpectedModelCount() {
