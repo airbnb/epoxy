@@ -182,7 +182,6 @@ public abstract class EpoxyController {
       timer.stop("Models diffed");
 
       modelsBeingBuilt = null;
-      requestedModelBuildType = RequestedModelBuildType.NONE;
       hasBuiltModelsEver = true;
     }
   };
