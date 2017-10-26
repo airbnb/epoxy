@@ -858,7 +858,8 @@ internal class GeneratedModelWriter(
 
         val generatedModelClass = info.generatedName
 
-        val moduleName = dataBindingModuleLookup.getModuleName(info.superClassElement)
+        val moduleName = (info as? DataBindingModelInfo)?.moduleName
+                ?: dataBindingModuleLookup.getModuleName(info.superClassElement)
 
         val baseMethodBuilder = bindVariablesMethod.toBuilder()
 

@@ -24,7 +24,6 @@ dependencies {
     compile deps.squareJavaPoet
     compile deps.squareKotlinPoet
 
-    compileOnly deps.googleAutoService
     /** Provides the sun javac tools for looking up the R class trees. */
     compileOnly files(Jvm.current().getToolsJar())
 

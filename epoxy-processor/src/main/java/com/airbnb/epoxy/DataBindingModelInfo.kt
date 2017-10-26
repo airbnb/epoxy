@@ -10,7 +10,7 @@ internal class DataBindingModelInfo(
         private val typeUtils: Types,
         private val elementUtils: Elements,
         val layoutResource: ResourceValue,
-        private val moduleName: String,
+         val moduleName: String,
         private val layoutPrefix: String = ""
 ) : GeneratedModelInfo() {
     private val dataBindingClassName: ClassName
