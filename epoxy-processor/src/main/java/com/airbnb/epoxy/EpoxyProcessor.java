@@ -1,7 +1,5 @@
 package com.airbnb.epoxy;
 
-import com.google.auto.service.AutoService;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,7 +13,6 @@ import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedOptions;
 import javax.lang.model.SourceVersion;
@@ -37,7 +34,6 @@ import static com.airbnb.epoxy.EpoxyProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME;
  * since generated classes would have to be abstract in order to guarantee they compile, and that
  * reduces their usefulness and doesn't make as much sense to support.
  */
-@AutoService(Processor.class)
 @SupportedOptions({
     PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS,
     PROCESSOR_OPTION_VALIDATE_MODEL_USAGE,

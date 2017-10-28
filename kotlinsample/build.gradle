@@ -1,0 +1,40 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+
+  compileSdkVersion rootProject.COMPILE_SDK_VERSION
+  buildToolsVersion rootProject.ANDROID_BUILD_TOOLS_VERSION
+
+
+
+  defaultConfig {
+    applicationId "com.airbnb.epoxy.kotlinsample"
+    minSdkVersion rootProject.MIN_SDK_VERSION
+    targetSdkVersion rootProject.TARGET_SDK_VERSION
+    versionCode 1
+    versionName "1.0"
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+  }
+
+  dataBinding {
+    enabled = true
+  }
+
+}
+
+dependencies {
+  compile rootProject.deps.kotlin
+  compile project(':epoxy-databinding')
+
+  kapt project(':epoxy-processor')
+  kapt rootProject.deps.dataBindingCompiler
+
+  testCompile rootProject.deps.robolectric
+  testCompile rootProject.deps.junit
+  testCompile rootProject.deps.mockito
+}
