@@ -1,3 +1,7 @@
+# 2.7.2 (October 24, 2017)
+
+- **Fixed** Using `EpoxyDataBindingPattern` could result in the wrong package being used for the BR class in generated models.
+
 # 2.7.1 (October 24, 2017)
 Several fixes:
 

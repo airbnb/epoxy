@@ -19,9 +19,9 @@ Gradle is the only supported build configuration, so just add the dependency to 
 
 ```groovy
 dependencies {
-  compile 'com.airbnb.android:epoxy:2.7.1'
+  compile 'com.airbnb.android:epoxy:2.7.2'
   // Add the annotation processor if you are using Epoxy's annotations (recommended)
-  annotationProcessor 'com.airbnb.android:epoxy-processor:2.7.1'
+  annotationProcessor 'com.airbnb.android:epoxy-processor:2.7.2'
 }
 ```
 
