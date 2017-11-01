@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
@@ -156,7 +157,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
    *
    * @see TestStringOverloadsView#setTitle(CharSequence)
    */
-  public TestStringOverloadsViewModel_ title(CharSequence title) {
+  public TestStringOverloadsViewModel_ title(@NonNull CharSequence title) {
     onMutation();
     assignedAttributes_epoxyGeneratedModel.set(0);
     if (title == null) {
@@ -237,7 +238,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
    *
    * @see TestStringOverloadsView#setTitleViaValueShortcut(CharSequence)
    */
-  public TestStringOverloadsViewModel_ titleViaValueShortcut(CharSequence titleViaValueShortcut) {
+  public TestStringOverloadsViewModel_ titleViaValueShortcut(@NonNull CharSequence titleViaValueShortcut) {
     onMutation();
     assignedAttributes_epoxyGeneratedModel.set(2);
     if (titleViaValueShortcut == null) {

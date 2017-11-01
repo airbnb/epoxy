@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
@@ -122,7 +123,7 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
    *
    * @see TextPropDefaultView#textWithDefault(CharSequence)
    */
-  public TextPropDefaultViewModel_ textWithDefault(CharSequence textWithDefault) {
+  public TextPropDefaultViewModel_ textWithDefault(@NonNull CharSequence textWithDefault) {
     onMutation();
     assignedAttributes_epoxyGeneratedModel.set(0);
     if (textWithDefault == null) {

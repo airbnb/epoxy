@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Dimension;
 import android.support.annotation.IntRange;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
@@ -32,6 +33,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
 
   /**
    * Bitset index: 0 */
+  @NonNull
   private String stringValue_String;
 
   /**
@@ -76,6 +78,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
 
   /**
    * Bitset index: 7 */
+  @NonNull
   private Integer integerValue_Integer;
 
   /**
@@ -84,18 +87,22 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
 
   /**
    * Bitset index: 9 */
+  @NonNull
   private Boolean booleanValue_Boolean;
 
   /**
    * Bitset index: 10 */
+  @NonNull
   private String[] arrayValue_StringArray;
 
   /**
    * Bitset index: 11 */
+  @NonNull
   private List<String> listValue_List;
 
   /**
    * Bitset index: 12 */
+  @NonNull
   private View.OnClickListener clickListener_OnClickListener;
 
   /**
@@ -267,7 +274,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setStringValue(String)
    */
-  public TestManyTypesViewModel_ stringValue(String stringValue) {
+  public TestManyTypesViewModel_ stringValue(@NonNull String stringValue) {
     if (stringValue == null) {
       throw new IllegalArgumentException("stringValue cannot be null");
     }
@@ -277,6 +284,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
+  @NonNull
   public String stringValue() {
     return stringValue_String;
   }
@@ -398,7 +406,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setIntegerValue(Integer)
    */
-  public TestManyTypesViewModel_ integerValue(Integer integerValue) {
+  public TestManyTypesViewModel_ integerValue(@NonNull Integer integerValue) {
     if (integerValue == null) {
       throw new IllegalArgumentException("integerValue cannot be null");
     }
@@ -408,6 +416,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
+  @NonNull
   public Integer integerValue() {
     return integerValue_Integer;
   }
@@ -433,7 +442,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setBooleanValue(Boolean)
    */
-  public TestManyTypesViewModel_ booleanValue(Boolean booleanValue) {
+  public TestManyTypesViewModel_ booleanValue(@NonNull Boolean booleanValue) {
     if (booleanValue == null) {
       throw new IllegalArgumentException("booleanValue cannot be null");
     }
@@ -443,6 +452,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
+  @NonNull
   public Boolean booleanValue() {
     return booleanValue_Boolean;
   }
@@ -452,7 +462,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setArrayValue(String[])
    */
-  public TestManyTypesViewModel_ arrayValue(String[] arrayValue) {
+  public TestManyTypesViewModel_ arrayValue(@NonNull String[] arrayValue) {
     if (arrayValue == null) {
       throw new IllegalArgumentException("arrayValue cannot be null");
     }
@@ -462,6 +472,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
+  @NonNull
   public String[] arrayValue() {
     return arrayValue_StringArray;
   }
@@ -471,7 +482,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setListValue(List<String>)
    */
-  public TestManyTypesViewModel_ listValue(List<String> listValue) {
+  public TestManyTypesViewModel_ listValue(@NonNull List<String> listValue) {
     if (listValue == null) {
       throw new IllegalArgumentException("listValue cannot be null");
     }
@@ -481,12 +492,14 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
+  @NonNull
   public List<String> listValue() {
     return listValue_List;
   }
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
+  @NonNull
   public TestManyTypesViewModel_ clickListener(final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener) {
     assignedAttributes_epoxyGeneratedModel.set(12);
     onMutation();
@@ -504,7 +517,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setClickListener(View.OnClickListener)
    */
-  public TestManyTypesViewModel_ clickListener(View.OnClickListener clickListener) {
+  public TestManyTypesViewModel_ clickListener(@NonNull View.OnClickListener clickListener) {
     if (clickListener == null) {
       throw new IllegalArgumentException("clickListener cannot be null");
     }
@@ -514,6 +527,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
+  @NonNull
   public View.OnClickListener clickListener() {
     return clickListener_OnClickListener;
   }

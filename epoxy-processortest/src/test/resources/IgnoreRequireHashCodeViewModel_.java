@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import java.lang.CharSequence;
@@ -23,6 +24,7 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
 
   /**
    * Bitset index: 0 */
+  @NonNull
   private View.OnClickListener clickListener_OnClickListener;
 
   @Override
@@ -107,6 +109,7 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
+  @NonNull
   public IgnoreRequireHashCodeViewModel_ clickListener(final OnModelClickListener<IgnoreRequireHashCodeViewModel_, IgnoreRequireHashCodeView> clickListener) {
     assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
@@ -124,7 +127,7 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
    *
    * @see IgnoreRequireHashCodeView#setClickListener(View.OnClickListener)
    */
-  public IgnoreRequireHashCodeViewModel_ clickListener(View.OnClickListener clickListener) {
+  public IgnoreRequireHashCodeViewModel_ clickListener(@NonNull View.OnClickListener clickListener) {
     if (clickListener == null) {
       throw new IllegalArgumentException("clickListener cannot be null");
     }
@@ -134,6 +137,7 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
     return this;
   }
 
+  @NonNull
   public View.OnClickListener clickListener() {
     return clickListener_OnClickListener;
   }

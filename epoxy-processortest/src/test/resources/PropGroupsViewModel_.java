@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.IllegalArgumentException;
@@ -31,6 +32,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
 
   /**
    * Bitset index: 2 */
+  @NonNull
   private CharSequence somethingElse_CharSequence;
 
   /**
@@ -59,6 +61,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
 
   /**
    * Bitset index: 9 */
+  @NonNull
   private CharSequence primitiveAndObjectGroupWithPrimitiveDefault_CharSequence;
 
   /**
@@ -67,14 +70,17 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
 
   /**
    * Bitset index: 11 */
+  @NonNull
   private CharSequence anotherThing_CharSequence;
 
   /**
    * Bitset index: 12 */
+  @NonNull
   private String requiredGroup_String;
 
   /**
    * Bitset index: 13 */
+  @NonNull
   private CharSequence requiredGroup_CharSequence;
 
   @Override
@@ -416,7 +422,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
    *
    * @see PropGroupsView#setSomethingElse(CharSequence)
    */
-  public PropGroupsViewModel_ somethingElse(CharSequence somethingElse) {
+  public PropGroupsViewModel_ somethingElse(@NonNull CharSequence somethingElse) {
     if (somethingElse == null) {
       throw new IllegalArgumentException("somethingElse cannot be null");
     }
@@ -428,6 +434,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
     return this;
   }
 
+  @NonNull
   public CharSequence somethingElseCharSequence() {
     return somethingElse_CharSequence;
   }
@@ -545,7 +552,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
    *
    * @see PropGroupsView#primitiveAndObjectGroupWithPrimitiveDefault(CharSequence)
    */
-  public PropGroupsViewModel_ primitiveAndObjectGroupWithPrimitiveDefault(CharSequence primitiveAndObjectGroupWithPrimitiveDefault) {
+  public PropGroupsViewModel_ primitiveAndObjectGroupWithPrimitiveDefault(@NonNull CharSequence primitiveAndObjectGroupWithPrimitiveDefault) {
     if (primitiveAndObjectGroupWithPrimitiveDefault == null) {
       throw new IllegalArgumentException("primitiveAndObjectGroupWithPrimitiveDefault cannot be null");
     }
@@ -557,6 +564,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
     return this;
   }
 
+  @NonNull
   public CharSequence primitiveAndObjectGroupWithPrimitiveDefaultCharSequence() {
     return primitiveAndObjectGroupWithPrimitiveDefault_CharSequence;
   }
@@ -584,7 +592,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
    *
    * @see PropGroupsView#setAnotherThing(CharSequence)
    */
-  public PropGroupsViewModel_ anotherThing(CharSequence anotherThing) {
+  public PropGroupsViewModel_ anotherThing(@NonNull CharSequence anotherThing) {
     if (anotherThing == null) {
       throw new IllegalArgumentException("anotherThing cannot be null");
     }
@@ -596,6 +604,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
     return this;
   }
 
+  @NonNull
   public CharSequence anotherThingCharSequence() {
     return anotherThing_CharSequence;
   }
@@ -605,7 +614,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
    *
    * @see PropGroupsView#requiredGroup(String)
    */
-  public PropGroupsViewModel_ requiredGroup(String requiredGroup) {
+  public PropGroupsViewModel_ requiredGroup(@NonNull String requiredGroup) {
     if (requiredGroup == null) {
       throw new IllegalArgumentException("requiredGroup cannot be null");
     }
@@ -617,6 +626,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
     return this;
   }
 
+  @NonNull
   public String requiredGroupString() {
     return requiredGroup_String;
   }
@@ -626,7 +636,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
    *
    * @see PropGroupsView#requiredGroup(CharSequence)
    */
-  public PropGroupsViewModel_ requiredGroup(CharSequence requiredGroup) {
+  public PropGroupsViewModel_ requiredGroup(@NonNull CharSequence requiredGroup) {
     if (requiredGroup == null) {
       throw new IllegalArgumentException("requiredGroup cannot be null");
     }
@@ -638,6 +648,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
     return this;
   }
 
+  @NonNull
   public CharSequence requiredGroupCharSequence() {
     return requiredGroup_CharSequence;
   }

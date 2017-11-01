@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.IllegalArgumentException;
@@ -22,6 +23,7 @@ public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements 
 
   /**
    * Bitset index: 0 */
+  @NonNull
   private String clickListener_String;
 
   @Override
@@ -106,7 +108,7 @@ public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements 
    *
    * @see SavedStateView#setClickListener(String)
    */
-  public SavedStateViewModel_ clickListener(String clickListener) {
+  public SavedStateViewModel_ clickListener(@NonNull String clickListener) {
     if (clickListener == null) {
       throw new IllegalArgumentException("clickListener cannot be null");
     }
@@ -116,6 +118,7 @@ public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements 
     return this;
   }
 
+  @NonNull
   public String clickListener() {
     return clickListener_String;
   }
