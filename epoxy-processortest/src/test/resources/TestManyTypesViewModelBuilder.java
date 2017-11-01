@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import android.support.annotation.Dimension;
 import android.support.annotation.IntRange;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
@@ -20,7 +21,7 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder onUnbind(OnModelUnboundListener<TestManyTypesViewModel_, TestManyTypesView> listener);
 
-  TestManyTypesViewModelBuilder stringValue(String stringValue);
+  TestManyTypesViewModelBuilder stringValue(@NonNull String stringValue);
 
   TestManyTypesViewModelBuilder nullableStringValue(@Nullable String nullableStringValue);
 
@@ -34,19 +35,19 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder intWithMultipleAnnotations(@IntRange(from = 0, to = 200) @Dimension(unit = 0) int intWithMultipleAnnotations);
 
-  TestManyTypesViewModelBuilder integerValue(Integer integerValue);
+  TestManyTypesViewModelBuilder integerValue(@NonNull Integer integerValue);
 
   TestManyTypesViewModelBuilder boolValue(boolean boolValue);
 
-  TestManyTypesViewModelBuilder booleanValue(Boolean booleanValue);
+  TestManyTypesViewModelBuilder booleanValue(@NonNull Boolean booleanValue);
 
-  TestManyTypesViewModelBuilder arrayValue(String[] arrayValue);
+  TestManyTypesViewModelBuilder arrayValue(@NonNull String[] arrayValue);
 
-  TestManyTypesViewModelBuilder listValue(List<String> listValue);
+  TestManyTypesViewModelBuilder listValue(@NonNull List<String> listValue);
 
   TestManyTypesViewModelBuilder clickListener(final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener);
 
-  TestManyTypesViewModelBuilder clickListener(View.OnClickListener clickListener);
+  TestManyTypesViewModelBuilder clickListener(@NonNull View.OnClickListener clickListener);
 
   TestManyTypesViewModelBuilder title(@Nullable CharSequence title);
 

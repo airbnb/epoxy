@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import java.lang.CharSequence;
@@ -23,14 +24,17 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
 
   /**
    * Bitset index: 0 */
+  @NonNull
   private CharSequence title_CharSequence;
 
   /**
    * Bitset index: 1 */
+  @NonNull
   private View.OnClickListener clickListener_OnClickListener;
 
   /**
    * Bitset index: 2 */
+  @NonNull
   private CharSequence normalProp_CharSequence;
 
   @Override
@@ -134,7 +138,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
    *
    * @see DoNotHashView#setTitle(CharSequence)
    */
-  public DoNotHashViewModel_ title(CharSequence title) {
+  public DoNotHashViewModel_ title(@NonNull CharSequence title) {
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
     }
@@ -144,12 +148,14 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
     return this;
   }
 
+  @NonNull
   public CharSequence title() {
     return title_CharSequence;
   }
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
+  @NonNull
   public DoNotHashViewModel_ clickListener(final OnModelClickListener<DoNotHashViewModel_, DoNotHashView> clickListener) {
     assignedAttributes_epoxyGeneratedModel.set(1);
     onMutation();
@@ -167,7 +173,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
    *
    * @see DoNotHashView#setClickListener(View.OnClickListener)
    */
-  public DoNotHashViewModel_ clickListener(View.OnClickListener clickListener) {
+  public DoNotHashViewModel_ clickListener(@NonNull View.OnClickListener clickListener) {
     if (clickListener == null) {
       throw new IllegalArgumentException("clickListener cannot be null");
     }
@@ -177,6 +183,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
     return this;
   }
 
+  @NonNull
   public View.OnClickListener clickListener() {
     return clickListener_OnClickListener;
   }
@@ -186,7 +193,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
    *
    * @see DoNotHashView#normalProp(CharSequence)
    */
-  public DoNotHashViewModel_ normalProp(CharSequence normalProp) {
+  public DoNotHashViewModel_ normalProp(@NonNull CharSequence normalProp) {
     if (normalProp == null) {
       throw new IllegalArgumentException("normalProp cannot be null");
     }
@@ -196,6 +203,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
     return this;
   }
 
+  @NonNull
   public CharSequence normalProp() {
     return normalProp_CharSequence;
   }

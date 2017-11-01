@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
@@ -113,7 +114,7 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
    *
    * @see TestTextPropView#setTitle(CharSequence)
    */
-  public TestTextPropViewModel_ title(CharSequence title) {
+  public TestTextPropViewModel_ title(@NonNull CharSequence title) {
     onMutation();
     assignedAttributes_epoxyGeneratedModel.set(0);
     if (title == null) {

@@ -35,6 +35,8 @@ internal class StringOverloadWriter(
 
         if (nullable) {
             paramBuilder.addAnnotation(Nullable::class.java)
+        } else {
+            paramBuilder.addAnnotation(NonNull::class.java)
         }
 
         addJavaDoc(builder, false)

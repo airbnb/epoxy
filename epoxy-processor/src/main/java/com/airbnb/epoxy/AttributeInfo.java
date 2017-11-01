@@ -1,5 +1,7 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.Nullable;
+
 import com.airbnb.epoxy.GeneratedModelInfo.AttributeGroup;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.CodeBlock;
@@ -85,7 +87,7 @@ abstract class AttributeInfo {
    */
   private Boolean isNullable;
 
-  protected void setJavaDocString(String docComment) {
+  protected void setJavaDocString(@Nullable String docComment) {
     if (docComment != null && !docComment.trim().isEmpty()) {
       javaDoc = CodeBlock.of(docComment);
     } else {

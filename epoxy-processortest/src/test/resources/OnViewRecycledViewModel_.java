@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.IllegalArgumentException;
@@ -22,6 +23,7 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
 
   /**
    * Bitset index: 0 */
+  @NonNull
   private CharSequence title_CharSequence;
 
   @Override
@@ -108,7 +110,7 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
    *
    * @see OnViewRecycledView#setTitle(CharSequence)
    */
-  public OnViewRecycledViewModel_ title(CharSequence title) {
+  public OnViewRecycledViewModel_ title(@NonNull CharSequence title) {
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
     }
@@ -118,6 +120,7 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
     return this;
   }
 
+  @NonNull
   public CharSequence title() {
     return title_CharSequence;
   }

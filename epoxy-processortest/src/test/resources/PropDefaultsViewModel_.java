@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.IllegalArgumentException;
@@ -27,6 +28,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
 
   /**
    * Bitset index: 1 */
+  @NonNull
   private CharSequence noDefaultSoItIsRequired_CharSequence;
 
   /**
@@ -39,6 +41,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
 
   /**
    * Bitset index: 4 */
+  @NonNull
   private String objectWithDefault_String = PropDefaultsView.STRING_DEFAULT;
 
   /**
@@ -170,7 +173,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
    *
    * @see PropDefaultsView#noDefaultSoItIsRequired(CharSequence)
    */
-  public PropDefaultsViewModel_ noDefaultSoItIsRequired(CharSequence noDefaultSoItIsRequired) {
+  public PropDefaultsViewModel_ noDefaultSoItIsRequired(@NonNull CharSequence noDefaultSoItIsRequired) {
     if (noDefaultSoItIsRequired == null) {
       throw new IllegalArgumentException("noDefaultSoItIsRequired cannot be null");
     }
@@ -180,6 +183,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
     return this;
   }
 
+  @NonNull
   public CharSequence noDefaultSoItIsRequired() {
     return noDefaultSoItIsRequired_CharSequence;
   }
@@ -221,7 +225,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
    *
    * @see PropDefaultsView#objectWithDefault(String)
    */
-  public PropDefaultsViewModel_ objectWithDefault(String objectWithDefault) {
+  public PropDefaultsViewModel_ objectWithDefault(@NonNull String objectWithDefault) {
     if (objectWithDefault == null) {
       throw new IllegalArgumentException("objectWithDefault cannot be null");
     }
@@ -231,6 +235,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
     return this;
   }
 
+  @NonNull
   public String objectWithDefault() {
     return objectWithDefault_String;
   }
