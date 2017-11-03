@@ -32,7 +32,7 @@ internal class ParisStyleAttributeInfo(
         fieldName = PARIS_STYLE_ATTR_NAME
         modelName = modelInfo.generatedName.simpleName()
         modelPackageName = packageName
-        typeMirror = Utils.getTypeMirror(ClassNames.PARIS_STYLE, elements, types)
+        typeMirror = getTypeMirror(ClassNames.PARIS_STYLE, elements, types)
         styleBuilderClass = styleBuilderClassName
         ignoreRequireHashCode = true
         isGenerated = true

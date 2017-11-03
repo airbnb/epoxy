@@ -85,27 +85,6 @@ class Utils {
     }
   }
 
-  static TypeMirror getTypeMirror(ClassName className, Elements elements, Types types) {
-    Element classElement = getElementByName(className, elements, types);
-    if (classElement == null) {
-      throw new IllegalArgumentException("Unknown class: " + className);
-    }
-
-    return classElement.asType();
-  }
-
-  static TypeMirror getTypeMirror(Class<?> clazz, Elements elements) {
-    return getTypeMirror(clazz.getCanonicalName(), elements);
-  }
-
-  static TypeMirror getTypeMirror(String canonicalName, Elements elements) {
-    try {
-      return elements.getTypeElement(canonicalName).asType();
-    } catch (MirroredTypeException mte) {
-      return mte.getTypeMirror();
-    }
-  }
-
   static Element getElementByName(ClassName name, Elements elements, Types types) {
     String canonicalName = name.reflectionName().replace("$", ".");
     return getElementByName(canonicalName, elements, types);
@@ -288,7 +267,8 @@ class Utils {
       ParameterSpec param2 = params2.get(i);
 
       TypeMirror param1Type = types.erasure(param1.asType());
-      TypeMirror param2Type = types.erasure(getTypeMirror(param2.type.toString(), elements));
+      TypeMirror param2Type =
+          types.erasure(KotlinUtilsKt.getTypeMirror(param2.type.toString(), elements));
 
       // If a param is a type variable then we don't need an exact type match, it just needs to
       // be assignable
@@ -432,7 +412,7 @@ class Utils {
   }
 
   static boolean isType(Elements elements, Types types, TypeMirror typeMirror, Class<?> clazz) {
-    TypeMirror classType = getTypeMirror(clazz, elements);
+    TypeMirror classType = KotlinUtilsKt.getTypeMirror(clazz, elements);
     return types.isSameType(typeMirror, classType);
   }
 
