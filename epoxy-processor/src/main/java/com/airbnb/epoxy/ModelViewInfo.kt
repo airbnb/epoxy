@@ -136,7 +136,7 @@ internal class ModelViewInfo(
         }
 
         val typeMirror = bounds[0]
-        val viewType = Utils.getTypeMirror(ClassNames.ANDROID_VIEW, elements, typeUtils)
+        val viewType = getTypeMirror(ClassNames.ANDROID_VIEW, elements, typeUtils)
         return typeUtils.isAssignable(viewType, typeMirror) || typeUtils.isSubtype(typeMirror,
                                                                                    viewType)
     }

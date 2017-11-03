@@ -91,7 +91,7 @@ internal class ViewAttributeInfo(
         validatePropOptions(errorLogger, options, types, elements)
 
         if (generateStringOverloads) {
-            typeMirror = Utils.getTypeMirror(ClassNames.EPOXY_STRING_ATTRIBUTE_DATA, elements,
+            typeMirror = getTypeMirror(ClassNames.EPOXY_STRING_ATTRIBUTE_DATA, elements,
                                              types)
 
             if (codeToSetDefault.isPresent) {
@@ -236,7 +236,7 @@ internal class ViewAttributeInfo(
         }
 
         if (options.contains(Option.GenerateStringOverloads) && !types.isAssignable(
-                Utils.getTypeMirror(CharSequence::class.java, elements), typeMirror)) {
+                getTypeMirror(CharSequence::class.java, elements), typeMirror)) {
             errorLogger
                     .logError("Setters with %s option must be a CharSequence. (%s#%s)",
                               Option.GenerateStringOverloads, modelName, viewSetterMethodName)

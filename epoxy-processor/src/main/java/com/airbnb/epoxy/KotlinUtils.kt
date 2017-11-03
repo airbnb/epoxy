@@ -1,5 +1,6 @@
 package com.airbnb.epoxy
 
+import com.airbnb.epoxy.Utils.*
 import com.squareup.javapoet.*
 import javax.lang.model.*
 import javax.lang.model.element.*
@@ -7,12 +8,40 @@ import javax.lang.model.type.*
 import javax.lang.model.util.*
 import kotlin.reflect.*
 
+fun getTypeMirror(
+        className: ClassName,
+        elements: Elements,
+        types: Types
+): TypeMirror {
+    val classElement = getElementByName(className, elements, types)
+            ?: throw IllegalArgumentException("Unknown class: " + className)
+
+    return classElement.asType()
+}
+
+fun getTypeMirror(
+        clazz: Class<*>,
+        elements: Elements
+): TypeMirror? = getTypeMirror(clazz.canonicalName, elements)
+
+fun getTypeMirror(
+        canonicalName: String,
+        elements: Elements
+): TypeMirror? {
+    return try {
+        elements.getTypeElement(canonicalName)?.asType()
+    } catch (mte: MirroredTypeException) {
+        mte.typeMirror
+    }
+
+}
+
 fun Class<*>.asTypeElement(
         elements: Elements,
         types: Types
-): TypeElement {
-    val typeMirror = Utils.getTypeMirror(this, elements)
-    return types.asElement(typeMirror) as TypeElement
+): TypeElement? {
+    val typeMirror = getTypeMirror(this, elements) ?: return null
+    return types.asElement(typeMirror) as? TypeElement
 }
 
 fun KClass<*>.asTypeElement(
@@ -60,8 +89,12 @@ fun AnnotatedConstruct.hasAnyAnnotation(annotationClasses: List<Class<out Annota
     }
 }
 
+
 fun AnnotatedConstruct.hasAnnotation(annotationClass: KClass<out Annotation>)
         = hasAnyAnnotation(listOf(annotationClass.java))
+
+fun AnnotatedConstruct.hasAnnotation(annotationClass: Class<out Annotation>)
+        = hasAnyAnnotation(listOf(annotationClass))
 
 inline fun <reified T : Annotation> AnnotatedConstruct.annotation(): T?
         = getAnnotation(T::class.java)

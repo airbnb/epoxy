@@ -69,7 +69,7 @@ internal fun tryAddStyleBuilderAttribute(
                                               "StyleBuilder")
 
     val styleBuilderElement = try {
-        Utils.getTypeMirror(styleBuilderClassName, elements, types)
+        getTypeMirror(styleBuilderClassName, elements, types)
     } catch (e: IllegalArgumentException) {
         return false
     }
