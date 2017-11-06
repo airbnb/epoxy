@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
  * <p>
  * Alternatively, the {@link #options()} parameter can be used to configure a prop.
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.CLASS)
 public @interface ModelProp {
 

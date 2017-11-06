@@ -1,8 +1,13 @@
 package com.airbnb.epoxy
 
-import com.squareup.javapoet.*
-import javax.lang.model.element.*
-import javax.lang.model.util.*
+import com.squareup.javapoet.CodeBlock
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterSpec
+import com.squareup.javapoet.TypeName
+import com.squareup.javapoet.TypeSpec
+import javax.lang.model.element.Modifier
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 /**
  * Used for writing the java code for models generated with @ModelView.
@@ -186,9 +191,9 @@ internal class ModelViewWriter(
                     .filter { it.resetWithNull }
                     .forEach {
                         unbindBuilder.addStatement(
-                                "\$L.\$L((\$T) null)",
+                                getAttributeExpression(it, false),
                                 unbindParamName,
-                                it.viewSetterMethodName,
+                                it.viewAttributeName,
                                 it.typeMirror)
                     }
 
@@ -213,10 +218,21 @@ internal class ModelViewWriter(
     private fun buildCodeBlockToSetAttribute(
             boundObjectParam: ParameterSpec,
             viewAttribute: ViewAttributeInfo
-    ): CodeBlock {
-        return CodeBlock.of("\$L.\$L(\$L);\n", boundObjectParam.name,
-                            viewAttribute.viewSetterMethodName,
-                            getValueToSetOnView(viewAttribute, boundObjectParam))
+    ): CodeBlock = CodeBlock.of(getAttributeExpression(viewAttribute),
+            boundObjectParam.name,
+            viewAttribute.viewAttributeName,
+            getValueToSetOnView(viewAttribute,
+            boundObjectParam))
+
+    private fun getAttributeExpression(
+            attribute : ViewAttributeInfo,
+            isBind : Boolean = true) : String {
+        val lastElementForMethod = if (isBind) "(\$L);\n" else "((\$T) null)"
+        val lastElementForField = if (isBind) " = \$L;\n" else " = (\$L) null"
+
+        return "\$L.\$L" +
+                if (attribute.viewAttributeTypeName == ViewAttributeType.Field)
+                    lastElementForField else lastElementForMethod
     }
 
     private fun getValueToSetOnView(

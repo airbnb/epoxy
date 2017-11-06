@@ -105,19 +105,19 @@ internal class ModelViewProcessor(
     private fun processSetterAnnotations(roundEnv: RoundEnvironment) {
 
         for (propAnnotation in modelPropAnnotations) {
-            for (propMethod in roundEnv.getElementsAnnotatedWith(propAnnotation)) {
-                if (!validatePropElement(propMethod, propAnnotation)) {
+            for (prop in roundEnv.getElementsAnnotatedWith(propAnnotation.java)) {
+                if (!validatePropElement(prop, propAnnotation.java)) {
                     continue
                 }
 
-                val info = getModelInfoForMethodElement(propMethod)
+                val info = getModelInfoForPropElement(prop)
                 if (info == null) {
                     errorLogger.logError(
-                            "${propAnnotation.simpleName} annotation can only be used in classes annotated with ${ModelView::class.java.simpleName} (${propMethod.enclosingElement.simpleName}#${propMethod.simpleName})")
+                            "${propAnnotation.simpleName} annotation can only be used in classes annotated with ${ModelView::class.java.simpleName} (${prop.enclosingElement.simpleName}#${prop.simpleName})")
                     continue
                 }
 
-                info.addProp(propMethod as ExecutableElement)
+                info.addProp(prop)
             }
         }
     }
@@ -138,7 +138,7 @@ internal class ModelViewProcessor(
                 if (groupKey.isEmpty()) {
                     // Default to using the method name as the group name, so method overloads are grouped
                     // together by default
-                    groupKey = setterInfo.viewSetterMethodName
+                    groupKey = setterInfo.viewAttributeName
                 } else {
                     customGroups.add(groupKey)
                 }
@@ -157,7 +157,7 @@ internal class ModelViewProcessor(
                     if (it.size == 1) {
                         val attribute = it[0] as ViewAttributeInfo
                         errorLogger.logError(
-                                "Only one setter was included in the custom group '$customGroup' at ${viewInfo.viewElement.simpleName}#${attribute.viewSetterMethodName}. Groups should have at least 2 setters.")
+                                "Only one setter was included in the custom group '$customGroup' at ${viewInfo.viewElement.simpleName}#${attribute.viewAttributeName}. Groups should have at least 2 setters.")
                     }
                 }
             }
@@ -174,10 +174,34 @@ internal class ModelViewProcessor(
     }
 
     private fun validatePropElement(
-            methodElement: Element,
+            prop: Element,
             propAnnotation: Class<out Annotation>
-    ): Boolean =
-            validateExecutableElement(methodElement, propAnnotation, 1)
+    ): Boolean {
+        return when (prop) {
+            is ExecutableElement -> validateExecutableElement(prop, propAnnotation, 1)
+            is VariableElement -> validateVariableElement(prop, propAnnotation)
+            else -> {
+                errorLogger.logError(
+                        "%s annotations can only be on a method or a field(element: %s)",
+                        propAnnotation,
+                        prop.simpleName)
+                return false
+            }
+        }
+    }
+
+    private fun validateVariableElement(field: Element, annotationClass: Class<*>): Boolean {
+        var isValidField =  field.kind == ElementKind.FIELD
+                && !field.modifiers.contains(PRIVATE)
+                && !field.modifiers.contains(STATIC)
+
+        if (!isValidField) {
+            errorLogger.logError(
+                    "Field annotated with %s must not be static or private (field: %s)",
+                    annotationClass, field)
+        }
+        return isValidField
+    }
 
     private fun validateExecutableElement(
             element: Element,
@@ -215,7 +239,7 @@ internal class ModelViewProcessor(
                 continue
             }
 
-            val info = getModelInfoForMethodElement(recycleMethod)
+            val info = getModelInfoForPropElement(recycleMethod)
             if (info == null) {
                 errorLogger.logError("%s annotation can only be used in classes annotated with %s",
                                      OnViewRecycled::class.java, ModelView::class.java)
@@ -232,7 +256,7 @@ internal class ModelViewProcessor(
                 continue
             }
 
-            val info = getModelInfoForMethodElement(afterPropsMethod)
+            val info = getModelInfoForPropElement(afterPropsMethod)
             if (info == null) {
                 errorLogger.logError("%s annotation can only be used in classes annotated with %s",
                                      AfterPropsSet::class.java, ModelView::class.java)
@@ -279,12 +303,12 @@ internal class ModelViewProcessor(
                 // subclass if the subclass overrides it, since the subclass definition could include
                 // different annotation parameter settings, or we could end up with duplicates
 
-                forEachElementWithAnnotation(modelPropAnnotations) {
+                forEachElementWithAnnotation(modelPropAnnotations.map { it.java }) {
                     // todo Include view interfaces for the super class in this model
                     // 1. we should only do that if all methods in the super class are accessible to this (ie not package private and in a different package)
                     // 2. We also need to handle the case the that super view is abstract - right now interfaces are not generated for abstract views
                     // 3. If an abstract view only implements part of the interface it would mess up the way we check which methods count in the interface
-                    view.addPropIfNotExists(it as ExecutableElement)
+                    view.addPropIfNotExists(it)
                 }
 
                 forEachElementWithAnnotation(listOf(OnViewRecycled::class.java)) {
@@ -356,12 +380,12 @@ internal class ModelViewProcessor(
 
     fun hasModelsToWrite() = styleableModelsToWrite.isNotEmpty()
 
-    private fun getModelInfoForMethodElement(element: Element): ModelViewInfo? =
+    private fun getModelInfoForPropElement(element: Element): ModelViewInfo? =
             element.enclosingElement?.let { modelClassMap[it] }
 
     companion object {
         val modelPropAnnotations = listOf(ModelProp::class, TextProp::class,
-                                          CallbackProp::class).map { it.java }
+                                          CallbackProp::class)
     }
 }
 

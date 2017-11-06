@@ -1,6 +1,7 @@
 package com.airbnb.epoxy
 
 import com.airbnb.epoxy.ProcessorTestUtils.*
+import com.google.common.collect.ImmutableList
 import com.google.common.truth.Truth.*
 import com.google.testing.compile.*
 import com.google.testing.compile.JavaSourcesSubjectFactory.*
@@ -706,7 +707,67 @@ class ViewProcessorTest {
                                        "ModelViewExtendingSuperClass.java")
     }
 
-    fun assertViewsHaveModelsGenerated(vararg viewFiles: String) {
+    @Test
+    fun testFieldPropModelProp() {
+        assertGeneration("TestFieldPropModelPropView.java", "TestFieldPropModelPropViewModel_.java")
+    }
+
+    @Test
+    fun testFieldPropTextProp() {
+        assertGeneration("TestFieldPropTextPropView.java", "TestFieldPropTextPropViewModel_.java")
+    }
+
+    @Test
+    fun testFieldPropCallbackProp() {
+        assertGeneration("TestFieldPropCallbackPropView.java", "TestFieldPropCallbackPropViewModel_.java")
+    }
+
+    @Test
+    fun testFieldPropDoNotHashOption() {
+        assertGeneration("TestFieldPropDoNotHashOptionView.java", "TestFieldPropDoNotHashOptionViewModel_.java")
+    }
+
+    @Test
+    fun testFieldPropGenerateStringOverloadsOption() {
+        assertGeneration("TestFieldPropGenerateStringOverloadsOptionView.java", "TestFieldPropGenerateStringOverloadsOptionViewModel_.java")
+    }
+
+    @Test
+    fun testFieldPropNullOnRecycleOption() {
+        assertGeneration("TestFieldPropNullOnRecycleOptionView.java", "TestFieldPropNullOnRecycleOptionViewModel_.java")
+    }
+
+    @Test
+    fun testFieldPropIgnoreRequireHashCodeOption() {
+        assertGeneration("TestFieldPropIgnoreRequireHashCodeOptionView.java", "TestFieldPropIgnoreRequireHashCodeOptionViewModel_.java")
+    }
+
+    @Test
+    fun testFieldPropInheritFromParentView() {
+        assertGeneration(listOf("TestFieldPropChildView.java", "TestFieldPropParentView.java"), listOf("TestFieldPropChildViewModel_.java"))
+    }
+
+    @Test
+    fun testFieldPropThrowsIfPrivate() {
+        assertGenerationError("TestFieldPropThrowsIfPrivateView.java", "private")
+    }
+
+    @Test
+    fun testFieldPropThrowsIfStatic() {
+        assertGenerationError("TestFieldPropThrowsIfStaticView.java", "static")
+    }
+
+    @Test
+    fun testFieldPropStringOverloadsIfNotCharSequence() {
+        assertGenerationError("TestFieldPropStringOverloadsIfNotCharSequenceView.java", "must be a CharSequence")
+    }
+
+    @Test
+    fun testFieldPropTextPropIfNotCharSequence() {
+        assertGenerationError("TestTextPropIfNotCharSequenceView.java", "must be a CharSequence")
+    }
+
+    private fun assertViewsHaveModelsGenerated(vararg viewFiles: String) {
         assertGeneration(viewFiles.toList(), viewFiles.map { it.replace(".", "Model_.") })
     }
 
