@@ -76,11 +76,10 @@ internal class ModelViewWriter(
 
                         methodBuilder.beginControlFlow(
                                 "else")
-                                .addStatement(
-                                        "\$L.\$L(\$L)",
-                                        boundObjectParam.name,
-                                        defaultAttribute.viewSetterMethodName,
-                                        defaultAttribute.codeToSetDefault.value())
+                                .addCode(
+                                        buildCodeBlockToSetAttribute(
+                                                boundObjectParam,
+                                                defaultAttribute))
                                 .endControlFlow()
                     }
                 }
@@ -95,101 +94,63 @@ internal class ModelViewWriter(
         ) {
 
             for (attributeGroup in modelInfo.attributeGroups) {
+                val attributes = attributeGroup.attributes
+
                 methodBuilder.addCode("\n")
-                if (attributeGroup.attributes.size == 1) {
-                    val attributeInfo = attributeGroup.attributes[0]
 
-                    if (attributeInfo is ViewAttributeInfo && attributeInfo.generateStringOverloads) {
-                        methodBuilder
-                                .beginControlFlow(
-                                        "if (!\$L.equals(that.\$L))",
-                                        attributeInfo.getterCode(),
-                                        attributeInfo.getterCode())
-                    } else {
-                        GeneratedModelWriter.startNotEqualsControlFlow(
-                                methodBuilder,
-                                attributeInfo)
+                for ((index, attribute) in attributes.withIndex()) {
+                    val isAttributeSetCode = GeneratedModelWriter.isAttributeSetCode(
+                            modelInfo,
+                            attribute)
+
+                    methodBuilder.apply {
+                        beginControlFlow("${if (index != 0) "else" else ""} if (\$L)",
+                                         isAttributeSetCode)
+
+                        // For primitives we do a simple != check to check if the prop changed from the previous model.
+                        // For objects we first check if the prop was not set on the previous model to be able to skip the equals check in some cases
+                        if (attribute.isPrimitive) {
+                            GeneratedModelWriter.startNotEqualsControlFlow(this, attribute)
+                        } else {
+                            beginControlFlow("if (!that.\$L || \$L)", isAttributeSetCode,
+                                             GeneratedModelWriter.notEqualsCodeBlock(attribute))
+                        }
+
+                        addCode(buildCodeBlockToSetAttribute(
+                                boundObjectParam,
+                                attribute as ViewAttributeInfo))
+
+                        endControlFlow()
+                        endControlFlow()
+                    }
+                }
+
+                if (!attributeGroup.isRequired) {
+                    val defaultAttribute = attributeGroup.defaultAttribute as ViewAttributeInfo
+
+                    val ifConditionArgs = StringBuilder().apply {
+                        attributes.indices.forEach {
+                            if (it != 0) {
+                                append(" || ")
+                            }
+                            append("that.\$L")
+                        }
                     }
 
-                    methodBuilder.addCode(
-                            buildCodeBlockToSetAttribute(
-                                    boundObjectParam,
-                                    attributeInfo as ViewAttributeInfo))
+                    val ifConditionValues = attributes.map {
+                        GeneratedModelWriter.isAttributeSetCode(modelInfo, it)
+                    }
+
+                    methodBuilder
+                            .addComment(
+                                    "A value was not set so we should use the default value, but we only need to set it if the previous model had a custom value set.")
+                            .beginControlFlow("else if ($ifConditionArgs)",
+                                              *ifConditionValues.toTypedArray())
+                            .addCode(buildCodeBlockToSetAttribute(
+                                    boundObjectParam, defaultAttribute))
                             .endControlFlow()
-                } else {
-                    methodBuilder.beginControlFlow(
-                            "if (\$L.equals(that.\$L))",
-                            GeneratedModelWriter.ATTRIBUTES_BITSET_FIELD_NAME,
-                            GeneratedModelWriter.ATTRIBUTES_BITSET_FIELD_NAME)
-
-                    var firstAttribute = true
-                    for (attribute in attributeGroup.attributes) {
-                        if (!firstAttribute) {
-                            methodBuilder.addCode(
-                                    " else ")
-                        }
-                        firstAttribute = false
-
-                        methodBuilder.beginControlFlow(
-                                "if (\$L)",
-                                GeneratedModelWriter.isAttributeSetCode(
-                                        modelInfo,
-                                        attribute))
-
-                        GeneratedModelWriter.startNotEqualsControlFlow(
-                                methodBuilder,
-                                attribute)
-                                .addCode(
-                                        buildCodeBlockToSetAttribute(
-                                                boundObjectParam,
-                                                attribute as ViewAttributeInfo))
-                                .endControlFlow()
-                                .endControlFlow()
-                    }
-
-                    methodBuilder.endControlFlow()
-                            .beginControlFlow("else")
-
-                    firstAttribute = true
-                    for (attribute in attributeGroup.attributes) {
-                        if (!firstAttribute) {
-                            methodBuilder.addCode(
-                                    " else ")
-                        }
-                        firstAttribute = false
-
-                        methodBuilder.beginControlFlow(
-                                "if (\$L && !that.\$L)",
-                                GeneratedModelWriter.isAttributeSetCode(
-                                        modelInfo,
-                                        attribute),
-                                GeneratedModelWriter.isAttributeSetCode(
-                                        modelInfo,
-                                        attribute))
-                                .addCode(
-                                        buildCodeBlockToSetAttribute(
-                                                boundObjectParam,
-                                                attribute as ViewAttributeInfo))
-                                .endControlFlow()
-                    }
-
-                    if (!attributeGroup.isRequired) {
-                        val defaultAttribute = attributeGroup.defaultAttribute as ViewAttributeInfo
-
-                        methodBuilder.beginControlFlow(
-                                "else")
-                                .addStatement(
-                                        "\$L.\$L(\$L)",
-                                        boundObjectParam.name,
-                                        defaultAttribute.viewSetterMethodName,
-                                        defaultAttribute.codeToSetDefault.value())
-                                .endControlFlow()
-                    }
-
-                    methodBuilder.endControlFlow()
                 }
             }
-
         }
 
         override fun addToHandlePostBindMethod(

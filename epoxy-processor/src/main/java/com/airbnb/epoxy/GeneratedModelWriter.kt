@@ -1346,26 +1346,35 @@ internal class GeneratedModelWriter(
                 useObjectHashCode: Boolean,
                 type: TypeName,
                 accessorCode: String
-        ) = with(builder) {
-            if (useObjectHashCode) {
-                when {
-                    type === FLOAT -> beginControlFlow("if (Float.compare(that.\$L, \$L) != 0)",
-                                                       accessorCode, accessorCode)
-                    type === DOUBLE -> beginControlFlow("if (Double.compare(that.\$L, \$L) != 0)",
-                                                        accessorCode, accessorCode)
-                    type.isPrimitive -> beginControlFlow("if (\$L != that.\$L)",
-                                                         accessorCode, accessorCode)
-                    type is ArrayTypeName -> beginControlFlow("if (!\$T.equals(\$L, that.\$L))",
-                                                              TypeName.get(Arrays::class.java),
-                                                              accessorCode, accessorCode)
-                    else -> beginControlFlow(
-                            "if (\$L != null ? !\$L.equals(that.\$L) : that.\$L != null)",
-                            accessorCode, accessorCode, accessorCode, accessorCode)
-                }
-            } else {
-                beginControlFlow("if ((\$L == null) != (that.\$L == null))", accessorCode,
-                                 accessorCode)
+        ) = builder.beginControlFlow("if (\$L)",
+                                     notEqualsCodeBlock(useObjectHashCode, type, accessorCode))
+
+        fun notEqualsCodeBlock(attribute: AttributeInfo): CodeBlock {
+            val attributeType = attribute.typeName
+            val useHash = attributeType.isPrimitive || attribute.useInHash()
+            return notEqualsCodeBlock(useHash, attributeType, attribute.getterCode())
+        }
+
+        fun notEqualsCodeBlock(
+                useObjectHashCode: Boolean,
+                type: TypeName,
+                accessorCode: String
+        ): CodeBlock = if (useObjectHashCode) {
+            when {
+                type === FLOAT -> CodeBlock.of("(Float.compare(that.\$L, \$L) != 0)",
+                                               accessorCode, accessorCode)
+                type === DOUBLE -> CodeBlock.of("(Double.compare(that.\$L, \$L) != 0)",
+                                                accessorCode, accessorCode)
+                type.isPrimitive -> CodeBlock.of("(\$L != that.\$L)", accessorCode, accessorCode)
+                type is ArrayTypeName -> CodeBlock.of("!\$T.equals(\$L, that.\$L)",
+                                                      TypeName.get(Arrays::class.java),
+                                                      accessorCode, accessorCode)
+                else -> CodeBlock.of(
+                        "(\$L != null ? !\$L.equals(that.\$L) : that.\$L != null)",
+                        accessorCode, accessorCode, accessorCode, accessorCode)
             }
+        } else {
+            CodeBlock.of("((\$L == null) != (that.\$L == null))", accessorCode, accessorCode)
         }
 
         private fun addHashCodeLineForType(
