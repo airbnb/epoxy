@@ -54,7 +54,7 @@ public class TestCallbackPropViewModel_ extends EpoxyModel<TestCallbackPropView>
     TestCallbackPropViewModel_ that = (TestCallbackPropViewModel_) previousModel;
     super.bind(object);
 
-    if ((listener_OnClickListener == null) != (that.listener_OnClickListener == null)) {
+    if (((listener_OnClickListener == null) != (that.listener_OnClickListener == null))) {
       object.setListener(listener_OnClickListener);
     }
   }
@@ -86,7 +86,7 @@ public class TestCallbackPropViewModel_ extends EpoxyModel<TestCallbackPropView>
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
-    object.setListener(null);
+    object.setListener((View.OnClickListener) null);
   }
 
   /**
@@ -228,13 +228,13 @@ public class TestCallbackPropViewModel_ extends EpoxyModel<TestCallbackPropView>
       return false;
     }
     TestCallbackPropViewModel_ that = (TestCallbackPropViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((listener_OnClickListener == null) != (that.listener_OnClickListener == null)) {
+    if (((listener_OnClickListener == null) != (that.listener_OnClickListener == null))) {
       return false;
     }
     return true;

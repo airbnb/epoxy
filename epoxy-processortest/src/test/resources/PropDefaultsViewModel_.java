@@ -84,27 +84,27 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
     PropDefaultsViewModel_ that = (PropDefaultsViewModel_) previousModel;
     super.bind(object);
 
-    if (primitiveWithExplicitDefault_Int != that.primitiveWithExplicitDefault_Int) {
+    if ((primitiveWithExplicitDefault_Int != that.primitiveWithExplicitDefault_Int)) {
       object.primitiveWithExplicitDefault(primitiveWithExplicitDefault_Int);
     }
 
-    if (defaultsToNull_CharSequence != null ? !defaultsToNull_CharSequence.equals(that.defaultsToNull_CharSequence) : that.defaultsToNull_CharSequence != null) {
+    if ((defaultsToNull_CharSequence != null ? !defaultsToNull_CharSequence.equals(that.defaultsToNull_CharSequence) : that.defaultsToNull_CharSequence != null)) {
       object.defaultsToNull(defaultsToNull_CharSequence);
     }
 
-    if (noDefaultSoItIsRequired_CharSequence != null ? !noDefaultSoItIsRequired_CharSequence.equals(that.noDefaultSoItIsRequired_CharSequence) : that.noDefaultSoItIsRequired_CharSequence != null) {
+    if ((noDefaultSoItIsRequired_CharSequence != null ? !noDefaultSoItIsRequired_CharSequence.equals(that.noDefaultSoItIsRequired_CharSequence) : that.noDefaultSoItIsRequired_CharSequence != null)) {
       object.noDefaultSoItIsRequired(noDefaultSoItIsRequired_CharSequence);
     }
 
-    if (objectWithDefaultAndNullable_String != null ? !objectWithDefaultAndNullable_String.equals(that.objectWithDefaultAndNullable_String) : that.objectWithDefaultAndNullable_String != null) {
+    if ((objectWithDefaultAndNullable_String != null ? !objectWithDefaultAndNullable_String.equals(that.objectWithDefaultAndNullable_String) : that.objectWithDefaultAndNullable_String != null)) {
       object.objectWithDefaultAndNullable(objectWithDefaultAndNullable_String);
     }
 
-    if (objectWithDefault_String != null ? !objectWithDefault_String.equals(that.objectWithDefault_String) : that.objectWithDefault_String != null) {
+    if ((objectWithDefault_String != null ? !objectWithDefault_String.equals(that.objectWithDefault_String) : that.objectWithDefault_String != null)) {
       object.objectWithDefault(objectWithDefault_String);
     }
 
-    if (primitivesHaveImplicitDefaultsAndCannotBeRequired_Int != that.primitivesHaveImplicitDefaultsAndCannotBeRequired_Int) {
+    if ((primitivesHaveImplicitDefaultsAndCannotBeRequired_Int != that.primitivesHaveImplicitDefaultsAndCannotBeRequired_Int)) {
       object.primitivesHaveImplicitDefaultsAndCannotBeRequired(primitivesHaveImplicitDefaultsAndCannotBeRequired_Int);
     }
   }
@@ -356,28 +356,28 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
       return false;
     }
     PropDefaultsViewModel_ that = (PropDefaultsViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (defaultsToNull_CharSequence != null ? !defaultsToNull_CharSequence.equals(that.defaultsToNull_CharSequence) : that.defaultsToNull_CharSequence != null) {
+    if ((defaultsToNull_CharSequence != null ? !defaultsToNull_CharSequence.equals(that.defaultsToNull_CharSequence) : that.defaultsToNull_CharSequence != null)) {
       return false;
     }
-    if (noDefaultSoItIsRequired_CharSequence != null ? !noDefaultSoItIsRequired_CharSequence.equals(that.noDefaultSoItIsRequired_CharSequence) : that.noDefaultSoItIsRequired_CharSequence != null) {
+    if ((noDefaultSoItIsRequired_CharSequence != null ? !noDefaultSoItIsRequired_CharSequence.equals(that.noDefaultSoItIsRequired_CharSequence) : that.noDefaultSoItIsRequired_CharSequence != null)) {
       return false;
     }
-    if (primitivesHaveImplicitDefaultsAndCannotBeRequired_Int != that.primitivesHaveImplicitDefaultsAndCannotBeRequired_Int) {
+    if ((primitivesHaveImplicitDefaultsAndCannotBeRequired_Int != that.primitivesHaveImplicitDefaultsAndCannotBeRequired_Int)) {
       return false;
     }
-    if (primitiveWithExplicitDefault_Int != that.primitiveWithExplicitDefault_Int) {
+    if ((primitiveWithExplicitDefault_Int != that.primitiveWithExplicitDefault_Int)) {
       return false;
     }
-    if (objectWithDefault_String != null ? !objectWithDefault_String.equals(that.objectWithDefault_String) : that.objectWithDefault_String != null) {
+    if ((objectWithDefault_String != null ? !objectWithDefault_String.equals(that.objectWithDefault_String) : that.objectWithDefault_String != null)) {
       return false;
     }
-    if (objectWithDefaultAndNullable_String != null ? !objectWithDefaultAndNullable_String.equals(that.objectWithDefaultAndNullable_String) : that.objectWithDefaultAndNullable_String != null) {
+    if ((objectWithDefaultAndNullable_String != null ? !objectWithDefaultAndNullable_String.equals(that.objectWithDefaultAndNullable_String) : that.objectWithDefaultAndNullable_String != null)) {
       return false;
     }
     return true;

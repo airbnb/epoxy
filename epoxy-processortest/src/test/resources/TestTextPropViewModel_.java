@@ -58,7 +58,7 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
     TestTextPropViewModel_ that = (TestTextPropViewModel_) previousModel;
     super.bind(object);
 
-    if (!title_StringAttributeData.equals(that.title_StringAttributeData)) {
+    if ((title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null)) {
       object.setTitle(title_StringAttributeData.toString(object.getContext()));
     }
   }
@@ -261,13 +261,13 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
       return false;
     }
     TestTextPropViewModel_ that = (TestTextPropViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null) {
+    if ((title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null)) {
       return false;
     }
     return true;

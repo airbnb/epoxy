@@ -57,8 +57,8 @@
           <option name="ANNOTATION_PARAMETER_WRAP" value="1" />
         </JavaCodeStyleSettings>
         <JetCodeStyleSettings>
-          <option name="NAME_COUNT_TO_USE_STAR_IMPORT" value="1" />
-          <option name="NAME_COUNT_TO_USE_STAR_IMPORT_FOR_MEMBERS" value="1" />
+          <option name="NAME_COUNT_TO_USE_STAR_IMPORT" value="2147483647" />
+          <option name="NAME_COUNT_TO_USE_STAR_IMPORT_FOR_MEMBERS" value="2147483647" />
         </JetCodeStyleSettings>
         <MarkdownNavigatorCodeStyleSettings>
           <option name="RIGHT_MARGIN" value="72" />

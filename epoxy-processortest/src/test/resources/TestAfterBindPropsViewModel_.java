@@ -54,11 +54,11 @@ public class TestAfterBindPropsViewModel_ extends EpoxyModel<TestAfterBindPropsV
     TestAfterBindPropsViewModel_ that = (TestAfterBindPropsViewModel_) previousModel;
     super.bind(object);
 
-    if (flagSuper_Boolean != that.flagSuper_Boolean) {
+    if ((flagSuper_Boolean != that.flagSuper_Boolean)) {
       object.setFlagSuper(flagSuper_Boolean);
     }
 
-    if (flag_Boolean != that.flag_Boolean) {
+    if ((flag_Boolean != that.flag_Boolean)) {
       object.setFlag(flag_Boolean);
     }
   }
@@ -234,16 +234,16 @@ public class TestAfterBindPropsViewModel_ extends EpoxyModel<TestAfterBindPropsV
       return false;
     }
     TestAfterBindPropsViewModel_ that = (TestAfterBindPropsViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (flag_Boolean != that.flag_Boolean) {
+    if ((flag_Boolean != that.flag_Boolean)) {
       return false;
     }
-    if (flagSuper_Boolean != that.flagSuper_Boolean) {
+    if ((flagSuper_Boolean != that.flagSuper_Boolean)) {
       return false;
     }
     return true;

@@ -63,7 +63,7 @@ public class AutoLayoutModelViewMatchParentModel_ extends EpoxyModel<AutoLayoutM
     AutoLayoutModelViewMatchParentModel_ that = (AutoLayoutModelViewMatchParentModel_) previousModel;
     super.bind(object);
 
-    if (value_Int != that.value_Int) {
+    if ((value_Int != that.value_Int)) {
       object.setValue(value_Int);
     }
   }
@@ -219,13 +219,13 @@ public class AutoLayoutModelViewMatchParentModel_ extends EpoxyModel<AutoLayoutM
       return false;
     }
     AutoLayoutModelViewMatchParentModel_ that = (AutoLayoutModelViewMatchParentModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (value_Int != that.value_Int) {
+    if ((value_Int != that.value_Int)) {
       return false;
     }
     return true;

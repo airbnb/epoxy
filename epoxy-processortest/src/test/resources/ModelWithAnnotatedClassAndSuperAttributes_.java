@@ -170,13 +170,13 @@ public class ModelWithAnnotatedClassAndSuperAttributes_ extends ModelWithAnnotat
       return false;
     }
     ModelWithAnnotatedClassAndSuperAttributes_ that = (ModelWithAnnotatedClassAndSuperAttributes_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (superValue != that.superValue) {
+    if ((superValue != that.superValue)) {
       return false;
     }
     return true;

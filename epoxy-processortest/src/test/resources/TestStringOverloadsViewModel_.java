@@ -64,7 +64,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
       object.setTitle(title_List);
     }
     else {
-      object.setTitle((List<CharSequence>) null);
+      object.setTitle(title_List);
     }
   }
 
@@ -77,32 +77,23 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     TestStringOverloadsViewModel_ that = (TestStringOverloadsViewModel_) previousModel;
     super.bind(object);
 
-    if (!titleViaValueShortcut_StringAttributeData.equals(that.titleViaValueShortcut_StringAttributeData)) {
+    if ((titleViaValueShortcut_StringAttributeData != null ? !titleViaValueShortcut_StringAttributeData.equals(that.titleViaValueShortcut_StringAttributeData) : that.titleViaValueShortcut_StringAttributeData != null)) {
       object.setTitleViaValueShortcut(titleViaValueShortcut_StringAttributeData.toString(object.getContext()));
     }
 
-    if (assignedAttributes_epoxyGeneratedModel.equals(that.assignedAttributes_epoxyGeneratedModel)) {
-      if (assignedAttributes_epoxyGeneratedModel.get(0)) {
-        if (title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null) {
-          object.setTitle(title_StringAttributeData.toString(object.getContext()));
-        }
-      }
-       else if (assignedAttributes_epoxyGeneratedModel.get(1)) {
-        if (title_List != null ? !title_List.equals(that.title_List) : that.title_List != null) {
-          object.setTitle(title_List);
-        }
-      }
-    }
-    else {
-      if (assignedAttributes_epoxyGeneratedModel.get(0) && !that.assignedAttributes_epoxyGeneratedModel.get(0)) {
+    if (assignedAttributes_epoxyGeneratedModel.get(0)) {
+      if (!that.assignedAttributes_epoxyGeneratedModel.get(0) || (title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null)) {
         object.setTitle(title_StringAttributeData.toString(object.getContext()));
       }
-       else if (assignedAttributes_epoxyGeneratedModel.get(1) && !that.assignedAttributes_epoxyGeneratedModel.get(1)) {
+    }
+    else if (assignedAttributes_epoxyGeneratedModel.get(1)) {
+      if (!that.assignedAttributes_epoxyGeneratedModel.get(1) || (title_List != null ? !title_List.equals(that.title_List) : that.title_List != null)) {
         object.setTitle(title_List);
       }
-      else {
-        object.setTitle((List<CharSequence>) null);
-      }
+    }
+    // A value was not set so we should use the default value, but we only need to set it if the previous model had a custom value set.
+    else if (that.assignedAttributes_epoxyGeneratedModel.get(0) || that.assignedAttributes_epoxyGeneratedModel.get(1)) {
+      object.setTitle(title_List);
     }
   }
 
@@ -388,19 +379,19 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
       return false;
     }
     TestStringOverloadsViewModel_ that = (TestStringOverloadsViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null) {
+    if ((title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null)) {
       return false;
     }
-    if (title_List != null ? !title_List.equals(that.title_List) : that.title_List != null) {
+    if ((title_List != null ? !title_List.equals(that.title_List) : that.title_List != null)) {
       return false;
     }
-    if (titleViaValueShortcut_StringAttributeData != null ? !titleViaValueShortcut_StringAttributeData.equals(that.titleViaValueShortcut_StringAttributeData) : that.titleViaValueShortcut_StringAttributeData != null) {
+    if ((titleViaValueShortcut_StringAttributeData != null ? !titleViaValueShortcut_StringAttributeData.equals(that.titleViaValueShortcut_StringAttributeData) : that.titleViaValueShortcut_StringAttributeData != null)) {
       return false;
     }
     return true;

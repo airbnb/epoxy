@@ -170,13 +170,13 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation implemen
       return false;
     }
     ModelWithFieldAnnotation_ that = (ModelWithFieldAnnotation_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (title != null ? !title.equals(that.title) : that.title != null) {
+    if ((title != null ? !title.equals(that.title) : that.title != null)) {
       return false;
     }
     return true;

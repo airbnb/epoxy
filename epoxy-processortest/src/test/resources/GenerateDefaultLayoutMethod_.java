@@ -175,13 +175,13 @@ public class GenerateDefaultLayoutMethod_ extends GenerateDefaultLayoutMethod im
       return false;
     }
     GenerateDefaultLayoutMethod_ that = (GenerateDefaultLayoutMethod_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (value != that.value) {
+    if ((value != that.value)) {
       return false;
     }
     return true;

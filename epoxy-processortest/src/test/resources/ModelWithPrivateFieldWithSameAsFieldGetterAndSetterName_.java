@@ -170,13 +170,13 @@ public class ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ extends Mo
       return false;
     }
     ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_ that = (ModelWithPrivateFieldWithSameAsFieldGetterAndSetterName_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (isValue() != that.isValue()) {
+    if ((isValue() != that.isValue())) {
       return false;
     }
     return true;

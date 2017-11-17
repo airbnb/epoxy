@@ -98,57 +98,72 @@ internal class ModelViewWriter(
 
                 methodBuilder.addCode("\n")
 
-                for ((index, attribute) in attributes.withIndex()) {
-                    val isAttributeSetCode = GeneratedModelWriter.isAttributeSetCode(
-                            modelInfo,
-                            attribute)
+                if (attributes.size == 1) {
+                    val attribute = attributes.first()
 
                     methodBuilder.apply {
-                        beginControlFlow("${if (index != 0) "else" else ""} if (\$L)",
-                                         isAttributeSetCode)
-
-                        // For primitives we do a simple != check to check if the prop changed from the previous model.
-                        // For objects we first check if the prop was not set on the previous model to be able to skip the equals check in some cases
-                        if (attribute.isPrimitive) {
-                            GeneratedModelWriter.startNotEqualsControlFlow(this, attribute)
-                        } else {
-                            beginControlFlow("if (!that.\$L || \$L)", isAttributeSetCode,
-                                             GeneratedModelWriter.notEqualsCodeBlock(attribute))
-                        }
+                        GeneratedModelWriter.startNotEqualsControlFlow(this, attribute)
 
                         addCode(buildCodeBlockToSetAttribute(
                                 boundObjectParam,
                                 attribute as ViewAttributeInfo))
 
                         endControlFlow()
-                        endControlFlow()
                     }
-                }
+                } else {
 
-                if (!attributeGroup.isRequired) {
-                    val defaultAttribute = attributeGroup.defaultAttribute as ViewAttributeInfo
+                    for ((index, attribute) in attributes.withIndex()) {
+                        val isAttributeSetCode = GeneratedModelWriter.isAttributeSetCode(
+                                modelInfo,
+                                attribute)
 
-                    val ifConditionArgs = StringBuilder().apply {
-                        attributes.indices.forEach {
-                            if (it != 0) {
-                                append(" || ")
+                        methodBuilder.apply {
+                            beginControlFlow("${if (index != 0) "else " else ""}if (\$L)",
+                                             isAttributeSetCode)
+
+                            // For primitives we do a simple != check to check if the prop changed from the previous model.
+                            // For objects we first check if the prop was not set on the previous model to be able to skip the equals check in some cases
+                            if (attribute.isPrimitive) {
+                                GeneratedModelWriter.startNotEqualsControlFlow(this, attribute)
+                            } else {
+                                beginControlFlow("if (!that.\$L || \$L)", isAttributeSetCode,
+                                                 GeneratedModelWriter.notEqualsCodeBlock(attribute))
                             }
-                            append("that.\$L")
+
+                            addCode(buildCodeBlockToSetAttribute(
+                                    boundObjectParam,
+                                    attribute as ViewAttributeInfo))
+
+                            endControlFlow()
+                            endControlFlow()
                         }
                     }
 
-                    val ifConditionValues = attributes.map {
-                        GeneratedModelWriter.isAttributeSetCode(modelInfo, it)
-                    }
+                    if (!attributeGroup.isRequired) {
+                        val defaultAttribute = attributeGroup.defaultAttribute as ViewAttributeInfo
 
-                    methodBuilder
-                            .addComment(
-                                    "A value was not set so we should use the default value, but we only need to set it if the previous model had a custom value set.")
-                            .beginControlFlow("else if ($ifConditionArgs)",
-                                              *ifConditionValues.toTypedArray())
-                            .addCode(buildCodeBlockToSetAttribute(
-                                    boundObjectParam, defaultAttribute))
-                            .endControlFlow()
+                        val ifConditionArgs = StringBuilder().apply {
+                            attributes.indices.forEach {
+                                if (it != 0) {
+                                    append(" || ")
+                                }
+                                append("that.\$L")
+                            }
+                        }
+
+                        val ifConditionValues = attributes.map {
+                            GeneratedModelWriter.isAttributeSetCode(modelInfo, it)
+                        }
+
+                        methodBuilder
+                                .addComment(
+                                        "A value was not set so we should use the default value, but we only need to set it if the previous model had a custom value set.")
+                                .beginControlFlow("else if ($ifConditionArgs)",
+                                                  *ifConditionValues.toTypedArray())
+                                .addCode(buildCodeBlockToSetAttribute(
+                                        boundObjectParam, defaultAttribute))
+                                .endControlFlow()
+                    }
                 }
             }
         }
@@ -171,9 +186,10 @@ internal class ModelViewWriter(
                     .filter { it.resetWithNull }
                     .forEach {
                         unbindBuilder.addStatement(
-                                "\$L.\$L(null)",
+                                "\$L.\$L((\$T) null)",
                                 unbindParamName,
-                                it.viewSetterMethodName)
+                                it.viewSetterMethodName,
+                                it.typeMirror)
                     }
 
             addResetMethodsToBuilder(unbindBuilder,
