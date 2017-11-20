@@ -69,11 +69,6 @@ public class ViewWithAnnotationsForIntegrationTest extends View {
 
   }
 
-  @ModelProp(Option.DoNotHash)
-  public void setGroupWithNoDefault(Object url) {
-
-  }
-
   @ModelProp
   public void setGroupWithDefault(String url) {
 
