@@ -169,7 +169,7 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
       return;
     }
     ModelWithDataBindingBindingModel_ that = (ModelWithDataBindingBindingModel_) previousModel;
-    if (stringValue != null ? !stringValue.equals(that.stringValue) : that.stringValue != null) {
+    if ((stringValue != null ? !stringValue.equals(that.stringValue) : that.stringValue != null)) {
       binding.setVariable(BR.stringValue, stringValue);
     }
   }
@@ -195,13 +195,13 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
       return false;
     }
     ModelWithDataBindingBindingModel_ that = (ModelWithDataBindingBindingModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (stringValue != null ? !stringValue.equals(that.stringValue) : that.stringValue != null) {
+    if ((stringValue != null ? !stringValue.equals(that.stringValue) : that.stringValue != null)) {
       return false;
     }
     return true;

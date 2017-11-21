@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.airbnb.epoxy.CallbackProp;
 import com.airbnb.epoxy.ModelProp;
 import com.airbnb.epoxy.ModelProp.Option;
 import com.airbnb.epoxy.ModelView;
@@ -50,5 +51,36 @@ public class ViewWithAnnotationsForIntegrationTest extends View {
   @ModelProp(options = Option.GenerateStringOverloads, defaultValue = "DEFAULT_STRING")
   public void setNullableTextWithDefault(@Nullable CharSequence text) {
     nullableTextWithDefault = text;
+  }
+
+  @CallbackProp
+  @Override
+  public void setOnClickListener(@Nullable OnClickListener l) {
+    super.setOnClickListener(l);
+  }
+
+  @ModelProp
+  public void setGroupWithNoDefault(String url) {
+
+  }
+
+  @CallbackProp
+  public void setGroupWithNoDefault(@Nullable OnClickListener url) {
+
+  }
+
+  @ModelProp
+  public void setGroupWithDefault(String url) {
+
+  }
+
+  @CallbackProp
+  public void setGroupWithDefault(@Nullable OnClickListener url) {
+
+  }
+
+  @ModelProp
+  public void setGroupWithDefault(int url) {
+
   }
 }

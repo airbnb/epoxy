@@ -78,15 +78,15 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
     DoNotHashViewModel_ that = (DoNotHashViewModel_) previousModel;
     super.bind(object);
 
-    if ((clickListener_OnClickListener == null) != (that.clickListener_OnClickListener == null)) {
+    if (((clickListener_OnClickListener == null) != (that.clickListener_OnClickListener == null))) {
       object.setClickListener(clickListener_OnClickListener);
     }
 
-    if ((title_CharSequence == null) != (that.title_CharSequence == null)) {
+    if (((title_CharSequence == null) != (that.title_CharSequence == null))) {
       object.setTitle(title_CharSequence);
     }
 
-    if (normalProp_CharSequence != null ? !normalProp_CharSequence.equals(that.normalProp_CharSequence) : that.normalProp_CharSequence != null) {
+    if ((normalProp_CharSequence != null ? !normalProp_CharSequence.equals(that.normalProp_CharSequence) : that.normalProp_CharSequence != null)) {
       object.normalProp(normalProp_CharSequence);
     }
   }
@@ -304,19 +304,19 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
       return false;
     }
     DoNotHashViewModel_ that = (DoNotHashViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((title_CharSequence == null) != (that.title_CharSequence == null)) {
+    if (((title_CharSequence == null) != (that.title_CharSequence == null))) {
       return false;
     }
-    if ((clickListener_OnClickListener == null) != (that.clickListener_OnClickListener == null)) {
+    if (((clickListener_OnClickListener == null) != (that.clickListener_OnClickListener == null))) {
       return false;
     }
-    if (normalProp_CharSequence != null ? !normalProp_CharSequence.equals(that.normalProp_CharSequence) : that.normalProp_CharSequence != null) {
+    if ((normalProp_CharSequence != null ? !normalProp_CharSequence.equals(that.normalProp_CharSequence) : that.normalProp_CharSequence != null)) {
       return false;
     }
     return true;

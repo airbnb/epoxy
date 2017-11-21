@@ -174,55 +174,55 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
       object.setArrayValue(arrayValue_StringArray);
     }
 
-    if ((clickListener_OnClickListener == null) != (that.clickListener_OnClickListener == null)) {
+    if (((clickListener_OnClickListener == null) != (that.clickListener_OnClickListener == null))) {
       object.setClickListener(clickListener_OnClickListener);
     }
 
-    if (booleanValue_Boolean != null ? !booleanValue_Boolean.equals(that.booleanValue_Boolean) : that.booleanValue_Boolean != null) {
+    if ((booleanValue_Boolean != null ? !booleanValue_Boolean.equals(that.booleanValue_Boolean) : that.booleanValue_Boolean != null)) {
       object.setBooleanValue(booleanValue_Boolean);
     }
 
-    if (!title_StringAttributeData.equals(that.title_StringAttributeData)) {
+    if ((title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null)) {
       object.setTitle(title_StringAttributeData.toString(object.getContext()));
     }
 
-    if (stringValue_String != null ? !stringValue_String.equals(that.stringValue_String) : that.stringValue_String != null) {
+    if ((stringValue_String != null ? !stringValue_String.equals(that.stringValue_String) : that.stringValue_String != null)) {
       object.setStringValue(stringValue_String);
     }
 
-    if (nullableStringValue_String != null ? !nullableStringValue_String.equals(that.nullableStringValue_String) : that.nullableStringValue_String != null) {
+    if ((nullableStringValue_String != null ? !nullableStringValue_String.equals(that.nullableStringValue_String) : that.nullableStringValue_String != null)) {
       object.setNullableStringValue(nullableStringValue_String);
     }
 
-    if (intValueWithAnnotation_Int != that.intValueWithAnnotation_Int) {
+    if ((intValueWithAnnotation_Int != that.intValueWithAnnotation_Int)) {
       object.setIntValueWithAnnotation(intValueWithAnnotation_Int);
     }
 
-    if (intValueWithDimenTypeAnnotation_Int != that.intValueWithDimenTypeAnnotation_Int) {
+    if ((intValueWithDimenTypeAnnotation_Int != that.intValueWithDimenTypeAnnotation_Int)) {
       object.setIntValueWithDimenTypeAnnotation(intValueWithDimenTypeAnnotation_Int);
     }
 
-    if (intWithMultipleAnnotations_Int != that.intWithMultipleAnnotations_Int) {
+    if ((intWithMultipleAnnotations_Int != that.intWithMultipleAnnotations_Int)) {
       object.setIntWithMultipleAnnotations(intWithMultipleAnnotations_Int);
     }
 
-    if (integerValue_Integer != null ? !integerValue_Integer.equals(that.integerValue_Integer) : that.integerValue_Integer != null) {
+    if ((integerValue_Integer != null ? !integerValue_Integer.equals(that.integerValue_Integer) : that.integerValue_Integer != null)) {
       object.setIntegerValue(integerValue_Integer);
     }
 
-    if (listValue_List != null ? !listValue_List.equals(that.listValue_List) : that.listValue_List != null) {
+    if ((listValue_List != null ? !listValue_List.equals(that.listValue_List) : that.listValue_List != null)) {
       object.setListValue(listValue_List);
     }
 
-    if (intValue_Int != that.intValue_Int) {
+    if ((intValue_Int != that.intValue_Int)) {
       object.setIntValue(intValue_Int);
     }
 
-    if (intValueWithRangeAnnotation_Int != that.intValueWithRangeAnnotation_Int) {
+    if ((intValueWithRangeAnnotation_Int != that.intValueWithRangeAnnotation_Int)) {
       object.setIntValueWithRangeAnnotation(intValueWithRangeAnnotation_Int);
     }
 
-    if (boolValue_Boolean != that.boolValue_Boolean) {
+    if ((boolValue_Boolean != that.boolValue_Boolean)) {
       object.setBoolValue(boolValue_Boolean);
     }
   }
@@ -699,52 +699,52 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
       return false;
     }
     TestManyTypesViewModel_ that = (TestManyTypesViewModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (stringValue_String != null ? !stringValue_String.equals(that.stringValue_String) : that.stringValue_String != null) {
+    if ((stringValue_String != null ? !stringValue_String.equals(that.stringValue_String) : that.stringValue_String != null)) {
       return false;
     }
-    if (nullableStringValue_String != null ? !nullableStringValue_String.equals(that.nullableStringValue_String) : that.nullableStringValue_String != null) {
+    if ((nullableStringValue_String != null ? !nullableStringValue_String.equals(that.nullableStringValue_String) : that.nullableStringValue_String != null)) {
       return false;
     }
-    if (intValue_Int != that.intValue_Int) {
+    if ((intValue_Int != that.intValue_Int)) {
       return false;
     }
-    if (intValueWithAnnotation_Int != that.intValueWithAnnotation_Int) {
+    if ((intValueWithAnnotation_Int != that.intValueWithAnnotation_Int)) {
       return false;
     }
-    if (intValueWithRangeAnnotation_Int != that.intValueWithRangeAnnotation_Int) {
+    if ((intValueWithRangeAnnotation_Int != that.intValueWithRangeAnnotation_Int)) {
       return false;
     }
-    if (intValueWithDimenTypeAnnotation_Int != that.intValueWithDimenTypeAnnotation_Int) {
+    if ((intValueWithDimenTypeAnnotation_Int != that.intValueWithDimenTypeAnnotation_Int)) {
       return false;
     }
-    if (intWithMultipleAnnotations_Int != that.intWithMultipleAnnotations_Int) {
+    if ((intWithMultipleAnnotations_Int != that.intWithMultipleAnnotations_Int)) {
       return false;
     }
-    if (integerValue_Integer != null ? !integerValue_Integer.equals(that.integerValue_Integer) : that.integerValue_Integer != null) {
+    if ((integerValue_Integer != null ? !integerValue_Integer.equals(that.integerValue_Integer) : that.integerValue_Integer != null)) {
       return false;
     }
-    if (boolValue_Boolean != that.boolValue_Boolean) {
+    if ((boolValue_Boolean != that.boolValue_Boolean)) {
       return false;
     }
-    if (booleanValue_Boolean != null ? !booleanValue_Boolean.equals(that.booleanValue_Boolean) : that.booleanValue_Boolean != null) {
+    if ((booleanValue_Boolean != null ? !booleanValue_Boolean.equals(that.booleanValue_Boolean) : that.booleanValue_Boolean != null)) {
       return false;
     }
     if (!Arrays.equals(arrayValue_StringArray, that.arrayValue_StringArray)) {
       return false;
     }
-    if (listValue_List != null ? !listValue_List.equals(that.listValue_List) : that.listValue_List != null) {
+    if ((listValue_List != null ? !listValue_List.equals(that.listValue_List) : that.listValue_List != null)) {
       return false;
     }
-    if ((clickListener_OnClickListener == null) != (that.clickListener_OnClickListener == null)) {
+    if (((clickListener_OnClickListener == null) != (that.clickListener_OnClickListener == null))) {
       return false;
     }
-    if (title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null) {
+    if ((title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null)) {
       return false;
     }
     return true;

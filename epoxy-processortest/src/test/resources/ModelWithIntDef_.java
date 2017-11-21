@@ -176,13 +176,13 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
       return false;
     }
     ModelWithIntDef_ that = (ModelWithIntDef_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (type != that.type) {
+    if ((type != that.type)) {
       return false;
     }
     return true;

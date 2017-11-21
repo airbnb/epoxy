@@ -63,7 +63,7 @@ public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> i
     ModelViewSuperClassModel_ that = (ModelViewSuperClassModel_) previousModel;
     super.bind(object);
 
-    if (superClassValue_Int != that.superClassValue_Int) {
+    if ((superClassValue_Int != that.superClassValue_Int)) {
       object.superClassValue(superClassValue_Int);
     }
   }
@@ -221,13 +221,13 @@ public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> i
       return false;
     }
     ModelViewSuperClassModel_ that = (ModelViewSuperClassModel_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (superClassValue_Int != that.superClassValue_Int) {
+    if ((superClassValue_Int != that.superClassValue_Int)) {
       return false;
     }
     return true;

@@ -165,10 +165,10 @@ public class GenerateDefaultLayoutMethodNextParentLayout$WithLayout_ extends Gen
       return false;
     }
     GenerateDefaultLayoutMethodNextParentLayout$WithLayout_ that = (GenerateDefaultLayoutMethodNextParentLayout$WithLayout_) o;
-    if ((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null)) {
+    if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null)) {
+    if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
     return true;
