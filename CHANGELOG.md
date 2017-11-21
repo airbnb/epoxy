@@ -1,3 +1,7 @@
+# 2.7.3 (October 24, 2017)
+
+- **Fixed** When a model changed and a partial update was bound to an existing view the wrong values could be set for prop groups (https://github.com/airbnb/epoxy/pull/347)
+
 # 2.7.2 (October 24, 2017)
 
 - **Fixed** Using `EpoxyDataBindingPattern` could result in the wrong package being used for the BR class in generated models.
