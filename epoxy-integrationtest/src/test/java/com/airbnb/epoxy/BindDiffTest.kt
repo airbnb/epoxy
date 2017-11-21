@@ -16,7 +16,7 @@ import org.robolectric.annotation.Config
 @Config(constants = BuildConfig::class, sdk = intArrayOf(21))
 class BindDiffTest {
 
-    private fun validateDiff(
+    private inline fun validateDiff(
             model1Props: ViewWithAnnotationsForIntegrationTestModel_.() -> Unit,
             model2Props: ViewWithAnnotationsForIntegrationTestModel_.() -> Unit,
             viewCallVerifications: ViewWithAnnotationsForIntegrationTest.() -> Unit
@@ -36,10 +36,12 @@ class BindDiffTest {
                 model1Props = {
                     requiredText("hello")
                     groupWithNoDefault("text")
+                    groupWithDefault("text")
                 },
                 model2Props = {
                     requiredText("hello2")
                     groupWithNoDefault("text")
+                    groupWithDefault("text")
                 },
                 viewCallVerifications = {
                     setRequiredText("hello2")
