@@ -54,7 +54,8 @@ public class Carousel extends EpoxyRecyclerView {
   private static SnapHelperFactory defaultGlobalSnapHelperFactory = new SnapHelperFactory() {
 
     @Override
-    SnapHelper buildSnapHelper(Context context) {
+    @NonNull
+    public SnapHelper buildSnapHelper(Context context) {
       return new LinearSnapHelper();
     }
   };
@@ -117,7 +118,7 @@ public class Carousel extends EpoxyRecyclerView {
    * A Carousel subclass can implement {@link #getSnapHelperFactory()} to override the global
    * default.
    */
-  protected void setDefaultGlobalSnapHelperFactory(@Nullable SnapHelperFactory factory) {
+  public static void setDefaultGlobalSnapHelperFactory(@Nullable SnapHelperFactory factory) {
     defaultGlobalSnapHelperFactory = factory;
   }
 
@@ -296,7 +297,7 @@ public class Carousel extends EpoxyRecyclerView {
   }
 
   @ModelProp
-  public void setModels(List<? extends EpoxyModel<?>> models) {
+  public void setModels(@NonNull List<? extends EpoxyModel<?>> models) {
     super.setModels(models);
   }
 
@@ -312,6 +313,6 @@ public class Carousel extends EpoxyRecyclerView {
      * with a Carousel.
      */
     @NonNull
-    abstract SnapHelper buildSnapHelper(Context context);
+    public abstract SnapHelper buildSnapHelper(Context context);
   }
 }
