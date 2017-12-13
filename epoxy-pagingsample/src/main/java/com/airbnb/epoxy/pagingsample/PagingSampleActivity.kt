@@ -1,18 +1,23 @@
 package com.airbnb.epoxy.pagingsample
 
-import android.arch.paging.*
-import android.content.*
-import android.os.*
-import android.support.v7.app.*
-import android.support.v7.widget.*
-import android.widget.*
-import com.airbnb.epoxy.*
-import com.airbnb.epoxy.paging.*
-import android.arch.persistence.room.*;
-import kotlinx.coroutines.experimental.*
-import kotlinx.coroutines.experimental.android.*
-import org.jetbrains.anko.coroutines.experimental.*
-import java.util.concurrent.*
+import android.arch.paging.PagedList
+import android.arch.persistence.room.Room
+import android.content.Context
+import android.os.AsyncTask
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.widget.TextView
+import com.airbnb.epoxy.ModelView
+import com.airbnb.epoxy.TextProp
+import com.airbnb.epoxy.paging.PagingEpoxyController
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.coroutines.experimental.bg
+import java.util.concurrent.Executor
 
 class PagingSampleActivity : AppCompatActivity() {
 
@@ -37,21 +42,20 @@ class PagingSampleActivity : AppCompatActivity() {
                     db.userDao().insertAll(User(i))
                 }
 
-                return@bg PagedList.Builder<Int, User>().run {
-                    setDataSource(db.userDao().dataSource)
+                return@bg PagedList.Builder<Int, User>(
+                        db.userDao().dataSource.create(),
+                        PagedList.Config.Builder().run {
+                            setEnablePlaceholders(false)
+                            setPageSize(40)
+                            setInitialLoadSizeHint(80)
+                            setPrefetchDistance(50)
+                            build()
+                        }).run {
                     setMainThreadExecutor(UiThreadExecutor)
                     setBackgroundThreadExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-                    setConfig(PagedList.Config.Builder().run {
-                        setEnablePlaceholders(false)
-                        setPageSize(40)
-                        setInitialLoadSizeHint(80)
-                        setPrefetchDistance(50)
-                        build()
-                    })
                     build()
                 }
             }
-
 
             pagingController.setList(pagedList.await())
         }
