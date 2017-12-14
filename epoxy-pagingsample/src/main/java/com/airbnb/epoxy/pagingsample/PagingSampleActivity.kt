@@ -40,7 +40,7 @@ class PagingSampleActivity : AppCompatActivity() {
                 return@bg PagedList.Builder<Int, User>(
                         db.userDao().dataSource.create(),
                         PagedList.Config.Builder().run {
-                            setEnablePlaceholders(false)
+                            setEnablePlaceholders(true)
                             setPageSize(40)
                             setInitialLoadSizeHint(80)
                             setPrefetchDistance(50)
@@ -63,13 +63,15 @@ class TestController : PagingEpoxyController<User>() {
         setDebugLoggingEnabled(true)
     }
 
-    override fun buildModels(users: List<User>) {
+    override fun buildModels(users: List<User?>) {
         println("build ${users.size}")
 
         users.forEach {
-            pagingView {
-                id(it.uid)
-                name("Id: ${it.uid}")
+            if (it != null) {
+                pagingView {
+                    id(it.uid)
+                    name("Id: ${it.uid}")
+                }
             }
         }
     }
