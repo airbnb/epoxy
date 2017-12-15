@@ -82,7 +82,8 @@ public class EpoxyRecyclerView extends RecyclerView {
   public EpoxyRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
 
-    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.EpoxyRecyclerView, defStyleAttr, 0);
+    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.EpoxyRecyclerView,
+        defStyleAttr, 0);
     setItemSpacingPx(a.getDimensionPixelSize(R.styleable.EpoxyRecyclerView_itemSpacing, 0));
     a.recycle();
 
