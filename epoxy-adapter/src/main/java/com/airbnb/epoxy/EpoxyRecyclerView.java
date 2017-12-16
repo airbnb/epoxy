@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.CallSuper;
 import android.support.annotation.DimenRes;
 import android.support.annotation.Dimension;
@@ -13,6 +14,7 @@ import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.ViewGroup;
+import com.airbnb.viewmodeladapter.R;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -70,26 +72,27 @@ public class EpoxyRecyclerView extends RecyclerView {
   private EpoxyController epoxyController;
 
   public EpoxyRecyclerView(Context context) {
-    super(context);
-    init();
+    this(context, null);
   }
 
   public EpoxyRecyclerView(Context context, @Nullable AttributeSet attrs) {
-    super(context, attrs);
-    init();
+    this(context, attrs, 0);
   }
 
-  public EpoxyRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
-    super(context, attrs, defStyle);
+  public EpoxyRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+
+    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.EpoxyRecyclerView,
+        defStyleAttr, 0);
+    setItemSpacingPx(a.getDimensionPixelSize(R.styleable.EpoxyRecyclerView_itemSpacing, 0));
+    a.recycle();
+
     init();
   }
 
   @CallSuper
   protected void init() {
     setClipToPadding(false);
-
-    // TODO: (eli_hart 9/27/17) We could make an attr for item spacing for xml usage
-
     initViewPool();
   }
 
@@ -244,6 +247,8 @@ public class EpoxyRecyclerView extends RecyclerView {
    * <p>
    * This only works if a {@link LinearLayoutManager} or {@link GridLayoutManager} is used with this
    * RecyclerView.
+   * <p>
+   * This can also be set via the {@code app:itemSpacing} styleable attribute.
    *
    * @see #setItemSpacingDp(int)
    * @see #setItemSpacingRes(int)
