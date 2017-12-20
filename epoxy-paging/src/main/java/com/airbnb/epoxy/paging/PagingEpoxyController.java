@@ -114,11 +114,11 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
    * You can still build multiple model types like a normal EpoxyController, you are not restricted
    * to models that represent items in the list.
    */
-  protected abstract void buildModels(List<T> list);
+  protected abstract void buildModels(@NonNull List<T> list);
 
   @CallSuper
   @Override
-  protected void onModelBound(EpoxyViewHolder holder, EpoxyModel<?> boundModel,
+  protected void onModelBound(@NonNull EpoxyViewHolder holder, @NonNull EpoxyModel<?> boundModel,
       int positionWithinCurrentModels, @Nullable EpoxyModel<?> previouslyBoundModel) {
 
     int positionWithinList = positionWithinCurrentModels + lastBuiltLowerBound;
@@ -143,7 +143,7 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
 
   @CallSuper
   @Override
-  protected void onModelUnbound(EpoxyViewHolder holder, EpoxyModel<?> model) {
+  protected void onModelUnbound(@NonNull EpoxyViewHolder holder, @NonNull EpoxyModel<?> model) {
     numBoundModels--;
   }
 
@@ -184,6 +184,7 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
    * set with {@link #setList(List)}, the latest snapshot if a PagedList is set, or an empty list if
    * nothing was set.
    */
+  @NonNull
   public List<T> getCurrentList() {
     return this.list;
   }

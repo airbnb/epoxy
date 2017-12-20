@@ -45,7 +45,7 @@ internal class ModelViewWriter(
                     methodBuilder
                             .addCode(
                                     buildCodeBlockToSetAttribute(
-                                            boundObjectParam,
+                                            boundObjectParam.name,
                                             viewAttribute))
                 } else {
                     for (i in 0 until attrCount) {
@@ -71,7 +71,7 @@ internal class ModelViewWriter(
                         methodBuilder
                                 .addCode(
                                         buildCodeBlockToSetAttribute(
-                                                boundObjectParam,
+                                                boundObjectParam.name,
                                                 viewAttribute))
                                 .endControlFlow()
                     }
@@ -83,7 +83,7 @@ internal class ModelViewWriter(
                                 "else")
                                 .addCode(
                                         buildCodeBlockToSetAttribute(
-                                                boundObjectParam,
+                                                boundObjectParam.name,
                                                 defaultAttribute))
                                 .endControlFlow()
                     }
@@ -110,7 +110,7 @@ internal class ModelViewWriter(
                         GeneratedModelWriter.startNotEqualsControlFlow(this, attribute)
 
                         addCode(buildCodeBlockToSetAttribute(
-                                boundObjectParam,
+                                boundObjectParam.name,
                                 attribute as ViewAttributeInfo))
 
                         endControlFlow()
@@ -136,7 +136,7 @@ internal class ModelViewWriter(
                             }
 
                             addCode(buildCodeBlockToSetAttribute(
-                                    boundObjectParam,
+                                    boundObjectParam.name,
                                     attribute as ViewAttributeInfo))
 
                             endControlFlow()
@@ -166,7 +166,7 @@ internal class ModelViewWriter(
                                 .beginControlFlow("else if ($ifConditionArgs)",
                                                   *ifConditionValues.toTypedArray())
                                 .addCode(buildCodeBlockToSetAttribute(
-                                        boundObjectParam, defaultAttribute))
+                                        boundObjectParam.name, defaultAttribute))
                                 .endControlFlow()
                     }
                 }
@@ -190,11 +190,13 @@ internal class ModelViewWriter(
             modelInfo.viewAttributes
                     .filter { it.resetWithNull }
                     .forEach {
-                        unbindBuilder.addStatement(
-                                getAttributeExpression(it, false),
-                                unbindParamName,
-                                it.viewAttributeName,
-                                it.typeMirror)
+                        unbindBuilder.addCode(
+                                buildCodeBlockToSetAttribute(
+                                        objectName = unbindParamName,
+                                        attr = it,
+                                        setToNull = true
+                                )
+                        )
                     }
 
             addResetMethodsToBuilder(unbindBuilder,
@@ -209,40 +211,39 @@ internal class ModelViewWriter(
             }
 
             if (modelInfo.fullSpanSize) {
-                builder.addMethod(
-                        buildFullSpanSizeMethod())
+                builder.addMethod(buildFullSpanSizeMethod())
             }
         }
     }
 
     private fun buildCodeBlockToSetAttribute(
-            boundObjectParam: ParameterSpec,
-            viewAttribute: ViewAttributeInfo
-    ): CodeBlock = CodeBlock.of(getAttributeExpression(viewAttribute),
-            boundObjectParam.name,
-            viewAttribute.viewAttributeName,
-            getValueToSetOnView(viewAttribute,
-            boundObjectParam))
+            objectName: String,
+            attr: ViewAttributeInfo,
+            setToNull: Boolean = false
+    ): CodeBlock {
 
-    private fun getAttributeExpression(
-            attribute : ViewAttributeInfo,
-            isBind : Boolean = true) : String {
-        val lastElementForMethod = if (isBind) "(\$L);\n" else "((\$T) null)"
-        val lastElementForField = if (isBind) " = \$L;\n" else " = (\$L) null"
+        val expression = "\$L.\$L" + if (attr.viewAttributeTypeName == ViewAttributeType.Field) {
+            if (setToNull) " = (\$T) null" else " = \$L"
+        } else {
+            if (setToNull) "((\$T) null)" else "(\$L)"
+        }
 
-        return "\$L.\$L" +
-                if (attribute.viewAttributeTypeName == ViewAttributeType.Field)
-                    lastElementForField else lastElementForMethod
+        return CodeBlock.builder().addStatement(
+                expression,
+                objectName,
+                attr.viewAttributeName,
+                if (setToNull) attr.typeMirror else getValueToSetOnView(attr, objectName)
+        ).build()
     }
 
     private fun getValueToSetOnView(
             viewAttribute: ViewAttributeInfo,
-            boundObjectParam: ParameterSpec
+            objectName: String
     ): String {
         val fieldName = viewAttribute.getFieldName()
 
         return if (viewAttribute.generateStringOverloads) {
-            fieldName + ".toString(" + boundObjectParam.name + ".getContext())"
+            "$fieldName.toString($objectName.getContext())"
         } else {
             fieldName
         }

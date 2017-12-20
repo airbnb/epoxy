@@ -142,3 +142,4 @@ inline internal fun MethodSpec.Builder.addParameter(
 }
 
 internal fun KClass<*>.className() = ClassName.get(this.java)
+internal fun Class<*>.className() = ClassName.get(this)

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.RecyclerView;
@@ -290,7 +291,7 @@ public abstract class EpoxyController {
      * The models list must not be changed after this method returns. Doing so will throw an
      * exception.
      */
-    void intercept(List<EpoxyModel<?>> models);
+    void intercept(@NonNull List<EpoxyModel<?>> models);
   }
 
   /**
@@ -299,12 +300,12 @@ public abstract class EpoxyController {
    *
    * @see Interceptor#intercept(List)
    */
-  public void addInterceptor(Interceptor interceptor) {
+  public void addInterceptor(@NonNull Interceptor interceptor) {
     interceptors.add(interceptor);
   }
 
   /** Remove an interceptor that was added with {@link #addInterceptor(Interceptor)}. */
-  public void removeInterceptor(Interceptor interceptor) {
+  public void removeInterceptor(@NonNull Interceptor interceptor) {
     interceptors.remove(interceptor);
   }
 
@@ -328,7 +329,7 @@ public abstract class EpoxyController {
    * Add the model to this controller. Can only be called from inside {@link
    * EpoxyController#buildModels()}.
    */
-  protected void add(EpoxyModel<?> model) {
+  protected void add(@NonNull EpoxyModel<?> model) {
     model.addTo(this);
   }
 
@@ -336,7 +337,7 @@ public abstract class EpoxyController {
    * Add the models to this controller. Can only be called from inside {@link
    * EpoxyController#buildModels()}.
    */
-  protected void add(EpoxyModel<?>... modelsToAdd) {
+  protected void add(@NonNull EpoxyModel<?>... modelsToAdd) {
     modelsBeingBuilt.ensureCapacity(modelsBeingBuilt.size() + modelsToAdd.length);
 
     for (EpoxyModel<?> model : modelsToAdd) {
@@ -348,7 +349,7 @@ public abstract class EpoxyController {
    * Add the models to this controller. Can only be called from inside {@link
    * EpoxyController#buildModels()}.
    */
-  protected void add(List<? extends EpoxyModel<?>> modelsToAdd) {
+  protected void add(@NonNull List<? extends EpoxyModel<?>> modelsToAdd) {
     modelsBeingBuilt.ensureCapacity(modelsBeingBuilt.size() + modelsToAdd.size());
 
     for (EpoxyModel<?> model : modelsToAdd) {
@@ -538,11 +539,12 @@ public abstract class EpoxyController {
    * Get the underlying adapter built by this controller. Use this to get the adapter to set on a
    * RecyclerView, or to get information about models currently in use.
    */
+  @NonNull
   public EpoxyControllerAdapter getAdapter() {
     return adapter;
   }
 
-  public void onSaveInstanceState(Bundle outState) {
+  public void onSaveInstanceState(@NonNull Bundle outState) {
     adapter.onSaveInstanceState(outState);
   }
 
@@ -556,6 +558,7 @@ public abstract class EpoxyController {
    * EpoxyModel#getSpanSize(int, int, int)}. Make sure to also call {@link #setSpanCount(int)} so
    * the span count is correct.
    */
+  @NonNull
   public SpanSizeLookup getSpanSizeLookup() {
     return adapter.getSpanSizeLookup();
   }
@@ -583,7 +586,7 @@ public abstract class EpoxyController {
    * This is called when recoverable exceptions happen at runtime. They can be ignored and Epoxy
    * will recover, but you can override this to be aware of when they happen.
    */
-  protected void onExceptionSwallowed(RuntimeException exception) {
+  protected void onExceptionSwallowed(@NonNull RuntimeException exception) {
   }
 
   void onAttachedToRecyclerViewInternal(RecyclerView recyclerView) {
@@ -621,12 +624,12 @@ public abstract class EpoxyController {
   }
 
   /** Called when the controller's adapter is attach to a recyclerview. */
-  protected void onAttachedToRecyclerView(RecyclerView recyclerView) {
+  protected void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
 
   }
 
   /** Called when the controller's adapter is detached from a recyclerview. */
-  protected void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+  protected void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
 
   }
 
@@ -663,7 +666,8 @@ public abstract class EpoxyController {
    *                             process, and follows the same general conditions for all
    *                             recyclerview change payloads.
    */
-  protected void onModelBound(EpoxyViewHolder holder, EpoxyModel<?> boundModel, int position,
+  protected void onModelBound(@NonNull EpoxyViewHolder holder, @NonNull EpoxyModel<?> boundModel,
+      int position,
       @Nullable EpoxyModel<?> previouslyBoundModel) {
   }
 
@@ -672,7 +676,7 @@ public abstract class EpoxyController {
    * they want alerts on when a model is unbound. Alternatively you may attach a listener directly
    * to a generated model with model.onUnbind(...)
    */
-  protected void onModelUnbound(EpoxyViewHolder holder, EpoxyModel<?> model) {
+  protected void onModelUnbound(@NonNull EpoxyViewHolder holder, @NonNull EpoxyModel<?> model) {
 
   }
 
@@ -682,7 +686,8 @@ public abstract class EpoxyController {
    *
    * @see BaseEpoxyAdapter#onViewAttachedToWindow(EpoxyViewHolder)
    */
-  protected void onViewAttachedToWindow(EpoxyViewHolder holder, EpoxyModel<?> model) {
+  protected void onViewAttachedToWindow(@NonNull EpoxyViewHolder holder,
+      @NonNull EpoxyModel<?> model) {
 
   }
 
@@ -692,7 +697,8 @@ public abstract class EpoxyController {
    *
    * @see BaseEpoxyAdapter#onViewDetachedFromWindow(EpoxyViewHolder)
    */
-  protected void onViewDetachedFromWindow(EpoxyViewHolder holder, EpoxyModel<?> model) {
+  protected void onViewDetachedFromWindow(@NonNull EpoxyViewHolder holder,
+      @NonNull EpoxyModel<?> model) {
 
   }
 }

@@ -1,14 +1,29 @@
 package com.airbnb.epoxy
 
-import android.support.annotation.*
-import com.airbnb.epoxy.ModelProp.*
-import com.airbnb.epoxy.Utils.*
-import com.squareup.javapoet.*
-import org.jetbrains.annotations.*
+import android.support.annotation.NonNull
+import com.airbnb.epoxy.ModelProp.Option
+import com.airbnb.epoxy.Utils.capitalizeFirstLetter
+import com.airbnb.epoxy.Utils.getDefaultValue
+import com.airbnb.epoxy.Utils.isFieldPackagePrivate
+import com.airbnb.epoxy.Utils.removeSetPrefix
+import com.squareup.javapoet.AnnotationSpec
+import com.squareup.javapoet.ArrayTypeName
+import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.CodeBlock
+import com.squareup.javapoet.ParameterizedTypeName
+import com.squareup.javapoet.TypeName
+import com.squareup.javapoet.TypeVariableName
+import org.jetbrains.annotations.NotNull
 import java.util.*
-import javax.lang.model.element.*
-import javax.lang.model.type.*
-import javax.lang.model.util.*
+import javax.lang.model.element.Element
+import javax.lang.model.element.ElementKind
+import javax.lang.model.element.ExecutableElement
+import javax.lang.model.element.Modifier
+import javax.lang.model.element.TypeElement
+import javax.lang.model.element.VariableElement
+import javax.lang.model.type.TypeMirror
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 private val NOT_NULL_ANNOTATION_SPEC = AnnotationSpec.builder(NotNull::class.java).build()
 private val NON_NULL_ANNOTATION_SPEC = AnnotationSpec.builder(NonNull::class.java).build()
@@ -39,8 +54,11 @@ internal class ViewAttributeInfo(
         val callbackAnnotation = viewAttributeElement.getAnnotation(CallbackProp::class.java)
 
         val options = HashSet<Option>()
-        val param = if (viewAttributeElement is ExecutableElement) viewAttributeElement.parameters[0]
-        else viewAttributeElement as VariableElement
+        val param = when (viewAttributeElement) {
+            is ExecutableElement -> viewAttributeElement.parameters[0]
+            is VariableElement -> viewAttributeElement
+            else -> throw IllegalStateException("Unsuppported element type $viewAttributeElement")
+        }
 
         viewAttributeTypeName = getViewAttributeType(viewAttributeElement, errorLogger);
 
@@ -140,15 +158,13 @@ internal class ViewAttributeInfo(
     private fun getViewAttributeType(
             element: Element,
             errorLogger: ErrorLogger
-    ): ViewAttributeType? {
-        return when {
-            element.kind == ElementKind.METHOD -> ViewAttributeType.Method
-            element.kind == ElementKind.FIELD -> ViewAttributeType.Field
-            else -> {
-                errorLogger.logError("Element must be either method or field (element: %s)",
-                                     element)
-                null
-            }
+    ): ViewAttributeType? = when {
+        element.kind == ElementKind.METHOD -> ViewAttributeType.Method
+        element.kind == ElementKind.FIELD -> ViewAttributeType.Field
+        else -> {
+            errorLogger.logError("Element must be either method or field (element: %s)",
+                                 element)
+            null
         }
     }
 
@@ -297,11 +313,14 @@ internal class ViewAttributeInfo(
             typeName: TypeName
     ) {
         for (annotationMirror in paramElement.annotationMirrors) {
-            val elementClassName = ClassName.get(
-                    types.asElement(annotationMirror.annotationType) as TypeElement)
+            val annotationType = types.asElement(
+                    annotationMirror.annotationType) as? TypeElement ?: continue
 
-            if (elementClassName in ModelViewProcessor.modelPropAnnotations.map { it.className() })
+            val elementClassName = ClassName.get(annotationType)
+
+            if (elementClassName in ModelViewProcessor.modelPropAnnotations.map { it.className() }) {
                 continue
+            }
 
             val builder = AnnotationSpec.builder(elementClassName)
 
