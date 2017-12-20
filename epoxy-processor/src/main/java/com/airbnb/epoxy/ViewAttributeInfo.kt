@@ -13,27 +13,36 @@ import javax.lang.model.util.*
 private val NOT_NULL_ANNOTATION_SPEC = AnnotationSpec.builder(NotNull::class.java).build()
 private val NON_NULL_ANNOTATION_SPEC = AnnotationSpec.builder(NonNull::class.java).build()
 
+sealed class ViewAttributeType {
+    object Method : ViewAttributeType()
+    object Field : ViewAttributeType()
+}
+
 internal class ViewAttributeInfo(
         private val modelInfo: ModelViewInfo,
-        setterElementOnView: ExecutableElement,
+        viewAttributeElement: Element,
         types: Types,
         elements: Elements,
         errorLogger: ErrorLogger,
         resourceProcessor: ResourceProcessor
 ) : AttributeInfo() {
     val propName: String
-    val viewSetterMethodName: String
+    val viewAttributeName: String
     val resetWithNull: Boolean
     val generateStringOverloads: Boolean
+    val viewAttributeTypeName: ViewAttributeType?
     var constantFieldNameForDefaultValue: String? = null
 
     init {
-        val propAnnotation = setterElementOnView.getAnnotation(ModelProp::class.java)
-        val textAnnotation = setterElementOnView.getAnnotation(TextProp::class.java)
-        val callbackAnnotation = setterElementOnView.getAnnotation(CallbackProp::class.java)
+        val propAnnotation = viewAttributeElement.getAnnotation(ModelProp::class.java)
+        val textAnnotation = viewAttributeElement.getAnnotation(TextProp::class.java)
+        val callbackAnnotation = viewAttributeElement.getAnnotation(CallbackProp::class.java)
 
         val options = HashSet<Option>()
-        val param = setterElementOnView.parameters[0]
+        val param = if (viewAttributeElement is ExecutableElement) viewAttributeElement.parameters[0]
+        else viewAttributeElement as VariableElement
+
+        viewAttributeTypeName = getViewAttributeType(viewAttributeElement, errorLogger);
 
         groupKey = ""
         var defaultConstant = ""
@@ -46,7 +55,7 @@ internal class ViewAttributeInfo(
             val stringResValue = textAnnotation.defaultRes
             if (stringResValue != 0) {
                 val stringResource = resourceProcessor
-                        .getStringResourceInAnnotation(setterElementOnView, TextProp::class.java,
+                        .getStringResourceInAnnotation(viewAttributeElement, TextProp::class.java,
                                                        stringResValue)
                 codeToSetDefault.explicit = stringResource.code
             }
@@ -64,7 +73,7 @@ internal class ViewAttributeInfo(
         generateSetter = true
         generateGetter = true
         hasFinalModifier = false
-        packagePrivate = isFieldPackagePrivate(setterElementOnView)
+        packagePrivate = isFieldPackagePrivate(viewAttributeElement)
         isGenerated = true
 
         useInHash = !options.contains(Option.DoNotHash)
@@ -75,8 +84,8 @@ internal class ViewAttributeInfo(
         modelName = modelInfo.generatedName.simpleName()
         modelPackageName = modelInfo.generatedClassName.packageName()
 
-        this.viewSetterMethodName = setterElementOnView.simpleName.toString()
-        propName = removeSetPrefix(viewSetterMethodName)
+        this.viewAttributeName = viewAttributeElement.simpleName.toString()
+        propName = removeSetPrefix(viewAttributeName)
         typeMirror = param.asType()
 
         assignDefaultValue(defaultConstant, errorLogger, types)
@@ -84,15 +93,15 @@ internal class ViewAttributeInfo(
 
         // TODO: (eli_hart 9/26/17) Get the javadoc on the super method if this setter overrides
         // something and doesn't have its own javadoc
-        createJavaDoc(elements.getDocComment(setterElementOnView), codeToSetDefault,
+        createJavaDoc(elements.getDocComment(viewAttributeElement), codeToSetDefault,
                       constantFieldNameForDefaultValue,
-                      modelInfo.viewElement, typeMirror, viewSetterMethodName)
+                      modelInfo.viewElement, typeMirror, viewAttributeName)
 
         validatePropOptions(errorLogger, options, types, elements)
 
         if (generateStringOverloads) {
             typeMirror = getTypeMirror(ClassNames.EPOXY_STRING_ATTRIBUTE_DATA, elements,
-                                             types)
+                                       types)
 
             if (codeToSetDefault.isPresent) {
                 if (codeToSetDefault.explicit != null) {
@@ -127,6 +136,21 @@ internal class ViewAttributeInfo(
             } else {
                 super.isRequired()
             }
+
+    private fun getViewAttributeType(
+            element: Element,
+            errorLogger: ErrorLogger
+    ): ViewAttributeType? {
+        return when {
+            element.kind == ElementKind.METHOD -> ViewAttributeType.Method
+            element.kind == ElementKind.FIELD -> ViewAttributeType.Field
+            else -> {
+                errorLogger.logError("Element must be either method or field (element: %s)",
+                                     element)
+                null
+            }
+        }
+    }
 
     private fun assignNullability(
             paramElement: VariableElement,
@@ -181,7 +205,7 @@ internal class ViewAttributeInfo(
 
         errorLogger.logError(
                 "The default value for (%s#%s) could not be found. Expected a constant named '%s' in the " + "view class.",
-                modelInfo.viewElement.simpleName, viewSetterMethodName, defaultConstant)
+                modelInfo.viewElement.simpleName, viewAttributeName, defaultConstant)
     }
 
     private fun checkElementForConstant(
@@ -199,7 +223,7 @@ internal class ViewAttributeInfo(
 
                 errorLogger.logError(
                         "Default values for view props must be static, final, and not private. (%s#%s)",
-                        modelInfo.viewElement.simpleName, viewSetterMethodName)
+                        modelInfo.viewElement.simpleName, viewAttributeName)
                 return true
             }
 
@@ -207,7 +231,7 @@ internal class ViewAttributeInfo(
             if (!types.isAssignable(element.asType(), typeMirror)) {
                 errorLogger.logError(
                         "The default value for (%s#%s) must be a %s.",
-                        modelInfo.viewElement.simpleName, viewSetterMethodName, typeMirror)
+                        modelInfo.viewElement.simpleName, viewAttributeName, typeMirror)
                 return true
             }
             constantFieldNameForDefaultValue = constantName
@@ -232,21 +256,21 @@ internal class ViewAttributeInfo(
             errorLogger
                     .logError("Illegal to use both %s and %s options in an %s annotation. (%s#%s)",
                               Option.DoNotHash, Option.IgnoreRequireHashCode,
-                              ModelProp::class.java.simpleName, modelName, viewSetterMethodName)
+                              ModelProp::class.java.simpleName, modelName, viewAttributeName)
         }
 
         if (options.contains(Option.GenerateStringOverloads) && !types.isAssignable(
                 getTypeMirror(CharSequence::class.java, elements), typeMirror)) {
             errorLogger
                     .logError("Setters with %s option must be a CharSequence. (%s#%s)",
-                              Option.GenerateStringOverloads, modelName, viewSetterMethodName)
+                              Option.GenerateStringOverloads, modelName, viewAttributeName)
         }
 
         if (options.contains(Option.NullOnRecycle) && (!hasSetNullability() || !isNullable)) {
             errorLogger
                     .logError(
                             "Setters with %s option must have a type that is annotated with @Nullable. (%s#%s)",
-                            Option.NullOnRecycle, modelName, viewSetterMethodName)
+                            Option.NullOnRecycle, modelName, viewAttributeName)
         }
     }
 
@@ -273,8 +297,13 @@ internal class ViewAttributeInfo(
             typeName: TypeName
     ) {
         for (annotationMirror in paramElement.annotationMirrors) {
-            val annotationElement = types.asElement(annotationMirror.annotationType)
-            val builder = AnnotationSpec.builder(ClassName.get(annotationElement as TypeElement))
+            val elementClassName = ClassName.get(
+                    types.asElement(annotationMirror.annotationType) as TypeElement)
+
+            if (elementClassName in ModelViewProcessor.modelPropAnnotations.map { it.className() })
+                continue
+
+            val builder = AnnotationSpec.builder(elementClassName)
 
             for ((key, value) in annotationMirror
                     .elementValues) {
@@ -307,7 +336,7 @@ internal class ViewAttributeInfo(
             constantFieldNameForDefaultValue: String?,
             viewElement: TypeElement,
             typeMirror: TypeMirror,
-            viewSetterMethodName: String
+            viewAttributeName: String
     ) {
         setJavaDocString(docComment)
 
@@ -333,7 +362,12 @@ internal class ViewAttributeInfo(
             }
         }
 
-        builder.add("\n\n@see \$T#\$L(\$T)", viewElement.asType(), viewSetterMethodName, typeMirror)
+        if (viewAttributeTypeName == ViewAttributeType.Field) {
+            builder.add("\n\n@see \$T#\$L", viewElement.asType(), viewAttributeName)
+        } else {
+            builder.add("\n\n@see \$T#\$L(\$T)", viewElement.asType(), viewAttributeName,
+                        typeMirror)
+        }
 
         javaDoc = builder
                 .add("\n").build()
@@ -355,7 +389,7 @@ internal class ViewAttributeInfo(
     override fun toString(): String {
         return ("View Prop {"
                 + "view='" + modelInfo.viewElement.simpleName + '\''
-                + ", name='" + viewSetterMethodName + '\''
+                + ", name='" + viewAttributeName + '\''
                 + ", type=" + typeName
                 + '}')
     }

@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * This is the same as using {@link ModelProp} with the option {@link
  * com.airbnb.epoxy.ModelProp.Option#GenerateStringOverloads}
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.CLASS)
 public @interface TextProp {
 

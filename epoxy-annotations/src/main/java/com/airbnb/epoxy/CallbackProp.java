@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
  * Be aware that since this applies the option {@link com.airbnb.epoxy.ModelProp.Option#DoNotHash}
  * changing the value of the listener will not trigger an update to the view.
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.CLASS)
 public @interface CallbackProp {
 }

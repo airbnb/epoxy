@@ -60,7 +60,7 @@ internal class ModelViewInfo(
                 .filter { interfaceElement ->
                     // Only include the interface if the view has one of the interface methods annotated with a prop annotation
                     methodsOnView.any { viewMethod ->
-                        viewMethod.hasAnyAnnotation(ModelViewProcessor.modelPropAnnotations)
+                        viewMethod.hasAnyAnnotation(ModelViewProcessor.modelPropAnnotations.map { it.java })
                         && interfaceElement.executableElements().any { interfaceMethod ->
                             // To keep this simple we only compare name and ignore parameters, should be close enough
                              viewMethod.simpleName.toString() == interfaceMethod.simpleName.toString()
@@ -153,14 +153,14 @@ internal class ModelViewInfo(
         return ClassName.get(packageName, className)
     }
 
-    fun addProp(propMethod: ExecutableElement) {
-        addAttribute(ViewAttributeInfo(this, propMethod, typeUtils, elements, errorLogger,
+    fun addProp(prop: Element) {
+        addAttribute(ViewAttributeInfo(this, prop, typeUtils, elements, errorLogger,
                                        resourceProcessor))
     }
 
-    fun addPropIfNotExists(propMethod: ExecutableElement) {
+    fun addPropIfNotExists(prop: Element) {
         addAttributeIfNotExists(
-                ViewAttributeInfo(this, propMethod, typeUtils, elements, errorLogger,
+                ViewAttributeInfo(this, prop, typeUtils, elements, errorLogger,
                                   resourceProcessor))
     }
 
