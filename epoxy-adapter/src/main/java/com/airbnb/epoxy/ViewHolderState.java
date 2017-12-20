@@ -114,6 +114,10 @@ class ViewHolderState extends LongSparseArray<ViewState> implements Parcelable {
     ViewState state = get(holder.getItemId());
     if (state != null) {
       state.restore(holder.itemView);
+    } else {
+      // The first time a model is bound it won't have previous state. We need to make sure
+      // the view is reset to its initial state to clear any changes from previously bound models
+      holder.restoreInitialViewState();
     }
   }
 

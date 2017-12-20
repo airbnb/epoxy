@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.airbnb.epoxy.ViewHolderState.ViewState;
+
 import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
@@ -12,9 +14,24 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
   @SuppressWarnings("rawtypes") private EpoxyModel epoxyModel;
   private List<Object> payloads;
   private EpoxyHolder epoxyHolder;
+  @Nullable ViewHolderState.ViewState initialViewState;
 
-  public EpoxyViewHolder(View view) {
+  public EpoxyViewHolder(View view, boolean saveInitialState) {
     super(view);
+
+    if (saveInitialState) {
+      // We save the initial state of the view when it is created so that we can reset this initial
+      // state before a model is bound for the first time. Otherwise the view may carry over
+      // state from a previously bound view.
+      initialViewState = new ViewState();
+      initialViewState.save(itemView);
+    }
+  }
+
+  void restoreInitialViewState() {
+    if (initialViewState != null) {
+      initialViewState.restore(itemView);
+    }
   }
 
   public void bind(@SuppressWarnings("rawtypes") EpoxyModel model,

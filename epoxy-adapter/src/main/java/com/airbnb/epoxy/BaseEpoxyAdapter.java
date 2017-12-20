@@ -76,7 +76,7 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
   public EpoxyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     EpoxyModel<?> model = viewTypeManager.getModelForViewType(this, viewType);
     View view = model.buildView(parent);
-    return new EpoxyViewHolder(view);
+    return new EpoxyViewHolder(view, model.shouldSaveViewState());
   }
 
   @Override
@@ -86,16 +86,6 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
 
   @Override
   public void onBindViewHolder(EpoxyViewHolder holder, int position, List<Object> payloads) {
-    // A ViewHolder can be bound again even it is already bound and showing, like when it is on
-    // screen and is changed. In this case we need
-    // to carry the state of the previous view over to the new view. This may not be necessary if
-    // the viewholder is reused (see RecyclerView.ItemAnimator#canReuseUpdatedViewHolder)
-    // but we don't rely on that to be safe and to simplify
-    EpoxyViewHolder boundViewHolder = boundViewHolders.get(holder);
-    if (boundViewHolder != null) {
-      viewHolderState.save(boundViewHolder);
-    }
-
     EpoxyModel<?> modelToShow = getModelForPosition(position);
 
     EpoxyModel<?> previouslyBoundModel = null;
@@ -105,7 +95,13 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
 
     holder.bind(modelToShow, previouslyBoundModel, payloads, position);
 
-    viewHolderState.restore(holder);
+    if (payloads.isEmpty()) {
+      // We only apply saved state to the view on initial bind, not on model updates.
+      // Since view state should be independent of model props, we should not need to apply state
+      // again in this case. This simplifies a rebind on update
+      viewHolderState.restore(holder);
+    }
+
     boundViewHolders.put(holder);
 
     if (diffPayloadsEnabled()) {
