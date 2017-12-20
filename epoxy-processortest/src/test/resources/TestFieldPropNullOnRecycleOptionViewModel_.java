@@ -101,7 +101,7 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
-    object.value = (android.view.View.OnClickListener) null;
+    object.value = (View.OnClickListener) null;
   }
 
   /**

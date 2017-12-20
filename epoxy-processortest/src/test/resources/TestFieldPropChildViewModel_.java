@@ -119,7 +119,7 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
     }
-    object.value = (android.view.View.OnClickListener) null;
+    object.value = (View.OnClickListener) null;
   }
 
   /**

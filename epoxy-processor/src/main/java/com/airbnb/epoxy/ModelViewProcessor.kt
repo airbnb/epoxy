@@ -105,8 +105,8 @@ internal class ModelViewProcessor(
     private fun processSetterAnnotations(roundEnv: RoundEnvironment) {
 
         for (propAnnotation in modelPropAnnotations) {
-            for (prop in roundEnv.getElementsAnnotatedWith(propAnnotation.java)) {
-                if (!validatePropElement(prop, propAnnotation.java)) {
+            for (prop in roundEnv.getElementsAnnotatedWith(propAnnotation)) {
+                if (!validatePropElement(prop, propAnnotation)) {
                     continue
                 }
 
@@ -303,7 +303,7 @@ internal class ModelViewProcessor(
                 // subclass if the subclass overrides it, since the subclass definition could include
                 // different annotation parameter settings, or we could end up with duplicates
 
-                forEachElementWithAnnotation(modelPropAnnotations.map { it.java }) {
+                forEachElementWithAnnotation(modelPropAnnotations) {
                     // todo Include view interfaces for the super class in this model
                     // 1. we should only do that if all methods in the super class are accessible to this (ie not package private and in a different package)
                     // 2. We also need to handle the case the that super view is abstract - right now interfaces are not generated for abstract views
@@ -384,8 +384,8 @@ internal class ModelViewProcessor(
             element.enclosingElement?.let { modelClassMap[it] }
 
     companion object {
-        val modelPropAnnotations = listOf(ModelProp::class, TextProp::class,
-                                          CallbackProp::class)
+            val modelPropAnnotations = listOf(ModelProp::class, TextProp::class,
+                                          CallbackProp::class).map { it.java }
     }
 }
 

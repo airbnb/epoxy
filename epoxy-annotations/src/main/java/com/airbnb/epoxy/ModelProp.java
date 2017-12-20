@@ -12,6 +12,9 @@ import java.lang.annotation.Target;
  * This annotation should be used on setter methods within a custom view class. Setters annotated
  * with this will have a corresponding field on the generated model.
  * <p>
+ * Alternatively, if your setter has no side effects, you can use this annotation on a field to have
+ * Epoxy set that field directly and avoid the boiler plate of a setter.
+ * <p>
  * For convenience you can use {@link TextProp} instead for props representing text.
  * <p>
  * Similarly you can use {@link CallbackProp} for props representing listeners or callbacks.

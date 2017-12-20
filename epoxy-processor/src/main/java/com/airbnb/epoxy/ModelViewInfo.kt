@@ -1,10 +1,18 @@
 package com.airbnb.epoxy
 
-import com.airbnb.epoxy.Utils.*
-import com.squareup.javapoet.*
-import javax.lang.model.element.*
-import javax.lang.model.type.*
-import javax.lang.model.util.*
+import com.airbnb.epoxy.Utils.isEpoxyModel
+import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.ParameterizedTypeName
+import com.squareup.javapoet.TypeName
+import javax.lang.model.element.Element
+import javax.lang.model.element.Modifier
+import javax.lang.model.element.Parameterizable
+import javax.lang.model.element.TypeElement
+import javax.lang.model.type.DeclaredType
+import javax.lang.model.type.MirroredTypeException
+import javax.lang.model.type.TypeMirror
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 internal class ModelViewInfo(
         val viewElement: TypeElement,
@@ -60,10 +68,10 @@ internal class ModelViewInfo(
                 .filter { interfaceElement ->
                     // Only include the interface if the view has one of the interface methods annotated with a prop annotation
                     methodsOnView.any { viewMethod ->
-                        viewMethod.hasAnyAnnotation(ModelViewProcessor.modelPropAnnotations.map { it.java })
-                        && interfaceElement.executableElements().any { interfaceMethod ->
+                        viewMethod.hasAnyAnnotation(ModelViewProcessor.modelPropAnnotations)
+                                && interfaceElement.executableElements().any { interfaceMethod ->
                             // To keep this simple we only compare name and ignore parameters, should be close enough
-                             viewMethod.simpleName.toString() == interfaceMethod.simpleName.toString()
+                            viewMethod.simpleName.toString() == interfaceMethod.simpleName.toString()
                         }
                     }
                 }
