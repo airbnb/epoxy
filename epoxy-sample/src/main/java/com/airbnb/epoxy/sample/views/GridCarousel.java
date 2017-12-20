@@ -8,7 +8,7 @@ import com.airbnb.epoxy.Carousel;
 import com.airbnb.epoxy.ModelView;
 import com.airbnb.epoxy.ModelView.Size;
 
-@ModelView(autoLayout = Size.MATCH_WIDTH_WRAP_HEIGHT)
+@ModelView(saveViewState = true, autoLayout = Size.MATCH_WIDTH_WRAP_HEIGHT)
 public class GridCarousel extends Carousel {
   private static final int SPAN_COUNT = 2;
 
