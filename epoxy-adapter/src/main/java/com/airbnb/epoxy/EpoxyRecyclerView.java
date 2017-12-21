@@ -1,13 +1,16 @@
 package com.airbnb.epoxy;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build.VERSION;
 import android.support.annotation.CallSuper;
 import android.support.annotation.DimenRes;
 import android.support.annotation.Dimension;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.Px;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -102,8 +105,7 @@ public class EpoxyRecyclerView extends RecyclerView {
    * https://github.com/airbnb/epoxy/wiki/Avoiding-Memory-Leaks#parent-view
    * <p>
    * The default is true, but you can disable this if you don't want your adapter detached
-   * automatically. A main case to disable this is for nested Carousels where the carousel may be
-   * detached and reattached to the screen without necessarily being rebound.
+   * automatically.
    * <p>
    * If the adapter is removed via this setting, it will be re-set on the RecyclerView if the
    * RecyclerView is re-attached to the window at a later point.
@@ -192,7 +194,7 @@ public class EpoxyRecyclerView extends RecyclerView {
         // finish iterating to remove any old contexts
       } else {
         // A pool from a different activity, it should be removed soon once the activity reference
-        // is cleared, but until then we can at least clear the pool references, which may
+        // is GC'd, but until then we can at least clear the pool references, which may
         // be keeping the activity from getting GC'd
         poolReference.clearIfNotInUse();
       }
@@ -524,15 +526,6 @@ public class EpoxyRecyclerView extends RecyclerView {
       } else {
         removeAdapter();
       }
-    } else {
-      clearPoolIfNotInUse();
-    }
-  }
-
-  private void clearPoolIfNotInUse() {
-    RecycledViewPool pool = getRecycledViewPool();
-    if (pool instanceof UnboundedViewPool) {
-      ((UnboundedViewPool) pool).clearIfNotInUse();
     }
   }
 
@@ -547,7 +540,13 @@ public class EpoxyRecyclerView extends RecyclerView {
       // attached again.
       removedAdapter = currentAdapter;
     }
-    clearPoolIfNotInUse();
+
+    // If all adapters are removed then the activity may be destroyed and we can clear the view
+    // pool to free memory
+    RecycledViewPool pool = getRecycledViewPool();
+    if (pool instanceof UnboundedViewPool) {
+      ((UnboundedViewPool) pool).clearIfNotInUse(getContext());
+    }
   }
 
   private void clearRemovedAdapter() {
@@ -572,7 +571,7 @@ public class EpoxyRecyclerView extends RecyclerView {
 
     void clearIfNotInUse() {
       if (viewPool instanceof UnboundedViewPool) {
-        ((UnboundedViewPool) viewPool).clearIfNotInUse();
+        ((UnboundedViewPool) viewPool).clearIfNotInUse(context());
       }
     }
   }
@@ -593,9 +592,31 @@ public class EpoxyRecyclerView extends RecyclerView {
       scrapHeaps.clear();
     }
 
-    void clearIfNotInUse() {
-      if (numRecyclerViewsAttachedToWindow == 0) {
+    void clearIfNotInUse(@Nullable Context context) {
+      if (numRecyclerViewsAttachedToWindow == 0 || isActivityDestroyed(context)) {
         clear();
+      }
+    }
+
+    private static boolean isActivityDestroyed(@Nullable Context context) {
+      if (context == null) {
+        return true;
+      }
+
+      if (!(context instanceof Activity)) {
+        return false;
+      }
+
+      Activity activity = (Activity) context;
+      if (activity.isFinishing()) {
+        return true;
+      }
+
+      if (VERSION.SDK_INT >= 17) {
+        return activity.isDestroyed();
+      } else {
+        // Use this as a proxy for being destroyed on older devices
+        return !ViewCompat.isAttachedToWindow(activity.getWindow().getDecorView());
       }
     }
 
