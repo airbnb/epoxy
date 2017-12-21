@@ -296,6 +296,74 @@ public class Carousel extends EpoxyRecyclerView {
     setItemSpacingPx(px);
   }
 
+  @ModelProp(group = "padding")
+  public void setPadding(@Nullable Padding padding) {
+    if (padding == null) {
+      setPaddingDp(0);
+    } else {
+      setPadding(padding.leftPx, padding.topPx, padding.rightPx, padding.bottomPx);
+      setItemSpacingPx(padding.itemSpacingPx);
+    }
+  }
+
+  public static class Padding {
+    @Px public final int topPx;
+    @Px public final int bottomPx;
+    @Px public final int leftPx;
+    @Px public final int rightPx;
+    @Px public final int itemSpacingPx;
+
+    public Padding(@Px int padding, @Px int itemSpacingPx) {
+      this(padding, padding, padding, padding, itemSpacingPx);
+    }
+
+    public Padding(@Px int topPx, @Px int bottomPx, @Px int leftPx, @Px int rightPx,
+        @Px int itemSpacingPx) {
+
+      this.topPx = topPx;
+      this.bottomPx = bottomPx;
+      this.leftPx = leftPx;
+      this.rightPx = rightPx;
+      this.itemSpacingPx = itemSpacingPx;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+
+      Padding padding = (Padding) o;
+
+      if (topPx != padding.topPx) {
+        return false;
+      }
+      if (bottomPx != padding.bottomPx) {
+        return false;
+      }
+      if (leftPx != padding.leftPx) {
+        return false;
+      }
+      if (rightPx != padding.rightPx) {
+        return false;
+      }
+      return itemSpacingPx == padding.itemSpacingPx;
+    }
+
+    @Override
+    public int hashCode() {
+      int result = topPx;
+      result = 31 * result + bottomPx;
+      result = 31 * result + leftPx;
+      result = 31 * result + rightPx;
+      result = 31 * result + itemSpacingPx;
+      return result;
+    }
+  }
+
   @ModelProp
   public void setModels(@NonNull List<? extends EpoxyModel<?>> models) {
     super.setModels(models);
