@@ -85,12 +85,12 @@ public class EpoxyRecyclerView extends RecyclerView {
    * never used again.
    * <p>
    * Since the adapter is removed this recyclerview won't get adapter changes, but that's fine since
-   * the view isn't attached to window and isn't being drawn anyway.
+   * the view isn't attached to window and isn't being drawn.
    * <p>
    * This reference is cleared if another adapter is manually set, so we don't override the user's
    * adapter choice.
    *
-   * @see #removeAdapterWhenDetachedFromWindow
+   * @see #setRemoveAdapterWhenDetachedFromWindow(boolean)
    */
   private RecyclerView.Adapter removedAdapter;
 
@@ -98,11 +98,12 @@ public class EpoxyRecyclerView extends RecyclerView {
 
   /**
    * If set to true, any adapter set on this recyclerview will be removed when this view is detached
-   * from the window. This is useful to prevent leaking a reference to this RecyclerView. The main
-   * use case is in a Fragment type situation where the view can be destroyed and recreated, but the
-   * same adapter is used. In that case the adapter is not cleared from previous RecyclerViews, so
-   * the adapter will continue to hold a reference to those views and leak them. More details at
-   * https://github.com/airbnb/epoxy/wiki/Avoiding-Memory-Leaks#parent-view
+   * from the window. This is useful to prevent leaking a reference to this RecyclerView. This is
+   * useful in cases where the same adapter can be used across multiple views (views which can be
+   * destroyed and recreated), such as with fragments. In that case the adapter is not necessarily
+   * cleared from previous RecyclerViews, so the adapter will continue to hold a reference to those
+   * views and leak them. More details at https://github
+   * .com/airbnb/epoxy/wiki/Avoiding-Memory-Leaks#parent-view
    * <p>
    * The default is true, but you can disable this if you don't want your adapter detached
    * automatically.
@@ -123,16 +124,29 @@ public class EpoxyRecyclerView extends RecyclerView {
    * <p>
    * By default a delay of {@value #DEFAULT_ADAPTER_REMOVAL_DELAY_MS} ms is used so that view
    * transitions can complete before the adapter is removed. Otherwise if the adapter is removed
-   * before transitions finish it can clear the screen and break the transition.
+   * before transitions finish it can clear the screen and break the transition. A notable case is
+   * fragment transitions, in which the fragment view is detached from window before the transition
+   * ends.
    */
   public void setDelayMsWhenRemovingAdapterOnDetach(int delayMsWhenRemovingAdapterOnDetach) {
     this.delayMsWhenRemovingAdapterOnDetach = delayMsWhenRemovingAdapterOnDetach;
   }
 
-  private final Runnable removeAdapterAfterDetachedFromWindowRunnable = new Runnable() {
+  /**
+   * Tracks whether {@link #removeAdapterRunnable} has been posted to run
+   * later. This lets us know if we should cancel the runnable at certain times. This removes the
+   * overhead of needlessly attemping to remove the runnable when it isn't posted.
+   */
+  private boolean isRemoveAdapterRunnablePosted;
+  private final Runnable removeAdapterRunnable = new Runnable() {
     @Override
     public void run() {
-      removeAdapter();
+      if (isRemoveAdapterRunnablePosted) {
+        // Canceling a runnable doesn't work accurately when a view switches between
+        // attached/detached, so we manually check that this should still be run
+        isRemoveAdapterRunnablePosted = false;
+        removeAdapter();
+      }
     }
   };
 
@@ -483,14 +497,14 @@ public class EpoxyRecyclerView extends RecyclerView {
   public void setAdapter(RecyclerView.Adapter adapter) {
     super.setAdapter(adapter);
 
-    clearRemovedAdapter();
+    clearRemovedAdapterAndCancelRunnable();
   }
 
   @Override
   public void swapAdapter(Adapter adapter, boolean removeAndRecycleExistingViews) {
     super.swapAdapter(adapter, removeAndRecycleExistingViews);
 
-    clearRemovedAdapter();
+    clearRemovedAdapterAndCancelRunnable();
   }
 
   @Override
@@ -501,7 +515,7 @@ public class EpoxyRecyclerView extends RecyclerView {
       // Restore the adapter that was removed when the view was detached from window
       swapAdapter(removedAdapter, false);
     }
-    clearRemovedAdapter();
+    clearRemovedAdapterAndCancelRunnable();
   }
 
   @Override
@@ -510,8 +524,9 @@ public class EpoxyRecyclerView extends RecyclerView {
 
     if (removeAdapterWhenDetachedFromWindow) {
       if (delayMsWhenRemovingAdapterOnDetach > 0) {
-        postDelayed(removeAdapterAfterDetachedFromWindowRunnable,
-            delayMsWhenRemovingAdapterOnDetach);
+
+        isRemoveAdapterRunnablePosted = true;
+        postDelayed(removeAdapterRunnable, delayMsWhenRemovingAdapterOnDetach);
       } else {
         removeAdapter();
       }
@@ -535,6 +550,14 @@ public class EpoxyRecyclerView extends RecyclerView {
     clearPoolIfActivityIsDestroyed();
   }
 
+  private void clearRemovedAdapterAndCancelRunnable() {
+    removedAdapter = null;
+    if (isRemoveAdapterRunnablePosted) {
+      removeCallbacks(removeAdapterRunnable);
+      isRemoveAdapterRunnablePosted = false;
+    }
+  }
+
   private void clearPoolIfActivityIsDestroyed() {
     // Views in the pool hold context references which can keep the activity from being GC'd,
     // plus they can hold significant memory resources. We should clear it asap after the pool
@@ -542,11 +565,6 @@ public class EpoxyRecyclerView extends RecyclerView {
     if (isActivityDestroyed(getContext())) {
       getRecycledViewPool().clear();
     }
-  }
-
-  private void clearRemovedAdapter() {
-    removedAdapter = null;
-    removeCallbacks(removeAdapterAfterDetachedFromWindowRunnable);
   }
 
   private static class PoolReference {
