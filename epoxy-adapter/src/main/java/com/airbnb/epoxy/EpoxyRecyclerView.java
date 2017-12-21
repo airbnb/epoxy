@@ -1,12 +1,16 @@
 package com.airbnb.epoxy;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build.VERSION;
 import android.support.annotation.CallSuper;
 import android.support.annotation.DimenRes;
 import android.support.annotation.Dimension;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.Px;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +18,7 @@ import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.ViewGroup;
+
 import com.airbnb.viewmodeladapter.R;
 
 import java.lang.ref.WeakReference;
@@ -61,6 +66,8 @@ import java.util.Queue;
  */
 public class EpoxyRecyclerView extends RecyclerView {
 
+  private static final int DEFAULT_ADAPTER_REMOVAL_DELAY_MS = 2000;
+
   /**
    * Store one unique pool per activity. They are cleared out when activities are destroyed, so this
    * only needs to hold pools for active activities.
@@ -70,6 +77,78 @@ public class EpoxyRecyclerView extends RecyclerView {
   protected final EpoxyItemSpacingDecorator spacingDecorator = new EpoxyItemSpacingDecorator();
 
   private EpoxyController epoxyController;
+
+  /**
+   * The adapter that was removed because the RecyclerView was detached from the window. We save it
+   * so we can reattach it if the RecyclerView is reattached to window. This allows us to
+   * automatically restore the adapter, without risking leaking the RecyclerView if this view is
+   * never used again.
+   * <p>
+   * Since the adapter is removed this recyclerview won't get adapter changes, but that's fine since
+   * the view isn't attached to window and isn't being drawn.
+   * <p>
+   * This reference is cleared if another adapter is manually set, so we don't override the user's
+   * adapter choice.
+   *
+   * @see #setRemoveAdapterWhenDetachedFromWindow(boolean)
+   */
+  private RecyclerView.Adapter removedAdapter;
+
+  private boolean removeAdapterWhenDetachedFromWindow = true;
+
+  /**
+   * If set to true, any adapter set on this recyclerview will be removed when this view is detached
+   * from the window. This is useful to prevent leaking a reference to this RecyclerView. This is
+   * useful in cases where the same adapter can be used across multiple views (views which can be
+   * destroyed and recreated), such as with fragments. In that case the adapter is not necessarily
+   * cleared from previous RecyclerViews, so the adapter will continue to hold a reference to those
+   * views and leak them. More details at https://github
+   * .com/airbnb/epoxy/wiki/Avoiding-Memory-Leaks#parent-view
+   * <p>
+   * The default is true, but you can disable this if you don't want your adapter detached
+   * automatically.
+   * <p>
+   * If the adapter is removed via this setting, it will be re-set on the RecyclerView if the
+   * RecyclerView is re-attached to the window at a later point.
+   */
+  public void setRemoveAdapterWhenDetachedFromWindow(boolean removeAdapterWhenDetachedFromWindow) {
+    this.removeAdapterWhenDetachedFromWindow = removeAdapterWhenDetachedFromWindow;
+  }
+
+  private int delayMsWhenRemovingAdapterOnDetach = DEFAULT_ADAPTER_REMOVAL_DELAY_MS;
+
+  /**
+   * If {@link #setRemoveAdapterWhenDetachedFromWindow(boolean)} is set to true, this is the delay
+   * in milliseconds between when {@link #onDetachedFromWindow()} is called and when the adapter is
+   * actually removed.
+   * <p>
+   * By default a delay of {@value #DEFAULT_ADAPTER_REMOVAL_DELAY_MS} ms is used so that view
+   * transitions can complete before the adapter is removed. Otherwise if the adapter is removed
+   * before transitions finish it can clear the screen and break the transition. A notable case is
+   * fragment transitions, in which the fragment view is detached from window before the transition
+   * ends.
+   */
+  public void setDelayMsWhenRemovingAdapterOnDetach(int delayMsWhenRemovingAdapterOnDetach) {
+    this.delayMsWhenRemovingAdapterOnDetach = delayMsWhenRemovingAdapterOnDetach;
+  }
+
+  /**
+   * Tracks whether {@link #removeAdapterRunnable} has been posted to run
+   * later. This lets us know if we should cancel the runnable at certain times. This removes the
+   * overhead of needlessly attemping to remove the runnable when it isn't posted.
+   */
+  private boolean isRemoveAdapterRunnablePosted;
+  private final Runnable removeAdapterRunnable = new Runnable() {
+    @Override
+    public void run() {
+      if (isRemoveAdapterRunnablePosted) {
+        // Canceling a runnable doesn't work accurately when a view switches between
+        // attached/detached, so we manually check that this should still be run
+        isRemoveAdapterRunnablePosted = false;
+        removeAdapter();
+      }
+    }
+  };
 
   public EpoxyRecyclerView(Context context) {
     this(context, null);
@@ -82,10 +161,12 @@ public class EpoxyRecyclerView extends RecyclerView {
   public EpoxyRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
 
-    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.EpoxyRecyclerView,
-        defStyleAttr, 0);
-    setItemSpacingPx(a.getDimensionPixelSize(R.styleable.EpoxyRecyclerView_itemSpacing, 0));
-    a.recycle();
+    if (attrs != null) {
+      TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.EpoxyRecyclerView,
+          defStyleAttr, 0);
+      setItemSpacingPx(a.getDimensionPixelSize(R.styleable.EpoxyRecyclerView_itemSpacing, 0));
+      a.recycle();
+    }
 
     init();
   }
@@ -124,6 +205,11 @@ public class EpoxyRecyclerView extends RecyclerView {
         }
         poolToUse = poolReference;
         // finish iterating to remove any old contexts
+      } else {
+        // A pool from a different activity, it may be removed soon once the activity reference
+        // is GC'd, but until then we can at least clear the pool references, which may
+        // be keeping the activity from getting GC'd
+        poolReference.clearIfActivityIsDestroyed();
       }
     }
 
@@ -139,6 +225,7 @@ public class EpoxyRecyclerView extends RecyclerView {
    * Create a new instance of a view pool to use with this recyclerview. By default a {@link
    * UnboundedViewPool} is used.
    */
+  @NonNull
   protected RecycledViewPool createViewPool() {
     return new UnboundedViewPool();
   }
@@ -179,6 +266,7 @@ public class EpoxyRecyclerView extends RecyclerView {
    * If the height is set to wrap_content then the scrolling orientation is set to horizontal, and
    * {@link #setClipToPadding(boolean)} is set to false.
    */
+  @NonNull
   protected LayoutManager createLayoutManager() {
     ViewGroup.LayoutParams layoutParams = getLayoutParams();
 
@@ -202,7 +290,7 @@ public class EpoxyRecyclerView extends RecyclerView {
   }
 
   @Override
-  public void setLayoutManager(LayoutManager layout) {
+  public void setLayoutManager(@Nullable LayoutManager layout) {
     super.setLayoutManager(layout);
     syncSpanCount();
   }
@@ -272,7 +360,7 @@ public class EpoxyRecyclerView extends RecyclerView {
    * @see #buildModelsWith(ModelBuilderCallback)
    */
 
-  public void setModels(List<? extends EpoxyModel<?>> models) {
+  public void setModels(@NonNull List<? extends EpoxyModel<?>> models) {
     if (!(epoxyController instanceof SimpleEpoxyController)) {
       setController(new SimpleEpoxyController());
     }
@@ -290,13 +378,15 @@ public class EpoxyRecyclerView extends RecyclerView {
    * <p>
    * Otherwise if you want models built automatically for you use {@link
    * #setControllerAndBuildModels(EpoxyController)}
+   * <p>
+   * The controller can be cleared with {@link #clear()}
    *
    * @see #setControllerAndBuildModels(EpoxyController)
    * @see #buildModelsWith(ModelBuilderCallback)
    * @see #setModels(List)
    */
 
-  public void setController(EpoxyController controller) {
+  public void setController(@NonNull EpoxyController controller) {
     epoxyController = controller;
     setAdapter(controller.getAdapter());
     syncSpanCount();
@@ -305,12 +395,14 @@ public class EpoxyRecyclerView extends RecyclerView {
   /**
    * Set an EpoxyController to populate this RecyclerView, and tell the controller to build
    * models.
+   * <p>
+   * The controller can be cleared with {@link #clear()}
    *
    * @see #setController(EpoxyController)
    * @see #buildModelsWith(ModelBuilderCallback)
    * @see #setModels(List)
    */
-  public void setControllerAndBuildModels(EpoxyController controller) {
+  public void setControllerAndBuildModels(@NonNull EpoxyController controller) {
     controller.requestModelBuild();
     setController(controller);
   }
@@ -327,7 +419,7 @@ public class EpoxyRecyclerView extends RecyclerView {
    * @see #setControllerAndBuildModels(EpoxyController)
    * @see #setModels(List)
    */
-  public void buildModelsWith(final ModelBuilderCallback callback) {
+  public void buildModelsWith(@NonNull final ModelBuilderCallback callback) {
     setControllerAndBuildModels(new EpoxyController() {
       @Override
       protected void buildModels() {
@@ -346,7 +438,7 @@ public class EpoxyRecyclerView extends RecyclerView {
      * add them to the given controller. {@link AutoModel} cannot be used with models added this
      * way.
      */
-    void buildModels(EpoxyController controller);
+    void buildModels(@NonNull EpoxyController controller);
   }
 
   /**
@@ -370,20 +462,18 @@ public class EpoxyRecyclerView extends RecyclerView {
   }
 
   /**
-   * Clear the currently set EpoxyController as well as any models that are displayed.
+   * Clear the currently set EpoxyController or Adapter as well as any models that are displayed.
    * <p>
    * Any pending requests to the EpoxyController to build models are canceled.
    * <p>
    * Any existing child views are recycled to the view pool.
    */
   public void clear() {
-    if (epoxyController == null) {
-      return;
+    if (epoxyController != null) {
+      // The controller is cleared so the next time models are set we can create a fresh one.
+      epoxyController.cancelPendingModelBuild();
+      epoxyController = null;
     }
-
-    // The controller is cleared so the next time models are set we can create a fresh one.
-    epoxyController.cancelPendingModelBuild();
-    epoxyController = null;
 
     // We use swapAdapter instead of setAdapter so that the view pool is not cleared.
     // 'removeAndRecycleExistingViews=true' is used in case this is a nested recyclerview
@@ -403,6 +493,80 @@ public class EpoxyRecyclerView extends RecyclerView {
     return getResources().getDimensionPixelOffset(itemSpacingRes);
   }
 
+  @Override
+  public void setAdapter(RecyclerView.Adapter adapter) {
+    super.setAdapter(adapter);
+
+    clearRemovedAdapterAndCancelRunnable();
+  }
+
+  @Override
+  public void swapAdapter(Adapter adapter, boolean removeAndRecycleExistingViews) {
+    super.swapAdapter(adapter, removeAndRecycleExistingViews);
+
+    clearRemovedAdapterAndCancelRunnable();
+  }
+
+  @Override
+  public void onAttachedToWindow() {
+    super.onAttachedToWindow();
+
+    if (removedAdapter != null) {
+      // Restore the adapter that was removed when the view was detached from window
+      swapAdapter(removedAdapter, false);
+    }
+    clearRemovedAdapterAndCancelRunnable();
+  }
+
+  @Override
+  public void onDetachedFromWindow() {
+    super.onDetachedFromWindow();
+
+    if (removeAdapterWhenDetachedFromWindow) {
+      if (delayMsWhenRemovingAdapterOnDetach > 0) {
+
+        isRemoveAdapterRunnablePosted = true;
+        postDelayed(removeAdapterRunnable, delayMsWhenRemovingAdapterOnDetach);
+      } else {
+        removeAdapter();
+      }
+    }
+    clearPoolIfActivityIsDestroyed();
+  }
+
+  private void removeAdapter() {
+    Adapter currentAdapter = getAdapter();
+    if (currentAdapter != null) {
+      // Clear the adapter so the adapter releases its reference to this RecyclerView.
+      // Views are recycled so they can return to a view pool (default behavior is to not recycle
+      // them).
+      swapAdapter(null, true);
+      // Keep a reference to the removed adapter so we can add it back if the recyclerview is
+      // attached again.
+      removedAdapter = currentAdapter;
+    }
+
+    // Do this after clearing the adapter, since that sends views back to the pool
+    clearPoolIfActivityIsDestroyed();
+  }
+
+  private void clearRemovedAdapterAndCancelRunnable() {
+    removedAdapter = null;
+    if (isRemoveAdapterRunnablePosted) {
+      removeCallbacks(removeAdapterRunnable);
+      isRemoveAdapterRunnablePosted = false;
+    }
+  }
+
+  private void clearPoolIfActivityIsDestroyed() {
+    // Views in the pool hold context references which can keep the activity from being GC'd,
+    // plus they can hold significant memory resources. We should clear it asap after the pool
+    // is no longer needed - the main signal we use for this is that the activity is destroyed.
+    if (isActivityDestroyed(getContext())) {
+      getRecycledViewPool().clear();
+    }
+  }
+
   private static class PoolReference {
     private final WeakReference<Context> contextReference;
     private final RecycledViewPool viewPool;
@@ -416,6 +580,34 @@ public class EpoxyRecyclerView extends RecyclerView {
     @Nullable
     private Context context() {
       return contextReference.get();
+    }
+
+    void clearIfActivityIsDestroyed() {
+      if (isActivityDestroyed(context())) {
+        viewPool.clear();
+      }
+    }
+  }
+
+  private static boolean isActivityDestroyed(@Nullable Context context) {
+    if (context == null) {
+      return true;
+    }
+
+    if (!(context instanceof Activity)) {
+      return false;
+    }
+
+    Activity activity = (Activity) context;
+    if (activity.isFinishing()) {
+      return true;
+    }
+
+    if (VERSION.SDK_INT >= 17) {
+      return activity.isDestroyed();
+    } else {
+      // Use this as a proxy for being destroyed on older devices
+      return !ViewCompat.isAttachedToWindow(activity.getWindow().getDecorView());
     }
   }
 

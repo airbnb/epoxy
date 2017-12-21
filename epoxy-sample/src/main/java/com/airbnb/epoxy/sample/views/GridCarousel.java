@@ -1,6 +1,7 @@
 package com.airbnb.epoxy.sample.views;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 
@@ -16,6 +17,7 @@ public class GridCarousel extends Carousel {
     super(context);
   }
 
+  @NonNull
   @Override
   protected LayoutManager createLayoutManager() {
     return new GridLayoutManager(getContext(), SPAN_COUNT, LinearLayoutManager.HORIZONTAL, false);
