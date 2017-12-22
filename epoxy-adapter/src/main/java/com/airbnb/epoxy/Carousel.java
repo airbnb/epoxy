@@ -296,6 +296,12 @@ public class Carousel extends EpoxyRecyclerView {
     setItemSpacingPx(px);
   }
 
+  /**
+   * Use the {@link Padding} class to specify individual padding values for each side of the
+   * carousel, as well as item spacing.
+   * <p>
+   * A value of null will set all padding and item spacing to 0.
+   */
   @ModelProp(group = "padding")
   public void setPadding(@Nullable Padding padding) {
     if (padding == null) {
@@ -306,6 +312,11 @@ public class Carousel extends EpoxyRecyclerView {
     }
   }
 
+  /**
+   * Used to specify individual padding values programmatically.
+   *
+   * @see #setPadding(Padding)
+   */
   public static class Padding {
     @Px public final int topPx;
     @Px public final int bottomPx;
@@ -313,10 +324,23 @@ public class Carousel extends EpoxyRecyclerView {
     @Px public final int rightPx;
     @Px public final int itemSpacingPx;
 
-    public Padding(@Px int padding, @Px int itemSpacingPx) {
-      this(padding, padding, padding, padding, itemSpacingPx);
+    /**
+     * @param paddingPx     Padding in pixels to add on all sides of the carousel
+     * @param itemSpacingPx Space in pixels to add between each carousel item. Will be implemented
+     *                      via an item decoration.
+     */
+    public Padding(@Px int paddingPx, @Px int itemSpacingPx) {
+      this(paddingPx, paddingPx, paddingPx, paddingPx, itemSpacingPx);
     }
 
+    /**
+     * @param topPx         Top padding in pixels.
+     * @param bottomPx      Bottom padding in pixels.
+     * @param leftPx        Left padding in pixels.
+     * @param rightPx       Right padding in pixels.
+     * @param itemSpacingPx Space in pixels to add between each carousel item. Will be implemented
+     *                      via an item decoration.
+     */
     public Padding(@Px int topPx, @Px int bottomPx, @Px int leftPx, @Px int rightPx,
         @Px int itemSpacingPx) {
 
