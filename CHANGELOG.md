@@ -1,8 +1,19 @@
-# 2.7.3 (October 24, 2017)
+# 2.8.0 (December 22, 2017)
+
+- **New** Use `@ModelProp` directly on fields to avoid creating a setter (https://github.com/airbnb/epoxy/pull/343)
+- **New** Set EpoxyRecyclerView item spacing via xml attribute (https://github.com/airbnb/epoxy/pull/364)
+- **New** More flexibility over setting Carousel padding values (https://github.com/airbnb/epoxy/pull/369)
+- **New** Allow custom EpoxyModelGroup root view (https://github.com/airbnb/epoxy/pull/370)
+
+- **Fixed** Public visibility settings of the Carousel snap helper settings (https://github.com/airbnb/epoxy/pull/356)
+- **Fixed** Add more nullability annotations to better support Kotlin
+- **Fixed** Saving view state now works better (https://github.com/airbnb/epoxy/pull/367)
+
+# 2.7.3 (November 21, 2017)
 
 - **Fixed** When a model changed and a partial update was bound to an existing view the wrong values could be set for prop groups (https://github.com/airbnb/epoxy/pull/347)
 
-# 2.7.2 (October 24, 2017)
+# 2.7.2 (October 28, 2017)
 
 - **Fixed** Using `EpoxyDataBindingPattern` could result in the wrong package being used for the BR class in generated models.
 
