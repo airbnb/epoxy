@@ -296,6 +296,98 @@ public class Carousel extends EpoxyRecyclerView {
     setItemSpacingPx(px);
   }
 
+  /**
+   * Use the {@link Padding} class to specify individual padding values for each side of the
+   * carousel, as well as item spacing.
+   * <p>
+   * A value of null will set all padding and item spacing to 0.
+   */
+  @ModelProp(group = "padding")
+  public void setPadding(@Nullable Padding padding) {
+    if (padding == null) {
+      setPaddingDp(0);
+    } else {
+      setPadding(padding.leftPx, padding.topPx, padding.rightPx, padding.bottomPx);
+      setItemSpacingPx(padding.itemSpacingPx);
+    }
+  }
+
+  /**
+   * Used to specify individual padding values programmatically.
+   *
+   * @see #setPadding(Padding)
+   */
+  public static class Padding {
+    @Px public final int topPx;
+    @Px public final int bottomPx;
+    @Px public final int leftPx;
+    @Px public final int rightPx;
+    @Px public final int itemSpacingPx;
+
+    /**
+     * @param paddingPx     Padding in pixels to add on all sides of the carousel
+     * @param itemSpacingPx Space in pixels to add between each carousel item. Will be implemented
+     *                      via an item decoration.
+     */
+    public Padding(@Px int paddingPx, @Px int itemSpacingPx) {
+      this(paddingPx, paddingPx, paddingPx, paddingPx, itemSpacingPx);
+    }
+
+    /**
+     * @param topPx         Top padding in pixels.
+     * @param bottomPx      Bottom padding in pixels.
+     * @param leftPx        Left padding in pixels.
+     * @param rightPx       Right padding in pixels.
+     * @param itemSpacingPx Space in pixels to add between each carousel item. Will be implemented
+     *                      via an item decoration.
+     */
+    public Padding(@Px int topPx, @Px int bottomPx, @Px int leftPx, @Px int rightPx,
+        @Px int itemSpacingPx) {
+
+      this.topPx = topPx;
+      this.bottomPx = bottomPx;
+      this.leftPx = leftPx;
+      this.rightPx = rightPx;
+      this.itemSpacingPx = itemSpacingPx;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+
+      Padding padding = (Padding) o;
+
+      if (topPx != padding.topPx) {
+        return false;
+      }
+      if (bottomPx != padding.bottomPx) {
+        return false;
+      }
+      if (leftPx != padding.leftPx) {
+        return false;
+      }
+      if (rightPx != padding.rightPx) {
+        return false;
+      }
+      return itemSpacingPx == padding.itemSpacingPx;
+    }
+
+    @Override
+    public int hashCode() {
+      int result = topPx;
+      result = 31 * result + bottomPx;
+      result = 31 * result + leftPx;
+      result = 31 * result + rightPx;
+      result = 31 * result + itemSpacingPx;
+      return result;
+    }
+  }
+
   @ModelProp
   public void setModels(@NonNull List<? extends EpoxyModel<?>> models) {
     super.setModels(models);
