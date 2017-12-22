@@ -8,6 +8,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.ViewStub;
 
 import com.airbnb.epoxy.EpoxyModelGroup.Holder;
+import com.airbnb.viewmodeladapter.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +26,11 @@ import java.util.List;
  * 1. Leave the viewgroup empty. The view for each model will be inflated and added in order. This
  * works fine if you don't need to include any other views, your model views don't need their layout
  * params changed, and your views don't need ids (eg for saving state).
+ * <p>
+ * Alternatively you can have nested view groups, with the innermost viewgroup given the id
+ * "epoxy_model_group_child_container" to mark it as the viewgroup that should have the model views
+ * added to it. The viewgroup marked with this id should be empty. This allows you to nest
+ * viewgroups, such as a LinearLayout inside of a CardView.
  * <p>
  * 2. Include a {@link ViewStub} for each of the models in the list. There should be at least as
  * many view stubs as models. Extra stubs will be ignored. Each model will be inflated into a view
@@ -303,8 +309,10 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
     private ViewGroup rootView;
 
     /**
-     * Get the root view group that holds all of the model views. You can override {@link
-     * EpoxyModelGroup#bind(Holder)} and use this method to make custom changes to the root view.
+     * Get the root view group (aka
+     * {@link android.support.v7.widget.RecyclerView.ViewHolder#itemView}.
+     * You can override {@link EpoxyModelGroup#bind(Holder)} and use this method to make custom
+     * changes to the root view.
      */
     public ViewGroup getRootView() {
       return rootView;
@@ -317,19 +325,20 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
             "The layout provided to EpoxyModelGroup must be a ViewGroup");
       }
       rootView = (ViewGroup) itemView;
+      ViewGroup childContainer = findChildContainer(rootView);
 
       int modelCount = models.size();
       views = new ArrayList<>(modelCount);
       holders = new ArrayList<>(modelCount);
 
-      boolean useViewStubs = rootView.getChildCount() != 0;
+      boolean useViewStubs = childContainer.getChildCount() != 0;
       for (int i = 0; i < models.size(); i++) {
         EpoxyModel model = models.get(i);
         View view;
         if (useViewStubs) {
-          view = replaceNextViewStub(rootView, model, useViewStubLayoutParams(model, i));
+          view = replaceNextViewStub(childContainer, model, useViewStubLayoutParams(model, i));
         } else {
-          view = createAndAddView(rootView, model);
+          view = createAndAddView(childContainer, model);
         }
 
         if (model instanceof EpoxyModelWithHolder) {
@@ -342,6 +351,21 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
 
         views.add(view);
       }
+    }
+
+    /**
+     * By default the outermost viewgroup is used as the container that views are added to. However,
+     * users can specify a different, nested view group to use as the child container by marking it
+     * with a special id.
+     */
+    private ViewGroup findChildContainer(ViewGroup outermostRoot) {
+      View customRoot = outermostRoot.findViewById(R.id.epoxy_model_group_child_container);
+
+      if (customRoot instanceof ViewGroup) {
+        return (ViewGroup) customRoot;
+      }
+
+      return outermostRoot;
     }
 
     private View createAndAddView(ViewGroup groupView, EpoxyModel<?> model) {
