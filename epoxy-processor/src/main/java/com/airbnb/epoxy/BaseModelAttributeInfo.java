@@ -163,10 +163,14 @@ class BaseModelAttributeInfo extends AttributeInfo {
       }
     }
     if (getterMethodName == null || setterMethodName == null) {
+      // We disable the "private" field setting so that we can still generate
+      // some code that compiles in an ok manner (ie via direct field access)
+      isPrivate = false;
+
       errorLogger
           .logError("%s annotations must not be on private fields"
                   + " without proper getter and setter methods. (class: %s, field: %s)",
-              EpoxyAttribute.class,
+              EpoxyAttribute.class.getSimpleName(),
               classElement.getSimpleName(),
               fieldName);
     }
