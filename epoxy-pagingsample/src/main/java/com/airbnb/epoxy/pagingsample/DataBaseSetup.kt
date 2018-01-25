@@ -23,7 +23,7 @@ data class User(
 @Dao
 interface UserDao {
     @get:Query("SELECT * FROM user")
-    val dataSource: TiledDataSource<User>
+    val dataSource: DataSource.Factory<Int, User>
 
     @get:Query("SELECT * FROM user")
     val all: List<User>

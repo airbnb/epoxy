@@ -37,21 +37,20 @@ class PagingSampleActivity : AppCompatActivity() {
                     db.userDao().insertAll(User(i))
                 }
 
-                return@bg PagedList.Builder<Int, User>().run {
-                    setDataSource(db.userDao().dataSource)
+                return@bg PagedList.Builder<Int, User>(
+                        db.userDao().dataSource.create(),
+                        PagedList.Config.Builder().run {
+                            setEnablePlaceholders(true)
+                            setPageSize(40)
+                            setInitialLoadSizeHint(80)
+                            setPrefetchDistance(50)
+                            build()
+                        }).run {
                     setMainThreadExecutor(UiThreadExecutor)
                     setBackgroundThreadExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-                    setConfig(PagedList.Config.Builder().run {
-                        setEnablePlaceholders(false)
-                        setPageSize(40)
-                        setInitialLoadSizeHint(80)
-                        setPrefetchDistance(50)
-                        build()
-                    })
                     build()
                 }
             }
-
 
             pagingController.setList(pagedList.await())
         }
@@ -64,13 +63,15 @@ class TestController : PagingEpoxyController<User>() {
         setDebugLoggingEnabled(true)
     }
 
-    override fun buildModels(users: List<User>) {
+    override fun buildModels(users: List<User?>) {
         println("build ${users.size}")
 
         users.forEach {
-            pagingView {
-                id(it.uid)
-                name("Id: ${it.uid}")
+            if (it != null) {
+                pagingView {
+                    id(it.uid)
+                    name("Id: ${it.uid}")
+                }
             }
         }
     }

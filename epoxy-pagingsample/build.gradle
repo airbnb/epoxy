@@ -24,8 +24,8 @@ dependencies {
   compile rootProject.deps.kotlin
 
   compile "org.jetbrains.anko:anko-coroutines:0.10.1"
-  compile 'android.arch.persistence.room:runtime:1.0.0-beta1'
-  kapt 'android.arch.persistence.room:compiler:1.0.0-beta1'
+  compile 'android.arch.persistence.room:runtime:1.0.0'
+  kapt 'android.arch.persistence.room:compiler:1.0.0'
 
   compile project(':epoxy-adapter')
   compile project(':epoxy-paging')
