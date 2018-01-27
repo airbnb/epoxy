@@ -1,19 +1,55 @@
 package com.airbnb.epoxy
 
-import android.support.annotation.*
-import com.airbnb.epoxy.ClassNames.*
-import com.airbnb.epoxy.Utils.*
-import com.squareup.javapoet.*
-import com.squareup.javapoet.MethodSpec.*
-import com.squareup.javapoet.TypeName.*
-import java.io.*
-import java.lang.annotation.*
-import java.lang.ref.*
+import android.support.annotation.LayoutRes
+import com.airbnb.epoxy.ClassNames.ANDROID_ASYNC_TASK
+import com.airbnb.epoxy.Utils.EPOXY_CONTROLLER_TYPE
+import com.airbnb.epoxy.Utils.EPOXY_VIEW_HOLDER_TYPE
+import com.airbnb.epoxy.Utils.GENERATED_MODEL_INTERFACE
+import com.airbnb.epoxy.Utils.MODEL_CLICK_LISTENER_TYPE
+import com.airbnb.epoxy.Utils.MODEL_LONG_CLICK_LISTENER_TYPE
+import com.airbnb.epoxy.Utils.ON_BIND_MODEL_LISTENER_TYPE
+import com.airbnb.epoxy.Utils.ON_UNBIND_MODEL_LISTENER_TYPE
+import com.airbnb.epoxy.Utils.UNTYPED_EPOXY_MODEL_TYPE
+import com.airbnb.epoxy.Utils.WRAPPED_LISTENER_TYPE
+import com.airbnb.epoxy.Utils.getClassName
+import com.airbnb.epoxy.Utils.implementsMethod
+import com.airbnb.epoxy.Utils.isDataBindingModel
+import com.airbnb.epoxy.Utils.isEpoxyModel
+import com.airbnb.epoxy.Utils.isEpoxyModelWithHolder
+import com.airbnb.epoxy.Utils.isViewLongClickListenerType
+import com.squareup.javapoet.ArrayTypeName
+import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.CodeBlock
+import com.squareup.javapoet.FieldSpec
+import com.squareup.javapoet.JavaFile
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.MethodSpec.Builder
+import com.squareup.javapoet.ParameterSpec
+import com.squareup.javapoet.ParameterizedTypeName
+import com.squareup.javapoet.TypeName
+import com.squareup.javapoet.TypeName.BOOLEAN
+import com.squareup.javapoet.TypeName.BYTE
+import com.squareup.javapoet.TypeName.CHAR
+import com.squareup.javapoet.TypeName.DOUBLE
+import com.squareup.javapoet.TypeName.FLOAT
+import com.squareup.javapoet.TypeName.INT
+import com.squareup.javapoet.TypeName.LONG
+import com.squareup.javapoet.TypeName.SHORT
+import com.squareup.javapoet.TypeSpec
+import java.io.IOException
+import java.lang.annotation.AnnotationTypeMismatchException
+import java.lang.ref.WeakReference
 import java.util.*
-import javax.annotation.processing.*
-import javax.lang.model.element.*
-import javax.lang.model.element.Modifier.*
-import javax.lang.model.util.*
+import javax.annotation.processing.Filer
+import javax.lang.model.element.Modifier
+import javax.lang.model.element.Modifier.FINAL
+import javax.lang.model.element.Modifier.PRIVATE
+import javax.lang.model.element.Modifier.PROTECTED
+import javax.lang.model.element.Modifier.PUBLIC
+import javax.lang.model.element.Modifier.STATIC
+import javax.lang.model.element.TypeElement
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 internal class GeneratedModelWriter(
         private val filer: Filer,
@@ -598,20 +634,20 @@ internal class GeneratedModelWriter(
         }
 
         val clickWrapperType = getClassName(WRAPPED_LISTENER_TYPE)
-        for (attribute in modelInfo.getAttributeInfo()) {
-            if (!attribute.isViewClickListener) {
-                continue
-            }
-            // Pass the view holder and bound object on to the wrapped click listener
-
-            preBindBuilder
-                    .beginControlFlow("if (\$L instanceof \$T)", attribute.superGetterCode(),
-                                      clickWrapperType)
-                    .addStatement("((\$L) \$L).bind(\$L, \$L)", clickWrapperType,
-                                  attribute.superGetterCode(),
-                                  viewHolderParam.name, boundObjectParam.name)
-                    .endControlFlow()
-        }
+        modelInfo.getAttributeInfo()
+                .filter {
+                    it.isViewClickListener
+                }
+                .forEach {
+                    // Pass the model, view holder, and bound object on to the wrapped click listener
+                    preBindBuilder
+                            .beginControlFlow("if (\$L instanceof \$T)", it.superGetterCode(),
+                                              clickWrapperType)
+                            .addStatement("((\$L) \$L).bind(this, \$L, \$L)", clickWrapperType,
+                                          it.superGetterCode(),
+                                          viewHolderParam.name, boundObjectParam.name)
+                            .endControlFlow()
+                }
 
         return preBindBuilder.build()
     }
@@ -1018,7 +1054,7 @@ internal class GeneratedModelWriter(
 
         setBitSetIfNeeded(classInfo, attribute, builder)
 
-        val wrapperClickListenerConstructor = CodeBlock.of("new \$T(this, \$L)",
+        val wrapperClickListenerConstructor = CodeBlock.of("new \$T(\$L)",
                                                            getClassName(WRAPPED_LISTENER_TYPE),
                                                            param.name)
 

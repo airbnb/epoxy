@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.airbnb.epoxy.ViewHolderState.ViewState;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
@@ -15,6 +16,7 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
   private List<Object> payloads;
   private EpoxyHolder epoxyHolder;
   @Nullable ViewHolderState.ViewState initialViewState;
+  private final List<WrappedEpoxyModelClickListener> boundClickListeners = new ArrayList<>();
 
   public EpoxyViewHolder(View view, boolean saveInitialState) {
     super(view);
@@ -52,6 +54,11 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     if (previouslyBoundModel != null) {
       // noinspection unchecked
       model.bind(objectToBind(), previouslyBoundModel);
+
+      for (WrappedEpoxyModelClickListener clickListener : boundClickListeners) {
+        //noinspection unchecked
+        clickListener.updateModel(model);
+      }
     } else if (payloads.isEmpty()) {
       // noinspection unchecked
       model.bind(objectToBind());
@@ -77,6 +84,14 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     assertBound();
     // noinspection unchecked
     epoxyModel.unbind(objectToBind());
+
+    if (!boundClickListeners.isEmpty()) {
+      for (WrappedEpoxyModelClickListener listener : boundClickListeners) {
+        // Prevent click listeners from holding on to views
+        listener.unbind();
+      }
+      boundClickListeners.clear();
+    }
 
     epoxyModel = null;
     payloads = null;
@@ -105,5 +120,9 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
         + ", view=" + itemView
         + ", super=" + super.toString()
         + '}';
+  }
+
+  public void addModelClickListener(WrappedEpoxyModelClickListener<?, ?> clickListener) {
+    boundClickListeners.add(clickListener);
   }
 }

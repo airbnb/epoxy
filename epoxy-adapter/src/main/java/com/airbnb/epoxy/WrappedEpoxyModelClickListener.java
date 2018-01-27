@@ -16,20 +16,19 @@ public class WrappedEpoxyModelClickListener<T extends EpoxyModel<?>, V>
   private final OnModelClickListener<T, V> originalClickListener;
   private final OnModelLongClickListener<T, V> originalLongClickListener;
   private EpoxyViewHolder holder;
-  private final T model;
+  private T model;
   private V object;
 
-  public WrappedEpoxyModelClickListener(T model, OnModelClickListener<T, V> clickListener) {
+  public WrappedEpoxyModelClickListener(OnModelClickListener<T, V> clickListener) {
     if (clickListener == null) {
       throw new IllegalArgumentException("Click listener cannot be null");
     }
 
-    this.model = model;
     this.originalClickListener = clickListener;
     originalLongClickListener = null;
   }
 
-  public WrappedEpoxyModelClickListener(T model, OnModelLongClickListener<T, V> clickListener) {
+  public WrappedEpoxyModelClickListener(OnModelLongClickListener<T, V> clickListener) {
     if (clickListener == null) {
       throw new IllegalArgumentException("Click listener cannot be null");
     }
@@ -39,9 +38,22 @@ public class WrappedEpoxyModelClickListener<T extends EpoxyModel<?>, V>
     originalClickListener = null;
   }
 
-  public void bind(EpoxyViewHolder holder, V object) {
+  public void bind(T model, EpoxyViewHolder holder, V object) {
+    this.model = model;
     this.holder = holder;
     this.object = object;
+
+    holder.addModelClickListener(this);
+  }
+
+  void updateModel(T model) {
+    this.model = model;
+  }
+
+  void unbind() {
+    this.model = null;
+    this.holder = null;
+    this.object = null;
   }
 
   @Override
