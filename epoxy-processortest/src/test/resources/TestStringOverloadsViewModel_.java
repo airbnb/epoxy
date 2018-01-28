@@ -54,7 +54,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
   }
 
   @Override
-  public void bind(final TestStringOverloadsView object) {
+  public void bind(@NonNull final TestStringOverloadsView object) {
     super.bind(object);
     object.setTitleViaValueShortcut(titleViaValueShortcut_StringAttributeData.toString(object.getContext()));
     if (assignedAttributes_epoxyGeneratedModel.get(0)) {
@@ -69,7 +69,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
   }
 
   @Override
-  public void bind(final TestStringOverloadsView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final TestStringOverloadsView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof TestStringOverloadsViewModel_)) {
       bind(object);
       return;
@@ -119,7 +119,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
   }
 
   @Override
-  public void unbind(TestStringOverloadsView object) {
+  public void unbind(@NonNull TestStringOverloadsView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

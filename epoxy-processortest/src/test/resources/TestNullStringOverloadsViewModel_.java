@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
@@ -38,13 +39,13 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   @Override
-  public void bind(final TestNullStringOverloadsView object) {
+  public void bind(@NonNull final TestNullStringOverloadsView object) {
     super.bind(object);
     object.setTitle(title_StringAttributeData.toString(object.getContext()));
   }
 
   @Override
-  public void bind(final TestNullStringOverloadsView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final TestNullStringOverloadsView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof TestNullStringOverloadsViewModel_)) {
       bind(object);
       return;
@@ -79,7 +80,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   @Override
-  public void unbind(TestNullStringOverloadsView object) {
+  public void unbind(@NonNull TestNullStringOverloadsView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

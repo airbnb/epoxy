@@ -44,13 +44,13 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
   }
 
   @Override
-  public void bind(final TestTextPropView object) {
+  public void bind(@NonNull final TestTextPropView object) {
     super.bind(object);
     object.setTitle(title_StringAttributeData.toString(object.getContext()));
   }
 
   @Override
-  public void bind(final TestTextPropView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final TestTextPropView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof TestTextPropViewModel_)) {
       bind(object);
       return;
@@ -85,7 +85,7 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
   }
 
   @Override
-  public void unbind(TestTextPropView object) {
+  public void unbind(@NonNull TestTextPropView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

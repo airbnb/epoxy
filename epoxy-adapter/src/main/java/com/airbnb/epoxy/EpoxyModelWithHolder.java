@@ -1,5 +1,7 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.NonNull;
+
 import java.util.List;
 
 /**
@@ -19,22 +21,22 @@ public abstract class EpoxyModelWithHolder<T extends EpoxyHolder> extends EpoxyM
   protected abstract T createNewHolder();
 
   @Override
-  public void bind(T holder) {
+  public void bind(@NonNull T holder) {
     super.bind(holder);
   }
 
   @Override
-  public void bind(T holder, List<Object> payloads) {
+  public void bind(@NonNull T holder, @NonNull List<Object> payloads) {
     super.bind(holder, payloads);
   }
 
   @Override
-  public void bind(T holder, EpoxyModel<?> previouslyBoundModel) {
+  public void bind(@NonNull T holder, @NonNull EpoxyModel<?> previouslyBoundModel) {
     super.bind(holder, previouslyBoundModel);
   }
 
   @Override
-  public void unbind(T holder) {
+  public void unbind(@NonNull T holder) {
     super.unbind(holder);
   }
 

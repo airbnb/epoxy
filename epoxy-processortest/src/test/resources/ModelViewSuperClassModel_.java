@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 import java.lang.CharSequence;
@@ -36,7 +37,7 @@ public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> i
   }
 
   @Override
-  protected ModelViewSuperClass buildView(ViewGroup parent) {
+  protected ModelViewSuperClass buildView(@NonNull ViewGroup parent) {
     ModelViewSuperClass v = new ModelViewSuperClass(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.MATCH_PARENT, ViewGroup.MarginLayoutParams.MATCH_PARENT));
     return v;
@@ -49,13 +50,13 @@ public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> i
   }
 
   @Override
-  public void bind(final ModelViewSuperClass object) {
+  public void bind(@NonNull final ModelViewSuperClass object) {
     super.bind(object);
     object.superClassValue(superClassValue_Int);
   }
 
   @Override
-  public void bind(final ModelViewSuperClass object, EpoxyModel previousModel) {
+  public void bind(@NonNull final ModelViewSuperClass object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof ModelViewSuperClassModel_)) {
       bind(object);
       return;
@@ -91,7 +92,7 @@ public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> i
   }
 
   @Override
-  public void unbind(ModelViewSuperClass object) {
+  public void unbind(@NonNull ModelViewSuperClass object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

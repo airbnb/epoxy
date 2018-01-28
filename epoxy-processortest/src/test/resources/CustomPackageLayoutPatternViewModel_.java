@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -31,12 +32,12 @@ public class CustomPackageLayoutPatternViewModel_ extends EpoxyModel<CustomPacka
   }
 
   @Override
-  public void bind(final CustomPackageLayoutPatternView object) {
+  public void bind(@NonNull final CustomPackageLayoutPatternView object) {
     super.bind(object);
   }
 
   @Override
-  public void bind(final CustomPackageLayoutPatternView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final CustomPackageLayoutPatternView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof CustomPackageLayoutPatternViewModel_)) {
       bind(object);
       return;
@@ -67,7 +68,7 @@ public class CustomPackageLayoutPatternViewModel_ extends EpoxyModel<CustomPacka
   }
 
   @Override
-  public void unbind(CustomPackageLayoutPatternView object) {
+  public void unbind(@NonNull CustomPackageLayoutPatternView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

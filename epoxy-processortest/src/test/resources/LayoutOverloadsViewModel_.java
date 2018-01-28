@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -31,12 +32,12 @@ public class LayoutOverloadsViewModel_ extends EpoxyModel<LayoutOverloadsView> i
   }
 
   @Override
-  public void bind(final LayoutOverloadsView object) {
+  public void bind(@NonNull final LayoutOverloadsView object) {
     super.bind(object);
   }
 
   @Override
-  public void bind(final LayoutOverloadsView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final LayoutOverloadsView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof LayoutOverloadsViewModel_)) {
       bind(object);
       return;
@@ -67,7 +68,7 @@ public class LayoutOverloadsViewModel_ extends EpoxyModel<LayoutOverloadsView> i
   }
 
   @Override
-  public void unbind(LayoutOverloadsView object) {
+  public void unbind(@NonNull LayoutOverloadsView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

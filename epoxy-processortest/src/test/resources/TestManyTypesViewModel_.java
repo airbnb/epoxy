@@ -143,7 +143,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   @Override
-  public void bind(final TestManyTypesView object) {
+  public void bind(@NonNull final TestManyTypesView object) {
     super.bind(object);
     object.setArrayValue(arrayValue_StringArray);
     object.setClickListener(clickListener_OnClickListener);
@@ -162,7 +162,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   @Override
-  public void bind(final TestManyTypesView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final TestManyTypesView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof TestManyTypesViewModel_)) {
       bind(object);
       return;
@@ -249,7 +249,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   @Override
-  public void unbind(TestManyTypesView object) {
+  public void unbind(@NonNull TestManyTypesView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

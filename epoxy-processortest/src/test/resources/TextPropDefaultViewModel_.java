@@ -48,14 +48,14 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   }
 
   @Override
-  public void bind(final TextPropDefaultView object) {
+  public void bind(@NonNull final TextPropDefaultView object) {
     super.bind(object);
     object.textWithDefault(textWithDefault_StringAttributeData.toString(object.getContext()));
     object.nullableTextWithDefault(nullableTextWithDefault_StringAttributeData.toString(object.getContext()));
   }
 
   @Override
-  public void bind(final TextPropDefaultView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final TextPropDefaultView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof TextPropDefaultViewModel_)) {
       bind(object);
       return;
@@ -94,7 +94,7 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   }
 
   @Override
-  public void unbind(TextPropDefaultView object) {
+  public void unbind(@NonNull TextPropDefaultView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

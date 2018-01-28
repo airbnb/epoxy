@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 
 import com.facebook.litho.Component;
@@ -37,7 +38,7 @@ public abstract class EpoxyLithoModel<T extends ComponentLifecycle>
   }
 
   @Override
-  public void bind(LithoView view) {
+  public void bind(@NonNull LithoView view) {
     Component<T> component = getComponent(view.getComponentContext());
     if (view.getComponentTree() == null) {
       view.setComponentTree(ComponentTree.create(view.getComponentContext(), component)
@@ -53,7 +54,7 @@ public abstract class EpoxyLithoModel<T extends ComponentLifecycle>
   }
 
   @Override
-  public void bind(LithoView view, List<Object> payloads) {
+  public void bind(@NonNull LithoView view, @NonNull List<Object> payloads) {
     if (payloads.isEmpty()) {
       bind(view);
     } else {
@@ -62,7 +63,7 @@ public abstract class EpoxyLithoModel<T extends ComponentLifecycle>
   }
 
   @Override
-  public void bind(LithoView view, EpoxyModel<?> previouslyBoundModel) {
+  public void bind(@NonNull LithoView view, @NonNull EpoxyModel<?> previouslyBoundModel) {
     view.getComponentTree().setRoot(getComponent(view.getComponentContext()));
   }
 
@@ -77,12 +78,12 @@ public abstract class EpoxyLithoModel<T extends ComponentLifecycle>
   }
 
   @Override
-  public void unbind(LithoView view) {
+  public void unbind(@NonNull LithoView view) {
     // The litho view is already unbound when it is detached from the window
   }
 
   @Override
-  protected LithoView buildView(ViewGroup parent) {
+  protected LithoView buildView(@NonNull ViewGroup parent) {
     return new LithoView(parent.getContext());
   }
 }

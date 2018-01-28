@@ -45,7 +45,7 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
   }
 
   @Override
-  protected TestFieldPropTextPropView buildView(ViewGroup parent) {
+  protected TestFieldPropTextPropView buildView(@NonNull ViewGroup parent) {
     TestFieldPropTextPropView v = new TestFieldPropTextPropView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;
@@ -58,13 +58,13 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
   }
 
   @Override
-  public void bind(final TestFieldPropTextPropView object) {
+  public void bind(@NonNull final TestFieldPropTextPropView object) {
     super.bind(object);
     object.value = value_StringAttributeData.toString(object.getContext());
   }
 
   @Override
-  public void bind(final TestFieldPropTextPropView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final TestFieldPropTextPropView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof TestFieldPropTextPropViewModel_)) {
       bind(object);
       return;
@@ -100,7 +100,7 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
   }
 
   @Override
-  public void unbind(TestFieldPropTextPropView object) {
+  public void unbind(@NonNull TestFieldPropTextPropView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

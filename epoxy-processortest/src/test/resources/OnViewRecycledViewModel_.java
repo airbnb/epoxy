@@ -42,13 +42,13 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
   }
 
   @Override
-  public void bind(final OnViewRecycledView object) {
+  public void bind(@NonNull final OnViewRecycledView object) {
     super.bind(object);
     object.setTitle(title_CharSequence);
   }
 
   @Override
-  public void bind(final OnViewRecycledView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final OnViewRecycledView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof OnViewRecycledViewModel_)) {
       bind(object);
       return;
@@ -83,7 +83,7 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
   }
 
   @Override
-  public void unbind(OnViewRecycledView object) {
+  public void unbind(@NonNull OnViewRecycledView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

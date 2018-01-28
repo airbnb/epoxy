@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import java.lang.CharSequence;
@@ -38,7 +39,7 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
   }
 
   @Override
-  protected TestFieldPropNullOnRecycleOptionView buildView(ViewGroup parent) {
+  protected TestFieldPropNullOnRecycleOptionView buildView(@NonNull ViewGroup parent) {
     TestFieldPropNullOnRecycleOptionView v = new TestFieldPropNullOnRecycleOptionView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;
@@ -54,13 +55,13 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
   }
 
   @Override
-  public void bind(final TestFieldPropNullOnRecycleOptionView object) {
+  public void bind(@NonNull final TestFieldPropNullOnRecycleOptionView object) {
     super.bind(object);
     object.value = value_OnClickListener;
   }
 
   @Override
-  public void bind(final TestFieldPropNullOnRecycleOptionView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final TestFieldPropNullOnRecycleOptionView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof TestFieldPropNullOnRecycleOptionViewModel_)) {
       bind(object);
       return;
@@ -96,7 +97,7 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
   }
 
   @Override
-  public void unbind(TestFieldPropNullOnRecycleOptionView object) {
+  public void unbind(@NonNull TestFieldPropNullOnRecycleOptionView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

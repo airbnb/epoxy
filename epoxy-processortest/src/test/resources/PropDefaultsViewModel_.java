@@ -65,7 +65,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   }
 
   @Override
-  public void bind(final PropDefaultsView object) {
+  public void bind(@NonNull final PropDefaultsView object) {
     super.bind(object);
     object.primitiveWithExplicitDefault(primitiveWithExplicitDefault_Int);
     object.defaultsToNull(defaultsToNull_CharSequence);
@@ -76,7 +76,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   }
 
   @Override
-  public void bind(final PropDefaultsView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final PropDefaultsView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof PropDefaultsViewModel_)) {
       bind(object);
       return;
@@ -131,7 +131,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   }
 
   @Override
-  public void unbind(PropDefaultsView object) {
+  public void unbind(@NonNull PropDefaultsView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

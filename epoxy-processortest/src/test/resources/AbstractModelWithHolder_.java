@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -53,7 +54,7 @@ public class AbstractModelWithHolder_ extends AbstractModelWithHolder implements
   }
 
   @Override
-  public void unbind(AbstractModelWithHolder.Holder object) {
+  public void unbind(@NonNull AbstractModelWithHolder.Holder object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

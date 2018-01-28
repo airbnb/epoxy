@@ -42,13 +42,13 @@ public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> imple
   }
 
   @Override
-  public void bind(final GridSpanCountView object) {
+  public void bind(@NonNull final GridSpanCountView object) {
     super.bind(object);
     object.setClickListener(clickListener_String);
   }
 
   @Override
-  public void bind(final GridSpanCountView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final GridSpanCountView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof GridSpanCountViewModel_)) {
       bind(object);
       return;
@@ -83,7 +83,7 @@ public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> imple
   }
 
   @Override
-  public void unbind(GridSpanCountView object) {
+  public void unbind(@NonNull GridSpanCountView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

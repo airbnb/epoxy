@@ -62,7 +62,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   }
 
   @Override
-  public void bind(final DoNotHashView object) {
+  public void bind(@NonNull final DoNotHashView object) {
     super.bind(object);
     object.setClickListener(clickListener_OnClickListener);
     object.setTitle(title_CharSequence);
@@ -70,7 +70,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   }
 
   @Override
-  public void bind(final DoNotHashView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final DoNotHashView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof DoNotHashViewModel_)) {
       bind(object);
       return;
@@ -113,7 +113,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   }
 
   @Override
-  public void unbind(DoNotHashView object) {
+  public void unbind(@NonNull DoNotHashView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

@@ -45,7 +45,7 @@ public class TestFieldPropGenerateStringOverloadsOptionViewModel_ extends EpoxyM
   }
 
   @Override
-  protected TestFieldPropGenerateStringOverloadsOptionView buildView(ViewGroup parent) {
+  protected TestFieldPropGenerateStringOverloadsOptionView buildView(@NonNull ViewGroup parent) {
     TestFieldPropGenerateStringOverloadsOptionView v = new TestFieldPropGenerateStringOverloadsOptionView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;
@@ -58,14 +58,14 @@ public class TestFieldPropGenerateStringOverloadsOptionViewModel_ extends EpoxyM
   }
 
   @Override
-  public void bind(final TestFieldPropGenerateStringOverloadsOptionView object) {
+  public void bind(@NonNull final TestFieldPropGenerateStringOverloadsOptionView object) {
     super.bind(object);
     object.value = value_StringAttributeData.toString(object.getContext());
   }
 
   @Override
-  public void bind(final TestFieldPropGenerateStringOverloadsOptionView object,
-      EpoxyModel previousModel) {
+  public void bind(@NonNull final TestFieldPropGenerateStringOverloadsOptionView object,
+      @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof TestFieldPropGenerateStringOverloadsOptionViewModel_)) {
       bind(object);
       return;
@@ -102,7 +102,7 @@ public class TestFieldPropGenerateStringOverloadsOptionViewModel_ extends EpoxyM
   }
 
   @Override
-  public void unbind(TestFieldPropGenerateStringOverloadsOptionView object) {
+  public void unbind(@NonNull TestFieldPropGenerateStringOverloadsOptionView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

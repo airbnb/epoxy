@@ -42,13 +42,13 @@ public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements 
   }
 
   @Override
-  public void bind(final SavedStateView object) {
+  public void bind(@NonNull final SavedStateView object) {
     super.bind(object);
     object.setClickListener(clickListener_String);
   }
 
   @Override
-  public void bind(final SavedStateView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final SavedStateView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof SavedStateViewModel_)) {
       bind(object);
       return;
@@ -83,7 +83,7 @@ public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements 
   }
 
   @Override
-  public void unbind(SavedStateView object) {
+  public void unbind(@NonNull SavedStateView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

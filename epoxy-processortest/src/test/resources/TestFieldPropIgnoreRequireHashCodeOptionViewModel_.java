@@ -44,7 +44,7 @@ public class TestFieldPropIgnoreRequireHashCodeOptionViewModel_ extends EpoxyMod
   }
 
   @Override
-  protected TestFieldPropIgnoreRequireHashCodeOptionView buildView(ViewGroup parent) {
+  protected TestFieldPropIgnoreRequireHashCodeOptionView buildView(@NonNull ViewGroup parent) {
     TestFieldPropIgnoreRequireHashCodeOptionView v = new TestFieldPropIgnoreRequireHashCodeOptionView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;
@@ -60,14 +60,14 @@ public class TestFieldPropIgnoreRequireHashCodeOptionViewModel_ extends EpoxyMod
   }
 
   @Override
-  public void bind(final TestFieldPropIgnoreRequireHashCodeOptionView object) {
+  public void bind(@NonNull final TestFieldPropIgnoreRequireHashCodeOptionView object) {
     super.bind(object);
     object.value = value_OnClickListener;
   }
 
   @Override
-  public void bind(final TestFieldPropIgnoreRequireHashCodeOptionView object,
-      EpoxyModel previousModel) {
+  public void bind(@NonNull final TestFieldPropIgnoreRequireHashCodeOptionView object,
+      @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof TestFieldPropIgnoreRequireHashCodeOptionViewModel_)) {
       bind(object);
       return;
@@ -104,7 +104,7 @@ public class TestFieldPropIgnoreRequireHashCodeOptionViewModel_ extends EpoxyMod
   }
 
   @Override
-  public void unbind(TestFieldPropIgnoreRequireHashCodeOptionView object) {
+  public void unbind(@NonNull TestFieldPropIgnoreRequireHashCodeOptionView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

@@ -44,7 +44,7 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
   }
 
   @Override
-  protected TestFieldPropDoNotHashOptionView buildView(ViewGroup parent) {
+  protected TestFieldPropDoNotHashOptionView buildView(@NonNull ViewGroup parent) {
     TestFieldPropDoNotHashOptionView v = new TestFieldPropDoNotHashOptionView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;
@@ -60,13 +60,13 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
   }
 
   @Override
-  public void bind(final TestFieldPropDoNotHashOptionView object) {
+  public void bind(@NonNull final TestFieldPropDoNotHashOptionView object) {
     super.bind(object);
     object.value = value_OnClickListener;
   }
 
   @Override
-  public void bind(final TestFieldPropDoNotHashOptionView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final TestFieldPropDoNotHashOptionView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof TestFieldPropDoNotHashOptionViewModel_)) {
       bind(object);
       return;
@@ -102,7 +102,7 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
   }
 
   @Override
-  public void unbind(TestFieldPropDoNotHashOptionView object) {
+  public void unbind(@NonNull TestFieldPropDoNotHashOptionView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

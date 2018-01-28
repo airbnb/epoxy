@@ -1,6 +1,7 @@
 package com.airbnb.epoxy.sample.models;
 
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
@@ -20,13 +21,13 @@ public abstract class ImageButtonModel extends EpoxyModelWithHolder<ImageButtonH
   @EpoxyAttribute(DoNotHash) OnClickListener clickListener;
 
   @Override
-  public void bind(ImageButtonHolder holder) {
+  public void bind(@NonNull ImageButtonHolder holder) {
     holder.button.setImageResource(imageRes);
     holder.button.setOnClickListener(clickListener);
   }
 
   @Override
-  public void unbind(ImageButtonHolder holder) {
+  public void unbind(@NonNull ImageButtonHolder holder) {
     // Release resources and don't leak listeners as this view goes back to the view pool
     holder.button.setOnClickListener(null);
     holder.button.setImageDrawable(null);

@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.airbnb.epoxy.othermodule.R;
 import java.lang.CharSequence;
@@ -53,7 +54,7 @@ public class ModelForTestingDuplicateRValues_ extends ModelForTestingDuplicateRV
   }
 
   @Override
-  public void unbind(Object object) {
+  public void unbind(@NonNull Object object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

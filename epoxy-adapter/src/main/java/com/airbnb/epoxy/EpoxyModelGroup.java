@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -141,7 +142,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
 
   @CallSuper
   @Override
-  public void bind(Holder holder) {
+  public void bind(@NonNull Holder holder) {
     iterateModels(holder, new IterateModelsCallback() {
       @Override
       public void onModel(EpoxyModel model, Object boundObject, View view, int modelIndex) {
@@ -154,7 +155,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
 
   @CallSuper
   @Override
-  public void bind(Holder holder, final List<Object> payloads) {
+  public void bind(@NonNull Holder holder, @NonNull final List<Object> payloads) {
     iterateModels(holder, new IterateModelsCallback() {
       @Override
       public void onModel(EpoxyModel model, Object boundObject, View view, int modelIndex) {
@@ -166,7 +167,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
   }
 
   @Override
-  public void bind(Holder holder, EpoxyModel<?> previouslyBoundModel) {
+  public void bind(@NonNull Holder holder, @NonNull EpoxyModel<?> previouslyBoundModel) {
     if (!(previouslyBoundModel instanceof EpoxyModelGroup)) {
       bind(holder);
       return;
@@ -204,7 +205,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
 
   @CallSuper
   @Override
-  public void unbind(Holder holder) {
+  public void unbind(@NonNull Holder holder) {
     iterateModels(holder, new IterateModelsCallback() {
       @Override
       public void onModel(EpoxyModel model, Object boundObject, View view, int modelIndex) {

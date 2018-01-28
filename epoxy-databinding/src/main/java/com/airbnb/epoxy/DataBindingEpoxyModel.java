@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ import java.util.List;
 public abstract class DataBindingEpoxyModel extends EpoxyModelWithHolder<DataBindingHolder> {
 
   @Override
-  protected View buildView(ViewGroup parent) {
+  protected View buildView(@NonNull ViewGroup parent) {
     LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
     ViewDataBinding binding = DataBindingUtil.inflate(layoutInflater, getViewType(), parent, false);
     View view = binding.getRoot();
@@ -43,19 +44,19 @@ public abstract class DataBindingEpoxyModel extends EpoxyModelWithHolder<DataBin
   }
 
   @Override
-  public void bind(DataBindingHolder holder) {
+  public void bind(@NonNull DataBindingHolder holder) {
     setDataBindingVariables(holder.dataBinding);
     holder.dataBinding.executePendingBindings();
   }
 
   @Override
-  public void bind(DataBindingHolder holder, EpoxyModel<?> previouslyBoundModel) {
+  public void bind(@NonNull DataBindingHolder holder, @NonNull EpoxyModel<?> previouslyBoundModel) {
     setDataBindingVariables(holder.dataBinding, previouslyBoundModel);
     holder.dataBinding.executePendingBindings();
   }
 
   @Override
-  public void bind(DataBindingHolder holder, List<Object> payloads) {
+  public void bind(@NonNull DataBindingHolder holder, @NonNull List<Object> payloads) {
     setDataBindingVariables(holder.dataBinding, payloads);
     holder.dataBinding.executePendingBindings();
   }
@@ -88,7 +89,7 @@ public abstract class DataBindingEpoxyModel extends EpoxyModelWithHolder<DataBin
   }
 
   @Override
-  public void unbind(DataBindingHolder holder) {
+  public void unbind(@NonNull DataBindingHolder holder) {
     holder.dataBinding.unbind();
   }
 

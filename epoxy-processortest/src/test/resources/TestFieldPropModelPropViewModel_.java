@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 import java.lang.CharSequence;
@@ -36,7 +37,7 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
   }
 
   @Override
-  protected TestFieldPropModelPropView buildView(ViewGroup parent) {
+  protected TestFieldPropModelPropView buildView(@NonNull ViewGroup parent) {
     TestFieldPropModelPropView v = new TestFieldPropModelPropView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;
@@ -49,13 +50,13 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
   }
 
   @Override
-  public void bind(final TestFieldPropModelPropView object) {
+  public void bind(@NonNull final TestFieldPropModelPropView object) {
     super.bind(object);
     object.value = value_Int;
   }
 
   @Override
-  public void bind(final TestFieldPropModelPropView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final TestFieldPropModelPropView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof TestFieldPropModelPropViewModel_)) {
       bind(object);
       return;
@@ -91,7 +92,7 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
   }
 
   @Override
-  public void unbind(TestFieldPropModelPropView object) {
+  public void unbind(@NonNull TestFieldPropModelPropView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

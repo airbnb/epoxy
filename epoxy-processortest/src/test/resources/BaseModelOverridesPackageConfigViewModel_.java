@@ -42,13 +42,13 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
   }
 
   @Override
-  public void bind(final BaseModelView object) {
+  public void bind(@NonNull final BaseModelView object) {
     super.bind(object);
     object.setClickListener(clickListener_String);
   }
 
   @Override
-  public void bind(final BaseModelView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final BaseModelView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof BaseModelViewModel_)) {
       bind(object);
       return;
@@ -83,7 +83,7 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
   }
 
   @Override
-  public void unbind(BaseModelView object) {
+  public void unbind(@NonNull BaseModelView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

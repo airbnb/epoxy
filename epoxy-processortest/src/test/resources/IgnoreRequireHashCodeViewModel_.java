@@ -46,13 +46,13 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
   }
 
   @Override
-  public void bind(final IgnoreRequireHashCodeView object) {
+  public void bind(@NonNull final IgnoreRequireHashCodeView object) {
     super.bind(object);
     object.setClickListener(clickListener_OnClickListener);
   }
 
   @Override
-  public void bind(final IgnoreRequireHashCodeView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final IgnoreRequireHashCodeView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof IgnoreRequireHashCodeViewModel_)) {
       bind(object);
       return;
@@ -87,7 +87,7 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
   }
 
   @Override
-  public void unbind(IgnoreRequireHashCodeView object) {
+  public void unbind(@NonNull IgnoreRequireHashCodeView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

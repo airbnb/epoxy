@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPro
   }
 
   @Override
-  protected TestFieldPropCallbackPropView buildView(ViewGroup parent) {
+  protected TestFieldPropCallbackPropView buildView(@NonNull ViewGroup parent) {
     TestFieldPropCallbackPropView v = new TestFieldPropCallbackPropView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;
@@ -54,13 +55,13 @@ public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPro
   }
 
   @Override
-  public void bind(final TestFieldPropCallbackPropView object) {
+  public void bind(@NonNull final TestFieldPropCallbackPropView object) {
     super.bind(object);
     object.value = value_OnClickListener;
   }
 
   @Override
-  public void bind(final TestFieldPropCallbackPropView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final TestFieldPropCallbackPropView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof TestFieldPropCallbackPropViewModel_)) {
       bind(object);
       return;
@@ -96,7 +97,7 @@ public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPro
   }
 
   @Override
-  public void unbind(TestFieldPropCallbackPropView object) {
+  public void unbind(@NonNull TestFieldPropCallbackPropView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

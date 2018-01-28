@@ -99,7 +99,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
   }
 
   @Override
-  public void bind(final PropGroupsView object) {
+  public void bind(@NonNull final PropGroupsView object) {
     super.bind(object);
     if (assignedAttributes_epoxyGeneratedModel.get(4)) {
       object.setPrimitive(primitive_Int);
@@ -164,7 +164,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
   }
 
   @Override
-  public void bind(final PropGroupsView object, EpoxyModel previousModel) {
+  public void bind(@NonNull final PropGroupsView object, @NonNull EpoxyModel previousModel) {
     if (!(previousModel instanceof PropGroupsViewModel_)) {
       bind(object);
       return;
@@ -296,7 +296,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
   }
 
   @Override
-  public void unbind(PropGroupsView object) {
+  public void unbind(@NonNull PropGroupsView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);

@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.databinding.ViewDataBinding;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.Boolean;
 import java.lang.Byte;
@@ -65,7 +66,7 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
   }
 
   @Override
-  public void unbind(DataBindingEpoxyModel.DataBindingHolder object) {
+  public void unbind(@NonNull DataBindingEpoxyModel.DataBindingHolder object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
