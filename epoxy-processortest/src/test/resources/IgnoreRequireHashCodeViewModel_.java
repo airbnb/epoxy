@@ -40,9 +40,6 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
   public void handlePreBind(final EpoxyViewHolder holder, final IgnoreRequireHashCodeView object,
       int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
-    if (clickListener_OnClickListener instanceof WrappedEpoxyModelClickListener) {
-      ((com.airbnb.epoxy.WrappedEpoxyModelClickListener) clickListener_OnClickListener).bind(holder, object);
-    }
   }
 
   @Override
@@ -117,7 +114,7 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
       this.clickListener_OnClickListener = null;
     }
     else {
-      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(this, clickListener);
+      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(clickListener);
     }
     return this;
   }

@@ -597,22 +597,6 @@ internal class GeneratedModelWriter(
                     .endControlFlow()
         }
 
-        val clickWrapperType = getClassName(WRAPPED_LISTENER_TYPE)
-        for (attribute in modelInfo.getAttributeInfo()) {
-            if (!attribute.isViewClickListener) {
-                continue
-            }
-            // Pass the view holder and bound object on to the wrapped click listener
-
-            preBindBuilder
-                    .beginControlFlow("if (\$L instanceof \$T)", attribute.superGetterCode(),
-                                      clickWrapperType)
-                    .addStatement("((\$L) \$L).bind(\$L, \$L)", clickWrapperType,
-                                  attribute.superGetterCode(),
-                                  viewHolderParam.name, boundObjectParam.name)
-                    .endControlFlow()
-        }
-
         return preBindBuilder.build()
     }
 
@@ -1018,7 +1002,7 @@ internal class GeneratedModelWriter(
 
         setBitSetIfNeeded(classInfo, attribute, builder)
 
-        val wrapperClickListenerConstructor = CodeBlock.of("new \$T(this, \$L)",
+        val wrapperClickListenerConstructor = CodeBlock.of("new \$T(\$L)",
                                                            getClassName(WRAPPED_LISTENER_TYPE),
                                                            param.name)
 

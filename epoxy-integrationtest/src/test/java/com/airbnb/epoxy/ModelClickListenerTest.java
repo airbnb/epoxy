@@ -1,9 +1,9 @@
 package com.airbnb.epoxy;
 
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.AdapterDataObserver;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.FrameLayout;
 
 import com.airbnb.epoxy.integrationtest.BuildConfig;
 import com.airbnb.epoxy.integrationtest.ModelWithClickListener_;
@@ -12,7 +12,6 @@ import com.airbnb.epoxy.integrationtest.ModelWithLongClickListener_;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertFalse;
@@ -21,14 +20,13 @@ import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -58,7 +56,8 @@ public class ModelClickListenerTest {
     }
   }
 
-  static class ModelLongClickListener implements OnModelLongClickListener<ModelWithLongClickListener_, View> {
+  static class ModelLongClickListener
+      implements OnModelLongClickListener<ModelWithLongClickListener_, View> {
     boolean clicked;
 
     @Override
@@ -88,12 +87,27 @@ public class ModelClickListenerTest {
 
     lifecycleHelper.buildModelsAndBind(controller);
 
-    View view = new View(RuntimeEnvironment.application);
-    model.clickListener().onClick(view);
+    View viewMock = mockModelForClicking(model);
+
+    model.clickListener().onClick(viewMock);
     assertTrue(modelClickListener.clicked);
 
-    verify(modelClickListener)
-        .onClick(eq(model), any(View.class), nullable(View.class), anyInt());
+    verify(modelClickListener).onClick(eq(model), any(View.class), eq(viewMock), eq(1));
+  }
+
+  private View mockModelForClicking(EpoxyModel model) {
+    View mockedView = mock(View.class);
+    RecyclerView recyclerMock = mock(RecyclerView.class);
+    EpoxyViewHolder holderMock = mock(EpoxyViewHolder.class);
+
+    when(mockedView.getParent()).thenReturn(recyclerMock);
+    when(recyclerMock.findContainingViewHolder(mockedView)).thenReturn(holderMock);
+    when(holderMock.getAdapterPosition()).thenReturn(1);
+    when(holderMock.getModel()).thenReturn(model);
+
+    View parentView = mock(View.class);
+    when(holderMock.objectToBind()).thenReturn(parentView);
+    return mockedView;
   }
 
   @Test
@@ -107,12 +121,12 @@ public class ModelClickListenerTest {
 
     lifecycleHelper.buildModelsAndBind(controller);
 
-    View view = new View(RuntimeEnvironment.application);
-    model.clickListener().onLongClick(view);
+    View viewMock = mockModelForClicking(model);
+
+    model.clickListener().onLongClick(viewMock);
     assertTrue(modelClickListener.clicked);
 
-    verify(modelClickListener)
-        .onLongClick(eq(model), any(View.class), nullable(View.class), anyInt());
+    verify(modelClickListener).onLongClick(eq(model), any(View.class), eq(viewMock), eq(1));
   }
 
   @Test
@@ -131,9 +145,11 @@ public class ModelClickListenerTest {
     assertNotSame(model.clickListener(), viewClickListener);
 
     lifecycleHelper.buildModelsAndBind(controller);
+    mockModelForClicking(model);
     assertNotNull(model.clickListener());
+    View viewMock = mockModelForClicking(model);
 
-    model.clickListener().onClick(null);
+    model.clickListener().onClick(viewMock);
     assertTrue(modelClickListener.clicked);
     assertFalse(viewClickListener.clicked);
   }
@@ -196,18 +212,18 @@ public class ModelClickListenerTest {
     model = new ModelWithClickListener_();
     model.clickListener(modelClickListener);
     controller.setModel(model);
-    controller.requestModelBuild();
+    lifecycleHelper.buildModelsAndBind(controller);
 
     // The second update shouldn't cause a item change
     model = new ModelWithClickListener_();
     model.clickListener(modelClickListener);
     controller.setModel(model);
-    controller.requestModelBuild();
+    lifecycleHelper.buildModelsAndBind(controller);
 
     model = new ModelWithClickListener_();
     model.clickListener(viewClickListener);
     controller.setModel(model);
-    controller.requestModelBuild();
+    lifecycleHelper.buildModelsAndBind(controller);
 
     verify(observerMock, times(2)).onItemRangeChanged(eq(0), eq(1), any());
     verifyNoMoreInteractions(observerMock);
