@@ -11,6 +11,7 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -362,5 +363,104 @@ public class EpoxyControllerTest {
     assertEquals(testModels, adapter.getCurrentModels());
     controller.requestModelBuild();
     assertEquals(testModels, adapter.getCurrentModels());
+  }
+
+  @Test
+  public void testDuplicateFilteringDisabledByDefault() {
+    EpoxyController controller = new EpoxyController() {
+
+      @Override
+      protected void buildModels() {
+
+      }
+    };
+
+    assertFalse(controller.isDuplicateFilteringEnabled());
+  }
+
+  @Test
+  public void testDuplicateFilteringCanBeToggled() {
+    EpoxyController controller = new EpoxyController() {
+
+      @Override
+      protected void buildModels() {
+
+      }
+    };
+
+    assertFalse(controller.isDuplicateFilteringEnabled());
+
+    controller.setFilterDuplicates(true);
+    assertTrue(controller.isDuplicateFilteringEnabled());
+
+    controller.setFilterDuplicates(false);
+    assertFalse(controller.isDuplicateFilteringEnabled());
+  }
+
+  @Test
+  public void testGlobalDuplicateFilteringDefault() {
+    EpoxyController.setGlobalDuplicateFilteringDefault(true);
+
+    EpoxyController controller = new EpoxyController() {
+
+      @Override
+      protected void buildModels() {
+
+      }
+    };
+
+    assertTrue(controller.isDuplicateFilteringEnabled());
+
+    controller.setFilterDuplicates(false);
+    assertFalse(controller.isDuplicateFilteringEnabled());
+
+    controller.setFilterDuplicates(true);
+    assertTrue(controller.isDuplicateFilteringEnabled());
+
+    // Reset static field for future tests
+    EpoxyController.setGlobalDuplicateFilteringDefault(false);
+  }
+
+  @Test
+  public void testDebugLoggingCanBeToggled() {
+    EpoxyController controller = new EpoxyController() {
+
+      @Override
+      protected void buildModels() {
+
+      }
+    };
+
+    assertFalse(controller.isDebugLoggingEnabled());
+
+    controller.setDebugLoggingEnabled(true);
+    assertTrue(controller.isDebugLoggingEnabled());
+
+    controller.setDebugLoggingEnabled(false);
+    assertFalse(controller.isDebugLoggingEnabled());
+  }
+
+  @Test
+  public void testGlobalDebugLoggingDefault() {
+    EpoxyController.setGlobalDebugLoggingEnabled(true);
+
+    EpoxyController controller = new EpoxyController() {
+
+      @Override
+      protected void buildModels() {
+
+      }
+    };
+
+    assertTrue(controller.isDebugLoggingEnabled());
+
+    controller.setDebugLoggingEnabled(false);
+    assertFalse(controller.isDebugLoggingEnabled());
+
+    controller.setDebugLoggingEnabled(true);
+    assertTrue(controller.isDebugLoggingEnabled());
+
+    // Reset static field for future tests
+    EpoxyController.setGlobalDebugLoggingEnabled(false);
   }
 }

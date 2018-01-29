@@ -41,6 +41,8 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
 public abstract class EpoxyController {
 
   private static final Timer NO_OP_TIMER = new NoOpTimer();
+  private static boolean filterDuplicatesDefault = false;
+  private static boolean globalDebugLoggingEnabled = false;
 
   /**
    * We check that the adapter is not connected to multiple recyclerviews, but when a fragment has
@@ -56,7 +58,7 @@ public abstract class EpoxyController {
   private final Handler handler = new Handler(Looper.getMainLooper());
   private final List<Interceptor> interceptors = new ArrayList<>();
   private ControllerModelList modelsBeingBuilt;
-  private boolean filterDuplicates;
+  private boolean filterDuplicates = filterDuplicatesDefault;
   /** Used to time operations and log their duration when in debug mode. */
   private Timer timer = NO_OP_TIMER;
   private EpoxyDiffLogger debugObserver;
@@ -64,6 +66,10 @@ public abstract class EpoxyController {
   private List<ModelInterceptorCallback> modelInterceptorCallbacks;
   private int recyclerViewAttachCount = 0;
   private EpoxyModel<?> stagedModel;
+
+  public EpoxyController() {
+    setDebugLoggingEnabled(globalDebugLoggingEnabled);
+  }
 
   /**
    * Posting and canceling runnables is a bit expensive - it is synchronizes and iterates the the
@@ -483,10 +489,23 @@ public abstract class EpoxyController {
     this.filterDuplicates = filterDuplicates;
   }
 
+  public boolean isDuplicateFilteringEnabled() {
+    return filterDuplicates;
+  }
+
+  /**
+   * {@link #setFilterDuplicates(boolean)} is disabled in each EpoxyController by default. It can be
+   * toggled individually in each controller, or alternatively you can use this to change the
+   * default value for all EpoxyControllers.
+   */
+  public static void setGlobalDuplicateFilteringDefault(boolean filterDuplicatesByDefault) {
+    EpoxyController.filterDuplicatesDefault = filterDuplicatesByDefault;
+  }
+
   /**
    * If enabled, DEBUG logcat messages will be printed to show when models are rebuilt, the time
    * taken to build them, the time taken to diff them, and the item change outcomes from the
-   * differ. The tag of the logcat message is your adapter name.
+   * differ. The tag of the logcat message is the class name of your EpoxyController.
    * <p>
    * This is useful to verify that models are being diffed as expected, as well as to watch for
    * slowdowns in model building or diffing to indicate when you should optimize model building or
@@ -509,6 +528,20 @@ public abstract class EpoxyController {
         adapter.unregisterAdapterDataObserver(debugObserver);
       }
     }
+  }
+
+  public boolean isDebugLoggingEnabled() {
+    return timer != NO_OP_TIMER;
+  }
+
+  /**
+   * Similar to {@link #setDebugLoggingEnabled(boolean)}, but this changes the global default for
+   * all EpoxyControllers.
+   * <p>
+   * The default is false.
+   */
+  public static void setGlobalDebugLoggingEnabled(boolean globalDebugLoggingEnabled) {
+    EpoxyController.globalDebugLoggingEnabled = globalDebugLoggingEnabled;
   }
 
   /**
@@ -583,10 +616,65 @@ public abstract class EpoxyController {
   }
 
   /**
-   * This is called when recoverable exceptions happen at runtime. They can be ignored and Epoxy
-   * will recover, but you can override this to be aware of when they happen.
+   * This is called when recoverable exceptions occur at runtime. By default they are ignored and
+   * Epoxy will recover, but you can override this to be aware of when they happen.
+   * <p>
+   * A common use for this is being aware of duplicates when {@link #setFilterDuplicates(boolean)}
+   * is enabled.
+   * <p>
+   * By default the global exception handler provided by
+   * {@link #setGlobalExceptionHandler(ExceptionHandler)}
+   * is called with the exception. Overriding this allows you to provide your own handling for a
+   * controller.
    */
   protected void onExceptionSwallowed(@NonNull RuntimeException exception) {
+    globalExceptionHandler.onException(this, exception);
+  }
+
+  /**
+   * Default handler for exceptions in all EpoxyControllers. Set with {@link
+   * #setGlobalExceptionHandler(ExceptionHandler)}
+   */
+  private static ExceptionHandler globalExceptionHandler =
+      new ExceptionHandler() {
+
+        @Override
+        public void onException(@NonNull EpoxyController controller,
+            @NonNull RuntimeException exception) {
+          // Ignore exceptions as the default
+        }
+      };
+
+  /**
+   * Set a callback to be notified when a recoverable exception occurs at runtime.  By default these
+   * are ignored and Epoxy will recover, but you can override this to be aware of when they happen.
+   * <p>
+   * For example, you could choose to rethrow the exception in development builds, or log them in
+   * production.
+   * <p>
+   * A common use for this is being aware of duplicates when {@link #setFilterDuplicates(boolean)}
+   * is enabled.
+   * <p>
+   * This callback will be used in all EpoxyController classes. If you would like specific handling
+   * in a certain controller you can override {@link #onExceptionSwallowed(RuntimeException)} in
+   * that controller.
+   */
+  public static void setGlobalExceptionHandler(
+      @NonNull ExceptionHandler globalExceptionHandler) {
+    EpoxyController.globalExceptionHandler = globalExceptionHandler;
+  }
+
+  public interface ExceptionHandler {
+    /**
+     * This is called when recoverable exceptions happen at runtime. They can be ignored and Epoxy
+     * will recover, but you can override this to be aware of when they happen.
+     * <p>
+     * For example, you could choose to rethrow the exception in development builds, or log them in
+     * production.
+     *
+     * @param controller The EpoxyController that the error occurred in.
+     */
+    void onException(@NonNull EpoxyController controller, @NonNull RuntimeException exception);
   }
 
   void onAttachedToRecyclerViewInternal(RecyclerView recyclerView) {
