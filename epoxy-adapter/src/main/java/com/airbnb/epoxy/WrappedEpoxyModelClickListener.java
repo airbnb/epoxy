@@ -72,7 +72,7 @@ public class WrappedEpoxyModelClickListener<T extends EpoxyModel<?>, V>
 
   @Nullable
   private static EpoxyViewHolder getEpoxyHolderForChildView(View v) {
-    RecyclerView recyclerView = findParentRecyclerView(v.getParent());
+    RecyclerView recyclerView = findParentRecyclerView(v);
     if (recyclerView == null) {
       return null;
     }
@@ -90,16 +90,21 @@ public class WrappedEpoxyModelClickListener<T extends EpoxyModel<?>, V>
   }
 
   @Nullable
-  private static RecyclerView findParentRecyclerView(@Nullable ViewParent v) {
+  private static RecyclerView findParentRecyclerView(@Nullable View v) {
     if (v == null) {
       return null;
     }
 
-    if (v instanceof RecyclerView) {
-      return (RecyclerView) v;
+    ViewParent parent = v.getParent();
+    if (parent instanceof RecyclerView) {
+      return (RecyclerView) parent;
     }
 
-    return findParentRecyclerView(v.getParent());
+    if (parent instanceof View) {
+      return findParentRecyclerView((View) parent);
+    }
+
+    return null;
   }
 
   @Override
