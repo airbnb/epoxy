@@ -61,9 +61,6 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   public void handlePreBind(final EpoxyViewHolder holder, final TestFieldPropChildView object,
       int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
-    if (value_OnClickListener instanceof WrappedEpoxyModelClickListener) {
-      ((com.airbnb.epoxy.WrappedEpoxyModelClickListener) value_OnClickListener).bind(holder, object);
-    }
   }
 
   @Override
@@ -207,7 +204,7 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
       this.value_OnClickListener = null;
     }
     else {
-      this.value_OnClickListener = new WrappedEpoxyModelClickListener(this, value);
+      this.value_OnClickListener = new WrappedEpoxyModelClickListener(value);
     }
     return this;
   }

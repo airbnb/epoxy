@@ -137,9 +137,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   public void handlePreBind(final EpoxyViewHolder holder, final TestManyTypesView object,
       int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
-    if (clickListener_OnClickListener instanceof WrappedEpoxyModelClickListener) {
-      ((com.airbnb.epoxy.WrappedEpoxyModelClickListener) clickListener_OnClickListener).bind(holder, object);
-    }
   }
 
   @Override
@@ -507,7 +504,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
       this.clickListener_OnClickListener = null;
     }
     else {
-      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(this, clickListener);
+      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(clickListener);
     }
     return this;
   }

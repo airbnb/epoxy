@@ -35,9 +35,6 @@ public class TestCallbackPropViewModel_ extends EpoxyModel<TestCallbackPropView>
   public void handlePreBind(final EpoxyViewHolder holder, final TestCallbackPropView object,
       int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
-    if (listener_OnClickListener instanceof WrappedEpoxyModelClickListener) {
-      ((com.airbnb.epoxy.WrappedEpoxyModelClickListener) listener_OnClickListener).bind(holder, object);
-    }
   }
 
   @Override
@@ -113,7 +110,7 @@ public class TestCallbackPropViewModel_ extends EpoxyModel<TestCallbackPropView>
       this.listener_OnClickListener = null;
     }
     else {
-      this.listener_OnClickListener = new WrappedEpoxyModelClickListener(this, listener);
+      this.listener_OnClickListener = new WrappedEpoxyModelClickListener(listener);
     }
     return this;
   }

@@ -30,9 +30,6 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
-    if (clickListener instanceof WrappedEpoxyModelClickListener) {
-      ((com.airbnb.epoxy.WrappedEpoxyModelClickListener) clickListener).bind(holder, object);
-    }
   }
 
   @Override
@@ -85,7 +82,7 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
       super.clickListener = null;
     }
     else {
-      super.clickListener = new WrappedEpoxyModelClickListener(this, clickListener);
+      super.clickListener = new WrappedEpoxyModelClickListener(clickListener);
     }
     return this;
   }

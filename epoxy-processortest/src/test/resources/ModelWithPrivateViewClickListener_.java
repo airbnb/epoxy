@@ -30,9 +30,6 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
-    if (super.getClickListener() instanceof WrappedEpoxyModelClickListener) {
-      ((com.airbnb.epoxy.WrappedEpoxyModelClickListener) super.getClickListener()).bind(holder, object);
-    }
   }
 
   @Override
@@ -85,7 +82,7 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
       super.setClickListener(null);
     }
     else {
-      super.setClickListener(new WrappedEpoxyModelClickListener(this, clickListener));
+      super.setClickListener(new WrappedEpoxyModelClickListener(clickListener));
     }
     return this;
   }

@@ -56,9 +56,6 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   public void handlePreBind(final EpoxyViewHolder holder, final DoNotHashView object,
       int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
-    if (clickListener_OnClickListener instanceof WrappedEpoxyModelClickListener) {
-      ((com.airbnb.epoxy.WrappedEpoxyModelClickListener) clickListener_OnClickListener).bind(holder, object);
-    }
   }
 
   @Override
@@ -163,7 +160,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
       this.clickListener_OnClickListener = null;
     }
     else {
-      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(this, clickListener);
+      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(clickListener);
     }
     return this;
   }
