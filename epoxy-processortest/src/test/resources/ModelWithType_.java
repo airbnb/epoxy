@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -89,8 +90,8 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> implement
   }
 
   @Override
-  public ModelWithType_<T> id(Number... ids) {
-    super.id(ids);
+  public ModelWithType_<T> id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -101,20 +102,20 @@ public class ModelWithType_<T extends String> extends ModelWithType<T> implement
   }
 
   @Override
-  public ModelWithType_<T> id(CharSequence key) {
-    super.id(key);
+  public ModelWithType_<T> id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelWithType_<T> id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelWithType_<T> id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelWithType_<T> id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelWithType_<T> id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

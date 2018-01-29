@@ -1,5 +1,6 @@
 package com.airbnb.epoxy.integrationtest;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.airbnb.epoxy.EpoxyAttribute;
@@ -14,7 +15,7 @@ public class ModelChangesDuringBind extends EpoxyModel<View> {
   }
 
   @Override
-  public void bind(View view) {
+  public void bind(@NonNull View view) {
     super.bind(view);
     value = 3;
   }

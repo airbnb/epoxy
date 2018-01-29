@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Deprecated;
@@ -81,8 +82,8 @@ public class ModelWithAnnotation_ extends ModelWithAnnotation implements Generat
   }
 
   @Override
-  public ModelWithAnnotation_ id(Number... ids) {
-    super.id(ids);
+  public ModelWithAnnotation_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -93,20 +94,20 @@ public class ModelWithAnnotation_ extends ModelWithAnnotation implements Generat
   }
 
   @Override
-  public ModelWithAnnotation_ id(CharSequence key) {
-    super.id(key);
+  public ModelWithAnnotation_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelWithAnnotation_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelWithAnnotation_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelWithAnnotation_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelWithAnnotation_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

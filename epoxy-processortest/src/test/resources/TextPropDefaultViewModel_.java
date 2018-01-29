@@ -244,8 +244,8 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   }
 
   @Override
-  public TextPropDefaultViewModel_ id(Number... ids) {
-    super.id(ids);
+  public TextPropDefaultViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -256,20 +256,20 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   }
 
   @Override
-  public TextPropDefaultViewModel_ id(CharSequence key) {
-    super.id(key);
+  public TextPropDefaultViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public TextPropDefaultViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public TextPropDefaultViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TextPropDefaultViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public TextPropDefaultViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

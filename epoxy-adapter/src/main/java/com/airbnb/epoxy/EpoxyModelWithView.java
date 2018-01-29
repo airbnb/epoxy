@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -40,7 +41,7 @@ public abstract class EpoxyModelWithView<T extends View> extends EpoxyModel<T> {
    * @param parent The parent ViewGroup that the returned view will be added to.
    */
   @Override
-  protected abstract T buildView(ViewGroup parent);
+  protected abstract T buildView(@NonNull ViewGroup parent);
 
   @Override
   protected final int getDefaultLayout() {

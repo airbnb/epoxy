@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.Boolean;
 import java.lang.Byte;
@@ -65,15 +66,15 @@ public interface ModelWithAllFieldTypesBuilder {
 
   ModelWithAllFieldTypesBuilder id(long id);
 
-  ModelWithAllFieldTypesBuilder id(Number... ids);
+  ModelWithAllFieldTypesBuilder id(@NonNull Number... arg0);
 
   ModelWithAllFieldTypesBuilder id(long id1, long id2);
 
-  ModelWithAllFieldTypesBuilder id(CharSequence key);
+  ModelWithAllFieldTypesBuilder id(@NonNull CharSequence arg0);
 
-  ModelWithAllFieldTypesBuilder id(CharSequence key, CharSequence... otherKeys);
+  ModelWithAllFieldTypesBuilder id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1);
 
-  ModelWithAllFieldTypesBuilder id(CharSequence key, long id);
+  ModelWithAllFieldTypesBuilder id(@NonNull CharSequence arg0, long arg1);
 
   ModelWithAllFieldTypesBuilder layout(@LayoutRes int arg0);
 

@@ -164,8 +164,8 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
   }
 
   @Override
-  public TestFieldPropDoNotHashOptionViewModel_ id(Number... ids) {
-    super.id(ids);
+  public TestFieldPropDoNotHashOptionViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -176,20 +176,21 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
   }
 
   @Override
-  public TestFieldPropDoNotHashOptionViewModel_ id(CharSequence key) {
-    super.id(key);
+  public TestFieldPropDoNotHashOptionViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public TestFieldPropDoNotHashOptionViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public TestFieldPropDoNotHashOptionViewModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestFieldPropDoNotHashOptionViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public TestFieldPropDoNotHashOptionViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

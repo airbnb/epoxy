@@ -1,5 +1,7 @@
 package com.airbnb.epoxy.integrationtest;
 
+import android.support.annotation.NonNull;
+
 import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.EpoxyModelClass;
@@ -16,7 +18,7 @@ public abstract class ModelGroupWithAnnotation extends EpoxyModelGroup {
   }
 
   @Override
-  public void bind(Holder holder) {
+  public void bind(@NonNull Holder holder) {
     super.bind(holder);
     holder.getRootView().setBackgroundColor(backgroundColor);
   }

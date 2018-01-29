@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import java.lang.CharSequence;
@@ -156,8 +157,8 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
   }
 
   @Override
-  public TestFieldPropNullOnRecycleOptionViewModel_ id(Number... ids) {
-    super.id(ids);
+  public TestFieldPropNullOnRecycleOptionViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -168,21 +169,21 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
   }
 
   @Override
-  public TestFieldPropNullOnRecycleOptionViewModel_ id(CharSequence key) {
-    super.id(key);
+  public TestFieldPropNullOnRecycleOptionViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public TestFieldPropNullOnRecycleOptionViewModel_ id(CharSequence key,
-      CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public TestFieldPropNullOnRecycleOptionViewModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestFieldPropNullOnRecycleOptionViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public TestFieldPropNullOnRecycleOptionViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

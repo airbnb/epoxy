@@ -2,6 +2,7 @@ package com.airbnb.epoxy.sample.models;
 
 import android.animation.Animator;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.airbnb.epoxy.EpoxyAttribute;
@@ -29,13 +30,13 @@ public abstract class ColorModel extends EpoxyModelWithHolder<ColorHolder> {
   @EpoxyAttribute(DoNotHash) View.OnClickListener clickListener;
 
   @Override
-  public void bind(ColorHolder holder) {
+  public void bind(@NonNull ColorHolder holder) {
     holder.cardView.setBackgroundColor(color);
     holder.cardView.setOnClickListener(clickListener);
   }
 
   @Override
-  public void bind(ColorHolder holder, EpoxyModel<?> previouslyBoundModel) {
+  public void bind(@NonNull ColorHolder holder, @NonNull EpoxyModel<?> previouslyBoundModel) {
     // When this model changes we get a bind call with the previously bound model, so we can see
     // what changed and update accordingly.
     ColorModel previousModel = (ColorModel) previouslyBoundModel;
@@ -86,7 +87,7 @@ public abstract class ColorModel extends EpoxyModelWithHolder<ColorHolder> {
   }
 
   @Override
-  public void unbind(ColorHolder holder) {
+  public void unbind(@NonNull ColorHolder holder) {
     // Don't leak the click listener when this view goes back in the view pool
     holder.cardView.setOnClickListener(null);
     cancelAnimation(holder.lottieView);

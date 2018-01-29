@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -27,7 +28,7 @@ public class ViewTypeManagerIntegrationTest {
 
   static class TestModel extends EpoxyModelWithView<View> {
     @Override
-    protected View buildView(ViewGroup parent) {
+    protected View buildView(@NonNull ViewGroup parent) {
       return new FrameLayout(RuntimeEnvironment.application);
     }
   }

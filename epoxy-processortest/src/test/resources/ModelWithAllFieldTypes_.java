@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.Boolean;
 import java.lang.Byte;
@@ -299,8 +300,8 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   @Override
-  public ModelWithAllFieldTypes_ id(Number... ids) {
-    super.id(ids);
+  public ModelWithAllFieldTypes_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -311,20 +312,20 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   @Override
-  public ModelWithAllFieldTypes_ id(CharSequence key) {
-    super.id(key);
+  public ModelWithAllFieldTypes_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelWithAllFieldTypes_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelWithAllFieldTypes_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelWithAllFieldTypes_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelWithAllFieldTypes_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

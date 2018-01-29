@@ -1,6 +1,7 @@
 package com.airbnb.epoxy.models;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.airbnb.epoxy.EpoxyController;
 import com.airbnb.epoxy.EpoxyModel;
@@ -96,8 +97,8 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
   }
 
   @Override
-  public ModelWithIntDef_ id(Number... ids) {
-    super.id(ids);
+  public ModelWithIntDef_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -108,20 +109,20 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
   }
 
   @Override
-  public ModelWithIntDef_ id(CharSequence key) {
-    super.id(key);
+  public ModelWithIntDef_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelWithIntDef_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelWithIntDef_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelWithIntDef_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelWithIntDef_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

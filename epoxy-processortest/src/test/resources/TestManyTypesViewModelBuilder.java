@@ -60,15 +60,15 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder id(long id);
 
-  TestManyTypesViewModelBuilder id(Number... ids);
+  TestManyTypesViewModelBuilder id(@NonNull Number... arg0);
 
   TestManyTypesViewModelBuilder id(long id1, long id2);
 
-  TestManyTypesViewModelBuilder id(CharSequence key);
+  TestManyTypesViewModelBuilder id(@NonNull CharSequence arg0);
 
-  TestManyTypesViewModelBuilder id(CharSequence key, CharSequence... otherKeys);
+  TestManyTypesViewModelBuilder id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1);
 
-  TestManyTypesViewModelBuilder id(CharSequence key, long id);
+  TestManyTypesViewModelBuilder id(@NonNull CharSequence arg0, long arg1);
 
   TestManyTypesViewModelBuilder layout(@LayoutRes int arg0);
 

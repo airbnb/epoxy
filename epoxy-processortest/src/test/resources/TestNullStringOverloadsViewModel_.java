@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
 import android.support.annotation.StringRes;
@@ -166,8 +167,8 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   @Override
-  public TestNullStringOverloadsViewModel_ id(Number... ids) {
-    super.id(ids);
+  public TestNullStringOverloadsViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -178,20 +179,21 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   @Override
-  public TestNullStringOverloadsViewModel_ id(CharSequence key) {
-    super.id(key);
+  public TestNullStringOverloadsViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public TestNullStringOverloadsViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public TestNullStringOverloadsViewModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestNullStringOverloadsViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public TestNullStringOverloadsViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

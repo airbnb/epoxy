@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.databinding.ViewDataBinding;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.Boolean;
 import java.lang.Byte;
@@ -293,8 +294,8 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   @Override
-  public DataBindingModelWithAllFieldTypesNoValidation_ id(Number... ids) {
-    super.id(ids);
+  public DataBindingModelWithAllFieldTypesNoValidation_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -305,21 +306,21 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
   }
 
   @Override
-  public DataBindingModelWithAllFieldTypesNoValidation_ id(CharSequence key) {
-    super.id(key);
+  public DataBindingModelWithAllFieldTypesNoValidation_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public DataBindingModelWithAllFieldTypesNoValidation_ id(CharSequence key,
-      CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public DataBindingModelWithAllFieldTypesNoValidation_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public DataBindingModelWithAllFieldTypesNoValidation_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public DataBindingModelWithAllFieldTypesNoValidation_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

@@ -166,8 +166,8 @@ public class TestFieldPropIgnoreRequireHashCodeOptionViewModel_ extends EpoxyMod
   }
 
   @Override
-  public TestFieldPropIgnoreRequireHashCodeOptionViewModel_ id(Number... ids) {
-    super.id(ids);
+  public TestFieldPropIgnoreRequireHashCodeOptionViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -178,21 +178,22 @@ public class TestFieldPropIgnoreRequireHashCodeOptionViewModel_ extends EpoxyMod
   }
 
   @Override
-  public TestFieldPropIgnoreRequireHashCodeOptionViewModel_ id(CharSequence key) {
-    super.id(key);
+  public TestFieldPropIgnoreRequireHashCodeOptionViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public TestFieldPropIgnoreRequireHashCodeOptionViewModel_ id(CharSequence key,
-      CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public TestFieldPropIgnoreRequireHashCodeOptionViewModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestFieldPropIgnoreRequireHashCodeOptionViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public TestFieldPropIgnoreRequireHashCodeOptionViewModel_ id(@NonNull CharSequence arg0,
+      long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

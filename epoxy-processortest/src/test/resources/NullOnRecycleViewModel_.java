@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -122,8 +123,8 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
   }
 
   @Override
-  public NullOnRecycleViewModel_ id(Number... ids) {
-    super.id(ids);
+  public NullOnRecycleViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -134,20 +135,20 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
   }
 
   @Override
-  public NullOnRecycleViewModel_ id(CharSequence key) {
-    super.id(key);
+  public NullOnRecycleViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public NullOnRecycleViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public NullOnRecycleViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public NullOnRecycleViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public NullOnRecycleViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

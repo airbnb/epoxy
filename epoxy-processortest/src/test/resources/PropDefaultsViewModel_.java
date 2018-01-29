@@ -264,8 +264,8 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   }
 
   @Override
-  public PropDefaultsViewModel_ id(Number... ids) {
-    super.id(ids);
+  public PropDefaultsViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -276,20 +276,20 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   }
 
   @Override
-  public PropDefaultsViewModel_ id(CharSequence key) {
-    super.id(key);
+  public PropDefaultsViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public PropDefaultsViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public PropDefaultsViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public PropDefaultsViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public PropDefaultsViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
