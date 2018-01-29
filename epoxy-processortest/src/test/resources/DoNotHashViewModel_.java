@@ -62,7 +62,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   }
 
   @Override
-  public void bind(@NonNull final DoNotHashView object) {
+  public void bind(final DoNotHashView object) {
     super.bind(object);
     object.setClickListener(clickListener_OnClickListener);
     object.setTitle(title_CharSequence);
@@ -70,7 +70,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   }
 
   @Override
-  public void bind(@NonNull final DoNotHashView object, @NonNull EpoxyModel previousModel) {
+  public void bind(final DoNotHashView object, EpoxyModel previousModel) {
     if (!(previousModel instanceof DoNotHashViewModel_)) {
       bind(object);
       return;
@@ -113,7 +113,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   }
 
   @Override
-  public void unbind(@NonNull DoNotHashView object) {
+  public void unbind(DoNotHashView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -215,8 +215,8 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   }
 
   @Override
-  public DoNotHashViewModel_ id(Number... ids) {
-    super.id(ids);
+  public DoNotHashViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -227,20 +227,20 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   }
 
   @Override
-  public DoNotHashViewModel_ id(CharSequence key) {
-    super.id(key);
+  public DoNotHashViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public DoNotHashViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public DoNotHashViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public DoNotHashViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public DoNotHashViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

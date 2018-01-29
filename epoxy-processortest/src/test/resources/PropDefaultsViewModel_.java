@@ -65,7 +65,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   }
 
   @Override
-  public void bind(@NonNull final PropDefaultsView object) {
+  public void bind(final PropDefaultsView object) {
     super.bind(object);
     object.primitiveWithExplicitDefault(primitiveWithExplicitDefault_Int);
     object.defaultsToNull(defaultsToNull_CharSequence);
@@ -76,7 +76,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   }
 
   @Override
-  public void bind(@NonNull final PropDefaultsView object, @NonNull EpoxyModel previousModel) {
+  public void bind(final PropDefaultsView object, EpoxyModel previousModel) {
     if (!(previousModel instanceof PropDefaultsViewModel_)) {
       bind(object);
       return;
@@ -131,7 +131,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   }
 
   @Override
-  public void unbind(@NonNull PropDefaultsView object) {
+  public void unbind(PropDefaultsView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -264,8 +264,8 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   }
 
   @Override
-  public PropDefaultsViewModel_ id(Number... ids) {
-    super.id(ids);
+  public PropDefaultsViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -276,20 +276,20 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   }
 
   @Override
-  public PropDefaultsViewModel_ id(CharSequence key) {
-    super.id(key);
+  public PropDefaultsViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public PropDefaultsViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public PropDefaultsViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public PropDefaultsViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public PropDefaultsViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

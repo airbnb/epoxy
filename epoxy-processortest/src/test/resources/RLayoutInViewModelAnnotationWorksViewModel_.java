@@ -32,12 +32,12 @@ public class RLayoutInViewModelAnnotationWorksViewModel_ extends EpoxyModel<RLay
   }
 
   @Override
-  public void bind(@NonNull final RLayoutInViewModelAnnotationWorksView object) {
+  public void bind(final RLayoutInViewModelAnnotationWorksView object) {
     super.bind(object);
   }
 
   @Override
-  public void bind(@NonNull final RLayoutInViewModelAnnotationWorksView object, @NonNull EpoxyModel previousModel) {
+  public void bind(final RLayoutInViewModelAnnotationWorksView object, EpoxyModel previousModel) {
     if (!(previousModel instanceof RLayoutInViewModelAnnotationWorksViewModel_)) {
       bind(object);
       return;
@@ -68,7 +68,7 @@ public class RLayoutInViewModelAnnotationWorksViewModel_ extends EpoxyModel<RLay
   }
 
   @Override
-  public void unbind(@NonNull RLayoutInViewModelAnnotationWorksView object) {
+  public void unbind(RLayoutInViewModelAnnotationWorksView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -95,8 +95,8 @@ public class RLayoutInViewModelAnnotationWorksViewModel_ extends EpoxyModel<RLay
   }
 
   @Override
-  public RLayoutInViewModelAnnotationWorksViewModel_ id(Number... ids) {
-    super.id(ids);
+  public RLayoutInViewModelAnnotationWorksViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -107,21 +107,21 @@ public class RLayoutInViewModelAnnotationWorksViewModel_ extends EpoxyModel<RLay
   }
 
   @Override
-  public RLayoutInViewModelAnnotationWorksViewModel_ id(CharSequence key) {
-    super.id(key);
+  public RLayoutInViewModelAnnotationWorksViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public RLayoutInViewModelAnnotationWorksViewModel_ id(CharSequence key,
-      CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public RLayoutInViewModelAnnotationWorksViewModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public RLayoutInViewModelAnnotationWorksViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public RLayoutInViewModelAnnotationWorksViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

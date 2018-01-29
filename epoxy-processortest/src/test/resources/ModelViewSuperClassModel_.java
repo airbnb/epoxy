@@ -37,7 +37,7 @@ public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> i
   }
 
   @Override
-  protected ModelViewSuperClass buildView(@NonNull ViewGroup parent) {
+  protected ModelViewSuperClass buildView(ViewGroup parent) {
     ModelViewSuperClass v = new ModelViewSuperClass(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.MATCH_PARENT, ViewGroup.MarginLayoutParams.MATCH_PARENT));
     return v;
@@ -50,13 +50,13 @@ public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> i
   }
 
   @Override
-  public void bind(@NonNull final ModelViewSuperClass object) {
+  public void bind(final ModelViewSuperClass object) {
     super.bind(object);
     object.superClassValue(superClassValue_Int);
   }
 
   @Override
-  public void bind(@NonNull final ModelViewSuperClass object, @NonNull EpoxyModel previousModel) {
+  public void bind(final ModelViewSuperClass object, EpoxyModel previousModel) {
     if (!(previousModel instanceof ModelViewSuperClassModel_)) {
       bind(object);
       return;
@@ -92,7 +92,7 @@ public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> i
   }
 
   @Override
-  public void unbind(@NonNull ModelViewSuperClass object) {
+  public void unbind(ModelViewSuperClass object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -136,8 +136,8 @@ public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> i
   }
 
   @Override
-  public ModelViewSuperClassModel_ id(Number... ids) {
-    super.id(ids);
+  public ModelViewSuperClassModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -148,20 +148,20 @@ public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> i
   }
 
   @Override
-  public ModelViewSuperClassModel_ id(CharSequence key) {
-    super.id(key);
+  public ModelViewSuperClassModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelViewSuperClassModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelViewSuperClassModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelViewSuperClassModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelViewSuperClassModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

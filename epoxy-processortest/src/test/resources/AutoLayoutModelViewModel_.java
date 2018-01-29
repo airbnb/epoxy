@@ -37,7 +37,7 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
   }
 
   @Override
-  protected AutoLayoutModelView buildView(@NonNull ViewGroup parent) {
+  protected AutoLayoutModelView buildView(ViewGroup parent) {
     AutoLayoutModelView v = new AutoLayoutModelView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;
@@ -50,13 +50,13 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
   }
 
   @Override
-  public void bind(@NonNull final AutoLayoutModelView object) {
+  public void bind(final AutoLayoutModelView object) {
     super.bind(object);
     object.setValue(value_Int);
   }
 
   @Override
-  public void bind(@NonNull final AutoLayoutModelView object, @NonNull EpoxyModel previousModel) {
+  public void bind(final AutoLayoutModelView object, EpoxyModel previousModel) {
     if (!(previousModel instanceof AutoLayoutModelViewModel_)) {
       bind(object);
       return;
@@ -91,7 +91,7 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
   }
 
   @Override
-  public void unbind(@NonNull AutoLayoutModelView object) {
+  public void unbind(AutoLayoutModelView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -134,8 +134,8 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
   }
 
   @Override
-  public AutoLayoutModelViewModel_ id(Number... ids) {
-    super.id(ids);
+  public AutoLayoutModelViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -146,20 +146,20 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
   }
 
   @Override
-  public AutoLayoutModelViewModel_ id(CharSequence key) {
-    super.id(key);
+  public AutoLayoutModelViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public AutoLayoutModelViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public AutoLayoutModelViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public AutoLayoutModelViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public AutoLayoutModelViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

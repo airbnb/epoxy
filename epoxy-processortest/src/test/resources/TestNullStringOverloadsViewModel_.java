@@ -39,13 +39,13 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   @Override
-  public void bind(@NonNull final TestNullStringOverloadsView object) {
+  public void bind(final TestNullStringOverloadsView object) {
     super.bind(object);
     object.setTitle(title_StringAttributeData.toString(object.getContext()));
   }
 
   @Override
-  public void bind(@NonNull final TestNullStringOverloadsView object, @NonNull EpoxyModel previousModel) {
+  public void bind(final TestNullStringOverloadsView object, EpoxyModel previousModel) {
     if (!(previousModel instanceof TestNullStringOverloadsViewModel_)) {
       bind(object);
       return;
@@ -80,7 +80,7 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   @Override
-  public void unbind(@NonNull TestNullStringOverloadsView object) {
+  public void unbind(TestNullStringOverloadsView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -167,8 +167,8 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   @Override
-  public TestNullStringOverloadsViewModel_ id(Number... ids) {
-    super.id(ids);
+  public TestNullStringOverloadsViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -179,20 +179,21 @@ public class TestNullStringOverloadsViewModel_ extends EpoxyModel<TestNullString
   }
 
   @Override
-  public TestNullStringOverloadsViewModel_ id(CharSequence key) {
-    super.id(key);
+  public TestNullStringOverloadsViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public TestNullStringOverloadsViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public TestNullStringOverloadsViewModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestNullStringOverloadsViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public TestNullStringOverloadsViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

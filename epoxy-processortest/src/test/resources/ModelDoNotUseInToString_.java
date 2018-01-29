@@ -53,7 +53,7 @@ public class ModelDoNotUseInToString_ extends ModelDoNotUseInToString implements
   }
 
   @Override
-  public void unbind(@NonNull Object object) {
+  public void unbind(Object object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -110,8 +110,8 @@ public class ModelDoNotUseInToString_ extends ModelDoNotUseInToString implements
   }
 
   @Override
-  public ModelDoNotUseInToString_ id(Number... ids) {
-    super.id(ids);
+  public ModelDoNotUseInToString_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -122,20 +122,20 @@ public class ModelDoNotUseInToString_ extends ModelDoNotUseInToString implements
   }
 
   @Override
-  public ModelDoNotUseInToString_ id(CharSequence key) {
-    super.id(key);
+  public ModelDoNotUseInToString_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelDoNotUseInToString_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelDoNotUseInToString_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelDoNotUseInToString_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelDoNotUseInToString_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

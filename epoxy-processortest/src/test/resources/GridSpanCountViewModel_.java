@@ -42,13 +42,13 @@ public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> imple
   }
 
   @Override
-  public void bind(@NonNull final GridSpanCountView object) {
+  public void bind(final GridSpanCountView object) {
     super.bind(object);
     object.setClickListener(clickListener_String);
   }
 
   @Override
-  public void bind(@NonNull final GridSpanCountView object, @NonNull EpoxyModel previousModel) {
+  public void bind(final GridSpanCountView object, EpoxyModel previousModel) {
     if (!(previousModel instanceof GridSpanCountViewModel_)) {
       bind(object);
       return;
@@ -83,7 +83,7 @@ public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> imple
   }
 
   @Override
-  public void unbind(@NonNull GridSpanCountView object) {
+  public void unbind(GridSpanCountView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -130,8 +130,8 @@ public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> imple
   }
 
   @Override
-  public GridSpanCountViewModel_ id(Number... ids) {
-    super.id(ids);
+  public GridSpanCountViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -142,20 +142,20 @@ public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> imple
   }
 
   @Override
-  public GridSpanCountViewModel_ id(CharSequence key) {
-    super.id(key);
+  public GridSpanCountViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public GridSpanCountViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public GridSpanCountViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public GridSpanCountViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public GridSpanCountViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

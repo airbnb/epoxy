@@ -54,7 +54,7 @@ public class ModelReturningClassType_ extends ModelReturningClassType implements
   }
 
   @Override
-  public void unbind(@NonNull Object object) {
+  public void unbind(Object object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -109,8 +109,8 @@ public class ModelReturningClassType_ extends ModelReturningClassType implements
   }
 
   @Override
-  public ModelReturningClassType_ id(Number... ids) {
-    super.id(ids);
+  public ModelReturningClassType_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -121,20 +121,20 @@ public class ModelReturningClassType_ extends ModelReturningClassType implements
   }
 
   @Override
-  public ModelReturningClassType_ id(CharSequence key) {
-    super.id(key);
+  public ModelReturningClassType_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelReturningClassType_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public ModelReturningClassType_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelReturningClassType_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public ModelReturningClassType_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

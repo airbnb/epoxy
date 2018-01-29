@@ -48,14 +48,14 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   }
 
   @Override
-  public void bind(@NonNull final TextPropDefaultView object) {
+  public void bind(final TextPropDefaultView object) {
     super.bind(object);
     object.textWithDefault(textWithDefault_StringAttributeData.toString(object.getContext()));
     object.nullableTextWithDefault(nullableTextWithDefault_StringAttributeData.toString(object.getContext()));
   }
 
   @Override
-  public void bind(@NonNull final TextPropDefaultView object, @NonNull EpoxyModel previousModel) {
+  public void bind(final TextPropDefaultView object, EpoxyModel previousModel) {
     if (!(previousModel instanceof TextPropDefaultViewModel_)) {
       bind(object);
       return;
@@ -94,7 +94,7 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   }
 
   @Override
-  public void unbind(@NonNull TextPropDefaultView object) {
+  public void unbind(TextPropDefaultView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -244,8 +244,8 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   }
 
   @Override
-  public TextPropDefaultViewModel_ id(Number... ids) {
-    super.id(ids);
+  public TextPropDefaultViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -256,20 +256,20 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   }
 
   @Override
-  public TextPropDefaultViewModel_ id(CharSequence key) {
-    super.id(key);
+  public TextPropDefaultViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public TextPropDefaultViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public TextPropDefaultViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TextPropDefaultViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public TextPropDefaultViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

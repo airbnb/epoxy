@@ -32,12 +32,12 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
   }
 
   @Override
-  public void bind(@NonNull final DefaultPackageLayoutPatternView object) {
+  public void bind(final DefaultPackageLayoutPatternView object) {
     super.bind(object);
   }
 
   @Override
-  public void bind(@NonNull final DefaultPackageLayoutPatternView object, @NonNull EpoxyModel previousModel) {
+  public void bind(final DefaultPackageLayoutPatternView object, EpoxyModel previousModel) {
     if (!(previousModel instanceof DefaultPackageLayoutPatternViewModel_)) {
       bind(object);
       return;
@@ -68,7 +68,7 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
   }
 
   @Override
-  public void unbind(@NonNull DefaultPackageLayoutPatternView object) {
+  public void unbind(DefaultPackageLayoutPatternView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -95,8 +95,8 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
   }
 
   @Override
-  public DefaultPackageLayoutPatternViewModel_ id(Number... ids) {
-    super.id(ids);
+  public DefaultPackageLayoutPatternViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -107,20 +107,21 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
   }
 
   @Override
-  public DefaultPackageLayoutPatternViewModel_ id(CharSequence key) {
-    super.id(key);
+  public DefaultPackageLayoutPatternViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public DefaultPackageLayoutPatternViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public DefaultPackageLayoutPatternViewModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public DefaultPackageLayoutPatternViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public DefaultPackageLayoutPatternViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

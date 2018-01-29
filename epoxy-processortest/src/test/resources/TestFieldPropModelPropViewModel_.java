@@ -37,7 +37,7 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
   }
 
   @Override
-  protected TestFieldPropModelPropView buildView(@NonNull ViewGroup parent) {
+  protected TestFieldPropModelPropView buildView(ViewGroup parent) {
     TestFieldPropModelPropView v = new TestFieldPropModelPropView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;
@@ -50,13 +50,13 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
   }
 
   @Override
-  public void bind(@NonNull final TestFieldPropModelPropView object) {
+  public void bind(final TestFieldPropModelPropView object) {
     super.bind(object);
     object.value = value_Int;
   }
 
   @Override
-  public void bind(@NonNull final TestFieldPropModelPropView object, @NonNull EpoxyModel previousModel) {
+  public void bind(final TestFieldPropModelPropView object, EpoxyModel previousModel) {
     if (!(previousModel instanceof TestFieldPropModelPropViewModel_)) {
       bind(object);
       return;
@@ -92,7 +92,7 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
   }
 
   @Override
-  public void unbind(@NonNull TestFieldPropModelPropView object) {
+  public void unbind(TestFieldPropModelPropView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -135,8 +135,8 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
   }
 
   @Override
-  public TestFieldPropModelPropViewModel_ id(Number... ids) {
-    super.id(ids);
+  public TestFieldPropModelPropViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -147,20 +147,21 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
   }
 
   @Override
-  public TestFieldPropModelPropViewModel_ id(CharSequence key) {
-    super.id(key);
+  public TestFieldPropModelPropViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public TestFieldPropModelPropViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public TestFieldPropModelPropViewModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestFieldPropModelPropViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public TestFieldPropModelPropViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

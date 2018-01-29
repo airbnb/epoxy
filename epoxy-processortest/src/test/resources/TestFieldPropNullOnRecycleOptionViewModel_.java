@@ -39,7 +39,7 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
   }
 
   @Override
-  protected TestFieldPropNullOnRecycleOptionView buildView(@NonNull ViewGroup parent) {
+  protected TestFieldPropNullOnRecycleOptionView buildView(ViewGroup parent) {
     TestFieldPropNullOnRecycleOptionView v = new TestFieldPropNullOnRecycleOptionView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;
@@ -55,13 +55,13 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
   }
 
   @Override
-  public void bind(@NonNull final TestFieldPropNullOnRecycleOptionView object) {
+  public void bind(final TestFieldPropNullOnRecycleOptionView object) {
     super.bind(object);
     object.value = value_OnClickListener;
   }
 
   @Override
-  public void bind(@NonNull final TestFieldPropNullOnRecycleOptionView object, @NonNull EpoxyModel previousModel) {
+  public void bind(final TestFieldPropNullOnRecycleOptionView object, EpoxyModel previousModel) {
     if (!(previousModel instanceof TestFieldPropNullOnRecycleOptionViewModel_)) {
       bind(object);
       return;
@@ -97,7 +97,7 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
   }
 
   @Override
-  public void unbind(@NonNull TestFieldPropNullOnRecycleOptionView object) {
+  public void unbind(TestFieldPropNullOnRecycleOptionView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -157,8 +157,8 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
   }
 
   @Override
-  public TestFieldPropNullOnRecycleOptionViewModel_ id(Number... ids) {
-    super.id(ids);
+  public TestFieldPropNullOnRecycleOptionViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -169,21 +169,21 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
   }
 
   @Override
-  public TestFieldPropNullOnRecycleOptionViewModel_ id(CharSequence key) {
-    super.id(key);
+  public TestFieldPropNullOnRecycleOptionViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public TestFieldPropNullOnRecycleOptionViewModel_ id(CharSequence key,
-      CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public TestFieldPropNullOnRecycleOptionViewModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestFieldPropNullOnRecycleOptionViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public TestFieldPropNullOnRecycleOptionViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

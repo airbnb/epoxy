@@ -37,13 +37,13 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
   }
 
   @Override
-  public void bind(@NonNull final NullOnRecycleView object) {
+  public void bind(final NullOnRecycleView object) {
     super.bind(object);
     object.setTitle(title_CharSequence);
   }
 
   @Override
-  public void bind(@NonNull final NullOnRecycleView object, @NonNull EpoxyModel previousModel) {
+  public void bind(final NullOnRecycleView object, EpoxyModel previousModel) {
     if (!(previousModel instanceof NullOnRecycleViewModel_)) {
       bind(object);
       return;
@@ -78,7 +78,7 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
   }
 
   @Override
-  public void unbind(@NonNull NullOnRecycleView object) {
+  public void unbind(NullOnRecycleView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -123,8 +123,8 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
   }
 
   @Override
-  public NullOnRecycleViewModel_ id(Number... ids) {
-    super.id(ids);
+  public NullOnRecycleViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -135,20 +135,20 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
   }
 
   @Override
-  public NullOnRecycleViewModel_ id(CharSequence key) {
-    super.id(key);
+  public NullOnRecycleViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public NullOnRecycleViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public NullOnRecycleViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public NullOnRecycleViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public NullOnRecycleViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

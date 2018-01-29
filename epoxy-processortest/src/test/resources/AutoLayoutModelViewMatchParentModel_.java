@@ -37,7 +37,7 @@ public class AutoLayoutModelViewMatchParentModel_ extends EpoxyModel<AutoLayoutM
   }
 
   @Override
-  protected AutoLayoutModelViewMatchParent buildView(@NonNull ViewGroup parent) {
+  protected AutoLayoutModelViewMatchParent buildView(ViewGroup parent) {
     AutoLayoutModelViewMatchParent v = new AutoLayoutModelViewMatchParent(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.MATCH_PARENT, ViewGroup.MarginLayoutParams.MATCH_PARENT));
     return v;
@@ -50,13 +50,13 @@ public class AutoLayoutModelViewMatchParentModel_ extends EpoxyModel<AutoLayoutM
   }
 
   @Override
-  public void bind(@NonNull final AutoLayoutModelViewMatchParent object) {
+  public void bind(final AutoLayoutModelViewMatchParent object) {
     super.bind(object);
     object.setValue(value_Int);
   }
 
   @Override
-  public void bind(@NonNull final AutoLayoutModelViewMatchParent object, @NonNull EpoxyModel previousModel) {
+  public void bind(final AutoLayoutModelViewMatchParent object, EpoxyModel previousModel) {
     if (!(previousModel instanceof AutoLayoutModelViewMatchParentModel_)) {
       bind(object);
       return;
@@ -91,7 +91,7 @@ public class AutoLayoutModelViewMatchParentModel_ extends EpoxyModel<AutoLayoutM
   }
 
   @Override
-  public void unbind(@NonNull AutoLayoutModelViewMatchParent object) {
+  public void unbind(AutoLayoutModelViewMatchParent object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -134,8 +134,8 @@ public class AutoLayoutModelViewMatchParentModel_ extends EpoxyModel<AutoLayoutM
   }
 
   @Override
-  public AutoLayoutModelViewMatchParentModel_ id(Number... ids) {
-    super.id(ids);
+  public AutoLayoutModelViewMatchParentModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -146,20 +146,21 @@ public class AutoLayoutModelViewMatchParentModel_ extends EpoxyModel<AutoLayoutM
   }
 
   @Override
-  public AutoLayoutModelViewMatchParentModel_ id(CharSequence key) {
-    super.id(key);
+  public AutoLayoutModelViewMatchParentModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public AutoLayoutModelViewMatchParentModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public AutoLayoutModelViewMatchParentModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public AutoLayoutModelViewMatchParentModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public AutoLayoutModelViewMatchParentModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

@@ -39,7 +39,7 @@ public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPro
   }
 
   @Override
-  protected TestFieldPropCallbackPropView buildView(@NonNull ViewGroup parent) {
+  protected TestFieldPropCallbackPropView buildView(ViewGroup parent) {
     TestFieldPropCallbackPropView v = new TestFieldPropCallbackPropView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;
@@ -55,13 +55,13 @@ public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPro
   }
 
   @Override
-  public void bind(@NonNull final TestFieldPropCallbackPropView object) {
+  public void bind(final TestFieldPropCallbackPropView object) {
     super.bind(object);
     object.value = value_OnClickListener;
   }
 
   @Override
-  public void bind(@NonNull final TestFieldPropCallbackPropView object, @NonNull EpoxyModel previousModel) {
+  public void bind(final TestFieldPropCallbackPropView object, EpoxyModel previousModel) {
     if (!(previousModel instanceof TestFieldPropCallbackPropViewModel_)) {
       bind(object);
       return;
@@ -97,7 +97,7 @@ public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPro
   }
 
   @Override
-  public void unbind(@NonNull TestFieldPropCallbackPropView object) {
+  public void unbind(TestFieldPropCallbackPropView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -157,8 +157,8 @@ public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPro
   }
 
   @Override
-  public TestFieldPropCallbackPropViewModel_ id(Number... ids) {
-    super.id(ids);
+  public TestFieldPropCallbackPropViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -169,20 +169,21 @@ public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPro
   }
 
   @Override
-  public TestFieldPropCallbackPropViewModel_ id(CharSequence key) {
-    super.id(key);
+  public TestFieldPropCallbackPropViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public TestFieldPropCallbackPropViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public TestFieldPropCallbackPropViewModel_ id(@NonNull CharSequence arg0,
+      @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestFieldPropCallbackPropViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public TestFieldPropCallbackPropViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 

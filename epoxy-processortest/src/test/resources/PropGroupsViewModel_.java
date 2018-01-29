@@ -99,7 +99,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
   }
 
   @Override
-  public void bind(@NonNull final PropGroupsView object) {
+  public void bind(final PropGroupsView object) {
     super.bind(object);
     if (assignedAttributes_epoxyGeneratedModel.get(4)) {
       object.setPrimitive(primitive_Int);
@@ -164,7 +164,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
   }
 
   @Override
-  public void bind(@NonNull final PropGroupsView object, @NonNull EpoxyModel previousModel) {
+  public void bind(final PropGroupsView object, EpoxyModel previousModel) {
     if (!(previousModel instanceof PropGroupsViewModel_)) {
       bind(object);
       return;
@@ -172,7 +172,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
     PropGroupsViewModel_ that = (PropGroupsViewModel_) previousModel;
     super.bind(object);
 
-     if (assignedAttributes_epoxyGeneratedModel.get(4)) {
+    if (assignedAttributes_epoxyGeneratedModel.get(4)) {
       if ((primitive_Int != that.primitive_Int)) {
         object.setPrimitive(primitive_Int);
       }
@@ -187,7 +187,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
       object.setPrimitive(primitive_Int);
     }
 
-     if (assignedAttributes_epoxyGeneratedModel.get(12)) {
+    if (assignedAttributes_epoxyGeneratedModel.get(12)) {
       if (!that.assignedAttributes_epoxyGeneratedModel.get(12) || (requiredGroup_String != null ? !requiredGroup_String.equals(that.requiredGroup_String) : that.requiredGroup_String != null)) {
         object.requiredGroup(requiredGroup_String);
       }
@@ -198,7 +198,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
       }
     }
 
-     if (assignedAttributes_epoxyGeneratedModel.get(8)) {
+    if (assignedAttributes_epoxyGeneratedModel.get(8)) {
       if ((primitiveAndObjectGroupWithPrimitiveDefault_Long != that.primitiveAndObjectGroupWithPrimitiveDefault_Long)) {
         object.primitiveAndObjectGroupWithPrimitiveDefault(primitiveAndObjectGroupWithPrimitiveDefault_Long);
       }
@@ -213,7 +213,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
       object.primitiveAndObjectGroupWithPrimitiveDefault(primitiveAndObjectGroupWithPrimitiveDefault_Long);
     }
 
-     if (assignedAttributes_epoxyGeneratedModel.get(10)) {
+    if (assignedAttributes_epoxyGeneratedModel.get(10)) {
       if ((oneThing_Long != that.oneThing_Long)) {
         object.setOneThing(oneThing_Long);
       }
@@ -228,7 +228,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
       object.setOneThing(oneThing_Long);
     }
 
-     if (assignedAttributes_epoxyGeneratedModel.get(0)) {
+    if (assignedAttributes_epoxyGeneratedModel.get(0)) {
       if (!that.assignedAttributes_epoxyGeneratedModel.get(0) || (something_CharSequence != null ? !something_CharSequence.equals(that.something_CharSequence) : that.something_CharSequence != null)) {
         object.setSomething(something_CharSequence);
       }
@@ -243,7 +243,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
       object.setSomething(something_CharSequence);
     }
 
-     if (assignedAttributes_epoxyGeneratedModel.get(2)) {
+    if (assignedAttributes_epoxyGeneratedModel.get(2)) {
       if (!that.assignedAttributes_epoxyGeneratedModel.get(2) || (somethingElse_CharSequence != null ? !somethingElse_CharSequence.equals(that.somethingElse_CharSequence) : that.somethingElse_CharSequence != null)) {
         object.setSomethingElse(somethingElse_CharSequence);
       }
@@ -258,7 +258,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
       object.setSomethingElse(somethingElse_Int);
     }
 
-     if (assignedAttributes_epoxyGeneratedModel.get(6)) {
+    if (assignedAttributes_epoxyGeneratedModel.get(6)) {
       if ((primitiveWithDefault_Int != that.primitiveWithDefault_Int)) {
         object.setPrimitiveWithDefault(primitiveWithDefault_Int);
       }
@@ -296,7 +296,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
   }
 
   @Override
-  public void unbind(@NonNull PropGroupsView object) {
+  public void unbind(PropGroupsView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -596,8 +596,8 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
   }
 
   @Override
-  public PropGroupsViewModel_ id(Number... ids) {
-    super.id(ids);
+  public PropGroupsViewModel_ id(@NonNull Number... arg0) {
+    super.id(arg0);
     return this;
   }
 
@@ -608,20 +608,20 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
   }
 
   @Override
-  public PropGroupsViewModel_ id(CharSequence key) {
-    super.id(key);
+  public PropGroupsViewModel_ id(@NonNull CharSequence arg0) {
+    super.id(arg0);
     return this;
   }
 
   @Override
-  public PropGroupsViewModel_ id(CharSequence key, CharSequence... otherKeys) {
-    super.id(key, otherKeys);
+  public PropGroupsViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public PropGroupsViewModel_ id(CharSequence key, long id) {
-    super.id(key, id);
+  public PropGroupsViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+    super.id(arg0, arg1);
     return this;
   }
 
