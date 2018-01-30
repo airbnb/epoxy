@@ -1,3 +1,11 @@
+# 2.9.0 (January 29, 2018)
+- **Improved** Global defaults for EpoxyController settings. Set duplicate filtering and exception handlers for all your controllers. (https://github.com/airbnb/epoxy/pull/394)
+- **Improved** Add `@NonNull` annotations in EpoxyModel for better Kotlin interop
+
+- **Fixed** Model click listeners now rebind correctly on partial model diffs (https://github.com/airbnb/epoxy/pull/393)
+- **Fixed** Update Android Paging library to fix placeholder support (Thanks @wkranich! https://github.com/airbnb/epoxy/pull/360)
+- **Fixed** Improve error message for inaccessible private fields (https://github.com/airbnb/epoxy/pull/388)
+
 # 2.8.0 (December 22, 2017)
 
 - **New** Use `@ModelProp` directly on fields to avoid creating a setter (https://github.com/airbnb/epoxy/pull/343)
