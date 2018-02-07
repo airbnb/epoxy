@@ -44,5 +44,5 @@ final class ClassNames {
   static final ClassName EPOXY_CONTROLLER_HELPER = get(PKG_EPOXY, "ControllerHelper");
 
   static final ClassName PARIS_STYLE_UTILS = get(PKG_PARIS, "StyleApplierUtils", "Companion");
-  static final ClassName PARIS_STYLE = get(PKG_PARIS, "Style");
+  static final ClassName PARIS_STYLE = get(PKG_PARIS + ".styles", "Style");
 }
