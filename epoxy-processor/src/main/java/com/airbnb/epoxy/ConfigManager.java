@@ -192,6 +192,15 @@ class ConfigManager {
     return modelViewConfig.getIncludeAlternateLayouts();
   }
 
+  String generatedModelSuffix(TypeElement viewElement) {
+    PackageModelViewSettings modelViewConfig = getModelViewConfig(viewElement);
+    if (modelViewConfig == null) {
+      return GeneratedModelInfo.GENERATED_MODEL_SUFFIX;
+    }
+
+    return modelViewConfig.getGeneratedModelSuffix();
+  }
+
   private PackageConfigSettings getConfigurationForElement(Element element) {
     return getConfigurationForPackage(elementUtils.getPackageOf(element));
   }

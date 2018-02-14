@@ -1,12 +1,12 @@
 package com.airbnb.epoxy
 
-import com.airbnb.epoxy.ProcessorTestUtils.*
-import com.google.common.collect.ImmutableList
-import com.google.common.truth.Truth.*
-import com.google.testing.compile.*
-import com.google.testing.compile.JavaSourcesSubjectFactory.*
-import org.junit.*
-import java.util.Arrays.*
+import com.airbnb.epoxy.ProcessorTestUtils.assertGeneration
+import com.airbnb.epoxy.ProcessorTestUtils.assertGenerationError
+import com.google.common.truth.Truth.assert_
+import com.google.testing.compile.JavaFileObjects
+import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
+import org.junit.Test
+import java.util.Arrays.asList
 
 class ViewProcessorTest {
 
@@ -611,6 +611,52 @@ class ViewProcessorTest {
                                         + "import com.airbnb.epoxy.R;\n")
 
         val generatedModel = JavaFileObjects.forResource("LayoutOverloadsViewModel_.java")
+
+        assert_().about(javaSources())
+                .that(asList(model, configClass, R))
+                .processedWith(EpoxyProcessor())
+                .compilesWithoutError()
+                .and()
+                .generatesSources(generatedModel)
+    }
+
+    @Test
+    fun generatedModelSuffix() {
+        val model = JavaFileObjects
+                .forSourceLines("com.airbnb.epoxy.GeneratedModelSuffixView",
+                                "package com.airbnb.epoxy;\n"
+                                        + "\n"
+                                        + "import android.content.Context;\n"
+                                        + "import android.view.View;\n"
+                                        + "\n"
+                                        + "@ModelView\n"
+                                        + "public class GeneratedModelSuffixView extends View {\n"
+                                        + "\n"
+                                        + "  public GeneratedModelSuffixView(Context context) {\n"
+                                        + "    super(context);\n"
+                                        + "  }\n"
+                                        + "\n"
+                                        + "}")
+
+        val R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
+                + "package com.airbnb.epoxy;\n"
+                + "public final class R {\n"
+                + "  public static final class layout {\n"
+                + "    public static final int generated_model_suffix_view = 0x7f040008;\n"
+                + "  }\n"
+                + "}"
+        )
+
+        val configClass = JavaFileObjects
+                .forSourceLines("com.airbnb.epoxy.package-info",
+                                "@PackageModelViewConfig(rClass = R"
+                                        + ".class, generatedModelSuffix = \"Suffix_\")\n"
+                                        + "package com.airbnb.epoxy;\n"
+                                        + "\n"
+                                        + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
+                                        + "import com.airbnb.epoxy.R;\n")
+
+        val generatedModel = JavaFileObjects.forResource("GeneratedModelSuffixViewSuffix_.java")
 
         assert_().about(javaSources())
                 .that(asList(model, configClass, R))

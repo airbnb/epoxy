@@ -15,6 +15,7 @@ class PackageModelViewSettings(
     val layoutName: String = annotation.defaultLayoutPattern
     val defaultBaseModel: TypeMirror? = getDefaultBaseModel(annotation)
     val includeAlternateLayouts: Boolean = annotation.useLayoutOverloads
+    val generatedModelSuffix: String = annotation.generatedModelSuffix
 
     private fun getDefaultBaseModel(annotation: PackageModelViewConfig): TypeMirror? {
         var defaultBaseModel: TypeMirror? = null
