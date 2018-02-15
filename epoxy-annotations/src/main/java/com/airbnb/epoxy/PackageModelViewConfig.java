@@ -40,4 +40,9 @@ public @interface PackageModelViewConfig {
    * other layout instead of the default.
    */
   boolean useLayoutOverloads() default false;
+
+  /**
+   * Suffix, which will be appended to generated model's names. "Model_" is a default value.
+   */
+  String generatedModelSuffix() default "Model_";
 }

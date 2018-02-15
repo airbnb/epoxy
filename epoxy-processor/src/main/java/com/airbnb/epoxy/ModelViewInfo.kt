@@ -27,6 +27,7 @@ internal class ModelViewInfo(
     val saveViewState: Boolean
     private val viewAnnotation: ModelView = viewElement.getAnnotation(ModelView::class.java)
     val fullSpanSize: Boolean
+    val generatedModelSuffix: String
 
     /** All interfaces the view implements that have at least one prop set by the interface. */
     val viewInterfaces: List<TypeElement>
@@ -39,6 +40,7 @@ internal class ModelViewInfo(
         this.superClassName = ParameterizedTypeName
                 .get(ClassName.get(superClassElement), TypeName.get(viewElement.asType()))
 
+        generatedModelSuffix = configManager.generatedModelSuffix(viewElement)
         generatedClassName = buildGeneratedModelName(viewElement, elements)
         // We don't have any type parameters on our generated model
         this.parametrizedClassName = generatedClassName
@@ -156,7 +158,7 @@ internal class ModelViewInfo(
         val packageName = elementUtils.getPackageOf(viewElement).qualifiedName.toString()
 
         var className = viewElement.simpleName.toString()
-        className += GeneratedModelInfo.GENERATED_MODEL_SUFFIX
+        className += generatedModelSuffix
 
         return ClassName.get(packageName, className)
     }
