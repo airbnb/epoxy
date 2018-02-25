@@ -1,3 +1,7 @@
+# 2.10.0 (February 25, 2018)
+
+- **Improved** Allow the `Model_` class suffix for models generated via `@ModelView` to be customized (https://github.com/airbnb/epoxy/pull/402 Big thanks to geralt-encore!)
+
 # 2.9.0 (January 29, 2018)
 - **Improved** Global defaults for EpoxyController settings. Set duplicate filtering and exception handlers for all your controllers. (https://github.com/airbnb/epoxy/pull/394)
 - **Improved** Add `@NonNull` annotations in EpoxyModel for better Kotlin interop
