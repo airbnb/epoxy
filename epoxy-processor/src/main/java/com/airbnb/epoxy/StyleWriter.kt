@@ -1,8 +1,12 @@
 package com.airbnb.epoxy
 
-import com.squareup.javapoet.*
-import javax.lang.model.*
-import javax.lang.model.util.*
+import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterSpec
+import java.util.*
+import javax.lang.model.AnnotatedConstruct
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 internal fun addStyleApplierCode(
         methodBuilder: MethodSpec.Builder,
@@ -36,11 +40,12 @@ internal fun addBindStyleCodeIfNeeded(
         // Compare against the style on the previous model if it exists,
         // otherwise we look up the saved style from the view tag
         if (hasPreviousModel) {
-            beginControlFlow("\nif (\$L != that.\$L)",
-                             PARIS_STYLE_ATTR_NAME, PARIS_STYLE_ATTR_NAME)
+            beginControlFlow("\nif (!\$T.equals(\$L, that.\$L))",
+                             Objects::class.java, PARIS_STYLE_ATTR_NAME, PARIS_STYLE_ATTR_NAME)
         } else {
-            beginControlFlow("\nif (\$L != \$L.getTag(\$T.id.epoxy_saved_view_style))",
-                             PARIS_STYLE_ATTR_NAME, boundObjectParam.name, ClassNames.EPOXY_R)
+            beginControlFlow("\nif (!\$T.equals(\$L, \$L.getTag(\$T.id.epoxy_saved_view_style)))",
+                             Objects::class.java, PARIS_STYLE_ATTR_NAME, boundObjectParam.name,
+                             ClassNames.EPOXY_R)
         }
 
         addStyleApplierCode(this, styleInfo, boundObjectParam.name)
@@ -49,8 +54,7 @@ internal fun addBindStyleCodeIfNeeded(
     }
 }
 
-internal fun AnnotatedConstruct.hasStyleableAnnotation(elements: Elements)
-        = annotationMirrors
+internal fun AnnotatedConstruct.hasStyleableAnnotation(elements: Elements) = annotationMirrors
         .map { it.annotationType.asElement() }
         .any {
             it.simpleName.toString() == "Styleable"
