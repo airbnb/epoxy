@@ -425,7 +425,7 @@ public abstract class EpoxyController {
     stagedModel = null;
   }
 
-  public boolean isBuildingModels() {
+  protected boolean isBuildingModels() {
     return modelsBeingBuilt != null;
   }
 
