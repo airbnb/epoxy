@@ -22,7 +22,7 @@ internal class ModelBuilderInterfaceWriter(
     private val viewInterfacesToGenerate = mutableMapOf<ClassName, Set<MethodDetails>>()
 
     /** These setters can't be used with models in an EpoxyController, they were made for EpoxyAdapter. */
-    private val blackListedLegacySetterNames = setOf("hide", "show", "reset")
+    private val blackListedLegacySetterNames = setOf("hide", "show", "reset", "setLifecycleOwner")
 
     fun writeInterface(
             modelInfo: GeneratedModelInfo,
