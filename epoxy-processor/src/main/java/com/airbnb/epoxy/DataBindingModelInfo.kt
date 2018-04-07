@@ -14,6 +14,7 @@ internal class DataBindingModelInfo(
         private val layoutPrefix: String = ""
 ) : GeneratedModelInfo() {
     private val dataBindingClassName: ClassName
+    private val blackListedSetterNames = setOf("setLifecycleOwner")
 
     val dataBindingClassElement: Element?
         get() = getElementByName(dataBindingClassName, elementUtils, typeUtils)
@@ -44,6 +45,7 @@ internal class DataBindingModelInfo(
         val hashCodeValidator = HashCodeValidator(typeUtils, elementUtils)
         dataBindingClassElement!!.enclosedElements
                 .filter { Utils.isSetterMethod(it) }
+                .filter { !blackListedSetterNames.contains(it.simpleName.toString()) }
                 .forEach {
                     addAttribute(
                             DataBindingAttributeInfo(this, it as ExecutableElement,
