@@ -55,6 +55,9 @@ public class ModelWithDataBindingBinding extends android.databinding.ViewDataBin
     return false;
   }
 
+  public void setLifecycleOwner(android.arch.lifecycle.LifecycleOwner lifecycleOwner) {
+  }
+
   public void setStringValue(java.lang.String StringValue) {
     this.mStringValue = StringValue;
     synchronized(this) {
