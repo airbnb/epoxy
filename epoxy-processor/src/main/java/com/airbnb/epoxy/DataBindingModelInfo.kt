@@ -10,13 +10,13 @@ internal class DataBindingModelInfo(
         private val typeUtils: Types,
         private val elementUtils: Elements,
         val layoutResource: ResourceValue,
-         val moduleName: String,
+        val moduleName: String,
         private val layoutPrefix: String = ""
 ) : GeneratedModelInfo() {
     private val dataBindingClassName: ClassName
 
-    val dataBindingClassElement: Element?
-        get() = getElementByName(dataBindingClassName, elementUtils, typeUtils)
+    private val dataBindingClassElement: TypeElement?
+        get() = getElementByName(dataBindingClassName, elementUtils, typeUtils) as TypeElement?
 
     init {
 
@@ -36,19 +36,24 @@ internal class DataBindingModelInfo(
     /**
      * Look up the DataBinding class generated for this model's layout file and parse the attributes
      * for it.
+     * @return True if the DataBinding class exists, false otherwise.
      */
-    fun parseDataBindingClass() {
+    fun parseDataBindingClass(): Boolean {
         // This databinding class won't exist until the second round of annotation processing since
         // it is generated in the first round.
+        val dataBindingClassElement = this.dataBindingClassElement ?: return false
 
         val hashCodeValidator = HashCodeValidator(typeUtils, elementUtils)
-        dataBindingClassElement!!.enclosedElements
+        dataBindingClassElement.executableElements()
                 .filter { Utils.isSetterMethod(it) }
-                .forEach {
-                    addAttribute(
-                            DataBindingAttributeInfo(this, it as ExecutableElement,
-                                                     hashCodeValidator))
+                .map {
+                    DataBindingAttributeInfo(this, it, hashCodeValidator)
                 }
+                .filter { it.fieldName !in FIELD_NAME_BLACKLIST }
+                .let {
+                    addAttributes(it)
+                }
+        return true
     }
 
     private fun getDataBindingClassNameForResource(
@@ -73,5 +78,11 @@ internal class DataBindingModelInfo(
     companion object {
 
         val BINDING_SUFFIX = "Binding"
+
+        val FIELD_NAME_BLACKLIST = listOf(
+                // Starting with Android plugin 3.1.0 nested DataBinding classes have a
+                // "setLifecycleOwner" method
+                "lifecycleOwner"
+        )
     }
 }

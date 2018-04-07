@@ -51,8 +51,8 @@ class PagingSampleActivity : AppCompatActivity() {
                             setPrefetchDistance(50)
                             build()
                         }).run {
-                    setMainThreadExecutor(UiThreadExecutor)
-                    setBackgroundThreadExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+                    setNotifyExecutor(UiThreadExecutor)
+                    setFetchExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
                     build()
                 }
             }

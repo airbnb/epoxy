@@ -2,7 +2,7 @@
 buildscript {
 
   ext.KOTLIN_VERSION = "1.2.21"
-  ext.ANDROID_PLUGIN_VERSION = "3.0.1"
+  ext.ANDROID_PLUGIN_VERSION = "3.1.0"
 
   repositories {
     google()
@@ -70,6 +70,6 @@ def getRepositoryPassword() {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '3.3'
+  gradleVersion = '4.4'
   distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
