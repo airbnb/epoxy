@@ -1,3 +1,9 @@
+# 2.11.0 (April 7, 2018)
+
+- **Fix** Make databinding work with Android Studio 3.1 (https://github.com/airbnb/epoxy/pull/418)
+- Make `EpoxyController#isBuildingModels` public (https://github.com/airbnb/epoxy/pull/406
+
+
 # 2.10.0 (February 25, 2018)
 
 - **Improved** Allow the `Model_` class suffix for models generated via `@ModelView` to be customized (https://github.com/airbnb/epoxy/pull/402 Big thanks to geralt-encore!)
