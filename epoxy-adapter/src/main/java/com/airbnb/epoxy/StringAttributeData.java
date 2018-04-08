@@ -49,41 +49,37 @@ public class StringAttributeData {
   }
 
   public void setValue(@StringRes int stringRes, @Nullable Object[] formatArgs) {
-    if (stringRes > 0) {
+    if (stringRes != 0) {
       this.stringRes = stringRes;
       this.formatArgs = formatArgs;
       string = null;
       pluralRes = 0;
     } else {
-      handleInvalidStringRes(stringRes);
+      handleInvalidStringRes();
     }
   }
 
-  private void handleInvalidStringRes(int stringRes) {
-    if (stringRes == 0) {
-      if (hasDefault) {
-        if (defaultStringRes > 0) {
-          setValue(defaultStringRes);
-        } else {
-          setValue(defaultString);
-        }
+  private void handleInvalidStringRes() {
+    if (hasDefault) {
+      if (defaultStringRes > 0) {
+        setValue(defaultStringRes);
       } else {
-        throw new IllegalArgumentException("0 is an invalid value for required strings.");
+        setValue(defaultString);
       }
     } else {
-      throw new IllegalArgumentException("String resource cannot be negative: " + stringRes);
+      throw new IllegalArgumentException("0 is an invalid value for required strings.");
     }
   }
 
   public void setValue(@PluralsRes int pluralRes, int quantity, @Nullable Object[] formatArgs) {
-    if (pluralRes > 0) {
+    if (pluralRes != 0) {
       this.pluralRes = pluralRes;
       this.quantity = quantity;
       this.formatArgs = formatArgs;
       string = null;
       stringRes = 0;
     } else {
-      handleInvalidStringRes(pluralRes);
+      handleInvalidStringRes();
     }
   }
 

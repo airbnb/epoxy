@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    This layout contains a nested databinding layout which causes the generated ViewDataBinding
+    class to override the "setLifecycleOwner" method. Since single parameter methods prefixed with
+    "set" are parsed as model properties, this layout and the ensuing generated Epoxy model class
+    act as a test by ensuring the module still builds successfully.
+-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <include layout="@layout/view_holder_databinding_test" />
+
+    </LinearLayout>
+
+</layout>

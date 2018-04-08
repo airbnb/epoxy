@@ -79,10 +79,8 @@ internal class DataBindingProcessor(
 
     private fun resolveDataBindingClassesAndWriteJava(): List<DataBindingModelInfo> {
         return modelsToWrite
-                .filter { it.dataBindingClassElement != null }
+                .filter { it.parseDataBindingClass() }
                 .onEach {
-                    it.parseDataBindingClass()
-
                     try {
                         modelWriter.generateClassForModel(it)
                     } catch (e: Exception) {

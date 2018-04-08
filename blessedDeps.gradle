@@ -10,15 +10,14 @@
 rootProject.ext.JAVA_SOURCE_VERSION = JavaVersion.VERSION_1_7
 rootProject.ext.JAVA_TARGET_VERSION = JavaVersion.VERSION_1_7
 
-rootProject.ext.TARGET_SDK_VERSION = 26
-rootProject.ext.COMPILE_SDK_VERSION = 26
+rootProject.ext.TARGET_SDK_VERSION = 27
+rootProject.ext.COMPILE_SDK_VERSION = 27
 rootProject.ext.MIN_SDK_VERSION = 14
 rootProject.ext.MIN_SDK_VERSION_LITHO = 15
 
-rootProject.ext.ANDROID_BUILD_TOOLS_VERSION = "26.0.2"
-rootProject.ext.ANDROID_SUPPORT_LIBS_VERSION = "26.1.0"
+rootProject.ext.ANDROID_SUPPORT_LIBS_VERSION = "27.1.0"
 rootProject.ext.ANDROID_DATA_BINDING = "1.3.1"
-rootProject.ext.ANDROID_PAGING = "1.0.0-alpha5"
+rootProject.ext.ANDROID_PAGING = "1.0.0-beta1"
 rootProject.ext.BUTTERKNIFE_VERSION = "8.8.1"
 rootProject.ext.SQUARE_JAVAPOET_VERSION = "1.9.0"
 rootProject.ext.SQUARE_KOTLINPOET_VERSION = "0.5.0"

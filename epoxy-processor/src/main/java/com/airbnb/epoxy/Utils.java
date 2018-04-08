@@ -85,9 +85,9 @@ class Utils {
     }
   }
 
-  static Element getElementByName(ClassName name, Elements elements, Types types) {
+  static TypeElement getElementByName(ClassName name, Elements elements, Types types) {
     String canonicalName = name.reflectionName().replace("$", ".");
-    return getElementByName(canonicalName, elements, types);
+    return (TypeElement) getElementByName(canonicalName, elements, types);
   }
 
   static Element getElementByName(String name, Elements elements, Types types) {
