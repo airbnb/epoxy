@@ -8,9 +8,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.widget.TextView
 import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.TextProp
 import com.airbnb.epoxy.paging.PagingEpoxyController
@@ -80,7 +80,7 @@ class TestController : PagingEpoxyController<User>() {
 }
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
-class PagingView(context: Context) : TextView(context) {
+class PagingView(context: Context) : AppCompatTextView(context) {
 
     @TextProp
     fun name(name: CharSequence) {

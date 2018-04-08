@@ -138,30 +138,6 @@ public class ViewAnnotationsStringOverloadsIntegrationTest {
         .requiredTextQuantityRes(0, 23, "args");
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void nullableTextThrowsOnNegativeString() {
-    new ViewWithAnnotationsForIntegrationTestModel_()
-        .nullableText(-1, "args");
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void requiredTextThrowsOnNegativeString() {
-    new ViewWithAnnotationsForIntegrationTestModel_()
-        .nullableText(-1, "args");
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void nullableTextThrowsOnNegativeQuantityString() {
-    new ViewWithAnnotationsForIntegrationTestModel_()
-        .nullableTextQuantityRes(-1, 1, "args");
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void requiredTextThrowsOnNegativeQuantityString() {
-    new ViewWithAnnotationsForIntegrationTestModel_()
-        .requiredTextQuantityRes(-1, 1, "args");
-  }
-
   @Test
   public void nullableTextSetsNullWhenNotSet() {
     ViewWithAnnotationsForIntegrationTestModel_ model =
