@@ -62,6 +62,7 @@ internal class GeneratedModelWriter(
 ) {
 
     val modelInterfaceWriter = ModelBuilderInterfaceWriter(filer, types)
+    private val blackListedAttributes = setOf("lifecycleOwner")
 
     private var builderHooks: BuilderHooks? = null
 
@@ -193,6 +194,10 @@ internal class GeneratedModelWriter(
         return result
     }
 
+    private fun getAttributesInfo(modelInfo: GeneratedModelInfo): List<AttributeInfo>{
+        return modelInfo.getAttributeInfo().filterNot { blackListedAttributes.contains(it.getFieldName()) }
+    }
+
     private fun getGeneratedModelInterface(info: GeneratedModelInfo): ParameterizedTypeName {
         return ParameterizedTypeName.get(
                 getClassName(GENERATED_MODEL_INTERFACE),
@@ -262,7 +267,7 @@ internal class GeneratedModelWriter(
         fields.add(FieldSpec.builder(onUnbindListenerType, modelUnbindListenerFieldName(),
                                      PRIVATE).build())
 
-        classInfo.getAttributeInfo()
+        getAttributesInfo(classInfo)
                 .filter { it.isGenerated }
                 .mapTo(fields) {
                     buildField(it.typeName, it.fieldName) {
@@ -896,8 +901,9 @@ internal class GeneratedModelWriter(
 
         val brClass = ClassName.get(moduleName, "BR")
         val validateAttributes = configManager.shouldValidateModelUsage()
-        for (attribute in info.getAttributeInfo()) {
+        for (attribute in getAttributesInfo(info)) {
             val attrName = attribute.getFieldName()
+
             val setVariableBlock = CodeBlock.of("binding.setVariable(\$T.\$L, \$L)", brClass,
                                                 attrName, attribute.getterCode())
 
@@ -994,7 +1000,7 @@ internal class GeneratedModelWriter(
     private fun generateSettersAndGetters(modelInfo: GeneratedModelInfo): List<MethodSpec> {
         val methods = ArrayList<MethodSpec>()
 
-        for (attr in modelInfo.getAttributeInfo()) {
+        for (attr in getAttributesInfo(modelInfo)) {
             if (attr is ViewAttributeInfo && attr.generateStringOverloads) {
                 methods.addAll(StringOverloadWriter(modelInfo, attr, configManager).buildMethods())
             } else {
@@ -1088,7 +1094,7 @@ internal class GeneratedModelWriter(
         addStatement("return false")
         endControlFlow()
 
-        for (attributeInfo in helperClass.getAttributeInfo()) {
+        for (attributeInfo in getAttributesInfo(helperClass)) {
             val type = attributeInfo.typeName
 
             if (!attributeInfo.useInHash() && type.isPrimitive) {
@@ -1123,7 +1129,7 @@ internal class GeneratedModelWriter(
                 modelUnbindListenerFieldName()
         )
 
-        for (attributeInfo in helperClass.getAttributeInfo()) {
+        for (attributeInfo in getAttributesInfo(helperClass)) {
             if (!attributeInfo.useInHash()) {
                 continue
             }
@@ -1133,7 +1139,7 @@ internal class GeneratedModelWriter(
             }
         }
 
-        for (attributeInfo in helperClass.getAttributeInfo()) {
+        for (attributeInfo in getAttributesInfo(helperClass)) {
             val type = attributeInfo.typeName
 
             if (!attributeInfo.useInHash() && type.isPrimitive) {
@@ -1156,7 +1162,7 @@ internal class GeneratedModelWriter(
         sb.append(String.format("\"%s{\" +\n", helperClass.generatedName.simpleName()))
 
         var first = true
-        for (attributeInfo in helperClass.getAttributeInfo()) {
+        for (attributeInfo in getAttributesInfo(helperClass)) {
             if (attributeInfo.doNotUseInToString()) {
                 continue
             }
@@ -1270,7 +1276,7 @@ internal class GeneratedModelWriter(
             addStatement("\$L.clear()", ATTRIBUTES_BITSET_FIELD_NAME)
         }
 
-        helperClass.getAttributeInfo()
+        getAttributesInfo(helperClass)
                 .filterNot { it.hasFinalModifier() }
                 .forEach {
                     addStatement(it.setterCode(),
