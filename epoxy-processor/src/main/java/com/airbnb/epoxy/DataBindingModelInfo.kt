@@ -16,7 +16,7 @@ internal class DataBindingModelInfo(
     private val dataBindingClassName: ClassName
 
     private val dataBindingClassElement: TypeElement?
-        get() = getElementByName(dataBindingClassName, elementUtils, typeUtils) as TypeElement?
+        get() = getElementByName(dataBindingClassName, elementUtils, typeUtils)
 
     init {
 
