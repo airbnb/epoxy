@@ -60,15 +60,21 @@ class PagingSampleActivity : AppCompatActivity() {
             pagingController.setList(pagedList.await())
         }
 
+        pagingController.setList(emptyList())
     }
 }
 
 class TestController : PagingEpoxyController<User>() {
     init {
-        setDebugLoggingEnabled(true)
+        isDebugLoggingEnabled = true
     }
 
     override fun buildModels(users: List<User>) {
+        pagingView {
+            id("header")
+            name("Header")
+        }
+
         users.forEach {
             pagingView {
                 id(it.uid)

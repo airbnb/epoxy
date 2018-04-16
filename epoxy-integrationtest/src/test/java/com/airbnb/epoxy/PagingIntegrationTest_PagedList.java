@@ -54,9 +54,14 @@ public class PagingIntegrationTest_PagedList {
 
   @Test
   public void initialPageBind() {
+    controller.setConfig(
+        new PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setPageSize(100)
+            .setInitialLoadSizeHint(100)
+            .build()
+    );
     controller.setPagedListWithSize(500);
-    controller.setPageSizeHint(10);
-    controller.setNumPagesToLoad(10);
 
     List<EpoxyModel<?>> models = controller.getAdapter().getCopyOfModels();
     assertEquals(100, models.size());

@@ -2,6 +2,7 @@ package com.airbnb.epoxy.paging;
 
 import android.arch.paging.PagedList;
 import android.arch.paging.PagedList.Callback;
+import android.arch.paging.PagedList.Config;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,14 +35,14 @@ import java.util.List;
  * @param <T> The type of item in the list
  */
 public abstract class PagingEpoxyController<T> extends EpoxyController {
-  private static final int DEFAULT_PAGE_SIZE_HINT = 10;
-  private static final int DEFAULT_NUM_PAGES_T0_LOAD = 10;
+
+  private static final Config DEFAULT_CONFIG = new Config.Builder()
+      .setEnablePlaceholders(false)
+      .setPageSize(100)
+      .build();
 
   @Nullable private PagedList<T> pagedList;
   @NonNull private List<T> list = Collections.emptyList();
-
-  private int pageSizeHint = DEFAULT_PAGE_SIZE_HINT;
-  private int numPagesToLoad = DEFAULT_NUM_PAGES_T0_LOAD;
 
   // TODO: (eli_hart 10/13/17) Save this in saved state and restore in constructor
   private int lastBoundPositionWithinList = 0;
@@ -49,35 +50,14 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
   private int numBoundModels;
   private int lastBuiltLowerBound = 0;
   private int lastBuiltUpperBound = 0;
-
-  /**
-   * Set an estimate of how many items will be shown on screen. This number will be used to
-   * calculate how many models should be built.
-   * <p>
-   * Setting this is optional - once the screen is fully populated Epoxy can track the number of
-   * bound items to determine the page size, so this is mostly useful for initial page load.
-   * <p>
-   * The default is {@link #DEFAULT_PAGE_SIZE_HINT}
-   */
-  public void setPageSizeHint(int pageSizeHint) {
-    this.pageSizeHint = pageSizeHint;
-  }
-
-  /**
-   * Set how many pages of items in the list should be built as EpoxyModels at a time. The lower the
-   * number the faster the model build and diff times will be, but it will also require more calls
-   * to rebuild models as the user scrolls.
-   * <p>
-   * The default is {@link #DEFAULT_NUM_PAGES_T0_LOAD}
-   */
-  public void setNumPagesToLoad(int numPagesToLoad) {
-    this.numPagesToLoad = numPagesToLoad;
-  }
+  @Nullable private Config customConfig = null;
 
   @Override
   protected final void buildModels() {
     int numListItemsToUse =
-        numBoundModels != 0 ? numBoundModels * numPagesToLoad : pageSizeHint * numPagesToLoad;
+        numBoundModels != 0
+            ? numBoundModels + config().prefetchDistance
+            : config().initialLoadSizeHint;
 
     // If we are scrolling towards one end of the list we can build slightly more models in that
     // direction in anticipation of needing to show more there soon
@@ -123,7 +103,7 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
 
     int positionWithinList = positionWithinCurrentModels + lastBuiltLowerBound;
 
-    if (pagedList != null) {
+    if (pagedList != null && !pagedList.isEmpty()) {
       pagedList.loadAround(positionWithinList);
     }
 
@@ -177,6 +157,29 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
     }
 
     updatePagedListSnapshot();
+  }
+
+  /**
+   * Set a Config value to specify how many models should be built at a time.
+   * <p>
+   * If not set, or set to null, the config value off of the currently set PagedList is used.
+   * <p>
+   * If no PagedList is set, {@link #DEFAULT_CONFIG} is used.
+   */
+  public void setConfig(@Nullable Config config) {
+    customConfig = config;
+  }
+
+  private Config config() {
+    if (customConfig != null) {
+      return customConfig;
+    }
+
+    if (pagedList != null) {
+      return pagedList.getConfig();
+    }
+
+    return DEFAULT_CONFIG;
   }
 
   /**
