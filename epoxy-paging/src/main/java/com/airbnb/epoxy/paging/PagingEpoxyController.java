@@ -39,6 +39,7 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
   private static final Config DEFAULT_CONFIG = new Config.Builder()
       .setEnablePlaceholders(false)
       .setPageSize(100)
+      .setInitialLoadSizeHint(100)
       .build();
 
   @Nullable private PagedList<T> pagedList;
@@ -47,17 +48,27 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
   // TODO: (eli_hart 10/13/17) Save this in saved state and restore in constructor
   private int lastBoundPositionWithinList = 0;
   private boolean scrollingTowardsEnd = true;
-  private int numBoundModels;
   private int lastBuiltLowerBound = 0;
   private int lastBuiltUpperBound = 0;
   @Nullable private Config customConfig = null;
+  private boolean isFirstBuildForList = true;
+  /** Prevent excessively throwing this exception. */
+  private boolean hasNotifiedInsufficientPageSize;
 
   @Override
   protected final void buildModels() {
-    int numListItemsToUse =
-        numBoundModels != 0
-            ? numBoundModels + config().prefetchDistance
-            : config().initialLoadSizeHint;
+    int numListItemsToUse = isFirstBuildForList ? config().initialLoadSizeHint : config().pageSize;
+    if (!list.isEmpty()) {
+      isFirstBuildForList = false;
+    }
+
+    int numBoundViews = getAdapter().getBoundViewHolders().size();
+    if (!hasNotifiedInsufficientPageSize && numBoundViews > numListItemsToUse) {
+      onExceptionSwallowed(new IllegalStateException(
+          "The page size specified in your PagedList config is smaller than the number of items "
+              + "shown on screen. Increase your page size and/or initial load size."));
+      hasNotifiedInsufficientPageSize = true;
+    }
 
     // If we are scrolling towards one end of the list we can build slightly more models in that
     // direction in anticipation of needing to show more there soon
@@ -107,24 +118,30 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
       pagedList.loadAround(positionWithinList);
     }
 
-    scrollingTowardsEnd = lastBoundPositionWithinList < positionWithinCurrentModels;
+    scrollingTowardsEnd = lastBoundPositionWithinList < positionWithinList;
     lastBoundPositionWithinList = positionWithinList;
-    numBoundModels++;
 
-    // TODO: (eli_hart 9/19/17) different prefetch depending on scroll direction?
-    // build again?
-    int prefetchDistance = numBoundModels;
-    int currentModelCount = getAdapter().getItemCount();
-    if (((currentModelCount - positionWithinCurrentModels - 1 < prefetchDistance)
-        || (positionWithinCurrentModels < prefetchDistance && lastBuiltLowerBound != 0))) {
+    int prefetchDistance = config().prefetchDistance;
+    final int distanceToEndOfPage = getAdapter().getItemCount() - positionWithinCurrentModels;
+    final int distanceToStartOfPage = positionWithinCurrentModels;
+
+    if ((distanceToEndOfPage < prefetchDistance && !hasBuiltLastItem() && scrollingTowardsEnd)
+        || (distanceToStartOfPage < prefetchDistance && !hasBuiltFirstItem()
+        && !scrollingTowardsEnd)) {
       requestModelBuild();
     }
   }
 
-  @CallSuper
-  @Override
-  protected void onModelUnbound(@NonNull EpoxyViewHolder holder, @NonNull EpoxyModel<?> model) {
-    numBoundModels--;
+  private boolean hasBuiltFirstItem() {
+    return lastBuiltLowerBound == 0;
+  }
+
+  private boolean hasBuiltLastItem() {
+    return lastBuiltUpperBound >= totalListSize();
+  }
+
+  public int totalListSize() {
+    return pagedList != null ? pagedList.size() : list.size();
   }
 
   public void setList(@Nullable List<T> list) {
@@ -137,6 +154,7 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
     }
 
     this.list = list == null ? Collections.<T>emptyList() : list;
+    isFirstBuildForList = true;
     requestModelBuild();
   }
 
@@ -156,6 +174,7 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
       list.addWeakCallback(null, callback);
     }
 
+    isFirstBuildForList = true;
     updatePagedListSnapshot();
   }
 
@@ -165,6 +184,8 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
    * If not set, or set to null, the config value off of the currently set PagedList is used.
    * <p>
    * If no PagedList is set, {@link #DEFAULT_CONFIG} is used.
+   * <p>
+   * {@link Config#initialLoadSizeHint} dictates how many models are built on first load
    */
   public void setConfig(@Nullable Config config) {
     customConfig = config;

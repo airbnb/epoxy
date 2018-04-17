@@ -22,7 +22,7 @@ android {
 dependencies {
   compile rootProject.deps.kotlin
 
-  compile "org.jetbrains.anko:anko-coroutines:0.10.1"
+  compile "org.jetbrains.anko:anko-coroutines:0.10.4"
   compile 'android.arch.persistence.room:runtime:1.0.0'
   kapt 'android.arch.persistence.room:compiler:1.0.0'
 
@@ -30,7 +30,7 @@ dependencies {
   compile project(':epoxy-paging')
   kapt project(':epoxy-processor')
 
-  implementation 'com.android.support:appcompat-v7:26.1.0'
+  implementation 'com.android.support:appcompat-v7:27.1.0'
   testImplementation 'junit:junit:4.12'
   androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
     exclude group: 'com.android.support', module: 'support-annotations'

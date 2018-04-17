@@ -17,6 +17,7 @@ import com.airbnb.epoxy.paging.PagingEpoxyController
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.coroutines.experimental.bg
+import java.lang.RuntimeException
 import java.util.concurrent.Executor
 
 class PagingSampleActivity : AppCompatActivity() {
@@ -38,17 +39,16 @@ class PagingSampleActivity : AppCompatActivity() {
         async(UI) {
             val pagedList = bg {
                 db.userDao().delete(db.userDao().all)
-                for (i in 1..3000) {
-                    db.userDao().insertAll(User(i))
-                }
+                (1..3000)
+                        .map { User(it) }
+                        .let { db.userDao().insertAll(*it.toTypedArray()) }
 
-                return@bg PagedList.Builder<Int, User>(
+                PagedList.Builder<Int, User>(
                         db.userDao().dataSource.create(),
                         PagedList.Config.Builder().run {
                             setEnablePlaceholders(false)
-                            setPageSize(40)
-                            setInitialLoadSizeHint(80)
-                            setPrefetchDistance(50)
+                            setPageSize(150)
+                            setPrefetchDistance(30)
                             build()
                         }).run {
                     setNotifyExecutor(UiThreadExecutor)
@@ -83,6 +83,10 @@ class TestController : PagingEpoxyController<User>() {
         }
     }
 
+    override fun onExceptionSwallowed(exception: RuntimeException) {
+        throw exception
+    }
+
 }
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
@@ -96,9 +100,9 @@ class PagingView(context: Context) : AppCompatTextView(context) {
 }
 
 object UiThreadExecutor : Executor {
-    private val mHandler = Handler(Looper.getMainLooper())
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun execute(command: Runnable) {
-        mHandler.post(command)
+        handler.post(command)
     }
 }
