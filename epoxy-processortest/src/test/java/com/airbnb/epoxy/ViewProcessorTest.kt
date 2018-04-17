@@ -813,6 +813,11 @@ class ViewProcessorTest {
         assertGenerationError("TestTextPropIfNotCharSequenceView.java", "must be a CharSequence")
     }
 
+    @Test
+    fun testStyleableView() {
+        assertGeneration("TestTextPropIfNotCharSequenceView.java", "must be a CharSequence")
+    }
+
     private fun assertViewsHaveModelsGenerated(vararg viewFiles: String) {
         assertGeneration(viewFiles.toList(), viewFiles.map { it.replace(".", "Model_.") })
     }

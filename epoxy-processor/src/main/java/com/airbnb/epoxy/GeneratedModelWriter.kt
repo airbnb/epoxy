@@ -596,7 +596,7 @@ internal class GeneratedModelWriter(
                 .addAnnotation(Override::class.java)
                 .addParameter(viewHolderParam)
                 .addParameter(boundObjectParam)
-                .addParameter(TypeName.INT, positionParamName)
+                .addParameter(TypeName.INT, positionParamName, Modifier.FINAL)
 
         addHashCodeValidationIfNecessary(preBindBuilder,
                                          "The model was changed between being added to the controller and being bound.")
