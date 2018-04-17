@@ -28,7 +28,7 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder,
-      final DataBindingEpoxyModel.DataBindingHolder object, int position) {
+      final DataBindingEpoxyModel.DataBindingHolder object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

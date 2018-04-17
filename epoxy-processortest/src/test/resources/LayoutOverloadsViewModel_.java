@@ -27,7 +27,7 @@ public class LayoutOverloadsViewModel_ extends EpoxyModel<LayoutOverloadsView> i
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final LayoutOverloadsView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

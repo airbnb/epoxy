@@ -35,7 +35,7 @@ public class TestAfterBindPropsViewModel_ extends EpoxyModel<TestAfterBindPropsV
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final TestAfterBindPropsView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

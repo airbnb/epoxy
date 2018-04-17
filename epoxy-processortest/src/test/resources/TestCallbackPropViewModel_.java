@@ -33,7 +33,7 @@ public class TestCallbackPropViewModel_ extends EpoxyModel<TestCallbackPropView>
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final TestCallbackPropView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

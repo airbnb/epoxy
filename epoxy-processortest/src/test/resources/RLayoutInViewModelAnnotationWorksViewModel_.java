@@ -27,7 +27,7 @@ public class RLayoutInViewModelAnnotationWorksViewModel_ extends EpoxyModel<RLay
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder,
-      final RLayoutInViewModelAnnotationWorksView object, int position) {
+      final RLayoutInViewModelAnnotationWorksView object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

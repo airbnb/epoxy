@@ -49,7 +49,7 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final TestStringOverloadsView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

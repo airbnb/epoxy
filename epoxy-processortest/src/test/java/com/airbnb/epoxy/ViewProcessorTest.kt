@@ -7,6 +7,7 @@ import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import org.junit.Test
 import java.util.Arrays.asList
+import javax.tools.JavaFileObject
 
 class ViewProcessorTest {
 
@@ -815,7 +816,20 @@ class ViewProcessorTest {
 
     @Test
     fun testStyleableView() {
-        assertGeneration("TestTextPropIfNotCharSequenceView.java", "must be a CharSequence")
+        val configClass: JavaFileObject = JavaFileObjects
+            .forSourceLines("com.airbnb.epoxy.package-info",
+                            "@ParisConfig(rClass = R.class)\n"
+                                    + "package com.airbnb.epoxy;\n"
+                                    + "\n"
+                                    + "import com.airbnb.paris.annotations.ParisConfig;\n"
+                                    + "import com.airbnb.epoxy.R;\n")
+
+        assertGeneration(
+            inputFile = "ModelViewWithParis.java",
+            generatedFile = "ModelViewWithParisModel_.java",
+            useParis = true,
+            helperObjects = listOf(configClass, R)
+        )
     }
 
     private fun assertViewsHaveModelsGenerated(vararg viewFiles: String) {
@@ -824,7 +838,7 @@ class ViewProcessorTest {
 
     companion object {
 
-        private val R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
+        private val R: JavaFileObject = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
                 + "package com.airbnb.epoxy;\n"
                 + "public final class R {\n"
                 + "  public static final class layout {\n"

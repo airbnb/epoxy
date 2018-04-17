@@ -27,7 +27,7 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder,
-      final DefaultPackageLayoutPatternView object, int position) {
+      final DefaultPackageLayoutPatternView object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

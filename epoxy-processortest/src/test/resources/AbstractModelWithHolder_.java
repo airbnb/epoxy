@@ -28,7 +28,7 @@ public class AbstractModelWithHolder_ extends AbstractModelWithHolder implements
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder,
-      final AbstractModelWithHolder.Holder object, int position) {
+      final AbstractModelWithHolder.Holder object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

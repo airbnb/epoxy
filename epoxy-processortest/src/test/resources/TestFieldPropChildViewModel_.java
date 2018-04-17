@@ -59,7 +59,7 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final TestFieldPropChildView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

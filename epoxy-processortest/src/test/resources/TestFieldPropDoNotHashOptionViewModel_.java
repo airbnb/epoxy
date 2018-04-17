@@ -52,7 +52,7 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder,
-      final TestFieldPropDoNotHashOptionView object, int position) {
+      final TestFieldPropDoNotHashOptionView object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

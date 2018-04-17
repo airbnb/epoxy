@@ -1,5 +1,6 @@
 package com.airbnb.epoxy
 
+import com.airbnb.paris.processor.ParisProcessor
 import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourceSubjectFactory
@@ -20,9 +21,7 @@ internal object ProcessorTestUtils {
         val model = JavaFileObjects
             .forResource(inputFile)
 
-        assert_().about<JavaSourcesSubject.SingleSourceAdapter, JavaFileObject, JavaSourceSubjectFactory>(
-            javaSource()
-        )
+        assert_().about(javaSource())
             .that(model)
             .processedWith(EpoxyProcessor())
             .failsToCompile()
@@ -34,9 +33,7 @@ internal object ProcessorTestUtils {
         val model = JavaFileObjects
             .forResource(inputFile)
 
-        assert_().about<JavaSourcesSubject.SingleSourceAdapter, JavaFileObject, JavaSourceSubjectFactory>(
-            javaSource()
-        )
+        assert_().about(javaSource())
             .that(model)
             .processedWith(EpoxyProcessor())
             .compilesWithoutError()
@@ -47,7 +44,8 @@ internal object ProcessorTestUtils {
     fun assertGeneration(
         inputFile: String,
         generatedFile: String,
-        useParis: Boolean = false
+        useParis: Boolean = false,
+        helperObjects: List<JavaFileObject> = emptyList()
     ) {
         val model = JavaFileObjects
             .forResource(inputFile)
@@ -56,14 +54,11 @@ internal object ProcessorTestUtils {
 
         val processors = mutableListOf<Processor>().apply {
             add(EpoxyProcessor())
-//            if (useParis) add(ParisPro)
+            if (useParis) add(ParisProcessor())
         }
 
-
-        assert_().about<JavaSourcesSubject.SingleSourceAdapter, JavaFileObject, JavaSourceSubjectFactory>(
-            javaSource()
-        )
-            .that(model)
+        assert_().about(javaSources())
+            .that(helperObjects + listOf(model))
             .processedWith(processors)
             .compilesWithoutError()
             .and()
@@ -89,9 +84,7 @@ internal object ProcessorTestUtils {
             generatedFiles.add(JavaFileObjects.forResource(fileNames[i]))
         }
 
-        assert_().about<JavaSourcesSubject, Iterable<JavaFileObject>, JavaSourcesSubjectFactory>(
-            javaSources()
-        )
+        assert_().about(javaSources())
             .that(sources)
             .processedWith(EpoxyProcessor())
             .compilesWithoutError()

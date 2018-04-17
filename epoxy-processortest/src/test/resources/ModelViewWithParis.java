@@ -10,16 +10,24 @@ import com.airbnb.epoxy.ModelView;
 
 import com.airbnb.paris.annotations.Style;
 import com.airbnb.paris.annotations.Styleable;
+
 @Styleable
 @ModelView
 public class ModelViewWithParis extends View {
-  @ModelProp(options = Option.IgnoreRequireHashCode) OnClickListener value;
+  @ModelProp int value;
 
   public ModelViewWithParis(Context context) {
     super(context);
   }
 
-  @AfterPropsSet
-  public void call() {
+  @Style(isDefault = true)
+  static void headerStyle(ModelViewWithParisStyleApplier.StyleBuilder builder) {
+
   }
+
+  @Style
+  static void otherStyle(ModelViewWithParisStyleApplier.StyleBuilder builder) {
+
+  }
+
 }
