@@ -40,6 +40,7 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
       .setEnablePlaceholders(false)
       .setPageSize(100)
       .setInitialLoadSizeHint(100)
+      .setPrefetchDistance(20)
       .build();
 
   @Nullable private PagedList<T> pagedList;
