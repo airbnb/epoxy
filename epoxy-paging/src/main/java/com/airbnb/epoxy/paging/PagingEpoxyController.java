@@ -70,9 +70,9 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
       hasNotifiedInsufficientPageSize = true;
     }
 
-    // If we are scrolling towards one end of the list we can build slightly more models in that
+    // If we are scrolling towards one end of the list we can build more models in that
     // direction in anticipation of needing to show more there soon
-    float ratioOfEndItems = scrollingTowardsEnd ? .6f : .4f;
+    float ratioOfEndItems = scrollingTowardsEnd ? .7f : .3f;
 
     int itemsToBuildTowardsEnd = (int) (numListItemsToUse * ratioOfEndItems);
     int itemsToBuildTowardsStart = numListItemsToUse - itemsToBuildTowardsEnd;
@@ -158,6 +158,17 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
     requestModelBuild();
   }
 
+  /**
+   * Set a PagedList that should be used to build models in this controller. A listener will be
+   * attached to the list so that models are rebuilt as new list items are loaded.
+   * <p>
+   * By default the Config setting on the PagedList will dictate how many models are built at once,
+   * and what prefetch thresholds should be used. This can be overridden with a separate Config via
+   * {@link #setConfig(Config)}.
+   * <p>
+   * See {@link #setConfig(Config)} for details on how the Config settings are used, and for
+   * recommended values.
+   */
   public void setList(@Nullable PagedList<T> list) {
     if (list == this.pagedList) {
       return;
@@ -186,14 +197,24 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
    * If no PagedList is set, {@link #DEFAULT_CONFIG} is used.
    * <p>
    * {@link Config#initialLoadSizeHint} dictates how many models are built on first load. This
-   * should be several times the number of items shown on screen.
+   * should be several times the number of items shown on screen, and is generally equal to or
+   * larger than pageSize.
    * <p>
    * {@link Config#pageSize} dictates how many models are built at a time after first load. This
-   * should be several times the number of items shown on screen.
+   * should be several times the number of items shown on screen (roughly 10x, and at least 5x). If
+   * this value is too small models will be rebuilt very often as the user scrolls, potentially
+   * hurting performance. In the worst case, if this value is too small, not enough models will be
+   * created to fill the whole screen and the controller will enter an infinite loop of rebuilding
+   * models.
    * <p>
    * {@link Config#prefetchDistance} defines how far from the edge of built models the user must
-   * scroll to trigger further model building. Should be significantly less than page size, and more
-   * than the number of items shown on screen.
+   * scroll to trigger further model building. Should be significantly less than page size (roughly
+   * 1/4), and more than the number of items shown on screen. If this value is too big models will
+   * be rebuilt very often as the user scrolls, potentially hurting performance. If this number is
+   * too small then the user may have to wait while models are rebuilt as they scroll.
+   * <p>
+   * For example, if 5 items are shown on screen at once you might have a initialLoadSizeHint of 50,
+   * a pageSize of 50, and a prefetchDistance of 10.
    */
   public void setConfig(@Nullable Config config) {
     customConfig = config;
