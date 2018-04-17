@@ -2,6 +2,7 @@ package com.airbnb.epoxy.paging;
 
 import android.arch.paging.PagedList;
 import android.arch.paging.PagedList.Callback;
+import android.arch.paging.PagedList.Config;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,54 +35,45 @@ import java.util.List;
  * @param <T> The type of item in the list
  */
 public abstract class PagingEpoxyController<T> extends EpoxyController {
-  private static final int DEFAULT_PAGE_SIZE_HINT = 10;
-  private static final int DEFAULT_NUM_PAGES_T0_LOAD = 10;
+
+  private static final Config DEFAULT_CONFIG = new Config.Builder()
+      .setEnablePlaceholders(false)
+      .setPageSize(100)
+      .setInitialLoadSizeHint(100)
+      .setPrefetchDistance(20)
+      .build();
 
   @Nullable private PagedList<T> pagedList;
   @NonNull private List<T> list = Collections.emptyList();
 
-  private int pageSizeHint = DEFAULT_PAGE_SIZE_HINT;
-  private int numPagesToLoad = DEFAULT_NUM_PAGES_T0_LOAD;
-
   // TODO: (eli_hart 10/13/17) Save this in saved state and restore in constructor
   private int lastBoundPositionWithinList = 0;
   private boolean scrollingTowardsEnd = true;
-  private int numBoundModels;
   private int lastBuiltLowerBound = 0;
   private int lastBuiltUpperBound = 0;
-
-  /**
-   * Set an estimate of how many items will be shown on screen. This number will be used to
-   * calculate how many models should be built.
-   * <p>
-   * Setting this is optional - once the screen is fully populated Epoxy can track the number of
-   * bound items to determine the page size, so this is mostly useful for initial page load.
-   * <p>
-   * The default is {@link #DEFAULT_PAGE_SIZE_HINT}
-   */
-  public void setPageSizeHint(int pageSizeHint) {
-    this.pageSizeHint = pageSizeHint;
-  }
-
-  /**
-   * Set how many pages of items in the list should be built as EpoxyModels at a time. The lower the
-   * number the faster the model build and diff times will be, but it will also require more calls
-   * to rebuild models as the user scrolls.
-   * <p>
-   * The default is {@link #DEFAULT_NUM_PAGES_T0_LOAD}
-   */
-  public void setNumPagesToLoad(int numPagesToLoad) {
-    this.numPagesToLoad = numPagesToLoad;
-  }
+  @Nullable private Config customConfig = null;
+  private boolean isFirstBuildForList = true;
+  /** Prevent excessively throwing this exception. */
+  private boolean hasNotifiedInsufficientPageSize;
 
   @Override
   protected final void buildModels() {
-    int numListItemsToUse =
-        numBoundModels != 0 ? numBoundModels * numPagesToLoad : pageSizeHint * numPagesToLoad;
+    int numListItemsToUse = isFirstBuildForList ? config().initialLoadSizeHint : config().pageSize;
+    if (!list.isEmpty()) {
+      isFirstBuildForList = false;
+    }
 
-    // If we are scrolling towards one end of the list we can build slightly more models in that
+    int numBoundViews = getAdapter().getBoundViewHolders().size();
+    if (!hasNotifiedInsufficientPageSize && numBoundViews > numListItemsToUse) {
+      onExceptionSwallowed(new IllegalStateException(
+          "The page size specified in your PagedList config is smaller than the number of items "
+              + "shown on screen. Increase your page size and/or initial load size."));
+      hasNotifiedInsufficientPageSize = true;
+    }
+
+    // If we are scrolling towards one end of the list we can build more models in that
     // direction in anticipation of needing to show more there soon
-    float ratioOfEndItems = scrollingTowardsEnd ? .6f : .4f;
+    float ratioOfEndItems = scrollingTowardsEnd ? .7f : .3f;
 
     int itemsToBuildTowardsEnd = (int) (numListItemsToUse * ratioOfEndItems);
     int itemsToBuildTowardsStart = numListItemsToUse - itemsToBuildTowardsEnd;
@@ -123,28 +115,34 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
 
     int positionWithinList = positionWithinCurrentModels + lastBuiltLowerBound;
 
-    if (pagedList != null) {
+    if (pagedList != null && !pagedList.isEmpty()) {
       pagedList.loadAround(positionWithinList);
     }
 
-    scrollingTowardsEnd = lastBoundPositionWithinList < positionWithinCurrentModels;
+    scrollingTowardsEnd = lastBoundPositionWithinList < positionWithinList;
     lastBoundPositionWithinList = positionWithinList;
-    numBoundModels++;
 
-    // TODO: (eli_hart 9/19/17) different prefetch depending on scroll direction?
-    // build again?
-    int prefetchDistance = numBoundModels;
-    int currentModelCount = getAdapter().getItemCount();
-    if (((currentModelCount - positionWithinCurrentModels - 1 < prefetchDistance)
-        || (positionWithinCurrentModels < prefetchDistance && lastBuiltLowerBound != 0))) {
+    int prefetchDistance = config().prefetchDistance;
+    final int distanceToEndOfPage = getAdapter().getItemCount() - positionWithinCurrentModels;
+    final int distanceToStartOfPage = positionWithinCurrentModels;
+
+    if ((distanceToEndOfPage < prefetchDistance && !hasBuiltLastItem() && scrollingTowardsEnd)
+        || (distanceToStartOfPage < prefetchDistance && !hasBuiltFirstItem()
+        && !scrollingTowardsEnd)) {
       requestModelBuild();
     }
   }
 
-  @CallSuper
-  @Override
-  protected void onModelUnbound(@NonNull EpoxyViewHolder holder, @NonNull EpoxyModel<?> model) {
-    numBoundModels--;
+  private boolean hasBuiltFirstItem() {
+    return lastBuiltLowerBound == 0;
+  }
+
+  private boolean hasBuiltLastItem() {
+    return lastBuiltUpperBound >= totalListSize();
+  }
+
+  public int totalListSize() {
+    return pagedList != null ? pagedList.size() : list.size();
   }
 
   public void setList(@Nullable List<T> list) {
@@ -157,9 +155,21 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
     }
 
     this.list = list == null ? Collections.<T>emptyList() : list;
+    isFirstBuildForList = true;
     requestModelBuild();
   }
 
+  /**
+   * Set a PagedList that should be used to build models in this controller. A listener will be
+   * attached to the list so that models are rebuilt as new list items are loaded.
+   * <p>
+   * By default the Config setting on the PagedList will dictate how many models are built at once,
+   * and what prefetch thresholds should be used. This can be overridden with a separate Config via
+   * {@link #setConfig(Config)}.
+   * <p>
+   * See {@link #setConfig(Config)} for details on how the Config settings are used, and for
+   * recommended values.
+   */
   public void setList(@Nullable PagedList<T> list) {
     if (list == this.pagedList) {
       return;
@@ -176,7 +186,51 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
       list.addWeakCallback(null, callback);
     }
 
+    isFirstBuildForList = true;
     updatePagedListSnapshot();
+  }
+
+  /**
+   * Set a Config value to specify how many models should be built at a time.
+   * <p>
+   * If not set, or set to null, the config value off of the currently set PagedList is used.
+   * <p>
+   * If no PagedList is set, {@link #DEFAULT_CONFIG} is used.
+   * <p>
+   * {@link Config#initialLoadSizeHint} dictates how many models are built on first load. This
+   * should be several times the number of items shown on screen, and is generally equal to or
+   * larger than pageSize.
+   * <p>
+   * {@link Config#pageSize} dictates how many models are built at a time after first load. This
+   * should be several times the number of items shown on screen (roughly 10x, and at least 5x). If
+   * this value is too small models will be rebuilt very often as the user scrolls, potentially
+   * hurting performance. In the worst case, if this value is too small, not enough models will be
+   * created to fill the whole screen and the controller will enter an infinite loop of rebuilding
+   * models.
+   * <p>
+   * {@link Config#prefetchDistance} defines how far from the edge of built models the user must
+   * scroll to trigger further model building. Should be significantly less than page size (roughly
+   * 1/4), and more than the number of items shown on screen. If this value is too big models will
+   * be rebuilt very often as the user scrolls, potentially hurting performance. If this number is
+   * too small then the user may have to wait while models are rebuilt as they scroll.
+   * <p>
+   * For example, if 5 items are shown on screen at once you might have a initialLoadSizeHint of 50,
+   * a pageSize of 50, and a prefetchDistance of 10.
+   */
+  public void setConfig(@Nullable Config config) {
+    customConfig = config;
+  }
+
+  private Config config() {
+    if (customConfig != null) {
+      return customConfig;
+    }
+
+    if (pagedList != null) {
+      return pagedList.getConfig();
+    }
+
+    return DEFAULT_CONFIG;
   }
 
   /**
