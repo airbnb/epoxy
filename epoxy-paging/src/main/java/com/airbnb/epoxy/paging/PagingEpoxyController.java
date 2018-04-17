@@ -185,7 +185,15 @@ public abstract class PagingEpoxyController<T> extends EpoxyController {
    * <p>
    * If no PagedList is set, {@link #DEFAULT_CONFIG} is used.
    * <p>
-   * {@link Config#initialLoadSizeHint} dictates how many models are built on first load
+   * {@link Config#initialLoadSizeHint} dictates how many models are built on first load. This
+   * should be several times the number of items shown on screen.
+   * <p>
+   * {@link Config#pageSize} dictates how many models are built at a time after first load. This
+   * should be several times the number of items shown on screen.
+   * <p>
+   * {@link Config#prefetchDistance} defines how far from the edge of built models the user must
+   * scroll to trigger further model building. Should be significantly less than page size, and more
+   * than the number of items shown on screen.
    */
   public void setConfig(@Nullable Config config) {
     customConfig = config;
