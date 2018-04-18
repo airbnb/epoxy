@@ -27,7 +27,7 @@ public class GeneratedModelSuffixViewSuffix_ extends EpoxyModel<GeneratedModelSu
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final GeneratedModelSuffixView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

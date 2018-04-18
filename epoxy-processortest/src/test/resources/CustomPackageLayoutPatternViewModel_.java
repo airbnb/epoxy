@@ -27,7 +27,7 @@ public class CustomPackageLayoutPatternViewModel_ extends EpoxyModel<CustomPacka
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder,
-      final CustomPackageLayoutPatternView object, int position) {
+      final CustomPackageLayoutPatternView object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

@@ -47,7 +47,7 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder,
-      final TestFieldPropNullOnRecycleOptionView object, int position) {
+      final TestFieldPropNullOnRecycleOptionView object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

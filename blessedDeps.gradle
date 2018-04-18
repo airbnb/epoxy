@@ -34,6 +34,8 @@ rootProject.ext.SO_LOADER_VERSION = "0.2.0"
 
 rootProject.ext.AUTO_VALUE_VERSION = "1.3"
 
+rootProject.ext.PARIS_VERSION = "1.0.0"
+
 rootProject.ext.deps = [
     kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jre7:$KOTLIN_VERSION",
     autoValue             : "com.google.auto.value:auto-value:$AUTO_VALUE_VERSION",
@@ -60,5 +62,7 @@ rootProject.ext.deps = [
     lithoSoloader         : "com.facebook.soloader:soloader:$SO_LOADER_VERSION",
     lithoCore             : "com.facebook.litho:litho-core:$LITHO_VERSION",
     lithoWidget           : "com.facebook.litho:litho-widget:$LITHO_VERSION",
-    lithoAnnotations      : "com.facebook.litho:litho-annotations:$LITHO_VERSION"
+    lithoAnnotations      : "com.facebook.litho:litho-annotations:$LITHO_VERSION",
+    paris                 : "com.airbnb.android:paris:$PARIS_VERSION",
+    parisProcessor        : "com.airbnb.android:paris-processor:$PARIS_VERSION"
 ]

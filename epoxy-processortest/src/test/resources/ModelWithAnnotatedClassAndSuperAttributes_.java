@@ -27,7 +27,7 @@ public class ModelWithAnnotatedClassAndSuperAttributes_ extends ModelWithAnnotat
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final Object object, int position) {
+  public void handlePreBind(final EpoxyViewHolder holder, final Object object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

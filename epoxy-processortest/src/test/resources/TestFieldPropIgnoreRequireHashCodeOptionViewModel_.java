@@ -52,7 +52,7 @@ public class TestFieldPropIgnoreRequireHashCodeOptionViewModel_ extends EpoxyMod
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder,
-      final TestFieldPropIgnoreRequireHashCodeOptionView object, int position) {
+      final TestFieldPropIgnoreRequireHashCodeOptionView object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

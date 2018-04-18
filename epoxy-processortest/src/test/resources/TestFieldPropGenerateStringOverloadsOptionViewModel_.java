@@ -53,7 +53,7 @@ public class TestFieldPropGenerateStringOverloadsOptionViewModel_ extends EpoxyM
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder,
-      final TestFieldPropGenerateStringOverloadsOptionView object, int position) {
+      final TestFieldPropGenerateStringOverloadsOptionView object, final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

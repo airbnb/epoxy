@@ -94,7 +94,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final PropGroupsView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

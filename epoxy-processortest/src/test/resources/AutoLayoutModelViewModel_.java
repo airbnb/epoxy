@@ -45,7 +45,7 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final AutoLayoutModelView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

@@ -33,7 +33,7 @@ public class DataBindingModelWithAllFieldTypesNoValidation_ extends DataBindingM
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder,
-      final DataBindingEpoxyModel.DataBindingHolder object, int position) {
+      final DataBindingEpoxyModel.DataBindingHolder object, final int position) {
   }
 
   @Override

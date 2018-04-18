@@ -38,7 +38,7 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final IgnoreRequireHashCodeView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

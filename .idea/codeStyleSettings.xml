@@ -59,6 +59,7 @@
         <JetCodeStyleSettings>
           <option name="NAME_COUNT_TO_USE_STAR_IMPORT" value="2147483647" />
           <option name="NAME_COUNT_TO_USE_STAR_IMPORT_FOR_MEMBERS" value="2147483647" />
+          <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
         </JetCodeStyleSettings>
         <MarkdownNavigatorCodeStyleSettings>
           <option name="RIGHT_MARGIN" value="72" />
@@ -294,16 +295,13 @@
           </arrangement>
         </codeStyleSettings>
         <codeStyleSettings language="kotlin">
+          <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
           <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
           <option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="1" />
           <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
           <option name="KEEP_BLANK_LINES_BEFORE_RBRACE" value="1" />
           <option name="ALIGN_MULTILINE_PARAMETERS_IN_CALLS" value="true" />
           <option name="ALIGN_MULTILINE_EXTENDS_LIST" value="true" />
-          <option name="CALL_PARAMETERS_WRAP" value="1" />
-          <option name="METHOD_PARAMETERS_WRAP" value="2" />
-          <option name="METHOD_PARAMETERS_LPAREN_ON_NEXT_LINE" value="true" />
-          <option name="METHOD_PARAMETERS_RPAREN_ON_NEXT_LINE" value="true" />
         </codeStyleSettings>
       </value>
     </option>

@@ -39,7 +39,7 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final TestTextPropView object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 

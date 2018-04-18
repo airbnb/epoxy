@@ -45,7 +45,7 @@ public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> i
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final ModelViewSuperClass object,
-      int position) {
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
