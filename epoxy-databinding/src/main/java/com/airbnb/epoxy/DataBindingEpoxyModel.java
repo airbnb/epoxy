@@ -1,8 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +7,10 @@ import android.view.ViewGroup;
 import com.airbnb.epoxy.DataBindingEpoxyModel.DataBindingHolder;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 
 /**
  * A version of {@link com.airbnb.epoxy.EpoxyModel} that can be used with databinding. The layout

@@ -9,7 +9,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath "com.android.tools.build:gradle:$ANDROID_PLUGIN_VERSION"
+    classpath "com.android.tools.build:gradle:3.2.0-alpha15"
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
     classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
   }

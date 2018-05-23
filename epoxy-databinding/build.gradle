@@ -17,7 +17,7 @@ android {
 
 configurations.all { strategy ->
   strategy.resolutionStrategy.force rootProject.deps.androidAnnotations, rootProject.deps.androidRecyclerView,
-      rootProject.deps.androidDesignLibrary, rootProject.deps.androidSupportLibrary, rootProject.deps.junit,
+      rootProject.deps.androidDesignLibrary, rootProject.deps.androidAppcompat, rootProject.deps.junit,
       rootProject.deps.robolectric, rootProject.deps.mockito
 }
 
@@ -25,7 +25,7 @@ dependencies {
   compile rootProject.deps.androidAnnotations
   compile rootProject.deps.androidRecyclerView
   compile rootProject.deps.androidDesignLibrary
-  compile rootProject.deps.androidSupportLibrary
+  compile rootProject.deps.androidAppcompat
   compile project(':epoxy-annotations')
   compile project(':epoxy-adapter')
 
