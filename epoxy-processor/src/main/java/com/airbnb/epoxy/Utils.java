@@ -1,7 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.Nullable;
-
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -28,6 +26,8 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+
+import androidx.annotation.Nullable;
 
 import static com.airbnb.epoxy.KotlinUtilsKt.getParentClassElement;
 import static com.squareup.javapoet.TypeName.BOOLEAN;

@@ -18,11 +18,11 @@ configurations.all { strategy ->
 }
 
 dependencies {
-  compile rootProject.deps.androidAnnotations
-  compile rootProject.deps.androidRecyclerView
-  compile rootProject.deps.androidDesignLibrary
-  compile rootProject.deps.androidSupportLibrary
-  compile project(':epoxy-annotations')
+  implementation rootProject.deps.androidAnnotations
+  implementation rootProject.deps.androidRecyclerView
+  implementation rootProject.deps.androidDesignLibrary
+  implementation rootProject.deps.androidSupportLibrary
+  implementation project(':epoxy-annotations')
 
   annotationProcessor project(':epoxy-processor')
 

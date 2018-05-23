@@ -1,6 +1,6 @@
 package com.airbnb.epoxy
 
-import android.support.annotation.NonNull
+import androidx.annotation.NonNull
 import com.airbnb.epoxy.ModelProp.Option
 import com.airbnb.epoxy.Utils.capitalizeFirstLetter
 import com.airbnb.epoxy.Utils.getDefaultValue
@@ -14,7 +14,8 @@ import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeVariableName
 import org.jetbrains.annotations.NotNull
-import java.util.*
+import java.util.Arrays
+import java.util.HashSet
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement

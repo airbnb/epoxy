@@ -1,6 +1,6 @@
 package com.airbnb.epoxy
 
-import android.support.annotation.LayoutRes
+import androidx.annotation.LayoutRes
 import com.airbnb.epoxy.ClassNames.ANDROID_ASYNC_TASK
 import com.airbnb.epoxy.ClassNames.EPOXY_MODEL_PROPERTIES
 import com.airbnb.epoxy.ClassNames.PARIS_STYLE
