@@ -1,12 +1,12 @@
 
 package com.airbnb.epoxy;
 
-import android.support.annotation.IntDef;
-import android.support.annotation.Nullable;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.Nullable;
 
 /** Defines an operation that makes a change to the epoxy model list. */
 class UpdateOp {

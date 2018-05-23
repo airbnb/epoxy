@@ -1,11 +1,12 @@
 package com.airbnb.epoxy;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.annotation.PluralsRes;
-import android.support.annotation.StringRes;
 
 import java.util.Arrays;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.PluralsRes;
+import androidx.annotation.StringRes;
 
 public class StringAttributeData {
   private final boolean hasDefault;

@@ -13,15 +13,15 @@ android {
 
 configurations.all { strategy ->
   strategy.resolutionStrategy.force rootProject.deps.androidAnnotations, rootProject.deps.androidRecyclerView,
-      rootProject.deps.androidDesignLibrary, rootProject.deps.androidSupportLibrary, rootProject.deps.junit,
+      rootProject.deps.androidDesignLibrary, rootProject.deps.androidAppcompat, rootProject.deps.junit,
       rootProject.deps.robolectric, rootProject.deps.mockito
 }
 
 dependencies {
+  implementation rootProject.deps.androidAppcompat
   implementation rootProject.deps.androidAnnotations
   implementation rootProject.deps.androidRecyclerView
   implementation rootProject.deps.androidDesignLibrary
-  implementation rootProject.deps.androidSupportLibrary
   implementation project(':epoxy-annotations')
 
   annotationProcessor project(':epoxy-processor')

@@ -3,9 +3,6 @@ package com.airbnb.epoxy;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.os.ParcelableCompat;
-import android.support.v4.os.ParcelableCompatCreatorCallbacks;
-import android.support.v4.util.LongSparseArray;
 import android.util.SparseArray;
 import android.view.View;
 
@@ -13,6 +10,8 @@ import com.airbnb.epoxy.ViewHolderState.ViewState;
 import com.airbnb.viewmodeladapter.R;
 
 import java.util.Collection;
+
+import androidx.collection.LongSparseArray;
 
 /**
  * Helper for {@link EpoxyAdapter} to store the state of Views in the adapter. This is useful for
@@ -185,7 +184,7 @@ class ViewHolderState extends LongSparseArray<ViewState> implements Parcelable {
     }
 
     public static final Creator<ViewState> CREATOR =
-        ParcelableCompat.newCreator(new ParcelableCompatCreatorCallbacks<ViewState>() {
+        new Parcelable.ClassLoaderCreator<ViewState>() {
           @Override
           public ViewState createFromParcel(Parcel source, ClassLoader loader) {
             int size = source.readInt();
@@ -196,9 +195,15 @@ class ViewHolderState extends LongSparseArray<ViewState> implements Parcelable {
           }
 
           @Override
+          public ViewState createFromParcel(Parcel source)
+          {
+            return createFromParcel(source, null);
+          }
+
+          @Override
           public ViewState[] newArray(int size) {
             return new ViewState[size];
           }
-        });
+        };
   }
 }

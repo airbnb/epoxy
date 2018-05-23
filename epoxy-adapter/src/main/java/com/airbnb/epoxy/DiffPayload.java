@@ -1,16 +1,15 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
-import android.support.v4.util.LongSparseArray;
-
-import java.util.Collections;
 import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.collection.LongSparseArray;
 
 /**
  * A helper class for tracking changed models found by the {@link com.airbnb.epoxy.DiffHelper} to
  * be included as a payload in the
- * {@link android.support.v7.widget.RecyclerView.Adapter#notifyItemChanged(int, Object)}
+ * {@link androidx.recyclerview.widget.RecyclerView.Adapter#notifyItemChanged(int, Object)}
  * call.
  */
 public class DiffPayload {

@@ -1,19 +1,19 @@
 
 package com.airbnb.epoxy;
 
-import android.support.annotation.Nullable;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 /**
  * Allows you to easily combine different view types in the same adapter, and handles view holder
  * creation, binding, and ids for you. Subclasses just need to add their desired {@link EpoxyModel}
  * objects and the rest is done automatically.
  * <p/>
- * {@link android.support.v7.widget.RecyclerView.Adapter#setHasStableIds(boolean)} is set to true by
+ * {@link androidx.recyclerview.widget.RecyclerView.Adapter#setHasStableIds(boolean)} is set to true by
  * default, since {@link EpoxyModel} makes it easy to support unique ids. If you don't want to
  * support this then disable it in your base class (not recommended).
  */

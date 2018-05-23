@@ -1,10 +1,11 @@
 package com.airbnb.epoxy;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.annotation.PluralsRes;
 
 import java.util.Arrays;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.PluralsRes;
 
 public class QuantityStringResAttribute {
   @PluralsRes private final int id;

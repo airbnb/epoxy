@@ -1,22 +1,23 @@
 package com.airbnb.epoxy;
 
 import android.graphics.Rect;
-import android.support.annotation.Px;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ItemDecoration;
-import android.support.v7.widget.RecyclerView.LayoutManager;
-import android.support.v7.widget.RecyclerView.State;
 import android.view.View;
+
+import androidx.annotation.Px;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.LayoutManager;
+import androidx.recyclerview.widget.RecyclerView.State;
 
 /**
  * Modifies item spacing in a recycler view so that items are equally spaced no matter where they
  * are on the grid. Only designed to work with standard linear or grid layout managers.
  */
-public class EpoxyItemSpacingDecorator extends ItemDecoration {
+public class EpoxyItemSpacingDecorator extends RecyclerView.ItemDecoration
+{
   private int pxBetweenItems;
   private boolean verticallyScrolling;
   private boolean horizontallyScrolling;
@@ -57,7 +58,7 @@ public class EpoxyItemSpacingDecorator extends ItemDecoration {
       return;
     }
 
-    LayoutManager layout = parent.getLayoutManager();
+    RecyclerView.LayoutManager layout = parent.getLayoutManager();
     calculatePositionDetails(parent, position, layout);
 
     boolean left = useLeftPadding();

@@ -1,11 +1,11 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.Nullable;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import androidx.annotation.Nullable;
 
 /**
  * Looks up a generated {@link ControllerHelper} implementation for a given adapter.

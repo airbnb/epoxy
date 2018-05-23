@@ -1,8 +1,9 @@
 package com.airbnb.epoxy;
 
 import android.graphics.Canvas;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
 
 /**
  * For use with {@link EpoxyModelTouchCallback}

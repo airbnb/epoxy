@@ -2,11 +2,7 @@ package com.airbnb.epoxy;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
-import android.support.v7.widget.RecyclerView;
+import android.os.Looper;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,6 +13,12 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
+
 import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
 
 /**
@@ -26,7 +28,7 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
  * {@link #buildModels()}, update the adapter with the new models, and notify any changes between
  * the new and old models.
  * <p>
- * The controller maintains a {@link android.support.v7.widget.RecyclerView.Adapter} with the latest
+ * The controller maintains a {@link androidx.recyclerview.widget.RecyclerView.Adapter} with the latest
  * models, which you can get via {@link #getAdapter()} to set on your RecyclerView.
  * <p>
  * All data change notifications are applied automatically via Epoxy's diffing algorithm. All of
@@ -121,8 +123,8 @@ public abstract class EpoxyController {
 
   @Retention(RetentionPolicy.SOURCE)
   @IntDef({RequestedModelBuildType.NONE,
-      RequestedModelBuildType.NEXT_FRAME,
-      RequestedModelBuildType.DELAYED})
+           RequestedModelBuildType.NEXT_FRAME,
+           RequestedModelBuildType.DELAYED})
   private @interface RequestedModelBuildType {
     int NONE = 0;
     /** A request has been made to build models immediately. It is posted. */
@@ -645,7 +647,7 @@ public abstract class EpoxyController {
 
   /**
    * An optimized way to move a model from one position to another without rebuilding all models.
-   * This is intended to be used with {@link android.support.v7.widget.helper.ItemTouchHelper} to
+   * This is intended to be used with {@link androidx.recyclerview.widget.ItemTouchHelper} to
    * allow for efficient item dragging and rearranging. It cannot be
    * <p>
    * If you call this you MUST also update the data backing your models as necessary.
