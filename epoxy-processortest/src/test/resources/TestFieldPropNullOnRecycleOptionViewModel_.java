@@ -1,8 +1,9 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.LayoutRes;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 import java.lang.CharSequence;
 import java.lang.Number;
 import java.lang.Object;
@@ -245,8 +246,7 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
   }
 
   @Override
-  public TestFieldPropNullOnRecycleOptionViewModel_ spanSizeOverride(
-      @android.support.annotation.Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public TestFieldPropNullOnRecycleOptionViewModel_ spanSizeOverride(@androidx.annotation.Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }

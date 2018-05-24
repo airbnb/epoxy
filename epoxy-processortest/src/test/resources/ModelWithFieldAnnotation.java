@@ -1,6 +1,6 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public class ModelWithFieldAnnotation extends EpoxyModel<Object> {
   @EpoxyAttribute @Nullable String title;
