@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 class ControllerLifecycleHelper {
   private EpoxyViewHolder viewHolder;
@@ -47,7 +46,7 @@ class ControllerLifecycleHelper {
     );
 
     // The simplest way to inject the position for testing.
-    when(viewHolder.getAdapterPosition()).thenReturn(position);
+//    doReturn(position).when(viewHolder).getAdapterPosition();
     return viewHolder;
   }
 

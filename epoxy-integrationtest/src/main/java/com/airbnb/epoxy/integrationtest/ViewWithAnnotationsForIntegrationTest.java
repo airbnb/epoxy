@@ -1,7 +1,6 @@
 package com.airbnb.epoxy.integrationtest;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -9,6 +8,8 @@ import com.airbnb.epoxy.CallbackProp;
 import com.airbnb.epoxy.ModelProp;
 import com.airbnb.epoxy.ModelProp.Option;
 import com.airbnb.epoxy.ModelView;
+
+import androidx.annotation.Nullable;
 
 @ModelView(defaultLayout = R.layout.view_with_annotations_for_integration_test)
 public class ViewWithAnnotationsForIntegrationTest extends View {

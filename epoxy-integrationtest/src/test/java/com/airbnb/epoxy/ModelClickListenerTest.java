@@ -1,7 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.AdapterDataObserver;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -14,6 +12,9 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver;
+
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNotSame;
@@ -21,6 +22,7 @@ import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -100,13 +102,19 @@ public class ModelClickListenerTest {
     RecyclerView recyclerMock = mock(RecyclerView.class);
     EpoxyViewHolder holderMock = mock(EpoxyViewHolder.class);
 
-    when(mockedView.getParent()).thenReturn(recyclerMock);
-    when(recyclerMock.findContainingViewHolder(mockedView)).thenReturn(holderMock);
     when(holderMock.getAdapterPosition()).thenReturn(1);
-    when(holderMock.getModel()).thenReturn(model);
+    doReturn(recyclerMock).when(mockedView).getParent();
+    doReturn(holderMock).when(recyclerMock).findContainingViewHolder(mockedView);
+    doReturn(model).when(holderMock).getModel();
+
+//    when(mockedView.getParent()).thenReturn(recyclerMock);
+//    when(recyclerMock.findContainingViewHolder(mockedView)).thenReturn(holderMock);
+//    when(holderMock.getAdapterPosition()).thenReturn(1);
+//    when(holderMock.getModel()).thenReturn(model);
 
     View parentView = mock(View.class);
-    when(holderMock.objectToBind()).thenReturn(parentView);
+//    when(holderMock.objectToBind()).thenReturn(parentView);
+    doReturn(parentView).when(holderMock).objectToBind();
     return mockedView;
   }
 

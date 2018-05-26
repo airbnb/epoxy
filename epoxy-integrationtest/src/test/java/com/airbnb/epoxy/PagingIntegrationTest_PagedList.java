@@ -1,7 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.arch.paging.PagedList;
-
 import com.airbnb.epoxy.integrationtest.BuildConfig;
 import com.airbnb.epoxy.integrationtest.Model_;
 import com.airbnb.epoxy.paging.PagingEpoxyController;
@@ -14,6 +12,8 @@ import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.paging.PagedList;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
