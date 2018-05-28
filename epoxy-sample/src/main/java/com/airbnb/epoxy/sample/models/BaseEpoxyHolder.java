@@ -1,11 +1,10 @@
 package com.airbnb.epoxy.sample.models;
 
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.airbnb.epoxy.EpoxyHolder;
 
+import androidx.annotation.CallSuper;
 import butterknife.ButterKnife;
 
 /**

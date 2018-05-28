@@ -1,8 +1,6 @@
 package com.airbnb.epoxy.sample.models;
 
 import android.animation.Animator;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.airbnb.epoxy.EpoxyAttribute;
@@ -13,6 +11,8 @@ import com.airbnb.epoxy.sample.R;
 import com.airbnb.epoxy.sample.models.ColorModel.ColorHolder;
 import com.airbnb.lottie.LottieAnimationView;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
 import butterknife.BindView;
 
 import static com.airbnb.epoxy.EpoxyAttribute.Option.DoNotHash;

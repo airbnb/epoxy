@@ -39,26 +39,34 @@ configurations.all { strategy ->
 }
 
 dependencies {
-  compile project(':epoxy-databinding')
-  compile project(':epoxy-adapter')
+  implementation project(':epoxy-databinding')
+  implementation project(':epoxy-adapter')
+  implementation project(':epoxy-annotations')
   annotationProcessor project(':epoxy-processor')
 
-  compile rootProject.deps.paris
+  implementation rootProject.deps.paris
   annotationProcessor rootProject.deps.parisProcessor
 
   // Dependencies for the optional litho integration
-  compile project(':epoxy-litho')
+    //
+    //
+  implementation project(':epoxy-litho')
   annotationProcessor rootProject.deps.lithoProcessor
-  compile rootProject.deps.lithoCore
-  compile rootProject.deps.lithoWidget
-  compile rootProject.deps.lithoSoloader
+  implementation rootProject.deps.lithoCore
+  implementation rootProject.deps.lithoWidget
+  implementation rootProject.deps.lithoSoloader
   provided rootProject.deps.lithoAnnotations
 
-  compile rootProject.deps.butterknifeLibrary
+  implementation rootProject.deps.butterknifeLibrary
   annotationProcessor rootProject.deps.butterknifeCompiler
 
-  compile rootProject.deps.androidCardView
-  compile rootProject.deps.lottie
+  implementation rootProject.deps.androidCardView
+  implementation rootProject.deps.androidRecyclerView
+  implementation rootProject.deps.androidAppcompat
+  implementation rootProject.deps.androidLegacy
+  implementation rootProject.deps.lottie
 
-  testCompile rootProject.deps.junit
+  implementation "com.android.support:support-annotations:27.1.1"
+
+  testImplementation rootProject.deps.junit
 }
