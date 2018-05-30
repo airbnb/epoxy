@@ -3,7 +3,6 @@ package com.airbnb.epoxy;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -130,7 +129,6 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
 
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, Holder groupHolder, final int position) {
-    groupHolder.setModelGroup(this);
     iterateModels(groupHolder, new IterateModelsCallback() {
       @Override
       public void onModel(EpoxyModel model, Object boundObject, View view, int modelIndex) {
@@ -145,7 +143,6 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
   @CallSuper
   @Override
   public void bind(@NonNull Holder holder) {
-    holder.setModelGroup(this);
     iterateModels(holder, new IterateModelsCallback() {
       @Override
       public void onModel(EpoxyModel model, Object boundObject, View view, int modelIndex) {
@@ -159,7 +156,6 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
   @CallSuper
   @Override
   public void bind(@NonNull Holder holder, @NonNull final List<Object> payloads) {
-    holder.setModelGroup(this);
     iterateModels(holder, new IterateModelsCallback() {
       @Override
       public void onModel(EpoxyModel model, Object boundObject, View view, int modelIndex) {
@@ -172,7 +168,6 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
 
   @Override
   public void bind(@NonNull Holder holder, @NonNull EpoxyModel<?> previouslyBoundModel) {
-    holder.setModelGroup(this);
     if (!(previouslyBoundModel instanceof EpoxyModelGroup)) {
       bind(holder);
       return;
@@ -218,7 +213,6 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
         model.unbind(boundObject);
       }
     });
-    holder.setModelGroup(null);
   }
 
   @CallSuper
@@ -307,17 +301,21 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
 
   @Override
   protected final Holder createNewHolder() {
-    Holder holder = new Holder();
-    holder.setModelGroup(this);
-    return holder;
+    return new Holder(this);
   }
 
   public static class Holder extends EpoxyHolder {
+    // Hold it for `bindView`, clear it after `bindView` be called
     private EpoxyModelGroup modelGroup;
     private List<? extends EpoxyModel<?>> models;
     private List<View> views;
     private List<EpoxyHolder> holders;
     private ViewGroup rootView;
+
+    public Holder(@NonNull EpoxyModelGroup modelGroup) {
+      this.modelGroup = modelGroup;
+      this.models = modelGroup.models;
+    }
 
     /**
      * Get the root view group (aka
@@ -327,15 +325,6 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
      */
     public ViewGroup getRootView() {
       return rootView;
-    }
-
-    protected void setModelGroup(@Nullable EpoxyModelGroup modelGroup) {
-      this.modelGroup = modelGroup;
-      if (modelGroup != null) {
-        this.models = modelGroup.models;
-      } else {
-        this.models = null;
-      }
     }
 
     @Override
@@ -356,7 +345,8 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
         EpoxyModel model = models.get(i);
         View view;
         if (useViewStubs) {
-          view = replaceNextViewStub(childContainer, model, modelGroup.useViewStubLayoutParams(model, i));
+          view = replaceNextViewStub(childContainer, model,
+              modelGroup.useViewStubLayoutParams(model, i));
         } else {
           view = createAndAddView(childContainer, model);
         }
@@ -371,6 +361,10 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
 
         views.add(view);
       }
+
+      // Clear the reference, because of `EpoxyController.buildModels`
+      // will build new modelGroup instance during every call.
+      modelGroup = null;
     }
 
     /**
