@@ -365,6 +365,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
       // Clear the reference, because of `EpoxyController.buildModels`
       // will build new modelGroup instance during every call.
       modelGroup = null;
+      models = null;
     }
 
     /**
