@@ -212,7 +212,7 @@ class PhotoController : Typed2EpoxyController<List<Photo>, Boolean>() {
 Get the backing adapter off the EpoxyController to set up your RecyclerView:
 ```java
 MyController controller = new MyController();
-recyclerView.setAdapter(controller);
+recyclerView.setAdapter(controller.getAdapter());
 
 // Request a model build whenever your data changes
 controller.requestModelBuild();
