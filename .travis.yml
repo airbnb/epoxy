@@ -8,7 +8,6 @@ android:
   - android-28
   - extra-google-google_play_services
   - extra-android-m2repository
-  - extra-android-support
   - extra-google-m2repository
 
 jdk:
