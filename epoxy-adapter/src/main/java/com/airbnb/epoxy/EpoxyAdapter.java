@@ -13,8 +13,8 @@ import androidx.annotation.Nullable;
  * creation, binding, and ids for you. Subclasses just need to add their desired {@link EpoxyModel}
  * objects and the rest is done automatically.
  * <p/>
- * {@link androidx.recyclerview.widget.RecyclerView.Adapter#setHasStableIds(boolean)} is set to true by
- * default, since {@link EpoxyModel} makes it easy to support unique ids. If you don't want to
+ * {@link androidx.recyclerview.widget.RecyclerView.Adapter#setHasStableIds(boolean)} is set to true
+ * by default, since {@link EpoxyModel} makes it easy to support unique ids. If you don't want to
  * support this then disable it in your base class (not recommended).
  */
 @SuppressWarnings("WeakerAccess")

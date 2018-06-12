@@ -16,8 +16,7 @@ import androidx.recyclerview.widget.RecyclerView.State;
  * Modifies item spacing in a recycler view so that items are equally spaced no matter where they
  * are on the grid. Only designed to work with standard linear or grid layout managers.
  */
-public class EpoxyItemSpacingDecorator extends RecyclerView.ItemDecoration
-{
+public class EpoxyItemSpacingDecorator extends RecyclerView.ItemDecoration {
   private int pxBetweenItems;
   private boolean verticallyScrolling;
   private boolean horizontallyScrolling;

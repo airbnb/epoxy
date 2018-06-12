@@ -195,8 +195,7 @@ class ViewHolderState extends LongSparseArray<ViewState> implements Parcelable {
           }
 
           @Override
-          public ViewState createFromParcel(Parcel source)
-          {
+          public ViewState createFromParcel(Parcel source) {
             return createFromParcel(source, null);
           }
 

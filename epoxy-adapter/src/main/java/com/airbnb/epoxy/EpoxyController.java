@@ -28,8 +28,8 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
  * {@link #buildModels()}, update the adapter with the new models, and notify any changes between
  * the new and old models.
  * <p>
- * The controller maintains a {@link androidx.recyclerview.widget.RecyclerView.Adapter} with the latest
- * models, which you can get via {@link #getAdapter()} to set on your RecyclerView.
+ * The controller maintains a {@link androidx.recyclerview.widget.RecyclerView.Adapter} with the
+ * latest models, which you can get via {@link #getAdapter()} to set on your RecyclerView.
  * <p>
  * All data change notifications are applied automatically via Epoxy's diffing algorithm. All of
  * your models must have a unique id set on them for diffing to work. You may choose to use {@link

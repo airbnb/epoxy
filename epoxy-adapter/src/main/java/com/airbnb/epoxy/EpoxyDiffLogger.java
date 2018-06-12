@@ -16,8 +16,7 @@ import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver;
  * Additionally, you may want to look for frequent or unnecessary updates as an opportunity for
  * optimization.
  */
-public class EpoxyDiffLogger extends AdapterDataObserver
-{
+public class EpoxyDiffLogger extends AdapterDataObserver {
   private final String tag;
 
   public EpoxyDiffLogger(String tag) {

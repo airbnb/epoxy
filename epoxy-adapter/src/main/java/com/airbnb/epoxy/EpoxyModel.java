@@ -626,7 +626,8 @@ public abstract class EpoxyModel<T> {
   /**
    * Called when this model's view is detached from the the window.
    *
-   * @see EpoxyAdapter#onViewDetachedFromWindow(androidx.recyclerview.widget.RecyclerView.ViewHolder)
+   * @see
+   * EpoxyAdapter#onViewDetachedFromWindow(androidx.recyclerview.widget.RecyclerView.ViewHolder)
    */
   public void onViewDetachedFromWindow(@NonNull T view) {
 

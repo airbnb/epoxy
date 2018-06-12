@@ -65,8 +65,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * 9. {@link #setClipToPadding(boolean)} is set to false by default since that behavior is commonly
  * desired in a scrolling list
  */
-public class EpoxyRecyclerView extends RecyclerView
-{
+public class EpoxyRecyclerView extends RecyclerView {
   private static final int DEFAULT_ADAPTER_REMOVAL_DELAY_MS = 2000;
 
   /**
@@ -255,8 +254,8 @@ public class EpoxyRecyclerView extends RecyclerView
   }
 
   /**
-   * Create a new {@link androidx.recyclerview.widget.RecyclerView.LayoutManager} instance to use for
-   * this RecyclerView.
+   * Create a new {@link androidx.recyclerview.widget.RecyclerView.LayoutManager}
+   * instance to use for this RecyclerView.
    * <p>
    * By default a LinearLayoutManager is used, and a reasonable default is chosen for scrolling
    * direction based on layout params.
