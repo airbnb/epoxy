@@ -216,7 +216,7 @@ internal class ViewAttributeInfo(
                 }
             }
 
-            viewClass = modelInfo.viewElement.getParentClassElement(types)
+            viewClass = viewClass.getParentClassElement(types)
         }
 
         errorLogger.logError(

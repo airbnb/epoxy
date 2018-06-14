@@ -84,6 +84,11 @@ class ViewProcessorTest {
     }
 
     @Test
+    fun defaults_throwsForNotFound() {
+        assertGenerationError("PropDefaultsView_throwsForNotFound.java", "could not be found")
+    }
+
+    @Test
     fun onViewRecycled() {
         assertGeneration("OnViewRecycledView.java", "OnViewRecycledViewModel_.java")
     }
