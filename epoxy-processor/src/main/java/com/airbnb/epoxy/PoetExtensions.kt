@@ -1,8 +1,18 @@
 package com.airbnb.epoxy
 
 import com.squareup.javapoet.TypeName
-import com.squareup.kotlinpoet.*
-import javax.lang.model.element.*
+import com.squareup.kotlinpoet.ANY
+import com.squareup.kotlinpoet.BOOLEAN
+import com.squareup.kotlinpoet.BYTE
+import com.squareup.kotlinpoet.CHAR
+import com.squareup.kotlinpoet.DOUBLE
+import com.squareup.kotlinpoet.FLOAT
+import com.squareup.kotlinpoet.INT
+import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.LONG
+import com.squareup.kotlinpoet.SHORT
+import com.squareup.kotlinpoet.UNIT
+import javax.lang.model.element.Modifier
 
 typealias JavaClassName = com.squareup.javapoet.ClassName
 typealias JavaTypeName = com.squareup.javapoet.TypeName
@@ -36,9 +46,10 @@ fun JavaClassName.toKPoet(): KotlinClassName {
     val packageName = getPackageNameInKotlin()
 
     return KotlinClassName(
-            packageName,
-            simpleNames.first(),
-            *simpleNames.drop(1).toTypedArray())
+        packageName,
+        simpleNames.first(),
+        *simpleNames.drop(1).toTypedArray()
+    )
 }
 
 /** Some classes, like List or Byte have the same class name but a different package for their kotlin equivalent. */
@@ -86,22 +97,22 @@ private fun JavaClassName.getSimpleNamesInKotlin(): List<String> {
     return originalNames
 }
 
-fun JavaClassName.setPackage(packageName: String)
-        = JavaClassName.get(packageName, simpleName(), *simpleNames().drop(1).toTypedArray())!!
+fun JavaClassName.setPackage(packageName: String) =
+    JavaClassName.get(packageName, simpleName(), *simpleNames().drop(1).toTypedArray())!!
 
 // Does not support transferring annotations
 fun JavaWildcardTypeName.toKPoet() =
-        if (!lowerBounds.isEmpty()) {
-            KotlinWildcardTypeName.supertypeOf(lowerBounds.first().toKPoet())
-        } else {
-            KotlinWildcardTypeName.subtypeOf(upperBounds.first().toKPoet())
-        }
+    if (!lowerBounds.isEmpty()) {
+        KotlinWildcardTypeName.supertypeOf(lowerBounds.first().toKPoet())
+    } else {
+        KotlinWildcardTypeName.subtypeOf(upperBounds.first().toKPoet())
+    }
 
 // Does not support transferring annotations
-fun JavaParametrizedTypeName.toKPoet()
-        = KotlinParameterizedTypeName.get(
-        this.rawType.toKPoet(),
-        *typeArguments.toKPoet().toTypedArray())
+fun JavaParametrizedTypeName.toKPoet() = KotlinParameterizedTypeName.get(
+    this.rawType.toKPoet(),
+    *typeArguments.toKPoet().toTypedArray()
+)
 
 // Does not support transferring annotations
 fun JavaArrayTypeName.toKPoet(): KotlinTypeName {
@@ -126,33 +137,42 @@ fun JavaArrayTypeName.toKPoet(): KotlinTypeName {
     }
 
     return KotlinParameterizedTypeName.get(
-            KotlinClassName(kotlinPkg, "Array"),
-            this.componentType.toKPoet())
+        KotlinClassName(kotlinPkg, "Array"),
+        this.componentType.toKPoet()
+    )
 }
 
 // Does not support transferring annotations
-fun JavaTypeVariableName.toKPoet()
-        = KotlinTypeVariableName.invoke(
-        name,
-        *bounds.toKPoet().toTypedArray())
+fun JavaTypeVariableName.toKPoet() = KotlinTypeVariableName.invoke(
+    name,
+    *bounds.toKPoet().toTypedArray()
+)
 
-fun JavaTypeName.toKPoet(): KotlinTypeName = when (this) {
-    JavaTypeName.BOOLEAN -> BOOLEAN
-    JavaTypeName.BYTE -> BYTE
-    JavaTypeName.SHORT -> SHORT
-    JavaTypeName.CHAR -> CHAR
-    JavaTypeName.INT -> INT
-    JavaTypeName.LONG -> LONG
-    JavaTypeName.FLOAT -> FLOAT
-    JavaTypeName.DOUBLE -> DOUBLE
-    JavaTypeName.OBJECT -> ANY
-    JavaTypeName.VOID -> UNIT
-    is JavaClassName -> toKPoet()
-    is JavaParametrizedTypeName -> toKPoet()
-    is JavaArrayTypeName -> toKPoet()
-    is JavaTypeVariableName -> toKPoet()
-    is JavaWildcardTypeName -> toKPoet()
-    else -> throw IllegalArgumentException("Unsupported type: ${this::class.simpleName}")
+fun JavaTypeName.toKPoet(nullable: Boolean = false): KotlinTypeName {
+    val type = when (this) {
+        JavaTypeName.BOOLEAN -> BOOLEAN
+        JavaTypeName.BYTE -> BYTE
+        JavaTypeName.SHORT -> SHORT
+        JavaTypeName.CHAR -> CHAR
+        JavaTypeName.INT -> INT
+        JavaTypeName.LONG -> LONG
+        JavaTypeName.FLOAT -> FLOAT
+        JavaTypeName.DOUBLE -> DOUBLE
+        JavaTypeName.OBJECT -> ANY
+        JavaTypeName.VOID -> UNIT
+        is JavaClassName -> toKPoet()
+        is JavaParametrizedTypeName -> toKPoet()
+        is JavaArrayTypeName -> toKPoet()
+        is JavaTypeVariableName -> toKPoet()
+        is JavaWildcardTypeName -> toKPoet()
+        else -> throw IllegalArgumentException("Unsupported type: ${this::class.simpleName}")
+    }
+
+    if (nullable) {
+        return type.asNullable()
+    }
+
+    return type
 }
 
 fun <T : JavaTypeName> Iterable<T>.toKPoet() = map { it.toKPoet() }
@@ -162,10 +182,12 @@ fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
     // A param name in java might be reserved in kotlin
     val paramName = if (name in KOTLIN_KEYWORDS) name + "Param" else name
 
+    val nullable = annotations.any { (it.type as? JavaClassName)?.simpleName() == "Nullable" }
+
     return KotlinParameterSpec.builder(
-            paramName,
-            type.toKPoet(),
-            *modifiers.toKModifier().toTypedArray()
+        paramName,
+        type.toKPoet(nullable),
+        *modifiers.toKModifier().toTypedArray()
     ).build()
 
 }
@@ -173,7 +195,7 @@ fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
 fun Iterable<JavaParameterSpec>.toKParams() = map { it.toKPoet() }
 
 fun Iterable<Modifier>.toKModifier(): List<KModifier> =
-        map { it.toKModifier() }.filter { it != null }.map { it!! }
+    map { it.toKModifier() }.filter { it != null }.map { it!! }
 
 fun Modifier.toKModifier() = when (this) {
     Modifier.PUBLIC -> KModifier.PUBLIC
@@ -186,33 +208,33 @@ fun Modifier.toKModifier() = when (this) {
 
 // https://github.com/JetBrains/kotlin/blob/master/core/descriptors/src/org/jetbrains/kotlin/renderer/KeywordStringsGenerated.java
 private val KOTLIN_KEYWORDS = setOf(
-        "package",
-        "as",
-        "typealias",
-        "class",
-        "this",
-        "super",
-        "val",
-        "var",
-        "fun",
-        "for",
-        "null",
-        "true",
-        "false",
-        "is",
-        "in",
-        "throw",
-        "return",
-        "break",
-        "continue",
-        "object",
-        "if",
-        "try",
-        "else",
-        "while",
-        "do",
-        "when",
-        "interface",
-        "typeof"
+    "package",
+    "as",
+    "typealias",
+    "class",
+    "this",
+    "super",
+    "val",
+    "var",
+    "fun",
+    "for",
+    "null",
+    "true",
+    "false",
+    "is",
+    "in",
+    "throw",
+    "return",
+    "break",
+    "continue",
+    "object",
+    "if",
+    "try",
+    "else",
+    "while",
+    "do",
+    "when",
+    "interface",
+    "typeof"
 )
 

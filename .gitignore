@@ -12,7 +12,7 @@ hs_err_pid*
 
 .idea/*
 lib/.idea/*
-!.idea/codeStyleSettings.xml
+!.idea/codeStyles
 
 .gradle
 *.iml
