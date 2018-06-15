@@ -6,12 +6,19 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import com.airbnb.paris.styles.Style
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Test
 
 /**
  * Asserts that using from(ModelProperties) to create a model applies the property values correctly
  */
 class FromModelPropertiesTest {
+
+    @Test
+    fun getId() {
+        val model = TestModelPropertiesViewModel_.from(TestModelProperties(id = "100"))
+        assertFalse(model.hasDefaultId())
+    }
 
     @Test
     fun getBoolean() {
@@ -59,7 +66,7 @@ class FromModelPropertiesTest {
     }
 
     class TestModelProperties(
-        private val id: String? = "",
+        private val id: String = "",
         private val booleanValue: Boolean? = null,
         private val doubleValue: Double? = null,
         private val drawable: Drawable? = null,
@@ -70,9 +77,10 @@ class FromModelPropertiesTest {
         private val styleValue: Style? = null
     ) : ModelProperties {
 
+        override fun getId() = id
+
         override fun has(propertyName: String): Boolean {
             return mapOf(
-                "id" to id,
                 "booleanValue" to booleanValue,
                 "doubleValue" to doubleValue,
                 "drawable" to drawable,
@@ -93,9 +101,7 @@ class FromModelPropertiesTest {
 
         override fun getOnClickListener(propertyName: String) = onClickListener!!
 
-        override fun getString(propertyName: String): String {
-            return if (propertyName == "id") id!! else stringValue!!
-        }
+        override fun getString(propertyName: String) = stringValue!!
 
         override fun getStringList(propertyName: String) = stringList!!
 

@@ -477,7 +477,7 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
 
   public static AllTypesModelViewModel_ from(ModelProperties properties) {
     AllTypesModelViewModel_ model = new AllTypesModelViewModel_();
-    model.id(properties.getString("id"));
+    model.id(properties.getId());
     if (properties.has("booleanValue")) {
       model.booleanValue(properties.getBoolean("booleanValue"));
     }

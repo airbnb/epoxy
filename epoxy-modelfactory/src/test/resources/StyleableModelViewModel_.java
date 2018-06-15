@@ -330,7 +330,7 @@ public class StyleableModelViewModel_ extends EpoxyModel<StyleableModelView> imp
 
   public static StyleableModelViewModel_ from(ModelProperties properties) {
     StyleableModelViewModel_ model = new StyleableModelViewModel_();
-    model.id(properties.getString("id"));
+    model.id(properties.getId());
     if (properties.has("title")) {
       model.title(properties.getString("title"));
     }

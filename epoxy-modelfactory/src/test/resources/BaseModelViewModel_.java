@@ -247,7 +247,7 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
 
   public static BaseModelViewModel_ from(ModelProperties properties) {
     BaseModelViewModel_ model = new BaseModelViewModel_();
-    model.id(properties.getString("id"));
+    model.id(properties.getId());
     if (properties.has("title")) {
       model.title(properties.getString("title"));
     }

@@ -1473,8 +1473,7 @@ internal class GeneratedModelWriter(
                 modelInfo.generatedClassName
             )
 
-            // There should always be an id
-            addStatement("model.id(properties.getString(\$S))", "id")
+            addStatement("model.id(properties.getId())")
 
             for (attributeInfo in supportedAttributeInfo) {
                 val setterName = attributeInfo.generatedSetterName()

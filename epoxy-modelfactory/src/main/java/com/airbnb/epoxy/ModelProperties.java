@@ -11,6 +11,9 @@ import java.util.List;
 
 public interface ModelProperties {
 
+  @NonNull
+  String getId();
+
   boolean has(@NonNull String propertyName);
 
   boolean getBoolean(@NonNull String propertyName);

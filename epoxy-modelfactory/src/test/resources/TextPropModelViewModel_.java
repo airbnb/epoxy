@@ -291,7 +291,7 @@ public class TextPropModelViewModel_ extends EpoxyModel<TextPropModelView> imple
 
   public static TextPropModelViewModel_ from(ModelProperties properties) {
     TextPropModelViewModel_ model = new TextPropModelViewModel_();
-    model.id(properties.getString("id"));
+    model.id(properties.getId());
     if (properties.has("title")) {
       model.title(properties.getString("title"));
     }

@@ -256,7 +256,7 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
 
   public static CallbackPropModelViewModel_ from(ModelProperties properties) {
     CallbackPropModelViewModel_ model = new CallbackPropModelViewModel_();
-    model.id(properties.getString("id"));
+    model.id(properties.getId());
     if (properties.has("onClickListener")) {
       model.onClickListener(properties.getOnClickListener("onClickListener"));
     }
