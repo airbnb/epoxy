@@ -29,6 +29,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.ClassNames.EPOXY_STRING_ATTRIBUTE_DATA;
 import static com.airbnb.epoxy.KotlinUtilsKt.getParentClassElement;
 import static com.squareup.javapoet.TypeName.BOOLEAN;
 import static com.squareup.javapoet.TypeName.BYTE;
@@ -56,6 +57,7 @@ class Utils {
   static final String EPOXY_CONTROLLER_TYPE = "com.airbnb.epoxy.EpoxyController";
   static final String VIEW_CLICK_LISTENER_TYPE = "android.view.View.OnClickListener";
   static final String VIEW_LONG_CLICK_LISTENER_TYPE = "android.view.View.OnLongClickListener";
+  static final String DRAWABLE_TYPE = "android.graphics.drawable.Drawable";
   static final String GENERATED_MODEL_INTERFACE = "com.airbnb.epoxy.GeneratedModel";
   static final String MODEL_CLICK_LISTENER_TYPE = "com.airbnb.epoxy.OnModelClickListener";
   static final String MODEL_LONG_CLICK_LISTENER_TYPE = "com.airbnb.epoxy.OnModelLongClickListener";
@@ -112,6 +114,18 @@ class Utils {
 
   static boolean isViewLongClickListenerType(TypeMirror type) {
     return isType(type, VIEW_LONG_CLICK_LISTENER_TYPE);
+  }
+
+  static boolean isCharSequenceType(TypeMirror type) {
+    return isSubtypeOfType(type, "java.lang.CharSequence")
+        || isSubtypeOfType(type, "kotlin.CharSequence");
+  }
+
+  static boolean isStringAttributeDataType(TypeMirror type) {
+    return isSubtypeOfType(type, EPOXY_STRING_ATTRIBUTE_DATA.reflectionName());
+  }
+  static boolean isDrawableType(TypeMirror type) {
+    return isSubtypeOfType(type, DRAWABLE_TYPE);
   }
 
   static boolean isIterableType(TypeElement element) {

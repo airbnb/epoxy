@@ -10,6 +10,8 @@ import com.squareup.javapoet.TypeName;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import static com.airbnb.epoxy.Utils.isViewClickListenerType;
@@ -231,7 +233,43 @@ abstract class AttributeInfo {
   }
 
   boolean isViewClickListener() {
-    return isViewClickListenerType(getTypeMirror()) || isViewLongClickListenerType(getTypeMirror());
+    return isViewClickListenerType(getTypeMirror());
+  }
+
+  boolean isViewLongClickListener() {
+    return isViewLongClickListenerType(getTypeMirror());
+  }
+
+  boolean isBoolean() {
+    return getTypeMirror().getKind() == TypeKind.BOOLEAN;
+  }
+
+  boolean isCharSequence() {
+    return Utils.isCharSequenceType(getTypeMirror());
+  }
+
+  boolean isCharSequenceList() {
+    if (Utils.isSubtypeOfType(getTypeMirror(), "java.util.List<?>")) {
+      DeclaredType declaredListType = (DeclaredType) getTypeMirror();
+      return Utils.isCharSequenceType(declaredListType.getTypeArguments().get(0));
+    }
+    return false;
+  }
+
+  boolean isDouble() {
+    return getTypeMirror().getKind() == TypeKind.DOUBLE;
+  }
+
+  boolean isDrawable() {
+    return Utils.isDrawableType(getTypeMirror());
+  }
+
+  boolean isInt() {
+    return getTypeMirror().getKind() == TypeKind.INT;
+  }
+
+  boolean isStringAttributeData() {
+    return Utils.isStringAttributeDataType(getTypeMirror());
   }
 
   String getPackageName() {
