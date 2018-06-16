@@ -1487,7 +1487,7 @@ internal class GeneratedModelWriter(
                     attributeInfo.isDrawableRes -> "getDrawableRes"
                     attributeInfo.isInt -> "getInt"
                     attributeInfo.isViewClickListener -> "getOnClickListener"
-                    else -> throw IllegalStateException()
+                    else -> throw IllegalStateException("Missing ModelProperties method for a supported attribute type.")
                 }
                 addStatement(
                     "model.\$N(properties.\$N(\$S))",
