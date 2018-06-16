@@ -3,7 +3,6 @@ package com.airbnb.epoxy;
 import com.airbnb.epoxy.EpoxyAttribute.Option;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.TypeName;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
