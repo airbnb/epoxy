@@ -1483,9 +1483,8 @@ internal class GeneratedModelWriter(
                             || attributeInfo.isStringAttributeData -> "getString"
                     attributeInfo.isCharSequenceList -> "getStringList"
                     attributeInfo.isDouble -> "getDouble"
-                    // This checks must happen before isInt since the latter would also return true
                     attributeInfo.isDrawableRes -> "getDrawableRes"
-                    attributeInfo.isInt -> "getInt"
+                    attributeInfo.isInt && !attributeInfo.isDrawableRes -> "getInt"
                     attributeInfo.isViewClickListener -> "getOnClickListener"
                     else -> throw IllegalStateException("Missing ModelProperties method for a supported attribute type.")
                 }

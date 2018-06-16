@@ -472,23 +472,23 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   public static AllTypesModelViewModel_ from(ModelProperties properties) {
     AllTypesModelViewModel_ model = new AllTypesModelViewModel_();
     model.id(properties.getId());
-    if (properties.has("booleanValue")) {
-      model.booleanValue(properties.getBoolean("booleanValue"));
-    }
-    if (properties.has("doubleValue")) {
-      model.doubleValue(properties.getDouble("doubleValue"));
-    }
-    if (properties.has("drawableRes")) {
-      model.drawableRes(properties.getDrawableRes("drawableRes"));
-    }
-    if (properties.has("intValue")) {
-      model.intValue(properties.getInt("intValue"));
+    if (properties.has("stringValue")) {
+      model.stringValue(properties.getString("stringValue"));
     }
     if (properties.has("onClickListener")) {
       model.onClickListener(properties.getOnClickListener("onClickListener"));
     }
-    if (properties.has("stringValue")) {
-      model.stringValue(properties.getString("stringValue"));
+    if (properties.has("intValue")) {
+      model.intValue(properties.getInt("intValue"));
+    }
+    if (properties.has("booleanValue")) {
+      model.booleanValue(properties.getBoolean("booleanValue"));
+    }
+    if (properties.has("drawableRes")) {
+      model.drawableRes(properties.getDrawableRes("drawableRes"));
+    }
+    if (properties.has("doubleValue")) {
+      model.doubleValue(properties.getDouble("doubleValue"));
     }
     if (properties.has("stringList")) {
       model.stringList(properties.getStringList("stringList"));
