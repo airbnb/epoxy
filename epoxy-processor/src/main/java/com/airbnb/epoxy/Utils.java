@@ -124,10 +124,6 @@ class Utils {
   static boolean isStringAttributeDataType(TypeMirror type) {
     return isSubtypeOfType(type, EPOXY_STRING_ATTRIBUTE_DATA.reflectionName());
   }
-  static boolean isDrawableType(TypeMirror type) {
-    return isSubtypeOfType(type, DRAWABLE_TYPE);
-  }
-
   static boolean isIterableType(TypeElement element) {
     return isSubtypeOfType(element.asType(), "java.lang.Iterable<?>");
   }

@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.airbnb.epoxy.GeneratedModelInfo.AttributeGroup;
 import com.squareup.javapoet.AnnotationSpec;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;
 
@@ -260,8 +261,18 @@ abstract class AttributeInfo {
     return getTypeMirror().getKind() == TypeKind.DOUBLE;
   }
 
-  boolean isDrawable() {
-    return Utils.isDrawableType(getTypeMirror());
+  boolean isDrawableRes() {
+    if (isInt()) {
+      for (AnnotationSpec annotation : setterAnnotations) {
+        if (annotation.type instanceof ClassName) {
+          String annotationSimpleName = ((ClassName) annotation.type).simpleName();
+          if (annotationSimpleName.equals("DrawableRes")) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 
   boolean isInt() {

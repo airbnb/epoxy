@@ -1443,7 +1443,7 @@ internal class GeneratedModelWriter(
                 AttributeInfo::isCharSequence,
                 AttributeInfo::isCharSequenceList,
                 AttributeInfo::isDouble,
-                AttributeInfo::isDrawable,
+                AttributeInfo::isDrawableRes,
                 AttributeInfo::isInt,
                 AttributeInfo::isViewClickListener,
                 AttributeInfo::isStringAttributeData
@@ -1484,7 +1484,8 @@ internal class GeneratedModelWriter(
                             || attributeInfo.isStringAttributeData -> "getString"
                     attributeInfo.isCharSequenceList -> "getStringList"
                     attributeInfo.isDouble -> "getDouble"
-                    attributeInfo.isDrawable -> "getDrawable"
+                    // This checks must happen before isInt since the latter would also return true
+                    attributeInfo.isDrawableRes -> "getDrawableRes"
                     attributeInfo.isInt -> "getInt"
                     attributeInfo.isViewClickListener -> "getOnClickListener"
                     else -> throw IllegalStateException()

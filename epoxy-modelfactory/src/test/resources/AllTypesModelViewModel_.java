@@ -1,6 +1,6 @@
 package com.airbnb.epoxy;
 
-import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,8 +34,8 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
 
   /**
    * Bitset index: 2 */
-  @NonNull
-  private Drawable drawable_Drawable;
+  @DrawableRes
+  private int drawableRes_Int = 0;
 
   /**
    * Bitset index: 3 */
@@ -66,9 +66,6 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     if (!assignedAttributes_epoxyGeneratedModel.get(4)) {
     	throw new IllegalStateException("A value is required for setOnClickListener");
     }
-    if (!assignedAttributes_epoxyGeneratedModel.get(2)) {
-    	throw new IllegalStateException("A value is required for setDrawable");
-    }
     if (!assignedAttributes_epoxyGeneratedModel.get(6)) {
     	throw new IllegalStateException("A value is required for setStringList");
     }
@@ -87,8 +84,8 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     object.setOnClickListener(onClickListener_OnClickListener);
     object.setIntValue(intValue_Int);
     object.setBooleanValue(booleanValue_Boolean);
+    object.setDrawableRes(drawableRes_Int);
     object.setDoubleValue(doubleValue_Double);
-    object.setDrawable(drawable_Drawable);
     object.setStringList(stringList_List);
   }
 
@@ -117,12 +114,12 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
       object.setBooleanValue(booleanValue_Boolean);
     }
 
-    if ((Double.compare(that.doubleValue_Double, doubleValue_Double) != 0)) {
-      object.setDoubleValue(doubleValue_Double);
+    if ((drawableRes_Int != that.drawableRes_Int)) {
+      object.setDrawableRes(drawableRes_Int);
     }
 
-    if (((drawable_Drawable == null) != (that.drawable_Drawable == null))) {
-      object.setDrawable(drawable_Drawable);
+    if ((Double.compare(that.doubleValue_Double, doubleValue_Double) != 0)) {
+      object.setDoubleValue(doubleValue_Double);
     }
 
     if ((stringList_List != null ? !stringList_List.equals(that.stringList_List) : that.stringList_List != null)) {
@@ -205,23 +202,20 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   }
 
   /**
-   * <i>Required.</i>
+   * <i>Optional</i>: Default value is 0
    *
-   * @see AllTypesModelView#setDrawable(Drawable)
+   * @see AllTypesModelView#setDrawableRes(int)
    */
-  public AllTypesModelViewModel_ drawable(@NonNull Drawable drawable) {
-    if (drawable == null) {
-      throw new IllegalArgumentException("drawable cannot be null");
-    }
+  public AllTypesModelViewModel_ drawableRes(@DrawableRes int drawableRes) {
     assignedAttributes_epoxyGeneratedModel.set(2);
     onMutation();
-    this.drawable_Drawable = drawable;
+    this.drawableRes_Int = drawableRes;
     return this;
   }
 
-  @NonNull
-  public Drawable drawable() {
-    return drawable_Drawable;
+  @DrawableRes
+  public int drawableRes() {
+    return drawableRes_Int;
   }
 
   /**
@@ -394,7 +388,7 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     assignedAttributes_epoxyGeneratedModel.clear();
     this.booleanValue_Boolean = false;
     this.doubleValue_Double = 0.0d;
-    this.drawable_Drawable = null;
+    this.drawableRes_Int = 0;
     this.intValue_Int = 0;
     this.onClickListener_OnClickListener = null;
     this.stringValue_String = null;
@@ -427,7 +421,7 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     if ((Double.compare(that.doubleValue_Double, doubleValue_Double) != 0)) {
       return false;
     }
-    if (((drawable_Drawable == null) != (that.drawable_Drawable == null))) {
+    if ((drawableRes_Int != that.drawableRes_Int)) {
       return false;
     }
     if ((intValue_Int != that.intValue_Int)) {
@@ -454,7 +448,7 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     result = 31 * result + (booleanValue_Boolean ? 1 : 0);
     temp = Double.doubleToLongBits(doubleValue_Double);
     result = 31 * result + (int) (temp ^ (temp >>> 32));
-    result = 31 * result + (drawable_Drawable != null ? 1 : 0);
+    result = 31 * result + drawableRes_Int;
     result = 31 * result + intValue_Int;
     result = 31 * result + (onClickListener_OnClickListener != null ? 1 : 0);
     result = 31 * result + (stringValue_String != null ? stringValue_String.hashCode() : 0);
@@ -467,7 +461,7 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     return "AllTypesModelViewModel_{" +
         "booleanValue_Boolean=" + booleanValue_Boolean +
         ", doubleValue_Double=" + doubleValue_Double +
-        ", drawable_Drawable=" + drawable_Drawable +
+        ", drawableRes_Int=" + drawableRes_Int +
         ", intValue_Int=" + intValue_Int +
         ", onClickListener_OnClickListener=" + onClickListener_OnClickListener +
         ", stringValue_String=" + stringValue_String +
@@ -484,8 +478,8 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     if (properties.has("doubleValue")) {
       model.doubleValue(properties.getDouble("doubleValue"));
     }
-    if (properties.has("drawable")) {
-      model.drawable(properties.getDrawable("drawable"));
+    if (properties.has("drawableRes")) {
+      model.drawableRes(properties.getDrawableRes("drawableRes"));
     }
     if (properties.has("intValue")) {
       model.intValue(properties.getInt("intValue"));

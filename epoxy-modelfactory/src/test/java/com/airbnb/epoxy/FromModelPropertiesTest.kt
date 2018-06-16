@@ -1,9 +1,7 @@
 package com.airbnb.epoxy
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.view.View
+import com.airbnb.epoxymodelfactory.R
 import com.airbnb.paris.styles.Style
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -33,10 +31,10 @@ class FromModelPropertiesTest {
     }
 
     @Test
-    fun getDrawable() {
-        val drawable = ColorDrawable(Color.GREEN)
-        val model = TestModelPropertiesViewModel_.from(TestModelProperties(drawable = drawable))
-        assertEquals(drawable, model.drawable())
+    fun getDrawableRes() {
+        val drawableRes = R.drawable.abc_ic_star_black_48dp
+        val model = TestModelPropertiesViewModel_.from(TestModelProperties(drawableRes = drawableRes))
+        assertEquals(drawableRes, model.drawableRes())
     }
 
     @Test
@@ -69,7 +67,7 @@ class FromModelPropertiesTest {
         private val id: String = "",
         private val booleanValue: Boolean? = null,
         private val doubleValue: Double? = null,
-        private val drawable: Drawable? = null,
+        private val drawableRes: Int? = null,
         private val intValue: Int? = null,
         private val onClickListener: View.OnClickListener? = null,
         private val stringValue: String? = null,
@@ -83,7 +81,7 @@ class FromModelPropertiesTest {
             return mapOf(
                 "booleanValue" to booleanValue,
                 "doubleValue" to doubleValue,
-                "drawable" to drawable,
+                "drawableRes" to drawableRes,
                 "intValue" to intValue,
                 "onClickListener" to onClickListener,
                 "stringList" to stringList,
@@ -95,7 +93,7 @@ class FromModelPropertiesTest {
 
         override fun getDouble(propertyName: String) = doubleValue!!
 
-        override fun getDrawable(propertyName: String) = drawable!!
+        override fun getDrawableRes(propertyName: String) = drawableRes!!
 
         override fun getInt(propertyName: String) = intValue!!
 

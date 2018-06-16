@@ -1,8 +1,7 @@
 package com.airbnb.epoxy
 
-import android.graphics.drawable.Drawable
+import android.support.annotation.DrawableRes
 import android.view.View.OnClickListener
-
 import com.airbnb.paris.styles.Style
 
 interface ModelProperties {
@@ -15,7 +14,8 @@ interface ModelProperties {
 
     fun getDouble(propertyName: String): Double
 
-    fun getDrawable(propertyName: String): Drawable
+    @DrawableRes
+    fun getDrawableRes(propertyName: String): Int
 
     fun getInt(propertyName: String): Int
 

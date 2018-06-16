@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.widget.FrameLayout;
 
 import com.airbnb.epoxy.ModelProp.Option;
@@ -25,8 +26,8 @@ public class AllTypesModelView extends FrameLayout {
 
   }
 
-  @ModelProp({ Option.DoNotHash })
-  public void setDrawable(Drawable value) {
+  @ModelProp
+  public void setDrawableRes(@DrawableRes int value) {
 
   }
 
