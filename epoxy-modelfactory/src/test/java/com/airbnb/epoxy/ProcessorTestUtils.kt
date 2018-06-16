@@ -8,8 +8,7 @@ import javax.annotation.processing.Processor
 import javax.tools.JavaFileObject
 
 internal object ProcessorTestUtils {
-    @JvmOverloads
-    @JvmStatic
+
     fun assertGeneration(
         inputFile: String,
         generatedFile: String,
