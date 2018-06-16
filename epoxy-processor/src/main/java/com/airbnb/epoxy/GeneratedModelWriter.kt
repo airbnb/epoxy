@@ -1437,28 +1437,27 @@ internal class GeneratedModelWriter(
             return
         }
 
-        val supportedAttributeInfo = modelInfo.attributeInfo.filter { attributeInfo ->
-            listOf(
-                AttributeInfo::isBoolean,
-                AttributeInfo::isCharSequence,
-                AttributeInfo::isCharSequenceList,
-                AttributeInfo::isDouble,
-                AttributeInfo::isDrawableRes,
-                AttributeInfo::isInt,
-                AttributeInfo::isViewClickListener,
-                AttributeInfo::isStringAttributeData
-            ).any {
-                it.invoke(attributeInfo)
+        val attributeInfoConditions = listOf(
+            AttributeInfo::isBoolean,
+            AttributeInfo::isCharSequence,
+            AttributeInfo::isCharSequenceList,
+            AttributeInfo::isDouble,
+            AttributeInfo::isDrawableRes,
+            AttributeInfo::isInt,
+            AttributeInfo::isViewClickListener,
+            AttributeInfo::isStringAttributeData
+        )
+        val supportedAttributeInfo = modelInfo.attributeGroups
+            .mapNotNull {
+                // Groups with multiple supported attribute types aren't supported because we
+                // wouldn't know which type to choose from
+                it.attributes.singleOrNull { attributeInfo ->
+                    attributeInfoConditions.any { it.invoke(attributeInfo) }
+                }
             }
-        }
 
         // If none of the properties are of a supported type the method isn't generated
         if (supportedAttributeInfo.isEmpty()) {
-            return
-        }
-
-        // Groups aren't supported because we wouldn't know which type to choose from
-        if (modelInfo.attributeGroups.any { it.attributes.size > 1 }) {
             return
         }
 

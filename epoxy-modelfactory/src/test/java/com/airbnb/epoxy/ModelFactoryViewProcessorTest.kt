@@ -16,6 +16,24 @@ class ModelFactoryViewProcessorTest {
     }
 
     @Test
+    fun groupPropSingleSupportedAttribute() {
+        assertGeneration(
+            "GroupPropSingleSupportedAttributeModelView.java",
+            "GroupPropSingleSupportedAttributeModelViewModel_.java"
+        )
+    }
+
+    @Test
+    fun groupPropMultipleSupportedAttribute() {
+        // Shouldn't generate a from method, groups with multiple supported attribute types aren't
+        // supported
+        assertGeneration(
+            "GroupPropMultipleSupportedAttributeModelView.java",
+            "GroupPropMultipleSupportedAttributeModelViewModel_.java"
+        )
+    }
+
+    @Test
     fun callbackPropModel() {
         assertGeneration(
             "CallbackPropModelView.java",
