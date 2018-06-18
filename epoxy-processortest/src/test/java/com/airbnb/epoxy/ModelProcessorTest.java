@@ -309,12 +309,6 @@ public class ModelProcessorTest {
   }
 
   @Test
-  public void testModelWithPrivateAttributeWithGetterWithWrongReturnTypeFails() {
-    assertGenerationError("ModelWithPrivateFieldWithGetterWithWrongReturnType.java",
-        "private fields without proper getter and setter");
-  }
-
-  @Test
   public void testModelWithPrivateAttributeWithPrivateSetterFails() {
     assertGenerationError("ModelWithPrivateFieldWithPrivateSetter.java",
         "private fields without proper getter and setter");
@@ -329,12 +323,6 @@ public class ModelProcessorTest {
   @Test
   public void testModelWithPrivateAttributeWithGetterWithoutParamsFails() {
     assertGenerationError("ModelWithPrivateFieldWithSettterWithoutParams.java",
-        "private fields without proper getter and setter");
-  }
-
-  @Test
-  public void testModelWithPrivateAttributeWithSetterWithWrongReturnTypeFails() {
-    assertGenerationError("ModelWithPrivateFieldWithSetterWithWrongParamType.java",
         "private fields without proper getter and setter");
   }
 

@@ -3,7 +3,6 @@ package com.airbnb.epoxy;
 import com.airbnb.epoxy.EpoxyAttribute.Option;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.TypeName;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
@@ -146,8 +145,7 @@ class BaseModelAttributeInfo extends AttributeInfo {
             || (methodName.equals(fieldName) && startsWithIs(fieldName)))
             && !method.getModifiers().contains(PRIVATE)
             && !method.getModifiers().contains(STATIC)
-            && method.getParameters().isEmpty()
-            && TypeName.get(method.getReturnType()).equals(getTypeName())) {
+            && method.getParameters().isEmpty()) {
           getterMethodName = methodName;
         }
         // check if it is a valid setter
@@ -156,8 +154,7 @@ class BaseModelAttributeInfo extends AttributeInfo {
             fieldName.substring(2, fieldName.length())))))
             && !method.getModifiers().contains(PRIVATE)
             && !method.getModifiers().contains(STATIC)
-            && method.getParameters().size() == 1
-            && TypeName.get(method.getParameters().get(0).asType()).equals(getTypeName())) {
+            && method.getParameters().size() == 1) {
           setterMethodName = methodName;
         }
       }
