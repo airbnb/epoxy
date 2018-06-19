@@ -189,7 +189,14 @@ class DiffHelper {
     collectMoves(updateOpHelper);
     collectChanges(updateOpHelper);
 
+    resetOldState();
+
     return updateOpHelper;
+  }
+
+  private void resetOldState() {
+    oldStateList.clear();
+    oldStateMap.clear();
   }
 
   private void prepareStateForDiff() {
