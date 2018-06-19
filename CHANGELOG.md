@@ -1,3 +1,9 @@
+# 2.13.0 (June 19, 2018)
+- **Fix** Reduce memory usage in model groups and differ (#433)
+- **Fix** Support for wildcards in private epoxy attributes (#451)
+- **Fix** Generated Kotlin Extensions Don't Adhere to Constructor Nullability (#449)
+- **Fix** Infinite loop in annotation processor (#447)
+
 # 2.12.0 (April 18, 2018)
 
 - **Breaking** Several updates to the Paging Library integration were made (https://github.com/airbnb/epoxy/pull/421)
