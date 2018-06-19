@@ -305,16 +305,15 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
   }
 
   public static class Holder extends EpoxyHolder {
-    // Hold it for `bindView`, clear it after `bindView` be called
-    private EpoxyModelGroup modelGroup;
-    private List<? extends EpoxyModel<?>> models;
+    // We use the model group that was used to create the view holder for initializing the view.
+    // We release the reference after the viewholder is initialized.
+    private EpoxyModelGroup initializingModelGroup;
     private List<View> views;
     private List<EpoxyHolder> holders;
     private ViewGroup rootView;
 
-    public Holder(@NonNull EpoxyModelGroup modelGroup) {
-      this.modelGroup = modelGroup;
-      this.models = modelGroup.models;
+    public Holder(@NonNull EpoxyModelGroup initializingModelGroup) {
+      this.initializingModelGroup = initializingModelGroup;
     }
 
     /**
@@ -336,7 +335,9 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
       rootView = (ViewGroup) itemView;
       ViewGroup childContainer = findChildContainer(rootView);
 
+      List<? extends EpoxyModel<?>> models = initializingModelGroup.models;
       int modelCount = models.size();
+
       views = new ArrayList<>(modelCount);
       holders = new ArrayList<>(modelCount);
 
@@ -346,7 +347,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
         View view;
         if (useViewStubs) {
           view = replaceNextViewStub(childContainer, model,
-              modelGroup.useViewStubLayoutParams(model, i));
+              initializingModelGroup.useViewStubLayoutParams(model, i));
         } else {
           view = createAndAddView(childContainer, model);
         }
@@ -362,10 +363,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
         views.add(view);
       }
 
-      // Clear the reference, because of `EpoxyController.buildModels`
-      // will build new modelGroup instance during every call.
-      modelGroup = null;
-      models = null;
+      initializingModelGroup = null;
     }
 
     /**
