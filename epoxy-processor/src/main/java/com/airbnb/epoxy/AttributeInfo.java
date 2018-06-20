@@ -253,6 +253,13 @@ abstract class AttributeInfo {
         || Utils.isType(getTypeMirror(), "java.util.List<kotlin.String>");
   }
 
+  boolean isEpoxyModelList() {
+    return Utils.isType(
+        getTypeMirror(),
+        "java.util.List<? extends com.airbnb.epoxy.EpoxyModel<?>>"
+    );
+  }
+
   boolean isDouble() {
     return getTypeMirror().getKind() == TypeKind.DOUBLE;
   }

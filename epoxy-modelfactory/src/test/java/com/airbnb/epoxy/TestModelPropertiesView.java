@@ -32,6 +32,11 @@ public class TestModelPropertiesView extends FrameLayout {
   }
 
   @ModelProp
+  public void setEpoxyModelList(List<? extends EpoxyModel<?>> value) {
+
+  }
+
+  @ModelProp
   public void setIntValue(int value) {
 
   }

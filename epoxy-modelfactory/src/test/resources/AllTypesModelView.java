@@ -22,6 +22,11 @@ public class AllTypesModelView extends FrameLayout {
   }
 
   @ModelProp
+  public void setCharSequenceValue(CharSequence value) {
+
+  }
+
+  @ModelProp
   public void setDoubleValue(double value) {
 
   }
@@ -32,17 +37,17 @@ public class AllTypesModelView extends FrameLayout {
   }
 
   @ModelProp
+  public void setEpoxyModelList(List<? extends EpoxyModel<?>> value) {
+
+  }
+
+  @ModelProp
   public void setIntValue(int value) {
 
   }
 
   @ModelProp({ Option.DoNotHash })
   public void setOnClickListener(OnClickListener value) {
-
-  }
-
-  @ModelProp
-  public void setCharSequenceValue(CharSequence value) {
 
   }
 

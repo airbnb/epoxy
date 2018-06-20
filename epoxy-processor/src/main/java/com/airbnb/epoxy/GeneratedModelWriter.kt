@@ -1440,12 +1440,13 @@ internal class GeneratedModelWriter(
         val attributeInfoConditions = listOf(
             AttributeInfo::isBoolean,
             AttributeInfo::isCharSequenceOrString,
-            AttributeInfo::isStringList,
             AttributeInfo::isDouble,
             AttributeInfo::isDrawableRes,
+            AttributeInfo::isEpoxyModelList,
             AttributeInfo::isInt,
-            AttributeInfo::isViewClickListener,
-            AttributeInfo::isStringAttributeData
+            AttributeInfo::isStringList,
+            AttributeInfo::isStringAttributeData,
+            AttributeInfo::isViewClickListener
         )
         val supportedAttributeInfo = modelInfo.attributeGroups
             .mapNotNull {
@@ -1481,10 +1482,11 @@ internal class GeneratedModelWriter(
                     attributeInfo.isBoolean -> "getBoolean"
                     attributeInfo.isCharSequenceOrString
                             || attributeInfo.isStringAttributeData -> "getString"
-                    attributeInfo.isStringList -> "getStringList"
                     attributeInfo.isDouble -> "getDouble"
                     attributeInfo.isDrawableRes -> "getDrawableRes"
+                    attributeInfo.isEpoxyModelList -> "getEpoxyModelList"
                     attributeInfo.isInt && !attributeInfo.isDrawableRes -> "getInt"
+                    attributeInfo.isStringList -> "getStringList"
                     attributeInfo.isViewClickListener -> "getOnClickListener"
                     else -> throw IllegalStateException("Missing ModelProperties method for a supported attribute type.")
                 }

@@ -23,6 +23,9 @@ public interface ModelProperties {
   @DrawableRes
   int getDrawableRes(@NonNull String propertyName);
 
+  @NonNull
+  List<? extends EpoxyModel<?>> getEpoxyModelList(@NonNull String propertyName);
+
   int getInt(@NonNull String propertyName);
 
   @NonNull

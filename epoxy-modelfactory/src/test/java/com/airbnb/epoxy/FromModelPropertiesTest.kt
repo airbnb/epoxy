@@ -33,8 +33,17 @@ class FromModelPropertiesTest {
     @Test
     fun getDrawableRes() {
         val drawableRes = R.drawable.abc_ic_star_black_48dp
-        val model = TestModelPropertiesViewModel_.from(TestModelProperties(drawableRes = drawableRes))
+        val model =
+            TestModelPropertiesViewModel_.from(TestModelProperties(drawableRes = drawableRes))
         assertEquals(drawableRes, model.drawableRes())
+    }
+
+    @Test
+    fun getEpoxyModelList() {
+        val epoxyModelList = emptyList<EpoxyModel<*>>()
+        val model =
+            TestModelPropertiesViewModel_.from(TestModelProperties(epoxyModelList = epoxyModelList))
+        assertEquals(epoxyModelList, model.epoxyModelList())
     }
 
     @Test
@@ -45,14 +54,16 @@ class FromModelPropertiesTest {
 
     @Test
     fun getOnClickListener() {
-        val clickListener = View.OnClickListener {  }
-        val model = TestModelPropertiesViewModel_.from(TestModelProperties(onClickListener = clickListener))
+        val clickListener = View.OnClickListener { }
+        val model =
+            TestModelPropertiesViewModel_.from(TestModelProperties(onClickListener = clickListener))
         assertEquals(clickListener, model.onClickListener())
     }
 
     @Test
     fun getString() {
-        val model = TestModelPropertiesViewModel_.from(TestModelProperties(stringValue = "ModelFactory"))
+        val model =
+            TestModelPropertiesViewModel_.from(TestModelProperties(stringValue = "ModelFactory"))
         assertEquals("ModelFactory", model.stringValue())
     }
 
@@ -68,13 +79,13 @@ class FromModelPropertiesTest {
         private val booleanValue: Boolean? = null,
         private val doubleValue: Double? = null,
         private val drawableRes: Int? = null,
+        private val epoxyModelList: List<EpoxyModel<*>>? = null,
         private val intValue: Int? = null,
         private val onClickListener: View.OnClickListener? = null,
         private val stringValue: String? = null,
         private val stringList: List<String>? = null,
         private val styleValue: Style? = null
     ) : ModelProperties {
-
         override fun getId() = id
 
         override fun has(propertyName: String): Boolean {
@@ -82,6 +93,7 @@ class FromModelPropertiesTest {
                 "booleanValue" to booleanValue,
                 "doubleValue" to doubleValue,
                 "drawableRes" to drawableRes,
+                "epoxyModelList" to epoxyModelList,
                 "intValue" to intValue,
                 "onClickListener" to onClickListener,
                 "stringList" to stringList,
@@ -94,6 +106,8 @@ class FromModelPropertiesTest {
         override fun getDouble(propertyName: String) = doubleValue!!
 
         override fun getDrawableRes(propertyName: String) = drawableRes!!
+
+        override fun getEpoxyModelList(propertyName: String) = epoxyModelList!!
 
         override fun getInt(propertyName: String) = intValue!!
 
