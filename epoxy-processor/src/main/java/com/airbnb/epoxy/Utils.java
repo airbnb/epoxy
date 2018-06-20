@@ -116,14 +116,21 @@ class Utils {
     return isType(type, VIEW_LONG_CLICK_LISTENER_TYPE);
   }
 
-  static boolean isCharSequenceType(TypeMirror type) {
-    return isSubtypeOfType(type, "java.lang.CharSequence")
-        || isSubtypeOfType(type, "kotlin.CharSequence");
+  static boolean isStringType(TypeMirror type) {
+    return Utils.isType(type, "java.lang.String")
+        || Utils.isType(type, "kotlin.String");
+  }
+
+  static boolean isCharSequenceOrStringType(TypeMirror type) {
+    return Utils.isType(type, "java.lang.CharSequence")
+        || Utils.isType(type, "kotlin.CharSequence")
+        || isStringType(type);
   }
 
   static boolean isStringAttributeDataType(TypeMirror type) {
-    return isSubtypeOfType(type, EPOXY_STRING_ATTRIBUTE_DATA.reflectionName());
+    return isType(type, EPOXY_STRING_ATTRIBUTE_DATA.reflectionName());
   }
+
   static boolean isIterableType(TypeElement element) {
     return isSubtypeOfType(element.asType(), "java.lang.Iterable<?>");
   }

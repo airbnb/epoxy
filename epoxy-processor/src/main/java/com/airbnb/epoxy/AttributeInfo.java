@@ -11,7 +11,6 @@ import com.squareup.javapoet.TypeName;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
@@ -245,16 +244,13 @@ abstract class AttributeInfo {
     return getTypeMirror().getKind() == TypeKind.BOOLEAN;
   }
 
-  boolean isCharSequence() {
-    return Utils.isCharSequenceType(getTypeMirror());
+  boolean isCharSequenceOrString() {
+    return Utils.isCharSequenceOrStringType(getTypeMirror());
   }
 
-  boolean isCharSequenceList() {
-    if (Utils.isSubtypeOfType(getTypeMirror(), "java.util.List<?>")) {
-      DeclaredType declaredListType = (DeclaredType) getTypeMirror();
-      return Utils.isCharSequenceType(declaredListType.getTypeArguments().get(0));
-    }
-    return false;
+  boolean isStringList() {
+    return Utils.isType(getTypeMirror(), "java.util.List<java.lang.String>")
+        || Utils.isType(getTypeMirror(), "java.util.List<kotlin.String>");
   }
 
   boolean isDouble() {

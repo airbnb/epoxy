@@ -42,6 +42,11 @@ public class AllTypesModelView extends FrameLayout {
   }
 
   @ModelProp
+  public void setCharSequenceValue(CharSequence value) {
+
+  }
+
+  @ModelProp
   public void setStringValue(String value) {
 
   }

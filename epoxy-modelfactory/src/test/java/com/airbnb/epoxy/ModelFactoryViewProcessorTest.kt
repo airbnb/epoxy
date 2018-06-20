@@ -58,6 +58,15 @@ class ModelFactoryViewProcessorTest {
     }
 
     @Test
+    fun listSubtypeModel() {
+        // Subtypes of List<String> are not supported so no from method should be generated here
+        assertGeneration(
+            "ListSubtypeModelView.java",
+            "ListSubtypeModelViewModel_.java"
+        )
+    }
+
+    @Test
     fun styleableModel() {
         // If the view is styleable then the generated "from" method supports setting a style
 

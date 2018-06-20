@@ -1439,8 +1439,8 @@ internal class GeneratedModelWriter(
 
         val attributeInfoConditions = listOf(
             AttributeInfo::isBoolean,
-            AttributeInfo::isCharSequence,
-            AttributeInfo::isCharSequenceList,
+            AttributeInfo::isCharSequenceOrString,
+            AttributeInfo::isStringList,
             AttributeInfo::isDouble,
             AttributeInfo::isDrawableRes,
             AttributeInfo::isInt,
@@ -1479,9 +1479,9 @@ internal class GeneratedModelWriter(
                 beginControlFlow("if (properties.has(\$S))", setterName)
                 val jsonGetterName = when {
                     attributeInfo.isBoolean -> "getBoolean"
-                    attributeInfo.isCharSequence
+                    attributeInfo.isCharSequenceOrString
                             || attributeInfo.isStringAttributeData -> "getString"
-                    attributeInfo.isCharSequenceList -> "getStringList"
+                    attributeInfo.isStringList -> "getStringList"
                     attributeInfo.isDouble -> "getDouble"
                     attributeInfo.isDrawableRes -> "getDrawableRes"
                     attributeInfo.isInt && !attributeInfo.isDrawableRes -> "getInt"
