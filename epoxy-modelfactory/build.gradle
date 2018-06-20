@@ -39,6 +39,9 @@ dependencies {
   kaptTest project(':epoxy-processor')
 }
 
+// Javadoc isn't working well with Kotlin :(
+tasks.withType(Javadoc).all { enabled = false }
+
 static def getRuntimeJar() {
   try {
     final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile()
