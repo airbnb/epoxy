@@ -10,6 +10,22 @@ class ModelFactoryViewProcessorTest {
     @Test
     fun baseModel() {
         assertGeneration(
+            "BasicModelWithAttribute.java",
+            "BasicModelWithAttribute_.java"
+        )
+    }
+
+    @Test
+    fun baseModelWithFinalAttribute() {
+        assertGeneration(
+            "BasicModelWithFinalAttribute.java",
+            "BasicModelWithFinalAttribute_.java"
+        )
+    }
+
+    @Test
+    fun baseModelView() {
+        assertGeneration(
             "BaseModelView.java",
             "BaseModelViewModel_.java"
         )
@@ -34,7 +50,7 @@ class ModelFactoryViewProcessorTest {
     }
 
     @Test
-    fun callbackPropModel() {
+    fun callbackPropModelView() {
         assertGeneration(
             "CallbackPropModelView.java",
             "CallbackPropModelViewModel_.java"
@@ -42,7 +58,7 @@ class ModelFactoryViewProcessorTest {
     }
 
     @Test
-    fun textPropModel() {
+    fun textPropModelView() {
         assertGeneration(
             "TextPropModelView.java",
             "TextPropModelViewModel_.java"
@@ -50,7 +66,7 @@ class ModelFactoryViewProcessorTest {
     }
 
     @Test
-    fun allTypesModel() {
+    fun allTypesModelView() {
         assertGeneration(
             "AllTypesModelView.java",
             "AllTypesModelViewModel_.java"
@@ -58,7 +74,7 @@ class ModelFactoryViewProcessorTest {
     }
 
     @Test
-    fun listSubtypeModel() {
+    fun listSubtypeModelView() {
         // Subtypes of List<String> are not supported so no from method should be generated here
         assertGeneration(
             "ListSubtypeModelView.java",
@@ -67,7 +83,7 @@ class ModelFactoryViewProcessorTest {
     }
 
     @Test
-    fun styleableModel() {
+    fun styleableModelView() {
         // If the view is styleable then the generated "from" method supports setting a style
 
         val configClass: JavaFileObject = JavaFileObjects

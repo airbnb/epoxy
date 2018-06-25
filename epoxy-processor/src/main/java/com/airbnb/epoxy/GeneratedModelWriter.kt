@@ -1448,17 +1448,26 @@ internal class GeneratedModelWriter(
             AttributeInfo::isStringAttributeData,
             AttributeInfo::isViewClickListener
         )
-        val supportedAttributeInfo = modelInfo.attributeGroups
-            .mapNotNull {
-                // Groups with multiple supported attribute types aren't supported because we
-                // wouldn't know which type to choose from
-                it.attributes.singleOrNull { attributeInfo ->
-                    attributeInfoConditions.any { it.invoke(attributeInfo) }
+        val supportedAttributeInfo = if (modelInfo.attributeGroups.isNotEmpty()) {
+            modelInfo.attributeGroups
+                .mapNotNull {
+                    // Groups with multiple supported attribute types aren't supported because we
+                    // wouldn't know which type to choose from
+                    it.attributes.singleOrNull { attributeInfo ->
+                        attributeInfoConditions.any { it.invoke(attributeInfo) }
+                    }
                 }
+        } else {
+            // attributeGroups is always empty for models not using @ModelView
+            modelInfo.attributeInfo.filter { attributeInfo ->
+                attributeInfoConditions.any { it.invoke(attributeInfo) }
             }
+        }
+        val supportedWithSetterAttributeInfo = supportedAttributeInfo
+            .filter { it.generateSetter() && !it.hasFinalModifier() }
 
         // If none of the properties are of a supported type the method isn't generated
-        if (supportedAttributeInfo.isEmpty()) {
+        if (supportedWithSetterAttributeInfo.isEmpty()) {
             return
         }
 
@@ -1475,7 +1484,7 @@ internal class GeneratedModelWriter(
 
             addStatement("model.id(properties.getId())")
 
-            for (attributeInfo in supportedAttributeInfo) {
+            for (attributeInfo in supportedWithSetterAttributeInfo) {
                 val setterName = attributeInfo.generatedSetterName()
                 beginControlFlow("if (properties.has(\$S))", setterName)
                 val jsonGetterName = when {
