@@ -45,7 +45,7 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder listValue(@NonNull List<String> listValue);
 
-  TestManyTypesViewModelBuilder clickListener(final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener);
+  TestManyTypesViewModelBuilder clickListener(@NonNull final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener);
 
   TestManyTypesViewModelBuilder clickListener(@NonNull View.OnClickListener clickListener);
 

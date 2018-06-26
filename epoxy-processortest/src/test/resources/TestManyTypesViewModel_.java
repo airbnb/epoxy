@@ -496,8 +496,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  @NonNull
-  public TestManyTypesViewModel_ clickListener(final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener) {
+  public TestManyTypesViewModel_ clickListener(@NonNull final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener) {
     assignedAttributes_epoxyGeneratedModel.set(12);
     onMutation();
     if (clickListener == null) {

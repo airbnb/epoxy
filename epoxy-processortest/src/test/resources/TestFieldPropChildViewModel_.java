@@ -196,8 +196,7 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  @Nullable
-  public TestFieldPropChildViewModel_ value(final OnModelClickListener<TestFieldPropChildViewModel_, TestFieldPropChildView> value) {
+  public TestFieldPropChildViewModel_ value(@Nullable final OnModelClickListener<TestFieldPropChildViewModel_, TestFieldPropChildView> value) {
     assignedAttributes_epoxyGeneratedModel.set(1);
     onMutation();
     if (value == null) {

@@ -123,8 +123,7 @@ public class TestFieldPropIgnoreRequireHashCodeOptionViewModel_ extends EpoxyMod
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  @NonNull
-  public TestFieldPropIgnoreRequireHashCodeOptionViewModel_ value(final OnModelClickListener<TestFieldPropIgnoreRequireHashCodeOptionViewModel_, TestFieldPropIgnoreRequireHashCodeOptionView> value) {
+  public TestFieldPropIgnoreRequireHashCodeOptionViewModel_ value(@NonNull final OnModelClickListener<TestFieldPropIgnoreRequireHashCodeOptionViewModel_, TestFieldPropIgnoreRequireHashCodeOptionView> value) {
     assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     if (value == null) {

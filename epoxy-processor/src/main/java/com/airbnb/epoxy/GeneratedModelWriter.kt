@@ -1026,7 +1026,8 @@ internal class GeneratedModelWriter(
         else
             getModelClickListenerType(classInfo)
 
-        val param = ParameterSpec.builder(clickListenerType, attributeName, FINAL).build()
+        val param = ParameterSpec.builder(clickListenerType, attributeName, FINAL)
+            .addAnnotations(attribute.getSetterAnnotations()).build()
 
         val builder = MethodSpec.methodBuilder(attributeName)
                 .addJavadoc(
@@ -1036,7 +1037,6 @@ internal class GeneratedModelWriter(
                 .addModifiers(PUBLIC)
                 .returns(classInfo.parameterizedGeneratedName)
                 .addParameter(param)
-                .addAnnotations(attribute.getSetterAnnotations())
 
         setBitSetIfNeeded(classInfo, attribute, builder)
 

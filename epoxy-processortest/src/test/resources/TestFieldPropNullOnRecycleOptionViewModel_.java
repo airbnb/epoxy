@@ -117,8 +117,7 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  @Nullable
-  public TestFieldPropNullOnRecycleOptionViewModel_ value(final OnModelClickListener<TestFieldPropNullOnRecycleOptionViewModel_, TestFieldPropNullOnRecycleOptionView> value) {
+  public TestFieldPropNullOnRecycleOptionViewModel_ value(@Nullable final OnModelClickListener<TestFieldPropNullOnRecycleOptionViewModel_, TestFieldPropNullOnRecycleOptionView> value) {
     assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     if (value == null) {

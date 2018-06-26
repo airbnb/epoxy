@@ -152,8 +152,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  @NonNull
-  public DoNotHashViewModel_ clickListener(final OnModelClickListener<DoNotHashViewModel_, DoNotHashView> clickListener) {
+  public DoNotHashViewModel_ clickListener(@NonNull final OnModelClickListener<DoNotHashViewModel_, DoNotHashView> clickListener) {
     assignedAttributes_epoxyGeneratedModel.set(1);
     onMutation();
     if (clickListener == null) {

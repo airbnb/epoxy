@@ -117,8 +117,7 @@ public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPro
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  @Nullable
-  public TestFieldPropCallbackPropViewModel_ value(final OnModelClickListener<TestFieldPropCallbackPropViewModel_, TestFieldPropCallbackPropView> value) {
+  public TestFieldPropCallbackPropViewModel_ value(@Nullable final OnModelClickListener<TestFieldPropCallbackPropViewModel_, TestFieldPropCallbackPropView> value) {
     assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     if (value == null) {
