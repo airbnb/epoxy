@@ -1,12 +1,16 @@
 package com.airbnb.epoxy
 
-import com.airbnb.epoxy.Utils.*
-import com.squareup.javapoet.*
-import javax.lang.model.*
-import javax.lang.model.element.*
-import javax.lang.model.type.*
-import javax.lang.model.util.*
-import kotlin.reflect.*
+import com.airbnb.epoxy.Utils.getElementByName
+import com.squareup.javapoet.ClassName
+import javax.lang.model.AnnotatedConstruct
+import javax.lang.model.element.Element
+import javax.lang.model.element.ExecutableElement
+import javax.lang.model.element.TypeElement
+import javax.lang.model.type.MirroredTypeException
+import javax.lang.model.type.TypeMirror
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
+import kotlin.reflect.KClass
 
 fun getTypeMirror(
         className: ClassName,
@@ -118,6 +122,10 @@ private fun String.transformEachChar(operation: StringBuilder.(Char?, Char, Char
     }
 
     return stringBuilder.toString()
+}
+
+fun Elements.isTypeLoaded(className: ClassName): Boolean {
+    return getTypeMirror(className.reflectionName(), this) != null
 }
 
 /** Return each of the classes in the class hierarchy, starting with the initial receiver and working upwards until Any. */

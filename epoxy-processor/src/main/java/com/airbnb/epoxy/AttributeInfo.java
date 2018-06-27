@@ -4,14 +4,17 @@ import android.support.annotation.Nullable;
 
 import com.airbnb.epoxy.GeneratedModelInfo.AttributeGroup;
 import com.squareup.javapoet.AnnotationSpec;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
+import static com.airbnb.epoxy.Utils.EPOXY_MODEL_TYPE;
 import static com.airbnb.epoxy.Utils.isViewClickListenerType;
 import static com.airbnb.epoxy.Utils.isViewLongClickListenerType;
 
@@ -231,7 +234,53 @@ abstract class AttributeInfo {
   }
 
   boolean isViewClickListener() {
-    return isViewClickListenerType(getTypeMirror()) || isViewLongClickListenerType(getTypeMirror());
+    return isViewClickListenerType(getTypeMirror());
+  }
+
+  boolean isViewLongClickListener() {
+    return isViewLongClickListenerType(getTypeMirror());
+  }
+
+  boolean isBoolean() {
+    return getTypeMirror().getKind() == TypeKind.BOOLEAN;
+  }
+
+  boolean isCharSequenceOrString() {
+    return Utils.isCharSequenceOrStringType(getTypeMirror());
+  }
+
+  boolean isStringList() {
+    return Utils.isListOfType(getTypeMirror(), String.class.getCanonicalName());
+  }
+
+  boolean isEpoxyModelList() {
+    return Utils.isListOfType(getTypeMirror(), "? extends " + EPOXY_MODEL_TYPE);
+  }
+
+  boolean isDouble() {
+    return getTypeMirror().getKind() == TypeKind.DOUBLE;
+  }
+
+  boolean isDrawableRes() {
+    if (isInt()) {
+      for (AnnotationSpec annotation : setterAnnotations) {
+        if (annotation.type instanceof ClassName) {
+          String annotationSimpleName = ((ClassName) annotation.type).simpleName();
+          if (annotationSimpleName.equals("DrawableRes")) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  boolean isInt() {
+    return getTypeMirror().getKind() == TypeKind.INT;
+  }
+
+  boolean isStringAttributeData() {
+    return Utils.isType(getTypeMirror(), ClassNames.EPOXY_STRING_ATTRIBUTE_DATA);
   }
 
   String getPackageName() {

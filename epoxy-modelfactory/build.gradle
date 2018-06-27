@@ -11,40 +11,36 @@ android {
   defaultConfig {
     minSdkVersion rootProject.MIN_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
-
-    javaCompileOptions {
-      annotationProcessorOptions {
-        includeCompileClasspath false
-      }
-    }
   }
+}
 
-  dataBinding {
-    enabled = true
-  }
+configurations.all { strategy ->
+  strategy.resolutionStrategy.force rootProject.deps.junit, rootProject.deps.robolectric,
+      rootProject.deps.mockito
 }
 
 dependencies {
-  compile rootProject.deps.kotlin
   compile project(':epoxy-adapter')
-  compile project(':epoxy-databinding')
-  compile project(':epoxy-processortest2')
+  compile rootProject.deps.paris
 
-  kapt project(':epoxy-processor')
+  testCompile project(':epoxy-adapter')
   // Need to include the processor directly since we create an instance of it in code for testing
   testCompile project(':epoxy-processor')
-
-  compile rootProject.deps.paris
+  testCompile project(':epoxy-processortest')
+  testCompile rootProject.deps.googleTestingCompile
+  testCompile rootProject.deps.junit
+  testCompile rootProject.deps.kotlin
   // Need to include the processor directly since we create an instance of it in code for testing
   testCompile rootProject.deps.parisProcessor
-
-  kapt rootProject.deps.dataBindingCompiler
-  kapt rootProject.deps.autoValue
-
-  testCompile rootProject.deps.googleTestingCompile
+  testCompile rootProject.deps.robolectric
   testCompile files(getRuntimeJar())
   testCompile files(Jvm.current().getToolsJar())
+
+  kaptTest project(':epoxy-processor')
 }
+
+// Javadoc isn't working well with Kotlin :(
+tasks.withType(Javadoc).all { enabled = false }
 
 static def getRuntimeJar() {
   try {
@@ -59,3 +55,5 @@ static def getRuntimeJar() {
     throw new RuntimeException(e)
   }
 }
+
+apply from: rootProject.file('gradle/gradle-maven-push.gradle')

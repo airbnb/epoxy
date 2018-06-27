@@ -230,6 +230,19 @@ abstract class GeneratedModelInfo {
     return isStyleable() || layoutParams != Size.NONE;
   }
 
+  boolean hasEmptyConstructor() {
+    if (constructors.isEmpty()) {
+      return true;
+    } else {
+      for (ConstructorInfo constructor : constructors) {
+        if (constructor.params.isEmpty()) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   static class ConstructorInfo {
     final Set<Modifier> modifiers;
     final List<ParameterSpec> params;
