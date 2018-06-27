@@ -14,6 +14,7 @@ import java.util.List;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
+import static com.airbnb.epoxy.Utils.EPOXY_MODEL_TYPE;
 import static com.airbnb.epoxy.Utils.isViewClickListenerType;
 import static com.airbnb.epoxy.Utils.isViewLongClickListenerType;
 
@@ -249,15 +250,11 @@ abstract class AttributeInfo {
   }
 
   boolean isStringList() {
-    return Utils.isType(getTypeMirror(), "java.util.List<java.lang.String>")
-        || Utils.isType(getTypeMirror(), "java.util.List<kotlin.String>");
+    return Utils.isListOfType(getTypeMirror(), String.class.getCanonicalName());
   }
 
   boolean isEpoxyModelList() {
-    return Utils.isType(
-        getTypeMirror(),
-        "java.util.List<? extends com.airbnb.epoxy.EpoxyModel<?>>"
-    );
+    return Utils.isListOfType(getTypeMirror(), "? extends " + EPOXY_MODEL_TYPE);
   }
 
   boolean isDouble() {
@@ -283,7 +280,7 @@ abstract class AttributeInfo {
   }
 
   boolean isStringAttributeData() {
-    return Utils.isStringAttributeDataType(getTypeMirror());
+    return Utils.isType(getTypeMirror(), ClassNames.EPOXY_STRING_ATTRIBUTE_DATA);
   }
 
   String getPackageName() {

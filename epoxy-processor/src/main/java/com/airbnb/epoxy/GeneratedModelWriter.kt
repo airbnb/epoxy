@@ -1423,17 +1423,13 @@ internal class GeneratedModelWriter(
         modelInfo: GeneratedModelInfo
     ) {
         // The epoxy-modelfactory module must be present to enable this functionality
-        val hasModelFactoryDependency =
-            getTypeMirror(EPOXY_MODEL_PROPERTIES.reflectionName(), elements) != null
-        if (!hasModelFactoryDependency) {
+        if (!elements.isTypeLoaded(EPOXY_MODEL_PROPERTIES)) {
             return
         }
 
         // Models that don't have an empty constructor are not supported because there would be no
         // clear way to create new instances
-        val hasEmptyConstructor = modelInfo.constructors.isEmpty()
-                || modelInfo.constructors.any { it.params.isEmpty() }
-        if (!hasEmptyConstructor) {
+        if (!modelInfo.hasEmptyConstructor()) {
             return
         }
 

@@ -29,7 +29,6 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import static com.airbnb.epoxy.ClassNames.EPOXY_STRING_ATTRIBUTE_DATA;
 import static com.airbnb.epoxy.KotlinUtilsKt.getParentClassElement;
 import static com.squareup.javapoet.TypeName.BOOLEAN;
 import static com.squareup.javapoet.TypeName.BYTE;
@@ -117,18 +116,11 @@ class Utils {
   }
 
   static boolean isStringType(TypeMirror type) {
-    return Utils.isType(type, "java.lang.String")
-        || Utils.isType(type, "kotlin.String");
+    return Utils.isType(type, "java.lang.String");
   }
 
   static boolean isCharSequenceOrStringType(TypeMirror type) {
-    return Utils.isType(type, "java.lang.CharSequence")
-        || Utils.isType(type, "kotlin.CharSequence")
-        || isStringType(type);
-  }
-
-  static boolean isStringAttributeDataType(TypeMirror type) {
-    return isType(type, EPOXY_STRING_ATTRIBUTE_DATA.reflectionName());
+    return Utils.isType(type, "java.lang.CharSequence") || isStringType(type);
   }
 
   static boolean isIterableType(TypeElement element) {
@@ -441,6 +433,14 @@ class Utils {
       }
     }
     return false;
+  }
+
+  static boolean isType(TypeMirror type, ClassName className) {
+    return isType(type, className.reflectionName());
+  }
+
+  static boolean isListOfType(TypeMirror typeMirror, String type) {
+    return isType(typeMirror, "java.util.List<" + type + ">");
   }
 
   @Nullable
