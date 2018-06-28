@@ -1,3 +1,6 @@
+# 2.14.0 (June 27, 2018)
+- **New** Experimental support for creating Epoxy models from arbitrary data formats (#450)
+
 # 2.13.0 (June 19, 2018)
 - **Fix** Reduce memory usage in model groups and differ (#433)
 - **Fix** Support for wildcards in private epoxy attributes (#451)
