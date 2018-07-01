@@ -42,7 +42,6 @@ dependencies {
   // Need to include the processor directly since we create an instance of it in code for testing
   testImplementation rootProject.deps.parisProcessor
 
-  kapt rootProject.deps.dataBindingCompiler
   kapt rootProject.deps.autoValue
 
   testImplementation files(getRuntimeJar())
