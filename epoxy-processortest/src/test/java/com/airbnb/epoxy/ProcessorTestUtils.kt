@@ -3,10 +3,7 @@ package com.airbnb.epoxy
 import com.airbnb.paris.processor.ParisProcessor
 import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
-import com.google.testing.compile.JavaSourceSubjectFactory
 import com.google.testing.compile.JavaSourceSubjectFactory.javaSource
-import com.google.testing.compile.JavaSourcesSubject
-import com.google.testing.compile.JavaSourcesSubjectFactory
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import java.util.*
 import javax.annotation.processing.Processor

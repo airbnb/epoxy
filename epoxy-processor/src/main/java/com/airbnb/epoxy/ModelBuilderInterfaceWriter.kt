@@ -1,9 +1,9 @@
 package com.airbnb.epoxy
 
 import com.squareup.javapoet.*
-import javax.annotation.processing.*
-import javax.lang.model.element.*
-import javax.lang.model.util.*
+import javax.annotation.processing.Filer
+import javax.lang.model.element.Modifier
+import javax.lang.model.util.Types
 
 const val MODEL_BUILDER_INTERFACE_SUFFIX = "Builder"
 
@@ -65,6 +65,9 @@ internal class ModelBuilderInterfaceWriter(
             interfaceName: ClassName
     ): List<MethodSpec> {
         return methods
+                .filter {
+                    !it.hasModifier(Modifier.STATIC)
+                }
                 .filter {
                     it.returnType == modelInfo.parameterizedGeneratedName
                 }
