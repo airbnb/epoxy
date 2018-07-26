@@ -1,6 +1,6 @@
 # Epoxy
 
-Epoxy is an Android library for building complex screens in a RecyclerView. Models are automatically generated from custom views, databinding layouts, or Litho components via annotation processing. These models are then used in an EpoxyController to declare what items to show in the RecyclerView.
+Epoxy is an Android library for building complex screens in a RecyclerView. Models are automatically generated from custom views, databinding layouts, or [Litho](https://fblitho.com/) components via annotation processing. These models are then used in an EpoxyController to declare what items to show in the RecyclerView.
 
 This abstracts the boilerplate of view holders, diffing items and binding payload changes, item types, item ids, span counts, and more, in order to simplify building screens with multiple view types. Additionally, Epoxy adds support for saving view state and automatic diffing of item changes.
 
