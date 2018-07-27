@@ -121,8 +121,7 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  @NonNull
-  public TestFieldPropDoNotHashOptionViewModel_ value(final OnModelClickListener<TestFieldPropDoNotHashOptionViewModel_, TestFieldPropDoNotHashOptionView> value) {
+  public TestFieldPropDoNotHashOptionViewModel_ value(@NonNull final OnModelClickListener<TestFieldPropDoNotHashOptionViewModel_, TestFieldPropDoNotHashOptionView> value) {
     assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     if (value == null) {
