@@ -15,25 +15,21 @@ android {
     targetSdkVersion rootProject.TARGET_SDK_VERSION
     versionCode 1
     versionName "1.0"
-
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
   }
 
   dataBinding {
     enabled = true
   }
-
 }
 
 dependencies {
-  compile rootProject.deps.kotlin
-  compile project(':epoxy-databinding')
+  implementation rootProject.deps.kotlin
+  implementation project(':epoxy-databinding')
 
   kapt project(':epoxy-processor')
   kapt rootProject.deps.dataBindingCompiler
 
-  testCompile rootProject.deps.robolectric
-  testCompile rootProject.deps.junit
-  testCompile rootProject.deps.mockito
+  testImplementation rootProject.deps.robolectric
+  testImplementation rootProject.deps.junit
+  testImplementation rootProject.deps.mockito
 }

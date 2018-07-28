@@ -1,17 +1,19 @@
 package com.airbnb.epoxy
 
-import com.airbnb.epoxy.ClassNames.*
-import com.airbnb.epoxy.Utils.*
-import com.squareup.javapoet.*
-import javax.lang.model.element.*
-import javax.lang.model.util.*
+import com.airbnb.epoxy.ClassNames.EPOXY_DATA_BINDING_HOLDER
+import com.airbnb.epoxy.ClassNames.EPOXY_DATA_BINDING_MODEL
+import com.airbnb.epoxy.Utils.getElementByName
+import com.squareup.javapoet.ClassName
+import javax.lang.model.element.TypeElement
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 internal class DataBindingModelInfo(
-        private val typeUtils: Types,
-        private val elementUtils: Elements,
-        val layoutResource: ResourceValue,
-        val moduleName: String,
-        private val layoutPrefix: String = ""
+    private val typeUtils: Types,
+    private val elementUtils: Elements,
+    val layoutResource: ResourceValue,
+    val moduleName: String,
+    private val layoutPrefix: String = ""
 ) : GeneratedModelInfo() {
     private val dataBindingClassName: ClassName
 
@@ -22,8 +24,10 @@ internal class DataBindingModelInfo(
 
         dataBindingClassName = getDataBindingClassNameForResource(layoutResource, moduleName)
 
-        superClassElement = Utils.getElementByName(EPOXY_DATA_BINDING_MODEL,
-                                                   elementUtils, typeUtils) as TypeElement
+        superClassElement = Utils.getElementByName(
+            EPOXY_DATA_BINDING_MODEL,
+            elementUtils, typeUtils
+        ) as TypeElement
         superClassName = EPOXY_DATA_BINDING_MODEL
         generatedClassName = buildGeneratedModelName()
         parametrizedClassName = generatedClassName
@@ -45,20 +49,20 @@ internal class DataBindingModelInfo(
 
         val hashCodeValidator = HashCodeValidator(typeUtils, elementUtils)
         dataBindingClassElement.executableElements()
-                .filter { Utils.isSetterMethod(it) }
-                .map {
-                    DataBindingAttributeInfo(this, it, hashCodeValidator)
-                }
-                .filter { it.fieldName !in FIELD_NAME_BLACKLIST }
-                .let {
-                    addAttributes(it)
-                }
+            .filter { Utils.isSetterMethod(it) }
+            .map {
+                DataBindingAttributeInfo(this, it, hashCodeValidator)
+            }
+            .filter { it.fieldName !in FIELD_NAME_BLACKLIST }
+            .let {
+                addAttributes(it)
+            }
         return true
     }
 
     private fun getDataBindingClassNameForResource(
-            layoutResource: ResourceValue,
-            moduleName: String
+        layoutResource: ResourceValue,
+        moduleName: String
     ): ClassName {
         val modelName = layoutResource.resourceName!!.toUpperCamelCase().plus(BINDING_SUFFIX)
 
@@ -67,10 +71,10 @@ internal class DataBindingModelInfo(
 
     private fun buildGeneratedModelName(): ClassName {
         val modelName = layoutResource.resourceName!!
-                .removePrefix(layoutPrefix)
-                .toUpperCamelCase()
-                .plus(BINDING_SUFFIX)
-                .plus(GeneratedModelInfo.GENERATED_MODEL_SUFFIX)
+            .removePrefix(layoutPrefix)
+            .toUpperCamelCase()
+            .plus(BINDING_SUFFIX)
+            .plus(GeneratedModelInfo.GENERATED_MODEL_SUFFIX)
 
         return ClassName.get(moduleName, modelName)
     }
@@ -80,9 +84,9 @@ internal class DataBindingModelInfo(
         val BINDING_SUFFIX = "Binding"
 
         val FIELD_NAME_BLACKLIST = listOf(
-                // Starting with Android plugin 3.1.0 nested DataBinding classes have a
-                // "setLifecycleOwner" method
-                "lifecycleOwner"
+            // Starting with Android plugin 3.1.0 nested DataBinding classes have a
+            // "setLifecycleOwner" method
+            "lifecycleOwner"
         )
     }
 }

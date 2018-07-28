@@ -595,7 +595,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   @Override
-  public TestManyTypesViewModel_ id(@NonNull Number... arg0) {
+  public TestManyTypesViewModel_ id(@Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
@@ -607,19 +607,19 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   @Override
-  public TestManyTypesViewModel_ id(@NonNull CharSequence arg0) {
+  public TestManyTypesViewModel_ id(@Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public TestManyTypesViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+  public TestManyTypesViewModel_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestManyTypesViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+  public TestManyTypesViewModel_ id(@Nullable CharSequence arg0, long arg1) {
     super.id(arg0, arg1);
     return this;
   }

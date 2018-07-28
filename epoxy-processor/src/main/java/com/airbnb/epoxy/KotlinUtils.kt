@@ -1,6 +1,7 @@
 package com.airbnb.epoxy
 
 import com.airbnb.epoxy.Utils.getElementByName
+import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.ClassName
 import javax.lang.model.AnnotatedConstruct
 import javax.lang.model.element.Element
@@ -13,9 +14,9 @@ import javax.lang.model.util.Types
 import kotlin.reflect.KClass
 
 fun getTypeMirror(
-        className: ClassName,
-        elements: Elements,
-        types: Types
+    className: ClassName,
+    elements: Elements,
+    types: Types
 ): TypeMirror {
     val classElement = getElementByName(className, elements, types)
             ?: throw IllegalArgumentException("Unknown class: " + className)
@@ -24,13 +25,13 @@ fun getTypeMirror(
 }
 
 fun getTypeMirror(
-        clazz: Class<*>,
-        elements: Elements
+    clazz: Class<*>,
+    elements: Elements
 ): TypeMirror? = getTypeMirror(clazz.canonicalName, elements)
 
 fun getTypeMirror(
-        canonicalName: String,
-        elements: Elements
+    canonicalName: String,
+    elements: Elements
 ): TypeMirror? {
     return try {
         elements.getTypeElement(canonicalName)?.asType()
@@ -41,27 +42,29 @@ fun getTypeMirror(
 }
 
 fun Class<*>.asTypeElement(
-        elements: Elements,
-        types: Types
+    elements: Elements,
+    types: Types
 ): TypeElement? {
     val typeMirror = getTypeMirror(this, elements) ?: return null
     return types.asElement(typeMirror) as? TypeElement
 }
 
 fun KClass<*>.asTypeElement(
-        elements: Elements,
-        types: Types
+    elements: Elements,
+    types: Types
 ) = java.asTypeElement(elements, types)
 
 fun String.toLowerCamelCase(): String {
 
     return transformEachChar { prevChar, char, _ ->
         if (char != '_') {
-            append(when (prevChar) {
-                       null -> Character.toLowerCase(char)
-                       '_' -> Character.toUpperCase(char)
-                       else -> char
-                   })
+            append(
+                when (prevChar) {
+                    null -> Character.toLowerCase(char)
+                    '_' -> Character.toUpperCase(char)
+                    else -> char
+                }
+            )
         }
     }
 }
@@ -71,10 +74,12 @@ fun String.toUpperCamelCase(): String {
 
     return transformEachChar { prevChar, char, _ ->
         if (char !in separators) {
-            append(when (prevChar) {
-                       null, in separators -> Character.toUpperCase(char)
-                       else -> char
-                   })
+            append(
+                when (prevChar) {
+                    null, in separators -> Character.toUpperCase(char)
+                    else -> char
+                }
+            )
         }
     }
 }
@@ -82,35 +87,33 @@ fun String.toUpperCamelCase(): String {
 fun TypeElement.executableElements() = enclosedElements.filterIsInstance<ExecutableElement>()
 
 /** @return Whether at least one of the given annotations is present on the receiver. */
-fun AnnotatedConstruct.hasAnyAnnotation(annotationClasses: List<Class<out Annotation>>)
-        = annotationClasses.any {
-    try {
-        getAnnotation(it) != null
-    } catch (e: MirroredTypeException) {
-        // This will be thrown if the annotation contains a param of type Class. This is fine,
-        // it still means that the annotation is present
-        true
+fun AnnotatedConstruct.hasAnyAnnotation(annotationClasses: List<Class<out Annotation>>) =
+    annotationClasses.any {
+        try {
+            getAnnotation(it) != null
+        } catch (e: MirroredTypeException) {
+            // This will be thrown if the annotation contains a param of type Class. This is fine,
+            // it still means that the annotation is present
+            true
+        }
     }
-}
 
+fun AnnotatedConstruct.hasAnnotation(annotationClass: KClass<out Annotation>) =
+    hasAnyAnnotation(listOf(annotationClass.java))
 
-fun AnnotatedConstruct.hasAnnotation(annotationClass: KClass<out Annotation>)
-        = hasAnyAnnotation(listOf(annotationClass.java))
+fun AnnotatedConstruct.hasAnnotation(annotationClass: Class<out Annotation>) =
+    hasAnyAnnotation(listOf(annotationClass))
 
-fun AnnotatedConstruct.hasAnnotation(annotationClass: Class<out Annotation>)
-        = hasAnyAnnotation(listOf(annotationClass))
-
-inline fun <reified T : Annotation> AnnotatedConstruct.annotation(): T?
-        = getAnnotation(T::class.java)
+inline fun <reified T : Annotation> AnnotatedConstruct.annotation(): T? =
+    getAnnotation(T::class.java)
 
 /** Creates a new version of the classname where the simple name has the given suffix added to it.
  *
  * If there are multiple simple names they are combined into 1.
  * */
-fun ClassName.appendToName(suffix: String)
-        = ClassName.get(
-        packageName(),
-        simpleNames().joinToString(separator = "_", postfix = suffix)
+fun ClassName.appendToName(suffix: String) = ClassName.get(
+    packageName(),
+    simpleNames().joinToString(separator = "_", postfix = suffix)
 ).annotated(annotations)!!
 
 /** Iterates through each character, allowing you to build a string by transforming the characters as needed. */
@@ -130,8 +133,8 @@ fun Elements.isTypeLoaded(className: ClassName): Boolean {
 
 /** Return each of the classes in the class hierarchy, starting with the initial receiver and working upwards until Any. */
 tailrec fun Element.iterateClassHierarchy(
-        types: Types,
-        classCallback: (classElement: TypeElement) -> Unit
+    types: Types,
+    classCallback: (classElement: TypeElement) -> Unit
 ) {
     if (this !is TypeElement) {
         return
@@ -145,8 +148,8 @@ tailrec fun Element.iterateClassHierarchy(
 
 /** Iterate each super class of the receiver, starting with the initial super class and going until Any. */
 fun Element.iterateSuperClasses(
-        types: Types,
-        classCallback: (classElement: TypeElement) -> Unit
+    types: Types,
+    classCallback: (classElement: TypeElement) -> Unit
 ) {
     iterateClassHierarchy(types) {
         // Skip the original class so that only super classes are passed to the callback
@@ -156,15 +159,26 @@ fun Element.iterateSuperClasses(
     }
 }
 
+/**
+ * Returns a list of annotations specs representing annotations on the given type element.
+ *
+ * @param annotationFilter Return false to exclude annotations with the given class name.
+ */
+fun TypeElement.buildAnnotationSpecs(annotationFilter: (ClassName) -> Boolean = { true }): List<AnnotationSpec> {
+    return annotationMirrors
+        .map { AnnotationSpec.get(it) }
+        .filter { annotationFilter(it.type as ClassName) }
+}
+
 fun TypeElement.getParentClassElement(
-        types: Types
+    types: Types
 ): TypeElement? = types.asElement(superclass) as? TypeElement
 
 /** Similar to the java 8 Map#merge method. */
 fun <K, V> MutableMap<K, V>.putOrMerge(
-        key: K,
-        value: V,
-        reduceFunction: (V, V) -> V
+    key: K,
+    value: V,
+    reduceFunction: (V, V) -> V
 ) {
     val oldValue = get(key)
     val newValue = if (oldValue == null) {

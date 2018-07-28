@@ -16,7 +16,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:onTextChanged="@{textWatcher.onTextChanged}"
+        android:onTextChanged="@{textWatcher::onTextChanged}"
         android:text="@{text}" />
 
 </layout>

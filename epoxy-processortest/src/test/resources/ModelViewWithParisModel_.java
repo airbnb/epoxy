@@ -2,7 +2,6 @@ package com.airbnb.epoxy;
 
 import android.os.AsyncTask;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 import com.airbnb.paris.StyleApplierUtils;
@@ -225,7 +224,7 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
   }
 
   @Override
-  public ModelViewWithParisModel_ id(@NonNull Number... arg0) {
+  public ModelViewWithParisModel_ id(@Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
@@ -237,19 +236,19 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
   }
 
   @Override
-  public ModelViewWithParisModel_ id(@NonNull CharSequence arg0) {
+  public ModelViewWithParisModel_ id(@Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelViewWithParisModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+  public ModelViewWithParisModel_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelViewWithParisModel_ id(@NonNull CharSequence arg0, long arg1) {
+  public ModelViewWithParisModel_ id(@Nullable CharSequence arg0, long arg1) {
     super.id(arg0, arg1);
     return this;
   }

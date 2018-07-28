@@ -189,7 +189,7 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
   }
 
   @Override
-  public TestFieldPropTextPropViewModel_ id(@NonNull Number... arg0) {
+  public TestFieldPropTextPropViewModel_ id(@Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
@@ -201,20 +201,20 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
   }
 
   @Override
-  public TestFieldPropTextPropViewModel_ id(@NonNull CharSequence arg0) {
+  public TestFieldPropTextPropViewModel_ id(@Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public TestFieldPropTextPropViewModel_ id(@NonNull CharSequence arg0,
-      @NonNull CharSequence... arg1) {
+  public TestFieldPropTextPropViewModel_ id(@Nullable CharSequence arg0,
+      @Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestFieldPropTextPropViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+  public TestFieldPropTextPropViewModel_ id(@Nullable CharSequence arg0, long arg1) {
     super.id(arg0, arg1);
     return this;
   }

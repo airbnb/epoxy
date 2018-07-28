@@ -302,8 +302,7 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  @NonNull
-  public AllTypesModelViewModel_ onClickListener(final OnModelClickListener<AllTypesModelViewModel_, AllTypesModelView> onClickListener) {
+  public AllTypesModelViewModel_ onClickListener(@NonNull final OnModelClickListener<AllTypesModelViewModel_, AllTypesModelView> onClickListener) {
     assignedAttributes_epoxyGeneratedModel.set(6);
     onMutation();
     if (onClickListener == null) {
@@ -382,7 +381,7 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   }
 
   @Override
-  public AllTypesModelViewModel_ id(@NonNull Number... arg0) {
+  public AllTypesModelViewModel_ id(@Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
@@ -394,19 +393,19 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   }
 
   @Override
-  public AllTypesModelViewModel_ id(@NonNull CharSequence arg0) {
+  public AllTypesModelViewModel_ id(@Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public AllTypesModelViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+  public AllTypesModelViewModel_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public AllTypesModelViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+  public AllTypesModelViewModel_ id(@Nullable CharSequence arg0, long arg1) {
     super.id(arg0, arg1);
     return this;
   }
