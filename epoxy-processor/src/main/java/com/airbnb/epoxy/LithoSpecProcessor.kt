@@ -1,21 +1,24 @@
 package com.airbnb.epoxy
 
-import com.airbnb.epoxy.ClassNames.*
-import com.airbnb.epoxy.GeneratedModelWriter.*
-import com.airbnb.epoxy.Utils.*
-import com.squareup.javapoet.*
-import com.squareup.javapoet.TypeSpec.*
+import com.airbnb.epoxy.ClassNames.EPOXY_LITHO_MODEL
+import com.airbnb.epoxy.GeneratedModelWriter.BuilderHooks
+import com.airbnb.epoxy.Utils.getAnnotationClass
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterizedTypeName
+import com.squareup.javapoet.TypeSpec.Builder
 import java.util.*
-import javax.annotation.processing.*
-import javax.lang.model.element.*
-import javax.lang.model.util.*
+import javax.annotation.processing.RoundEnvironment
+import javax.lang.model.element.Element
+import javax.lang.model.element.Modifier
+import javax.lang.model.element.TypeElement
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 internal class LithoSpecProcessor(
-        private val elementUtils: Elements,
-        private val typeUtils: Types,
-        private val configManager: ConfigManager,
-        private val errorLogger: ErrorLogger,
-        private val modelWriter: GeneratedModelWriter
+    private val elementUtils: Elements,
+    private val typeUtils: Types,
+    private val errorLogger: ErrorLogger,
+    private val modelWriter: GeneratedModelWriter
 ) {
     private var layoutSpecAnnotationClass: Class<out Annotation>? = null
 
@@ -35,8 +38,8 @@ internal class LithoSpecProcessor(
 
         val modelInfoMap = LinkedHashMap<TypeElement, LithoModelInfo>()
         roundEnv.getElementsAnnotatedWith(layoutSpecAnnotationClass)
-                .filterIsInstance<TypeElement>()
-                .forEach { modelInfoMap.put(it, LithoModelInfo(typeUtils, elementUtils, it)) }
+            .filterIsInstance<TypeElement>()
+            .forEach { modelInfoMap.put(it, LithoModelInfo(typeUtils, elementUtils, it)) }
 
         val propClass = getAnnotationClass(ClassNames.LITHO_ANNOTATION_PROP)
         val hashCodeValidator = HashCodeValidator(typeUtils, elementUtils)
@@ -63,26 +66,30 @@ internal class LithoSpecProcessor(
 
     // Only true if the epoxy-litho module is included in dependencies
     private fun hasLithoEpoxyDependency(): Boolean =
-            getTypeMirror(EPOXY_LITHO_MODEL.reflectionName(), elementUtils) != null
+        getTypeMirror(EPOXY_LITHO_MODEL.reflectionName(), elementUtils) != null
 
     private fun updateGeneratedClassForLithoComponent(
-            modelInfo: LithoModelInfo,
-            classBuilder: Builder
+        modelInfo: LithoModelInfo,
+        classBuilder: Builder
     ) {
         // Adding the "buildComponent" method
         val methodBuilder = MethodSpec.methodBuilder("buildComponent")
-                .addAnnotation(Override::class.java)
-                .addModifiers(Modifier.PROTECTED)
-                .returns(
-                        ParameterizedTypeName.get(ClassNames.LITHO_COMPONENT,
-                                                  modelInfo.lithoComponentName)
+            .addAnnotation(Override::class.java)
+            .addModifiers(Modifier.PROTECTED)
+            .returns(
+                ParameterizedTypeName.get(
+                    ClassNames.LITHO_COMPONENT,
+                    modelInfo.lithoComponentName
                 )
-                .addParameter(ClassNames.LITHO_COMPONENT_CONTEXT, "context")
-                .addCode("return \$T.create(context)", modelInfo.lithoComponentName)
+            )
+            .addParameter(ClassNames.LITHO_COMPONENT_CONTEXT, "context")
+            .addCode("return \$T.create(context)", modelInfo.lithoComponentName)
 
         for (attributeInfo in modelInfo.attributeInfo) {
-            methodBuilder.addCode(".\$L(\$L)", attributeInfo.getFieldName(),
-                                  attributeInfo.getFieldName())
+            methodBuilder.addCode(
+                ".\$L(\$L)", attributeInfo.getFieldName(),
+                attributeInfo.getFieldName()
+            )
         }
 
         methodBuilder.addStatement(".build()")
@@ -91,8 +98,8 @@ internal class LithoSpecProcessor(
     }
 
     private fun getModelInfoForProp(
-            modelInfoMap: Map<TypeElement, LithoModelInfo>,
-            propElement: Element
+        modelInfoMap: Map<TypeElement, LithoModelInfo>,
+        propElement: Element
     ): LithoModelInfo? {
         val methodElement = propElement.enclosingElement ?: return null
 

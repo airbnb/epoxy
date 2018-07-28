@@ -13,7 +13,7 @@ import org.robolectric.annotation.Config
 
 /** Tests that a partial bind of model (from a diff) binds the correct props. This is particularly tricky with prop groups. */
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, sdk = intArrayOf(21))
+@Config(constants = BuildConfig::class, sdk = [21])
 class BindDiffTest {
 
     private inline fun validateDiff(

@@ -1,7 +1,6 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
@@ -147,7 +146,7 @@ public class TestAfterBindPropsViewModel_ extends EpoxyModel<TestAfterBindPropsV
   }
 
   @Override
-  public TestAfterBindPropsViewModel_ id(@NonNull Number... arg0) {
+  public TestAfterBindPropsViewModel_ id(@Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
@@ -159,20 +158,20 @@ public class TestAfterBindPropsViewModel_ extends EpoxyModel<TestAfterBindPropsV
   }
 
   @Override
-  public TestAfterBindPropsViewModel_ id(@NonNull CharSequence arg0) {
+  public TestAfterBindPropsViewModel_ id(@Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public TestAfterBindPropsViewModel_ id(@NonNull CharSequence arg0,
-      @NonNull CharSequence... arg1) {
+  public TestAfterBindPropsViewModel_ id(@Nullable CharSequence arg0,
+      @Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestAfterBindPropsViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+  public TestAfterBindPropsViewModel_ id(@Nullable CharSequence arg0, long arg1) {
     super.id(arg0, arg1);
     return this;
   }

@@ -232,7 +232,7 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@NonNull Number... arg0) {
+  public TestFieldPropChildViewModel_ id(@android.support.annotation.Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
@@ -244,20 +244,21 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@NonNull CharSequence arg0) {
+  public TestFieldPropChildViewModel_ id(@android.support.annotation.Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@NonNull CharSequence arg0,
-      @NonNull CharSequence... arg1) {
+  public TestFieldPropChildViewModel_ id(@android.support.annotation.Nullable CharSequence arg0,
+      @android.support.annotation.Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+  public TestFieldPropChildViewModel_ id(@android.support.annotation.Nullable CharSequence arg0,
+      long arg1) {
     super.id(arg0, arg1);
     return this;
   }

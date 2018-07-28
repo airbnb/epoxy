@@ -130,7 +130,7 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
   }
 
   @Override
-  public BaseModelViewModel_ id(@NonNull Number... arg0) {
+  public BaseModelViewModel_ id(@Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
@@ -142,19 +142,19 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
   }
 
   @Override
-  public BaseModelViewModel_ id(@NonNull CharSequence arg0) {
+  public BaseModelViewModel_ id(@Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public BaseModelViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+  public BaseModelViewModel_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public BaseModelViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+  public BaseModelViewModel_ id(@Nullable CharSequence arg0, long arg1) {
     super.id(arg0, arg1);
     return this;
   }

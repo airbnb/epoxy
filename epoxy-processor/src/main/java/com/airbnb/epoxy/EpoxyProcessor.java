@@ -129,7 +129,7 @@ public class EpoxyProcessor extends AbstractProcessor {
         modelWriter, resourceProcessor);
 
     lithoSpecProcessor = new LithoSpecProcessor(
-        elementUtils, typeUtils, configManager, errorLogger, modelWriter);
+        elementUtils, typeUtils, errorLogger, modelWriter);
 
     kotlinExtensionWriter = new KotlinModelBuilderExtensionWriter(processingEnv);
   }

@@ -131,7 +131,7 @@ public class ListSubtypeModelViewModel_ extends EpoxyModel<ListSubtypeModelView>
   }
 
   @Override
-  public ListSubtypeModelViewModel_ id(@NonNull Number... arg0) {
+  public ListSubtypeModelViewModel_ id(@Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
@@ -143,19 +143,20 @@ public class ListSubtypeModelViewModel_ extends EpoxyModel<ListSubtypeModelView>
   }
 
   @Override
-  public ListSubtypeModelViewModel_ id(@NonNull CharSequence arg0) {
+  public ListSubtypeModelViewModel_ id(@Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public ListSubtypeModelViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+  public ListSubtypeModelViewModel_ id(@Nullable CharSequence arg0,
+      @Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ListSubtypeModelViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+  public ListSubtypeModelViewModel_ id(@Nullable CharSequence arg0, long arg1) {
     super.id(arg0, arg1);
     return this;
   }

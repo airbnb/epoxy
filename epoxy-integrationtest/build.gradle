@@ -23,6 +23,12 @@ android {
     // Was getting this error otherwise - "Multiple dex files define Landroid/arch/core/BuildConfig"
     preDexLibraries = false
   }
+
+  testOptions {
+    unitTests {
+      includeAndroidResources = true
+    }
+  }
 }
 
 dependencies {

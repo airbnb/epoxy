@@ -181,10 +181,12 @@ public abstract class EpoxyModel<T> {
    * <p>
    * This hashes the numbers, so there is a tiny risk of collision with other ids.
    */
-  public EpoxyModel<T> id(@NonNull Number... ids) {
+  public EpoxyModel<T> id(@Nullable Number... ids) {
     long result = 0;
-    for (Number id : ids) {
-      result = 31 * result + hashLong64Bit(id.hashCode());
+    if (ids != null) {
+      for (@Nullable Number id : ids) {
+        result = 31 * result + hashLong64Bit(id == null ? 0 : id.hashCode());
+      }
     }
     return id(result);
   }
@@ -213,7 +215,7 @@ public abstract class EpoxyModel<T> {
    *
    * @see EpoxyModel#hashString64Bit(CharSequence)
    */
-  public EpoxyModel<T> id(@NonNull CharSequence key) {
+  public EpoxyModel<T> id(@Nullable CharSequence key) {
     id(hashString64Bit(key));
     return this;
   }
@@ -223,10 +225,12 @@ public abstract class EpoxyModel<T> {
    * <p>
    * Similar to {@link #id(CharSequence)}, but with additional strings.
    */
-  public EpoxyModel<T> id(@NonNull CharSequence key, @NonNull CharSequence... otherKeys) {
+  public EpoxyModel<T> id(@Nullable CharSequence key, @Nullable CharSequence... otherKeys) {
     long result = hashString64Bit(key);
-    for (CharSequence otherKey : otherKeys) {
-      result = 31 * result + hashString64Bit(otherKey);
+    if (otherKeys != null) {
+      for (CharSequence otherKey : otherKeys) {
+        result = 31 * result + hashString64Bit(otherKey);
+      }
     }
     return id(result);
   }
@@ -243,7 +247,7 @@ public abstract class EpoxyModel<T> {
    * @see EpoxyModel#hashString64Bit(CharSequence)
    * @see EpoxyModel#hashLong64Bit(long)
    */
-  public EpoxyModel<T> id(@NonNull CharSequence key, long id) {
+  public EpoxyModel<T> id(@Nullable CharSequence key, long id) {
     long result = hashString64Bit(key);
     result = 31 * result + hashLong64Bit(id);
     id(result);
@@ -274,7 +278,11 @@ public abstract class EpoxyModel<T> {
    * <p>
    * Hash implementation from http://www.isthe.com/chongo/tech/comp/fnv/index.html#FNV-1a
    */
-  private static long hashString64Bit(@NonNull CharSequence str) {
+  private static long hashString64Bit(@Nullable CharSequence str) {
+    if (str == null) {
+      return 0;
+    }
+
     long result = 0xcbf29ce484222325L;
     final int len = str.length();
     for (int i = 0; i < len; i++) {

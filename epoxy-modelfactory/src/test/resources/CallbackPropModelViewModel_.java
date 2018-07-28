@@ -1,7 +1,6 @@
 package com.airbnb.epoxy;
 
 import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import java.lang.CharSequence;
@@ -102,8 +101,7 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  @Nullable
-  public CallbackPropModelViewModel_ onClickListener(final OnModelClickListener<CallbackPropModelViewModel_, CallbackPropModelView> onClickListener) {
+  public CallbackPropModelViewModel_ onClickListener(@Nullable final OnModelClickListener<CallbackPropModelViewModel_, CallbackPropModelView> onClickListener) {
     assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     if (onClickListener == null) {
@@ -139,7 +137,7 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
   }
 
   @Override
-  public CallbackPropModelViewModel_ id(@NonNull Number... arg0) {
+  public CallbackPropModelViewModel_ id(@Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
@@ -151,19 +149,20 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
   }
 
   @Override
-  public CallbackPropModelViewModel_ id(@NonNull CharSequence arg0) {
+  public CallbackPropModelViewModel_ id(@Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public CallbackPropModelViewModel_ id(@NonNull CharSequence arg0, @NonNull CharSequence... arg1) {
+  public CallbackPropModelViewModel_ id(@Nullable CharSequence arg0,
+      @Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public CallbackPropModelViewModel_ id(@NonNull CharSequence arg0, long arg1) {
+  public CallbackPropModelViewModel_ id(@Nullable CharSequence arg0, long arg1) {
     super.id(arg0, arg1);
     return this;
   }
