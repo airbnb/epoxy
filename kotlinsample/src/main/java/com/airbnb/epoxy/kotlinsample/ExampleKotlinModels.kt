@@ -1,26 +1,47 @@
 package com.airbnb.epoxy.kotlinsample
 
+import android.content.Context
 import android.net.Uri
+import android.util.AttributeSet
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import com.airbnb.epoxy.AfterPropsSet
+import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
+import com.airbnb.epoxy.ModelProp
+import com.airbnb.epoxy.ModelView
+import com.airbnb.epoxy.TextProp
 
-// This does not require annotations or annotation processing.
-// The data class is required to generated equals/hashcode which Epoxy needs for diffing.
-// Views are easily declared via property delegates
-data class SampleKotlinModel(
-    val title: String,
-    val imageUrl: Uri
-) : KotlinModel(R.layout.view_holder_page_header) {
+// The ModelView annotation is used on Views to have models generated from those views.
+// This is pretty straightforward with Kotlin, but properties need some special handling.
+@ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
+class KotlinView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr) {
 
-    val titleView by bind<TextView>(R.id.title)
-    val imageView by bind<ImageView>(R.id.image)
+    @ModelProp
+    fun setValue(value: Int) {
+        // Do something here with value
+    }
 
-    override fun bind() {
-        titleView.text = title
-        imageView.setImageURI(imageUrl)
+    // Or if you need to store data in properties there are two options
+
+    // Can make it nullable like this and annotate the setter
+    var myListener: View.OnClickListener? = null
+        @CallbackProp set
+
+    // Or use lateinit
+    @TextProp lateinit var myText: CharSequence
+
+    @AfterPropsSet
+    fun useProps() {
+        // This is optional, and is called after the annotated properties above are set.
+        // This is useful for using several properties in one method to guarantee they are all set first.
     }
 }
 
@@ -44,4 +65,21 @@ abstract class SampleKotlinModelWithHolder : EpoxyModelWithHolder<Holder>() {
 class Holder : KotlinHolder() {
     val titleView by bind<TextView>(R.id.title)
     val imageView by bind<ImageView>(R.id.image)
+}
+
+// This does not require annotations or annotation processing.
+// The data class is required to generated equals/hashcode which Epoxy needs for diffing.
+// Views are easily declared via property delegates
+data class SampleKotlinModel(
+    val title: String,
+    val imageUrl: Uri
+) : KotlinModel(R.layout.view_holder_page_header) {
+
+    val titleView by bind<TextView>(R.id.title)
+    val imageView by bind<ImageView>(R.id.image)
+
+    override fun bind() {
+        titleView.text = title
+        imageView.setImageURI(imageUrl)
+    }
 }
