@@ -377,7 +377,8 @@ abstract class GeneratedModelInfo {
         throw new IllegalStateException("No default value exists");
       }
 
-      return CodeBlock.of(defaultAttribute.setterCode(), defaultAttribute.getCodeToSetDefault().value());
+      return CodeBlock
+          .of(defaultAttribute.setterCode(), defaultAttribute.getCodeToSetDefault().value());
     }
   }
 }
