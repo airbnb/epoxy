@@ -52,14 +52,13 @@ class KotlinView @JvmOverloads constructor(
 @EpoxyModelClass(layout = R.layout.view_holder_page_header)
 abstract class SampleKotlinModelWithHolder : EpoxyModelWithHolder<Holder>() {
 
-    @EpoxyAttribute lateinit var title: String
+    @EpoxyAttribute lateinit var callback: () -> Unit
     @EpoxyAttribute lateinit var imageUrl: Uri
 
     override fun bind(holder: Holder) {
         holder.imageView.setImageURI(imageUrl)
-        holder.titleView.text = title
+        holder.imageView.setOnClickListener { callback() }
     }
-
 }
 
 class Holder : KotlinHolder() {

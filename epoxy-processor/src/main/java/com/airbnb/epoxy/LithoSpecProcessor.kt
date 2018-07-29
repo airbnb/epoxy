@@ -87,8 +87,8 @@ internal class LithoSpecProcessor(
 
         for (attributeInfo in modelInfo.attributeInfo) {
             methodBuilder.addCode(
-                ".\$L(\$L)", attributeInfo.getFieldName(),
-                attributeInfo.getFieldName()
+                ".\$L(\$L)", attributeInfo.fieldName,
+                attributeInfo.fieldName
             )
         }
 

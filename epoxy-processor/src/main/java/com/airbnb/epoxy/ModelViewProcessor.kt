@@ -134,7 +134,7 @@ internal class ModelViewProcessor(
             for (attributeInfo in viewInfo.attributeInfo) {
                 val setterInfo = attributeInfo as ViewAttributeInfo
 
-                var groupKey = notNull(setterInfo.groupKey)
+                var groupKey = setterInfo.groupKey!!
                 if (groupKey.isEmpty()) {
                     // Default to using the method name as the group name, so method overloads are grouped
                     // together by default

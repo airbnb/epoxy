@@ -14,8 +14,8 @@ internal class StringOverloadWriter(
         private val attr: AttributeInfo,
         private val configManager: ConfigManager
 ) {
-    private val fieldName: String = attr.getFieldName()
-    private val nullable: Boolean = attr.hasSetNullability() && attr.isNullable
+    private val fieldName: String = attr.fieldName
+    private val nullable: Boolean = attr.isNullable == true
 
     fun buildMethods(): List<MethodSpec> {
         val methods = ArrayList<MethodSpec>()
@@ -143,7 +143,7 @@ internal class StringOverloadWriter(
         }
 
         return builder
-                .addAnnotations(attr.getGetterAnnotations())
+                .addAnnotations(attr.getterAnnotations)
                 .addParameter(ClassNames.ANDROID_CONTEXT, "context")
                 .addStatement("return \$L", fieldName + ".toString(context)")
                 .build()

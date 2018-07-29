@@ -287,7 +287,7 @@ internal class GeneratedModelWriter(
             .mapTo(fields) {
                 buildField(it.typeName, it.fieldName) {
                     addModifiers(PRIVATE)
-                    addAnnotations(it.getSetterAnnotations())
+                    addAnnotations(it.setterAnnotations)
 
                     if (shouldUseBitSet(classInfo)) {
                         addJavadoc("Bitset index: \$L", attributeIndex(classInfo, it))
@@ -303,10 +303,10 @@ internal class GeneratedModelWriter(
     }
 
     private fun modelUnbindListenerFieldName(): String =
-        "onModelUnboundListener" + GENERATED_FIELD_SUFFIX
+        "onModelUnboundListener$GENERATED_FIELD_SUFFIX"
 
     private fun modelBindListenerFieldName(): String =
-        "onModelBoundListener" + GENERATED_FIELD_SUFFIX
+        "onModelBoundListener$GENERATED_FIELD_SUFFIX"
 
     private fun getModelClickListenerType(classInfo: GeneratedModelInfo): ParameterizedTypeName {
         return ParameterizedTypeName.get(
@@ -981,7 +981,7 @@ internal class GeneratedModelWriter(
         val brClass = ClassName.get(moduleName, "BR")
         val validateAttributes = configManager.shouldValidateModelUsage()
         for (attribute in info.getAttributeInfo()) {
-            val attrName = attribute.getFieldName()
+            val attrName = attribute.fieldName
             val setVariableBlock = CodeBlock.of(
                 "binding.setVariable(\$T.\$L, \$L)", brClass,
                 attrName, attribute.getterCode()
@@ -1093,11 +1093,11 @@ internal class GeneratedModelWriter(
                     methods.add(generateSetClickModelListener(modelInfo, attr))
                 }
 
-                if (attr.generateSetter() && !attr.hasFinalModifier()) {
+                if (attr.generateSetter && !attr.hasFinalModifier) {
                     methods.add(generateSetter(modelInfo, attr))
                 }
 
-                if (attr.generateGetter()) {
+                if (attr.generateGetter) {
                     methods.add(generateGetter(attr))
                 }
             }
@@ -1112,13 +1112,13 @@ internal class GeneratedModelWriter(
     ): MethodSpec {
         val attributeName = attribute.generatedSetterName()
 
-        val clickListenerType = if (isViewLongClickListenerType(attribute.getTypeMirror()))
+        val clickListenerType = if (isViewLongClickListenerType(attribute.typeMirror))
             getModelLongClickListenerType(classInfo)
         else
             getModelClickListenerType(classInfo)
 
         val param = ParameterSpec.builder(clickListenerType, attributeName, FINAL)
-            .addAnnotations(attribute.getSetterAnnotations()).build()
+            .addAnnotations(attribute.setterAnnotations).build()
 
         val builder = MethodSpec.methodBuilder(attributeName)
             .addJavadoc(
@@ -1187,7 +1187,7 @@ internal class GeneratedModelWriter(
         for (attributeInfo in helperClass.getAttributeInfo()) {
             val type = attributeInfo.typeName
 
-            if (!attributeInfo.useInHash() && type.isPrimitive) {
+            if (!attributeInfo.useInHash && type.isPrimitive) {
                 continue
             }
 
@@ -1220,7 +1220,7 @@ internal class GeneratedModelWriter(
         )
 
         for (attributeInfo in helperClass.getAttributeInfo()) {
-            if (!attributeInfo.useInHash()) {
+            if (!attributeInfo.useInHash) {
                 continue
             }
             if (attributeInfo.typeName === DOUBLE) {
@@ -1232,12 +1232,12 @@ internal class GeneratedModelWriter(
         for (attributeInfo in helperClass.getAttributeInfo()) {
             val type = attributeInfo.typeName
 
-            if (!attributeInfo.useInHash() && type.isPrimitive) {
+            if (!attributeInfo.useInHash && type.isPrimitive) {
                 continue
             }
 
             addHashCodeLineForType(
-                this, attributeInfo.useInHash(), type,
+                this, attributeInfo.useInHash, type,
                 attributeInfo.getterCode()
             )
         }
@@ -1255,11 +1255,11 @@ internal class GeneratedModelWriter(
 
         var first = true
         for (attributeInfo in helperClass.getAttributeInfo()) {
-            if (attributeInfo.doNotUseInToString()) {
+            if (attributeInfo.doNotUseInToString) {
                 continue
             }
 
-            val attributeName = attributeInfo.getFieldName()
+            val attributeName = attributeInfo.fieldName
             if (first) {
                 sb.append(
                     String.format(
@@ -1286,7 +1286,7 @@ internal class GeneratedModelWriter(
     private fun generateGetter(data: AttributeInfo) = buildMethod(data.generatedGetterName()) {
         addModifiers(PUBLIC)
         returns(data.typeName)
-        addAnnotations(data.getGetterAnnotations())
+        addAnnotations(data.getterAnnotations)
         addStatement("return \$L", data.superGetterCode())
     }
 
@@ -1294,7 +1294,7 @@ internal class GeneratedModelWriter(
         modelInfo: GeneratedModelInfo,
         attribute: AttributeInfo
     ): MethodSpec {
-        val attributeName = attribute.getFieldName()
+        val attributeName = attribute.fieldName
         val paramName = attribute.generatedSetterName()
         val builder = MethodSpec.methodBuilder(attribute.generatedSetterName())
             .addModifiers(PUBLIC)
@@ -1307,7 +1307,7 @@ internal class GeneratedModelWriter(
         } else {
             builder.addParameter(
                 ParameterSpec.builder(attribute.typeName, paramName)
-                    .addAnnotations(attribute.getSetterAnnotations()).build()
+                    .addAnnotations(attribute.setterAnnotations).build()
             )
         }
 
@@ -1321,28 +1321,26 @@ internal class GeneratedModelWriter(
 
         setBitSetIfNeeded(modelInfo, attribute, builder)
 
-        if (attribute.isOverload) {
-            for (overload in attribute.attributeGroup.attributes) {
-                if (overload === attribute) {
-                    // Need to clear the other attributes in the group
-                    continue
-                }
+        for (overload in (attribute.attributeGroup?.attributes ?: emptyList())) {
+            if (overload === attribute) {
+                // Need to clear the other attributes in the group
+                continue
+            }
 
-                if (shouldUseBitSet(modelInfo)) {
-                    builder.addStatement(
-                        "\$L.clear(\$L)", ATTRIBUTES_BITSET_FIELD_NAME,
-                        attributeIndex(modelInfo, overload)
-                    )
-                }
-
+            if (shouldUseBitSet(modelInfo)) {
                 builder.addStatement(
-                    overload.setterCode(),
-                    if (overload.codeToSetDefault.isPresent)
-                        overload.codeToSetDefault.value()
-                    else
-                        Utils.getDefaultValue(overload.typeName)
+                    "\$L.clear(\$L)", ATTRIBUTES_BITSET_FIELD_NAME,
+                    attributeIndex(modelInfo, overload)
                 )
             }
+
+            builder.addStatement(
+                overload.setterCode(),
+                if (overload.codeToSetDefault.isPresent)
+                    overload.codeToSetDefault.value()
+                else
+                    Utils.getDefaultValue(overload.typeName)
+            )
         }
 
         addOnMutationCall(builder)
@@ -1357,7 +1355,7 @@ internal class GeneratedModelWriter(
         // Call the super setter if it exists.
         // No need to do this if the attribute is private since we already called the super setter to
         // set it
-        if (!attribute.isPrivate && attribute.hasSuperSetterMethod()) {
+        if (!attribute.isPrivate && attribute.hasSuperSetter) {
             if (hasMultipleParams) {
                 errorLogger
                     .logError(
@@ -1386,7 +1384,7 @@ internal class GeneratedModelWriter(
         }
 
         helperClass.getAttributeInfo()
-            .filterNot { it.hasFinalModifier() }
+            .filterNot { it.hasFinalModifier }
             .forEach {
                 addStatement(
                     it.setterCode(),
@@ -1460,7 +1458,7 @@ internal class GeneratedModelWriter(
             }
         }
         val supportedWithSetterAttributeInfo = supportedAttributeInfo
-            .filter { it.generateSetter() && !it.hasFinalModifier() }
+            .filter { it.generateSetter && !it.hasFinalModifier }
 
         // If none of the properties are of a supported type the method isn't generated
         if (supportedWithSetterAttributeInfo.isEmpty()) {
@@ -1570,7 +1568,7 @@ internal class GeneratedModelWriter(
 
             if (configManager.shouldValidateModelUsage()
                 && attr.hasSetNullability()
-                && !attr.isNullable
+                && !attr.isNullable()
             ) {
 
                 builder.beginControlFlow("if (\$L == null)", paramName)
@@ -1587,7 +1585,7 @@ internal class GeneratedModelWriter(
             attribute: AttributeInfo
         ): MethodSpec.Builder {
             val attributeType = attribute.typeName
-            val useHash = attributeType.isPrimitive || attribute.useInHash()
+            val useHash = attributeType.isPrimitive || attribute.useInHash
             return startNotEqualsControlFlow(
                 methodBuilder, useHash, attributeType,
                 attribute.getterCode()
@@ -1606,7 +1604,7 @@ internal class GeneratedModelWriter(
 
         fun notEqualsCodeBlock(attribute: AttributeInfo): CodeBlock {
             val attributeType = attribute.typeName
-            val useHash = attributeType.isPrimitive || attribute.useInHash()
+            val useHash = attributeType.isPrimitive || attribute.useInHash
             return notEqualsCodeBlock(useHash, attributeType, attribute.getterCode())
         }
 

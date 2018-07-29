@@ -13,13 +13,13 @@ internal class DataBindingAttributeInfo(
         fieldName = removeSetPrefix(setterMethod.simpleName.toString())
         typeMirror = setterMethod.parameters[0].asType()
         modelName = modelInfo.generatedName.simpleName()
-        modelPackageName = modelInfo.generatedName.packageName()
+        packageName = modelInfo.generatedName.packageName()
         useInHash = hashCodeValidator.implementsHashCodeAndEquals(typeMirror)
         ignoreRequireHashCode = false
         generateSetter = true
         generateGetter = true
         hasFinalModifier = false
-        packagePrivate = false
+        isPackagePrivate = false
         isGenerated = true
     }
 }

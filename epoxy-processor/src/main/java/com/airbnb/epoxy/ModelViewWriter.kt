@@ -240,7 +240,7 @@ internal class ModelViewWriter(
             viewAttribute: ViewAttributeInfo,
             objectName: String
     ): String {
-        val fieldName = viewAttribute.getFieldName()
+        val fieldName = viewAttribute.fieldName
 
         return if (viewAttribute.generateStringOverloads) {
             "$fieldName.toString($objectName.getContext())"

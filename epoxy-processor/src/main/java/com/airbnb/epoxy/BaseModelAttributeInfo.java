@@ -36,16 +36,16 @@ class BaseModelAttributeInfo extends AttributeInfo {
   BaseModelAttributeInfo(Element attribute, Types typeUtils, Elements elements,
       ErrorLogger errorLogger) {
     this.typeUtils = typeUtils;
-    this.fieldName = attribute.getSimpleName().toString();
-    typeMirror = attribute.asType();
+    this.setFieldName(attribute.getSimpleName().toString());
+    setTypeMirror(attribute.asType());
     setJavaDocString(elements.getDocComment(attribute));
 
     classElement = (TypeElement) attribute.getEnclosingElement();
-    modelName = classElement.getSimpleName().toString();
-    modelPackageName = elements.getPackageOf(classElement).getQualifiedName().toString();
-    this.hasSuperSetter = hasSuperMethod(classElement, attribute);
-    this.hasFinalModifier = attribute.getModifiers().contains(FINAL);
-    this.packagePrivate = isFieldPackagePrivate(attribute);
+    setModelName(classElement.getSimpleName().toString());
+    setPackageName(elements.getPackageOf(classElement).getQualifiedName().toString());
+    this.setHasSuperSetter(hasSuperMethod(classElement, attribute));
+    this.setHasFinalModifier(attribute.getModifiers().contains(FINAL));
+    this.setPackagePrivate(isFieldPackagePrivate(attribute));
 
     EpoxyAttribute annotation = attribute.getAnnotation(EpoxyAttribute.class);
 
@@ -53,15 +53,15 @@ class BaseModelAttributeInfo extends AttributeInfo {
     validateAnnotationOptions(errorLogger, annotation, options);
 
     //noinspection deprecation
-    useInHash = annotation.hash() && !options.contains(Option.DoNotHash);
-    ignoreRequireHashCode = options.contains(Option.IgnoreRequireHashCode);
-    doNotUseInToString = options.contains(Option.DoNotUseInToString);
+    setUseInHash(annotation.hash() && !options.contains(Option.DoNotHash));
+    setIgnoreRequireHashCode(options.contains(Option.IgnoreRequireHashCode));
+    setDoNotUseInToString(options.contains(Option.DoNotUseInToString));
 
-    generateSetter = annotation.setter() && !options.contains(Option.NoSetter);
-    generateGetter = !options.contains(Option.NoGetter);
+    setGenerateSetter(annotation.setter() && !options.contains(Option.NoSetter));
+    setGenerateGetter(!options.contains(Option.NoGetter));
 
-    isPrivate = attribute.getModifiers().contains(PRIVATE);
-    if (isPrivate) {
+    setPrivate(attribute.getModifiers().contains(PRIVATE));
+    if (isPrivate()) {
       findGetterAndSetterForPrivateField(errorLogger);
     }
 
@@ -104,7 +104,7 @@ class BaseModelAttributeInfo extends AttributeInfo {
               Option.IgnoreRequireHashCode,
               EpoxyAttribute.class.getSimpleName(),
               classElement.getSimpleName(),
-              fieldName);
+              getFieldName());
     }
 
     // Don't let legacy values be mixed with the new Options values
@@ -116,7 +116,7 @@ class BaseModelAttributeInfo extends AttributeInfo {
                 EpoxyAttribute.class.getSimpleName(),
                 Option.DoNotHash,
                 classElement.getSimpleName(),
-                fieldName);
+                getFieldName());
       }
 
       if (!annotation.setter()) {
@@ -126,7 +126,7 @@ class BaseModelAttributeInfo extends AttributeInfo {
                 EpoxyAttribute.class.getSimpleName(),
                 Option.NoSetter,
                 classElement.getSimpleName(),
-                fieldName);
+                getFieldName());
       }
     }
   }
@@ -140,36 +140,36 @@ class BaseModelAttributeInfo extends AttributeInfo {
         ExecutableElement method = (ExecutableElement) element;
         String methodName = method.getSimpleName().toString();
         // check if it is a valid getter
-        if ((methodName.equals(String.format("get%s", capitalizeFirstLetter(fieldName)))
-            || methodName.equals(String.format("is%s", capitalizeFirstLetter(fieldName)))
-            || (methodName.equals(fieldName) && startsWithIs(fieldName)))
+        if ((methodName.equals(String.format("get%s", capitalizeFirstLetter(getFieldName())))
+            || methodName.equals(String.format("is%s", capitalizeFirstLetter(getFieldName())))
+            || (methodName.equals(getFieldName()) && startsWithIs(getFieldName())))
             && !method.getModifiers().contains(PRIVATE)
             && !method.getModifiers().contains(STATIC)
             && method.getParameters().isEmpty()) {
-          getterMethodName = methodName;
+          setGetterMethodName(methodName);
         }
         // check if it is a valid setter
-        if ((methodName.equals(String.format("set%s", capitalizeFirstLetter(fieldName)))
-            || (startsWithIs(fieldName) && methodName.equals(String.format("set%s",
-            fieldName.substring(2, fieldName.length())))))
+        if ((methodName.equals(String.format("set%s", capitalizeFirstLetter(getFieldName())))
+            || (startsWithIs(getFieldName()) && methodName.equals(String.format("set%s",
+            getFieldName().substring(2, getFieldName().length())))))
             && !method.getModifiers().contains(PRIVATE)
             && !method.getModifiers().contains(STATIC)
             && method.getParameters().size() == 1) {
-          setterMethodName = methodName;
+          setSetterMethodName(methodName);
         }
       }
     }
-    if (getterMethodName == null || setterMethodName == null) {
+    if (getGetterMethodName() == null || getSetterMethodName() == null) {
       // We disable the "private" field setting so that we can still generate
       // some code that compiles in an ok manner (ie via direct field access)
-      isPrivate = false;
+      setPrivate(false);
 
       errorLogger
           .logError("%s annotations must not be on private fields"
                   + " without proper getter and setter methods. (class: %s, field: %s)",
               EpoxyAttribute.class.getSimpleName(),
               classElement.getSimpleName(),
-              fieldName);
+              getFieldName());
     }
   }
 
@@ -203,11 +203,11 @@ class BaseModelAttributeInfo extends AttributeInfo {
 
       AnnotationSpec annotationSpec = AnnotationSpec.builder(annotationClass).build();
       if (elementTypes.contains(ElementType.PARAMETER)) {
-        setterAnnotations.add(annotationSpec);
+        getSetterAnnotations().add(annotationSpec);
       }
 
       if (elementTypes.contains(ElementType.METHOD)) {
-        getterAnnotations.add(annotationSpec);
+        getGetterAnnotations().add(annotationSpec);
       }
     }
   }
