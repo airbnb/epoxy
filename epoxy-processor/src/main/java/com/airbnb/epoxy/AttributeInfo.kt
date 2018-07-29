@@ -2,12 +2,14 @@ package com.airbnb.epoxy
 
 import com.airbnb.epoxy.GeneratedModelInfo.AttributeGroup
 import com.airbnb.epoxy.Utils.EPOXY_MODEL_TYPE
+import com.airbnb.epoxy.Utils.isSubtypeOfType
 import com.airbnb.epoxy.Utils.isViewClickListenerType
 import com.airbnb.epoxy.Utils.isViewLongClickListenerType
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.TypeName
+import com.squareup.kotlinpoet.asTypeName
 import javax.lang.model.type.TypeKind
 import javax.lang.model.type.TypeMirror
 
@@ -27,6 +29,17 @@ internal abstract class AttributeInfo {
         protected set
     var doNotUseInToString: Boolean = false
         protected set
+        get() {
+            if (field) {
+                return true
+            }
+
+            // Do not include Kotlin lambdas in toString because there is a bug where they sometimes
+            // crash.
+            // see https://github.com/airbnb/epoxy/issues/455
+            return isSubtypeOfType(typeMirror, "kotlin.Function<?>")
+        }
+
     var generateSetter: Boolean = false
         protected set
     var setterAnnotations: MutableList<AnnotationSpec> = mutableListOf()

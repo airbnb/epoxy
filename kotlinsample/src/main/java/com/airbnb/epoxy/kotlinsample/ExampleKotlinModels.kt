@@ -15,9 +15,6 @@ import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.TextProp
 
-
-
-
 // The ModelView annotation is used on Views to have models generated from those views.
 // This is pretty straightforward with Kotlin, but properties need some special handling.
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
@@ -60,8 +57,8 @@ abstract class SampleKotlinModelWithHolder : EpoxyModelWithHolder<Holder>() {
 
     override fun bind(holder: Holder) {
         holder.imageView.setImageURI(imageUrl)
+        holder.imageView.setOnClickListener { callback() }
     }
-
 }
 
 class Holder : KotlinHolder() {
