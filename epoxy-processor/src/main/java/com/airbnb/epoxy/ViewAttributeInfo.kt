@@ -34,12 +34,12 @@ sealed class ViewAttributeType {
 }
 
 internal class ViewAttributeInfo(
-        private val modelInfo: ModelViewInfo,
-        viewAttributeElement: Element,
-        types: Types,
-        elements: Elements,
-        errorLogger: ErrorLogger,
-        resourceProcessor: ResourceProcessor
+    private val modelInfo: ModelViewInfo,
+    viewAttributeElement: Element,
+    types: Types,
+    elements: Elements,
+    errorLogger: ErrorLogger,
+    resourceProcessor: ResourceProcessor
 ) : AttributeInfo() {
     val propName: String
     val viewAttributeName: String
@@ -73,8 +73,10 @@ internal class ViewAttributeInfo(
             val stringResValue = textAnnotation.defaultRes
             if (stringResValue != 0) {
                 val stringResource = resourceProcessor
-                        .getStringResourceInAnnotation(viewAttributeElement, TextProp::class.java,
-                                                       stringResValue)
+                    .getStringResourceInAnnotation(
+                        viewAttributeElement, TextProp::class.java,
+                        stringResValue
+                    )
                 codeToSetDefault.explicit = stringResource.code
             }
             options.add(Option.GenerateStringOverloads)
@@ -83,15 +85,17 @@ internal class ViewAttributeInfo(
             if (isMarkedNullable(param)) {
                 options.add(Option.NullOnRecycle)
             } else {
-                errorLogger.logError("Setters with %s must be marked Nullable",
-                                     CallbackProp::class.java.simpleName)
+                errorLogger.logError(
+                    "Setters with %s must be marked Nullable",
+                    CallbackProp::class.java.simpleName
+                )
             }
         }
 
         generateSetter = true
         generateGetter = true
         hasFinalModifier = false
-        packagePrivate = isFieldPackagePrivate(viewAttributeElement)
+        isPackagePrivate = isFieldPackagePrivate(viewAttributeElement)
         isGenerated = true
 
         useInHash = !options.contains(Option.DoNotHash)
@@ -100,7 +104,7 @@ internal class ViewAttributeInfo(
         generateStringOverloads = options.contains(Option.GenerateStringOverloads)
 
         modelName = modelInfo.generatedName.simpleName()
-        modelPackageName = modelInfo.generatedClassName.packageName()
+        packageName = modelInfo.generatedClassName.packageName()
 
         this.viewAttributeName = viewAttributeElement.simpleName.toString()
         propName = removeSetPrefix(viewAttributeName)
@@ -111,25 +115,33 @@ internal class ViewAttributeInfo(
 
         // TODO: (eli_hart 9/26/17) Get the javadoc on the super method if this setter overrides
         // something and doesn't have its own javadoc
-        createJavaDoc(elements.getDocComment(viewAttributeElement), codeToSetDefault,
-                      constantFieldNameForDefaultValue,
-                      modelInfo.viewElement, typeMirror, viewAttributeName)
+        createJavaDoc(
+            elements.getDocComment(viewAttributeElement), codeToSetDefault,
+            constantFieldNameForDefaultValue,
+            modelInfo.viewElement, typeMirror, viewAttributeName
+        )
 
         validatePropOptions(errorLogger, options, types, elements)
 
         if (generateStringOverloads) {
-            typeMirror = getTypeMirror(ClassNames.EPOXY_STRING_ATTRIBUTE_DATA, elements,
-                                       types)
+            typeMirror = getTypeMirror(
+                ClassNames.EPOXY_STRING_ATTRIBUTE_DATA, elements,
+                types
+            )
 
             if (codeToSetDefault.isPresent) {
                 if (codeToSetDefault.explicit != null) {
-                    codeToSetDefault.explicit = CodeBlock.of(" new \$T(\$L)", typeMirror,
-                                                             codeToSetDefault.explicit)
+                    codeToSetDefault.explicit = CodeBlock.of(
+                        " new \$T(\$L)", typeMirror,
+                        codeToSetDefault.explicit
+                    )
                 }
 
                 if (codeToSetDefault.implicit != null) {
-                    codeToSetDefault.implicit = CodeBlock.of(" new \$T(\$L)", typeMirror,
-                                                             codeToSetDefault.implicit)
+                    codeToSetDefault.implicit = CodeBlock.of(
+                        " new \$T(\$L)", typeMirror,
+                        codeToSetDefault.implicit
+                    )
                 }
             } else {
                 codeToSetDefault.implicit = CodeBlock.of(" new \$T()", typeMirror)
@@ -148,29 +160,32 @@ internal class ViewAttributeInfo(
         }
     }
 
-    internal override fun isRequired() =
+    override val isRequired
+        get() =
             if (generateStringOverloads) {
-                !isNullable && constantFieldNameForDefaultValue == null
+                !isNullable() && constantFieldNameForDefaultValue == null
             } else {
-                super.isRequired()
+                super.isRequired
             }
 
     private fun getViewAttributeType(
-            element: Element,
-            errorLogger: ErrorLogger
+        element: Element,
+        errorLogger: ErrorLogger
     ): ViewAttributeType? = when {
         element.kind == ElementKind.METHOD -> ViewAttributeType.Method
         element.kind == ElementKind.FIELD -> ViewAttributeType.Field
         else -> {
-            errorLogger.logError("Element must be either method or field (element: %s)",
-                                 element)
+            errorLogger.logError(
+                "Element must be either method or field (element: %s)",
+                element
+            )
             null
         }
     }
 
     private fun assignNullability(
-            paramElement: VariableElement,
-            typeMirror: TypeMirror
+        paramElement: VariableElement,
+        typeMirror: TypeMirror
     ) {
         if (isPrimitive) {
             return
@@ -187,17 +202,17 @@ internal class ViewAttributeInfo(
         }
     }
 
-    private fun isMarkedNullable(paramElement: VariableElement)
-            = paramElement.annotationMirrors.any {
-        // There are multiple packages/frameworks that define a Nullable annotation and we want to
-        // support all of them. We just check for a class named Nullable and ignore the package.
-        it.annotationType.asElement().simpleName.toString() == "Nullable"
-    }
+    private fun isMarkedNullable(paramElement: VariableElement) =
+        paramElement.annotationMirrors.any {
+            // There are multiple packages/frameworks that define a Nullable annotation and we want to
+            // support all of them. We just check for a class named Nullable and ignore the package.
+            it.annotationType.asElement().simpleName.toString() == "Nullable"
+        }
 
     private fun assignDefaultValue(
-            defaultConstant: String,
-            errorLogger: ErrorLogger,
-            types: Types
+        defaultConstant: String,
+        errorLogger: ErrorLogger,
+        types: Types
     ) {
 
         if (defaultConstant.isEmpty()) {
@@ -220,41 +235,47 @@ internal class ViewAttributeInfo(
         }
 
         errorLogger.logError(
-                "The default value for (%s#%s) could not be found. Expected a constant named '%s' in the " + "view class.",
-                modelInfo.viewElement.simpleName, viewAttributeName, defaultConstant)
+            "The default value for (%s#%s) could not be found. Expected a constant named '%s' in the " + "view class.",
+            modelInfo.viewElement.simpleName, viewAttributeName, defaultConstant
+        )
     }
 
     private fun checkElementForConstant(
-            element: Element,
-            constantName: String,
-            types: Types,
-            errorLogger: ErrorLogger
+        element: Element,
+        constantName: String,
+        types: Types,
+        errorLogger: ErrorLogger
     ): Boolean {
         if (element.kind == ElementKind.FIELD && element.simpleName.toString() == constantName) {
 
             val modifiers = element.modifiers
             if (!modifiers.contains(Modifier.FINAL)
-                    || !modifiers.contains(Modifier.STATIC)
-                    || modifiers.contains(Modifier.PRIVATE)) {
+                || !modifiers.contains(Modifier.STATIC)
+                || modifiers.contains(Modifier.PRIVATE)
+            ) {
 
                 errorLogger.logError(
-                        "Default values for view props must be static, final, and not private. (%s#%s)",
-                        modelInfo.viewElement.simpleName, viewAttributeName)
+                    "Default values for view props must be static, final, and not private. (%s#%s)",
+                    modelInfo.viewElement.simpleName, viewAttributeName
+                )
                 return true
             }
 
             // Make sure that the type of the default value is a valid type for the prop
             if (!types.isAssignable(element.asType(), typeMirror)) {
                 errorLogger.logError(
-                        "The default value for (%s#%s) must be a %s.",
-                        modelInfo.viewElement.simpleName, viewAttributeName, typeMirror)
+                    "The default value for (%s#%s) must be a %s.",
+                    modelInfo.viewElement.simpleName, viewAttributeName, typeMirror
+                )
                 return true
             }
             constantFieldNameForDefaultValue = constantName
 
-            codeToSetDefault.explicit = CodeBlock.of("\$T.\$L",
-                                                     ClassName.get(modelInfo.viewElement),
-                                                     constantName)
+            codeToSetDefault.explicit = CodeBlock.of(
+                "\$T.\$L",
+                ClassName.get(modelInfo.viewElement),
+                constantName
+            )
 
             return true
         }
@@ -263,30 +284,37 @@ internal class ViewAttributeInfo(
     }
 
     private fun validatePropOptions(
-            errorLogger: ErrorLogger,
-            options: Set<Option>,
-            types: Types,
-            elements: Elements
+        errorLogger: ErrorLogger,
+        options: Set<Option>,
+        types: Types,
+        elements: Elements
     ) {
         if (options.contains(Option.IgnoreRequireHashCode) && options.contains(Option.DoNotHash)) {
             errorLogger
-                    .logError("Illegal to use both %s and %s options in an %s annotation. (%s#%s)",
-                              Option.DoNotHash, Option.IgnoreRequireHashCode,
-                              ModelProp::class.java.simpleName, modelName, viewAttributeName)
+                .logError(
+                    "Illegal to use both %s and %s options in an %s annotation. (%s#%s)",
+                    Option.DoNotHash, Option.IgnoreRequireHashCode,
+                    ModelProp::class.java.simpleName, modelName, viewAttributeName
+                )
         }
 
         if (options.contains(Option.GenerateStringOverloads) && !types.isAssignable(
-                getTypeMirror(CharSequence::class.java, elements), typeMirror)) {
+                getTypeMirror(CharSequence::class.java, elements), typeMirror
+            )
+        ) {
             errorLogger
-                    .logError("Setters with %s option must be a CharSequence. (%s#%s)",
-                              Option.GenerateStringOverloads, modelName, viewAttributeName)
+                .logError(
+                    "Setters with %s option must be a CharSequence. (%s#%s)",
+                    Option.GenerateStringOverloads, modelName, viewAttributeName
+                )
         }
 
-        if (options.contains(Option.NullOnRecycle) && (!hasSetNullability() || !isNullable)) {
+        if (options.contains(Option.NullOnRecycle) && (!hasSetNullability() || !isNullable())) {
             errorLogger
-                    .logError(
-                            "Setters with %s option must have a type that is annotated with @Nullable. (%s#%s)",
-                            Option.NullOnRecycle, modelName, viewAttributeName)
+                .logError(
+                    "Setters with %s option must have a type that is annotated with @Nullable. (%s#%s)",
+                    Option.NullOnRecycle, modelName, viewAttributeName
+                )
         }
     }
 
@@ -307,14 +335,15 @@ internal class ViewAttributeInfo(
     }
 
     private fun parseAnnotations(
-            paramElement: VariableElement,
-            types: Types,
-            markedNullable: Boolean,
-            typeName: TypeName
+        paramElement: VariableElement,
+        types: Types,
+        markedNullable: Boolean,
+        typeName: TypeName
     ) {
         for (annotationMirror in paramElement.annotationMirrors) {
             val annotationType = types.asElement(
-                    annotationMirror.annotationType) as? TypeElement ?: continue
+                annotationMirror.annotationType
+            ) as? TypeElement ?: continue
 
             val elementClassName = ClassName.get(annotationType)
 
@@ -325,7 +354,7 @@ internal class ViewAttributeInfo(
             val builder = AnnotationSpec.builder(elementClassName)
 
             for ((key, value) in annotationMirror
-                    .elementValues) {
+                .elementValues) {
                 val paramName = key.simpleName.toString()
                 val paramValue = value.value.toString()
                 builder.addMember(paramName, paramValue)
@@ -341,21 +370,22 @@ internal class ViewAttributeInfo(
         // nullability tooling since we know epoxy will enforce that the param value is
         // non null at run time.
         if (!typeName.isPrimitive
-                && !markedNullable
-                && NON_NULL_ANNOTATION_SPEC !in setterAnnotations
-                && NOT_NULL_ANNOTATION_SPEC !in setterAnnotations) {
+            && !markedNullable
+            && NON_NULL_ANNOTATION_SPEC !in setterAnnotations
+            && NOT_NULL_ANNOTATION_SPEC !in setterAnnotations
+        ) {
             setterAnnotations.add(NON_NULL_ANNOTATION_SPEC)
             getterAnnotations.add(NON_NULL_ANNOTATION_SPEC)
         }
     }
 
     private fun createJavaDoc(
-            docComment: String?,
-            codeToSetDefault: AttributeInfo.DefaultValue,
-            constantFieldNameForDefaultValue: String?,
-            viewElement: TypeElement,
-            typeMirror: TypeMirror,
-            viewAttributeName: String
+        docComment: String?,
+        codeToSetDefault: AttributeInfo.DefaultValue,
+        constantFieldNameForDefaultValue: String?,
+        viewElement: TypeElement,
+        typeMirror: TypeMirror,
+        viewAttributeName: String
     ) {
         setJavaDocString(docComment)
 
@@ -363,9 +393,9 @@ internal class ViewAttributeInfo(
             javaDoc = CodeBlock.of("")
         }
 
-        val builder = javaDoc.toBuilder()
+        val builder = javaDoc!!.toBuilder()
 
-        if (!javaDoc.isEmpty) {
+        if (!javaDoc!!.isEmpty) {
             builder.add("\n<p>\n")
         }
 
@@ -376,25 +406,29 @@ internal class ViewAttributeInfo(
             if (constantFieldNameForDefaultValue == null) {
                 builder.add("Default value is \$L", codeToSetDefault.value())
             } else {
-                builder.add("Default value is <b>{@value \$T#\$L}</b>", ClassName.get(viewElement),
-                            constantFieldNameForDefaultValue)
+                builder.add(
+                    "Default value is <b>{@value \$T#\$L}</b>", ClassName.get(viewElement),
+                    constantFieldNameForDefaultValue
+                )
             }
         }
 
         if (viewAttributeTypeName == ViewAttributeType.Field) {
             builder.add("\n\n@see \$T#\$L", viewElement.asType(), viewAttributeName)
         } else {
-            builder.add("\n\n@see \$T#\$L(\$T)", viewElement.asType(), viewAttributeName,
-                        typeMirror)
+            builder.add(
+                "\n\n@see \$T#\$L(\$T)", viewElement.asType(), viewAttributeName,
+                typeMirror
+            )
         }
 
         javaDoc = builder
-                .add("\n").build()
+            .add("\n").build()
     }
 
-    internal override fun generatedSetterName(): String = propName
+    override fun generatedSetterName(): String = propName
 
-    internal override fun generatedGetterName(): String {
+    override fun generatedGetterName(): String {
         if (isOverload) {
             // Avoid method name collisions for overloaded method by appending the return type
             return propName + getSimpleName(typeName)!!

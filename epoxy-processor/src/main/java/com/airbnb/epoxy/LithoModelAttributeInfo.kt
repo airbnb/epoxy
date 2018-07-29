@@ -11,13 +11,13 @@ internal class LithoModelAttributeInfo(
         fieldName = propElement.simpleName.toString()
         typeMirror = propElement.asType()
         modelName = lithoModelInfo.generatedName.simpleName()
-        modelPackageName = lithoModelInfo.generatedClassName.packageName()
+        packageName = lithoModelInfo.generatedClassName.packageName()
         useInHash = hashCodeValidator.implementsHashCodeAndEquals(typeMirror)
         ignoreRequireHashCode = false
         generateSetter = true
         generateGetter = true
         hasFinalModifier = false
-        packagePrivate = false
+        isPackagePrivate = false
         isGenerated = true
     }
 }

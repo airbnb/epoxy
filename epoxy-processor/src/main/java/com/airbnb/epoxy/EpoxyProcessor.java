@@ -222,8 +222,8 @@ public class EpoxyProcessor extends AbstractProcessor {
     for (GeneratedModelInfo generatedClass : generatedClasses) {
       for (AttributeInfo attributeInfo : generatedClass.getAttributeInfo()) {
         if (configManager.requiresHashCode(attributeInfo)
-            && attributeInfo.useInHash()
-            && !attributeInfo.ignoreRequireHashCode()) {
+            && attributeInfo.getUseInHash()
+            && !attributeInfo.getIgnoreRequireHashCode()) {
 
           try {
             hashCodeValidator.validate(attributeInfo);

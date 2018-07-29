@@ -315,14 +315,14 @@ abstract class GeneratedModelInfo {
 
     AttributeInfo defaultAttribute = null;
     for (AttributeInfo attribute : attributes) {
-      if (attribute.isRequired() || attribute.codeToSetDefault.isEmpty()) {
+      if (attribute.isRequired() || attribute.getCodeToSetDefault().isEmpty()) {
         continue;
       }
 
       boolean hasSetExplicitDefault =
-          defaultAttribute != null && defaultAttribute.codeToSetDefault.explicit != null;
+          defaultAttribute != null && defaultAttribute.getCodeToSetDefault().getExplicit() != null;
 
-      if (hasSetExplicitDefault && attribute.codeToSetDefault.explicit != null) {
+      if (hasSetExplicitDefault && attribute.getCodeToSetDefault().getExplicit() != null) {
         throw buildEpoxyException(
             "Only one default value can exist for a group of attributes: " + attributes);
       }
@@ -337,7 +337,7 @@ abstract class GeneratedModelInfo {
       // is a nullable object and a primitive in a group, the default value will be to null out the
       // object.
       if (defaultAttribute == null
-          || attribute.codeToSetDefault.explicit != null
+          || attribute.getCodeToSetDefault().getExplicit() != null
           || attribute.hasSetNullability()) {
         defaultAttribute = attribute;
       }
@@ -362,7 +362,7 @@ abstract class GeneratedModelInfo {
         throw buildEpoxyException("Attributes cannot be empty");
       }
 
-      if (defaultAttribute != null && defaultAttribute.codeToSetDefault.isEmpty()) {
+      if (defaultAttribute != null && defaultAttribute.getCodeToSetDefault().isEmpty()) {
         throw buildEpoxyException("Default attribute has no default code");
       }
 
@@ -373,11 +373,11 @@ abstract class GeneratedModelInfo {
     }
 
     CodeBlock codeToSetDefaultValue() {
-      if (defaultAttribute == null || defaultAttribute.codeToSetDefault.isEmpty()) {
+      if (defaultAttribute == null || defaultAttribute.getCodeToSetDefault().isEmpty()) {
         throw new IllegalStateException("No default value exists");
       }
 
-      return CodeBlock.of(defaultAttribute.setterCode(), defaultAttribute.codeToSetDefault.value());
+      return CodeBlock.of(defaultAttribute.setterCode(), defaultAttribute.getCodeToSetDefault().value());
     }
   }
 }
