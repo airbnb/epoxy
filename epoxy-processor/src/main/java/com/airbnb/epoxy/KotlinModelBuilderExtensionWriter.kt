@@ -71,7 +71,7 @@ internal class KotlinModelBuilderExtensionWriter(
         // This prevents the generated file from causing errors for using deprecated classes.
         fileBuilder.addAnnotation(
             AnnotationSpec.builder(Suppress::class)
-                .addMember("%S", "Deprecated")
+                .addMember("%S", "DEPRECATION")
                 .build()
         )
 
