@@ -455,29 +455,34 @@ internal class GeneratedModelWriter(
             methods.add(buildBindWithDiffMethod(modelInfo, boundObjectParam))
         }
 
-        val postBindBuilder = MethodSpec.methodBuilder("handlePostBind")
-            .addModifiers(PUBLIC)
-            .addAnnotation(Override::class.java)
-            .addParameter(boundObjectParam)
-            .addParameter(TypeName.INT, "position")
-            .beginControlFlow("if (\$L != null)", modelBindListenerFieldName())
-            .addStatement(
+        val postBind = buildMethod("handlePostBind") {
+            addModifiers(PUBLIC)
+            addAnnotation(Override::class.java)
+            addParameter(boundObjectParam)
+            addParameter(TypeName.INT, "position")
+
+            if (modelInfo.isSuperClassAlsoGenerated) {
+                // If a super class is also generated we need to make sure to call through to these
+                // methods on it as well. This is particularly important for EpoxyModelGroup.
+                addStatement("super.handlePostBind(\$L, position)", boundObjectParam.name)
+            }
+
+            beginControlFlow("if (\$L != null)", modelBindListenerFieldName())
+            addStatement(
                 "\$L.onModelBound(this, object, position)",
                 modelBindListenerFieldName()
             )
-            .endControlFlow()
+            endControlFlow()
 
-        addHashCodeValidationIfNecessary(
-            postBindBuilder,
-            "The model was changed during the bind call."
-        )
+            addHashCodeValidationIfNecessary(
+                this,
+                "The model was changed during the bind call."
+            )
 
-        builderHooks?.addToHandlePostBindMethod(postBindBuilder, boundObjectParam)
+            builderHooks?.addToHandlePostBindMethod(this, boundObjectParam)
+        }
 
-        methods.add(
-            postBindBuilder
-                .build()
-        )
+        methods.add(postBind)
 
         val onBindListenerType = ParameterizedTypeName.get(
             getClassName(ON_BIND_MODEL_LISTENER_TYPE),
@@ -640,6 +645,17 @@ internal class GeneratedModelWriter(
             .addParameter(viewHolderParam)
             .addParameter(boundObjectParam)
             .addParameter(TypeName.INT, positionParamName, Modifier.FINAL)
+
+        if (modelInfo.isSuperClassAlsoGenerated) {
+            // If a super class is also generated we need to make sure to call through to these
+            // methods on it as well. This is particularly important for EpoxyModelGroup.
+            preBindBuilder.addStatement(
+                "super.handlePreBind(\$L, \$L, \$L)",
+                viewHolderParam.name,
+                boundObjectParam.name,
+                positionParamName
+            )
+        }
 
         addHashCodeValidationIfNecessary(
             preBindBuilder,

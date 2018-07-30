@@ -34,6 +34,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
 import static com.airbnb.epoxy.Utils.buildEpoxyException;
+import static com.airbnb.epoxy.Utils.isSubtypeOfType;
 
 abstract class GeneratedModelInfo {
   private static final String RESET_METHOD = "reset";
@@ -241,6 +242,14 @@ abstract class GeneratedModelInfo {
       }
     }
     return false;
+  }
+
+  /**
+   * @return True if the super class of this generated model is also extended from a generated
+   * model.
+   */
+  public boolean isSuperClassAlsoGenerated() {
+    return isSubtypeOfType(superClassElement.asType(), "com.airbnb.epoxy.GeneratedModel<?>");
   }
 
   static class ConstructorInfo {
