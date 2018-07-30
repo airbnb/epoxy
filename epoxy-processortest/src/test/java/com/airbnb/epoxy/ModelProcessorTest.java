@@ -357,4 +357,9 @@ public class ModelProcessorTest {
   public void testModelBuilderInterface() {
     assertGeneration("ModelWithAllFieldTypes.java", "ModelWithAllFieldTypesBuilder.java");
   }
+
+  @Test
+  public void generatedEpoxyModelGroup() {
+    assertGeneration("EpoxyModelGroupWithAnnotations.java", "EpoxyModelGroupWithAnnotations_.java");
+  }
 }
