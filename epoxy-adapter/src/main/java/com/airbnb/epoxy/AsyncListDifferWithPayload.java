@@ -1,7 +1,6 @@
 package com.airbnb.epoxy;
 
 import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
@@ -11,7 +10,6 @@ import android.support.v7.util.ListUpdateCallback;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * An adaptation of Google's {@link android.support.v7.recyclerview.extensions.AsyncListDiffer}
@@ -20,13 +18,17 @@ import java.util.concurrent.Executors;
  * Also adds support for canceling an in progress diff.
  */
 class AsyncListDifferWithPayload<T> {
-  private static final Executor DIFF_EXECUTOR = Executors.newFixedThreadPool(2);
-  private static final Executor MAIN_THREAD_EXECUTOR = new MainThreadExecutor();
+
+  private final Executor executor;
   private final ListUpdateCallback updateCallback;
   private final ItemCallback<T> diffCallback;
 
-  AsyncListDifferWithPayload(@NonNull ListUpdateCallback listUpdateCallback,
-      @NonNull DiffUtil.ItemCallback<T> diffCallback) {
+  AsyncListDifferWithPayload(
+      @NonNull Handler handler,
+      @NonNull ListUpdateCallback listUpdateCallback,
+      @NonNull ItemCallback<T> diffCallback
+  ) {
+    this.executor = new HandlerExecutor(handler);
     updateCallback = listUpdateCallback;
     this.diffCallback = diffCallback;
   }
@@ -72,7 +74,7 @@ class AsyncListDifferWithPayload<T> {
     return diffInProgress;
   }
 
-  public boolean  isDiffInProgress() {
+  public boolean isDiffInProgress() {
     return maxScheduledGeneration > maxFinishedGeneration;
   }
 
@@ -123,12 +125,12 @@ class AsyncListDifferWithPayload<T> {
 
     final DiffCallback<T> wrappedCallback = new DiffCallback<>(list, newList, diffCallback);
 
-    DIFF_EXECUTOR.execute(new Runnable() {
+    executor.execute(new Runnable() {
       @Override
       public void run() {
         final DiffUtil.DiffResult result = DiffUtil.calculateDiff(wrappedCallback);
 
-        MAIN_THREAD_EXECUTOR.execute(new Runnable() {
+        MainThreadExecutor.INSTANCE.execute(new Runnable() {
           @Override
           public void run() {
             if (maxScheduledGeneration == runGeneration && runGeneration > maxFinishedGeneration) {
@@ -149,15 +151,6 @@ class AsyncListDifferWithPayload<T> {
       readOnlyList = Collections.emptyList();
     } else {
       readOnlyList = Collections.unmodifiableList(newList);
-    }
-  }
-
-  private static class MainThreadExecutor implements Executor {
-    final Handler handler = new Handler(Looper.getMainLooper());
-
-    @Override
-    public void execute(@NonNull Runnable command) {
-      handler.post(command);
     }
   }
 

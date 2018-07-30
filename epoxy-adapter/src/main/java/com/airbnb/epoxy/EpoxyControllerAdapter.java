@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
@@ -8,18 +9,21 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
   private final NotifyBlocker notifyBlocker = new NotifyBlocker(this);
-  private final AsyncListDifferWithPayload<EpoxyModel<?>> differ = new AsyncListDifferWithPayload<>(
-      notifyBlocker,
-      ITEM_CALLBACK
-  );
+  private final AsyncListDifferWithPayload<EpoxyModel<?>> differ;
   private final EpoxyController epoxyController;
   private int itemCount;
 
-  EpoxyControllerAdapter(@NonNull EpoxyController epoxyController) {
+  EpoxyControllerAdapter(@NonNull EpoxyController epoxyController, Handler diffingHandler) {
     this.epoxyController = epoxyController;
+    differ = new AsyncListDifferWithPayload<>(
+        diffingHandler,
+        notifyBlocker,
+        ITEM_CALLBACK
+    );
     registerAdapterDataObserver(notifyBlocker);
   }
 

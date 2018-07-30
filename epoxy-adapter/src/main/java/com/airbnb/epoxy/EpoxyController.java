@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.concurrent.Executor;
 
 import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
 
@@ -40,6 +41,9 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
  */
 public abstract class EpoxyController {
 
+  public static Handler DEFAULT_MODEL_BUILDING_HANDLER = MainThreadExecutor.INSTANCE.handler;
+  public static Handler DEFAULT_DIFFING_HANDLER = MainThreadExecutor.INSTANCE.handler;
+
   private static final Timer NO_OP_TIMER = new NoOpTimer();
   private static boolean filterDuplicatesDefault = false;
   private static boolean globalDebugLoggingEnabled = false;
@@ -53,9 +57,9 @@ public abstract class EpoxyController {
    */
   private static final int DELAY_TO_CHECK_ADAPTER_COUNT_MS = 3000;
 
-  private final EpoxyControllerAdapter adapter = new EpoxyControllerAdapter(this);
+  private final EpoxyControllerAdapter adapter;
+  private final Handler modelBuildHandler;
   private final ControllerHelper helper = getHelperForController(this);
-  private final Handler handler = new Handler(Looper.getMainLooper());
   private final List<Interceptor> interceptors = new ArrayList<>();
   private ControllerModelList modelsBeingBuilt;
   private boolean filterDuplicates = filterDuplicatesDefault;
@@ -68,7 +72,13 @@ public abstract class EpoxyController {
   private EpoxyModel<?> stagedModel;
 
   public EpoxyController() {
+    this(DEFAULT_MODEL_BUILDING_HANDLER, DEFAULT_DIFFING_HANDLER);
+  }
+
+  public EpoxyController(Handler modelBuildingHandler, Handler diffingHandler) {
     setDebugLoggingEnabled(globalDebugLoggingEnabled);
+    modelBuildHandler = modelBuildingHandler;
+    adapter = new EpoxyControllerAdapter(this, diffingHandler);
   }
 
   /**
@@ -78,7 +88,7 @@ public abstract class EpoxyController {
    * we track whether we have a call to build models posted already so we can avoid canceling a
    * current call and posting it again.
    */
-  @RequestedModelBuildType private int requestedModelBuildType = RequestedModelBuildType.NONE;
+  @RequestedModelBuildType private volatile int requestedModelBuildType = RequestedModelBuildType.NONE;
 
   @Retention(RetentionPolicy.SOURCE)
   @IntDef({RequestedModelBuildType.NONE,
@@ -153,7 +163,7 @@ public abstract class EpoxyController {
     requestedModelBuildType =
         delayMs == 0 ? RequestedModelBuildType.NEXT_FRAME : RequestedModelBuildType.DELAYED;
 
-    handler.postDelayed(buildModelsRunnable, delayMs);
+    modelBuildHandler.postDelayed(buildModelsRunnable, delayMs);
   }
 
   /**
@@ -163,7 +173,7 @@ public abstract class EpoxyController {
   public void cancelPendingModelBuild() {
     if (requestedModelBuildType != RequestedModelBuildType.NONE) {
       requestedModelBuildType = RequestedModelBuildType.NONE;
-      handler.removeCallbacks(buildModelsRunnable);
+      modelBuildHandler.removeCallbacks(buildModelsRunnable);
     }
   }
 
@@ -681,7 +691,7 @@ public abstract class EpoxyController {
     recyclerViewAttachCount++;
 
     if (recyclerViewAttachCount > 1) {
-      handler.postDelayed(new Runnable() {
+      MainThreadExecutor.INSTANCE.handler.postDelayed(new Runnable() {
         @Override
         public void run() {
           // Only warn if there are still multiple adapters attached after a delay, to allow for

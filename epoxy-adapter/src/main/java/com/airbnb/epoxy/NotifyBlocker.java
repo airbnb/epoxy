@@ -61,6 +61,8 @@ class NotifyBlocker extends AdapterDataObserver implements ListUpdateCallback {
     onChanged();
   }
 
+  // These methods are called from the differ and allow notifications to go through to the adapter
+
   /** {@inheritDoc} */
   @Override
   public void onInserted(int position, int count) {
