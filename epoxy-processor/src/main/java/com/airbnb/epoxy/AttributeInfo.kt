@@ -9,7 +9,6 @@ import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.TypeName
-import com.squareup.kotlinpoet.asTypeName
 import javax.lang.model.type.TypeKind
 import javax.lang.model.type.TypeMirror
 
@@ -122,22 +121,28 @@ internal abstract class AttributeInfo {
         get() = typeMirror.kind == TypeKind.DOUBLE
 
     val isDrawableRes: Boolean
-        get() {
-            if (isInt) {
-                for (annotation in setterAnnotations) {
-                    if (annotation.type is ClassName) {
-                        val annotationSimpleName = (annotation.type as ClassName).simpleName()
-                        if (annotationSimpleName == "DrawableRes") {
-                            return true
-                        }
-                    }
+        get() = isInt && hasAnnotation("DrawableRes")
+
+    val isRawRes: Boolean
+        get() = isInt && hasAnnotation("RawRes")
+
+    private fun hasAnnotation(annotationSimpleName: String): Boolean {
+        for (annotation in setterAnnotations) {
+            if (annotation.type is ClassName) {
+                val otherAnnotationSimpleName = (annotation.type as ClassName).simpleName()
+                if (annotationSimpleName == otherAnnotationSimpleName) {
+                    return true
                 }
             }
-            return false
         }
+        return false
+    }
 
     val isInt: Boolean
         get() = typeMirror.kind == TypeKind.INT
+
+    val isLong: Boolean
+        get() = typeMirror.kind == TypeKind.LONG
 
     val isStringAttributeData: Boolean
         get() = Utils.isType(typeMirror, ClassNames.EPOXY_STRING_ATTRIBUTE_DATA)

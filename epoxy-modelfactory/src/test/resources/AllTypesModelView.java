@@ -1,8 +1,8 @@
 package com.airbnb.epoxy;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.RawRes;
 import android.widget.FrameLayout;
 
 import com.airbnb.epoxy.ModelProp.Option;
@@ -46,8 +46,18 @@ public class AllTypesModelView extends FrameLayout {
 
   }
 
+  @ModelProp
+  public void setLongValue(long value) {
+
+  }
+
   @ModelProp({ Option.DoNotHash })
   public void setOnClickListener(OnClickListener value) {
+
+  }
+
+  @ModelProp
+  public void setRawRes(@RawRes int value) {
 
   }
 

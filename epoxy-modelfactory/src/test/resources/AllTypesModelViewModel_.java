@@ -4,6 +4,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RawRes;
 import android.view.View;
 import java.lang.CharSequence;
 import java.lang.IllegalArgumentException;
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * Generated file. Do not modify! */
 public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> implements GeneratedModel<AllTypesModelView>, AllTypesModelViewModelBuilder {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(9);
+  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(11);
 
   private OnModelBoundListener<AllTypesModelViewModel_, AllTypesModelView> onModelBoundListener_epoxyGeneratedModel;
 
@@ -53,16 +54,25 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
 
   /**
    * Bitset index: 6 */
-  @NonNull
-  private View.OnClickListener onClickListener_OnClickListener;
+  private long longValue_Long = 0L;
 
   /**
    * Bitset index: 7 */
   @NonNull
-  private String stringValue_String;
+  private View.OnClickListener onClickListener_OnClickListener;
 
   /**
    * Bitset index: 8 */
+  @RawRes
+  private int rawRes_Int = 0;
+
+  /**
+   * Bitset index: 9 */
+  @NonNull
+  private String stringValue_String;
+
+  /**
+   * Bitset index: 10 */
   @NonNull
   private List<String> stringList_List;
 
@@ -70,10 +80,10 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   public void addTo(EpoxyController controller) {
     super.addTo(controller);
     addWithDebugValidation(controller);
-    if (!assignedAttributes_epoxyGeneratedModel.get(7)) {
+    if (!assignedAttributes_epoxyGeneratedModel.get(9)) {
     	throw new IllegalStateException("A value is required for setStringValue");
     }
-    if (!assignedAttributes_epoxyGeneratedModel.get(6)) {
+    if (!assignedAttributes_epoxyGeneratedModel.get(7)) {
     	throw new IllegalStateException("A value is required for setOnClickListener");
     }
     if (!assignedAttributes_epoxyGeneratedModel.get(4)) {
@@ -82,7 +92,7 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     if (!assignedAttributes_epoxyGeneratedModel.get(1)) {
     	throw new IllegalStateException("A value is required for setCharSequenceValue");
     }
-    if (!assignedAttributes_epoxyGeneratedModel.get(8)) {
+    if (!assignedAttributes_epoxyGeneratedModel.get(10)) {
     	throw new IllegalStateException("A value is required for setStringList");
     }
   }
@@ -102,8 +112,10 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     object.setBooleanValue(booleanValue_Boolean);
     object.setDrawableRes(drawableRes_Int);
     object.setDoubleValue(doubleValue_Double);
+    object.setRawRes(rawRes_Int);
     object.setEpoxyModelList(epoxyModelList_List);
     object.setCharSequenceValue(charSequenceValue_CharSequence);
+    object.setLongValue(longValue_Long);
     object.setStringList(stringList_List);
   }
 
@@ -140,12 +152,20 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
       object.setDoubleValue(doubleValue_Double);
     }
 
+    if ((rawRes_Int != that.rawRes_Int)) {
+      object.setRawRes(rawRes_Int);
+    }
+
     if ((epoxyModelList_List != null ? !epoxyModelList_List.equals(that.epoxyModelList_List) : that.epoxyModelList_List != null)) {
       object.setEpoxyModelList(epoxyModelList_List);
     }
 
     if ((charSequenceValue_CharSequence != null ? !charSequenceValue_CharSequence.equals(that.charSequenceValue_CharSequence) : that.charSequenceValue_CharSequence != null)) {
       object.setCharSequenceValue(charSequenceValue_CharSequence);
+    }
+
+    if ((longValue_Long != that.longValue_Long)) {
+      object.setLongValue(longValue_Long);
     }
 
     if ((stringList_List != null ? !stringList_List.equals(that.stringList_List) : that.stringList_List != null)) {
@@ -301,9 +321,25 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   }
 
   /**
+   * <i>Optional</i>: Default value is 0L
+   *
+   * @see AllTypesModelView#setLongValue(long)
+   */
+  public AllTypesModelViewModel_ longValue(long longValue) {
+    assignedAttributes_epoxyGeneratedModel.set(6);
+    onMutation();
+    this.longValue_Long = longValue;
+    return this;
+  }
+
+  public long longValue() {
+    return longValue_Long;
+  }
+
+  /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
   public AllTypesModelViewModel_ onClickListener(@NonNull final OnModelClickListener<AllTypesModelViewModel_, AllTypesModelView> onClickListener) {
-    assignedAttributes_epoxyGeneratedModel.set(6);
+    assignedAttributes_epoxyGeneratedModel.set(7);
     onMutation();
     if (onClickListener == null) {
       this.onClickListener_OnClickListener = null;
@@ -323,7 +359,7 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     if (onClickListener == null) {
       throw new IllegalArgumentException("onClickListener cannot be null");
     }
-    assignedAttributes_epoxyGeneratedModel.set(6);
+    assignedAttributes_epoxyGeneratedModel.set(7);
     onMutation();
     this.onClickListener_OnClickListener = onClickListener;
     return this;
@@ -335,6 +371,23 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   }
 
   /**
+   * <i>Optional</i>: Default value is 0
+   *
+   * @see AllTypesModelView#setRawRes(int)
+   */
+  public AllTypesModelViewModel_ rawRes(@RawRes int rawRes) {
+    assignedAttributes_epoxyGeneratedModel.set(8);
+    onMutation();
+    this.rawRes_Int = rawRes;
+    return this;
+  }
+
+  @RawRes
+  public int rawRes() {
+    return rawRes_Int;
+  }
+
+  /**
    * <i>Required.</i>
    *
    * @see AllTypesModelView#setStringValue(String)
@@ -343,7 +396,7 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     if (stringValue == null) {
       throw new IllegalArgumentException("stringValue cannot be null");
     }
-    assignedAttributes_epoxyGeneratedModel.set(7);
+    assignedAttributes_epoxyGeneratedModel.set(9);
     onMutation();
     this.stringValue_String = stringValue;
     return this;
@@ -363,7 +416,7 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     if (stringList == null) {
       throw new IllegalArgumentException("stringList cannot be null");
     }
-    assignedAttributes_epoxyGeneratedModel.set(8);
+    assignedAttributes_epoxyGeneratedModel.set(10);
     onMutation();
     this.stringList_List = stringList;
     return this;
@@ -457,7 +510,9 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     this.drawableRes_Int = 0;
     this.epoxyModelList_List = null;
     this.intValue_Int = 0;
+    this.longValue_Long = 0L;
     this.onClickListener_OnClickListener = null;
+    this.rawRes_Int = 0;
     this.stringValue_String = null;
     this.stringList_List = null;
     super.reset();
@@ -500,7 +555,13 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     if ((intValue_Int != that.intValue_Int)) {
       return false;
     }
+    if ((longValue_Long != that.longValue_Long)) {
+      return false;
+    }
     if (((onClickListener_OnClickListener == null) != (that.onClickListener_OnClickListener == null))) {
+      return false;
+    }
+    if ((rawRes_Int != that.rawRes_Int)) {
       return false;
     }
     if ((stringValue_String != null ? !stringValue_String.equals(that.stringValue_String) : that.stringValue_String != null)) {
@@ -525,7 +586,9 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     result = 31 * result + drawableRes_Int;
     result = 31 * result + (epoxyModelList_List != null ? epoxyModelList_List.hashCode() : 0);
     result = 31 * result + intValue_Int;
+    result = 31 * result + (int) (longValue_Long ^ (longValue_Long >>> 32));
     result = 31 * result + (onClickListener_OnClickListener != null ? 1 : 0);
+    result = 31 * result + rawRes_Int;
     result = 31 * result + (stringValue_String != null ? stringValue_String.hashCode() : 0);
     result = 31 * result + (stringList_List != null ? stringList_List.hashCode() : 0);
     return result;
@@ -540,7 +603,9 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
         ", drawableRes_Int=" + drawableRes_Int +
         ", epoxyModelList_List=" + epoxyModelList_List +
         ", intValue_Int=" + intValue_Int +
+        ", longValue_Long=" + longValue_Long +
         ", onClickListener_OnClickListener=" + onClickListener_OnClickListener +
+        ", rawRes_Int=" + rawRes_Int +
         ", stringValue_String=" + stringValue_String +
         ", stringList_List=" + stringList_List +
         "}" + super.toString();
@@ -549,29 +614,35 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   public static AllTypesModelViewModel_ from(ModelProperties properties) {
     AllTypesModelViewModel_ model = new AllTypesModelViewModel_();
     model.id(properties.getId());
-    if (properties.has("stringValue")) {
-      model.stringValue(properties.getString("stringValue"));
-    }
-    if (properties.has("onClickListener")) {
-      model.onClickListener(properties.getOnClickListener("onClickListener"));
-    }
-    if (properties.has("intValue")) {
-      model.intValue(properties.getInt("intValue"));
-    }
     if (properties.has("booleanValue")) {
       model.booleanValue(properties.getBoolean("booleanValue"));
     }
-    if (properties.has("drawableRes")) {
-      model.drawableRes(properties.getDrawableRes("drawableRes"));
+    if (properties.has("charSequenceValue")) {
+      model.charSequenceValue(properties.getString("charSequenceValue"));
     }
     if (properties.has("doubleValue")) {
       model.doubleValue(properties.getDouble("doubleValue"));
     }
+    if (properties.has("drawableRes")) {
+      model.drawableRes(properties.getDrawableRes("drawableRes"));
+    }
     if (properties.has("epoxyModelList")) {
       model.epoxyModelList(properties.getEpoxyModelList("epoxyModelList"));
     }
-    if (properties.has("charSequenceValue")) {
-      model.charSequenceValue(properties.getString("charSequenceValue"));
+    if (properties.has("intValue")) {
+      model.intValue(properties.getInt("intValue"));
+    }
+    if (properties.has("longValue")) {
+      model.longValue(properties.getLong("longValue"));
+    }
+    if (properties.has("onClickListener")) {
+      model.onClickListener(properties.getOnClickListener("onClickListener"));
+    }
+    if (properties.has("rawRes")) {
+      model.rawRes(properties.getRawRes("rawRes"));
+    }
+    if (properties.has("stringValue")) {
+      model.stringValue(properties.getString("stringValue"));
     }
     if (properties.has("stringList")) {
       model.stringList(properties.getStringList("stringList"));

@@ -53,11 +53,25 @@ class FromModelPropertiesTest {
     }
 
     @Test
+    fun getLong() {
+        val model = TestModelPropertiesViewModel_.from(TestModelProperties(longValue = 3000000))
+        assertEquals(3000000, model.longValue())
+    }
+
+    @Test
     fun getOnClickListener() {
         val clickListener = View.OnClickListener { }
         val model =
             TestModelPropertiesViewModel_.from(TestModelProperties(onClickListener = clickListener))
         assertEquals(clickListener, model.onClickListener())
+    }
+
+    @Test
+    fun getRawRes() {
+        // We use an arbitrary int rather than adding a test-only raw resource, which isn't easy
+        val model =
+            TestModelPropertiesViewModel_.from(TestModelProperties(rawRes = 42))
+        assertEquals(42, model.rawRes())
     }
 
     @Test
@@ -81,11 +95,14 @@ class FromModelPropertiesTest {
         private val drawableRes: Int? = null,
         private val epoxyModelList: List<EpoxyModel<*>>? = null,
         private val intValue: Int? = null,
+        private val longValue: Long? = null,
         private val onClickListener: View.OnClickListener? = null,
+        private val rawRes: Int? = null,
         private val stringValue: String? = null,
         private val stringList: List<String>? = null,
         private val styleValue: Style? = null
     ) : ModelProperties {
+
         override fun getId() = id
 
         override fun has(propertyName: String): Boolean {
@@ -95,7 +112,9 @@ class FromModelPropertiesTest {
                 "drawableRes" to drawableRes,
                 "epoxyModelList" to epoxyModelList,
                 "intValue" to intValue,
+                "longValue" to longValue,
                 "onClickListener" to onClickListener,
+                "rawRes" to rawRes,
                 "stringList" to stringList,
                 "stringValue" to stringValue
             )[propertyName] != null
@@ -111,7 +130,11 @@ class FromModelPropertiesTest {
 
         override fun getInt(propertyName: String) = intValue!!
 
+        override fun getLong(propertyName: String) = longValue!!
+
         override fun getOnClickListener(propertyName: String) = onClickListener!!
+
+        override fun getRawRes(propertyName: String) = rawRes!!
 
         override fun getString(propertyName: String) = stringValue!!
 
