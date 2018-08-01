@@ -22,7 +22,17 @@ public class AllTypesModelView extends FrameLayout {
   }
 
   @ModelProp
+  public void setBoxedBooleanValue(Boolean value) {
+
+  }
+
+  @ModelProp
   public void setCharSequenceValue(CharSequence value) {
+
+  }
+
+  @ModelProp
+  public void setBoxedDoubleValue(Double value) {
 
   }
 
@@ -47,7 +57,17 @@ public class AllTypesModelView extends FrameLayout {
   }
 
   @ModelProp
+  public void setBoxedIntValue(Integer value) {
+
+  }
+
+  @ModelProp
   public void setLongValue(long value) {
+
+  }
+
+  @ModelProp
+  public void setBoxedLongValue(Long value) {
 
   }
 
