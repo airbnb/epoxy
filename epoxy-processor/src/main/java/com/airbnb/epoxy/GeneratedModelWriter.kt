@@ -1533,14 +1533,19 @@ internal class GeneratedModelWriter(
                         attributeInfo.isRawRes -> "getRawRes"
                         attributeInfo.isStringList -> "getStringList"
                         attributeInfo.isViewClickListener -> "getOnClickListener"
-                        else -> throw IllegalStateException("Missing ModelProperties method for a supported attribute type.")
+                        else -> {
+                            errorLogger.logError("Missing ModelProperties method for a supported attribute type.")
+                            null
+                        }
                     }
-                    addStatement(
-                        "model.\$N(properties.\$N(\$S))",
-                        setterName,
-                        jsonGetterName,
-                        setterName
-                    )
+                    jsonGetterName?.let {
+                        addStatement(
+                            "model.\$N(properties.\$N(\$S))",
+                            setterName,
+                            jsonGetterName,
+                            setterName
+                        )
+                    }
 
                     if (isEndOfGroup) {
                         endControlFlow()
