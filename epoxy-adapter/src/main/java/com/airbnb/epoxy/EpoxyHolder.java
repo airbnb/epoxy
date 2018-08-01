@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 
 /**
@@ -15,5 +16,5 @@ public abstract class EpoxyHolder {
    * @param itemView A view inflated from the layout provided by
    * {@link EpoxyModelWithHolder#getLayout()}
    */
-  protected abstract void bindView(View itemView);
+  protected abstract void bindView(@NonNull View itemView);
 }
