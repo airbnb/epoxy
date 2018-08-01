@@ -126,15 +126,10 @@ internal abstract class AttributeInfo {
         get() = isInt && hasAnnotation("RawRes")
 
     private fun hasAnnotation(annotationSimpleName: String): Boolean {
-        for (annotation in setterAnnotations) {
-            if (annotation.type is ClassName) {
-                val otherAnnotationSimpleName = (annotation.type as ClassName).simpleName()
-                if (annotationSimpleName == otherAnnotationSimpleName) {
-                    return true
-                }
-            }
-        }
-        return false
+        return setterAnnotations
+            .map { it.type }
+            .filterIsInstance<ClassName>()
+            .any { it.simpleName() == annotationSimpleName }
     }
 
     val isInt: Boolean
