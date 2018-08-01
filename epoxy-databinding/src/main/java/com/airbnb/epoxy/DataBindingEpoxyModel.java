@@ -106,7 +106,7 @@ public abstract class DataBindingEpoxyModel extends EpoxyModelWithHolder<DataBin
     }
 
     @Override
-    protected void bindView(View itemView) {
+    protected void bindView(@NonNull View itemView) {
       dataBinding = (ViewDataBinding) itemView.getTag();
     }
   }

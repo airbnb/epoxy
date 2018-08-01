@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 
 @EpoxyModelClass
@@ -14,7 +15,7 @@ public abstract class AbstractModelWithHolder
 
   static class Holder extends EpoxyHolder {
 
-    protected void bindView(View itemView) {
+    protected void bindView(@NonNull View itemView) {
 
     }
   }

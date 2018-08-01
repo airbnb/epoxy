@@ -327,7 +327,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
     }
 
     @Override
-    protected void bindView(View itemView) {
+    protected void bindView(@NonNull View itemView) {
       if (!(itemView instanceof ViewGroup)) {
         throw new IllegalStateException(
             "The layout provided to EpoxyModelGroup must be a ViewGroup");
