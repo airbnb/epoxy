@@ -5,6 +5,7 @@ import com.airbnb.epoxymodelfactory.R
 import com.airbnb.paris.styles.Style
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 /**
@@ -90,6 +91,12 @@ class FromModelPropertiesTest {
         val model =
             TestModelPropertiesViewModel_.from(TestModelProperties(onClickListener = clickListener))
         assertEquals(clickListener, model.onClickListener())
+    }
+
+    @Test
+    fun getNullOnClickListener() {
+        val model = TestModelPropertiesViewModel_.from(TestModelProperties(onClickListener = null))
+        assertNull(model.onClickListener())
     }
 
     @Test

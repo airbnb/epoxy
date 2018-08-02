@@ -24,23 +24,23 @@ public interface ModelProperties {
   @DrawableRes
   int getDrawableRes(@NonNull String propertyName);
 
-  @NonNull
+  @Nullable
   List<? extends EpoxyModel<?>> getEpoxyModelList(@NonNull String propertyName);
 
   int getInt(@NonNull String propertyName);
 
   long getLong(@NonNull String propertyName);
 
-  @NonNull
+  @Nullable
   OnClickListener getOnClickListener(@NonNull String propertyName);
 
   @RawRes
   int getRawRes(@NonNull String propertyName);
 
-  @NonNull
+  @Nullable
   String getString(@NonNull String propertyName);
 
-  @NonNull
+  @Nullable
   List<String> getStringList(@NonNull String propertyName);
 
   /**
