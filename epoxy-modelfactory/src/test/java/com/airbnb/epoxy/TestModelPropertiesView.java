@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.RawRes;
 import android.widget.FrameLayout;
 
 import com.airbnb.epoxy.ModelView.Size;
@@ -22,7 +23,17 @@ public class TestModelPropertiesView extends FrameLayout {
   }
 
   @ModelProp
+  public void setBoxedBooleanValue(Boolean value) {
+
+  }
+
+  @ModelProp
   public void setDoubleValue(double value) {
+
+  }
+
+  @ModelProp
+  public void setBoxedDoubleValue(Double value) {
 
   }
 
@@ -41,8 +52,28 @@ public class TestModelPropertiesView extends FrameLayout {
 
   }
 
+  @ModelProp
+  public void setBoxedIntValue(Integer value) {
+
+  }
+
+  @ModelProp
+  public void setLongValue(long value) {
+
+  }
+
+  @ModelProp
+  public void setBoxedLongValue(Long value) {
+
+  }
+
   @CallbackProp
   public void setOnClickListener(@Nullable OnClickListener value) {
+
+  }
+
+  @ModelProp
+  public void setRawRes(@RawRes int value) {
 
   }
 

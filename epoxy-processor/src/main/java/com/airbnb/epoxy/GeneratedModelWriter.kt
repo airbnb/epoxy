@@ -1454,16 +1454,20 @@ internal class GeneratedModelWriter(
             AttributeInfo::isDrawableRes,
             AttributeInfo::isEpoxyModelList,
             AttributeInfo::isInt,
+            AttributeInfo::isLong,
+            AttributeInfo::isRawRes,
             AttributeInfo::isStringList,
             AttributeInfo::isStringAttributeData,
             AttributeInfo::isViewClickListener
         )
         val supportedAttributeInfo = if (modelInfo.attributeGroups.isNotEmpty()) {
-            modelInfo.attributeGroups
+            modelInfo.attributeInfo
+                .groupBy { it.generatedSetterName() }
                 .mapNotNull {
-                    // Groups with multiple supported attribute types aren't supported because we
-                    // wouldn't know which type to choose from
-                    it.attributes.singleOrNull { attributeInfo ->
+                    // Amongst attributes with a supported type, we only include those that have a
+                    // unique name. This means that multiple attributes with the same name and
+                    // supported types are excluded, because we wouldn't know which one to use.
+                    it.value.singleOrNull { attributeInfo ->
                         attributeInfoConditions.any { it.invoke(attributeInfo) }
                     }
                 }
@@ -1494,28 +1498,59 @@ internal class GeneratedModelWriter(
 
             addStatement("model.id(properties.getId())")
 
-            for (attributeInfo in supportedWithSetterAttributeInfo) {
-                val setterName = attributeInfo.generatedSetterName()
-                beginControlFlow("if (properties.has(\$S))", setterName)
-                val jsonGetterName = when {
-                    attributeInfo.isBoolean -> "getBoolean"
-                    attributeInfo.isCharSequenceOrString
-                            || attributeInfo.isStringAttributeData -> "getString"
-                    attributeInfo.isDouble -> "getDouble"
-                    attributeInfo.isDrawableRes -> "getDrawableRes"
-                    attributeInfo.isEpoxyModelList -> "getEpoxyModelList"
-                    attributeInfo.isInt && !attributeInfo.isDrawableRes -> "getInt"
-                    attributeInfo.isStringList -> "getStringList"
-                    attributeInfo.isViewClickListener -> "getOnClickListener"
-                    else -> throw IllegalStateException("Missing ModelProperties method for a supported attribute type.")
+            // Groups attributes that are part of the same attribute group, others will be by
+            // themselves (at this point no two attributes should have the same generated setter
+            // name).
+            val supportedAttributeInfoGroups = supportedAttributeInfo.groupBy {
+                if (it.groupKey.isNullOrEmpty()) {
+                    it.generatedSetterName()
+                } else {
+                    it.groupKey
                 }
-                addStatement(
-                    "model.\$N(properties.\$N(\$S))",
-                    setterName,
-                    jsonGetterName,
-                    setterName
-                )
-                endControlFlow()
+            }
+
+            for ((_, attributeInfoGroup) in supportedAttributeInfoGroups) {
+                for ((index, attributeInfo) in attributeInfoGroup.withIndex()) {
+                    val setterName = attributeInfo.generatedSetterName()
+                    val isStartOfGroup = index == 0
+                    val isEndOfGroup = index == attributeInfoGroup.size - 1
+
+                    if (isStartOfGroup) {
+                        beginControlFlow("if (properties.has(\$S))", setterName)
+                    } else {
+                        nextControlFlow("else if (properties.has(\$S))", setterName)
+                    }
+
+                    val jsonGetterName = when {
+                        attributeInfo.isBoolean -> "getBoolean"
+                        attributeInfo.isCharSequenceOrString
+                                || attributeInfo.isStringAttributeData -> "getString"
+                        attributeInfo.isDouble -> "getDouble"
+                        attributeInfo.isDrawableRes -> "getDrawableRes"
+                        attributeInfo.isEpoxyModelList -> "getEpoxyModelList"
+                        attributeInfo.isInt && !attributeInfo.isDrawableRes && !attributeInfo.isRawRes -> "getInt"
+                        attributeInfo.isLong -> "getLong"
+                        attributeInfo.isRawRes -> "getRawRes"
+                        attributeInfo.isStringList -> "getStringList"
+                        attributeInfo.isViewClickListener -> "getOnClickListener"
+                        else -> {
+                            errorLogger.logError("Missing ModelProperties method for a supported attribute type.")
+                            null
+                        }
+                    }
+                    jsonGetterName?.let {
+                        addStatement(
+                            "model.\$N(properties.\$N(\$S))",
+                            setterName,
+                            jsonGetterName,
+                            setterName
+                        )
+                    }
+
+                    if (isEndOfGroup) {
+                        endControlFlow()
+                    }
+                }
             }
 
             if (modelInfo.isStyleable) {

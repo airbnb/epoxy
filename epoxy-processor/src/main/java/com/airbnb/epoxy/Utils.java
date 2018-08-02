@@ -115,6 +115,22 @@ class Utils {
     return isType(type, VIEW_LONG_CLICK_LISTENER_TYPE);
   }
 
+  static boolean isBooleanType(TypeMirror type) {
+    return type.getKind() == TypeKind.BOOLEAN || Utils.isType(type, "java.lang.Boolean");
+  }
+
+  static boolean isDoubleType(TypeMirror type) {
+    return type.getKind() == TypeKind.DOUBLE || Utils.isType(type, "java.lang.Double");
+  }
+
+  static boolean isIntType(TypeMirror type) {
+    return type.getKind() == TypeKind.INT || Utils.isType(type, "java.lang.Integer");
+  }
+
+  static boolean isLongType(TypeMirror type) {
+    return type.getKind() == TypeKind.LONG || Utils.isType(type, "java.lang.Long");
+  }
+
   static boolean isStringType(TypeMirror type) {
     return Utils.isType(type, "java.lang.String");
   }

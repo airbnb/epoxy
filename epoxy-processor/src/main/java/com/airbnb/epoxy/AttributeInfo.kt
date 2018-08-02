@@ -9,8 +9,6 @@ import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.TypeName
-import com.squareup.kotlinpoet.asTypeName
-import javax.lang.model.type.TypeKind
 import javax.lang.model.type.TypeMirror
 
 internal abstract class AttributeInfo {
@@ -107,7 +105,7 @@ internal abstract class AttributeInfo {
         get() = isViewLongClickListenerType(typeMirror)
 
     val isBoolean: Boolean
-        get() = typeMirror.kind == TypeKind.BOOLEAN
+        get() = Utils.isBooleanType(typeMirror)
 
     val isCharSequenceOrString: Boolean
         get() = Utils.isCharSequenceOrStringType(typeMirror)
@@ -119,25 +117,26 @@ internal abstract class AttributeInfo {
         get() = Utils.isListOfType(typeMirror, "? extends $EPOXY_MODEL_TYPE")
 
     val isDouble: Boolean
-        get() = typeMirror.kind == TypeKind.DOUBLE
+        get() = Utils.isDoubleType(typeMirror)
 
     val isDrawableRes: Boolean
-        get() {
-            if (isInt) {
-                for (annotation in setterAnnotations) {
-                    if (annotation.type is ClassName) {
-                        val annotationSimpleName = (annotation.type as ClassName).simpleName()
-                        if (annotationSimpleName == "DrawableRes") {
-                            return true
-                        }
-                    }
-                }
-            }
-            return false
-        }
+        get() = isInt && hasAnnotation("DrawableRes")
+
+    val isRawRes: Boolean
+        get() = isInt && hasAnnotation("RawRes")
+
+    private fun hasAnnotation(annotationSimpleName: String): Boolean {
+        return setterAnnotations
+            .map { it.type }
+            .filterIsInstance<ClassName>()
+            .any { it.simpleName() == annotationSimpleName }
+    }
 
     val isInt: Boolean
-        get() = typeMirror.kind == TypeKind.INT
+        get() = Utils.isIntType(typeMirror)
+
+    val isLong: Boolean
+        get() = Utils.isLongType(typeMirror)
 
     val isStringAttributeData: Boolean
         get() = Utils.isType(typeMirror, ClassNames.EPOXY_STRING_ATTRIBUTE_DATA)

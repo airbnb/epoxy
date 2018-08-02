@@ -25,9 +25,22 @@ class FromModelPropertiesTest {
     }
 
     @Test
+    fun getBoxedBoolean() {
+        val model =
+            TestModelPropertiesViewModel_.from(TestModelProperties(boxedBooleanValue = true))
+        assertEquals(true, model.boxedBooleanValue())
+    }
+
+    @Test
     fun getDouble() {
         val model = TestModelPropertiesViewModel_.from(TestModelProperties(doubleValue = 42.0))
         assertEquals(42.0, model.doubleValue(), 0.0)
+    }
+
+    @Test
+    fun getBoxedDouble() {
+        val model = TestModelPropertiesViewModel_.from(TestModelProperties(boxedDoubleValue = 42.0))
+        assertEquals(42.0, model.boxedDoubleValue(), 0.0)
     }
 
     @Test
@@ -53,11 +66,38 @@ class FromModelPropertiesTest {
     }
 
     @Test
+    fun getBoxedInt() {
+        val model = TestModelPropertiesViewModel_.from(TestModelProperties(boxedIntValue = 51))
+        assertEquals(51, model.boxedIntValue())
+    }
+
+    @Test
+    fun getLong() {
+        val model = TestModelPropertiesViewModel_.from(TestModelProperties(longValue = 3000000))
+        assertEquals(3000000, model.longValue())
+    }
+
+    @Test
+    fun getBoxedLong() {
+        val model =
+            TestModelPropertiesViewModel_.from(TestModelProperties(boxedLongValue = 3000000))
+        assertEquals(3000000, model.boxedLongValue())
+    }
+
+    @Test
     fun getOnClickListener() {
         val clickListener = View.OnClickListener { }
         val model =
             TestModelPropertiesViewModel_.from(TestModelProperties(onClickListener = clickListener))
         assertEquals(clickListener, model.onClickListener())
+    }
+
+    @Test
+    fun getRawRes() {
+        // We use an arbitrary int rather than adding a test-only raw resource, which isn't easy
+        val model =
+            TestModelPropertiesViewModel_.from(TestModelProperties(rawRes = 42))
+        assertEquals(42, model.rawRes())
     }
 
     @Test
@@ -77,45 +117,67 @@ class FromModelPropertiesTest {
     class TestModelProperties(
         private val id: String = "",
         private val booleanValue: Boolean? = null,
+        private val boxedBooleanValue: Boolean? = null,
         private val doubleValue: Double? = null,
+        private val boxedDoubleValue: Double? = null,
         private val drawableRes: Int? = null,
         private val epoxyModelList: List<EpoxyModel<*>>? = null,
         private val intValue: Int? = null,
+        private val boxedIntValue: Int? = null,
+        private val longValue: Long? = null,
+        private val boxedLongValue: Long? = null,
         private val onClickListener: View.OnClickListener? = null,
+        private val rawRes: Int? = null,
         private val stringValue: String? = null,
         private val stringList: List<String>? = null,
         private val styleValue: Style? = null
     ) : ModelProperties {
+
+        private val propertyNameToValue = mapOf(
+            "booleanValue" to booleanValue,
+            "boxedBooleanValue" to boxedBooleanValue,
+            "doubleValue" to doubleValue,
+            "boxedDoubleValue" to boxedDoubleValue,
+            "drawableRes" to drawableRes,
+            "epoxyModelList" to epoxyModelList,
+            "intValue" to intValue,
+            "boxedIntValue" to boxedIntValue,
+            "longValue" to longValue,
+            "boxedLongValue" to boxedLongValue,
+            "onClickListener" to onClickListener,
+            "rawRes" to rawRes,
+            "stringList" to stringList,
+            "stringValue" to stringValue
+        )
+
+        @Suppress("UNCHECKED_CAST")
+        private fun <T> getValue(propertyName: String): T = propertyNameToValue[propertyName]!! as T
+
         override fun getId() = id
 
-        override fun has(propertyName: String): Boolean {
-            return mapOf(
-                "booleanValue" to booleanValue,
-                "doubleValue" to doubleValue,
-                "drawableRes" to drawableRes,
-                "epoxyModelList" to epoxyModelList,
-                "intValue" to intValue,
-                "onClickListener" to onClickListener,
-                "stringList" to stringList,
-                "stringValue" to stringValue
-            )[propertyName] != null
-        }
+        override fun has(propertyName: String) = propertyNameToValue[propertyName] != null
 
-        override fun getBoolean(propertyName: String) = booleanValue!!
+        override fun getBoolean(propertyName: String): Boolean = getValue(propertyName)
 
-        override fun getDouble(propertyName: String) = doubleValue!!
+        override fun getDouble(propertyName: String): Double = getValue(propertyName)
 
-        override fun getDrawableRes(propertyName: String) = drawableRes!!
+        override fun getDrawableRes(propertyName: String): Int = getValue(propertyName)
 
-        override fun getEpoxyModelList(propertyName: String) = epoxyModelList!!
+        override fun getEpoxyModelList(propertyName: String): List<EpoxyModel<*>> =
+            getValue(propertyName)
 
-        override fun getInt(propertyName: String) = intValue!!
+        override fun getInt(propertyName: String): Int = getValue(propertyName)
 
-        override fun getOnClickListener(propertyName: String) = onClickListener!!
+        override fun getLong(propertyName: String): Long = getValue(propertyName)
 
-        override fun getString(propertyName: String) = stringValue!!
+        override fun getOnClickListener(propertyName: String): View.OnClickListener =
+            getValue(propertyName)
 
-        override fun getStringList(propertyName: String) = stringList!!
+        override fun getRawRes(propertyName: String): Int = getValue(propertyName)
+
+        override fun getString(propertyName: String): String = getValue(propertyName)
+
+        override fun getStringList(propertyName: String): List<String> = getValue(propertyName)
 
         override fun getStyle() = styleValue
     }

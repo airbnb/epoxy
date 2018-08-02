@@ -40,12 +40,22 @@ class ModelFactoryViewProcessorTest {
     }
 
     @Test
-    fun groupPropMultipleSupportedAttribute() {
+    fun groupPropMultipleSupportedAttributeDifferentName() {
+        // Should generate a from method for both attributes since they have different names,
+        // despite being in the same group
+        assertGeneration(
+            "GroupPropMultipleSupportedAttributeDifferentNameModelView.java",
+            "GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_.java"
+        )
+    }
+
+    @Test
+    fun groupPropMultipleSupportedAttributeSameName() {
         // Shouldn't generate a from method, groups with multiple supported attribute types aren't
         // supported
         assertGeneration(
-            "GroupPropMultipleSupportedAttributeModelView.java",
-            "GroupPropMultipleSupportedAttributeModelViewModel_.java"
+            "GroupPropMultipleSupportedAttributeSameNameModelView.java",
+            "GroupPropMultipleSupportedAttributeSameNameModelViewModel_.java"
         )
     }
 
