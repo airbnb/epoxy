@@ -36,9 +36,9 @@ rootProject.ext.SQUARE_JAVAPOET_VERSION = "1.11.1"
 rootProject.ext.SQUARE_KOTLINPOET_VERSION = "0.7.0"
 
 rootProject.ext.ASSERTJ_VERSION = "1.7.1"
-rootProject.ext.GOOGLE_TESTING_COMPILE_VERSION = "0.13"
+rootProject.ext.GOOGLE_TESTING_COMPILE_VERSION = "0.15"
 rootProject.ext.JUNIT_VERSION = "4.12"
-rootProject.ext.MOCKITO_VERSION = "2.18.3"
+rootProject.ext.MOCKITO_VERSION = "2.21.0"
 rootProject.ext.ROBOLECTRIC_VERSION = "3.8"
 
 rootProject.ext.LOTTIE_VERSION = "2.2.5"
