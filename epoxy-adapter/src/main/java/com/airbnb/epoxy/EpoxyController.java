@@ -94,9 +94,9 @@ public abstract class EpoxyController {
   }
 
   public EpoxyController(Handler modelBuildingHandler, Handler diffingHandler) {
-    setDebugLoggingEnabled(globalDebugLoggingEnabled);
-    modelBuildHandler = modelBuildingHandler;
     adapter = new EpoxyControllerAdapter(this, diffingHandler);
+    modelBuildHandler = modelBuildingHandler;
+    setDebugLoggingEnabled(globalDebugLoggingEnabled);
   }
 
   /**
@@ -195,7 +195,8 @@ public abstract class EpoxyController {
 
   private void unsynchronizedCancelModelBuild() {
     // Access to requestedModelBuildType is synchronized because the model building thread clears
-    // it when model building starts, and the main thread needs to set it to indicate a build request.
+    // it when model building starts, and the main thread needs to set it to indicate a build
+    // request.
     // Additionally, it is crucial to guarantee that the state of requestedModelBuildType is in sync
     // with the modelBuildHandler, otherwise we could end up in a state where we think a model build
     // is queued, but it isn't, and model building never happens - stuck forever.
@@ -231,7 +232,7 @@ public abstract class EpoxyController {
 
       modelsBeingBuilt = null;
       hasBuiltModelsEver = true;
-      isBuildingModels = true;
+      isBuildingModels = false;
     }
   };
 
@@ -533,9 +534,8 @@ public abstract class EpoxyController {
    * #onExceptionSwallowed(RuntimeException)} will be called for each duplicate removed.
    * <p>
    * This may be useful if your models are created via server supplied data, in which case the
-   * server may erroneously send duplicate items. Duplicate items break Epoxy's diffing and would
-   * normally cause a crash, so filtering them out can make a production application more robust to
-   * server inconsistencies.
+   * server may erroneously send duplicate items. Duplicate items are otherwise left in and can
+   * result in undefined behavior.
    */
   public void setFilterDuplicates(boolean filterDuplicates) {
     this.filterDuplicates = filterDuplicates;

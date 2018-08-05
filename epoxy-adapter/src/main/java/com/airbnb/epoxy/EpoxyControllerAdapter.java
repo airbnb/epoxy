@@ -7,20 +7,22 @@ import android.support.annotation.UiThread;
 import android.support.v7.util.DiffUtil.ItemCallback;
 import android.support.v7.widget.RecyclerView;
 
+import com.airbnb.epoxy.AsyncEpoxyDiffer.ResultCallack;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
-  private final NotifyBlocker notifyBlocker = new NotifyBlocker(this);
-  private final AsyncEpoxyDiffer<EpoxyModel<?>> differ;
+public final class EpoxyControllerAdapter extends BaseEpoxyAdapter implements ResultCallack {
+  private final NotifyBlocker notifyBlocker = new NotifyBlocker();
+  private final AsyncEpoxyDiffer differ;
   private final EpoxyController epoxyController;
   private int itemCount;
 
   EpoxyControllerAdapter(@NonNull EpoxyController epoxyController, Handler diffingHandler) {
     this.epoxyController = epoxyController;
-    differ = new AsyncEpoxyDiffer<>(
+    differ = new AsyncEpoxyDiffer(
         diffingHandler,
-        notifyBlocker,
+        this,
         ITEM_CALLBACK
     );
     registerAdapterDataObserver(notifyBlocker);
@@ -33,7 +35,7 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
 
   @NonNull
   @Override
-  List<EpoxyModel<?>> getCurrentModels() {
+  List<? extends EpoxyModel<?>> getCurrentModels() {
     return differ.getCurrentList();
   }
 
@@ -47,9 +49,15 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
 
   /** This is set from whatever thread model building happened on, so must be thread safe. */
   void setModels(@NonNull ControllerModelList models) {
-    itemCount = models.size();
-    notifyBlocker.allowChanges();
     differ.submitList(models);
+  }
+
+  // Called on diff results from the differ
+  @Override
+  public void onResult(@NonNull DiffResult result) {
+    itemCount = result.newModels.size();
+    notifyBlocker.allowChanges();
+    result.dispatchTo(this);
     notifyBlocker.blockChanges();
   }
 
@@ -94,7 +102,8 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
   /** Get an unmodifiable copy of the current models set on the adapter. */
   @NonNull
   public List<EpoxyModel<?>> getCopyOfModels() {
-    return getCurrentModels();
+    //noinspection unchecked
+    return (List<EpoxyModel<?>>) getCurrentModels();
   }
 
   /**
@@ -149,8 +158,7 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
     notifyItemMoved(fromPosition, toPosition);
     notifyBlocker.blockChanges();
 
-    boolean interruptedDiff = differ.isDiffInProgress();
-    differ.forceListOverride(updatedList);
+    boolean interruptedDiff = differ.forceListOverride(updatedList);
 
     if (interruptedDiff) {
       // The move interrupted a model rebuild/diff that was in progress,

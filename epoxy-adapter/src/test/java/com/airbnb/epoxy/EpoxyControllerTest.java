@@ -51,9 +51,9 @@ public class EpoxyControllerTest {
     verifyNoMoreInteractions(observer);
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test(expected = IllegalEpoxyUsage.class)
   public void addingSameModelTwiceThrows() {
-    final TestModel model = new TestModel();
+    final CarouselModel_ model = new CarouselModel_();
 
     EpoxyController controller = new EpoxyController() {
 
@@ -87,25 +87,6 @@ public class EpoxyControllerTest {
     controller.requestModelBuild();
 
     assertEquals(1, controller.getAdapter().getItemCount());
-  }
-
-  @Test(expected = IllegalStateException.class)
-  public void throwOnDuplicatesIfNotFiltering() {
-    EpoxyController controller = new EpoxyController() {
-
-      @Override
-      protected void buildModels() {
-        new TestModel()
-            .id(1)
-            .addTo(this);
-
-        new TestModel()
-            .id(1)
-            .addTo(this);
-      }
-    };
-
-    controller.requestModelBuild();
   }
 
   boolean exceptionSwallowed;

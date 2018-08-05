@@ -66,7 +66,7 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
   }
 
   /** Return the models currently being used by the adapter to populate the recyclerview. */
-  abstract List<EpoxyModel<?>> getCurrentModels();
+  abstract List<? extends EpoxyModel<?>> getCurrentModels();
 
   public boolean isEmpty() {
     return getCurrentModels().isEmpty();

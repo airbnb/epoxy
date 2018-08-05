@@ -1,6 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.support.v7.util.ListUpdateCallback;
 import android.support.v7.widget.RecyclerView.AdapterDataObserver;
 
 /**
@@ -10,13 +9,7 @@ import android.support.v7.widget.RecyclerView.AdapterDataObserver;
  * <p>
  * This observer throws upon any changes done outside of diffing.
  */
-class NotifyBlocker extends AdapterDataObserver implements ListUpdateCallback {
-
-  private final EpoxyControllerAdapter adapter;
-
-  NotifyBlocker(EpoxyControllerAdapter adapter) {
-    this.adapter = adapter;
-  }
+class NotifyBlocker extends AdapterDataObserver {
 
   private boolean changesAllowed;
 
@@ -59,39 +52,5 @@ class NotifyBlocker extends AdapterDataObserver implements ListUpdateCallback {
   @Override
   public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
     onChanged();
-  }
-
-  // These methods are called from the differ and allow notifications to go through to the adapter
-
-  /** {@inheritDoc} */
-  @Override
-  public void onInserted(int position, int count) {
-    allowChanges();
-    adapter.notifyItemRangeInserted(position, count);
-    blockChanges();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void onRemoved(int position, int count) {
-    allowChanges();
-    adapter.notifyItemRangeRemoved(position, count);
-    blockChanges();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void onMoved(int fromPosition, int toPosition) {
-    allowChanges();
-    adapter.notifyItemMoved(fromPosition, toPosition);
-    blockChanges();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void onChanged(int position, int count, Object payload) {
-    allowChanges();
-    adapter.notifyItemRangeChanged(position, count, payload);
-    blockChanges();
   }
 }
