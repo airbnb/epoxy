@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.util.DiffUtil.ItemCallback;
 import android.support.v7.util.ListUpdateCallback;
@@ -17,24 +18,28 @@ import java.util.concurrent.Executor;
  * <p>
  * Also adds support for canceling an in progress diff.
  */
-class AsyncListDifferWithPayload<T> {
+class AsyncEpoxyDiffer {
+
+  interface ResultCallack{
+    void onResult(DiffResult result);
+  }
 
   private final Executor executor;
-  private final ListUpdateCallback updateCallback;
-  private final ItemCallback<T> diffCallback;
+  private final ResultCallack resultCallack;
+  private final ItemCallback<EpoxyModel<?>> diffCallback;
 
-  AsyncListDifferWithPayload(
+  AsyncEpoxyDiffer(
       @NonNull Handler handler,
-      @NonNull ListUpdateCallback listUpdateCallback,
-      @NonNull ItemCallback<T> diffCallback
+      @NonNull ResultCallack resultCallack,
+      @NonNull ItemCallback<EpoxyModel<?>> diffCallback
   ) {
     this.executor = new HandlerExecutor(handler);
-    updateCallback = listUpdateCallback;
+    this.resultCallack = resultCallack;
     this.diffCallback = diffCallback;
   }
 
   @Nullable
-  private List<T> list;
+  private List<EpoxyModel<?>> list;
 
   /**
    * Non-null, unmodifiable version of list.
@@ -42,7 +47,7 @@ class AsyncListDifferWithPayload<T> {
    * Collections.emptyList when list is null, wrapped by Collections.unmodifiableList otherwise
    */
   @NonNull
-  private List<T> readOnlyList = Collections.emptyList();
+  private List<EpoxyModel<?>> readOnlyList = Collections.emptyList();
 
   // Max generation of currently scheduled runnable
   private int maxScheduledGeneration;
@@ -60,7 +65,7 @@ class AsyncListDifferWithPayload<T> {
    * @return current List.
    */
   @NonNull
-  public List<T> getCurrentList() {
+  public List<EpoxyModel<?>> getCurrentList() {
     return readOnlyList;
   }
 
@@ -84,7 +89,7 @@ class AsyncListDifferWithPayload<T> {
    * This can be used if you notified a change to the adapter manually and need this list to be
    * synced.
    */
-  public void forceListOverride(@Nullable List<T> newList) {
+  public void forceListOverride(@Nullable List<EpoxyModel<?>> newList) {
     onRunCompleted(newList, ++maxScheduledGeneration);
   }
 
@@ -98,19 +103,24 @@ class AsyncListDifferWithPayload<T> {
    *
    * @param newList The new List.
    */
+  @UiThread
   @SuppressWarnings("WeakerAccess")
-  public void submitList(@Nullable final List<T> newList) {
+  public void submitList(@Nullable final List<EpoxyModel<?>> newList) {
+
     if (newList == list) {
       // nothing to do
       return;
     }
+
+    // TODO: (eli_hart 8/5/18) voliate?
+    final List<EpoxyModel<?>> previousList = readOnlyList;
 
     // incrementing generation means any currently-running diffs are discarded when they finish
     final int runGeneration = ++maxScheduledGeneration;
 
     if (newList == null || newList.isEmpty()) {
       if (list != null && !list.isEmpty()) {
-        updateCallback.onRemoved(0, list.size());
+        resultCallack.onResult(new DiffResult(list, newList, null));
       }
       onRunCompleted(null, runGeneration);
       return;
@@ -118,12 +128,12 @@ class AsyncListDifferWithPayload<T> {
 
     if (list == null || list.isEmpty()) {
       // fast simple first insert
-      updateCallback.onInserted(0, newList.size());
+        resultCallack.onResult(new DiffResult(list, newList, null));
       onRunCompleted(newList, runGeneration);
       return;
     }
 
-    final DiffCallback<T> wrappedCallback = new DiffCallback<>(list, newList, diffCallback);
+    final DiffCallback<EpoxyModel<?>> wrappedCallback = new DiffCallback<>(list, newList, diffCallback);
 
     executor.execute(new Runnable() {
       @Override
@@ -134,7 +144,7 @@ class AsyncListDifferWithPayload<T> {
           @Override
           public void run() {
             if (maxScheduledGeneration == runGeneration && runGeneration > maxFinishedGeneration) {
-              result.dispatchUpdatesTo(updateCallback);
+              resultCallack.onResult(new DiffResult(list, newList, result));
               onRunCompleted(newList, runGeneration);
             }
           }
@@ -143,7 +153,7 @@ class AsyncListDifferWithPayload<T> {
     });
   }
 
-  private void onRunCompleted(@Nullable List<T> newList, int runGeneration) {
+  private void onRunCompleted(@Nullable List<EpoxyModel<?>> newList, int runGeneration) {
     maxFinishedGeneration = runGeneration;
     list = newList;
 

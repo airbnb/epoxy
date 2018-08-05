@@ -9,17 +9,16 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 
 public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
   private final NotifyBlocker notifyBlocker = new NotifyBlocker(this);
-  private final AsyncListDifferWithPayload<EpoxyModel<?>> differ;
+  private final AsyncEpoxyDiffer<EpoxyModel<?>> differ;
   private final EpoxyController epoxyController;
   private int itemCount;
 
   EpoxyControllerAdapter(@NonNull EpoxyController epoxyController, Handler diffingHandler) {
     this.epoxyController = epoxyController;
-    differ = new AsyncListDifferWithPayload<>(
+    differ = new AsyncEpoxyDiffer<>(
         diffingHandler,
         notifyBlocker,
         ITEM_CALLBACK
@@ -46,6 +45,7 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter {
     return itemCount;
   }
 
+  /** This is set from whatever thread model building happened on, so must be thread safe. */
   void setModels(@NonNull ControllerModelList models) {
     itemCount = models.size();
     notifyBlocker.allowChanges();
