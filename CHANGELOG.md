@@ -1,3 +1,12 @@
+# 2.15.0 (July 29, 2018)
+- **New** Added kotlin sample code for building models. Updated wiki with info (https://github.com/airbnb/epoxy/wiki/Kotlin-Model-Examples)
+
+- **Fix**  Generated kotlin extension functions now work with Models with type variables (https://github.com/airbnb/epoxy/pull/478)
+- **Fix**  Backup is not enabled in manifest now (https://github.com/airbnb/epoxy/pull/481)
+- **Fix**  Click listener setter on generated model has correct nullability annotation (https://github.com/airbnb/epoxy/pull/458)
+- **Fix**  Avoid kotlin crash using toString on lambdas (https://github.com/airbnb/epoxy/pull/482)
+- **Fix**  If EpoxyModelGroup has annotations the generated class now calls super methods correctly.  (https://github.com/airbnb/epoxy/pull/483)
+
 # 2.14.0 (June 27, 2018)
 - **New** Experimental support for creating Epoxy models from arbitrary data formats (#450)
 
