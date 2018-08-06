@@ -141,6 +141,9 @@ public abstract class EpoxyController {
    * The exception is that the first time this is called on a new instance of {@link
    * EpoxyController} it is run synchronously. This allows state to be restored and the initial view
    * to be draw quicker.
+   * <p>
+   * If you would like to be alerted when models have finished building use
+   * {@link #addModelBuildListener(OnModelBuildFinishedListener)}
    */
   public void requestModelBuild() {
     if (isBuildingModels()) {
@@ -157,6 +160,29 @@ public abstract class EpoxyController {
     } else {
       buildModelsRunnable.run();
     }
+  }
+
+  /**
+   * Add a listener that will be called every time {@link #buildModels()} has finished running
+   * and changes have been dispatched to the RecyclerView.
+   * <p>
+   * Since buildModels can be called once for many calls to {@link #requestModelBuild()}, this is
+   * called just for each buildModels execution, not for every request.
+   * <p>
+   * Used this to react to changes in your models that need to happen after the RecyclerView has
+   * been notified, such as scrolling.
+   */
+  public void addModelBuildListener(OnModelBuildFinishedListener listener) {
+    adapter.addModelBuildListener(listener);
+  }
+
+  /**
+   * Remove a listener added with {@link #addModelBuildListener(OnModelBuildFinishedListener)}.
+   * This is safe to call from inside the callback
+   * {@link OnModelBuildFinishedListener#onModelBuildFinished(DiffResult)}
+   */
+  public void removeModelBuildListener(OnModelBuildFinishedListener listener) {
+    adapter.removeModelBuildListener(listener);
   }
 
   /**

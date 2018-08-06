@@ -119,7 +119,7 @@ class AsyncEpoxyDiffer {
 
     if (newList == previousList) {
       // nothing to do
-      onRunCompleted(runGeneration, newList, null);
+      onRunCompleted(runGeneration, newList, new DiffResult(previousList, newList, null));
       return;
     }
 
@@ -127,8 +127,7 @@ class AsyncEpoxyDiffer {
       // fast simple clear all
       DiffResult result = null;
       if (previousList != null && !previousList.isEmpty()) {
-        //noinspection unchecked
-        result = new DiffResult(previousList, Collections.EMPTY_LIST, null);
+        result = new DiffResult(previousList, null, null);
       }
       onRunCompleted(runGeneration, null, result);
       return;
@@ -136,8 +135,7 @@ class AsyncEpoxyDiffer {
 
     if (previousList == null || previousList.isEmpty()) {
       // fast simple first insert
-      //noinspection unchecked
-      onRunCompleted(runGeneration, newList, new DiffResult(Collections.EMPTY_LIST, newList, null));
+      onRunCompleted(runGeneration, newList, new DiffResult(null, newList, null));
       return;
     }
 

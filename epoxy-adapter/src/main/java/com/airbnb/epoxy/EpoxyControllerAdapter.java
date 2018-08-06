@@ -17,6 +17,7 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter implements Re
   private final AsyncEpoxyDiffer differ;
   private final EpoxyController epoxyController;
   private int itemCount;
+  private final List<OnModelBuildFinishedListener> modelBuildListeners = new ArrayList<>();
 
   EpoxyControllerAdapter(@NonNull EpoxyController epoxyController, Handler diffingHandler) {
     this.epoxyController = epoxyController;
@@ -59,6 +60,18 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter implements Re
     notifyBlocker.allowChanges();
     result.dispatchTo(this);
     notifyBlocker.blockChanges();
+
+    for (int i = modelBuildListeners.size() - 1; i >= 0; i--) {
+      modelBuildListeners.get(i).onModelBuildFinished(result);
+    }
+  }
+
+  public void addModelBuildListener(OnModelBuildFinishedListener listener) {
+    modelBuildListeners.add(listener);
+  }
+
+  public void removeModelBuildListener(OnModelBuildFinishedListener listener) {
+    modelBuildListeners.remove(listener);
   }
 
   @Override

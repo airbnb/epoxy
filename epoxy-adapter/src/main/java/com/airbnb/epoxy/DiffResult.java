@@ -7,6 +7,7 @@ import android.support.v7.util.DiffUtil;
 import android.support.v7.util.ListUpdateCallback;
 import android.support.v7.widget.RecyclerView.Adapter;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,13 +23,14 @@ public class DiffResult {
 
   @Nullable final DiffUtil.DiffResult differResult;
 
+  @SuppressWarnings("unchecked")
   public DiffResult(
-      @NonNull List<? extends EpoxyModel<?>> previousModels,
-      @NonNull List<? extends EpoxyModel<?>> newModels,
+      @Nullable List<? extends EpoxyModel<?>> previousModels,
+      @Nullable List<? extends EpoxyModel<?>> newModels,
       @Nullable DiffUtil.DiffResult differResult
   ) {
-    this.previousModels = previousModels;
-    this.newModels = newModels;
+    this.previousModels = previousModels != null ? previousModels : Collections.EMPTY_LIST;
+    this.newModels = newModels != null ? newModels : Collections.EMPTY_LIST;
     this.differResult = differResult;
   }
 
@@ -43,8 +45,8 @@ public class DiffResult {
       callback.onRemoved(0, previousModels.size());
     } else if (!newModels.isEmpty() && previousModels.isEmpty()) {
       callback.onInserted(0, newModels.size());
-    } else {
-      throw new IllegalStateException("No updates found in diff result");
     }
+
+    // Else nothing changed!
   }
 }
