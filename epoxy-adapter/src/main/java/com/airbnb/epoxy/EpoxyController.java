@@ -51,8 +51,8 @@ public abstract class EpoxyController {
   private static final int DELAY_TO_CHECK_ADAPTER_COUNT_MS = 3000;
   private static final Timer NO_OP_TIMER = new NoOpTimer();
 
-  public static Handler DEFAULT_MODEL_BUILDING_HANDLER = MainThreadExecutor.INSTANCE.handler;
-  public static Handler DEFAULT_DIFFING_HANDLER = MainThreadExecutor.INSTANCE.handler;
+  public static Handler defaultModelBuildingHandler = MainThreadExecutor.INSTANCE.handler;
+  public static Handler defaultDiffingHandler = MainThreadExecutor.INSTANCE.handler;
   private static boolean filterDuplicatesDefault = false;
   private static boolean globalDebugLoggingEnabled = false;
 
@@ -67,18 +67,29 @@ public abstract class EpoxyController {
    */
   private final List<Interceptor> interceptors = new CopyOnWriteArrayList<>();
 
-  // write only on main thread, read from builder thread
+  // Volatile because -> write only on main thread, read from builder thread
   private volatile boolean filterDuplicates = filterDuplicatesDefault;
-  // safe to be volatile - write only on handler
-  private volatile boolean isBuildingModels = false;
+  /**
+   * This is used to track whether we are currently building models. If it is non null it means
+   * a thread is in the building models method. We store the looper so we can know which thread
+   * is building models.
+   * <p>
+   * Volatile because - write only on handler, read from any thread
+   */
+  private volatile Looper buildingModelsLooper = null;
   /**
    * Used to know that we should build models synchronously the first time.
    * <p>
-   * Written to from the build models thread, read from the main thread.
+   * Volatile because -> written from the build models thread, read from the main thread.
    */
   private volatile boolean hasBuiltModelsEver;
 
-  /* The fields below are expected to only be used on the model building thread. **/
+  //////////////////////////////////////////////////////////////////////////////////////////
+
+  /*
+   * These fields are expected to only be used on the model building thread so they are not
+   * synchronized.
+   */
 
   /** Used to time operations and log their duration when in debug mode. */
   private Timer timer = NO_OP_TIMER;
@@ -87,10 +98,10 @@ public abstract class EpoxyController {
   private List<ModelInterceptorCallback> modelInterceptorCallbacks;
   private EpoxyModel<?> stagedModel;
 
-  /**************************************************************************************/
+  //////////////////////////////////////////////////////////////////////////////////////////
 
   public EpoxyController() {
-    this(DEFAULT_MODEL_BUILDING_HANDLER, DEFAULT_DIFFING_HANDLER);
+    this(defaultModelBuildingHandler, defaultDiffingHandler);
   }
 
   public EpoxyController(Handler modelBuildingHandler, Handler diffingHandler) {
@@ -212,7 +223,7 @@ public abstract class EpoxyController {
       // This is needed to reset the requestedModelBuildType back to NONE
       cancelPendingModelBuild();
 
-      isBuildingModels = true;
+      buildingModelsLooper = Looper.myLooper();
       helper.resetAutoModels();
 
       modelsBeingBuilt = new ControllerModelList(getExpectedModelCount());
@@ -228,11 +239,12 @@ public abstract class EpoxyController {
 
       timer.start();
       adapter.setModels(modelsBeingBuilt);
+      // This timing is only right if diffing and model building are on the same thread
       timer.stop("Models diffed");
 
       modelsBeingBuilt = null;
       hasBuiltModelsEver = true;
-      isBuildingModels = false;
+      buildingModelsLooper = null;
     }
   };
 
@@ -377,7 +389,7 @@ public abstract class EpoxyController {
 
   private void assertIsBuildingModels() {
     if (!isBuildingModels()) {
-      throw new IllegalEpoxyUsage("Can only all this when inside the `buildModels` method");
+      throw new IllegalEpoxyUsage("Can only call this when inside the `buildModels` method");
     }
   }
 
@@ -479,7 +491,7 @@ public abstract class EpoxyController {
 
   /** True if the current callstack originated from the buildModels call, on the same thread. */
   protected boolean isBuildingModels() {
-    return isBuildingModels && Looper.myLooper() == modelBuildHandler.getLooper();
+    return buildingModelsLooper != null && buildingModelsLooper == Looper.myLooper();
   }
 
   private void filterDuplicatesIfNeeded(List<EpoxyModel<?>> models) {
@@ -570,7 +582,9 @@ public abstract class EpoxyController {
 
     if (enabled) {
       timer = new DebugTimer(getClass().getSimpleName());
-      debugObserver = new EpoxyDiffLogger(getClass().getSimpleName());
+      if (debugObserver == null) {
+        debugObserver = new EpoxyDiffLogger(getClass().getSimpleName());
+      }
       adapter.registerAdapterDataObserver(debugObserver);
     } else {
       timer = NO_OP_TIMER;

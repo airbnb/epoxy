@@ -24,7 +24,7 @@ class ControllerLifecycleHelper {
   }
 
   void bindModels(BaseEpoxyAdapter adapter) {
-    List<EpoxyModel<?>> models = adapter.getCurrentModels();
+    List<? extends EpoxyModel<?>> models = adapter.getCurrentModels();
     for (int i = 0; i < models.size(); i++) {
       viewHolder = createViewHolder(adapter, i);
       adapter.onBindViewHolder(viewHolder, i);

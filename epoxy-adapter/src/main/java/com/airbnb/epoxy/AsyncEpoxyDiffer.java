@@ -15,7 +15,7 @@ import java.util.concurrent.Executor;
  * An adaptation of Google's {@link android.support.v7.recyclerview.extensions.AsyncListDiffer}
  * that adds support for payloads in changes.
  * <p>
- * Also adds support for canceling an in progress diff.
+ * Also adds support for canceling an in progress diff, and makes everything thread safe.
  */
 class AsyncEpoxyDiffer {
 
@@ -198,6 +198,17 @@ class AsyncEpoxyDiffer {
     return false;
   }
 
+  /**
+   * The concept of a "generation" is used to associate a diff result with a point in time when
+   * it was created. This allows us to handle list updates concurrently, and ignore outdated diffs.
+   * <p>
+   * We track the highest start generation, and the highest finished generation, and these must
+   * be kept in sync, so all access to this class is synchronized.
+   * <p>
+   * The general synchronization strategy for this class is that when a generation number
+   * is queried that action must be synchronized with accessing the current list, so that the
+   * generation number is synced with the list state at the time it was created.
+   */
   private static class GenerationTracker {
 
     // Max generation of currently scheduled runnable
