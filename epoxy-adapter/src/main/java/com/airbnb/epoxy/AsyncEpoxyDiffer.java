@@ -83,14 +83,11 @@ class AsyncEpoxyDiffer {
    * synced.
    */
   @AnyThread
-  public boolean forceListOverride(@Nullable List<EpoxyModel<?>> newList) {
-    final boolean interruptedDiff;
-    synchronized (this) {
-      // We need to make sure that generation changes and list updates are synchronized
-      interruptedDiff = cancelDiff();
-      int generation = generationTracker.incrementAndGetNextScheduled();
-      tryLatchList(newList, generation);
-    }
+  public synchronized boolean forceListOverride(@Nullable List<EpoxyModel<?>> newList) {
+    // We need to make sure that generation changes and list updates are synchronized
+    final boolean interruptedDiff = cancelDiff();
+    int generation = generationTracker.incrementAndGetNextScheduled();
+    tryLatchList(newList, generation);
     return interruptedDiff;
   }
 
@@ -119,7 +116,7 @@ class AsyncEpoxyDiffer {
 
     if (newList == previousList) {
       // nothing to do
-      onRunCompleted(runGeneration, newList, new DiffResult(previousList, newList, null));
+      onRunCompleted(runGeneration, newList, DiffResult.noOp(previousList));
       return;
     }
 
@@ -127,7 +124,7 @@ class AsyncEpoxyDiffer {
       // fast simple clear all
       DiffResult result = null;
       if (previousList != null && !previousList.isEmpty()) {
-        result = new DiffResult(previousList, null, null);
+        result = DiffResult.clear(previousList);
       }
       onRunCompleted(runGeneration, null, result);
       return;
@@ -135,7 +132,7 @@ class AsyncEpoxyDiffer {
 
     if (previousList == null || previousList.isEmpty()) {
       // fast simple first insert
-      onRunCompleted(runGeneration, newList, new DiffResult(null, newList, null));
+      onRunCompleted(runGeneration, newList, DiffResult.inserted(newList));
       return;
     }
 
@@ -145,7 +142,7 @@ class AsyncEpoxyDiffer {
       @Override
       public void run() {
         DiffUtil.DiffResult result = DiffUtil.calculateDiff(wrappedCallback);
-        onRunCompleted(runGeneration, newList, new DiffResult(previousList, newList, result));
+        onRunCompleted(runGeneration, newList, DiffResult.diff(previousList, newList, result));
       }
     });
   }
@@ -159,11 +156,7 @@ class AsyncEpoxyDiffer {
     MainThreadExecutor.INSTANCE.execute(new Runnable() {
       @Override
       public void run() {
-        final boolean dispatchResult;
-        synchronized (this) {
-          dispatchResult = tryLatchList(newList, runGeneration);
-        }
-
+        final boolean dispatchResult = tryLatchList(newList, runGeneration);
         if (result != null && dispatchResult) {
           resultCallack.onResult(result);
         }
@@ -173,14 +166,13 @@ class AsyncEpoxyDiffer {
 
   /**
    * Marks the generation as done, and updates the list if the generation is the most recent.
-   * Calls to this MUST be synchronized on "this" so list object and generation always stay in sync.
-   * This method isn't synchronized directly so callers have flexibility to includes other
-   * actions in their synchronized block
    *
    * @return True if the given generation is the most recent, in which case the given list was
    * set. False if the generation is old and the list was ignored.
    */
-  private boolean tryLatchList(@Nullable List<? extends EpoxyModel<?>> newList, int runGeneration) {
+  @AnyThread
+  private synchronized boolean tryLatchList(@Nullable List<? extends EpoxyModel<?>> newList,
+      int runGeneration) {
     if (generationTracker.finishGeneration(runGeneration)) {
       list = newList;
 

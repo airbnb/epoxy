@@ -211,7 +211,7 @@ public abstract class EpoxyController {
     }
 
     if (requestedModelBuildType == RequestedModelBuildType.DELAYED) {
-      unsynchronizedCancelModelBuild();
+      cancelPendingModelBuild();
     } else if (requestedModelBuildType == RequestedModelBuildType.NEXT_FRAME) {
       return;
     }
@@ -227,10 +227,6 @@ public abstract class EpoxyController {
    * #requestModelBuild()}.
    */
   public synchronized void cancelPendingModelBuild() {
-    unsynchronizedCancelModelBuild();
-  }
-
-  private void unsynchronizedCancelModelBuild() {
     // Access to requestedModelBuildType is synchronized because the model building thread clears
     // it when model building starts, and the main thread needs to set it to indicate a build
     // request.
