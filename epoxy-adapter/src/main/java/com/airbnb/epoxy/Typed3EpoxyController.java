@@ -1,5 +1,7 @@
 package com.airbnb.epoxy;
 
+import android.os.Handler;
+
 /**
  * This is a wrapper around {@link com.airbnb.epoxy.EpoxyController} to simplify how data is
  * accessed. Use this if the data required to build your models is represented by three objects.
@@ -20,6 +22,13 @@ public abstract class Typed3EpoxyController<T, U, V> extends EpoxyController {
   private U data2;
   private V data3;
   private boolean allowModelBuildRequests;
+
+  public Typed3EpoxyController() {
+  }
+
+  public Typed3EpoxyController(Handler modelBuildingHandler, Handler diffingHandler) {
+    super(modelBuildingHandler, diffingHandler);
+  }
 
   /**
    * Call this with the latest data when you want models to be rebuilt. The data will be passed on

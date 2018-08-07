@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
 
@@ -40,10 +41,6 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
  */
 public abstract class EpoxyController {
 
-  private static final Timer NO_OP_TIMER = new NoOpTimer();
-  private static boolean filterDuplicatesDefault = false;
-  private static boolean globalDebugLoggingEnabled = false;
-
   /**
    * We check that the adapter is not connected to multiple recyclerviews, but when a fragment has
    * its view quickly destroyed and recreated it may temporarily attach the same adapter to the
@@ -52,33 +49,76 @@ public abstract class EpoxyController {
    * enough time for screen transitions to happen.
    */
   private static final int DELAY_TO_CHECK_ADAPTER_COUNT_MS = 3000;
+  private static final Timer NO_OP_TIMER = new NoOpTimer();
 
-  private final EpoxyControllerAdapter adapter = new EpoxyControllerAdapter(this);
-  private final ControllerHelper helper = getHelperForController(this);
-  private final Handler handler = new Handler(Looper.getMainLooper());
-  private final List<Interceptor> interceptors = new ArrayList<>();
-  private ControllerModelList modelsBeingBuilt;
-  private boolean filterDuplicates = filterDuplicatesDefault;
+  public static Handler defaultModelBuildingHandler = MainThreadExecutor.INSTANCE.handler;
+  public static Handler defaultDiffingHandler = MainThreadExecutor.INSTANCE.handler;
+  private static boolean filterDuplicatesDefault = false;
+  private static boolean globalDebugLoggingEnabled = false;
+
+  private final EpoxyControllerAdapter adapter;
+  private EpoxyDiffLogger debugObserver;
+  private int recyclerViewAttachCount = 0;
+  private final Handler modelBuildHandler;
+
+  /**
+   * This is iterated over in the build models thread, but items can be inserted or removed from
+   * other threads at any time.
+   */
+  private final List<Interceptor> interceptors = new CopyOnWriteArrayList<>();
+
+  // Volatile because -> write only on main thread, read from builder thread
+  private volatile boolean filterDuplicates = filterDuplicatesDefault;
+  /**
+   * This is used to track whether we are currently building models. If it is non null it means
+   * a thread is in the building models method. We store the looper so we can know which thread
+   * is building models.
+   * <p>
+   * Volatile because - write only on handler, read from any thread
+   */
+  private volatile Looper buildingModelsLooper = null;
+  /**
+   * Used to know that we should build models synchronously the first time.
+   * <p>
+   * Volatile because -> written from the build models thread, read from the main thread.
+   */
+  private volatile boolean hasBuiltModelsEver;
+
+  //////////////////////////////////////////////////////////////////////////////////////////
+
+  /*
+   * These fields are expected to only be used on the model building thread so they are not
+   * synchronized.
+   */
+
   /** Used to time operations and log their duration when in debug mode. */
   private Timer timer = NO_OP_TIMER;
-  private EpoxyDiffLogger debugObserver;
-  private boolean hasBuiltModelsEver;
+  private final ControllerHelper helper = getHelperForController(this);
+  private ControllerModelList modelsBeingBuilt;
   private List<ModelInterceptorCallback> modelInterceptorCallbacks;
-  private int recyclerViewAttachCount = 0;
   private EpoxyModel<?> stagedModel;
 
+  //////////////////////////////////////////////////////////////////////////////////////////
+
   public EpoxyController() {
+    this(defaultModelBuildingHandler, defaultDiffingHandler);
+  }
+
+  public EpoxyController(Handler modelBuildingHandler, Handler diffingHandler) {
+    adapter = new EpoxyControllerAdapter(this, diffingHandler);
+    modelBuildHandler = modelBuildingHandler;
     setDebugLoggingEnabled(globalDebugLoggingEnabled);
   }
 
   /**
-   * Posting and canceling runnables is a bit expensive - it is synchronizes and iterates the the
+   * Posting and canceling runnables is a bit expensive - it is synchronizes and iterates the
    * list of runnables. We want clients to be able to request model builds as often as they want and
    * have it act as a no-op if one is already requested, without being a performance hit. To do that
    * we track whether we have a call to build models posted already so we can avoid canceling a
    * current call and posting it again.
    */
-  @RequestedModelBuildType private int requestedModelBuildType = RequestedModelBuildType.NONE;
+  @RequestedModelBuildType private volatile int requestedModelBuildType =
+      RequestedModelBuildType.NONE;
 
   @Retention(RetentionPolicy.SOURCE)
   @IntDef({RequestedModelBuildType.NONE,
@@ -101,6 +141,9 @@ public abstract class EpoxyController {
    * The exception is that the first time this is called on a new instance of {@link
    * EpoxyController} it is run synchronously. This allows state to be restored and the initial view
    * to be draw quicker.
+   * <p>
+   * If you would like to be alerted when models have finished building use
+   * {@link #addModelBuildListener(OnModelBuildFinishedListener)}
    */
   public void requestModelBuild() {
     if (isBuildingModels()) {
@@ -117,6 +160,29 @@ public abstract class EpoxyController {
     } else {
       buildModelsRunnable.run();
     }
+  }
+
+  /**
+   * Add a listener that will be called every time {@link #buildModels()} has finished running
+   * and changes have been dispatched to the RecyclerView.
+   * <p>
+   * Since buildModels can be called once for many calls to {@link #requestModelBuild()}, this is
+   * called just for each buildModels execution, not for every request.
+   * <p>
+   * Used this to react to changes in your models that need to happen after the RecyclerView has
+   * been notified, such as scrolling.
+   */
+  public void addModelBuildListener(OnModelBuildFinishedListener listener) {
+    adapter.addModelBuildListener(listener);
+  }
+
+  /**
+   * Remove a listener added with {@link #addModelBuildListener(OnModelBuildFinishedListener)}.
+   * This is safe to call from inside the callback
+   * {@link OnModelBuildFinishedListener#onModelBuildFinished(DiffResult)}
+   */
+  public void removeModelBuildListener(OnModelBuildFinishedListener listener) {
+    adapter.removeModelBuildListener(listener);
   }
 
   /**
@@ -138,7 +204,7 @@ public abstract class EpoxyController {
    * @param delayMs The time in milliseconds to delay the model build by. Should be greater than or
    *                equal to 0. A value of 0 is equivalent to calling {@link #requestModelBuild()}
    */
-  public void requestDelayedModelBuild(int delayMs) {
+  public synchronized void requestDelayedModelBuild(int delayMs) {
     if (isBuildingModels()) {
       throw new IllegalEpoxyUsage(
           "Cannot call `requestDelayedModelBuild` from inside `buildModels`");
@@ -153,24 +219,33 @@ public abstract class EpoxyController {
     requestedModelBuildType =
         delayMs == 0 ? RequestedModelBuildType.NEXT_FRAME : RequestedModelBuildType.DELAYED;
 
-    handler.postDelayed(buildModelsRunnable, delayMs);
+    modelBuildHandler.postDelayed(buildModelsRunnable, delayMs);
   }
 
   /**
    * Cancels a pending call to {@link #buildModels()} if one has been queued by {@link
    * #requestModelBuild()}.
    */
-  public void cancelPendingModelBuild() {
+  public synchronized void cancelPendingModelBuild() {
+    // Access to requestedModelBuildType is synchronized because the model building thread clears
+    // it when model building starts, and the main thread needs to set it to indicate a build
+    // request.
+    // Additionally, it is crucial to guarantee that the state of requestedModelBuildType is in sync
+    // with the modelBuildHandler, otherwise we could end up in a state where we think a model build
+    // is queued, but it isn't, and model building never happens - stuck forever.
     if (requestedModelBuildType != RequestedModelBuildType.NONE) {
       requestedModelBuildType = RequestedModelBuildType.NONE;
-      handler.removeCallbacks(buildModelsRunnable);
+      modelBuildHandler.removeCallbacks(buildModelsRunnable);
     }
   }
 
   private final Runnable buildModelsRunnable = new Runnable() {
     @Override
     public void run() {
+      // This is needed to reset the requestedModelBuildType back to NONE
       cancelPendingModelBuild();
+
+      buildingModelsLooper = Looper.myLooper();
       helper.resetAutoModels();
 
       modelsBeingBuilt = new ControllerModelList(getExpectedModelCount());
@@ -186,10 +261,12 @@ public abstract class EpoxyController {
 
       timer.start();
       adapter.setModels(modelsBeingBuilt);
+      // This timing is only right if diffing and model building are on the same thread
       timer.stop("Models diffed");
 
       modelsBeingBuilt = null;
       hasBuiltModelsEver = true;
+      buildingModelsLooper = null;
     }
   };
 
@@ -215,6 +292,8 @@ public abstract class EpoxyController {
   protected abstract void buildModels();
 
   int getFirstIndexOfModelInBuildingList(EpoxyModel<?> model) {
+    assertIsBuildingModels();
+
     int size = modelsBeingBuilt.size();
     for (int i = 0; i < size; i++) {
       if (modelsBeingBuilt.get(i) == model) {
@@ -226,6 +305,8 @@ public abstract class EpoxyController {
   }
 
   boolean isModelAddedMultipleTimes(EpoxyModel<?> model) {
+    assertIsBuildingModels();
+
     int modelCount = 0;
     int size = modelsBeingBuilt.size();
     for (int i = 0; i < size; i++) {
@@ -238,9 +319,7 @@ public abstract class EpoxyController {
   }
 
   void addAfterInterceptorCallback(ModelInterceptorCallback callback) {
-    if (!isBuildingModels()) {
-      throw new IllegalEpoxyUsage("Can only call when building models");
-    }
+    assertIsBuildingModels();
 
     if (modelInterceptorCallbacks == null) {
       modelInterceptorCallbacks = new ArrayList<>();
@@ -303,6 +382,8 @@ public abstract class EpoxyController {
   /**
    * Add an interceptor callback to be run after models are built, to make any last changes before
    * they are set on the adapter. Interceptors are run in the order they are added.
+   * <p>
+   * Interceptors are run on the same thread that models are built on.
    *
    * @see Interceptor#intercept(List)
    */
@@ -324,11 +405,20 @@ public abstract class EpoxyController {
    * count call {@link #getAdapter()} and {@link EpoxyControllerAdapter#getItemCount()}
    */
   protected int getModelCountBuiltSoFar() {
-    if (!isBuildingModels()) {
-      throw new IllegalEpoxyUsage("Can only all this when inside the `buildModels` method");
-    }
-
+    assertIsBuildingModels();
     return modelsBeingBuilt.size();
+  }
+
+  private void assertIsBuildingModels() {
+    if (!isBuildingModels()) {
+      throw new IllegalEpoxyUsage("Can only call this when inside the `buildModels` method");
+    }
+  }
+
+  private void assertNotBuildingModels() {
+    if (isBuildingModels()) {
+      throw new IllegalEpoxyUsage("Cannot call this from inside `buildModels`");
+    }
   }
 
   /**
@@ -368,11 +458,7 @@ public abstract class EpoxyController {
    * validations are done.
    */
   void addInternal(EpoxyModel<?> modelToAdd) {
-    if (!isBuildingModels()) {
-      throw new IllegalEpoxyUsage(
-          "You can only add models inside the `buildModels` methods, and you cannot call "
-              + "`buildModels` directly. Call `requestModelBuild` instead");
-    }
+    assertIsBuildingModels();
 
     if (modelToAdd.hasDefaultId()) {
       throw new IllegalEpoxyUsage(
@@ -425,8 +511,9 @@ public abstract class EpoxyController {
     stagedModel = null;
   }
 
+  /** True if the current callstack originated from the buildModels call, on the same thread. */
   protected boolean isBuildingModels() {
-    return modelsBeingBuilt != null;
+    return buildingModelsLooper != null && buildingModelsLooper == Looper.myLooper();
   }
 
   private void filterDuplicatesIfNeeded(List<EpoxyModel<?>> models) {
@@ -481,9 +568,8 @@ public abstract class EpoxyController {
    * #onExceptionSwallowed(RuntimeException)} will be called for each duplicate removed.
    * <p>
    * This may be useful if your models are created via server supplied data, in which case the
-   * server may erroneously send duplicate items. Duplicate items break Epoxy's diffing and would
-   * normally cause a crash, so filtering them out can make a production application more robust to
-   * server inconsistencies.
+   * server may erroneously send duplicate items. Duplicate items are otherwise left in and can
+   * result in undefined behavior.
    */
   public void setFilterDuplicates(boolean filterDuplicates) {
     this.filterDuplicates = filterDuplicates;
@@ -514,13 +600,13 @@ public abstract class EpoxyController {
    * This should only be used in debug builds to avoid a performance hit in prod.
    */
   public void setDebugLoggingEnabled(boolean enabled) {
-    if (isBuildingModels()) {
-      throw new IllegalEpoxyUsage("Debug logging should be enabled before models are built");
-    }
+    assertNotBuildingModels();
 
     if (enabled) {
       timer = new DebugTimer(getClass().getSimpleName());
-      debugObserver = new EpoxyDiffLogger(getClass().getSimpleName());
+      if (debugObserver == null) {
+        debugObserver = new EpoxyDiffLogger(getClass().getSimpleName());
+      }
       adapter.registerAdapterDataObserver(debugObserver);
     } else {
       timer = NO_OP_TIMER;
@@ -559,9 +645,7 @@ public abstract class EpoxyController {
    * @param toPosition   New position of the item.
    */
   public void moveModel(int fromPosition, int toPosition) {
-    if (isBuildingModels()) {
-      throw new IllegalEpoxyUsage("Cannot call `moveModel` from inside `buildModels`");
-    }
+    assertNotBuildingModels();
 
     adapter.moveModel(fromPosition, toPosition);
 
@@ -681,7 +765,7 @@ public abstract class EpoxyController {
     recyclerViewAttachCount++;
 
     if (recyclerViewAttachCount > 1) {
-      handler.postDelayed(new Runnable() {
+      MainThreadExecutor.INSTANCE.handler.postDelayed(new Runnable() {
         @Override
         public void run() {
           // Only warn if there are still multiple adapters attached after a delay, to allow for

@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.os.Handler;
 import android.support.annotation.Nullable;
 
 /**
@@ -19,6 +20,13 @@ import android.support.annotation.Nullable;
 public abstract class TypedEpoxyController<T> extends EpoxyController {
   private T currentData;
   private boolean allowModelBuildRequests;
+
+  public TypedEpoxyController() {
+  }
+
+  public TypedEpoxyController(Handler modelBuildingHandler, Handler diffingHandler) {
+    super(modelBuildingHandler, diffingHandler);
+  }
 
   public final void setData(T data) {
     currentData = data;

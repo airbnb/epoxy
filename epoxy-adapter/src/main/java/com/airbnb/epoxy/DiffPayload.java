@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.LongSparseArray;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,6 +35,10 @@ public class DiffPayload {
         modelsById.put(model.id(), model);
       }
     }
+  }
+
+  public DiffPayload(EpoxyModel<?> changedItem) {
+    this(Collections.singletonList(changedItem));
   }
 
   /**

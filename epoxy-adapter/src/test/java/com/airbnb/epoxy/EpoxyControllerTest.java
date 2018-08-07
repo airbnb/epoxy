@@ -14,7 +14,9 @@ import java.util.List;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -51,9 +53,9 @@ public class EpoxyControllerTest {
     verifyNoMoreInteractions(observer);
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test(expected = IllegalEpoxyUsage.class)
   public void addingSameModelTwiceThrows() {
-    final TestModel model = new TestModel();
+    final CarouselModel_ model = new CarouselModel_();
 
     EpoxyController controller = new EpoxyController() {
 
@@ -87,25 +89,6 @@ public class EpoxyControllerTest {
     controller.requestModelBuild();
 
     assertEquals(1, controller.getAdapter().getItemCount());
-  }
-
-  @Test(expected = IllegalStateException.class)
-  public void throwOnDuplicatesIfNotFiltering() {
-    EpoxyController controller = new EpoxyController() {
-
-      @Override
-      protected void buildModels() {
-        new TestModel()
-            .id(1)
-            .addTo(this);
-
-        new TestModel()
-            .id(1)
-            .addTo(this);
-      }
-    };
-
-    controller.requestModelBuild();
   }
 
   boolean exceptionSwallowed;
@@ -462,5 +445,42 @@ public class EpoxyControllerTest {
 
     // Reset static field for future tests
     EpoxyController.setGlobalDebugLoggingEnabled(false);
+  }
+
+  @Test
+  public void testModelBuildListener() {
+    OnModelBuildFinishedListener observer = mock(OnModelBuildFinishedListener.class);
+    EpoxyController controller = new EpoxyController() {
+
+      @Override
+      protected void buildModels() {
+        new TestModel()
+            .addTo(this);
+      }
+    };
+
+    controller.addModelBuildListener(observer);
+    controller.requestModelBuild();
+
+    verify(observer).onModelBuildFinished(any(DiffResult.class));
+  }
+
+  @Test
+  public void testRemoveModelBuildListener() {
+    OnModelBuildFinishedListener observer = mock(OnModelBuildFinishedListener.class);
+    EpoxyController controller = new EpoxyController() {
+
+      @Override
+      protected void buildModels() {
+        new TestModel()
+            .addTo(this);
+      }
+    };
+
+    controller.addModelBuildListener(observer);
+    controller.removeModelBuildListener(observer);
+    controller.requestModelBuild();
+
+    verify(observer, never()).onModelBuildFinished(any(DiffResult.class));
   }
 }

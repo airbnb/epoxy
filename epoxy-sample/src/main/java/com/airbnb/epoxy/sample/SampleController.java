@@ -1,5 +1,8 @@
 package com.airbnb.epoxy.sample;
 
+import android.os.Handler;
+import android.os.HandlerThread;
+
 import com.airbnb.epoxy.AutoModel;
 import com.airbnb.epoxy.TypedEpoxyController;
 import com.airbnb.epoxy.sample.models.CarouselModelGroup;
@@ -28,7 +31,21 @@ public class SampleController extends TypedEpoxyController<List<CarouselData>> {
 
   private final AdapterCallbacks callbacks;
 
+  private static final Handler BACKGROUND_HANDLER;
+
+  static {
+    HandlerThread handlerThread = new HandlerThread("epoxy");
+    handlerThread.start();
+    BACKGROUND_HANDLER = new Handler(handlerThread.getLooper());
+  }
+
   SampleController(AdapterCallbacks callbacks) {
+    // Demonstrating how model building and diffing can be done in the background.
+    // You can control them separately by passing in separate handler, as shown below.
+    super(BACKGROUND_HANDLER, BACKGROUND_HANDLER);
+//    super(new Handler(), BACKGROUND_HANDLER);
+//    super(BACKGROUND_HANDLER, new Handler());
+
     this.callbacks = callbacks;
     setDebugLoggingEnabled(true);
   }
