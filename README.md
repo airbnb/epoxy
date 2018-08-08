@@ -19,11 +19,13 @@ Gradle is the only supported build configuration, so just add the dependency to 
 
 ```groovy
 dependencies {
-  compile 'com.airbnb.android:epoxy:2.16.0'
+  compile 'com.airbnb.android:epoxy:2.x.y'
   // Add the annotation processor if you are using Epoxy's annotations (recommended)
-  annotationProcessor 'com.airbnb.android:epoxy-processor:2.16.0'
+  annotationProcessor 'com.airbnb.android:epoxy-processor:2.x.y'
 }
 ```
+
+Replace `x` and `y` with the latest version number: [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.airbnb.android/epoxy/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.airbnb.android/epoxy)
 
 #### Kotlin
 If you are using Kotlin you should also add
