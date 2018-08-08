@@ -1,3 +1,8 @@
+# 2.16.0 (Aug 7, 2018)
+- **New** EpoxyController now supports asynchronous model building and diffing by allowing you to provide a custom Handler to run these tasks. See the [wiki](https://github.com/airbnb/epoxy/wiki/Epoxy-Controller#asynchronous-support) for more details.
+
+- **New** The `EpoxyController#addModelBuildListener` method was added to support listening for when model changes are dispatched to the recyclerview.
+
 # 2.15.0 (July 29, 2018)
 - **New** Added kotlin sample code for building models. Updated wiki with info (https://github.com/airbnb/epoxy/wiki/Kotlin-Model-Examples)
 

@@ -167,9 +167,9 @@ public abstract class EpoxyController {
    * and changes have been dispatched to the RecyclerView.
    * <p>
    * Since buildModels can be called once for many calls to {@link #requestModelBuild()}, this is
-   * called just for each buildModels execution, not for every request.
+   * called just once for each buildModels execution, not for every request.
    * <p>
-   * Used this to react to changes in your models that need to happen after the RecyclerView has
+   * Use this to react to changes in your models that need to happen after the RecyclerView has
    * been notified, such as scrolling.
    */
   public void addModelBuildListener(OnModelBuildFinishedListener listener) {
