@@ -1,4 +1,4 @@
-package com.airbnb.epoxy.kotlinsample
+package com.airbnb.epoxy.kotlinsample.helpers
 
 import android.view.View
 import com.airbnb.epoxy.EpoxyHolder
@@ -10,17 +10,17 @@ import kotlin.reflect.KProperty
  *
  * See [SampleKotlinModelWithHolder] for a usage example.
  */
-abstract class KotlinHolder : EpoxyHolder() {
+abstract class KotlinEpoxyHolder : EpoxyHolder() {
     private lateinit var view: View
 
     override fun bindView(itemView: View) {
         view = itemView
     }
 
-    protected fun <V : View> bind(id: Int): ReadOnlyProperty<KotlinHolder, V> =
-        Lazy { holder: KotlinHolder, prop ->
+    protected fun <V : View> bind(id: Int): ReadOnlyProperty<KotlinEpoxyHolder, V> =
+        Lazy { holder: KotlinEpoxyHolder, prop ->
             holder.view.findViewById(id) as V?
-                    ?: throw IllegalStateException("View ID $id for '${prop.name}' not found.")
+                ?: throw IllegalStateException("View ID $id for '${prop.name}' not found.")
         }
 
     /**
@@ -28,13 +28,13 @@ abstract class KotlinHolder : EpoxyHolder() {
      * https://github.com/JakeWharton/kotterknife
      */
     private class Lazy<V>(
-        private val initializer: (KotlinHolder, KProperty<*>) -> V
-    ) : ReadOnlyProperty<KotlinHolder, V> {
+        private val initializer: (KotlinEpoxyHolder, KProperty<*>) -> V
+    ) : ReadOnlyProperty<KotlinEpoxyHolder, V> {
         private object EMPTY
 
         private var value: Any? = EMPTY
 
-        override fun getValue(thisRef: KotlinHolder, property: KProperty<*>): V {
+        override fun getValue(thisRef: KotlinEpoxyHolder, property: KProperty<*>): V {
             if (value == EMPTY) {
                 value = initializer(thisRef, property)
             }

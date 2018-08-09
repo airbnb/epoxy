@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.design.widget.TabItem
+            android:text="Mix &amp; Match"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <android.support.design.widget.TabItem
+            android:text="Data Binding"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <android.support.design.widget.TabItem
+            android:text="Custom View"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <android.support.design.widget.TabItem
+            android:text="ViewHolder"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <android.support.design.widget.TabItem
+            android:text="Data Class"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+    </android.support.design.widget.TabLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#80000000"/>
+    <com.airbnb.epoxy.EpoxyRecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
+
+
