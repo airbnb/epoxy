@@ -2,7 +2,6 @@ package com.airbnb.epoxy;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -71,12 +70,12 @@ public abstract class EpoxyController {
   private volatile boolean filterDuplicates = filterDuplicatesDefault;
   /**
    * This is used to track whether we are currently building models. If it is non null it means
-   * a thread is in the building models method. We store the looper so we can know which thread
+   * a thread is in the building models method. We store the thread so we can know which one
    * is building models.
    * <p>
-   * Volatile because - write only on handler, read from any thread
+   * Volatile because -> write only on handler, read from any thread
    */
-  private volatile Looper buildingModelsLooper = null;
+  private volatile Thread threadBuildingModels = null;
   /**
    * Used to know that we should build models synchronously the first time.
    * <p>
@@ -245,7 +244,7 @@ public abstract class EpoxyController {
       // This is needed to reset the requestedModelBuildType back to NONE
       cancelPendingModelBuild();
 
-      buildingModelsLooper = Looper.myLooper();
+      threadBuildingModels = Thread.currentThread();
       helper.resetAutoModels();
 
       modelsBeingBuilt = new ControllerModelList(getExpectedModelCount());
@@ -266,7 +265,7 @@ public abstract class EpoxyController {
 
       modelsBeingBuilt = null;
       hasBuiltModelsEver = true;
-      buildingModelsLooper = null;
+      threadBuildingModels = null;
     }
   };
 
@@ -513,7 +512,7 @@ public abstract class EpoxyController {
 
   /** True if the current callstack originated from the buildModels call, on the same thread. */
   protected boolean isBuildingModels() {
-    return buildingModelsLooper != null && buildingModelsLooper == Looper.myLooper();
+    return threadBuildingModels == Thread.currentThread();
   }
 
   private void filterDuplicatesIfNeeded(List<EpoxyModel<?>> models) {
