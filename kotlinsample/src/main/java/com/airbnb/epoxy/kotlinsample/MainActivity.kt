@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        showDataBindingItems()
+        showMixAndMatch()
     }
 
     private fun showMixAndMatch() {
