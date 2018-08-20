@@ -38,6 +38,7 @@ typealias KotlinTypeSpec = com.squareup.kotlinpoet.TypeSpec
 
 private val javaUtilPkg = "java.util"
 private val javaLangPkg = "java.lang"
+private val kotlinJvmFunction = "kotlin.jvm.functions"
 private val kotlinCollectionsPkg = "kotlin.collections"
 private val kotlinPkg = "kotlin"
 fun JavaClassName.toKPoet(): KotlinClassName {
@@ -54,18 +55,18 @@ fun JavaClassName.toKPoet(): KotlinClassName {
 
 /** Some classes, like List or Byte have the same class name but a different package for their kotlin equivalent. */
 private fun JavaClassName.getPackageNameInKotlin(): String {
-    if (packageName() in listOf(javaUtilPkg, javaLangPkg) && simpleNames().size == 1) {
+    if (packageName() in listOf(javaUtilPkg, javaLangPkg, kotlinJvmFunction) && simpleNames().size == 1) {
 
-        val transformedPkg = if (isBoxedPrimitive) {
-            kotlinPkg
-        } else {
-            when (simpleName()) {
+        val transformedPkg = when {
+            isBoxedPrimitive -> kotlinPkg
+            isLambda(this) -> kotlinPkg
+            else -> when (simpleName()) {
                 "Collection",
                 "List",
                 "Map",
                 "Set",
                 "Iterable" -> kotlinCollectionsPkg
-                "String" -> kotlinPkg
+                "String", "Function1" -> kotlinPkg
                 else -> null
             }
         }
@@ -76,6 +77,10 @@ private fun JavaClassName.getPackageNameInKotlin(): String {
     }
 
     return packageName()
+}
+
+fun isLambda(type: JavaTypeName): Boolean {
+    return type.toString().contains("Function")
 }
 
 /** Some classes, notably Integer and Character, have a different simple name in Kotlin. */
@@ -184,12 +189,16 @@ fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
 
     val nullable = annotations.any { (it.type as? JavaClassName)?.simpleName() == "Nullable" }
 
-    return KotlinParameterSpec.builder(
+    val parameterBuilder = KotlinParameterSpec.builder(
         paramName,
         type.toKPoet(nullable),
         *modifiers.toKModifier().toTypedArray()
-    ).build()
+    )
 
+    if (isLambda(type)) {
+        parameterBuilder.addModifiers(KModifier.NOINLINE)
+    }
+    return parameterBuilder.build()
 }
 
 fun Iterable<JavaParameterSpec>.toKParams() = map { it.toKPoet() }
