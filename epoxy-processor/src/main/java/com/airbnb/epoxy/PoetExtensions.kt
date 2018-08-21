@@ -66,7 +66,7 @@ private fun JavaClassName.getPackageNameInKotlin(): String {
                 "Map",
                 "Set",
                 "Iterable" -> kotlinCollectionsPkg
-                "String", "Function1" -> kotlinPkg
+                "String" -> kotlinPkg
                 else -> null
             }
         }
@@ -80,7 +80,7 @@ private fun JavaClassName.getPackageNameInKotlin(): String {
 }
 
 fun isLambda(type: JavaTypeName): Boolean {
-    return type.toString().contains("Function")
+    return type.toString().contains("Function") && type.toString().contains("kotlin")
 }
 
 /** Some classes, notably Integer and Character, have a different simple name in Kotlin. */
@@ -189,16 +189,15 @@ fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
 
     val nullable = annotations.any { (it.type as? JavaClassName)?.simpleName() == "Nullable" }
 
-    val parameterBuilder = KotlinParameterSpec.builder(
+    return KotlinParameterSpec.builder(
         paramName,
         type.toKPoet(nullable),
         *modifiers.toKModifier().toTypedArray()
-    )
-
-    if (isLambda(type)) {
-        parameterBuilder.addModifiers(KModifier.NOINLINE)
-    }
-    return parameterBuilder.build()
+    ).apply {
+        if (isLambda(type)) {
+            addModifiers(KModifier.NOINLINE)
+        }
+    }.build()
 }
 
 fun Iterable<JavaParameterSpec>.toKParams() = map { it.toKPoet() }
