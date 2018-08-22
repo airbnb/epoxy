@@ -1,3 +1,6 @@
+# 2.16.1 (Aug 22, 2018)
+- **Fix** Update EpoxyController async model building so threading works with tests (https://github.com/airbnb/epoxy/pull/504)
+
 # 2.16.0 (Aug 7, 2018)
 - **New** EpoxyController now supports asynchronous model building and diffing by allowing you to provide a custom Handler to run these tasks. See the [wiki](https://github.com/airbnb/epoxy/wiki/Epoxy-Controller#asynchronous-support) for more details.
 
