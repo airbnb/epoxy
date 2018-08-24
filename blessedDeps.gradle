@@ -10,8 +10,8 @@
 rootProject.ext.JAVA_SOURCE_VERSION = JavaVersion.VERSION_1_7
 rootProject.ext.JAVA_TARGET_VERSION = JavaVersion.VERSION_1_7
 
-rootProject.ext.TARGET_SDK_VERSION = 27
-rootProject.ext.COMPILE_SDK_VERSION = 27
+rootProject.ext.TARGET_SDK_VERSION = 28
+rootProject.ext.COMPILE_SDK_VERSION = 28
 rootProject.ext.MIN_SDK_VERSION = 14
 rootProject.ext.MIN_SDK_VERSION_LITHO = 15
 
