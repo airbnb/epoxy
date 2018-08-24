@@ -77,6 +77,15 @@ class AsyncEpoxyDiffer {
   }
 
   /**
+   * @return True if a diff operation is in progress.
+   */
+  @SuppressWarnings("WeakerAccess")
+  @AnyThread
+  public boolean isDiffInProgress() {
+    return generationTracker.hasUnfinishedGeneration();
+  }
+
+  /**
    * Set the current list without performing any diffing. Cancels any diff in progress.
    * <p>
    * This can be used if you notified a change to the adapter manually and need this list to be
@@ -210,9 +219,13 @@ class AsyncEpoxyDiffer {
     }
 
     synchronized boolean finishMaxGeneration() {
-      boolean isInterrupting = maxScheduledGeneration > maxFinishedGeneration;
+      boolean isInterrupting = hasUnfinishedGeneration();
       maxFinishedGeneration = maxScheduledGeneration;
       return isInterrupting;
+    }
+
+    synchronized boolean hasUnfinishedGeneration() {
+      return maxScheduledGeneration > maxFinishedGeneration;
     }
 
     synchronized boolean finishGeneration(int runGeneration) {

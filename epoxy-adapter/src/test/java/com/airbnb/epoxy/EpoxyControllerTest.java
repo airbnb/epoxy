@@ -483,4 +483,23 @@ public class EpoxyControllerTest {
 
     verify(observer, never()).onModelBuildFinished(any(DiffResult.class));
   }
+
+  @Test
+  public void testDiffInProgress() {
+    EpoxyController controller = new EpoxyController() {
+
+      @Override
+      protected void buildModels() {
+        assertTrue(this.hasPendingModelBuild());
+
+        new TestModel()
+            .addTo(this);
+      }
+    };
+
+    assertFalse(controller.hasPendingModelBuild());
+    controller.requestModelBuild();
+    // Model build should happen synchronously in tests
+    assertFalse(controller.hasPendingModelBuild());
+  }
 }
