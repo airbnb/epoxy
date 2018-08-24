@@ -1,4 +1,8 @@
-# 2.16.1 (Aug 22, 2018)
+# 2.16.2 (Aug 23, 2018)
+- **Fix** Kotlin lambdas can be used in model constructors (https://github.com/airbnb/epoxy/pull/501)
+- **New** Added function to check whether a model build is pending (https://github.com/airbnb/epoxy/pull/506)
+
+# 2.16.1 (Aug 15, 2018)
 - **Fix** Update EpoxyController async model building so threading works with tests (https://github.com/airbnb/epoxy/pull/504)
 
 # 2.16.0 (Aug 7, 2018)
