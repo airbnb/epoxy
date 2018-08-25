@@ -162,7 +162,9 @@ class AsyncEpoxyDiffer {
       @Nullable final DiffResult result
   ) {
 
-    MainThreadExecutor.INSTANCE.execute(new Runnable() {
+    // We use an asynchronous handler so that the Runnable can be posted directly back to the main
+    // thread without waiting on view invalidation synchronization.
+    MainThreadExecutor.ASYNC_INSTANCE.execute(new Runnable() {
       @Override
       public void run() {
         final boolean dispatchResult = tryLatchList(newList, runGeneration);
