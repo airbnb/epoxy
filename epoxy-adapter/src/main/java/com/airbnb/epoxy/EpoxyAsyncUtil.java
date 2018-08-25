@@ -2,13 +2,11 @@ package com.airbnb.epoxy;
 
 import android.os.Build;
 import android.os.Handler;
+import android.os.Handler.Callback;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.MainThread;
-import android.support.annotation.Nullable;
-
-import java.lang.reflect.Constructor;
 
 /**
  * Various helpers for running Epoxy operations off the main thread.
@@ -60,18 +58,18 @@ public final class EpoxyAsyncUtil {
       return new Handler(looper);
     }
 
+    // Standard way of exposing async handler on older api's from the support library
+    // https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core
+    // /src/main/java/androidx/core/os/HandlerCompat.java#51
     if (Build.VERSION.SDK_INT >= 28) {
       return Handler.createAsync(looper);
     }
-
-    if (Build.VERSION.SDK_INT >= 17) {
-      Constructor<Handler> handlerConstructor = asyncHandlerConstructor();
-      if (handlerConstructor != null) {
-        try {
-          return handlerConstructor.newInstance(looper, null, true);
-        } catch (Throwable e) {
-          // Fallback
-        }
+    if (Build.VERSION.SDK_INT >= 16) {
+      try {
+        //noinspection JavaReflectionMemberAccess
+        return Handler.class.getDeclaredConstructor(Looper.class, Callback.class, boolean.class)
+            .newInstance(looper, null, true);
+      } catch (Throwable ignored) {
       }
     }
 
@@ -85,19 +83,5 @@ public final class EpoxyAsyncUtil {
     HandlerThread handlerThread = new HandlerThread(threadName);
     handlerThread.start();
     return handlerThread.getLooper();
-  }
-
-  @Nullable
-  private static Constructor<Handler> asyncHandlerConstructor() {
-    try {
-      //noinspection JavaReflectionMemberAccess
-      return Handler.class.getConstructor(
-          Looper.class,
-          Handler.Callback.class,
-          Boolean.class
-      );
-    } catch (Throwable e) {
-      return null;
-    }
   }
 }

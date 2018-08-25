@@ -1,15 +1,14 @@
 package com.airbnb.epoxy;
 
-import android.os.Looper;
-
-import static com.airbnb.epoxy.EpoxyAsyncUtil.createHandler;
+import static com.airbnb.epoxy.EpoxyAsyncUtil.AYSNC_MAIN_THREAD_HANDLER;
+import static com.airbnb.epoxy.EpoxyAsyncUtil.MAIN_THREAD_HANDLER;
 
 class MainThreadExecutor extends HandlerExecutor {
   static final MainThreadExecutor INSTANCE = new MainThreadExecutor(false);
   static final MainThreadExecutor ASYNC_INSTANCE = new MainThreadExecutor(true);
 
   MainThreadExecutor(boolean async) {
-    super(createHandler(Looper.getMainLooper(), async));
+    super(async ? AYSNC_MAIN_THREAD_HANDLER : MAIN_THREAD_HANDLER);
   }
 }
 
