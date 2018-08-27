@@ -2,7 +2,6 @@ package com.airbnb.epoxy;
 
 import android.view.View;
 import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;

@@ -2,7 +2,6 @@ package com.airbnb.epoxy;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

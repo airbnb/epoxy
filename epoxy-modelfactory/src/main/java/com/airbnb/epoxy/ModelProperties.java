@@ -1,10 +1,10 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RawRes;
 import android.view.View.OnClickListener;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RawRes;
 
 import com.airbnb.paris.styles.Style;
 

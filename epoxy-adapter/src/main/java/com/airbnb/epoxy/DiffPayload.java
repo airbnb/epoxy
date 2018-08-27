@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.Nullable;

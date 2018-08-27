@@ -1,6 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.NonNull;
 import android.view.View;
 
 @EpoxyModelClass

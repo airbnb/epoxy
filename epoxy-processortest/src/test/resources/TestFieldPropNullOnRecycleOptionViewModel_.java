@@ -3,7 +3,6 @@ package com.airbnb.epoxy;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
 import java.lang.CharSequence;
 import java.lang.Number;
 import java.lang.Object;
