@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.PluralsRes;
 import androidx.annotation.StringRes;
 import java.lang.CharSequence;
@@ -283,7 +284,7 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@android.support.annotation.Nullable Number... arg0) {
+  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
@@ -295,20 +296,20 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@android.support.annotation.Nullable CharSequence arg0) {
+  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@android.support.annotation.Nullable CharSequence arg0,
-      @android.support.annotation.Nullable CharSequence... arg1) {
+  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable CharSequence arg0,
+      @androidx.annotation.Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@android.support.annotation.Nullable CharSequence arg0,
+  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable CharSequence arg0,
       long arg1) {
     super.id(arg0, arg1);
     return this;
