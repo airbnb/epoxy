@@ -1,3 +1,6 @@
+# 2.16.3 (Aug 24, 2018)
+- **New** Add `AsyncEpoxyController` for easy access to async support. Change background diffing to post asynchronously to the main thread (https://github.com/airbnb/epoxy/pull/509)
+
 # 2.16.2 (Aug 23, 2018)
 - **Fix** Kotlin lambdas can be used in model constructors (https://github.com/airbnb/epoxy/pull/501)
 - **New** Added function to check whether a model build is pending (https://github.com/airbnb/epoxy/pull/506)
