@@ -16,7 +16,7 @@ buildscript {
 }
 
 plugins {
-  id 'com.github.ben-manes.versions' version '0.17.0'
+  id 'com.github.ben-manes.versions' version '0.20.0'
 }
 
 allprojects {
@@ -81,6 +81,6 @@ def getRepositoryPassword() {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '4.7'
+  gradleVersion = '4.9'
   distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }

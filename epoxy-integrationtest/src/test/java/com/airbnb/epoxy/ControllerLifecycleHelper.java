@@ -8,6 +8,7 @@ import org.robolectric.RuntimeEnvironment;
 import java.util.Collections;
 import java.util.List;
 
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
 class ControllerLifecycleHelper {
@@ -46,7 +47,7 @@ class ControllerLifecycleHelper {
     );
 
     // The simplest way to inject the position for testing.
-//    doReturn(position).when(viewHolder).getAdapterPosition();
+    doReturn(position).when(viewHolder).getAdapterPosition();
     return viewHolder;
   }
 

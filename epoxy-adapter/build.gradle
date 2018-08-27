@@ -22,7 +22,7 @@ dependencies {
   implementation rootProject.deps.androidAnnotations
   implementation rootProject.deps.androidRecyclerView
   implementation rootProject.deps.androidDesignLibrary
-  implementation project(':epoxy-annotations')
+  api project(':epoxy-annotations')
 
   annotationProcessor project(':epoxy-processor')
 

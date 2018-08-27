@@ -107,13 +107,13 @@ public class ModelClickListenerTest {
     doReturn(holderMock).when(recyclerMock).findContainingViewHolder(mockedView);
     doReturn(model).when(holderMock).getModel();
 
-//    when(mockedView.getParent()).thenReturn(recyclerMock);
-//    when(recyclerMock.findContainingViewHolder(mockedView)).thenReturn(holderMock);
-//    when(holderMock.getAdapterPosition()).thenReturn(1);
-//    when(holderMock.getModel()).thenReturn(model);
+    when(mockedView.getParent()).thenReturn(recyclerMock);
+    when(recyclerMock.findContainingViewHolder(mockedView)).thenReturn(holderMock);
+    when(holderMock.getAdapterPosition()).thenReturn(1);
+    when(holderMock.getModel()).thenReturn(model);
 
     View parentView = mock(View.class);
-//    when(holderMock.objectToBind()).thenReturn(parentView);
+    when(holderMock.objectToBind()).thenReturn(parentView);
     doReturn(parentView).when(holderMock).objectToBind();
     return mockedView;
   }
