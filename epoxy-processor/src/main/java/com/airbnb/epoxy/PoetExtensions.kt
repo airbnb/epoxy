@@ -13,6 +13,7 @@ import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.UNIT
 import javax.lang.model.element.Modifier
+import kotlin.reflect.jvm.internal.impl.types.KotlinType
 
 typealias JavaClassName = com.squareup.javapoet.ClassName
 typealias JavaTypeName = com.squareup.javapoet.TypeName
@@ -196,6 +197,10 @@ fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
     ).apply {
         if (isLambda(type)) {
             addModifiers(KModifier.NOINLINE)
+        }
+        // Add annotations associated with the parameter.
+        annotations.map { annotation ->
+            addAnnotation(KotlinClassName.bestGuess(annotation.type.toString()))
         }
     }.build()
 }
