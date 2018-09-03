@@ -103,6 +103,11 @@ private fun JavaClassName.getSimpleNamesInKotlin(): List<String> {
     return originalNames
 }
 
+fun JavaAnnotationSpec.toKPoet(): KotlinAnnotationSpec {
+    val annotationClass = KotlinClassName.bestGuess(type.toString())
+    return KotlinAnnotationSpec.builder(annotationClass).build()
+}
+
 fun JavaClassName.setPackage(packageName: String) =
     JavaClassName.get(packageName, simpleName(), *simpleNames().drop(1).toTypedArray())!!
 
@@ -190,6 +195,8 @@ fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
 
     val nullable = annotations.any { (it.type as? JavaClassName)?.simpleName() == "Nullable" }
 
+    val kotlinAnnotations = annotations.map { it.toKPoet() }
+
     return KotlinParameterSpec.builder(
         paramName,
         type.toKPoet(nullable),
@@ -198,10 +205,7 @@ fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
         if (isLambda(type)) {
             addModifiers(KModifier.NOINLINE)
         }
-        // Add annotations associated with the parameter.
-        annotations.map { annotation ->
-            addAnnotation(KotlinClassName.bestGuess(annotation.type.toString()))
-        }
+        addAnnotations(kotlinAnnotations)
     }.build()
 }
 
