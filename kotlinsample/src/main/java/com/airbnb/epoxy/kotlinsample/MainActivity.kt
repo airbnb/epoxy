@@ -1,5 +1,6 @@
 package com.airbnb.epoxy.kotlinsample
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v7.app.AppCompatActivity
@@ -59,8 +60,8 @@ class MainActivity : AppCompatActivity() {
 
                 itemCustomView {
                     id("custom view $i")
-                    greeting("this is a custom view item")
-                    name("")
+                    color(Color.GREEN)
+                    title("this is a green custom view item")
                     listener { _ ->
                         Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
                     }
@@ -103,8 +104,8 @@ class MainActivity : AppCompatActivity() {
             for (i in 0 until 100) {
                 val title = "Custom View Item $i"
                 ItemCustomViewModel_()
-                    .greeting("Hello")
-                    .name("$i times")
+                    .color(Color.BLACK)
+                    .title("$i times")
                     .id(i)
                     .listener { _ ->
                         Toast.makeText(this@MainActivity, title, Toast.LENGTH_LONG).show()

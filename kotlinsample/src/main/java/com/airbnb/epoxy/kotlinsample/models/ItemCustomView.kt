@@ -1,6 +1,7 @@
 package com.airbnb.epoxy.kotlinsample.models
 
 import android.content.Context
+import android.support.annotation.ColorInt
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
@@ -21,16 +22,17 @@ class ItemCustomView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
+    val textView: TextView
     init {
         inflate(context, R.layout.custom_view_item, this)
         orientation = VERTICAL
+        textView = (findViewById<TextView>(R.id.title))
     }
 
-    lateinit var greeting: String
-
+    // You can annotate your methods with @ModelProp
     @ModelProp
-    fun greeting(value: String) {
-        greeting = value
+    fun color(@ColorInt color: Int) {
+        textView.setTextColor(color)
     }
 
     // Or if you need to store data in properties there are two options
@@ -40,15 +42,14 @@ class ItemCustomView @JvmOverloads constructor(
         @CallbackProp set
 
     // 2. Or you can use lateinit
-    @TextProp lateinit var name: CharSequence
+    @TextProp lateinit var title: CharSequence
 
 
     @AfterPropsSet
     fun useProps() {
         // This is optional, and is called after the annotated properties above are set.
         // This is useful for using several properties in one method to guarantee they are all set first.
-        val textView = (findViewById<TextView>(R.id.title))
-        textView.setText("${greeting} ${name}")
+        textView.text = title
         textView.setOnClickListener(listener)
     }
 }
