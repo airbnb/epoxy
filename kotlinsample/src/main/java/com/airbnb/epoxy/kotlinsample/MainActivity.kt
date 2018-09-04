@@ -47,36 +47,39 @@ class MainActivity : AppCompatActivity() {
 
     private fun showMixAndMatch() {
         recyclerView.withModels {
-            dataBindingItem {
-                id("0")
-                text("this is a data binding model")
-                onclick { _ ->
-                    Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
-                }
-            }
 
-            itemCustomView {
-                id("1")
-                greeting("this is a custom view item")
-                name("")
-                listener { _ ->
-                    Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
+            for(i in 0 until 100) {
+                dataBindingItem {
+                    id("data binding $i")
+                    text("this is a data binding model")
+                    onclick { _ ->
+                        Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
+                    }
                 }
-            }
 
-            itemEpoxyHolder {
-                id("2")
-                title("this is a View Holder item")
-                listener {
-                    Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG)
-                        .show()
+                itemCustomView {
+                    id("custom view $i")
+                    greeting("this is a custom view item")
+                    name("")
+                    listener { _ ->
+                        Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
+                    }
                 }
-            }
 
-            // Since data classes do not use code generation, there's no extension generated here
-            ItemDataClass("this is a Data Class Item")
-                .id("3")
-                .addTo(this)
+                itemEpoxyHolder {
+                    id("view holder $i")
+                    title("this is a View Holder item")
+                    listener {
+                        Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                }
+
+                // Since data classes do not use code generation, there's no extension generated here
+                ItemDataClass("this is a Data Class Item")
+                    .id("data class $i")
+                    .addTo(this)
+            }
         }
     }
 
