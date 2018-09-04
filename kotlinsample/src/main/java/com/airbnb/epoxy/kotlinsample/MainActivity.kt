@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 dataBindingItem {
                     id("data binding $i")
                     text("this is a data binding model")
-                    onclick { _ ->
+                    onClick { _ ->
                         Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
                     }
                 }
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                 DataBindingItemBindingModel_()
                     .text(title)
                     .id(i)
-                    .onclick { _ ->
+                    .onClick { _ ->
                         Toast.makeText(this@MainActivity, title, Toast.LENGTH_LONG).show()
                     }
                     .addTo(it)

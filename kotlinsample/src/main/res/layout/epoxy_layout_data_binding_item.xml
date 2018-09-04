@@ -7,7 +7,7 @@
             name="text"
             type="String" />
         <variable
-            name="onclick"
+            name="onClick"
             type="android.view.View.OnClickListener" />
 
     </data>
@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="20dp"
-            android:onClick="@{onclick}"
+            android:onClick="@{onClick}"
             android:text="@{text}"
             android:background="?attr/selectableItemBackground"/>
         <View
