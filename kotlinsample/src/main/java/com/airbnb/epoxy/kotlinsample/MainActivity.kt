@@ -3,7 +3,6 @@ package com.airbnb.epoxy.kotlinsample
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import android.widget.Toast
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.kotlinsample.models.ItemCustomViewModel_
@@ -51,27 +50,27 @@ class MainActivity : AppCompatActivity() {
                 dataBindingItem {
                     id("0")
                     text("this is a data binding model")
-                    onclick(View.OnClickListener {
+                    onclick { _ ->
                         Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
-                    })
+                    }
                 }
 
                 itemCustomView {
                     id("1")
                     greeting("this is a custom view item")
                     name("")
-                    listener(View.OnClickListener {
+                    listener { _ ->
                         Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
-                    })
+                    }
                 }
 
                 itemEpoxyHolder {
                     id("2")
                     title("this is a View Holder item")
-                    listener({
-                                 Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG)
-                                     .show()
-                             })
+                    listener {
+                        Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG)
+                            .show()
+                    }
                 }
 
                 // Since data classes do not use code generation, there's no extension generated here
@@ -90,9 +89,9 @@ class MainActivity : AppCompatActivity() {
                 DataBindingItemBindingModel_()
                     .text(title)
                     .id(i)
-                    .onclick(View.OnClickListener {
+                    .onclick { _ ->
                         Toast.makeText(this@MainActivity, title, Toast.LENGTH_LONG).show()
-                    })
+                    }
                     .addTo(it)
             }
         }
@@ -106,9 +105,9 @@ class MainActivity : AppCompatActivity() {
                     .greeting("Hello")
                     .name("${i} times")
                     .id(i)
-                    .listener(View.OnClickListener {
+                    .listener { _ ->
                         Toast.makeText(this@MainActivity, title, Toast.LENGTH_LONG).show()
-                    })
+                    }
                     .addTo(it)
             }
         }
@@ -121,9 +120,9 @@ class MainActivity : AppCompatActivity() {
                 ItemEpoxyHolder_()
                     .title(title)
                     .id(i)
-                    .listener({
-                                  Toast.makeText(this@MainActivity, title, Toast.LENGTH_LONG).show()
-                              })
+                    .listener {
+                        Toast.makeText(this@MainActivity, title, Toast.LENGTH_LONG).show()
+                    }
                     .addTo(it)
             }
         }
