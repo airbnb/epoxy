@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.kotlinsample.models.ItemCustomViewModel_
 import com.airbnb.epoxy.kotlinsample.models.ItemDataClass
@@ -12,7 +13,7 @@ import com.airbnb.epoxy.kotlinsample.models.itemCustomView
 import com.airbnb.epoxy.kotlinsample.models.itemEpoxyHolder
 
 class MainActivity : AppCompatActivity() {
-    lateinit var recyclerView: EpoxyRecyclerView
+    private lateinit var recyclerView: EpoxyRecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,40 +46,37 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showMixAndMatch() {
-        recyclerView.buildModelsWith {
-            it.apply {
-                dataBindingItem {
-                    id("0")
-                    text("this is a data binding model")
-                    onclick { _ ->
-                        Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
-                    }
+        recyclerView.withModels {
+            dataBindingItem {
+                id("0")
+                text("this is a data binding model")
+                onclick { _ ->
+                    Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
                 }
-
-                itemCustomView {
-                    id("1")
-                    greeting("this is a custom view item")
-                    name("")
-                    listener { _ ->
-                        Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
-                    }
-                }
-
-                itemEpoxyHolder {
-                    id("2")
-                    title("this is a View Holder item")
-                    listener {
-                        Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG)
-                            .show()
-                    }
-                }
-
-                // Since data classes do not use code generation, there's no extension generated here
-                ItemDataClass("this is a Data Class Item")
-                    .id("3")
-                    .addTo(it)
-
             }
+
+            itemCustomView {
+                id("1")
+                greeting("this is a custom view item")
+                name("")
+                listener { _ ->
+                    Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            itemEpoxyHolder {
+                id("2")
+                title("this is a View Holder item")
+                listener {
+                    Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+
+            // Since data classes do not use code generation, there's no extension generated here
+            ItemDataClass("this is a Data Class Item")
+                .id("3")
+                .addTo(this)
         }
     }
 
@@ -103,7 +101,7 @@ class MainActivity : AppCompatActivity() {
                 val title = "Custom View Item $i"
                 ItemCustomViewModel_()
                     .greeting("Hello")
-                    .name("${i} times")
+                    .name("$i times")
                     .id(i)
                     .listener { _ ->
                         Toast.makeText(this@MainActivity, title, Toast.LENGTH_LONG).show()
@@ -134,5 +132,13 @@ class MainActivity : AppCompatActivity() {
         recyclerView.setModels(modelList)
     }
 
+}
+
+fun EpoxyRecyclerView.withModels(buildModelsCallback: EpoxyController.() -> Unit) {
+    setControllerAndBuildModels(object : EpoxyController() {
+        override fun buildModels() {
+            buildModelsCallback()
+        }
+    })
 }
 
