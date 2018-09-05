@@ -19,7 +19,7 @@ fun getTypeMirror(
     types: Types
 ): TypeMirror {
     val classElement = getElementByName(className, elements, types)
-            ?: throw IllegalArgumentException("Unknown class: " + className)
+        ?: throw IllegalArgumentException("Unknown class: " + className)
 
     return classElement.asType()
 }
@@ -165,9 +165,19 @@ fun Element.iterateSuperClasses(
  * @param annotationFilter Return false to exclude annotations with the given class name.
  */
 fun TypeElement.buildAnnotationSpecs(annotationFilter: (ClassName) -> Boolean = { true }): List<AnnotationSpec> {
+    val internalAnnotationFilter = { className: ClassName ->
+        if (className.reflectionName() == "kotlin.Metadata") {
+            // Don't include the generated kotlin metadata since it only applies to the original
+            // kotlin class and is wrong to put on our generated java classes.
+            false
+        } else {
+            annotationFilter(className)
+        }
+
+    }
     return annotationMirrors
         .map { AnnotationSpec.get(it) }
-        .filter { annotationFilter(it.type as ClassName) }
+        .filter { internalAnnotationFilter(it.type as ClassName) }
 }
 
 fun TypeElement.getParentClassElement(
