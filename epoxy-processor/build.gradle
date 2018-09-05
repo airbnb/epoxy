@@ -20,14 +20,16 @@ for (File file : sdkHandler.sdkLoader.repositories) {
 }
 
 dependencies {
-    compile deps.kotlin
-    compile deps.squareJavaPoet
-    compile deps.squareKotlinPoet
+    implementation deps.kotlin
+    implementation deps.squareJavaPoet
+    implementation deps.squareKotlinPoet
 
     /** Provides the sun javac tools for looking up the R class trees. */
     compileOnly files(Jvm.current().getToolsJar())
 
-    compile project(':epoxy-annotations')
+    implementation project(':epoxy-annotations')
+
+    testImplementation rootProject.deps.junit
 }
 
 checkstyle {

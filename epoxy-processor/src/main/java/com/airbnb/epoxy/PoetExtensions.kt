@@ -1,5 +1,6 @@
 package com.airbnb.epoxy
 
+import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.TypeName
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
@@ -13,6 +14,7 @@ import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.UNIT
 import javax.lang.model.element.Modifier
+import kotlin.reflect.jvm.internal.impl.types.KotlinType
 
 typealias JavaClassName = com.squareup.javapoet.ClassName
 typealias JavaTypeName = com.squareup.javapoet.TypeName
@@ -102,6 +104,19 @@ private fun JavaClassName.getSimpleNamesInKotlin(): List<String> {
     return originalNames
 }
 
+// Does not support transferring complex annotations which
+// have parameters and values associated with them.
+fun JavaAnnotationSpec.toKPoet(): KotlinAnnotationSpec? {
+    // If the annotation has any members (params), then we
+    // return null since we don't yet support translating
+    // params from Java annotation to Kotlin annotation.
+    if (members.isNotEmpty()) {
+        return null
+    }
+    val annotationClass = KotlinClassName.bestGuess(type.toString())
+    return KotlinAnnotationSpec.builder(annotationClass).build()
+}
+
 fun JavaClassName.setPackage(packageName: String) =
     JavaClassName.get(packageName, simpleName(), *simpleNames().drop(1).toTypedArray())!!
 
@@ -189,6 +204,8 @@ fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
 
     val nullable = annotations.any { (it.type as? JavaClassName)?.simpleName() == "Nullable" }
 
+    val kotlinAnnotations: List<KotlinAnnotationSpec> = annotations.mapNotNull { it.toKPoet() }
+
     return KotlinParameterSpec.builder(
         paramName,
         type.toKPoet(nullable),
@@ -197,6 +214,7 @@ fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
         if (isLambda(type)) {
             addModifiers(KModifier.NOINLINE)
         }
+        addAnnotations(kotlinAnnotations)
     }.build()
 }
 
