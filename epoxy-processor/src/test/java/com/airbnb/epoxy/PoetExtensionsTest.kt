@@ -1,9 +1,12 @@
 package com.airbnb.epoxy
 
+import android.support.annotation.FloatRange
 import android.support.annotation.NonNull
 import com.squareup.kotlinpoet.asTypeName
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import javax.lang.model.element.Modifier
@@ -16,7 +19,19 @@ class PoetExtensionsTest {
         val javaAnnotation = JavaAnnotationSpec.builder(annotation).build()
 
         val kotlinAnnotation = javaAnnotation.toKPoet()
-        assertEquals(type, kotlinAnnotation.type)
+        assertNotNull(kotlinAnnotation)
+        assertEquals(type, kotlinAnnotation?.type)
+    }
+
+    @Test fun testAnnotationSpecToKPoetWithParams() {
+        val annotation = FloatRange::class.java
+        val javaAnnotation = JavaAnnotationSpec.builder(annotation)
+            .addMember("from", "0.0")
+            .addMember("to", "1.0")
+            .build()
+
+        val kotlinAnnotation = javaAnnotation.toKPoet()
+        assertNull(kotlinAnnotation)
     }
 
     @Test fun testIsLambdaWithString() {

@@ -106,7 +106,13 @@ private fun JavaClassName.getSimpleNamesInKotlin(): List<String> {
 
 // Does not support transferring complex annotations which
 // have parameters and values associated with them.
-fun JavaAnnotationSpec.toKPoet(): KotlinAnnotationSpec {
+fun JavaAnnotationSpec.toKPoet(): KotlinAnnotationSpec? {
+    // If the annotation has any members (params), then we
+    // return null since we don't yet support translating
+    // params from Java annotation to Kotlin annotation.
+    if (members.isNotEmpty()) {
+        return null
+    }
     val annotationClass = KotlinClassName.bestGuess(type.toString())
     return KotlinAnnotationSpec.builder(annotationClass).build()
 }
@@ -198,7 +204,7 @@ fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
 
     val nullable = annotations.any { (it.type as? JavaClassName)?.simpleName() == "Nullable" }
 
-    val kotlinAnnotations = annotations.map { it.toKPoet() }
+    val kotlinAnnotations: List<KotlinAnnotationSpec> = annotations.mapNotNull { it.toKPoet() }
 
     return KotlinParameterSpec.builder(
         paramName,
