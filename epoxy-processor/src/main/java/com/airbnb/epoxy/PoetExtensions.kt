@@ -1,5 +1,6 @@
 package com.airbnb.epoxy
 
+import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.TypeName
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
@@ -103,6 +104,8 @@ private fun JavaClassName.getSimpleNamesInKotlin(): List<String> {
     return originalNames
 }
 
+// Does not support transferring complex annotations which
+// have parameters and values associated with them.
 fun JavaAnnotationSpec.toKPoet(): KotlinAnnotationSpec {
     val annotationClass = KotlinClassName.bestGuess(type.toString())
     return KotlinAnnotationSpec.builder(annotationClass).build()
