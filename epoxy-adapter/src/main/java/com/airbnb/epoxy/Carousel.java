@@ -22,46 +22,49 @@ import java.util.List;
 /**
  * <i>This feature is in Beta - please report bugs, feature requests, or other feedback at
  * https://github.com/airbnb/epoxy by creating a new issue. Thanks!</i>
- * <p>
- * This is intended as a plug and play "Carousel" view - a Recyclerview with horizontal scrolling.
- * It comes with common defaults and performance optimizations and can be either used as a top level
- * RecyclerView, or nested within a vertical recyclerview.
- * <p>
- * This class provides:
- * <p>
- * 1. Automatic integration with Epoxy. A {@link CarouselModel_} is generated from this class, which
- * you can use in your EpoxyController. Just call {@link #setModels(List)} to provide the list of
- * models to show in the carousel.
- * <p>
- * 2. Default padding for carousel peeking, and an easy way to change this padding - {@link
+ *
+ * <p>This is intended as a plug and play "Carousel" view - a Recyclerview with horizontal
+ * scrolling. It comes with common defaults and performance optimizations and can be either used as
+ * a top level RecyclerView, or nested within a vertical recyclerview.
+ *
+ * <p>This class provides:
+ *
+ * <p>1. Automatic integration with Epoxy. A {@link CarouselModel_} is generated from this class,
+ * which you can use in your EpoxyController. Just call {@link #setModels(List)} to provide the list
+ * of models to show in the carousel.
+ *
+ * <p>2. Default padding for carousel peeking, and an easy way to change this padding - {@link
  * #setPaddingDp(int)}
- * <p>
- * 3. Easily control how many items are shown on screen in the carousel at a time - {@link
+ *
+ * <p>3. Easily control how many items are shown on screen in the carousel at a time - {@link
  * #setNumViewsToShowOnScreen(float)}
- * <p>
- * 4. Easy snap support. By default a {@link LinearSnapHelper} is used, but you can set a global
+ *
+ * <p>4. Easy snap support. By default a {@link LinearSnapHelper} is used, but you can set a global
  * default for all Carousels with {@link #setDefaultGlobalSnapHelperFactory(SnapHelperFactory)}
- * <p>
- * 5. All of the benefits of {@link EpoxyRecyclerView}
- * <p>
- * If you need further flexibility you can subclass this view to change its width, height, scrolling
- * direction, etc. You can annotate a subclass with {@link ModelView} to generate a new EpoxyModel.
+ *
+ * <p>5. All of the benefits of {@link EpoxyRecyclerView}
+ *
+ * <p>If you need further flexibility you can subclass this view to change its width, height,
+ * scrolling direction, etc. You can annotate a subclass with {@link ModelView} to generate a new
+ * EpoxyModel.
  */
 @ModelView(saveViewState = true, autoLayout = Size.MATCH_WIDTH_WRAP_HEIGHT)
 public class Carousel extends EpoxyRecyclerView {
   public static final int NO_VALUE_SET = -1;
 
-  private static SnapHelperFactory defaultGlobalSnapHelperFactory = new SnapHelperFactory() {
+  private static SnapHelperFactory defaultGlobalSnapHelperFactory =
+      new SnapHelperFactory() {
 
-    @Override
-    @NonNull
-    public SnapHelper buildSnapHelper(Context context) {
-      return new LinearSnapHelper();
-    }
-  };
+        @Override
+        @NonNull
+        public SnapHelper buildSnapHelper(Context context) {
+          return new LinearSnapHelper();
+        }
+      };
 
   @Dimension(unit = Dimension.DP)
   private static int defaultSpacingBetweenItemsDp = 8;
+
   private float numViewsToShowOnScreen;
 
   public Carousel(Context context) {
@@ -114,8 +117,8 @@ public class Carousel extends EpoxyRecyclerView {
    * Set a {@link SnapHelperFactory} instance to use with all Carousels by default. The {@link
    * SnapHelper} created by the factory will be attached to each Carousel on view creation. Set null
    * for no snap helper to be attached automatically.
-   * <p>
-   * A Carousel subclass can implement {@link #getSnapHelperFactory()} to override the global
+   *
+   * <p>A Carousel subclass can implement {@link #getSnapHelperFactory()} to override the global
    * default.
    */
   public static void setDefaultGlobalSnapHelperFactory(@Nullable SnapHelperFactory factory) {
@@ -131,20 +134,20 @@ public class Carousel extends EpoxyRecyclerView {
   /**
    * Set the number of views to show on screen in this carousel at a time, partial numbers are
    * allowed.
-   * <p>
-   * This is useful where you want to easily control for the number of items on screen, regardless
-   * of screen size. For example, you could set this to 1.2f so that one view is shown in full and
-   * 20% of the next view "peeks" from the edge to indicate that there is more content to scroll
-   * to.
-   * <p>
-   * Another pattern is setting a different view count depending on whether the device is phone or
-   * tablet.
-   * <p>
-   * Additionally, if a LinearLayoutManager is used this value will be forwarded to {@link
+   *
+   * <p>This is useful where you want to easily control for the number of items on screen,
+   * regardless of screen size. For example, you could set this to 1.2f so that one view is shown in
+   * full and 20% of the next view "peeks" from the edge to indicate that there is more content to
+   * scroll to.
+   *
+   * <p>Another pattern is setting a different view count depending on whether the device is phone
+   * or tablet.
+   *
+   * <p>Additionally, if a LinearLayoutManager is used this value will be forwarded to {@link
    * LinearLayoutManager#setInitialPrefetchItemCount(int)} as a performance optimization.
-   * <p>
-   * If you want to only change the prefetch count without changing the view size you can simply use
-   * {@link #setInitialPrefetchItemCount(int)}
+   *
+   * <p>If you want to only change the prefetch count without changing the view size you can simply
+   * use {@link #setInitialPrefetchItemCount(int)}
    */
   @ModelProp(group = "prefetch")
   public void setNumViewsToShowOnScreen(float viewCount) {
@@ -189,8 +192,9 @@ public class Carousel extends EpoxyRecyclerView {
 
       boolean isScrollingHorizontally = getLayoutManager().canScrollHorizontally();
       int itemSizeInScrollingDirection =
-          (int) ((getSpaceForChildren(isScrollingHorizontally) - spaceBetweenItems)
-              / numViewsToShowOnScreen);
+          (int)
+              ((getSpaceForChildren(isScrollingHorizontally) - spaceBetweenItems)
+                  / numViewsToShowOnScreen);
 
       if (isScrollingHorizontally) {
         childLayoutParams.width = itemSizeInScrollingDirection;
@@ -263,8 +267,8 @@ public class Carousel extends EpoxyRecyclerView {
 
   /**
    * Return the item spacing to use in this carousel, or 0 for no spacing.
-   * <p>
-   * By default this uses the global default set in {@link #setDefaultItemSpacingDp(int)}, but
+   *
+   * <p>By default this uses the global default set in {@link #setDefaultItemSpacingDp(int)}, but
    * subclasses can override this to specify their own value.
    */
   @Dimension(unit = Dimension.DP)
@@ -286,8 +290,8 @@ public class Carousel extends EpoxyRecyclerView {
   /**
    * Set a DP value to use as the padding on each side of the carousel and in between carousel
    * items.
-   * <p>
-   * The default as the value returned by {@link #getDefaultSpacingBetweenItemsDp()}
+   *
+   * <p>The default as the value returned by {@link #getDefaultSpacingBetweenItemsDp()}
    */
   @ModelProp(defaultValue = "NO_VALUE_SET", group = "padding")
   public void setPaddingDp(@Dimension(unit = Dimension.DP) int paddingDp) {
@@ -299,16 +303,27 @@ public class Carousel extends EpoxyRecyclerView {
   /**
    * Use the {@link Padding} class to specify individual padding values for each side of the
    * carousel, as well as item spacing.
-   * <p>
-   * A value of null will set all padding and item spacing to 0.
+   *
+   * <p>A value of null will set all padding and item spacing to 0.
    */
   @ModelProp(group = "padding")
   public void setPadding(@Nullable Padding padding) {
     if (padding == null) {
       setPaddingDp(0);
-    } else {
-      setPadding(padding.leftPx, padding.topPx, padding.rightPx, padding.bottomPx);
-      setItemSpacingPx(padding.itemSpacingPx);
+    } else if (padding.paddingType == Padding.PaddingType.PX) {
+      setPadding(padding.left, padding.top, padding.right, padding.bottom);
+      setItemSpacingPx(padding.itemSpacing);
+    } else if (padding.paddingType == Padding.PaddingType.DP) {
+      setPadding(
+          dpToPx(padding.left), dpToPx(padding.top), dpToPx(padding.right), dpToPx(padding.bottom));
+      setItemSpacingPx(dpToPx(padding.itemSpacing));
+    } else if (padding.paddingType == Padding.PaddingType.RESOURCE) {
+      setPadding(
+          resToPx(padding.left),
+          resToPx(padding.top),
+          resToPx(padding.right),
+          resToPx(padding.bottom));
+      setItemSpacingPx(resToPx(padding.itemSpacing));
     }
   }
 
@@ -318,37 +333,115 @@ public class Carousel extends EpoxyRecyclerView {
    * @see #setPadding(Padding)
    */
   public static class Padding {
-    @Px public final int topPx;
-    @Px public final int bottomPx;
-    @Px public final int leftPx;
-    @Px public final int rightPx;
-    @Px public final int itemSpacingPx;
+    public final int top;
+    public final int bottom;
+    public final int left;
+    public final int right;
+    public final int itemSpacing;
+    public final PaddingType paddingType;
 
-    /**
-     * @param paddingPx     Padding in pixels to add on all sides of the carousel
-     * @param itemSpacingPx Space in pixels to add between each carousel item. Will be implemented
-     *                      via an item decoration.
-     */
-    public Padding(@Px int paddingPx, @Px int itemSpacingPx) {
-      this(paddingPx, paddingPx, paddingPx, paddingPx, itemSpacingPx);
+    enum PaddingType {
+      PX,
+      DP,
+      RESOURCE
     }
 
     /**
-     * @param topPx         Top padding in pixels.
-     * @param bottomPx      Bottom padding in pixels.
-     * @param leftPx        Left padding in pixels.
-     * @param rightPx       Right padding in pixels.
-     * @param itemSpacingPx Space in pixels to add between each carousel item. Will be implemented
-     *                      via an item decoration.
+     * @param paddingRes Padding as dimension resource.
+     * @param itemSpacingRes Space as dimension resource to add between each carousel item. Will be
+     *     implemented via an item decoration.
      */
-    public Padding(@Px int topPx, @Px int bottomPx, @Px int leftPx, @Px int rightPx,
-        @Px int itemSpacingPx) {
+    public static Padding resource(@DimenRes int paddingRes, @DimenRes int itemSpacingRes) {
+      return new Padding(
+          paddingRes, paddingRes, paddingRes, paddingRes, itemSpacingRes, PaddingType.RESOURCE);
+    }
 
-      this.topPx = topPx;
-      this.bottomPx = bottomPx;
-      this.leftPx = leftPx;
-      this.rightPx = rightPx;
-      this.itemSpacingPx = itemSpacingPx;
+    /**
+     * @param topRes Top padding as dimension resource.
+     * @param bottomRes Bottom padding as dimension resource.
+     * @param leftRes Left padding as dimension resource.
+     * @param rightRes Right padding as dimension resource.
+     * @param itemSpacingRes Space as dimension resource to add between each carousel item. Will be
+     *     implemented via an item decoration.
+     */
+    public static Padding resource(
+        @DimenRes int topRes,
+        @DimenRes int bottomRes,
+        @DimenRes int leftRes,
+        @DimenRes int rightRes,
+        @DimenRes int itemSpacingRes) {
+      return new Padding(
+          topRes, bottomRes, leftRes, rightRes, itemSpacingRes, PaddingType.RESOURCE);
+    }
+
+    /**
+     * @param paddingDp Padding in dp.
+     * @param itemSpacingDp Space in dp to add between each carousel item. Will be implemented via
+     *     an item decoration.
+     */
+    public static Padding dp(
+        @Dimension(unit = Dimension.DP) int paddingDp,
+        @Dimension(unit = Dimension.DP) int itemSpacingDp) {
+      return new Padding(paddingDp, paddingDp, paddingDp, paddingDp, itemSpacingDp, PaddingType.DP);
+    }
+
+    /**
+     * @param topDp Top padding in dp.
+     * @param bottomDp Bottom padding in dp.
+     * @param leftDp Left padding in dp.
+     * @param rightDp Right padding in dp.
+     * @param itemSpacingDp Space in dp to add between each carousel item. Will be implemented via
+     *     an item decoration.
+     */
+    public static Padding dp(
+        @Dimension(unit = Dimension.DP) int topDp,
+        @Dimension(unit = Dimension.DP) int bottomDp,
+        @Dimension(unit = Dimension.DP) int leftDp,
+        @Dimension(unit = Dimension.DP) int rightDp,
+        @Dimension(unit = Dimension.DP) int itemSpacingDp) {
+      return new Padding(topDp, bottomDp, leftDp, rightDp, itemSpacingDp, PaddingType.DP);
+    }
+
+    /**
+     * @param paddingPx Padding in pixels to add on all sides of the carousel
+     * @param itemSpacingPx Space in pixels to add between each carousel item. Will be implemented
+     *     via an item decoration.
+     */
+    public Padding(@Px int paddingPx, @Px int itemSpacingPx) {
+      this(paddingPx, paddingPx, paddingPx, paddingPx, itemSpacingPx, PaddingType.PX);
+    }
+
+    /**
+     * @param topPx Top padding in pixels.
+     * @param bottomPx Bottom padding in pixels.
+     * @param leftPx Left padding in pixels.
+     * @param rightPx Right padding in pixels.
+     * @param itemSpacingPx Space in pixels to add between each carousel item. Will be implemented
+     *     via an item decoration.
+     */
+    public Padding(
+        @Px int topPx, @Px int bottomPx, @Px int leftPx, @Px int rightPx, @Px int itemSpacingPx) {
+      this(topPx, bottomPx, leftPx, rightPx, itemSpacingPx, PaddingType.PX);
+    }
+
+    /**
+     * @param top Top padding.
+     * @param bottom Bottom padding.
+     * @param left Left padding.
+     * @param right Right padding.
+     * @param itemSpacing Space to add between each carousel item. Will be implemented via an item
+     *     decoration.
+     * @param paddingType Unit / Type of the given paddings/ itemspacing.
+     */
+    private Padding(
+        int top, int bottom, int left, int right, int itemSpacing, PaddingType paddingType) {
+
+      this.top = top;
+      this.bottom = bottom;
+      this.left = left;
+      this.right = right;
+      this.itemSpacing = itemSpacing;
+      this.paddingType = paddingType;
     }
 
     @Override
@@ -362,28 +455,28 @@ public class Carousel extends EpoxyRecyclerView {
 
       Padding padding = (Padding) o;
 
-      if (topPx != padding.topPx) {
+      if (top != padding.top) {
         return false;
       }
-      if (bottomPx != padding.bottomPx) {
+      if (bottom != padding.bottom) {
         return false;
       }
-      if (leftPx != padding.leftPx) {
+      if (left != padding.left) {
         return false;
       }
-      if (rightPx != padding.rightPx) {
+      if (right != padding.right) {
         return false;
       }
-      return itemSpacingPx == padding.itemSpacingPx;
+      return itemSpacing == padding.itemSpacing;
     }
 
     @Override
     public int hashCode() {
-      int result = topPx;
-      result = 31 * result + bottomPx;
-      result = 31 * result + leftPx;
-      result = 31 * result + rightPx;
-      result = 31 * result + itemSpacingPx;
+      int result = top;
+      result = 31 * result + bottom;
+      result = 31 * result + left;
+      result = 31 * result + right;
+      result = 31 * result + itemSpacing;
       return result;
     }
   }
