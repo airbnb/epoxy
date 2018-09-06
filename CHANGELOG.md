@@ -1,3 +1,8 @@
+# 2.17.0 (Sep 6, 2018)
+- **New** Add support for setting the Padding via resource or directly in dp (https://github.com/airbnb/epoxy/pull/528 Thanks to pwillmann!)
+- **Fixed** Strip kotlin metadata annotation from generated classes (https://github.com/airbnb/epoxy/pull/523)
+- **Fixed** Reflect the annotations declared in constructor params (https://github.com/airbnb/epoxy/pull/519 Thanks to Shaishav Gandhi!)
+
 # 2.16.4 (Aug 29, 2018)
 - **New** `EpoxyAsyncUtil` and `AsyncEpoxyController` make it easier to use Epoxy's async behavior out of the box
 - **New** Epoxy's background diffing posts messages back to the main thread asynchronously so they are not blocked by waiting for vsync

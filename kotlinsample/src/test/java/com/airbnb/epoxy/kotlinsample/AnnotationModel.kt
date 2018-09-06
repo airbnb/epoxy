@@ -9,7 +9,7 @@ import com.airbnb.epoxy.EpoxyHolder
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 
-@EpoxyModelClass(layout = R.layout.activity_kotlin_sample)
+@EpoxyModelClass(layout = R.layout.activity)
 abstract class AnnotationModel(
     @StringRes val resId: Int,
     @FloatRange(from = 0.0, to = 1.0) val range: Float
