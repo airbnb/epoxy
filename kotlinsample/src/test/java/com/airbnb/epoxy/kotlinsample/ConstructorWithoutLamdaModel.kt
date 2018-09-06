@@ -6,7 +6,7 @@ import com.airbnb.epoxy.EpoxyHolder
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 
-@EpoxyModelClass(layout = R.layout.activity_kotlin_sample)
+@EpoxyModelClass(layout = R.layout.activity)
 abstract class KotlinNonConstructorSample(): EpoxyModelWithHolder<KotlinNonConstructorSampleHolder>() {
     @EpoxyAttribute lateinit var listener: ((boolean: Boolean) -> Unit)
 }

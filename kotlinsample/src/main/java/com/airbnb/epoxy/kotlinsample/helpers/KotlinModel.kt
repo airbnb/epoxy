@@ -1,4 +1,4 @@
-package com.airbnb.epoxy.kotlinsample
+package com.airbnb.epoxy.kotlinsample.helpers
 
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
@@ -10,7 +10,7 @@ import kotlin.reflect.KProperty
 /**
  * A pattern for using epoxy models with Kotlin with no annotations or code generation.
  *
- * See [SampleKotlinModel] for a usage example.
+ * See [com.airbnb.epoxy.kotlinsample.models.ItemDataClass] for a usage example.
  */
 abstract class KotlinModel(
     @LayoutRes private val layoutRes: Int
