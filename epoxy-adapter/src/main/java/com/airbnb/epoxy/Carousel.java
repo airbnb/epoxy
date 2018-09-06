@@ -433,7 +433,7 @@ public class Carousel extends EpoxyRecyclerView {
      *     decoration.
      * @param paddingType Unit / Type of the given paddings/ itemspacing.
      */
-    public Padding(
+    private Padding(
         int top, int bottom, int left, int right, int itemSpacing, PaddingType paddingType) {
 
       this.top = top;
