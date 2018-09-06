@@ -26,6 +26,7 @@ dependencies {
 ```
 
 Replace `x` and `y` with the latest version number: [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.airbnb.android/epoxy/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.airbnb.android/epoxy)
+
 See the [releases page](https://github.com/airbnb/epoxy/releases) for up to date release versions and details
 
 #### Kotlin
