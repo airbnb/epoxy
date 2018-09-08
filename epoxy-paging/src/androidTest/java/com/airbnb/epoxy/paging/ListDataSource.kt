@@ -17,6 +17,9 @@ package com.airbnb.epoxy.paging
 
 import android.arch.paging.PositionalDataSource
 
+/**
+ * Simple data source that works with a given list and its loading can be stopped / started.
+ */
 class ListDataSource<T>(
     private val data: List<T>
 ) : PositionalDataSource<T>() {

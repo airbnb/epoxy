@@ -23,28 +23,42 @@ import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyViewHolder
 
 /**
- * Creates an [EpoxyController] that can work with a [PagedList].
- * Internally, it caches the model for each item in the [PagedList]. You should override [buildItemModel] method to
- * build the model for the given item. Since paged list might include `null` items if placeholders are enabled, this
- * method needs to handle null values in the list.
+ * An [EpoxyController] that can work with a [PagedList].
  *
- * By default, the model for each item is added  to the model list. To change this behavior (to filter items or
- * inject extra items), you can override [addModels] function and manually add built models.
+ * Internally, it caches the model for each item in the [PagedList]. You should override
+ * [buildItemModel] method to build the model for the given item. Since [PagedList] might include
+ * `null` items if placeholders are enabled, this method needs to handle `null` values in the list.
+ *
+ * By default, the model for each item is added  to the model list. To change this behavior (to
+ * filter items or inject extra items), you can override [addModels] function and manually add built
+ * models.
  */
 abstract class CachingPagingEpoxyController<T>(
-    modelBuildingHandler: Handler = EpoxyController.defaultModelBuildingHandler,
-    diffingHandler: Handler = EpoxyController.defaultDiffingHandler,
-    itemDiffCallback: DiffUtil.ItemCallback<T> = DEFAULT_ITEM_DIFF_CALLBACK as DiffUtil.ItemCallback<T>
+  /**
+   * The handler to use for build models.
+   */
+  modelBuildingHandler: Handler = EpoxyController.defaultModelBuildingHandler,
+  /**
+   * The handler to use when calculating the diff between built model lists
+   */
+  diffingHandler: Handler = EpoxyController.defaultDiffingHandler,
+  /**
+   * [CachingPagingEpoxyController] uses an [DiffUtil.ItemCallback] to detect changes between
+   * [PagedList]s. By default, it relies on simple object equality but you can provide a custom
+   * one if you don't use all fields in the object in your models.
+   */
+  itemDiffCallback: DiffUtil.ItemCallback<T> = DEFAULT_ITEM_DIFF_CALLBACK as DiffUtil.ItemCallback<T>
 ) : EpoxyController(modelBuildingHandler, diffingHandler) {
+  // this is where we keep the already built models
   private val modelCache = PagedListModelCache(
-      modelBuilder = { pos, item ->
-        buildItemModel(pos, item)
-      },
-      rebuildCallback = {
-        requestDelayedModelBuild(0)
-      },
-      itemDiffCallback = itemDiffCallback,
-      modelBuildingHandler = modelBuildingHandler
+    modelBuilder = { pos, item ->
+      buildItemModel(pos, item)
+    },
+    rebuildCallback = {
+      requestDelayedModelBuild(0)
+    },
+    itemDiffCallback = itemDiffCallback,
+    modelBuildingHandler = modelBuildingHandler
   )
 
   final override fun buildModels() {
@@ -52,24 +66,24 @@ abstract class CachingPagingEpoxyController<T>(
   }
 
   /**
-   * This function adds all built models to the adapter. You can override this method to add extra items into the model
-   * list or remove some.
+   * This function adds all built models to the adapter. You can override this method to add extra
+   * items into the model list or remove some.
    */
   open fun addModels(models: List<EpoxyModel<*>>) {
     super.add(models)
   }
 
   /**
-   * Builds the model for a given item. This must return a single model for each item. If you want to inject headers
-   * etc, you can override [addModels] function.
+   * Builds the model for a given item. This must return a single model for each item. If you want
+   * to inject headers etc, you can override [addModels] function.
    */
   abstract fun buildItemModel(currentPosition: Int, item: T?): EpoxyModel<*>
 
   override fun onModelBound(
-      holder: EpoxyViewHolder,
-      boundModel: EpoxyModel<*>,
-      position: Int,
-      previouslyBoundModel: EpoxyModel<*>?
+    holder: EpoxyViewHolder,
+    boundModel: EpoxyModel<*>,
+    position: Int,
+    previouslyBoundModel: EpoxyModel<*>?
   ) {
     // TODO the position may not be a good value if there are too many injected items.
     modelCache.loadAround(position)
@@ -77,6 +91,9 @@ abstract class CachingPagingEpoxyController<T>(
 
   /**
    * Submit a new paged list.
+   *
+   * A diff will be calculated between this list and the previous list so you may still get calls
+   * to [buildItemModel] with items from the previous list.
    */
   fun submitList(newList: PagedList<T>?) {
     modelCache.submitList(newList)
@@ -84,7 +101,8 @@ abstract class CachingPagingEpoxyController<T>(
 
   companion object {
     /**
-     * [CachingPagingEpoxyController] calculates a diff on top of the PagedList to check which models are invalidated.
+     * [CachingPagingEpoxyController] calculates a diff on top of the PagedList to check which
+     * models are invalidated.
      * This is the default [DiffUtil.ItemCallback] which uses object equality.
      */
     val DEFAULT_ITEM_DIFF_CALLBACK = object : DiffUtil.ItemCallback<Any>() {

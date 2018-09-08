@@ -17,6 +17,9 @@ package com.airbnb.epoxy.paging
 
 import android.support.v7.util.DiffUtil
 
+/**
+ * Dummy item for testing.
+ */
 data class Item(val id: Int, val value: String) {
   companion object {
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Item>() {

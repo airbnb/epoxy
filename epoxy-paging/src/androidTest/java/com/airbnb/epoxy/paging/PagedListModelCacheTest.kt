@@ -16,7 +16,6 @@
 
 package com.airbnb.epoxy.paging
 
-import android.app.Instrumentation
 import android.arch.core.executor.testing.CountingTaskExecutorRule
 import android.arch.paging.PagedList
 import android.support.test.InstrumentationRegistry
@@ -38,6 +37,9 @@ class PagedListModelCacheTest {
   @Rule
   @JvmField
   val archExecutor = CountingTaskExecutorRule()
+  /**
+   * Simple mode builder for [Item]
+   */
   private val modelBuilder: (Int, Item?) -> EpoxyModel<*> = { pos, item ->
     if (item == null) {
       FakePlaceholderModel(pos)
@@ -46,18 +48,22 @@ class PagedListModelCacheTest {
     }
   }
 
+  /**
+   * Number of times a rebuild is requested
+   */
   private var rebuildCounter = 0
   private val rebuildCallback: () -> Unit = {
     rebuildCounter++
   }
+
   private val pagedListModelCache = PagedListModelCache(
-      modelBuilder = modelBuilder,
-      rebuildCallback = rebuildCallback,
-      itemDiffCallback = Item.DIFF_CALLBACK,
-      diffExecutor = Executor {
-        it.run()
-      },
-      modelBuildingHandler = EpoxyController.defaultModelBuildingHandler
+    modelBuilder = modelBuilder,
+    rebuildCallback = rebuildCallback,
+    itemDiffCallback = Item.DIFF_CALLBACK,
+    diffExecutor = Executor {
+      it.run()
+    },
+    modelBuildingHandler = EpoxyController.defaultModelBuildingHandler
   )
 
   @Test
@@ -112,12 +118,12 @@ class PagedListModelCacheTest {
   fun deletion() {
     testListUpdate { items, models ->
       Modification(
-          newList = items.copyToMutable().also {
-            it.removeAt(3)
-          },
-          expectedModels = models.toMutableList().also {
-            it.removeAt(3)
-          }
+        newList = items.copyToMutable().also {
+          it.removeAt(3)
+        },
+        expectedModels = models.toMutableList().also {
+          it.removeAt(3)
+        }
       )
     }
   }
@@ -126,12 +132,12 @@ class PagedListModelCacheTest {
   fun deletion_range() {
     testListUpdate { items, models ->
       Modification(
-          newList = items.copyToMutable().also {
-            it.removeAll(items.subList(3, 5))
-          },
-          expectedModels = models.toMutableList().also {
-            it.removeAll(models.subList(3, 5))
-          }
+        newList = items.copyToMutable().also {
+          it.removeAll(items.subList(3, 5))
+        },
+        expectedModels = models.toMutableList().also {
+          it.removeAll(models.subList(3, 5))
+        }
       )
     }
   }
@@ -141,12 +147,12 @@ class PagedListModelCacheTest {
     val newItem = Item(id = 100, value = "newItem")
     testListUpdate { items, models ->
       Modification(
-          newList = items.copyToMutable().also {
-            it.add(newItem)
-          },
-          expectedModels = models.toMutableList().also {
-            it.add(newItem)
-          }
+        newList = items.copyToMutable().also {
+          it.add(newItem)
+        },
+        expectedModels = models.toMutableList().also {
+          it.add(newItem)
+        }
       )
     }
   }
@@ -158,12 +164,12 @@ class PagedListModelCacheTest {
     }
     testListUpdate { items, models ->
       Modification(
-          newList = items.copyToMutable().also {
-            it.addAll(newItems)
-          },
-          expectedModels = models.toMutableList().also {
-            it.addAll(newItems)
-          }
+        newList = items.copyToMutable().also {
+          it.addAll(newItems)
+        },
+        expectedModels = models.toMutableList().also {
+          it.addAll(newItems)
+        }
       )
     }
   }
@@ -173,12 +179,12 @@ class PagedListModelCacheTest {
     testListUpdate { items, models ->
       val newItem = Item(id = 100, value = "item x")
       Modification(
-          newList = items.copyToMutable().also {
-            it.add(5, newItem)
-          },
-          expectedModels = models.toMutableList().also {
-            it.add(5, newItem)
-          }
+        newList = items.copyToMutable().also {
+          it.add(5, newItem)
+        },
+        expectedModels = models.toMutableList().also {
+          it.add(5, newItem)
+        }
       )
     }
   }
@@ -190,12 +196,12 @@ class PagedListModelCacheTest {
         Item(id = it, value = "newItem $it")
       }
       Modification(
-          newList = items.copyToMutable().also {
-            it.addAll(5, newItems)
-          },
-          expectedModels = models.toMutableList().also {
-            it.addAll(5, newItems)
-          }
+        newList = items.copyToMutable().also {
+          it.addAll(5, newItems)
+        },
+        expectedModels = models.toMutableList().also {
+          it.addAll(5, newItems)
+        }
       )
     }
   }
@@ -204,12 +210,12 @@ class PagedListModelCacheTest {
   fun move() {
     testListUpdate { items, models ->
       Modification(
-          newList = items.toMutableList().also {
-            it.add(3, it.removeAt(5))
-          },
-          expectedModels = models.toMutableList().also {
-            it.add(3, it.removeAt(5))
-          }
+        newList = items.toMutableList().also {
+          it.add(3, it.removeAt(5))
+        },
+        expectedModels = models.toMutableList().also {
+          it.add(3, it.removeAt(5))
+        }
       )
     }
   }
@@ -218,14 +224,14 @@ class PagedListModelCacheTest {
   fun move_multiple() {
     testListUpdate { items, models ->
       Modification(
-          newList = items.toMutableList().also {
-            it.add(3, it.removeAt(5))
-            it.add(1, it.removeAt(8))
-          },
-          expectedModels = models.toMutableList().also {
-            it.add(3, it.removeAt(5))
-            it.add(1, it.removeAt(8))
-          }
+        newList = items.toMutableList().also {
+          it.add(3, it.removeAt(5))
+          it.add(1, it.removeAt(8))
+        },
+        expectedModels = models.toMutableList().also {
+          it.add(3, it.removeAt(5))
+          it.add(1, it.removeAt(8))
+        }
       )
     }
   }
@@ -277,9 +283,9 @@ class PagedListModelCacheTest {
 
   private fun drain() {
     archExecutor.drainTasks(4, TimeUnit.SECONDS)
-    InstrumentationRegistry.getInstrumentation().runOnMainSync {  }
+    InstrumentationRegistry.getInstrumentation().runOnMainSync { }
     archExecutor.drainTasks(4, TimeUnit.SECONDS)
-    InstrumentationRegistry.getInstrumentation().runOnMainSync {  }
+    InstrumentationRegistry.getInstrumentation().runOnMainSync { }
   }
 
   private fun createItems(cnt: Int): List<Item> {
@@ -291,14 +297,14 @@ class PagedListModelCacheTest {
   private fun createPagedList(items: List<Item>): Pair<PagedList<Item>, ListDataSource<Item>> {
     val dataSource = ListDataSource(items)
     val pagedList = PagedList.Builder<Int, Item>(
-        dataSource, PagedList.Config.Builder()
+      dataSource, PagedList.Config.Builder()
         .setEnablePlaceholders(true)
         .setInitialLoadSizeHint(PAGE_SIZE * 2)
         .setPageSize(PAGE_SIZE)
         .build()
     ).setFetchExecutor { it.run() }
-        .setNotifyExecutor { it.run() }
-        .build()
+      .setNotifyExecutor { it.run() }
+      .build()
     return pagedList to dataSource
   }
 
@@ -312,8 +318,8 @@ class PagedListModelCacheTest {
   }
 
   data class Modification(
-      val newList: List<Item>,
-      val expectedModels: List<Any?>
+    val newList: List<Item>,
+    val expectedModels: List<Any?>
   )
 
   private fun List<Item>.copyToMutable(): MutableList<Item> {
