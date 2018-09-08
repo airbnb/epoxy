@@ -33,7 +33,10 @@ import java.util.List;
  * for them.
  *
  * @param <T> The type of item in the list
+ *
+ * @deprecated Use {@link CachingPagingEpoxyController} instead.
  */
+@Deprecated()
 public abstract class PagingEpoxyController<T> extends EpoxyController {
 
   private static final Config DEFAULT_CONFIG = new Config.Builder()

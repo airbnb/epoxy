@@ -14,10 +14,10 @@ data class User(
         var uid: Int,
 
         @ColumnInfo(name = "first_name")
-        var firstName: String = "first name",
+        var firstName: String = "first name $uid",
 
         @ColumnInfo(name = "last_name")
-        var lastName: String = "last name"
+        var lastName: String = "last name $uid"
 )
 
 @Dao
@@ -29,7 +29,7 @@ interface UserDao {
     val all: List<User>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg users: User)
+    fun insertAll(users: List<User>)
 
     @Delete
     fun delete(users: List<User>)

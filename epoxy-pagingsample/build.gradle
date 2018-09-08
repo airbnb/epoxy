@@ -20,14 +20,15 @@ android {
 
 
 dependencies {
-  compile rootProject.deps.kotlin
+  implementation rootProject.deps.kotlin
 
-  compile "org.jetbrains.anko:anko-coroutines:0.10.4"
-  compile 'android.arch.persistence.room:runtime:1.0.0'
-  kapt 'android.arch.persistence.room:compiler:1.0.0'
+  implementation "org.jetbrains.anko:anko-coroutines:0.10.4"
+  implementation 'android.arch.persistence.room:runtime:1.1.1'
+  implementation "android.arch.lifecycle:extensions:1.1.1"
+  kapt 'android.arch.persistence.room:compiler:1.1.1'
 
-  compile project(':epoxy-adapter')
-  compile project(':epoxy-paging')
+  implementation project(':epoxy-adapter')
+  implementation project(':epoxy-paging')
   kapt project(':epoxy-processor')
 
   implementation 'com.android.support:appcompat-v7:27.1.0'

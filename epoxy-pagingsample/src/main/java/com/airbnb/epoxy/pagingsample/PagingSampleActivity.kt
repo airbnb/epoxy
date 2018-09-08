@@ -1,9 +1,14 @@
 package com.airbnb.epoxy.pagingsample
 
+import android.app.Application
+import android.arch.lifecycle.AndroidViewModel
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
+import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.arch.persistence.room.Room
 import android.content.Context
-import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,76 +16,61 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import com.airbnb.epoxy.EpoxyAsyncUtil
+import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.TextProp
-import com.airbnb.epoxy.paging.PagingEpoxyController
+import com.airbnb.epoxy.paging.CachingPagingEpoxyController
+import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.coroutines.experimental.bg
 import java.lang.RuntimeException
 import java.util.concurrent.Executor
+import java.util.concurrent.TimeUnit
 
 class PagingSampleActivity : AppCompatActivity() {
-
-    lateinit var db: PagingDatabase
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        db = Room.databaseBuilder(applicationContext,
-                                  PagingDatabase::class.java,
-                                  "database-name").build()
-
         val pagingController = TestController()
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = pagingController.adapter
 
-        async(UI) {
-            val pagedList = bg {
-                db.userDao().delete(db.userDao().all)
-                (1..3000)
-                        .map { User(it) }
-                        .let { db.userDao().insertAll(*it.toTypedArray()) }
-
-                PagedList.Builder<Int, User>(
-                        db.userDao().dataSource.create(),
-                        PagedList.Config.Builder().run {
-                            setEnablePlaceholders(false)
-                            setPageSize(150)
-                            setPrefetchDistance(30)
-                            build()
-                        }).run {
-                    setNotifyExecutor(UiThreadExecutor)
-                    setFetchExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-                    build()
-                }
-            }
-
-            pagingController.setList(pagedList.await())
-        }
-
-        pagingController.setList(emptyList())
+        val viewModel = ViewModelProviders.of(this).get(ActivityViewModel::class.java)
+        viewModel.pagedList.observe(this, Observer {
+          pagingController.submitList(it)
+        })
     }
 }
 
-class TestController : PagingEpoxyController<User>() {
-    init {
-        isDebugLoggingEnabled = true
+class TestController : CachingPagingEpoxyController<User>(
+    modelBuildingHandler = EpoxyAsyncUtil.getAsyncBackgroundHandler()
+) {
+    override fun buildItemModel(currentPosition: Int, item: User?): EpoxyModel<*> {
+        return if (item == null) {
+            PagingViewModel_()
+                .id(-currentPosition)
+                .name("loading ${currentPosition}")
+        } else {
+            PagingViewModel_()
+                .id(item.uid)
+                .name("${item.uid}: ${item.firstName} / ${item.lastName}")
+        }
     }
 
-    override fun buildModels(users: List<User>) {
+    override fun addModels(models: List<EpoxyModel<*>>) {
         pagingView {
             id("header")
-            name("Header")
+            name("showing ${models.size} items")
         }
+        super.addModels(models)
+    }
 
-        users.forEach {
-            pagingView {
-                id(it.uid)
-                name("Id: ${it.uid}")
-            }
-        }
+    init {
+        isDebugLoggingEnabled = true
     }
 
     override fun onExceptionSwallowed(exception: RuntimeException) {
@@ -99,10 +89,29 @@ class PagingView(context: Context) : AppCompatTextView(context) {
 
 }
 
-object UiThreadExecutor : Executor {
-    private val handler = Handler(Looper.getMainLooper())
-
-    override fun execute(command: Runnable) {
-        handler.post(command)
+class ActivityViewModel(app : Application) : AndroidViewModel(app) {
+    val db by lazy {
+        Room.inMemoryDatabaseBuilder(app, PagingDatabase::class.java).build()
+    }
+    val pagedList : LiveData<PagedList<User>> by lazy {
+        LivePagedListBuilder<Int, User>(
+            db.userDao().dataSource, 100
+        ).build()
+    }
+    init {
+        bg {
+            (1..3000).map {
+                User(it)
+            }.let {
+                it.groupBy {
+                    it.uid % 20
+                }.forEach { group ->
+                    launch(CommonPool) {
+                        delay(group.key.toLong(), TimeUnit.SECONDS)
+                        db.userDao().insertAll(group.value)
+                    }
+                }
+            }
+        }
     }
 }
