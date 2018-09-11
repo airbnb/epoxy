@@ -25,7 +25,7 @@ public abstract class AsyncEpoxyController extends EpoxyController {
    *                    both on the main thread.
    */
   public AsyncEpoxyController(boolean enableAsync) {
-    this(true, true);
+    this(enableAsync, enableAsync);
   }
 
   /**
