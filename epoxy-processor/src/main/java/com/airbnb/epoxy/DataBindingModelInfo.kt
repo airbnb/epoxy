@@ -13,7 +13,8 @@ internal class DataBindingModelInfo(
     private val elementUtils: Elements,
     val layoutResource: ResourceValue,
     val moduleName: String,
-    private val layoutPrefix: String = ""
+    private val layoutPrefix: String = "",
+    val enableDoNotHash: Boolean
 ) : GeneratedModelInfo() {
     private val dataBindingClassName: ClassName
 
@@ -46,8 +47,8 @@ internal class DataBindingModelInfo(
         // This databinding class won't exist until the second round of annotation processing since
         // it is generated in the first round.
         val dataBindingClassElement = this.dataBindingClassElement ?: return false
-
         val hashCodeValidator = HashCodeValidator(typeUtils, elementUtils)
+
         dataBindingClassElement.executableElements()
             .filter { Utils.isSetterMethod(it) }
             .map {
@@ -57,6 +58,7 @@ internal class DataBindingModelInfo(
             .let {
                 addAttributes(it)
             }
+
         return true
     }
 
@@ -66,7 +68,7 @@ internal class DataBindingModelInfo(
     ): ClassName {
         val modelName = layoutResource.resourceName!!.toUpperCamelCase().plus(BINDING_SUFFIX)
 
-        return ClassName.get(moduleName + ".databinding", modelName)
+        return ClassName.get("$moduleName.databinding", modelName)
     }
 
     private fun buildGeneratedModelName(): ClassName {
@@ -81,7 +83,7 @@ internal class DataBindingModelInfo(
 
     companion object {
 
-        val BINDING_SUFFIX = "Binding"
+        const val BINDING_SUFFIX = "Binding"
 
         val FIELD_NAME_BLACKLIST = listOf(
             // Starting with Android plugin 3.1.0 nested DataBinding classes have a

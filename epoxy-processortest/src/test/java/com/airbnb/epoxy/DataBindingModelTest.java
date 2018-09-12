@@ -28,6 +28,7 @@ public class DataBindingModelTest {
       + "  public static final class layout {\n"
       + "    public static final int res = 0x7f040008;\n"
       + "    public static final int model_with_data_binding=0x7f040009;\n"
+      + "    public static final int model_with_data_binding_without_donothash=0x7f0f002b;\n"
       + "  }\n"
       + "  public static final class integer {\n"
       + "    public static final int res = 0x7f040004;\n"
@@ -66,6 +67,7 @@ public class DataBindingModelTest {
               + "  public static final int valueObject = 20;\n"
               + "  public static final int valueList = 21;\n"
               + "  public static final int stringValue = 22;\n"
+              + "  public static final int clickListener = 23;\n"
               + "}");
 
   @Test
@@ -110,6 +112,29 @@ public class DataBindingModelTest {
 
     JavaFileObject generatedModel =
         JavaFileObjects.forResource("ModelWithDataBindingBindingModel_.java");
+
+    assert_().about(javaSources())
+        .that(asList(packageInfo, binding, BR_CLASS, R))
+        .processedWith(new EpoxyProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(generatedModel);
+  }
+
+  @Test
+  public void testFullyGeneratedModelWithoutDoNotHash() {
+    JavaFileObject packageInfo = JavaFileObjects
+        .forSourceString("com.airbnb.epoxy.package-info",
+            "@EpoxyDataBindingLayouts(value = {R.layout"
+                + ".model_with_data_binding_without_donothash}, enableDoNotHash = false)\n"
+                + "package com.airbnb.epoxy;\n"
+        );
+
+    JavaFileObject binding = JavaFileObjects
+        .forResource("ModelWithDataBindingWithoutDonothashBinding.java");
+
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource("ModelWithDataBindingWithoutDonothashBindingModel_.java");
 
     assert_().about(javaSources())
         .that(asList(packageInfo, binding, BR_CLASS, R))
