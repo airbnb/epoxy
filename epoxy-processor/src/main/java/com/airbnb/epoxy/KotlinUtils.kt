@@ -159,6 +159,8 @@ fun Element.iterateSuperClasses(
     }
 }
 
+inline fun <reified T : Annotation> Element.annotation(): T? = getAnnotation(T::class.java)
+
 /**
  * Returns a list of annotations specs representing annotations on the given type element.
  *

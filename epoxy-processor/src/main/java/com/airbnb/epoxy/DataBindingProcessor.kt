@@ -1,20 +1,21 @@
 package com.airbnb.epoxy
 
-import com.airbnb.epoxy.Utils.*
-import com.squareup.javapoet.*
+import com.airbnb.epoxy.Utils.getClassParamFromAnnotation
+import com.squareup.javapoet.ClassName
 import java.util.*
-import javax.annotation.processing.*
-import javax.lang.model.element.*
-import javax.lang.model.util.*
+import javax.annotation.processing.RoundEnvironment
+import javax.lang.model.element.VariableElement
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 internal class DataBindingProcessor(
-        private val elements: Elements,
-        private val types: Types,
-        private val errorLogger: ErrorLogger,
-        private val configManager: ConfigManager,
-        private val resourceProcessor: ResourceProcessor,
-        private val dataBindingModuleLookup: DataBindingModuleLookup,
-        private val modelWriter: GeneratedModelWriter
+    private val elements: Elements,
+    private val types: Types,
+    private val errorLogger: ErrorLogger,
+    private val configManager: ConfigManager,
+    private val resourceProcessor: ResourceProcessor,
+    private val dataBindingModuleLookup: DataBindingModuleLookup,
+    private val modelWriter: GeneratedModelWriter
 ) {
     private val modelsToWrite = ArrayList<DataBindingModelInfo>()
 
@@ -23,40 +24,58 @@ internal class DataBindingProcessor(
         roundEnv.getElementsAnnotatedWith(EpoxyDataBindingLayouts::class.java).forEach {
 
             val layoutResources = resourceProcessor
-                    .getLayoutsInAnnotation(it, EpoxyDataBindingLayouts::class.java)
+                .getLayoutsInAnnotation(it, EpoxyDataBindingLayouts::class.java)
 
             // Get the module name after parsing resources so we can use the resource classes to figure
             // out the module name
             val moduleName = dataBindingModuleLookup.getModuleName(it)
 
+            val enableDoNotHash =
+                it.annotation<EpoxyDataBindingLayouts>()?.enableDoNotHash == true
             layoutResources.mapTo(modelsToWrite) {
-                DataBindingModelInfo(types, elements, it, moduleName)
+                DataBindingModelInfo(
+                    typeUtils = types,
+                    elementUtils = elements,
+                    layoutResource = it,
+                    moduleName = moduleName,
+                    enableDoNotHash = enableDoNotHash
+                )
             }
         }
 
-        roundEnv.getElementsAnnotatedWith(EpoxyDataBindingPattern::class.java).forEach {
-            val patternAnnotation = it.getAnnotation(EpoxyDataBindingPattern::class.java)
+        roundEnv.getElementsAnnotatedWith(EpoxyDataBindingPattern::class.java).forEach { element ->
+            val patternAnnotation = element.getAnnotation(EpoxyDataBindingPattern::class.java)
 
             val layoutPrefix = patternAnnotation.layoutPrefix
             val rClassName = getClassParamFromAnnotation<EpoxyDataBindingPattern>(
-                    it,
-                    EpoxyDataBindingPattern::class.java,
-                    "rClass",
-                    types)
-                    ?: return@forEach
+                element,
+                EpoxyDataBindingPattern::class.java,
+                "rClass",
+                types
+            )
+                ?: return@forEach
 
             val moduleName = rClassName.packageName()
             val layoutClassName = ClassName.get(moduleName, "R", "layout")
+            val enableDoNotHash =
+                element.annotation<EpoxyDataBindingLayouts>()?.enableDoNotHash == true
 
             Utils.getElementByName(layoutClassName, elements, types)
-                    .enclosedElements
-                    .filterIsInstance<VariableElement>()
-                    .map { it.simpleName.toString() }
-                    .filter { it.startsWith(layoutPrefix) }
-                    .map { ResourceValue(layoutClassName, it, 0 /* value doesn't matter */) }
-                    .mapTo(modelsToWrite) {
-                        DataBindingModelInfo(types, elements, it, moduleName, layoutPrefix)
-                    }
+                .enclosedElements
+                .filterIsInstance<VariableElement>()
+                .map { it.simpleName.toString() }
+                .filter { it.startsWith(layoutPrefix) }
+                .map { ResourceValue(layoutClassName, it, 0 /* value doesn't matter */) }
+                .mapTo(modelsToWrite) {
+                    DataBindingModelInfo(
+                        typeUtils = types,
+                        elementUtils = elements,
+                        layoutResource = it,
+                        moduleName = moduleName,
+                        layoutPrefix = layoutPrefix,
+                        enableDoNotHash = enableDoNotHash
+                    )
+                }
         }
 
         val modelsWritten = resolveDataBindingClassesAndWriteJava()
@@ -79,15 +98,15 @@ internal class DataBindingProcessor(
 
     private fun resolveDataBindingClassesAndWriteJava(): List<DataBindingModelInfo> {
         return modelsToWrite
-                .filter { it.parseDataBindingClass() }
-                .onEach {
-                    try {
-                        modelWriter.generateClassForModel(it)
-                    } catch (e: Exception) {
-                        errorLogger.logError(e, "Error generating model classes")
-                    }
-
-                    modelsToWrite.remove(it)
+            .filter { it.parseDataBindingClass() }
+            .onEach {
+                try {
+                    modelWriter.generateClassForModel(it)
+                } catch (e: Exception) {
+                    errorLogger.logError(e, "Error generating model classes")
                 }
+
+                modelsToWrite.remove(it)
+            }
     }
 }

@@ -23,4 +23,15 @@ import java.lang.annotation.Target;
 public @interface EpoxyDataBindingLayouts {
   /** A list of databinding layout resources that should have EpoxyModel's generated for them. */
   @LayoutRes int[] value();
+
+  /**
+     * If true, any variable whose type does not implement equals and hashcode will have the
+   * {@link EpoxyAttribute.Option#DoNotHash} behavior applied to them automatically.
+   * <p>
+   * This is generally helpful for listeners - other variables should almost always implement
+   * equals and hashcode.
+   * <p>
+   * For details on the nuances of this, see https://github.com/airbnb/epoxy/wiki/DoNotHash
+   */
+  boolean enableDoNotHash() default true;
 }
