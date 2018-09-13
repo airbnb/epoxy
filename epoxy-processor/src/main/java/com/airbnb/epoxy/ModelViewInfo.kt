@@ -13,7 +13,6 @@ import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
-import javax.tools.Diagnostic
 
 internal class ModelViewInfo(
     val viewElement: TypeElement,
@@ -21,7 +20,8 @@ internal class ModelViewInfo(
     val elements: Elements,
     val errorLogger: ErrorLogger,
     private val configManager: ConfigManager,
-    private val resourceProcessor: ResourceProcessor
+    private val resourceProcessor: ResourceProcessor,
+    private val hashCodeValidator: HashCodeValidator
 ) : GeneratedModelInfo() {
     val resetMethodNames = mutableListOf<String>()
     val afterPropsSetMethodNames = mutableListOf<String>()
@@ -179,7 +179,7 @@ internal class ModelViewInfo(
         addAttribute(
             ViewAttributeInfo(
                 this, prop, typeUtils, elements, errorLogger,
-                resourceProcessor
+                resourceProcessor, hashCodeValidator
             )
         )
     }
@@ -188,7 +188,7 @@ internal class ModelViewInfo(
         addAttributeIfNotExists(
             ViewAttributeInfo(
                 this, prop, typeUtils, elements, errorLogger,
-                resourceProcessor
+                resourceProcessor, hashCodeValidator
             )
         )
     }

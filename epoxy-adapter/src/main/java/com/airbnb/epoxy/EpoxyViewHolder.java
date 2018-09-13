@@ -69,7 +69,7 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     epoxyModel = model;
   }
 
-  Object objectToBind() {
+  public Object objectToBind() {
     return epoxyHolder != null ? epoxyHolder : itemView;
   }
 

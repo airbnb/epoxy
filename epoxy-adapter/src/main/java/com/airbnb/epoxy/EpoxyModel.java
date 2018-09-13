@@ -32,6 +32,8 @@ public abstract class EpoxyModel<T> {
   private long id;
   @LayoutRes private int layout;
   private boolean shown = true;
+  boolean inKeyedListenerEquals;
+
   /**
    * Set to true once this model is diffed in an adapter. Used to ensure that this model's id
    * doesn't change after being diffed.

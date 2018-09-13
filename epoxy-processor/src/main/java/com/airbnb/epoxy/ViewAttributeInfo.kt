@@ -39,14 +39,15 @@ internal class ViewAttributeInfo(
     types: Types,
     elements: Elements,
     errorLogger: ErrorLogger,
-    resourceProcessor: ResourceProcessor
+    resourceProcessor: ResourceProcessor,
+    hashCodeValidator: HashCodeValidator
 ) : AttributeInfo() {
-    val propName: String
+    private val propName: String
     val viewAttributeName: String
     val resetWithNull: Boolean
     val generateStringOverloads: Boolean
     val viewAttributeTypeName: ViewAttributeType?
-    var constantFieldNameForDefaultValue: String? = null
+    private var constantFieldNameForDefaultValue: String? = null
 
     init {
         val propAnnotation = viewAttributeElement.getAnnotation(ModelProp::class.java)
@@ -60,7 +61,8 @@ internal class ViewAttributeInfo(
             else -> throw IllegalStateException("Unsuppported element type $viewAttributeElement")
         }
 
-        viewAttributeTypeName = getViewAttributeType(viewAttributeElement, errorLogger);
+        typeMirror = param.asType()
+        viewAttributeTypeName = getViewAttributeType(viewAttributeElement, errorLogger)
 
         groupKey = ""
         var defaultConstant = ""
@@ -81,7 +83,12 @@ internal class ViewAttributeInfo(
             }
             options.add(Option.GenerateStringOverloads)
         } else if (callbackAnnotation != null) {
-            options.add(Option.DoNotHash)
+            // Only ignore hashing if the type doesn't support it. Otherwise if we are using
+            // a listener that knows how to detect changes in itself we can hash it.
+            if (!hashCodeValidator.implementsHashCodeAndEquals(typeMirror)) {
+                options.add(Option.DoNotHash)
+            }
+
             if (isMarkedNullable(param)) {
                 options.add(Option.NullOnRecycle)
             } else {
@@ -108,7 +115,6 @@ internal class ViewAttributeInfo(
 
         this.viewAttributeName = viewAttributeElement.simpleName.toString()
         propName = removeSetPrefix(viewAttributeName)
-        typeMirror = param.asType()
 
         assignDefaultValue(defaultConstant, errorLogger, types)
         assignNullability(param, typeMirror)
@@ -329,7 +335,7 @@ internal class ViewAttributeInfo(
             is ArrayTypeName -> getSimpleName(name.componentType)!! + "Array"
             is ParameterizedTypeName -> getSimpleName(name.rawType)
             is TypeVariableName -> capitalizeFirstLetter(name.name)
-        // Don't expect this to happen
+            // Don't expect this to happen
             else -> name.toString().replace(".", "")
         }
     }
