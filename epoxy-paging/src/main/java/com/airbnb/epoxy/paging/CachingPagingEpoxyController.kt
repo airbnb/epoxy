@@ -32,6 +32,8 @@ import com.airbnb.epoxy.EpoxyViewHolder
  * By default, the model for each item is added  to the model list. To change this behavior (to
  * filter items or inject extra items), you can override [addModels] function and manually add built
  * models.
+ *
+ * @param T The type of the items in the [PagedList].
  */
 abstract class CachingPagingEpoxyController<T>(
   /**
@@ -55,7 +57,7 @@ abstract class CachingPagingEpoxyController<T>(
       buildItemModel(pos, item)
     },
     rebuildCallback = {
-      requestDelayedModelBuild(0)
+      requestModelBuild()
     },
     itemDiffCallback = itemDiffCallback,
     modelBuildingHandler = modelBuildingHandler
@@ -76,6 +78,9 @@ abstract class CachingPagingEpoxyController<T>(
   /**
    * Builds the model for a given item. This must return a single model for each item. If you want
    * to inject headers etc, you can override [addModels] function.
+   *
+   * If the `item` is `null`, you should provide the placeholder. If your [PagedList] is configured
+   * without placeholders, you don't need to handle the `null` case.
    */
   abstract fun buildItemModel(currentPosition: Int, item: T?): EpoxyModel<*>
 

@@ -34,7 +34,7 @@ import java.util.concurrent.Executor
  * updated.
  */
 internal class PagedListModelCache<T>(
-    private val modelBuilder: (Int, T?) -> EpoxyModel<*>,
+    private val modelBuilder: (itemIndex: Int, item: T?) -> EpoxyModel<*>,
     private val rebuildCallback: () -> Unit,
     private val itemDiffCallback : DiffUtil.ItemCallback<T>,
     private val diffExecutor : Executor? = null,
@@ -147,7 +147,7 @@ internal class PagedListModelCache<T>(
     lastPosition = position
   }
 
-  fun triggerLoadAround(position: Int) {
+  private fun triggerLoadAround(position: Int) {
     asyncDiffer.currentList?.let {
       if (it.size > 0) {
         it.loadAround(Math.min(position, it.size - 1))
