@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @param <T> The list type
  *
- * @deprecated Use {@link CachingPagingEpoxyController} instead.
+ * @deprecated Use {@link PagedListEpoxyController} instead.
  */
 public abstract class SimplePagingEpoxyController<T> extends PagingEpoxyController<T> {
   @Override

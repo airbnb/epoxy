@@ -34,7 +34,7 @@ import java.util.List;
  *
  * @param <T> The type of item in the list
  *
- * @deprecated Use {@link CachingPagingEpoxyController} instead.
+ * @deprecated Use {@link PagedListEpoxyController} instead.
  */
 @Deprecated()
 public abstract class PagingEpoxyController<T> extends EpoxyController {

@@ -10,8 +10,6 @@ import android.arch.paging.PagedList
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.LinearLayoutManager
@@ -20,14 +18,12 @@ import com.airbnb.epoxy.EpoxyAsyncUtil
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.TextProp
-import com.airbnb.epoxy.paging.CachingPagingEpoxyController
+import com.airbnb.epoxy.paging.PagedListEpoxyController
 import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.coroutines.experimental.bg
 import java.lang.RuntimeException
-import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
 class PagingSampleActivity : AppCompatActivity() {
@@ -46,7 +42,7 @@ class PagingSampleActivity : AppCompatActivity() {
     }
 }
 
-class TestController : CachingPagingEpoxyController<User>(
+class TestController : PagedListEpoxyController<User>(
     modelBuildingHandler = EpoxyAsyncUtil.getAsyncBackgroundHandler()
 ) {
     override fun buildItemModel(currentPosition: Int, item: User?): EpoxyModel<*> {

@@ -35,7 +35,7 @@ import com.airbnb.epoxy.EpoxyViewHolder
  *
  * @param T The type of the items in the [PagedList].
  */
-abstract class CachingPagingEpoxyController<T>(
+abstract class PagedListEpoxyController<T>(
   /**
    * The handler to use for build models.
    */
@@ -45,7 +45,7 @@ abstract class CachingPagingEpoxyController<T>(
    */
   diffingHandler: Handler = EpoxyController.defaultDiffingHandler,
   /**
-   * [CachingPagingEpoxyController] uses an [DiffUtil.ItemCallback] to detect changes between
+   * [PagedListEpoxyController] uses an [DiffUtil.ItemCallback] to detect changes between
    * [PagedList]s. By default, it relies on simple object equality but you can provide a custom
    * one if you don't use all fields in the object in your models.
    */
@@ -106,7 +106,7 @@ abstract class CachingPagingEpoxyController<T>(
 
   companion object {
     /**
-     * [CachingPagingEpoxyController] calculates a diff on top of the PagedList to check which
+     * [PagedListEpoxyController] calculates a diff on top of the PagedList to check which
      * models are invalidated.
      * This is the default [DiffUtil.ItemCallback] which uses object equality.
      */
