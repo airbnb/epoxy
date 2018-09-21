@@ -100,7 +100,7 @@ class ActivityViewModel(app : Application) : AndroidViewModel(app) {
                 User(it)
             }.let {
                 it.groupBy {
-                    it.uid % 20
+                    it.uid / 200
                 }.forEach { group ->
                     launch(CommonPool) {
                         delay(group.key.toLong(), TimeUnit.SECONDS)
