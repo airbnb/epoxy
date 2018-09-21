@@ -10,6 +10,8 @@ import java.util.List;
  * {@link #buildModel(Object)}
  *
  * @param <T> The list type
+ *
+ * @deprecated Use {@link PagedListEpoxyController} instead.
  */
 public abstract class SimplePagingEpoxyController<T> extends PagingEpoxyController<T> {
   @Override

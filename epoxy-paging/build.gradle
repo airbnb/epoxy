@@ -1,23 +1,26 @@
 apply plugin: 'com.android.library'
-
+apply plugin: 'kotlin-android'
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
   defaultConfig {
     minSdkVersion rootProject.MIN_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 }
 
 dependencies {
+  implementation rootProject.deps.kotlin
+  api rootProject.deps.androidPagingComponent
+  api project(':epoxy-annotations')
+  api project(':epoxy-adapter')
 
-  compile rootProject.deps.androidPagingComponent
-  compile project(':epoxy-annotations')
-  compile project(':epoxy-adapter')
+  androidTestImplementation rootProject.deps.junit
+  androidTestImplementation rootProject.deps.androidArchCoreTesting
+  androidTestImplementation rootProject.deps.androidTestRunner
 
-  testCompile rootProject.deps.junit
-  testCompile rootProject.deps.robolectric
-  testCompile rootProject.deps.mockito
+  kaptAndroidTest project(":epoxy-processor")
 }
 
 apply from: rootProject.file('gradle/gradle-maven-push.gradle')
