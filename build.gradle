@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
 
-  ext.KOTLIN_VERSION = "1.2.60"
+  ext.KOTLIN_VERSION = "1.2.71"
   ext.ANDROID_PLUGIN_VERSION = "3.1.4"
 
   repositories {
@@ -19,6 +19,11 @@ allprojects {
   repositories {
     google()
     jcenter()
+  }
+  
+  // Prevent javadoc task complaining about errors with kotlin files
+  tasks.withType(Javadoc) {
+      excludes = ['**/*.kt']
   }
 }
 

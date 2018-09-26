@@ -1,3 +1,12 @@
+# 2.18.0 (Sep 26, 2018)
+- **New** A new `PagedListEpoxyController` to improve integration with the Android Paging architecture component (#533 Thanks to Yigit!)
+          With this change the old `PagingEpoxyController` has been deprecated, and [the wiki](https://github.com/airbnb/epoxy/wiki/Paging-Support) is updated.
+
+- **New** Add databinding option to not auto apply DoNotHash (#539)
+- **Fixed** Fix AsyncEpoxyController constructor to correctly use boolean setting (#537)
+- **Fixed** `app_name` is removed from module manifests (#543 Thanks @kettsun0123!)
+
+
 # 2.17.0 (Sep 6, 2018)
 - **New** Add support for setting the Padding via resource or directly in dp (https://github.com/airbnb/epoxy/pull/528 Thanks to pwillmann!)
 - **Fixed** Strip kotlin metadata annotation from generated classes (https://github.com/airbnb/epoxy/pull/523)
