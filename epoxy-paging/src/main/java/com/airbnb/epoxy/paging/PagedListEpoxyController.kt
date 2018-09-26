@@ -37,11 +37,14 @@ import com.airbnb.epoxy.EpoxyViewHolder
  */
 abstract class PagedListEpoxyController<T>(
   /**
-   * The handler to use for build models.
+   * The handler to use for building models. By default this uses the main thread, but you can use
+   * [EpoxyAsyncUtil.getAsyncBackgroundHandler] to do model building in the background.
    */
   modelBuildingHandler: Handler = EpoxyController.defaultModelBuildingHandler,
   /**
-   * The handler to use when calculating the diff between built model lists
+   * The handler to use when calculating the diff between built model lists.
+   * By default this uses the main thread, but you can use
+   * [EpoxyAsyncUtil.getAsyncBackgroundHandler] to do diffing in the background.
    */
   diffingHandler: Handler = EpoxyController.defaultDiffingHandler,
   /**

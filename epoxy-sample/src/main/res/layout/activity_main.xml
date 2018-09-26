@@ -6,4 +6,5 @@
     android:layout_height="match_parent"
     android:padding="8dp"
     android:background="#ffffff"
-    app:itemSpacing="4dp"/>
+    app:itemSpacing="4dp"
+    />
