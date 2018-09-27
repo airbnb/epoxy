@@ -82,6 +82,42 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     payloads = null;
   }
 
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth, int visibleHeight, int visibleWidth) {
+    assertBound();
+    // noinspection unchecked
+    epoxyModel.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, objectToBind());
+  }
+
+  public void visibilityVisible() {
+    assertBound();
+    // noinspection unchecked
+    epoxyModel.visibilityVisible(objectToBind());
+  }
+
+  public void visibilityFocusedVisible() {
+    assertBound();
+    // noinspection unchecked
+    epoxyModel.visibilityFocusedVisible(objectToBind());
+  }
+
+  public void visibilityInvisible() {
+    assertBound();
+    // noinspection unchecked
+    epoxyModel.visibilityInvisible(objectToBind());
+  }
+
+  public void visibilityUnfocusedVisible() {
+    assertBound();
+    // noinspection unchecked
+    epoxyModel.visibilityUnfocusedVisible(objectToBind());
+  }
+
+  public void visibilityFullImpressionVisible() {
+    assertBound();
+    // noinspection unchecked
+    epoxyModel.visibilityFullImpressionVisible(objectToBind());
+  }
+
   public List<Object> getPayloads() {
     assertBound();
     return payloads;

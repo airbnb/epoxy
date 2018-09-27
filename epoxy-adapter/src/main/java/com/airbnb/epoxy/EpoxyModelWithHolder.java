@@ -41,6 +41,38 @@ public abstract class EpoxyModelWithHolder<T extends EpoxyHolder> extends EpoxyM
   }
 
   @Override
+  public void visibilityFocusedVisible(@NonNull T view) {
+    super.visibilityFocusedVisible(view);
+  }
+
+  @Override
+  public void visibilityFullImpressionVisible(@NonNull T view) {
+    super.visibilityFullImpressionVisible(view);
+  }
+
+  @Override
+  public void visibilityInvisible(@NonNull T view) {
+    super.visibilityInvisible(view);
+  }
+
+  @Override
+  public void visibilityUnfocusedVisible(@NonNull T view) {
+    super.visibilityUnfocusedVisible(view);
+  }
+
+  @Override
+  public void visibilityVisible(@NonNull T view) {
+    super.visibilityVisible(view);
+  }
+
+  @Override
+  public void visibilityChanged(float visibleHeight, float visibleWidth, int percentVisibleHeight,
+      int percentVisibleWidth, @NonNull T view) {
+    super.visibilityChanged(visibleHeight, visibleWidth, percentVisibleHeight, percentVisibleWidth,
+        view);
+  }
+
+  @Override
   public boolean onFailedToRecycleView(T holder) {
     return super.onFailedToRecycleView(holder);
   }

@@ -10,6 +10,7 @@ import com.airbnb.epoxy.AfterPropsSet
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
+import com.airbnb.epoxy.OnVisibilityEvent
 import com.airbnb.epoxy.TextProp
 import com.airbnb.epoxy.kotlinsample.R
 
@@ -51,5 +52,35 @@ class ItemCustomView @JvmOverloads constructor(
         // This is useful for using several properties in one method to guarantee they are all set first.
         textView.text = title
         textView.setOnClickListener(listener)
+    }
+
+    @OnVisibilityEvent(OnVisibilityEvent.Event.Changed)
+    fun onChanged(
+        visibleHeight: Float,
+        visibleWidth: Float,
+        percentVisibleHeight: Int,
+        percentVisibleWidth: Int
+    ) {
+        textView.text = "onVisibilityChanged $visibleHeight $visibleWidth $percentVisibleHeight $percentVisibleWidth"
+    }
+
+    @OnVisibilityEvent(OnVisibilityEvent.Event.Visible)
+    fun onVisible() {
+    }
+
+    @OnVisibilityEvent(OnVisibilityEvent.Event.FocusedVisible)
+    fun onFocusedVisible() {
+    }
+
+    @OnVisibilityEvent(OnVisibilityEvent.Event.FullImpressionVisible)
+    fun onFullImpressionVisible() {
+    }
+
+    @OnVisibilityEvent(OnVisibilityEvent.Event.Invisible)
+    fun onInvisible() {
+    }
+
+    @OnVisibilityEvent(OnVisibilityEvent.Event.UnfocusedVisible)
+    fun onUnfocusedVisible() {
     }
 }

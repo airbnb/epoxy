@@ -78,6 +78,14 @@ internal class GeneratedModelWriter(
 
         }
 
+        open fun addToVisibilityMethod(
+            visibilityBuilder: Builder,
+            visibilityParamName: String,
+            event: OnVisibilityEvent.Event
+        ) {
+
+        }
+
         /**
          * True true to have the bind method build, false to not add the method to the generated class.
          */
@@ -137,6 +145,7 @@ internal class GeneratedModelWriter(
 
             addMethods(generateProgrammaticViewMethods(info))
             addMethods(generateBindMethods(info))
+            addMethods(generateVisibilityMethods(info))
             addMethods(generateStyleableViewMethods(info))
             addMethods(generateSettersAndGetters(info))
             addMethods(generateMethodsReturningClassType(info))
@@ -435,6 +444,18 @@ internal class GeneratedModelWriter(
         }
     }
 
+    private fun generateVisibilityMethods(modelInfo: GeneratedModelInfo): Iterable<MethodSpec> {
+        val methods = ArrayList<MethodSpec>()
+        val boundObjectParam = ParameterSpec.builder(modelInfo.modelType, "object", FINAL).build()
+        methods.add(buildVisibilityVisibleMethod(boundObjectParam))
+        methods.add(buildVisibilityFocusedVisibleMethod(boundObjectParam))
+        methods.add(buildVisibilityUnfocusedVisibleMethod(boundObjectParam))
+        methods.add(buildVisibilityInvisibleMethod(boundObjectParam))
+        methods.add(buildVisibilityFullImpressionVisibleMethod(boundObjectParam))
+        methods.add(buildVisibilityChangedMethod(boundObjectParam))
+        return methods
+    }
+
     private fun generateBindMethods(modelInfo: GeneratedModelInfo): Iterable<MethodSpec> {
         val methods = ArrayList<MethodSpec>()
 
@@ -579,6 +600,82 @@ internal class GeneratedModelWriter(
         addStatement("super.bind(\$L)", boundObjectParam.name)
 
         builderHooks?.addToBindMethod(this, boundObjectParam)
+    }
+
+    private fun buildVisibilityVisibleMethod(
+        boundObjectParam: ParameterSpec
+    ) = buildMethod("visibilityVisible") {
+        addAnnotation(Override::class.java)
+        addModifiers(PUBLIC)
+        addParameter(boundObjectParam)
+
+        builderHooks?.addToVisibilityMethod(this, boundObjectParam.name, OnVisibilityEvent.Event.Visible)
+
+        addStatement("super.visibilityVisible(\$L)", boundObjectParam.name)
+    }
+
+    private fun buildVisibilityUnfocusedVisibleMethod(
+        boundObjectParam: ParameterSpec
+    ) = buildMethod("visibilityUnfocusedVisible") {
+        addAnnotation(Override::class.java)
+        addModifiers(PUBLIC)
+        addParameter(boundObjectParam)
+
+        builderHooks?.addToVisibilityMethod(this, boundObjectParam.name, OnVisibilityEvent.Event.UnfocusedVisible)
+
+        addStatement("super.visibilityUnfocusedVisible(\$L)", boundObjectParam.name)
+    }
+
+    private fun buildVisibilityFocusedVisibleMethod(
+        boundObjectParam: ParameterSpec
+    ) = buildMethod("visibilityFocusedVisible") {
+        addAnnotation(Override::class.java)
+        addModifiers(PUBLIC)
+        addParameter(boundObjectParam)
+
+        builderHooks?.addToVisibilityMethod(this, boundObjectParam.name, OnVisibilityEvent.Event.FocusedVisible)
+
+        addStatement("super.visibilityFocusedVisible(\$L)", boundObjectParam.name)
+    }
+
+    private fun buildVisibilityInvisibleMethod(
+        boundObjectParam: ParameterSpec
+    ) = buildMethod("visibilityInvisible") {
+        addAnnotation(Override::class.java)
+        addModifiers(PUBLIC)
+        addParameter(boundObjectParam)
+
+        builderHooks?.addToVisibilityMethod(this, boundObjectParam.name, OnVisibilityEvent.Event.Invisible)
+
+        addStatement("super.visibilityInvisible(\$L)", boundObjectParam.name)
+    }
+
+    private fun buildVisibilityFullImpressionVisibleMethod(
+        boundObjectParam: ParameterSpec
+    ) = buildMethod("visibilityFullImpressionVisible") {
+        addAnnotation(Override::class.java)
+        addModifiers(PUBLIC)
+        addParameter(boundObjectParam)
+
+        builderHooks?.addToVisibilityMethod(this, boundObjectParam.name, OnVisibilityEvent.Event.FullImpressionVisible)
+
+        addStatement("super.visibilityFullImpressionVisible(\$L)", boundObjectParam.name)
+    }
+
+    private fun buildVisibilityChangedMethod(
+        boundObjectParam: ParameterSpec
+    ) = buildMethod("visibilityChanged") {
+        addAnnotation(Override::class.java)
+        addModifiers(PUBLIC)
+        addParameter(TypeName.FLOAT, "percentVisibleHeight")
+        addParameter(TypeName.FLOAT, "percentVisibleWidth")
+        addParameter(TypeName.INT, "visibleHeight")
+        addParameter(TypeName.INT, "visibleWidth")
+        addParameter(boundObjectParam)
+
+        builderHooks?.addToVisibilityMethod(this, boundObjectParam.name, OnVisibilityEvent.Event.Changed)
+
+        addStatement("super.visibilityChanged(\$L, \$L, \$L, \$L, \$L)", "percentVisibleHeight", "percentVisibleWidth", "visibleHeight", "visibleWidth", boundObjectParam.name)
     }
 
     private fun buildBindWithDiffMethod(

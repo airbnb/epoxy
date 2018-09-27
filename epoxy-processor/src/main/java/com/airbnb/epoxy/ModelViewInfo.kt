@@ -13,7 +13,6 @@ import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
-import javax.tools.Diagnostic
 
 internal class ModelViewInfo(
     val viewElement: TypeElement,
@@ -24,6 +23,7 @@ internal class ModelViewInfo(
     private val resourceProcessor: ResourceProcessor
 ) : GeneratedModelInfo() {
     val resetMethodNames = mutableListOf<String>()
+    val visibilityMethodNamesMap = mutableMapOf<OnVisibilityEvent.Event, MutableList<String>>()
     val afterPropsSetMethodNames = mutableListOf<String>()
     val saveViewState: Boolean
     private val viewAnnotation: ModelView = viewElement.getAnnotation(ModelView::class.java)
@@ -197,6 +197,20 @@ internal class ModelViewInfo(
         val methodName = resetMethod.simpleName.toString()
         if (!resetMethodNames.contains(methodName)) {
             resetMethodNames.add(methodName)
+        }
+    }
+
+    fun addOnVisibilityChangedMethodIfNotExists(
+        visibilityMethod: Element,
+        event: OnVisibilityEvent.Event
+    ) {
+        val methodName = visibilityMethod.simpleName.toString()
+        val list =
+            visibilityMethodNamesMap[event] ?: mutableListOf<String>().apply {
+                visibilityMethodNamesMap[event] = this
+            }
+        if (!list.contains(methodName)) {
+            list.add(methodName)
         }
     }
 

@@ -1,11 +1,20 @@
 package com.airbnb.epoxy
 
-import com.airbnb.epoxy.Utils.*
+import com.airbnb.epoxy.Utils.belongToTheSamePackage
+import com.airbnb.epoxy.Utils.isFieldPackagePrivate
+import com.airbnb.epoxy.Utils.isSubtype
+import com.airbnb.epoxy.Utils.isSubtypeOfType
 import java.util.*
-import javax.annotation.processing.*
-import javax.lang.model.element.*
-import javax.lang.model.element.Modifier.*
-import javax.lang.model.util.*
+import javax.annotation.processing.RoundEnvironment
+import javax.lang.model.element.Element
+import javax.lang.model.element.ElementKind
+import javax.lang.model.element.ExecutableElement
+import javax.lang.model.element.Modifier.PRIVATE
+import javax.lang.model.element.Modifier.STATIC
+import javax.lang.model.element.TypeElement
+import javax.lang.model.element.VariableElement
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 // TODO: (eli_hart 5/30/17) allow param counts > 0 in setters
 // TODO: (eli_hart 5/23/17) Allow default values to be methods
@@ -35,6 +44,7 @@ internal class ModelViewProcessor(
 
         processSetterAnnotations(roundEnv)
         processResetAnnotations(roundEnv)
+        processVisibilityAnnotations(roundEnv)
         processAfterBindAnnotations(roundEnv)
 
         updateViewsForInheritedViewAnnotations()
@@ -250,6 +260,29 @@ internal class ModelViewProcessor(
         }
     }
 
+    private fun processVisibilityAnnotations(roundEnv: RoundEnvironment) {
+        for (visibilityMethod in roundEnv.getElementsAnnotatedWith(OnVisibilityEvent::class.java)) {
+            val value = visibilityMethod.getAnnotation(OnVisibilityEvent::class.java).value
+            if (!validateVisibilityElement(visibilityMethod, value)) {
+                continue
+            }
+
+            val info = getModelInfoForPropElement(visibilityMethod)
+            if (info == null) {
+                errorLogger.logError(
+                    "%s annotation can only be used in classes annotated with %s",
+                    OnVisibilityEvent::class.java, ModelView::class.java
+                )
+                continue
+            }
+
+            info.addOnVisibilityChangedMethodIfNotExists(
+                visibilityMethod as ExecutableElement,
+                value
+            )
+        }
+    }
+
     private fun processAfterBindAnnotations(roundEnv: RoundEnvironment) {
         for (afterPropsMethod in roundEnv.getElementsAnnotatedWith(AfterPropsSet::class.java)) {
             if (!validateAfterPropsMethod(afterPropsMethod)) {
@@ -315,6 +348,11 @@ internal class ModelViewProcessor(
                     view.addOnRecycleMethodIfNotExists(it)
                 }
 
+                forEachElementWithAnnotation(listOf(OnVisibilityEvent::class.java)) {
+                    view.addOnVisibilityChangedMethodIfNotExists(it, it.getAnnotation(
+                        OnVisibilityEvent::class.java).value)
+                }
+
                 forEachElementWithAnnotation(listOf(AfterPropsSet::class.java)) {
                     view.addAfterPropsSetMethodIfNotExists(it)
                 }
@@ -354,7 +392,23 @@ internal class ModelViewProcessor(
     }
 
     private fun validateResetElement(resetMethod: Element): Boolean =
-            validateExecutableElement(resetMethod, OnViewRecycled::class.java, 0)
+        validateExecutableElement(resetMethod, OnViewRecycled::class.java, 0)
+
+    private fun validateVisibilityElement(
+        visibilityMethod: Element,
+        event: OnVisibilityEvent.Event
+    ): Boolean = when (event) {
+        OnVisibilityEvent.Event.Changed -> validateExecutableElement(
+            visibilityMethod,
+            OnVisibilityEvent::class.java,
+            4
+        )
+        else -> validateExecutableElement(
+            visibilityMethod,
+            OnVisibilityEvent::class.java,
+            0
+        )
+    }
 
     private fun writeJava() {
         val modelsToWrite = mutableListOf<ModelViewInfo>()

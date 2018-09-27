@@ -204,6 +204,18 @@ internal class ModelViewWriter(
                                      unbindParamName)
         }
 
+        override fun addToVisibilityMethod(
+            visibilityBuilder: MethodSpec.Builder,
+            visibilityParamName: String,
+            event: OnVisibilityEvent.Event
+        ) {
+            addVisibilityMethodsToBuilder(visibilityBuilder,
+                modelInfo,
+                visibilityParamName,
+                event
+            )
+        }
+
         override fun beforeFinalBuild(builder: TypeSpec.Builder) {
             if (modelInfo.saveViewState) {
                 builder.addMethod(
@@ -280,6 +292,32 @@ internal class ModelViewWriter(
         }
     }
 
+    private fun addVisibilityMethodsToBuilder(
+        builder: MethodSpec.Builder,
+        modelViewInfo: ModelViewInfo,
+        unbindParamName: String,
+        event: OnVisibilityEvent.Event
+    ) {
+        modelViewInfo.visibilityMethodNamesMap[event]?.let { visibilityMethodNames ->
+            for (methodName in visibilityMethodNames) {
+                when (event) {
+                    OnVisibilityEvent.Event.Visible ->
+                        builder.addStatement("$unbindParamName.$methodName()")
+                    OnVisibilityEvent.Event.Invisible ->
+                        builder.addStatement("$unbindParamName.$methodName()")
+                    OnVisibilityEvent.Event.UnfocusedVisible ->
+                        builder.addStatement("$unbindParamName.$methodName()")
+                    OnVisibilityEvent.Event.FocusedVisible ->
+                        builder.addStatement("$unbindParamName.$methodName()")
+                    OnVisibilityEvent.Event.FullImpressionVisible ->
+                        builder.addStatement("$unbindParamName.$methodName()")
+                    OnVisibilityEvent.Event.Changed ->
+                        builder.addStatement("$unbindParamName.$methodName(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth)")
+                }
+            }
+        }
+    }
+
     private fun addAfterPropsAddedMethodsToBuilder(
             methodBuilder: MethodSpec.Builder,
             modelInfo: ModelViewInfo,
@@ -289,5 +327,4 @@ internal class ModelViewWriter(
             methodBuilder.addStatement(boundObjectParam.name + "." + methodName + "()")
         }
     }
-
 }

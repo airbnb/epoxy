@@ -155,6 +155,25 @@ public abstract class EpoxyModel<T> {
   public void unbind(@NonNull T view) {
   }
 
+  public void visibilityVisible(@NonNull T view) {
+  }
+
+  public void visibilityFocusedVisible(@NonNull T view) {
+  }
+
+  public void visibilityInvisible(@NonNull T view) {
+  }
+
+  public void visibilityUnfocusedVisible(@NonNull T view) {
+  }
+
+  public void visibilityFullImpressionVisible(@NonNull T view) {
+  }
+
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, @NonNull T view) {
+  }
+
   public long id() {
     return id;
   }
