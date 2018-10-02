@@ -312,7 +312,9 @@ internal class ModelViewWriter(
                     OnVisibilityEvent.Event.FullImpressionVisible ->
                         builder.addStatement("$unbindParamName.$methodName()")
                     OnVisibilityEvent.Event.Changed ->
-                        builder.addStatement("$unbindParamName.$methodName(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth)")
+                        builder.addStatement(
+                            "$unbindParamName.$methodName(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth)"
+                        )
                 }
             }
         }

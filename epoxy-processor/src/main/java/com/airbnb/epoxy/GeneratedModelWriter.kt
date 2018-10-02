@@ -447,12 +447,28 @@ internal class GeneratedModelWriter(
     private fun generateVisibilityMethods(modelInfo: GeneratedModelInfo): Iterable<MethodSpec> {
         val methods = ArrayList<MethodSpec>()
         val boundObjectParam = ParameterSpec.builder(modelInfo.modelType, "object", FINAL).build()
-        methods.add(buildVisibilityVisibleMethod(boundObjectParam))
-        methods.add(buildVisibilityFocusedVisibleMethod(boundObjectParam))
-        methods.add(buildVisibilityUnfocusedVisibleMethod(boundObjectParam))
-        methods.add(buildVisibilityInvisibleMethod(boundObjectParam))
-        methods.add(buildVisibilityFullImpressionVisibleMethod(boundObjectParam))
-        methods.add(buildVisibilityChangedMethod(boundObjectParam))
+        if (modelInfo is ModelViewInfo) {
+            with(modelInfo.visibilityMethodNamesMap) {
+                if (containsKey(OnVisibilityEvent.Event.Visible)) {
+                    methods.add(buildVisibilityVisibleMethod(boundObjectParam))
+                }
+                if (containsKey(OnVisibilityEvent.Event.Invisible)) {
+                    methods.add(buildVisibilityInvisibleMethod(boundObjectParam))
+                }
+                if (containsKey(OnVisibilityEvent.Event.FocusedVisible)) {
+                    methods.add(buildVisibilityFocusedVisibleMethod(boundObjectParam))
+                }
+                if (containsKey(OnVisibilityEvent.Event.UnfocusedVisible)) {
+                    methods.add(buildVisibilityUnfocusedVisibleMethod(boundObjectParam))
+                }
+                if (containsKey(OnVisibilityEvent.Event.FullImpressionVisible)) {
+                    methods.add(buildVisibilityFullImpressionVisibleMethod(boundObjectParam))
+                }
+                if (containsKey(OnVisibilityEvent.Event.Changed)) {
+                    methods.add(buildVisibilityChangedMethod(boundObjectParam))
+                }
+            }
+        }
         return methods
     }
 
@@ -609,7 +625,9 @@ internal class GeneratedModelWriter(
         addModifiers(PUBLIC)
         addParameter(boundObjectParam)
 
-        builderHooks?.addToVisibilityMethod(this, boundObjectParam.name, OnVisibilityEvent.Event.Visible)
+        builderHooks?.addToVisibilityMethod(
+            this, boundObjectParam.name, OnVisibilityEvent.Event.Visible
+        )
 
         addStatement("super.visibilityVisible(\$L)", boundObjectParam.name)
     }
@@ -621,7 +639,9 @@ internal class GeneratedModelWriter(
         addModifiers(PUBLIC)
         addParameter(boundObjectParam)
 
-        builderHooks?.addToVisibilityMethod(this, boundObjectParam.name, OnVisibilityEvent.Event.UnfocusedVisible)
+        builderHooks?.addToVisibilityMethod(
+            this, boundObjectParam.name, OnVisibilityEvent.Event.UnfocusedVisible
+        )
 
         addStatement("super.visibilityUnfocusedVisible(\$L)", boundObjectParam.name)
     }
@@ -633,7 +653,9 @@ internal class GeneratedModelWriter(
         addModifiers(PUBLIC)
         addParameter(boundObjectParam)
 
-        builderHooks?.addToVisibilityMethod(this, boundObjectParam.name, OnVisibilityEvent.Event.FocusedVisible)
+        builderHooks?.addToVisibilityMethod(
+            this, boundObjectParam.name, OnVisibilityEvent.Event.FocusedVisible
+        )
 
         addStatement("super.visibilityFocusedVisible(\$L)", boundObjectParam.name)
     }
@@ -645,7 +667,9 @@ internal class GeneratedModelWriter(
         addModifiers(PUBLIC)
         addParameter(boundObjectParam)
 
-        builderHooks?.addToVisibilityMethod(this, boundObjectParam.name, OnVisibilityEvent.Event.Invisible)
+        builderHooks?.addToVisibilityMethod(
+            this, boundObjectParam.name, OnVisibilityEvent.Event.Invisible
+        )
 
         addStatement("super.visibilityInvisible(\$L)", boundObjectParam.name)
     }
@@ -657,7 +681,9 @@ internal class GeneratedModelWriter(
         addModifiers(PUBLIC)
         addParameter(boundObjectParam)
 
-        builderHooks?.addToVisibilityMethod(this, boundObjectParam.name, OnVisibilityEvent.Event.FullImpressionVisible)
+        builderHooks?.addToVisibilityMethod(
+            this, boundObjectParam.name, OnVisibilityEvent.Event.FullImpressionVisible
+        )
 
         addStatement("super.visibilityFullImpressionVisible(\$L)", boundObjectParam.name)
     }
@@ -673,9 +699,14 @@ internal class GeneratedModelWriter(
         addParameter(TypeName.INT, "visibleWidth")
         addParameter(boundObjectParam)
 
-        builderHooks?.addToVisibilityMethod(this, boundObjectParam.name, OnVisibilityEvent.Event.Changed)
+        builderHooks?.addToVisibilityMethod(
+            this, boundObjectParam.name, OnVisibilityEvent.Event.Changed
+        )
 
-        addStatement("super.visibilityChanged(\$L, \$L, \$L, \$L, \$L)", "percentVisibleHeight", "percentVisibleWidth", "visibleHeight", "visibleWidth", boundObjectParam.name)
+        addStatement(
+            "super.visibilityChanged(\$L, \$L, \$L, \$L, \$L)", "percentVisibleHeight",
+            "percentVisibleWidth", "visibleHeight", "visibleWidth", boundObjectParam.name
+        )
     }
 
     private fun buildBindWithDiffMethod(
