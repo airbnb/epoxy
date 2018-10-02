@@ -82,10 +82,12 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     payloads = null;
   }
 
-  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth, int visibleHeight, int visibleWidth) {
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth) {
     assertBound();
     // noinspection unchecked
-    epoxyModel.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, objectToBind());
+    epoxyModel.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight,
+        visibleWidth, objectToBind());
   }
 
   public void visibilityVisible() {

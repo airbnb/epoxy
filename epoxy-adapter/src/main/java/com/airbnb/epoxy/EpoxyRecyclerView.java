@@ -247,8 +247,8 @@ public class EpoxyRecyclerView extends RecyclerView {
    * half of the viewport, or, if the Component is smaller than half the viewport, when it is fully
    * visible.
    * <p>
-   * - Unfocused Visible Event: this event is triggered when the Component is no longer focused, i.e.
-   * it is not fully visible and does not occupy at least half the viewport.
+   * - Unfocused Visible Event: this event is triggered when the Component is no longer focused,
+   * i.e. it is not fully visible and does not occupy at least half the viewport.
    * <p>
    * - Full Impression Visible Event: this event is triggered when the entire Component has passed
    * through the viewport at some point.
