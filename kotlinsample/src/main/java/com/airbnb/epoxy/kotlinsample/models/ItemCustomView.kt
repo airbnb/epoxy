@@ -3,6 +3,7 @@ package com.airbnb.epoxy.kotlinsample.models
 import android.content.Context
 import android.support.annotation.ColorInt
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -10,6 +11,7 @@ import com.airbnb.epoxy.AfterPropsSet
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
+import com.airbnb.epoxy.OnViewRecycled
 import com.airbnb.epoxy.OnVisibilityEvent
 import com.airbnb.epoxy.TextProp
 import com.airbnb.epoxy.kotlinsample.R
@@ -23,11 +25,16 @@ class ItemCustomView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    val textView: TextView
+    private val onVisibilityEventDrawable = OnVisibilityEventDrawable(context)
+
+    private val textView: TextView
+
     init {
         inflate(context, R.layout.custom_view_item, this)
         orientation = VERTICAL
-        textView = (findViewById<TextView>(R.id.title))
+        textView = (findViewById(R.id.title))
+        textView.setCompoundDrawables(null, null, onVisibilityEventDrawable, null)
+        textView.compoundDrawablePadding = (4 * resources.displayMetrics.density).toInt()
     }
 
     // You can annotate your methods with @ModelProp
@@ -45,7 +52,6 @@ class ItemCustomView @JvmOverloads constructor(
     // 2. Or you can use lateinit
     @TextProp lateinit var title: CharSequence
 
-
     @AfterPropsSet
     fun useProps() {
         // This is optional, and is called after the annotated properties above are set.
@@ -54,33 +60,61 @@ class ItemCustomView @JvmOverloads constructor(
         textView.setOnClickListener(listener)
     }
 
-    @OnVisibilityEvent(OnVisibilityEvent.Event.Changed)
-    fun onChanged(
-        visibleHeight: Float,
-        visibleWidth: Float,
-        percentVisibleHeight: Int,
-        percentVisibleWidth: Int
-    ) {
-        textView.text = "onVisibilityChanged $visibleHeight $visibleWidth $percentVisibleHeight $percentVisibleWidth"
-    }
-
     @OnVisibilityEvent(OnVisibilityEvent.Event.Visible)
     fun onVisible() {
-    }
-
-    @OnVisibilityEvent(OnVisibilityEvent.Event.FocusedVisible)
-    fun onFocusedVisible() {
-    }
-
-    @OnVisibilityEvent(OnVisibilityEvent.Event.FullImpressionVisible)
-    fun onFullImpressionVisible() {
+        Log.d(TAG, "$title Visible")
+        onVisibilityEventDrawable.visible = true
     }
 
     @OnVisibilityEvent(OnVisibilityEvent.Event.Invisible)
     fun onInvisible() {
+        Log.d(TAG, "$title Invisible")
+        onVisibilityEventDrawable.visible = false
+    }
+
+    @OnVisibilityEvent(OnVisibilityEvent.Event.FocusedVisible)
+    fun onFocusedVisible() {
+        Log.d(TAG, "$title FocusedVisible")
+        onVisibilityEventDrawable.focusedVisible = true
     }
 
     @OnVisibilityEvent(OnVisibilityEvent.Event.UnfocusedVisible)
     fun onUnfocusedVisible() {
+        Log.d(TAG, "$title UnfocusedVisible")
+        onVisibilityEventDrawable.focusedVisible = false
+    }
+
+    @OnVisibilityEvent(OnVisibilityEvent.Event.FullImpressionVisible)
+    fun onFullImpressionVisible() {
+        Log.d(TAG, "$title FullImpressionVisible")
+        onVisibilityEventDrawable.fullImpression = true
+    }
+
+    @OnVisibilityEvent(OnVisibilityEvent.Event.Changed)
+    fun onChanged(
+        percentVisibleHeight: Float,
+        percentVisibleWidth: Float,
+        visibleHeight: Int,
+        visibleWidth: Int
+    ) {
+        Log.d(
+            TAG,
+            "$title onChanged ${percentVisibleHeight.toInt()} ${percentVisibleWidth.toInt()} $visibleHeight $visibleWidth ${System.identityHashCode(this)}"
+        )
+        with(onVisibilityEventDrawable) {
+            if (percentVisibleHeight < 100 && fullImpression) {
+                fullImpression = false
+            }
+            percent = percentVisibleHeight
+        }
+    }
+
+    @OnViewRecycled
+    fun clear() {
+        onVisibilityEventDrawable.reset()
+    }
+
+    companion object {
+        private const val TAG = "ItemCustomView"
     }
 }

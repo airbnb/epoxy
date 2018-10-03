@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity)
 
         recyclerView = findViewById(R.id.recycler_view)
+        recyclerView.setVisibilityTrackingEnabled(true)
 
         recyclerView.withModels {
 
