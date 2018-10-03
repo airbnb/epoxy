@@ -30,6 +30,9 @@ class EpoxyVisibilityItem {
   private boolean visible = false;
   private boolean focusedVisible = false;
 
+  /** Store last value for deduping */
+  private int lastVisibleSizeNotified = -1;
+
   /**
    * Update the visibility item according the current layout.
    *
@@ -65,6 +68,7 @@ class EpoxyVisibilityItem {
     visible = false;
     focusedVisible = false;
     adapterPosition = newAdapterPosition;
+    lastVisibleSizeNotified = -1;
   }
 
   void handleVisible(@NonNull EpoxyViewHolder epoxyHolder) {
@@ -98,10 +102,13 @@ class EpoxyVisibilityItem {
   }
 
   void handleChanged(EpoxyViewHolder epoxyHolder) {
-    if (vertical) {
-      epoxyHolder.visibilityChanged(percentVisibleSize, 100.f, size, otherSize);
-    } else {
-      epoxyHolder.visibilityChanged(100.f, percentVisibleSize, otherSize, size);
+    if (visibleSize != lastVisibleSizeNotified) {
+      if (vertical) {
+        epoxyHolder.visibilityChanged(percentVisibleSize, 100.f, visibleSize, otherSize);
+      } else {
+        epoxyHolder.visibilityChanged(100.f, percentVisibleSize, otherSize, visibleSize);
+      }
+      lastVisibleSizeNotified = visibleSize;
     }
   }
 

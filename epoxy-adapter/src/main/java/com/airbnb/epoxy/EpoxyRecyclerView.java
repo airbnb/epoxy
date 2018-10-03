@@ -81,7 +81,7 @@ public class EpoxyRecyclerView extends RecyclerView {
   private boolean visibilityTrackingEnabled = false;
 
   @NonNull
-  private EpoxyVisibilityTracker epoxyVisibilityTracker = new EpoxyVisibilityTracker();
+  private final EpoxyVisibilityTracker epoxyVisibilityTracker = new EpoxyVisibilityTracker();
 
   /**
    * The adapter that was removed because the RecyclerView was detached from the window. We save it
