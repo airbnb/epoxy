@@ -63,6 +63,10 @@ class EpoxyVisibilityItem {
     return size > 0;
   }
 
+  int getAdapterPosition() {
+    return adapterPosition;
+  }
+
   void reset(int newAdapterPosition) {
     fullyVisible = false;
     visible = false;
@@ -72,31 +76,31 @@ class EpoxyVisibilityItem {
   }
 
   void handleVisible(@NonNull EpoxyViewHolder epoxyHolder) {
-    if (!wasVisible() && isVisible()) {
+    if (!visible && isVisible()) {
       epoxyHolder.visibilityVisible();
     }
   }
 
   void handleInvisible(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
-    if (!wasInvisible() && isInvisible(detachEvent)) {
+    if (visible && isInvisible(detachEvent)) {
       epoxyHolder.visibilityInvisible();
     }
   }
 
   void handleFocusedVisible(EpoxyViewHolder epoxyHolder) {
-    if (!wasFocusedVisible() && isFocusedVisible()) {
+    if (!focusedVisible && isFocusedVisible()) {
       epoxyHolder.visibilityFocusedVisible();
     }
   }
 
   void handleUnfocusedVisible(EpoxyViewHolder epoxyHolder) {
-    if (!wasUnfocusedVisible() && isUnfocusedVisible()) {
+    if (focusedVisible && isUnfocusedVisible()) {
       epoxyHolder.visibilityUnfocusedVisible();
     }
   }
 
   void handleFullImpressionVisible(EpoxyViewHolder epoxyHolder) {
-    if (!wasFullImpressionVisible() && isFullImpressionVisible()) {
+    if (!fullyVisible && isFullImpressionVisible()) {
       epoxyHolder.visibilityFullImpressionVisible();
     }
   }
@@ -112,17 +116,9 @@ class EpoxyVisibilityItem {
     }
   }
 
-  int getAdapterPosition() {
-    return adapterPosition;
-  }
-
   private boolean isVisible() {
     // true when at least one pixel of the Component is visible
     return visible = visibleSize > 0;
-  }
-
-  private boolean wasVisible() {
-    return visible;
   }
 
   private boolean isInvisible(boolean detachEvent) {
@@ -134,19 +130,11 @@ class EpoxyVisibilityItem {
     return !visible;
   }
 
-  private boolean wasInvisible() {
-    return !visible;
-  }
-
   private boolean isFocusedVisible() {
     // true when either the Component occupies at least half of the viewport, or, if the Component
     // is smaller than half the viewport, when it is fully visible.
     return focusedVisible =
         size >= viewportSize / 2 || (visibleSize == size && size < viewportSize / 2);
-  }
-
-  private boolean wasFocusedVisible() {
-    return focusedVisible;
   }
 
   private boolean isUnfocusedVisible() {
@@ -158,14 +146,6 @@ class EpoxyVisibilityItem {
       focusedVisible = false;
     }
     return !focusedVisible;
-  }
-
-  private boolean wasUnfocusedVisible() {
-    return !focusedVisible;
-  }
-
-  private boolean wasFullImpressionVisible() {
-    return fullyVisible;
   }
 
   private boolean isFullImpressionVisible() {
