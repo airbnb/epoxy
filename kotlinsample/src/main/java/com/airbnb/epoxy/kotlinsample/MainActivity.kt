@@ -3,9 +3,11 @@ package com.airbnb.epoxy.kotlinsample
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Toast
 import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyRecyclerView
+import com.airbnb.epoxy.OnModelVisibilityStateChangedListener
 import com.airbnb.epoxy.kotlinsample.models.ItemDataClass
 import com.airbnb.epoxy.kotlinsample.models.itemCustomView
 import com.airbnb.epoxy.kotlinsample.models.itemEpoxyHolder
@@ -28,6 +30,9 @@ class MainActivity : AppCompatActivity() {
                     text("this is a data binding model")
                     onClick { _ ->
                         Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
+                    }
+                    onVisibilityStateChanged { model, view, visibilityState ->
+                        Log.d(TAG, "$model -> $visibilityState")
                     }
                 }
 
@@ -55,6 +60,10 @@ class MainActivity : AppCompatActivity() {
                     .addTo(this)
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
     }
 }
 
