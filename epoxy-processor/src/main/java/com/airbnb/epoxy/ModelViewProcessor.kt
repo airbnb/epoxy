@@ -44,7 +44,8 @@ internal class ModelViewProcessor(
 
         processSetterAnnotations(roundEnv)
         processResetAnnotations(roundEnv)
-        processVisibilityAnnotations(roundEnv)
+        processVisibilityStateChangedAnnotations(roundEnv)
+        processVisibilityChangedAnnotations(roundEnv)
         processAfterBindAnnotations(roundEnv)
 
         updateViewsForInheritedViewAnnotations()
@@ -260,26 +261,38 @@ internal class ModelViewProcessor(
         }
     }
 
-    private fun processVisibilityAnnotations(roundEnv: RoundEnvironment) {
-        for (visibilityMethod in roundEnv.getElementsAnnotatedWith(OnVisibilityEvent::class.java)) {
-            val value = visibilityMethod.getAnnotation(OnVisibilityEvent::class.java).value
-            if (!validateVisibilityElement(visibilityMethod, value)) {
+    private fun processVisibilityStateChangedAnnotations(roundEnv: RoundEnvironment) {
+        for (visibilityMethod in roundEnv.getElementsAnnotatedWith(OnVisibilityStateChanged::class.java)) {
+            if (!validateVisibilityStateChangedElement(visibilityMethod)) {
                 continue
             }
 
             val info = getModelInfoForPropElement(visibilityMethod)
             if (info == null) {
-                errorLogger.logError(
-                    "%s annotation can only be used in classes annotated with %s",
-                    OnVisibilityEvent::class.java, ModelView::class.java
-                )
+                errorLogger.logError("%s annotation can only be used in classes annotated with %s",
+                                     OnVisibilityStateChanged::class.java, ModelView::class.java)
                 continue
             }
 
-            info.addOnVisibilityChangedMethodIfNotExists(
-                visibilityMethod as ExecutableElement,
-                value
-            )
+            info.addOnVisibilityStateChangedMethodIfNotExists(visibilityMethod as ExecutableElement)
+        }
+    }
+
+
+    private fun processVisibilityChangedAnnotations(roundEnv: RoundEnvironment) {
+        for (visibilityMethod in roundEnv.getElementsAnnotatedWith(OnVisibilityChanged::class.java)) {
+            if (!validateVisibilityChangedElement(visibilityMethod)) {
+                continue
+            }
+
+            val info = getModelInfoForPropElement(visibilityMethod)
+            if (info == null) {
+                errorLogger.logError("%s annotation can only be used in classes annotated with %s",
+                                     OnVisibilityChanged::class.java, ModelView::class.java)
+                continue
+            }
+
+            info.addOnVisibilityChangedMethodIfNotExists(visibilityMethod as ExecutableElement)
         }
     }
 
@@ -348,9 +361,12 @@ internal class ModelViewProcessor(
                     view.addOnRecycleMethodIfNotExists(it)
                 }
 
-                forEachElementWithAnnotation(listOf(OnVisibilityEvent::class.java)) {
-                    view.addOnVisibilityChangedMethodIfNotExists(it, it.getAnnotation(
-                        OnVisibilityEvent::class.java).value)
+                forEachElementWithAnnotation(listOf(OnVisibilityStateChanged::class.java)) {
+                    view.addOnVisibilityStateChangedMethodIfNotExists(it)
+                }
+
+                forEachElementWithAnnotation(listOf(OnVisibilityChanged::class.java)) {
+                    view.addOnVisibilityChangedMethodIfNotExists(it)
                 }
 
                 forEachElementWithAnnotation(listOf(AfterPropsSet::class.java)) {
@@ -394,21 +410,11 @@ internal class ModelViewProcessor(
     private fun validateResetElement(resetMethod: Element): Boolean =
         validateExecutableElement(resetMethod, OnViewRecycled::class.java, 0)
 
-    private fun validateVisibilityElement(
-        visibilityMethod: Element,
-        event: OnVisibilityEvent.Event
-    ): Boolean = when (event) {
-        OnVisibilityEvent.Event.Changed -> validateExecutableElement(
-            visibilityMethod,
-            OnVisibilityEvent::class.java,
-            4
-        )
-        else -> validateExecutableElement(
-            visibilityMethod,
-            OnVisibilityEvent::class.java,
-            0
-        )
-    }
+    private fun validateVisibilityStateChangedElement(visibilityMethod: Element): Boolean =
+        validateExecutableElement(visibilityMethod, OnVisibilityStateChanged::class.java, 1)
+
+    private fun validateVisibilityChangedElement(visibilityMethod: Element): Boolean =
+        validateExecutableElement(visibilityMethod, OnVisibilityChanged::class.java, 4)
 
     private fun writeJava() {
         val modelsToWrite = mutableListOf<ModelViewInfo>()

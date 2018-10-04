@@ -2,6 +2,8 @@ package com.airbnb.epoxy;
 
 import android.support.annotation.NonNull;
 
+import com.airbnb.epoxy.OnModelVisibilityStateChangedListener.VisibilityState;
+
 import java.util.List;
 
 /**
@@ -40,30 +42,12 @@ public abstract class EpoxyModelWithHolder<T extends EpoxyHolder> extends EpoxyM
     super.unbind(holder);
   }
 
-  @Override
-  public void visibilityFocusedVisible(@NonNull T view) {
-    super.visibilityFocusedVisible(view);
-  }
 
   @Override
-  public void visibilityFullImpressionVisible(@NonNull T view) {
-    super.visibilityFullImpressionVisible(view);
+  public void visibilityStateChanged(@VisibilityState int visibilityState, @NonNull T view) {
+    super.visibilityStateChanged(visibilityState, view);
   }
 
-  @Override
-  public void visibilityInvisible(@NonNull T view) {
-    super.visibilityInvisible(view);
-  }
-
-  @Override
-  public void visibilityUnfocusedVisible(@NonNull T view) {
-    super.visibilityUnfocusedVisible(view);
-  }
-
-  @Override
-  public void visibilityVisible(@NonNull T view) {
-    super.visibilityVisible(view);
-  }
 
   @Override
   public void visibilityChanged(float visibleHeight, float visibleWidth, int percentVisibleHeight,

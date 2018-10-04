@@ -204,15 +204,23 @@ internal class ModelViewWriter(
                                      unbindParamName)
         }
 
-        override fun addToVisibilityMethod(
+        override fun addToVisibilityStateChangedMethod(
             visibilityBuilder: MethodSpec.Builder,
-            visibilityParamName: String,
-            event: OnVisibilityEvent.Event
+            visibilityParamName: String
         ) {
-            addVisibilityMethodsToBuilder(visibilityBuilder,
-                modelInfo,
-                visibilityParamName,
-                event
+            addVisibilityStateChangedMethodsToBuilder(visibilityBuilder,
+                                          modelInfo,
+                                          visibilityParamName
+            )
+        }
+
+        override fun addToVisibilityChangedMethod(
+            visibilityBuilder: MethodSpec.Builder,
+            visibilityParamName: String
+        ) {
+            addVisibilityChangedMethodsToBuilder(visibilityBuilder,
+                                          modelInfo,
+                                          visibilityParamName
             )
         }
 
@@ -283,40 +291,32 @@ internal class ModelViewWriter(
     }
 
     private fun addResetMethodsToBuilder(
-            builder: MethodSpec.Builder,
-            modelViewInfo: ModelViewInfo,
-            unbindParamName: String
+        builder: MethodSpec.Builder,
+        modelViewInfo: ModelViewInfo,
+        unbindParamName: String
     ) {
         for (methodName in modelViewInfo.resetMethodNames) {
             builder.addStatement("$unbindParamName.$methodName()")
         }
     }
 
-    private fun addVisibilityMethodsToBuilder(
+    private fun addVisibilityStateChangedMethodsToBuilder(
         builder: MethodSpec.Builder,
         modelViewInfo: ModelViewInfo,
-        unbindParamName: String,
-        event: OnVisibilityEvent.Event
+        visibilityParamName: String
     ) {
-        modelViewInfo.visibilityMethodNamesMap[event]?.let { visibilityMethodNames ->
-            for (methodName in visibilityMethodNames) {
-                when (event) {
-                    OnVisibilityEvent.Event.Visible ->
-                        builder.addStatement("$unbindParamName.$methodName()")
-                    OnVisibilityEvent.Event.Invisible ->
-                        builder.addStatement("$unbindParamName.$methodName()")
-                    OnVisibilityEvent.Event.UnfocusedVisible ->
-                        builder.addStatement("$unbindParamName.$methodName()")
-                    OnVisibilityEvent.Event.FocusedVisible ->
-                        builder.addStatement("$unbindParamName.$methodName()")
-                    OnVisibilityEvent.Event.FullImpressionVisible ->
-                        builder.addStatement("$unbindParamName.$methodName()")
-                    OnVisibilityEvent.Event.Changed ->
-                        builder.addStatement(
-                            "$unbindParamName.$methodName(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth)"
-                        )
-                }
-            }
+        for (methodName in modelViewInfo.visibilityStateChangedMethodNames) {
+            builder.addStatement("$visibilityParamName.$methodName(visibilityState)")
+        }
+    }
+
+    private fun addVisibilityChangedMethodsToBuilder(
+        builder: MethodSpec.Builder,
+        modelViewInfo: ModelViewInfo,
+        visibilityParamName: String
+    ) {
+        for (methodName in modelViewInfo.visibilityChangedMethodNames) {
+            builder.addStatement("$visibilityParamName.$methodName(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth)")
         }
     }
 

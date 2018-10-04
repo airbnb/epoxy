@@ -23,7 +23,8 @@ internal class ModelViewInfo(
     private val resourceProcessor: ResourceProcessor
 ) : GeneratedModelInfo() {
     val resetMethodNames = mutableListOf<String>()
-    val visibilityMethodNamesMap = mutableMapOf<OnVisibilityEvent.Event, MutableList<String>>()
+    val visibilityStateChangedMethodNames = mutableListOf<String>()
+    val visibilityChangedMethodNames = mutableListOf<String>()
     val afterPropsSetMethodNames = mutableListOf<String>()
     val saveViewState: Boolean
     private val viewAnnotation: ModelView = viewElement.getAnnotation(ModelView::class.java)
@@ -200,17 +201,17 @@ internal class ModelViewInfo(
         }
     }
 
-    fun addOnVisibilityChangedMethodIfNotExists(
-        visibilityMethod: Element,
-        event: OnVisibilityEvent.Event
-    ) {
+    fun addOnVisibilityStateChangedMethodIfNotExists(visibilityMethod: Element) {
         val methodName = visibilityMethod.simpleName.toString()
-        val list =
-            visibilityMethodNamesMap[event] ?: mutableListOf<String>().apply {
-                visibilityMethodNamesMap[event] = this
-            }
-        if (!list.contains(methodName)) {
-            list.add(methodName)
+        if (!visibilityStateChangedMethodNames.contains(methodName)) {
+            visibilityStateChangedMethodNames.add(methodName)
+        }
+    }
+
+    fun addOnVisibilityChangedMethodIfNotExists(visibilityMethod: Element) {
+        val methodName = visibilityMethod.simpleName.toString()
+        if (!visibilityChangedMethodNames.contains(methodName)) {
+            visibilityChangedMethodNames.add(methodName)
         }
     }
 

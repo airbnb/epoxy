@@ -11,8 +11,10 @@ import com.airbnb.epoxy.AfterPropsSet
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
+import com.airbnb.epoxy.OnModelVisibilityStateChangedListener
 import com.airbnb.epoxy.OnViewRecycled
-import com.airbnb.epoxy.OnVisibilityEvent
+import com.airbnb.epoxy.OnVisibilityChanged
+import com.airbnb.epoxy.OnVisibilityStateChanged
 import com.airbnb.epoxy.TextProp
 import com.airbnb.epoxy.kotlinsample.R
 
@@ -60,38 +62,36 @@ class ItemCustomView @JvmOverloads constructor(
         textView.setOnClickListener(listener)
     }
 
-    @OnVisibilityEvent(OnVisibilityEvent.Event.Visible)
-    fun onVisible() {
-        Log.d(TAG, "$title Visible")
-        onVisibilityEventDrawable.visible = true
+    @OnVisibilityStateChanged
+    fun onVisibilityStateChanged(
+        @OnModelVisibilityStateChangedListener.VisibilityState visibilityState: Int
+    ) {
+        when (visibilityState) {
+            OnModelVisibilityStateChangedListener.VISIBLE -> {
+                Log.d(TAG, "$title Visible")
+                onVisibilityEventDrawable.visible = true
+            }
+            OnModelVisibilityStateChangedListener.INVISIBLE -> {
+                Log.d(TAG, "$title Invisible")
+                onVisibilityEventDrawable.visible = false
+            }
+            OnModelVisibilityStateChangedListener.FOCUSED_VISIBLE -> {
+                Log.d(TAG, "$title FocusedVisible")
+                onVisibilityEventDrawable.focusedVisible = true
+            }
+            OnModelVisibilityStateChangedListener.UNFOCUSED_VISIBLE -> {
+                Log.d(TAG, "$title UnfocusedVisible")
+                onVisibilityEventDrawable.focusedVisible = false
+            }
+            OnModelVisibilityStateChangedListener.FULL_IMPRESSION_VISIBLE -> {
+                Log.d(TAG, "$title FullImpressionVisible")
+                onVisibilityEventDrawable.fullImpression = true
+            }
+        }
     }
 
-    @OnVisibilityEvent(OnVisibilityEvent.Event.Invisible)
-    fun onInvisible() {
-        Log.d(TAG, "$title Invisible")
-        onVisibilityEventDrawable.visible = false
-    }
-
-    @OnVisibilityEvent(OnVisibilityEvent.Event.FocusedVisible)
-    fun onFocusedVisible() {
-        Log.d(TAG, "$title FocusedVisible")
-        onVisibilityEventDrawable.focusedVisible = true
-    }
-
-    @OnVisibilityEvent(OnVisibilityEvent.Event.UnfocusedVisible)
-    fun onUnfocusedVisible() {
-        Log.d(TAG, "$title UnfocusedVisible")
-        onVisibilityEventDrawable.focusedVisible = false
-    }
-
-    @OnVisibilityEvent(OnVisibilityEvent.Event.FullImpressionVisible)
-    fun onFullImpressionVisible() {
-        Log.d(TAG, "$title FullImpressionVisible")
-        onVisibilityEventDrawable.fullImpression = true
-    }
-
-    @OnVisibilityEvent(OnVisibilityEvent.Event.Changed)
-    fun onChanged(
+    @OnVisibilityChanged
+    fun onVisibilityChanged(
         percentVisibleHeight: Float,
         percentVisibleWidth: Float,
         visibleHeight: Int,

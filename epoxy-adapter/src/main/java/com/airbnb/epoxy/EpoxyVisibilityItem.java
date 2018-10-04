@@ -36,10 +36,9 @@ class EpoxyVisibilityItem {
   /**
    * Update the visibility item according the current layout.
    *
-   * @param view the current {@link com.airbnb.epoxy.EpoxyViewHolder}'s itemView
-   * @param parent the {@link android.support.v7.widget.RecyclerView}
+   * @param view        the current {@link com.airbnb.epoxy.EpoxyViewHolder}'s itemView
+   * @param parent      the {@link android.support.v7.widget.RecyclerView}
    * @param orientation the {@link android.support.v7.widget.LinearLayoutManager}'s orientation
-   *
    * @return true if the view has been measured
    */
   boolean update(@NonNull View view, @NonNull RecyclerView parent, int orientation) {
@@ -77,31 +76,32 @@ class EpoxyVisibilityItem {
 
   void handleVisible(@NonNull EpoxyViewHolder epoxyHolder) {
     if (!visible && isVisible()) {
-      epoxyHolder.visibilityVisible();
+      epoxyHolder.visibilityStateChanged(OnModelVisibilityStateChangedListener.VISIBLE);
     }
   }
 
   void handleInvisible(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
     if (visible && isInvisible(detachEvent)) {
-      epoxyHolder.visibilityInvisible();
+      epoxyHolder.visibilityStateChanged(OnModelVisibilityStateChangedListener.INVISIBLE);
     }
   }
 
   void handleFocusedVisible(EpoxyViewHolder epoxyHolder) {
     if (!focusedVisible && isFocusedVisible()) {
-      epoxyHolder.visibilityFocusedVisible();
+      epoxyHolder.visibilityStateChanged(OnModelVisibilityStateChangedListener.FOCUSED_VISIBLE);
     }
   }
 
   void handleUnfocusedVisible(EpoxyViewHolder epoxyHolder) {
     if (focusedVisible && isUnfocusedVisible()) {
-      epoxyHolder.visibilityUnfocusedVisible();
+      epoxyHolder.visibilityStateChanged(OnModelVisibilityStateChangedListener.UNFOCUSED_VISIBLE);
     }
   }
 
   void handleFullImpressionVisible(EpoxyViewHolder epoxyHolder) {
     if (!fullyVisible && isFullImpressionVisible()) {
-      epoxyHolder.visibilityFullImpressionVisible();
+      epoxyHolder
+          .visibilityStateChanged(OnModelVisibilityStateChangedListener.FULL_IMPRESSION_VISIBLE);
     }
   }
 

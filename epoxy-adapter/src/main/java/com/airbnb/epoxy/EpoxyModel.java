@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.airbnb.epoxy.EpoxyController.ModelInterceptorCallback;
+import com.airbnb.epoxy.OnModelVisibilityStateChangedListener.VisibilityState;
 
 import java.util.List;
 
@@ -155,19 +156,7 @@ public abstract class EpoxyModel<T> {
   public void unbind(@NonNull T view) {
   }
 
-  public void visibilityVisible(@NonNull T view) {
-  }
-
-  public void visibilityFocusedVisible(@NonNull T view) {
-  }
-
-  public void visibilityInvisible(@NonNull T view) {
-  }
-
-  public void visibilityUnfocusedVisible(@NonNull T view) {
-  }
-
-  public void visibilityFullImpressionVisible(@NonNull T view) {
+  public void visibilityStateChanged(@VisibilityState int visibilityState, @NonNull T view) {
   }
 
   public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,

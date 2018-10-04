@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.airbnb.epoxy.OnModelVisibilityStateChangedListener.VisibilityState;
 import com.airbnb.epoxy.ViewHolderState.ViewState;
 
 import java.util.List;
@@ -82,6 +83,12 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     payloads = null;
   }
 
+  public void visibilityStateChanged(@VisibilityState int visibilityState) {
+    assertBound();
+    // noinspection unchecked
+    epoxyModel.visibilityStateChanged(visibilityState, objectToBind());
+  }
+
   public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
       int visibleHeight, int visibleWidth) {
     assertBound();
@@ -90,35 +97,6 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
         visibleWidth, objectToBind());
   }
 
-  public void visibilityVisible() {
-    assertBound();
-    // noinspection unchecked
-    epoxyModel.visibilityVisible(objectToBind());
-  }
-
-  public void visibilityFocusedVisible() {
-    assertBound();
-    // noinspection unchecked
-    epoxyModel.visibilityFocusedVisible(objectToBind());
-  }
-
-  public void visibilityInvisible() {
-    assertBound();
-    // noinspection unchecked
-    epoxyModel.visibilityInvisible(objectToBind());
-  }
-
-  public void visibilityUnfocusedVisible() {
-    assertBound();
-    // noinspection unchecked
-    epoxyModel.visibilityUnfocusedVisible(objectToBind());
-  }
-
-  public void visibilityFullImpressionVisible() {
-    assertBound();
-    // noinspection unchecked
-    epoxyModel.visibilityFullImpressionVisible(objectToBind());
-  }
 
   public List<Object> getPayloads() {
     assertBound();
