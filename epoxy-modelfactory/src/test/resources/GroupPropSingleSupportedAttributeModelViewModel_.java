@@ -21,6 +21,10 @@ public class GroupPropSingleSupportedAttributeModelViewModel_ extends EpoxyModel
 
   private OnModelUnboundListener<GroupPropSingleSupportedAttributeModelViewModel_, GroupPropSingleSupportedAttributeModelView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<GroupPropSingleSupportedAttributeModelViewModel_, GroupPropSingleSupportedAttributeModelView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<GroupPropSingleSupportedAttributeModelViewModel_, GroupPropSingleSupportedAttributeModelView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   @NonNull
@@ -95,7 +99,8 @@ public class GroupPropSingleSupportedAttributeModelViewModel_ extends EpoxyModel
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public GroupPropSingleSupportedAttributeModelViewModel_ onBind(OnModelBoundListener<GroupPropSingleSupportedAttributeModelViewModel_, GroupPropSingleSupportedAttributeModelView> listener) {
+  public GroupPropSingleSupportedAttributeModelViewModel_ onBind(
+      OnModelBoundListener<GroupPropSingleSupportedAttributeModelViewModel_, GroupPropSingleSupportedAttributeModelView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -116,9 +121,57 @@ public class GroupPropSingleSupportedAttributeModelViewModel_ extends EpoxyModel
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public GroupPropSingleSupportedAttributeModelViewModel_ onUnbind(OnModelUnboundListener<GroupPropSingleSupportedAttributeModelViewModel_, GroupPropSingleSupportedAttributeModelView> listener) {
+  public GroupPropSingleSupportedAttributeModelViewModel_ onUnbind(
+      OnModelUnboundListener<GroupPropSingleSupportedAttributeModelViewModel_, GroupPropSingleSupportedAttributeModelView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityStateChanged(int visibilityState,
+      final GroupPropSingleSupportedAttributeModelView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.visibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public GroupPropSingleSupportedAttributeModelViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<GroupPropSingleSupportedAttributeModelViewModel_, GroupPropSingleSupportedAttributeModelView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth,
+      final GroupPropSingleSupportedAttributeModelView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public GroupPropSingleSupportedAttributeModelViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<GroupPropSingleSupportedAttributeModelViewModel_, GroupPropSingleSupportedAttributeModelView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -211,7 +264,8 @@ public class GroupPropSingleSupportedAttributeModelViewModel_ extends EpoxyModel
   }
 
   @Override
-  public GroupPropSingleSupportedAttributeModelViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public GroupPropSingleSupportedAttributeModelViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -244,6 +298,8 @@ public class GroupPropSingleSupportedAttributeModelViewModel_ extends EpoxyModel
   public GroupPropSingleSupportedAttributeModelViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.title_String = null;
     this.title_Object = null;
@@ -269,6 +325,12 @@ public class GroupPropSingleSupportedAttributeModelViewModel_ extends EpoxyModel
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((title_String != null ? !title_String.equals(that.title_String) : that.title_String != null)) {
       return false;
     }
@@ -283,6 +345,8 @@ public class GroupPropSingleSupportedAttributeModelViewModel_ extends EpoxyModel
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (title_String != null ? title_String.hashCode() : 0);
     result = 31 * result + (title_Object != null ? title_Object.hashCode() : 0);
     return result;

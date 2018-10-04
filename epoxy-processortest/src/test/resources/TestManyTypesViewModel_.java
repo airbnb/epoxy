@@ -31,6 +31,10 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
 
   private OnModelUnboundListener<TestManyTypesViewModel_, TestManyTypesView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<TestManyTypesViewModel_, TestManyTypesView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<TestManyTypesViewModel_, TestManyTypesView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   @NonNull
@@ -239,7 +243,8 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public TestManyTypesViewModel_ onBind(OnModelBoundListener<TestManyTypesViewModel_, TestManyTypesView> listener) {
+  public TestManyTypesViewModel_ onBind(
+      OnModelBoundListener<TestManyTypesViewModel_, TestManyTypesView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -260,9 +265,55 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public TestManyTypesViewModel_ onUnbind(OnModelUnboundListener<TestManyTypesViewModel_, TestManyTypesView> listener) {
+  public TestManyTypesViewModel_ onUnbind(
+      OnModelUnboundListener<TestManyTypesViewModel_, TestManyTypesView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityStateChanged(int visibilityState, final TestManyTypesView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.visibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public TestManyTypesViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<TestManyTypesViewModel_, TestManyTypesView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final TestManyTypesView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public TestManyTypesViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<TestManyTypesViewModel_, TestManyTypesView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -341,7 +392,8 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setIntValueWithRangeAnnotation(int)
    */
-  public TestManyTypesViewModel_ intValueWithRangeAnnotation(@IntRange(from = 0, to = 200) int intValueWithRangeAnnotation) {
+  public TestManyTypesViewModel_ intValueWithRangeAnnotation(
+      @IntRange(from = 0, to = 200) int intValueWithRangeAnnotation) {
     assignedAttributes_epoxyGeneratedModel.set(4);
     onMutation();
     this.intValueWithRangeAnnotation_Int = intValueWithRangeAnnotation;
@@ -361,7 +413,8 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setIntValueWithDimenTypeAnnotation(int)
    */
-  public TestManyTypesViewModel_ intValueWithDimenTypeAnnotation(@Dimension(unit = 0) int intValueWithDimenTypeAnnotation) {
+  public TestManyTypesViewModel_ intValueWithDimenTypeAnnotation(
+      @Dimension(unit = 0) int intValueWithDimenTypeAnnotation) {
     assignedAttributes_epoxyGeneratedModel.set(5);
     onMutation();
     this.intValueWithDimenTypeAnnotation_Int = intValueWithDimenTypeAnnotation;
@@ -380,7 +433,8 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setIntWithMultipleAnnotations(int)
    */
-  public TestManyTypesViewModel_ intWithMultipleAnnotations(@IntRange(from = 0, to = 200) @Dimension(unit = 0) int intWithMultipleAnnotations) {
+  public TestManyTypesViewModel_ intWithMultipleAnnotations(
+      @IntRange(from = 0, to = 200) @Dimension(unit = 0) int intWithMultipleAnnotations) {
     assignedAttributes_epoxyGeneratedModel.set(6);
     onMutation();
     this.intWithMultipleAnnotations_Int = intWithMultipleAnnotations;
@@ -496,7 +550,8 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  public TestManyTypesViewModel_ clickListener(@NonNull final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener) {
+  public TestManyTypesViewModel_ clickListener(
+      @NonNull final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener) {
     assignedAttributes_epoxyGeneratedModel.set(12);
     onMutation();
     if (clickListener == null) {
@@ -631,7 +686,8 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   @Override
-  public TestManyTypesViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public TestManyTypesViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -664,6 +720,8 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   public TestManyTypesViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.stringValue_String = null;
     this.nullableStringValue_String = (String) null;
@@ -699,6 +757,12 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
       return false;
     }
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
       return false;
     }
     if ((stringValue_String != null ? !stringValue_String.equals(that.stringValue_String) : that.stringValue_String != null)) {
@@ -751,6 +815,8 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (stringValue_String != null ? stringValue_String.hashCode() : 0);
     result = 31 * result + (nullableStringValue_String != null ? nullableStringValue_String.hashCode() : 0);
     result = 31 * result + intValue_Int;

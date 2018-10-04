@@ -22,6 +22,10 @@ public class ListSubtypeModelViewModel_ extends EpoxyModel<ListSubtypeModelView>
 
   private OnModelUnboundListener<ListSubtypeModelViewModel_, ListSubtypeModelView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<ListSubtypeModelViewModel_, ListSubtypeModelView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<ListSubtypeModelViewModel_, ListSubtypeModelView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   @NonNull
@@ -77,7 +81,8 @@ public class ListSubtypeModelViewModel_ extends EpoxyModel<ListSubtypeModelView>
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ListSubtypeModelViewModel_ onBind(OnModelBoundListener<ListSubtypeModelViewModel_, ListSubtypeModelView> listener) {
+  public ListSubtypeModelViewModel_ onBind(
+      OnModelBoundListener<ListSubtypeModelViewModel_, ListSubtypeModelView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -98,9 +103,55 @@ public class ListSubtypeModelViewModel_ extends EpoxyModel<ListSubtypeModelView>
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ListSubtypeModelViewModel_ onUnbind(OnModelUnboundListener<ListSubtypeModelViewModel_, ListSubtypeModelView> listener) {
+  public ListSubtypeModelViewModel_ onUnbind(
+      OnModelUnboundListener<ListSubtypeModelViewModel_, ListSubtypeModelView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityStateChanged(int visibilityState, final ListSubtypeModelView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.visibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public ListSubtypeModelViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<ListSubtypeModelViewModel_, ListSubtypeModelView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final ListSubtypeModelView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public ListSubtypeModelViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<ListSubtypeModelViewModel_, ListSubtypeModelView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -168,7 +219,8 @@ public class ListSubtypeModelViewModel_ extends EpoxyModel<ListSubtypeModelView>
   }
 
   @Override
-  public ListSubtypeModelViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public ListSubtypeModelViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -201,6 +253,8 @@ public class ListSubtypeModelViewModel_ extends EpoxyModel<ListSubtypeModelView>
   public ListSubtypeModelViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.stringArrayList_ArrayList = null;
     super.reset();
@@ -225,6 +279,12 @@ public class ListSubtypeModelViewModel_ extends EpoxyModel<ListSubtypeModelView>
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((stringArrayList_ArrayList != null ? !stringArrayList_ArrayList.equals(that.stringArrayList_ArrayList) : that.stringArrayList_ArrayList != null)) {
       return false;
     }
@@ -236,6 +296,8 @@ public class ListSubtypeModelViewModel_ extends EpoxyModel<ListSubtypeModelView>
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (stringArrayList_ArrayList != null ? stringArrayList_ArrayList.hashCode() : 0);
     return result;
   }

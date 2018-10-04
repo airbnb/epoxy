@@ -17,9 +17,17 @@ import java.lang.String;
 import java.util.List;
 
 public interface TestManyTypesViewModelBuilder {
-  TestManyTypesViewModelBuilder onBind(OnModelBoundListener<TestManyTypesViewModel_, TestManyTypesView> listener);
+  TestManyTypesViewModelBuilder onBind(
+      OnModelBoundListener<TestManyTypesViewModel_, TestManyTypesView> listener);
 
-  TestManyTypesViewModelBuilder onUnbind(OnModelUnboundListener<TestManyTypesViewModel_, TestManyTypesView> listener);
+  TestManyTypesViewModelBuilder onUnbind(
+      OnModelUnboundListener<TestManyTypesViewModel_, TestManyTypesView> listener);
+
+  TestManyTypesViewModelBuilder onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<TestManyTypesViewModel_, TestManyTypesView> listener);
+
+  TestManyTypesViewModelBuilder onVisibilityChanged(
+      OnModelVisibilityChangedListener<TestManyTypesViewModel_, TestManyTypesView> listener);
 
   TestManyTypesViewModelBuilder stringValue(@NonNull String stringValue);
 
@@ -29,11 +37,14 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder intValueWithAnnotation(@StringRes int intValueWithAnnotation);
 
-  TestManyTypesViewModelBuilder intValueWithRangeAnnotation(@IntRange(from = 0, to = 200) int intValueWithRangeAnnotation);
+  TestManyTypesViewModelBuilder intValueWithRangeAnnotation(
+      @IntRange(from = 0, to = 200) int intValueWithRangeAnnotation);
 
-  TestManyTypesViewModelBuilder intValueWithDimenTypeAnnotation(@Dimension(unit = 0) int intValueWithDimenTypeAnnotation);
+  TestManyTypesViewModelBuilder intValueWithDimenTypeAnnotation(
+      @Dimension(unit = 0) int intValueWithDimenTypeAnnotation);
 
-  TestManyTypesViewModelBuilder intWithMultipleAnnotations(@IntRange(from = 0, to = 200) @Dimension(unit = 0) int intWithMultipleAnnotations);
+  TestManyTypesViewModelBuilder intWithMultipleAnnotations(
+      @IntRange(from = 0, to = 200) @Dimension(unit = 0) int intWithMultipleAnnotations);
 
   TestManyTypesViewModelBuilder integerValue(@NonNull Integer integerValue);
 
@@ -45,7 +56,8 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder listValue(@NonNull List<String> listValue);
 
-  TestManyTypesViewModelBuilder clickListener(@NonNull final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener);
+  TestManyTypesViewModelBuilder clickListener(
+      @NonNull final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener);
 
   TestManyTypesViewModelBuilder clickListener(@NonNull View.OnClickListener clickListener);
 
@@ -72,5 +84,6 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder layout(@LayoutRes int arg0);
 
-  TestManyTypesViewModelBuilder spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0);
+  TestManyTypesViewModelBuilder spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0);
 }

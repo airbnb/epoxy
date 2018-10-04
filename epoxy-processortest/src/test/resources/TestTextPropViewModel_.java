@@ -24,6 +24,10 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
 
   private OnModelUnboundListener<TestTextPropViewModel_, TestTextPropView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<TestTextPropViewModel_, TestTextPropView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<TestTextPropViewModel_, TestTextPropView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   private StringAttributeData title_StringAttributeData =  new StringAttributeData();
@@ -78,7 +82,8 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public TestTextPropViewModel_ onBind(OnModelBoundListener<TestTextPropViewModel_, TestTextPropView> listener) {
+  public TestTextPropViewModel_ onBind(
+      OnModelBoundListener<TestTextPropViewModel_, TestTextPropView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -99,9 +104,55 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public TestTextPropViewModel_ onUnbind(OnModelUnboundListener<TestTextPropViewModel_, TestTextPropView> listener) {
+  public TestTextPropViewModel_ onUnbind(
+      OnModelUnboundListener<TestTextPropViewModel_, TestTextPropView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityStateChanged(int visibilityState, final TestTextPropView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.visibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public TestTextPropViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<TestTextPropViewModel_, TestTextPropView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final TestTextPropView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public TestTextPropViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<TestTextPropViewModel_, TestTextPropView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -210,7 +261,8 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
   }
 
   @Override
-  public TestTextPropViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public TestTextPropViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -243,6 +295,8 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
   public TestTextPropViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.title_StringAttributeData =  new StringAttributeData();
     super.reset();
@@ -267,6 +321,12 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null)) {
       return false;
     }
@@ -278,6 +338,8 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (title_StringAttributeData != null ? title_StringAttributeData.hashCode() : 0);
     return result;
   }

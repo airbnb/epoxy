@@ -35,6 +35,10 @@ public class StyleableModelViewModel_ extends EpoxyModel<StyleableModelView> imp
 
   private OnModelUnboundListener<StyleableModelViewModel_, StyleableModelView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<StyleableModelViewModel_, StyleableModelView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<StyleableModelViewModel_, StyleableModelView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   @NonNull
@@ -130,7 +134,8 @@ public class StyleableModelViewModel_ extends EpoxyModel<StyleableModelView> imp
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public StyleableModelViewModel_ onBind(OnModelBoundListener<StyleableModelViewModel_, StyleableModelView> listener) {
+  public StyleableModelViewModel_ onBind(
+      OnModelBoundListener<StyleableModelViewModel_, StyleableModelView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -151,9 +156,55 @@ public class StyleableModelViewModel_ extends EpoxyModel<StyleableModelView> imp
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public StyleableModelViewModel_ onUnbind(OnModelUnboundListener<StyleableModelViewModel_, StyleableModelView> listener) {
+  public StyleableModelViewModel_ onUnbind(
+      OnModelUnboundListener<StyleableModelViewModel_, StyleableModelView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityStateChanged(int visibilityState, final StyleableModelView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.visibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public StyleableModelViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<StyleableModelViewModel_, StyleableModelView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final StyleableModelView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public StyleableModelViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<StyleableModelViewModel_, StyleableModelView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -164,7 +215,8 @@ public class StyleableModelViewModel_ extends EpoxyModel<StyleableModelView> imp
     return this;
   }
 
-  public StyleableModelViewModel_ styleBuilder(StyleBuilderCallback<StyleableModelViewStyleApplier.StyleBuilder> builderCallback) {
+  public StyleableModelViewModel_ styleBuilder(
+      StyleBuilderCallback<StyleableModelViewStyleApplier.StyleBuilder> builderCallback) {
     StyleableModelViewStyleApplier.StyleBuilder builder = new StyleableModelViewStyleApplier.StyleBuilder();
     builderCallback.buildStyle(builder.addDefault());
     return style(builder.build());
@@ -243,7 +295,8 @@ public class StyleableModelViewModel_ extends EpoxyModel<StyleableModelView> imp
   }
 
   @Override
-  public StyleableModelViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public StyleableModelViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -276,6 +329,8 @@ public class StyleableModelViewModel_ extends EpoxyModel<StyleableModelView> imp
   public StyleableModelViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.title_String = null;
     this.style = DEFAULT_PARIS_STYLE;
@@ -301,6 +356,12 @@ public class StyleableModelViewModel_ extends EpoxyModel<StyleableModelView> imp
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((title_String != null ? !title_String.equals(that.title_String) : that.title_String != null)) {
       return false;
     }
@@ -315,6 +376,8 @@ public class StyleableModelViewModel_ extends EpoxyModel<StyleableModelView> imp
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (title_String != null ? title_String.hashCode() : 0);
     result = 31 * result + (style != null ? style.hashCode() : 0);
     return result;

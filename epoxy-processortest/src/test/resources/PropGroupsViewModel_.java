@@ -21,6 +21,10 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
 
   private OnModelUnboundListener<PropGroupsViewModel_, PropGroupsView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<PropGroupsViewModel_, PropGroupsView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<PropGroupsViewModel_, PropGroupsView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   @Nullable
@@ -289,7 +293,8 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public PropGroupsViewModel_ onBind(OnModelBoundListener<PropGroupsViewModel_, PropGroupsView> listener) {
+  public PropGroupsViewModel_ onBind(
+      OnModelBoundListener<PropGroupsViewModel_, PropGroupsView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -310,9 +315,55 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public PropGroupsViewModel_ onUnbind(OnModelUnboundListener<PropGroupsViewModel_, PropGroupsView> listener) {
+  public PropGroupsViewModel_ onUnbind(
+      OnModelUnboundListener<PropGroupsViewModel_, PropGroupsView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityStateChanged(int visibilityState, final PropGroupsView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.visibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public PropGroupsViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<PropGroupsViewModel_, PropGroupsView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final PropGroupsView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public PropGroupsViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<PropGroupsViewModel_, PropGroupsView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -470,7 +521,8 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
    *
    * @see PropGroupsView#primitiveAndObjectGroupWithPrimitiveDefault(long)
    */
-  public PropGroupsViewModel_ primitiveAndObjectGroupWithPrimitiveDefault(long primitiveAndObjectGroupWithPrimitiveDefault) {
+  public PropGroupsViewModel_ primitiveAndObjectGroupWithPrimitiveDefault(
+      long primitiveAndObjectGroupWithPrimitiveDefault) {
     assignedAttributes_epoxyGeneratedModel.set(8);
     assignedAttributes_epoxyGeneratedModel.clear(9);
     this.primitiveAndObjectGroupWithPrimitiveDefault_CharSequence = null;
@@ -488,7 +540,8 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
    *
    * @see PropGroupsView#primitiveAndObjectGroupWithPrimitiveDefault(CharSequence)
    */
-  public PropGroupsViewModel_ primitiveAndObjectGroupWithPrimitiveDefault(@NonNull CharSequence primitiveAndObjectGroupWithPrimitiveDefault) {
+  public PropGroupsViewModel_ primitiveAndObjectGroupWithPrimitiveDefault(
+      @NonNull CharSequence primitiveAndObjectGroupWithPrimitiveDefault) {
     if (primitiveAndObjectGroupWithPrimitiveDefault == null) {
       throw new IllegalArgumentException("primitiveAndObjectGroupWithPrimitiveDefault cannot be null");
     }
@@ -665,6 +718,8 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
   public PropGroupsViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.something_CharSequence = (CharSequence) null;
     this.something_Int = 0;
@@ -700,6 +755,12 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
       return false;
     }
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
       return false;
     }
     if ((something_CharSequence != null ? !something_CharSequence.equals(that.something_CharSequence) : that.something_CharSequence != null)) {
@@ -752,6 +813,8 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (something_CharSequence != null ? something_CharSequence.hashCode() : 0);
     result = 31 * result + something_Int;
     result = 31 * result + (somethingElse_CharSequence != null ? somethingElse_CharSequence.hashCode() : 0);

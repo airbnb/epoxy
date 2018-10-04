@@ -17,6 +17,10 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
 
   private OnModelUnboundListener<ModelWithDataBindingBindingModel_, DataBindingEpoxyModel.DataBindingHolder> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<ModelWithDataBindingBindingModel_, DataBindingEpoxyModel.DataBindingHolder> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<ModelWithDataBindingBindingModel_, DataBindingEpoxyModel.DataBindingHolder> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   private String stringValue;
 
   @Override
@@ -46,7 +50,8 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ModelWithDataBindingBindingModel_ onBind(OnModelBoundListener<ModelWithDataBindingBindingModel_, DataBindingEpoxyModel.DataBindingHolder> listener) {
+  public ModelWithDataBindingBindingModel_ onBind(
+      OnModelBoundListener<ModelWithDataBindingBindingModel_, DataBindingEpoxyModel.DataBindingHolder> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -67,9 +72,56 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ModelWithDataBindingBindingModel_ onUnbind(OnModelUnboundListener<ModelWithDataBindingBindingModel_, DataBindingEpoxyModel.DataBindingHolder> listener) {
+  public ModelWithDataBindingBindingModel_ onUnbind(
+      OnModelUnboundListener<ModelWithDataBindingBindingModel_, DataBindingEpoxyModel.DataBindingHolder> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityStateChanged(int visibilityState,
+      final DataBindingEpoxyModel.DataBindingHolder object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.visibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public ModelWithDataBindingBindingModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<ModelWithDataBindingBindingModel_, DataBindingEpoxyModel.DataBindingHolder> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final DataBindingEpoxyModel.DataBindingHolder object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public ModelWithDataBindingBindingModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<ModelWithDataBindingBindingModel_, DataBindingEpoxyModel.DataBindingHolder> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -127,7 +179,8 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
   }
 
   @Override
-  public ModelWithDataBindingBindingModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public ModelWithDataBindingBindingModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -179,6 +232,8 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
   public ModelWithDataBindingBindingModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     this.stringValue = null;
     super.reset();
     return this;
@@ -202,6 +257,12 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((stringValue != null ? !stringValue.equals(that.stringValue) : that.stringValue != null)) {
       return false;
     }
@@ -213,6 +274,8 @@ public class ModelWithDataBindingBindingModel_ extends DataBindingEpoxyModel imp
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (stringValue != null ? stringValue.hashCode() : 0);
     return result;
   }

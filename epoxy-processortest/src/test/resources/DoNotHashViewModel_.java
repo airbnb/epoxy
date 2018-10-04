@@ -22,6 +22,10 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
 
   private OnModelUnboundListener<DoNotHashViewModel_, DoNotHashView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<DoNotHashViewModel_, DoNotHashView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<DoNotHashViewModel_, DoNotHashView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   @NonNull
@@ -103,7 +107,8 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public DoNotHashViewModel_ onBind(OnModelBoundListener<DoNotHashViewModel_, DoNotHashView> listener) {
+  public DoNotHashViewModel_ onBind(
+      OnModelBoundListener<DoNotHashViewModel_, DoNotHashView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -124,9 +129,55 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public DoNotHashViewModel_ onUnbind(OnModelUnboundListener<DoNotHashViewModel_, DoNotHashView> listener) {
+  public DoNotHashViewModel_ onUnbind(
+      OnModelUnboundListener<DoNotHashViewModel_, DoNotHashView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityStateChanged(int visibilityState, final DoNotHashView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.visibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public DoNotHashViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<DoNotHashViewModel_, DoNotHashView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final DoNotHashView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public DoNotHashViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<DoNotHashViewModel_, DoNotHashView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -152,7 +203,8 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  public DoNotHashViewModel_ clickListener(@NonNull final OnModelClickListener<DoNotHashViewModel_, DoNotHashView> clickListener) {
+  public DoNotHashViewModel_ clickListener(
+      @NonNull final OnModelClickListener<DoNotHashViewModel_, DoNotHashView> clickListener) {
     assignedAttributes_epoxyGeneratedModel.set(1);
     onMutation();
     if (clickListener == null) {
@@ -280,6 +332,8 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   public DoNotHashViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.title_CharSequence = null;
     this.clickListener_OnClickListener = null;
@@ -306,6 +360,12 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if (((title_CharSequence == null) != (that.title_CharSequence == null))) {
       return false;
     }
@@ -323,6 +383,8 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (title_CharSequence != null ? 1 : 0);
     result = 31 * result + (clickListener_OnClickListener != null ? 1 : 0);
     result = 31 * result + (normalProp_CharSequence != null ? normalProp_CharSequence.hashCode() : 0);

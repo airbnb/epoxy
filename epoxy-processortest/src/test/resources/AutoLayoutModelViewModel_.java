@@ -20,6 +20,10 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
 
   private OnModelUnboundListener<AutoLayoutModelViewModel_, AutoLayoutModelView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<AutoLayoutModelViewModel_, AutoLayoutModelView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<AutoLayoutModelViewModel_, AutoLayoutModelView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   private int value_Int = 0;
@@ -83,7 +87,8 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public AutoLayoutModelViewModel_ onBind(OnModelBoundListener<AutoLayoutModelViewModel_, AutoLayoutModelView> listener) {
+  public AutoLayoutModelViewModel_ onBind(
+      OnModelBoundListener<AutoLayoutModelViewModel_, AutoLayoutModelView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -104,9 +109,55 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public AutoLayoutModelViewModel_ onUnbind(OnModelUnboundListener<AutoLayoutModelViewModel_, AutoLayoutModelView> listener) {
+  public AutoLayoutModelViewModel_ onUnbind(
+      OnModelUnboundListener<AutoLayoutModelViewModel_, AutoLayoutModelView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityStateChanged(int visibilityState, final AutoLayoutModelView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.visibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public AutoLayoutModelViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<AutoLayoutModelViewModel_, AutoLayoutModelView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final AutoLayoutModelView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public AutoLayoutModelViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<AutoLayoutModelViewModel_, AutoLayoutModelView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -168,7 +219,8 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
   }
 
   @Override
-  public AutoLayoutModelViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public AutoLayoutModelViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -201,6 +253,8 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
   public AutoLayoutModelViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.value_Int = 0;
     super.reset();
@@ -225,6 +279,12 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((value_Int != that.value_Int)) {
       return false;
     }
@@ -236,6 +296,8 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + value_Int;
     return result;
   }

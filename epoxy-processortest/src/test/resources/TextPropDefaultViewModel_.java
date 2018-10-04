@@ -24,6 +24,10 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
 
   private OnModelUnboundListener<TextPropDefaultViewModel_, TextPropDefaultView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<TextPropDefaultViewModel_, TextPropDefaultView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<TextPropDefaultViewModel_, TextPropDefaultView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   private StringAttributeData textWithDefault_StringAttributeData =  new StringAttributeData(R.string.string_resource_value);
@@ -87,7 +91,8 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public TextPropDefaultViewModel_ onBind(OnModelBoundListener<TextPropDefaultViewModel_, TextPropDefaultView> listener) {
+  public TextPropDefaultViewModel_ onBind(
+      OnModelBoundListener<TextPropDefaultViewModel_, TextPropDefaultView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -108,9 +113,55 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public TextPropDefaultViewModel_ onUnbind(OnModelUnboundListener<TextPropDefaultViewModel_, TextPropDefaultView> listener) {
+  public TextPropDefaultViewModel_ onUnbind(
+      OnModelUnboundListener<TextPropDefaultViewModel_, TextPropDefaultView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityStateChanged(int visibilityState, final TextPropDefaultView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.visibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public TextPropDefaultViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<TextPropDefaultViewModel_, TextPropDefaultView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final TextPropDefaultView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public TextPropDefaultViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<TextPropDefaultViewModel_, TextPropDefaultView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -186,7 +237,8 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
    *
    * @see TextPropDefaultView#nullableTextWithDefault(CharSequence)
    */
-  public TextPropDefaultViewModel_ nullableTextWithDefault(@Nullable CharSequence nullableTextWithDefault) {
+  public TextPropDefaultViewModel_ nullableTextWithDefault(
+      @Nullable CharSequence nullableTextWithDefault) {
     onMutation();
     assignedAttributes_epoxyGeneratedModel.set(1);
     nullableTextWithDefault_StringAttributeData.setValue(nullableTextWithDefault);
@@ -280,7 +332,8 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   }
 
   @Override
-  public TextPropDefaultViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public TextPropDefaultViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -313,6 +366,8 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   public TextPropDefaultViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.textWithDefault_StringAttributeData =  new StringAttributeData(R.string.string_resource_value);
     this.nullableTextWithDefault_StringAttributeData =  new StringAttributeData(R.string.string_resource_value);
@@ -338,6 +393,12 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((textWithDefault_StringAttributeData != null ? !textWithDefault_StringAttributeData.equals(that.textWithDefault_StringAttributeData) : that.textWithDefault_StringAttributeData != null)) {
       return false;
     }
@@ -352,6 +413,8 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (textWithDefault_StringAttributeData != null ? textWithDefault_StringAttributeData.hashCode() : 0);
     result = 31 * result + (nullableTextWithDefault_StringAttributeData != null ? nullableTextWithDefault_StringAttributeData.hashCode() : 0);
     return result;

@@ -17,9 +17,17 @@ import java.lang.String;
 import java.util.List;
 
 public interface ModelWithAllFieldTypesBuilder {
-  ModelWithAllFieldTypesBuilder onBind(OnModelBoundListener<ModelWithAllFieldTypes_, Object> listener);
+  ModelWithAllFieldTypesBuilder onBind(
+      OnModelBoundListener<ModelWithAllFieldTypes_, Object> listener);
 
-  ModelWithAllFieldTypesBuilder onUnbind(OnModelUnboundListener<ModelWithAllFieldTypes_, Object> listener);
+  ModelWithAllFieldTypesBuilder onUnbind(
+      OnModelUnboundListener<ModelWithAllFieldTypes_, Object> listener);
+
+  ModelWithAllFieldTypesBuilder onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<ModelWithAllFieldTypes_, Object> listener);
+
+  ModelWithAllFieldTypesBuilder onVisibilityChanged(
+      OnModelVisibilityChangedListener<ModelWithAllFieldTypes_, Object> listener);
 
   ModelWithAllFieldTypesBuilder valueInt(int valueInt);
 
@@ -77,5 +85,6 @@ public interface ModelWithAllFieldTypesBuilder {
 
   ModelWithAllFieldTypesBuilder layout(@LayoutRes int arg0);
 
-  ModelWithAllFieldTypesBuilder spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0);
+  ModelWithAllFieldTypesBuilder spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0);
 }

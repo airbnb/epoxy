@@ -22,6 +22,10 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
 
   private OnModelUnboundListener<IgnoreRequireHashCodeViewModel_, IgnoreRequireHashCodeView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<IgnoreRequireHashCodeViewModel_, IgnoreRequireHashCodeView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<IgnoreRequireHashCodeViewModel_, IgnoreRequireHashCodeView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   @NonNull
@@ -77,7 +81,8 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public IgnoreRequireHashCodeViewModel_ onBind(OnModelBoundListener<IgnoreRequireHashCodeViewModel_, IgnoreRequireHashCodeView> listener) {
+  public IgnoreRequireHashCodeViewModel_ onBind(
+      OnModelBoundListener<IgnoreRequireHashCodeViewModel_, IgnoreRequireHashCodeView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -98,15 +103,62 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public IgnoreRequireHashCodeViewModel_ onUnbind(OnModelUnboundListener<IgnoreRequireHashCodeViewModel_, IgnoreRequireHashCodeView> listener) {
+  public IgnoreRequireHashCodeViewModel_ onUnbind(
+      OnModelUnboundListener<IgnoreRequireHashCodeViewModel_, IgnoreRequireHashCodeView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
+  @Override
+  public void visibilityStateChanged(int visibilityState, final IgnoreRequireHashCodeView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.visibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public IgnoreRequireHashCodeViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<IgnoreRequireHashCodeViewModel_, IgnoreRequireHashCodeView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final IgnoreRequireHashCodeView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public IgnoreRequireHashCodeViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<IgnoreRequireHashCodeViewModel_, IgnoreRequireHashCodeView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  public IgnoreRequireHashCodeViewModel_ clickListener(@NonNull final OnModelClickListener<IgnoreRequireHashCodeViewModel_, IgnoreRequireHashCodeView> clickListener) {
+  public IgnoreRequireHashCodeViewModel_ clickListener(
+      @NonNull final OnModelClickListener<IgnoreRequireHashCodeViewModel_, IgnoreRequireHashCodeView> clickListener) {
     assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     if (clickListener == null) {
@@ -123,7 +175,8 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
    *
    * @see IgnoreRequireHashCodeView#setClickListener(View.OnClickListener)
    */
-  public IgnoreRequireHashCodeViewModel_ clickListener(@NonNull View.OnClickListener clickListener) {
+  public IgnoreRequireHashCodeViewModel_ clickListener(
+      @NonNull View.OnClickListener clickListener) {
     if (clickListener == null) {
       throw new IllegalArgumentException("clickListener cannot be null");
     }
@@ -182,7 +235,8 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
   }
 
   @Override
-  public IgnoreRequireHashCodeViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public IgnoreRequireHashCodeViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -215,6 +269,8 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
   public IgnoreRequireHashCodeViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.clickListener_OnClickListener = null;
     super.reset();
@@ -239,6 +295,12 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((clickListener_OnClickListener != null ? !clickListener_OnClickListener.equals(that.clickListener_OnClickListener) : that.clickListener_OnClickListener != null)) {
       return false;
     }
@@ -250,6 +312,8 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (clickListener_OnClickListener != null ? clickListener_OnClickListener.hashCode() : 0);
     return result;
   }

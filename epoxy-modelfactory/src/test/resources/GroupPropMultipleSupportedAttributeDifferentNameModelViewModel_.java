@@ -20,6 +20,10 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
 
   private OnModelUnboundListener<GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_, GroupPropMultipleSupportedAttributeDifferentNameModelView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_, GroupPropMultipleSupportedAttributeDifferentNameModelView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_, GroupPropMultipleSupportedAttributeDifferentNameModelView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   @NonNull
@@ -97,7 +101,8 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ onBind(OnModelBoundListener<GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_, GroupPropMultipleSupportedAttributeDifferentNameModelView> listener) {
+  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ onBind(
+      OnModelBoundListener<GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_, GroupPropMultipleSupportedAttributeDifferentNameModelView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -118,9 +123,57 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ onUnbind(OnModelUnboundListener<GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_, GroupPropMultipleSupportedAttributeDifferentNameModelView> listener) {
+  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ onUnbind(
+      OnModelUnboundListener<GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_, GroupPropMultipleSupportedAttributeDifferentNameModelView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityStateChanged(int visibilityState,
+      final GroupPropMultipleSupportedAttributeDifferentNameModelView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.visibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_, GroupPropMultipleSupportedAttributeDifferentNameModelView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth,
+      final GroupPropMultipleSupportedAttributeDifferentNameModelView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_, GroupPropMultipleSupportedAttributeDifferentNameModelView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -129,7 +182,8 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
    *
    * @see GroupPropMultipleSupportedAttributeDifferentNameModelView#setTitleString(String)
    */
-  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ titleString(@NonNull String titleString) {
+  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ titleString(
+      @NonNull String titleString) {
     if (titleString == null) {
       throw new IllegalArgumentException("titleString cannot be null");
     }
@@ -171,7 +225,8 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
   }
 
   @Override
-  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ id(@Nullable Number... arg0) {
+  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ id(
+      @Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
@@ -183,33 +238,36 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
   }
 
   @Override
-  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ id(@Nullable CharSequence arg0) {
+  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ id(
+      @Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ id(@Nullable CharSequence arg0,
-      @Nullable CharSequence... arg1) {
+  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ id(
+      @Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ id(@Nullable CharSequence arg0,
-      long arg1) {
+  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ id(
+      @Nullable CharSequence arg0, long arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ layout(@LayoutRes int arg0) {
+  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ layout(
+      @LayoutRes int arg0) {
     super.layout(arg0);
     return this;
   }
 
   @Override
-  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -242,6 +300,8 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
   public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.titleString_String = null;
     this.titleInt_Int = 0;
@@ -267,6 +327,12 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((titleString_String != null ? !titleString_String.equals(that.titleString_String) : that.titleString_String != null)) {
       return false;
     }
@@ -281,6 +347,8 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (titleString_String != null ? titleString_String.hashCode() : 0);
     result = 31 * result + titleInt_Int;
     return result;
@@ -294,7 +362,8 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
         "}" + super.toString();
   }
 
-  public static GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ from(ModelProperties properties) {
+  public static GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ from(
+      ModelProperties properties) {
     GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ model = new GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_();
     model.id(properties.getId());
     if (properties.has("titleString")) {

@@ -16,6 +16,10 @@ public class ModelWithViewLongClickListener_ extends ModelWithViewLongClickListe
 
   private OnModelUnboundListener<ModelWithViewLongClickListener_, Object> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<ModelWithViewLongClickListener_, Object> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<ModelWithViewLongClickListener_, Object> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   public ModelWithViewLongClickListener_() {
     super();
   }
@@ -46,7 +50,8 @@ public class ModelWithViewLongClickListener_ extends ModelWithViewLongClickListe
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ModelWithViewLongClickListener_ onBind(OnModelBoundListener<ModelWithViewLongClickListener_, Object> listener) {
+  public ModelWithViewLongClickListener_ onBind(
+      OnModelBoundListener<ModelWithViewLongClickListener_, Object> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -67,15 +72,62 @@ public class ModelWithViewLongClickListener_ extends ModelWithViewLongClickListe
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ModelWithViewLongClickListener_ onUnbind(OnModelUnboundListener<ModelWithViewLongClickListener_, Object> listener) {
+  public ModelWithViewLongClickListener_ onUnbind(
+      OnModelUnboundListener<ModelWithViewLongClickListener_, Object> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
+  @Override
+  public void visibilityStateChanged(int visibilityState, final Object object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.visibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public ModelWithViewLongClickListener_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<ModelWithViewLongClickListener_, Object> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final Object object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public ModelWithViewLongClickListener_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<ModelWithViewLongClickListener_, Object> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  public ModelWithViewLongClickListener_ clickListener(final OnModelLongClickListener<ModelWithViewLongClickListener_, Object> clickListener) {
+  public ModelWithViewLongClickListener_ clickListener(
+      final OnModelLongClickListener<ModelWithViewLongClickListener_, Object> clickListener) {
     onMutation();
     if (clickListener == null) {
       super.clickListener = null;
@@ -140,7 +192,8 @@ public class ModelWithViewLongClickListener_ extends ModelWithViewLongClickListe
   }
 
   @Override
-  public ModelWithViewLongClickListener_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public ModelWithViewLongClickListener_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -167,6 +220,8 @@ public class ModelWithViewLongClickListener_ extends ModelWithViewLongClickListe
   public ModelWithViewLongClickListener_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     super.clickListener = null;
     super.reset();
     return this;
@@ -190,6 +245,12 @@ public class ModelWithViewLongClickListener_ extends ModelWithViewLongClickListe
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if (((clickListener == null) != (that.clickListener == null))) {
       return false;
     }
@@ -201,6 +262,8 @@ public class ModelWithViewLongClickListener_ extends ModelWithViewLongClickListe
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (clickListener != null ? 1 : 0);
     return result;
   }
