@@ -124,7 +124,7 @@ class EpoxyVisibilityTracker {
       vi.handleVisible(epoxyHolder);
       vi.handleInvisible(epoxyHolder, detachEvent);
       vi.handleFocusedVisible(epoxyHolder);
-      vi.handleUnfocusedVisible(epoxyHolder);
+      vi.handleUnfocusedVisible(epoxyHolder, detachEvent);
       vi.handleFullImpressionVisible(epoxyHolder);
       vi.handleChanged(epoxyHolder);
     }

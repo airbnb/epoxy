@@ -92,8 +92,8 @@ class EpoxyVisibilityItem {
     }
   }
 
-  void handleUnfocusedVisible(EpoxyViewHolder epoxyHolder) {
-    if (focusedVisible && isUnfocusedVisible()) {
+  void handleUnfocusedVisible(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
+    if (focusedVisible && isUnfocusedVisible(detachEvent)) {
       epoxyHolder.visibilityStateChanged(OnModelVisibilityStateChangedListener.UNFOCUSED_VISIBLE);
     }
   }
@@ -137,11 +137,11 @@ class EpoxyVisibilityItem {
         size >= viewportSize / 2 || (visibleSize == size && size < viewportSize / 2);
   }
 
-  private boolean isUnfocusedVisible() {
+  private boolean isUnfocusedVisible(boolean detachEvent) {
     // true when the Component is no longer focused, i.e. it is not fully visible and does not
     // occupy at least half the viewport.
-    boolean unfocusedVisible =
-        !(size >= viewportSize / 2 || (visibleSize == size && size < viewportSize / 2));
+    boolean unfocusedVisible = detachEvent
+        || !(size >= viewportSize / 2 || (visibleSize == size && size < viewportSize / 2));
     if (unfocusedVisible) {
       focusedVisible = false;
     }
