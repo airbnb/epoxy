@@ -3,7 +3,7 @@ package com.airbnb.epoxy;
 import android.support.annotation.Px;
 
 /** Used to register an onVisibilityChanged callback with a generated model. */
-public interface OnModelVisibilityChangedListener<T extends EpoxyModel<?>, V> {
+public interface OnModelVisibilityChangedListener<T extends EpoxyModel<V>, V> {
 
   /**
    * This will be called once the view port changed.
