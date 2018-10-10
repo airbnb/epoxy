@@ -30,7 +30,7 @@ class EpoxyVisibilityItem {
   private boolean visible = false;
   private boolean focusedVisible = false;
 
-  /** Store last value for deduping */
+  /** Store last value for de-duping */
   private int lastVisibleSizeNotified = -1;
 
   /**
