@@ -28,13 +28,15 @@ import com.airbnb.epoxy.EpoxyModel
 import java.lang.IllegalStateException
 import java.util.concurrent.Executor
 
+typealias ItemPosition = Int
+
 /**
  * A PagedList stream wrapper that caches models built for each item. It tracks changes in paged lists and caches
  * models for each item when they are invalidated to avoid rebuilding models for the whole list when PagedList is
  * updated.
  */
 internal class PagedListModelCache<T>(
-    private val modelBuilder: (itemIndex: Int, item: T?) -> EpoxyModel<*>,
+    private val modelBuilder: (itemIndex: Int, item: T?) -> List<EpoxyModel<*>>,
     private val rebuildCallback: () -> Unit,
     private val itemDiffCallback : DiffUtil.ItemCallback<T>,
     private val diffExecutor : Executor? = null,
@@ -43,7 +45,10 @@ internal class PagedListModelCache<T>(
   /**
    * Backing list for built models. This is a full array list that has null items for not yet build models.
    */
-  private val modelCache = arrayListOf<EpoxyModel<*>?>()
+  private val modelCache = linkedMapOf<EpoxyModel<*>, ItemPosition>()
+
+  private val unbuiltModels = mutableSetOf<ItemPosition>()
+
   /**
    * Tracks the last accessed position so that we can report it back to the paged list when models are built.
    */
@@ -53,31 +58,36 @@ internal class PagedListModelCache<T>(
    * Observer for the PagedList changes that invalidates the model cache when data is updated.
    */
   private val updateCallback = object : ListUpdateCallback {
-    override fun onChanged(position: Int, count: Int, payload: Any?) {
-      (position until (position + count)).forEach {
-        modelCache[it] = null
+    override fun onChanged(position: ItemPosition, count: Int, payload: Any?) {
+      (position until (position + count)).forEach { index ->
+        modelCache.filterValues { it == index }.keys.forEach { model ->
+          modelCache.remove(model)
+        }
       }
       rebuildCallback()
     }
 
-    override fun onMoved(fromPosition: Int, toPosition: Int) {
-        val model = modelCache.removeAt(fromPosition)
-        modelCache.add(toPosition, model)
-        rebuildCallback()
+    override fun onMoved(fromPosition: ItemPosition, toPosition: ItemPosition) {
+      modelCache.filterValues { it == fromPosition }.keys.forEach {
+        modelCache[it] = toPosition
+      }
+      rebuildCallback()
     }
 
-    override fun onInserted(position: Int, count: Int) {
-        (0 until count).forEach { _ ->
-          modelCache.add(position, null)
-        }
-        rebuildCallback()
+    override fun onInserted(position: ItemPosition, count: Int) {
+      (position until position + count - 1).forEach { pos ->
+        unbuiltModels.add(pos)
+      }
+      rebuildCallback()
     }
 
-    override fun onRemoved(position: Int, count: Int) {
-        (0 until count).forEach { _ ->
-          modelCache.removeAt(position)
+    override fun onRemoved(position: ItemPosition, count: Int) {
+      (position until position + count - 1).forEach { index ->
+        modelCache.filterValues { it == index }.keys.forEach { model ->
+          modelCache.remove(model)
         }
-        rebuildCallback()
+      }
+      rebuildCallback()
     }
   }
 
@@ -122,32 +132,43 @@ internal class PagedListModelCache<T>(
     asyncDiffer.submitList(pagedList)
   }
 
-  private fun getOrBuildModel(pos: Int): EpoxyModel<*> {
-    modelCache[pos]?.let {
-      return it
+  private fun getOrBuildModels(pos: ItemPosition): List<EpoxyModel<*>> {
+    if (pos >= asyncDiffer.currentList?.size ?: 0) {
+      return emptyList()
     }
-    return modelBuilder(pos, asyncDiffer.currentList?.get(pos)).also {
-      modelCache[pos] = it
+    return if (modelCache.containsValue(pos)) {
+      modelCache.filterValues { it == pos }.keys.toList()
+    } else {
+      modelBuilder(pos, asyncDiffer.currentList?.get(pos)).also { modelList ->
+        modelList.forEach { model ->
+          modelCache[model] = pos
+        }
+      }
     }
   }
 
   fun getModels(): List<EpoxyModel<*>> {
+    unbuiltModels.forEach {
+      getOrBuildModels(it)
+    }
     (0 until modelCache.size).forEach {
-      getOrBuildModel(it)
+      getOrBuildModels(it)
     }
     lastPosition?.let {
       triggerLoadAround(it)
     }
-    @Suppress("UNCHECKED_CAST")
-    return modelCache as List<EpoxyModel<*>>
+    Log.d("rdhruva", "Model build requested, size: ${modelCache.size}")
+    return modelCache.keys.toList()
   }
 
-  fun loadAround(position: Int) {
-    triggerLoadAround(position)
-    lastPosition = position
+  fun loadAround(model: EpoxyModel<*>) {
+    modelCache[model]?.let { itemPosition ->
+      triggerLoadAround(itemPosition)
+      lastPosition = itemPosition
+    }
   }
 
-  private fun triggerLoadAround(position: Int) {
+  private fun triggerLoadAround(position: ItemPosition) {
     asyncDiffer.currentList?.let {
       if (it.size > 0) {
         it.loadAround(Math.min(position, it.size - 1))

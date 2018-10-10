@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import com.airbnb.epoxy.EpoxyAsyncUtil
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.ModelView
@@ -39,21 +40,36 @@ class PagingSampleActivity : AppCompatActivity() {
         viewModel.pagedList.observe(this, Observer {
           pagingController.submitList(it)
         })
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    Log.d("rdhruva", "Items in RV: ${recyclerView.adapter.itemCount}")
+                }
+            }
+        })
     }
 }
 
 class TestController : PagedListEpoxyController<User>(
     modelBuildingHandler = EpoxyAsyncUtil.getAsyncBackgroundHandler()
 ) {
-    override fun buildItemModel(currentPosition: Int, item: User?): EpoxyModel<*> {
+    override fun buildItemModel(currentPosition: Int, item: User?): List<EpoxyModel<*>> {
         return if (item == null) {
-            PagingViewModel_()
-                .id(-currentPosition)
-                .name("loading ${currentPosition}")
+            listOf(
+                PagingViewModel_()
+                    .id(-currentPosition)
+                    .name("loading ${currentPosition}")
+            )
         } else {
-            PagingViewModel_()
-                .id(item.uid)
-                .name("${item.uid}: ${item.firstName} / ${item.lastName}")
+            listOf(
+                PagingViewModel_()
+                    .id(item.uid)
+                    .name("${item.uid}: ${item.firstName} / ${item.lastName}"),
+                PagingViewModel_()
+                    .id(Int.MAX_VALUE - item.uid)
+                    .name("Second model for ${item.uid}")
+            )
         }
     }
 
@@ -67,6 +83,9 @@ class TestController : PagedListEpoxyController<User>(
 
     init {
         isDebugLoggingEnabled = true
+        addInterceptor {
+            Log.d("rdhruva", "Items in model list: ${it.size}")
+        }
     }
 
     override fun onExceptionSwallowed(exception: RuntimeException) {
