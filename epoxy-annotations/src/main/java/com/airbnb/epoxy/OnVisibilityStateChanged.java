@@ -11,6 +11,9 @@ import java.lang.annotation.Target;
  *
  * Possible States are declared in {@link com.airbnb.epoxy.OnModelVisibilityStateChangedListener}.
  *
+ * The equivalent methods on the model is
+ * {@link com.airbnb.epoxy.EpoxyModel#onVisibilityStateChanged}
+ *
  * Inspired from Litho: https://fblitho.com/docs/visibility-handling
  */
 @SuppressWarnings("JavadocReference")
