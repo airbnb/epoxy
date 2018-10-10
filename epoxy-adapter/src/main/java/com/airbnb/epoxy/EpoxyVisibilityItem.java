@@ -3,7 +3,6 @@ package com.airbnb.epoxy;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Px;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -38,12 +37,12 @@ class EpoxyVisibilityItem {
    *
    * @param view        the current {@link com.airbnb.epoxy.EpoxyViewHolder}'s itemView
    * @param parent      the {@link android.support.v7.widget.RecyclerView}
-   * @param orientation the {@link android.support.v7.widget.LinearLayoutManager}'s orientation
+   * @param vertical    true if it scroll vertically
    * @return true if the view has been measured
    */
-  boolean update(@NonNull View view, @NonNull RecyclerView parent, int orientation) {
+  boolean update(@NonNull View view, @NonNull RecyclerView parent, boolean vertical) {
     view.getLocalVisibleRect(localVisibleRect);
-    vertical = orientation == LinearLayoutManager.VERTICAL;
+    this.vertical = vertical;
     if (vertical) {
       sizeInScrollingDirection = view.getMeasuredHeight();
       otherSize = view.getMeasuredWidth();
