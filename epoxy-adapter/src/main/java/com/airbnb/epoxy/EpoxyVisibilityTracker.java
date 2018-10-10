@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.View.OnLayoutChangeListener;
 
 /**
- * Helper class to handle visibility event from an {@link com.airbnb.epoxy.EpoxyRecyclerView}.
+ * Helper class to handle visibility event from a {@link android.support.v7.widget.RecyclerView}.
  */
-class EpoxyVisibilityTracker {
+public class EpoxyVisibilityTracker {
 
   /** Maintain visibility item indexed by view id (identity hashcode) */
   private final SparseArray<EpoxyVisibilityItem> visibilityIdToItemMap = new SparseArray<>();
@@ -27,9 +27,9 @@ class EpoxyVisibilityTracker {
   /**
    * Attach the tracker.
    *
-   * @param recyclerView The EpoxyRecyclerView.
+   * @param recyclerView The RecyclerView.
    */
-  void attach(@NonNull EpoxyRecyclerView recyclerView) {
+  public void attach(@NonNull RecyclerView recyclerView) {
     attachedRecyclerView = recyclerView;
     recyclerView.addOnScrollListener(this.listener);
     recyclerView.addOnLayoutChangeListener(this.listener);
@@ -39,9 +39,9 @@ class EpoxyVisibilityTracker {
   /**
    * Detach the tracker
    *
-   * @param recyclerView The EpoxyRecyclerView.
+   * @param recyclerView The RecyclerView.
    */
-  void detach(@NonNull EpoxyRecyclerView recyclerView) {
+  public void detach(@NonNull RecyclerView recyclerView) {
     recyclerView.removeOnScrollListener(this.listener);
     recyclerView.removeOnLayoutChangeListener(this.listener);
     recyclerView.removeOnChildAttachStateChangeListener(this.listener);

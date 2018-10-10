@@ -78,11 +78,6 @@ public class EpoxyRecyclerView extends RecyclerView {
 
   private EpoxyController epoxyController;
 
-  private boolean visibilityTrackingEnabled = false;
-
-  @NonNull
-  private final EpoxyVisibilityTracker epoxyVisibilityTracker = new EpoxyVisibilityTracker();
-
   /**
    * The adapter that was removed because the RecyclerView was detached from the window. We save it
    * so we can reattach it if the RecyclerView is reattached to window. This allows us to
@@ -233,40 +228,6 @@ public class EpoxyRecyclerView extends RecyclerView {
   @NonNull
   protected RecycledViewPool createViewPool() {
     return new UnboundedViewPool();
-  }
-
-  /**
-   * Enable visibility event tracking :
-   * <p>
-   * - Visible Event: this event is triggered when at least one pixel of the Component is visible.
-   * <p>
-   * - Invisible Event: this event is triggered when the Component no longer has any pixels on the
-   * screen.
-   * <p>
-   * - Focused Visible Event: this event is triggered when either the Component occupies at least
-   * half of the viewport, or, if the Component is smaller than half the viewport, when it is fully
-   * visible.
-   * <p>
-   * - Unfocused Visible Event: this event is triggered when the Component is no longer focused,
-   * i.e. it is not fully visible and does not occupy at least half the viewport.
-   * <p>
-   * - Full Impression Visible Event: this event is triggered when the entire Component has passed
-   * through the viewport at some point.
-   * <p>
-   * - VisibilityChangedEvent: this event is triggered when the visibility of the Component on the
-   * screen changes.
-   *
-   * By default visibility event tracking is not enabled.
-   */
-  public void setVisibilityTrackingEnabled(boolean enabled) {
-    if (visibilityTrackingEnabled != enabled) {
-      visibilityTrackingEnabled = enabled;
-      if (visibilityTrackingEnabled) {
-        epoxyVisibilityTracker.attach(this);
-      } else {
-        epoxyVisibilityTracker.detach(this);
-      }
-    }
   }
 
   /**

@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyRecyclerView
+import com.airbnb.epoxy.EpoxyVisibilityTracker
 import com.airbnb.epoxy.OnModelVisibilityStateChangedListener
 import com.airbnb.epoxy.kotlinsample.models.ItemDataClass
 import com.airbnb.epoxy.kotlinsample.models.itemCustomView
@@ -20,7 +21,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity)
 
         recyclerView = findViewById(R.id.recycler_view)
-        recyclerView.setVisibilityTrackingEnabled(true)
+
+        // Attach the visibility tracker to the RecyclerView. This will enable visibility events.
+        val epoxyVisibilityTracker = EpoxyVisibilityTracker()
+        epoxyVisibilityTracker.attach(recyclerView)
 
         recyclerView.withModels {
 
