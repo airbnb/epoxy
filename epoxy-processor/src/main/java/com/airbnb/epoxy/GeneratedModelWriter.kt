@@ -505,9 +505,6 @@ internal class GeneratedModelWriter(
                         + "<p>\n"
                         + "The listener will contribute to this model's hashCode state per the {@link\n"
                         + "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
-                        + "<p>\n"
-                        + "You may clear the listener by setting a null value, or by calling "
-                        + "{@link #reset()}"
             )
             .addModifiers(PUBLIC)
             .returns(modelInfo.parameterizedGeneratedName)
@@ -535,9 +532,6 @@ internal class GeneratedModelWriter(
                         + "<p>\n"
                         + "The listener will contribute to this model's hashCode state per the {@link\n"
                         + "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
-                        + "<p>\n"
-                        + "You may clear the listener by setting a null value, or by calling "
-                        + "{@link #reset()}"
             )
             .addModifiers(PUBLIC)
             .returns(modelInfo.parameterizedGeneratedName)
