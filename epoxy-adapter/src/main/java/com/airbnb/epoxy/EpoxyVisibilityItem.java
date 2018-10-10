@@ -14,7 +14,7 @@ class EpoxyVisibilityItem {
   private int adapterPosition = RecyclerView.NO_POSITION;
 
   @Px
-  int sizeInScrollingDirection;
+  private int sizeInScrollingDirection;
 
   private int otherSize;
 
