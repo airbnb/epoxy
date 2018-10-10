@@ -701,7 +701,7 @@ internal class GeneratedModelWriter(
 
     private fun buildVisibilityStateChangedMethod(
         visibilityStateParam: ParameterSpec
-    ) = buildMethod("visibilityStateChanged") {
+    ) = buildMethod("onVisibilityStateChanged") {
         addAnnotation(Override::class.java)
         addModifiers(PUBLIC)
         addParameter(TypeName.INT, "visibilityState")
@@ -717,13 +717,13 @@ internal class GeneratedModelWriter(
         builderHooks?.addToVisibilityStateChangedMethod(this, visibilityStateParam.name)
 
         addStatement(
-            "super.visibilityStateChanged(\$L, \$L)", "visibilityState", visibilityStateParam.name
+            "super.onVisibilityStateChanged(\$L, \$L)", "visibilityState", visibilityStateParam.name
         )
     }
 
     private fun buildVisibilityChangedMethod(
         visibilityStateParam: ParameterSpec
-    ) = buildMethod("visibilityChanged") {
+    ) = buildMethod("onVisibilityChanged") {
         addAnnotation(Override::class.java)
         addModifiers(PUBLIC)
         addParameter(TypeName.FLOAT, "percentVisibleHeight")
@@ -743,7 +743,7 @@ internal class GeneratedModelWriter(
         builderHooks?.addToVisibilityChangedMethod(this, visibilityStateParam.name)
 
         addStatement(
-            "super.visibilityChanged(\$L, \$L, \$L, \$L, \$L)", "percentVisibleHeight",
+            "super.onVisibilityChanged(\$L, \$L, \$L, \$L, \$L)", "percentVisibleHeight",
             "percentVisibleWidth", "visibleHeight", "visibleWidth", visibilityStateParam.name
         )
     }

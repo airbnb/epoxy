@@ -278,11 +278,11 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   }
 
   @Override
-  public void visibilityStateChanged(int visibilityState, final AllTypesModelView object) {
+  public void onVisibilityStateChanged(int visibilityState, final AllTypesModelView object) {
     if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
       onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
     }
-    super.visibilityStateChanged(visibilityState, object);
+    super.onVisibilityStateChanged(visibilityState, object);
   }
 
   /**
@@ -300,12 +300,12 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   }
 
   @Override
-  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+  public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
       int visibleHeight, int visibleWidth, final AllTypesModelView object) {
     if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
       onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
     }
-    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+    super.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
   }
 
   /**

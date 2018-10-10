@@ -106,11 +106,11 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
   }
 
   @Override
-  public void visibilityStateChanged(int visibilityState, final CallbackPropModelView object) {
+  public void onVisibilityStateChanged(int visibilityState, final CallbackPropModelView object) {
     if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
       onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
     }
-    super.visibilityStateChanged(visibilityState, object);
+    super.onVisibilityStateChanged(visibilityState, object);
   }
 
   /**
@@ -128,12 +128,12 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
   }
 
   @Override
-  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+  public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
       int visibleHeight, int visibleWidth, final CallbackPropModelView object) {
     if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
       onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
     }
-    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+    super.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
   }
 
   /**
