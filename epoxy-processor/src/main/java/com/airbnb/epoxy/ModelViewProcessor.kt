@@ -13,6 +13,7 @@ import javax.lang.model.element.Modifier.PRIVATE
 import javax.lang.model.element.Modifier.STATIC
 import javax.lang.model.element.TypeElement
 import javax.lang.model.element.VariableElement
+import javax.lang.model.type.TypeKind
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
@@ -215,9 +216,10 @@ internal class ModelViewProcessor(
     }
 
     private fun validateExecutableElement(
-            element: Element,
-            annotationClass: Class<*>,
-            paramCount: Int
+        element: Element,
+        annotationClass: Class<*>,
+        paramCount: Int,
+        checkTypeParameters: List<TypeKind>? = null
     ): Boolean {
         if (element !is ExecutableElement) {
             errorLogger.logError("%s annotations can only be on a method (element: %s)",
@@ -231,6 +233,22 @@ internal class ModelViewProcessor(
                     "Methods annotated with %s must have exactly %s parameter (method: %s)",
                     annotationClass, paramCount, element.getSimpleName())
             return false
+        }
+
+        checkTypeParameters?.let { expectedTypeParameters ->
+            // Check also the parameter types
+            var hasErrors = false
+            element.parameters.forEachIndexed { i, parameter ->
+                hasErrors = hasErrors || parameter.asType().kind != expectedTypeParameters[i]
+            }
+            if (hasErrors) {
+                errorLogger.logError(
+                    "Methods annotated with %s must have parameter types %s, found: %s (method: %s)",
+                    annotationClass, expectedTypeParameters,
+                    element.parameters.map { it.asType().kind },
+                    element.simpleName
+                )
+            }
         }
 
         val modifiers = element.getModifiers()
@@ -411,10 +429,16 @@ internal class ModelViewProcessor(
         validateExecutableElement(resetMethod, OnViewRecycled::class.java, 0)
 
     private fun validateVisibilityStateChangedElement(visibilityMethod: Element): Boolean =
-        validateExecutableElement(visibilityMethod, OnVisibilityStateChanged::class.java, 1)
+        validateExecutableElement(
+            visibilityMethod, OnVisibilityStateChanged::class.java, 1,
+            checkTypeParameters = listOf(TypeKind.INT)
+        )
 
     private fun validateVisibilityChangedElement(visibilityMethod: Element): Boolean =
-        validateExecutableElement(visibilityMethod, OnVisibilityChanged::class.java, 4)
+        validateExecutableElement(
+            visibilityMethod, OnVisibilityChanged::class.java, 4,
+            checkTypeParameters = listOf(TypeKind.FLOAT, TypeKind.FLOAT, TypeKind.INT, TypeKind.INT)
+        )
 
     private fun writeJava() {
         val modelsToWrite = mutableListOf<ModelViewInfo>()

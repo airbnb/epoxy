@@ -87,7 +87,7 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
   public void visibilityStateChanged(@VisibilityState int visibilityState) {
     assertBound();
     // noinspection unchecked
-    epoxyModel.visibilityStateChanged(visibilityState, objectToBind());
+    epoxyModel.onVisibilityStateChanged(visibilityState, objectToBind());
   }
 
   public void visibilityChanged(
@@ -98,7 +98,7 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
   ) {
     assertBound();
     // noinspection unchecked
-    epoxyModel.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight,
+    epoxyModel.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight,
         visibleWidth, objectToBind());
   }
 

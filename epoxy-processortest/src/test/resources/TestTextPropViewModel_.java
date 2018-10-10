@@ -112,11 +112,11 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
   }
 
   @Override
-  public void visibilityStateChanged(int visibilityState, final TestTextPropView object) {
+  public void onVisibilityStateChanged(int visibilityState, final TestTextPropView object) {
     if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
       onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
     }
-    super.visibilityStateChanged(visibilityState, object);
+    super.onVisibilityStateChanged(visibilityState, object);
   }
 
   /**
@@ -134,12 +134,12 @@ public class TestTextPropViewModel_ extends EpoxyModel<TestTextPropView> impleme
   }
 
   @Override
-  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+  public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
       int visibleHeight, int visibleWidth, final TestTextPropView object) {
     if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
       onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
     }
-    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+    super.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
   }
 
   /**

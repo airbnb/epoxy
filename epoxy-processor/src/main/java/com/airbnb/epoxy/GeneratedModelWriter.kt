@@ -700,12 +700,12 @@ internal class GeneratedModelWriter(
 
 
     private fun buildVisibilityStateChangedMethod(
-        visibilityStateParam: ParameterSpec
-    ) = buildMethod("visibilityStateChanged") {
+        visibilityObjectParam: ParameterSpec
+    ) = buildMethod("onVisibilityStateChanged") {
         addAnnotation(Override::class.java)
         addModifiers(PUBLIC)
         addParameter(TypeName.INT, "visibilityState")
-        addParameter(visibilityStateParam)
+        addParameter(visibilityObjectParam)
 
         beginControlFlow("if (\$L != null)", modelVisibilityStateChangedListenerFieldName())
         addStatement(
@@ -714,23 +714,23 @@ internal class GeneratedModelWriter(
         )
         endControlFlow()
 
-        builderHooks?.addToVisibilityStateChangedMethod(this, visibilityStateParam.name)
+        builderHooks?.addToVisibilityStateChangedMethod(this, visibilityObjectParam.name)
 
         addStatement(
-            "super.visibilityStateChanged(\$L, \$L)", "visibilityState", visibilityStateParam.name
+            "super.onVisibilityStateChanged(\$L, \$L)", "visibilityState", visibilityObjectParam.name
         )
     }
 
     private fun buildVisibilityChangedMethod(
-        visibilityStateParam: ParameterSpec
-    ) = buildMethod("visibilityChanged") {
+        visibilityObjectParam: ParameterSpec
+    ) = buildMethod("onVisibilityChanged") {
         addAnnotation(Override::class.java)
         addModifiers(PUBLIC)
         addParameter(TypeName.FLOAT, "percentVisibleHeight")
         addParameter(TypeName.FLOAT, "percentVisibleWidth")
         addParameter(TypeName.INT, "visibleHeight")
         addParameter(TypeName.INT, "visibleWidth")
-        addParameter(visibilityStateParam)
+        addParameter(visibilityObjectParam)
 
         beginControlFlow("if (\$L != null)", modelVisibilityChangedListenerFieldName())
         addStatement(
@@ -740,11 +740,11 @@ internal class GeneratedModelWriter(
         )
         endControlFlow()
 
-        builderHooks?.addToVisibilityChangedMethod(this, visibilityStateParam.name)
+        builderHooks?.addToVisibilityChangedMethod(this, visibilityObjectParam.name)
 
         addStatement(
-            "super.visibilityChanged(\$L, \$L, \$L, \$L, \$L)", "percentVisibleHeight",
-            "percentVisibleWidth", "visibleHeight", "visibleWidth", visibilityStateParam.name
+            "super.onVisibilityChanged(\$L, \$L, \$L, \$L, \$L)", "percentVisibleHeight",
+            "percentVisibleWidth", "visibleHeight", "visibleWidth", visibilityObjectParam.name
         )
     }
 
