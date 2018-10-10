@@ -6,6 +6,17 @@ import android.support.annotation.Px;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+/**
+ * This class represent an item in the {@link android.support.v7.widget.RecyclerView} and it is
+ * being reused with multiple model via the update method. There is 1:1 relationship between an
+ * EpoxyVisibilityItem and a child within the {@link android.support.v7.widget.RecyclerView}.
+ *
+ * It contains the logic to compute the visibility state of an item. It will also invoke the
+ * visibility callbacks on {@link com.airbnb.epoxy.EpoxyViewHolder}
+ *
+ * This class should remain non-public and is intended to be used by {@link EpoxyVisibilityTracker}
+ * only.
+ */
 class EpoxyVisibilityItem {
 
   private final Rect localVisibleRect = new Rect();
@@ -15,9 +26,9 @@ class EpoxyVisibilityItem {
   @Px
   private int sizeInScrollingDirection;
 
-  private int otherSize;
+  private int sizeNotInScrollingDirection;
 
-  private boolean vertical;
+  private boolean verticalScrolling;
 
   private float percentVisibleSize = 0.f;
 
@@ -42,14 +53,14 @@ class EpoxyVisibilityItem {
    */
   boolean update(@NonNull View view, @NonNull RecyclerView parent, boolean vertical) {
     view.getLocalVisibleRect(localVisibleRect);
-    this.vertical = vertical;
+    this.verticalScrolling = vertical;
     if (vertical) {
       sizeInScrollingDirection = view.getMeasuredHeight();
-      otherSize = view.getMeasuredWidth();
+      sizeNotInScrollingDirection = view.getMeasuredWidth();
       viewportSize = parent.getMeasuredHeight();
       visibleSize = localVisibleRect.height();
     } else {
-      otherSize = view.getMeasuredHeight();
+      sizeNotInScrollingDirection = view.getMeasuredHeight();
       sizeInScrollingDirection = view.getMeasuredWidth();
       viewportSize = parent.getMeasuredWidth();
       visibleSize = localVisibleRect.width();
@@ -106,10 +117,12 @@ class EpoxyVisibilityItem {
 
   void handleChanged(EpoxyViewHolder epoxyHolder) {
     if (visibleSize != lastVisibleSizeNotified) {
-      if (vertical) {
-        epoxyHolder.visibilityChanged(percentVisibleSize, 100.f, visibleSize, otherSize);
+      if (verticalScrolling) {
+        epoxyHolder.visibilityChanged(percentVisibleSize, 100.f, visibleSize,
+            sizeNotInScrollingDirection);
       } else {
-        epoxyHolder.visibilityChanged(100.f, percentVisibleSize, otherSize, visibleSize);
+        epoxyHolder.visibilityChanged(100.f, percentVisibleSize,
+            sizeNotInScrollingDirection, visibleSize);
       }
       lastVisibleSizeNotified = visibleSize;
     }
