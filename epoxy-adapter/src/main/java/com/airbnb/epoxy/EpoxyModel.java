@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.FloatRange;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -159,8 +160,13 @@ public abstract class EpoxyModel<T> {
   public void visibilityStateChanged(@VisibilityState int visibilityState, @NonNull T view) {
   }
 
-  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
-      int visibleHeight, int visibleWidth, @NonNull T view) {
+  public void visibilityChanged(
+      @FloatRange(from = 0.0f, to = 100.0f) float percentVisibleHeight,
+      @FloatRange(from = 0.0f, to = 100.0f) float percentVisibleWidth,
+      int visibleHeight,
+      int visibleWidth,
+      @NonNull T view
+  ) {
   }
 
   public long id() {
