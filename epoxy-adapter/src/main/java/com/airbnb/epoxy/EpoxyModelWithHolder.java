@@ -48,11 +48,11 @@ public abstract class EpoxyModelWithHolder<T extends EpoxyHolder> extends EpoxyM
     super.visibilityStateChanged(visibilityState, view);
   }
 
-
   @Override
-  public void visibilityChanged(float visibleHeight, float visibleWidth, int percentVisibleHeight,
-      int percentVisibleWidth, @NonNull T view) {
-    super.visibilityChanged(visibleHeight, visibleWidth, percentVisibleHeight, percentVisibleWidth,
+  public void visibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight,
+      int visibleWidth, @NonNull T view) {
+    super.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth,
         view);
   }
 
