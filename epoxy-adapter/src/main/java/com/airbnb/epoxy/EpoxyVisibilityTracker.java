@@ -12,6 +12,8 @@ import android.view.View.OnLayoutChangeListener;
 
 /**
  * Helper class to handle visibility event from a {@link android.support.v7.widget.RecyclerView}.
+ *
+ * TODO: The visibility event tracking is not working well with nested list (ex: carousel).
  */
 public class EpoxyVisibilityTracker {
 
