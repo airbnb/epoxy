@@ -16,6 +16,7 @@ import com.airbnb.epoxy.OnViewRecycled
 import com.airbnb.epoxy.OnVisibilityChanged
 import com.airbnb.epoxy.OnVisibilityStateChanged
 import com.airbnb.epoxy.TextProp
+import com.airbnb.epoxy.VisibilityState
 import com.airbnb.epoxy.kotlinsample.R
 
 // The ModelView annotation is used on Views to have models generated from those views.
@@ -64,26 +65,26 @@ class ItemCustomView @JvmOverloads constructor(
 
     @OnVisibilityStateChanged
     fun onVisibilityStateChanged(
-        @OnModelVisibilityStateChangedListener.VisibilityState visibilityState: Int
+        @VisibilityState.Visibility visibilityState: Int
     ) {
         when (visibilityState) {
-            OnModelVisibilityStateChangedListener.VISIBLE -> {
+            VisibilityState.VISIBLE -> {
                 Log.d(TAG, "$title Visible")
                 onVisibilityEventDrawable.visible = true
             }
-            OnModelVisibilityStateChangedListener.INVISIBLE -> {
+            VisibilityState.INVISIBLE -> {
                 Log.d(TAG, "$title Invisible")
                 onVisibilityEventDrawable.visible = false
             }
-            OnModelVisibilityStateChangedListener.FOCUSED_VISIBLE -> {
+            VisibilityState.FOCUSED_VISIBLE -> {
                 Log.d(TAG, "$title FocusedVisible")
                 onVisibilityEventDrawable.focusedVisible = true
             }
-            OnModelVisibilityStateChangedListener.UNFOCUSED_VISIBLE -> {
+            VisibilityState.UNFOCUSED_VISIBLE -> {
                 Log.d(TAG, "$title UnfocusedVisible")
                 onVisibilityEventDrawable.focusedVisible = false
             }
-            OnModelVisibilityStateChangedListener.FULL_IMPRESSION_VISIBLE -> {
+            VisibilityState.FULL_IMPRESSION_VISIBLE -> {
                 Log.d(TAG, "$title FullImpressionVisible")
                 onVisibilityEventDrawable.fullImpression = true
             }

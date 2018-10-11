@@ -11,9 +11,18 @@ import android.view.View;
 import android.view.View.OnLayoutChangeListener;
 
 /**
- * Helper class to handle visibility event from a {@link android.support.v7.widget.RecyclerView}.
- *
- * TODO: The visibility event tracking is not working well with nested list (ex: carousel).
+ * A simple way to track visibility events on {@link com.airbnb.epoxy.EpoxyModel} within a {@link
+ * android.support.v7.widget.RecyclerView}.
+ * <p>
+ * {@link EpoxyVisibilityTracker} works with any {@link android.support.v7.widget.RecyclerView}
+ * backed by an Epoxy controller. Once attached the events will be forwarded to the Epoxy model (or
+ * to the Epoxy view when using annotations).
+ * <p>
+ * Note regarding nested lists: The visibility event tracking is not properly handled yet. This is
+ * on the todo.
+ * <p>
+ * @see OnVisibilityChanged (annotation)
+ * @see OnVisibilityStateChanged (annotation)
  */
 public class EpoxyVisibilityTracker {
 
@@ -29,7 +38,7 @@ public class EpoxyVisibilityTracker {
   /**
    * Attach the tracker.
    *
-   * @param recyclerView The RecyclerView.
+   * @param recyclerView The recyclerview that the EpoxyController has its adapter added to.
    */
   public void attach(@NonNull RecyclerView recyclerView) {
     attachedRecyclerView = recyclerView;
@@ -41,7 +50,7 @@ public class EpoxyVisibilityTracker {
   /**
    * Detach the tracker
    *
-   * @param recyclerView The RecyclerView.
+   * @param recyclerView The recyclerview that the EpoxyController has its adapter added to.
    */
   public void detach(@NonNull RecyclerView recyclerView) {
     recyclerView.removeOnScrollListener(this.listener);
