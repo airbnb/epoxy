@@ -74,7 +74,9 @@ public class EpoxyVisibilityTracker {
       if (holder instanceof EpoxyViewHolder) {
         processVisibilityEvents(recyclerView, (EpoxyViewHolder) holder,
             recyclerView.getLayoutManager().canScrollVertically(), detachEvent);
-      }
+      } else throw new IllegalEpoxyUsage(
+          "`EpoxyVisibilityTracker` cannot be used with non-epoxy view holders."
+      );
     }
   }
 

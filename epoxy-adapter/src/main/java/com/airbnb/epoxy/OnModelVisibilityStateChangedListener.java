@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /** Used to register an onVisibilityChanged callback with a generated model. */
-public interface OnModelVisibilityStateChangedListener<T extends EpoxyModel<?>, V> {
+public interface OnModelVisibilityStateChangedListener<T extends EpoxyModel<V>, V> {
 
   @Retention(RetentionPolicy.SOURCE)
   @IntDef({VISIBLE, INVISIBLE, FOCUSED_VISIBLE, UNFOCUSED_VISIBLE, FULL_IMPRESSION_VISIBLE})
