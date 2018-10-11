@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.airbnb.epoxy.OnModelVisibilityStateChangedListener.VisibilityState;
 import com.airbnb.epoxy.ViewHolderState.ViewState;
+import com.airbnb.epoxy.VisibilityState.Visibility;
 
 import java.util.List;
 
@@ -84,7 +84,7 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     payloads = null;
   }
 
-  public void visibilityStateChanged(@VisibilityState int visibilityState) {
+  public void visibilityStateChanged(@Visibility int visibilityState) {
     assertBound();
     // noinspection unchecked
     epoxyModel.onVisibilityStateChanged(visibilityState, objectToBind());

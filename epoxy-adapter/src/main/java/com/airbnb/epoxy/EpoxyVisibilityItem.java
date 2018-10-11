@@ -86,32 +86,32 @@ class EpoxyVisibilityItem {
 
   void handleVisible(@NonNull EpoxyViewHolder epoxyHolder) {
     if (!visible && isVisible()) {
-      epoxyHolder.visibilityStateChanged(OnModelVisibilityStateChangedListener.VISIBLE);
+      epoxyHolder.visibilityStateChanged(VisibilityState.VISIBLE);
     }
   }
 
   void handleInvisible(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
     if (visible && isInvisible(detachEvent)) {
-      epoxyHolder.visibilityStateChanged(OnModelVisibilityStateChangedListener.INVISIBLE);
+      epoxyHolder.visibilityStateChanged(VisibilityState.INVISIBLE);
     }
   }
 
   void handleFocusedVisible(EpoxyViewHolder epoxyHolder) {
     if (!focusedVisible && isFocusedVisible()) {
-      epoxyHolder.visibilityStateChanged(OnModelVisibilityStateChangedListener.FOCUSED_VISIBLE);
+      epoxyHolder.visibilityStateChanged(VisibilityState.FOCUSED_VISIBLE);
     }
   }
 
   void handleUnfocusedVisible(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
     if (focusedVisible && isUnfocusedVisible(detachEvent)) {
-      epoxyHolder.visibilityStateChanged(OnModelVisibilityStateChangedListener.UNFOCUSED_VISIBLE);
+      epoxyHolder.visibilityStateChanged(VisibilityState.UNFOCUSED_VISIBLE);
     }
   }
 
   void handleFullImpressionVisible(EpoxyViewHolder epoxyHolder) {
     if (!fullyVisible && isFullImpressionVisible()) {
       epoxyHolder
-          .visibilityStateChanged(OnModelVisibilityStateChangedListener.FULL_IMPRESSION_VISIBLE);
+          .visibilityStateChanged(VisibilityState.FULL_IMPRESSION_VISIBLE);
     }
   }
 
