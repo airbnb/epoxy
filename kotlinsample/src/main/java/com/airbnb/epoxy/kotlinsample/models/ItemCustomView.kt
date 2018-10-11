@@ -11,7 +11,6 @@ import com.airbnb.epoxy.AfterPropsSet
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
-import com.airbnb.epoxy.OnModelVisibilityStateChangedListener
 import com.airbnb.epoxy.OnViewRecycled
 import com.airbnb.epoxy.OnVisibilityChanged
 import com.airbnb.epoxy.OnVisibilityStateChanged
