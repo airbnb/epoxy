@@ -21,8 +21,10 @@ import android.view.View.OnLayoutChangeListener;
  * Note regarding nested lists: The visibility event tracking is not properly handled yet. This is
  * on the todo.
  * <p>
- * @see OnVisibilityChanged (annotation)
- * @see OnVisibilityStateChanged (annotation)
+ * @see OnVisibilityChanged
+ * @see OnVisibilityStateChanged
+ * @see OnModelVisibilityChangedListener
+ * @see OnModelVisibilityStateChangedListener
  */
 public class EpoxyVisibilityTracker {
 
@@ -34,6 +36,19 @@ public class EpoxyVisibilityTracker {
 
   @Nullable
   private RecyclerView attachedRecyclerView = null;
+
+  private boolean onChangedEnabled = true;
+
+  /**
+   * Enable or disable visibility changed event. Default is `true`, disable it if you don't need
+   * (triggered by every pixel scrolled).
+   *
+   * @see OnVisibilityChanged
+   * @see OnModelVisibilityChangedListener
+   */
+  public void setOnChangedEnabled(boolean enabled) {
+    onChangedEnabled = enabled;
+  }
 
   /**
    * Attach the tracker.
@@ -112,14 +127,14 @@ public class EpoxyVisibilityTracker {
       vi.reset(epoxyHolder.getAdapterPosition());
     }
 
-    if (vi.update(itemView, recyclerView, vertical)) {
+    if (vi.update(itemView, recyclerView, vertical, detachEvent)) {
       // View is measured, process events
-      vi.handleVisible(epoxyHolder);
-      vi.handleInvisible(epoxyHolder, detachEvent);
-      vi.handleFocusedVisible(epoxyHolder);
-      vi.handleUnfocusedVisible(epoxyHolder, detachEvent);
-      vi.handleFullImpressionVisible(epoxyHolder);
-      vi.handleChanged(epoxyHolder);
+      vi.handleVisible(epoxyHolder, detachEvent);
+      vi.handleFocus(epoxyHolder, detachEvent);
+      vi.handleFullImpressionVisible(epoxyHolder, detachEvent);
+      if (onChangedEnabled) {
+        vi.handleChanged(epoxyHolder);
+      }
     }
   }
 

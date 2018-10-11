@@ -51,21 +51,22 @@ class EpoxyVisibilityItem {
    * @param vertical    true if it scroll vertically
    * @return true if the view has been measured
    */
-  boolean update(@NonNull View view, @NonNull RecyclerView parent, boolean vertical) {
+  boolean update(@NonNull View view, @NonNull RecyclerView parent,
+      boolean vertical, boolean detachEvent) {
     view.getLocalVisibleRect(localVisibleRect);
     this.verticalScrolling = vertical;
     if (vertical) {
       sizeInScrollingDirection = view.getMeasuredHeight();
       sizeNotInScrollingDirection = view.getMeasuredWidth();
       viewportSize = parent.getMeasuredHeight();
-      visibleSize = localVisibleRect.height();
+      visibleSize = detachEvent ? 0 : localVisibleRect.height();
     } else {
       sizeNotInScrollingDirection = view.getMeasuredHeight();
       sizeInScrollingDirection = view.getMeasuredWidth();
       viewportSize = parent.getMeasuredWidth();
-      visibleSize = localVisibleRect.width();
+      visibleSize = detachEvent ? 0 : localVisibleRect.width();
     }
-    percentVisibleSize = 100.f / sizeInScrollingDirection * visibleSize;
+    percentVisibleSize = detachEvent ? 0 : 100.f / sizeInScrollingDirection * visibleSize;
     if (visibleSize != sizeInScrollingDirection) {
       fullyVisible = false;
     }
@@ -84,31 +85,23 @@ class EpoxyVisibilityItem {
     lastVisibleSizeNotified = -1;
   }
 
-  void handleVisible(@NonNull EpoxyViewHolder epoxyHolder) {
-    if (!visible && isVisible()) {
+  void handleVisible(@NonNull EpoxyViewHolder epoxyHolder, boolean detachEvent) {
+    if (visible && isInvisible(detachEvent)) {
+      epoxyHolder.visibilityStateChanged(VisibilityState.INVISIBLE);
+    } else if (!visible && isVisible()) {
       epoxyHolder.visibilityStateChanged(VisibilityState.VISIBLE);
     }
   }
 
-  void handleInvisible(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
-    if (visible && isInvisible(detachEvent)) {
-      epoxyHolder.visibilityStateChanged(VisibilityState.INVISIBLE);
-    }
-  }
-
-  void handleFocusedVisible(EpoxyViewHolder epoxyHolder) {
-    if (!focusedVisible && isFocusedVisible()) {
+  void handleFocus(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
+    if (focusedVisible && isUnfocusedVisible(detachEvent)) {
+      epoxyHolder.visibilityStateChanged(VisibilityState.UNFOCUSED_VISIBLE);
+    } else if (!focusedVisible && isFocusedVisible()) {
       epoxyHolder.visibilityStateChanged(VisibilityState.FOCUSED_VISIBLE);
     }
   }
 
-  void handleUnfocusedVisible(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
-    if (focusedVisible && isUnfocusedVisible(detachEvent)) {
-      epoxyHolder.visibilityStateChanged(VisibilityState.UNFOCUSED_VISIBLE);
-    }
-  }
-
-  void handleFullImpressionVisible(EpoxyViewHolder epoxyHolder) {
+  void handleFullImpressionVisible(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
     if (!fullyVisible && isFullImpressionVisible()) {
       epoxyHolder
           .visibilityStateChanged(VisibilityState.FULL_IMPRESSION_VISIBLE);
