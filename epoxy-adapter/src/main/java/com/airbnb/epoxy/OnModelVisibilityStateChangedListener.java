@@ -49,7 +49,7 @@ public interface OnModelVisibilityStateChangedListener<T extends EpoxyModel<V>, 
 
   /**
    * This will be called once the visibility changed.
-   *
+   * <p>
    * @param model           The model being bound
    * @param view            The view that is being bound to the model
    * @param visibilityState The new visibility
