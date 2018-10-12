@@ -135,7 +135,6 @@ class EpoxyVisibilityItem {
    * @return true when when the component no longer has any pixels on the screen
    */
   private boolean checkAndUpdateInvisible(boolean detachEvent) {
-    // true when when the Component no longer has any pixels on the screen
     boolean invisible = visibleSize <= 0 || detachEvent;
     if (invisible) {
       visible = false;
