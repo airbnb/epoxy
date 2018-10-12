@@ -109,6 +109,10 @@ public class EpoxyVisibilityTracker {
       @NonNull EpoxyViewHolder epoxyHolder,
       boolean vertical, boolean detachEvent
   ) {
+
+    // TODO EpoxyVisibilityTrackerTest testInsertData / testInsertData are disabled as they fail as
+    // insert/delete not properly handled in the tracker
+
     if (epoxyHolder.getAdapterPosition() == RecyclerView.NO_POSITION) {
       return;
     }

@@ -52,10 +52,13 @@ class EpoxyVisibilityTrackerTest {
         private fun log(message: String) {
             if (DEBUG_LOG) System.out.println(message)
         }
+
+        private var ids = 0
     }
 
     private lateinit var activity: Activity
     private lateinit var recyclerView: RecyclerView
+    private lateinit var epoxyController: TypedEpoxyController<List<AssertHelper>>
     private var viewportHeight: Int = 0
     private var itemHeight: Int = 0
 
@@ -131,7 +134,113 @@ class EpoxyVisibilityTrackerTest {
         }
     }
 
+    /**
+     * Test visibility events when loading a recycler view
+     */
+    // @Test TODO make insert works
+    fun testInsertData() {
 
+        // Build initial list
+        val testHelper = buildTestData(10)
+        val secondFullyVisibleItemBeforeInsert = testHelper[1]
+        val halfVisibleItemBeforeInsert = testHelper[2]
+
+        // Insert in visible area
+        val position = 1
+        val inserted = insertAt(testHelper, position)
+
+        with(testHelper[position]) {
+            assert(
+                id = inserted.id,
+                visibleHeight = itemHeight,
+                percentVisibleHeight = 100.0f,
+                visible = true,
+                fullImpression = true,
+                visitedStates = intArrayOf(
+                    VISIBLE,
+                    FOCUSED_VISIBLE,
+                    FULL_IMPRESSION_VISIBLE
+                )
+            )
+        }
+
+        with(secondFullyVisibleItemBeforeInsert) {
+            assert(
+                visibleHeight = itemHeight / 2,
+                percentVisibleHeight = 50.0f,
+                visible = true,
+                fullImpression = false,
+                visitedStates = intArrayOf(
+                    VISIBLE,
+                    FOCUSED_VISIBLE,
+                    FULL_IMPRESSION_VISIBLE
+                )
+            )
+        }
+
+        with(halfVisibleItemBeforeInsert) {
+            assert(
+                visibleHeight = 0,
+                percentVisibleHeight = 0.0f,
+                visible = false,
+                fullImpression = false,
+                visitedStates = intArrayOf(
+                    VISIBLE,
+                    INVISIBLE
+                )
+            )
+        }
+    }
+
+    /**
+     * Test visibility events when loading a recycler view
+     */
+    // @Test TODO make delete works
+    fun testDeleteData() {
+
+        // Build initial list
+        val testHelper = buildTestData(10)
+        val halfVisibleItemBeforeDelete = testHelper[2]
+        val firstNonVisibleItemBeforeDelete = testHelper[3]
+
+        // Delete from visible area
+        val position = 1
+        val deleted = deleteAt(testHelper, position)
+
+        with(deleted) {
+            assert(
+                visibleHeight = 0,
+                percentVisibleHeight = 0.0f,
+                visible = false,
+                fullImpression = false,
+                visitedStates = ALL_STATES
+            )
+        }
+
+        with(halfVisibleItemBeforeDelete) {
+            assert(
+                visibleHeight = itemHeight,
+                percentVisibleHeight = 100.0f,
+                visible = true,
+                fullImpression = true,
+                visitedStates = intArrayOf(
+                    VISIBLE,
+                    FOCUSED_VISIBLE,
+                    FULL_IMPRESSION_VISIBLE
+                )
+            )
+        }
+
+        with(firstNonVisibleItemBeforeDelete) {
+            assert(
+                visibleHeight = itemHeight / 2,
+                percentVisibleHeight = 50.0f,
+                visible = true,
+                fullImpression = false,
+                visitedStates = intArrayOf(VISIBLE)
+            )
+        }
+    }
 
     /**
      * Test visibility events using scrollToPosition on the recycler view
@@ -361,23 +470,26 @@ class EpoxyVisibilityTrackerTest {
      */
     private fun buildTestData(sampleSize: Int): MutableList<AssertHelper> {
         // Build a test sample of  0 items
-        val testHelper = mutableListOf<AssertHelper>().apply {
-            for (index in 0 until sampleSize) add(AssertHelper())
+        val helpers = mutableListOf<AssertHelper>().apply {
+            for (index in 0 until sampleSize) add(AssertHelper(ids++))
         }
+        epoxyController.setData(helpers)
+        return helpers
+    }
 
-        // Plug an epoxy controller
-        val controller = object : TypedEpoxyController<Int>() {
-            override fun buildModels(data: Int?) {
-                data?.let { size ->
-                    for (index in 0 until size) {
-                        add(TestModel(index, itemHeight, testHelper[index]).id(index))
-                    }
-                }
-            }
-        }
-        recyclerView.adapter = controller.adapter
-        controller.setData(testHelper.size)
-        return testHelper
+    private fun insertAt(helpers: MutableList<AssertHelper>, position: Int): AssertHelper {
+        log("insert at $position")
+        val helper = AssertHelper(ids++)
+        helpers.add(position, helper)
+        epoxyController.setData(helpers)
+        return helper
+    }
+
+    private fun deleteAt(helpers: MutableList<AssertHelper>, position: Int): AssertHelper {
+        log("delete at $position")
+        val helper = helpers.removeAt(position)
+        epoxyController.setData(helpers)
+        return helper
     }
 
     /**
@@ -389,6 +501,15 @@ class EpoxyVisibilityTrackerTest {
             setContentView(EpoxyRecyclerView(this).apply {
                 epoxyVisibilityTracker.attach(this)
                 recyclerView = this
+                // Plug an epoxy controller
+                epoxyController = object : TypedEpoxyController<List<AssertHelper>>() {
+                    override fun buildModels(data: List<AssertHelper>?) {
+                        data?.forEachIndexed { index, helper ->
+                            add(TestModel(index, itemHeight, helper).id(helper.id))
+                        }
+                    }
+                }
+                recyclerView.adapter = epoxyController.adapter
             })
             viewportHeight = recyclerView.measuredHeight
             itemHeight = (recyclerView.measuredHeight / VISIBLE_ITEMS).toInt()
@@ -411,7 +532,7 @@ class EpoxyVisibilityTrackerTest {
     ) : EpoxyModelWithView<View>() {
 
         override fun buildView(parent: ViewGroup): View {
-            log("buildView[$itemPosition]")
+            log("buildView[$itemPosition](id=${helper.id})")
             return TextView(parent.context).apply {
                 // Force height
                 layoutParams = RecyclerView.LayoutParams(
@@ -428,7 +549,7 @@ class EpoxyVisibilityTrackerTest {
         }
 
         override fun onVisibilityStateChanged(state: Int, view: View) {
-            log("onVisibilityStateChanged[$itemPosition]=${state.description()}")
+            log("onVisibilityStateChanged[$itemPosition](id=${helper.id})=${state.description()}")
             helper.visitedStates.add(state)
             when (state) {
                 VISIBLE, INVISIBLE -> helper.visible = state == VISIBLE
@@ -442,7 +563,7 @@ class EpoxyVisibilityTrackerTest {
     /**
      * Helper for asserting visibility
      */
-    internal class AssertHelper {
+    internal class AssertHelper(val id: Int) {
 
         var created = false
         var visitedStates = mutableListOf<Int>()
@@ -453,12 +574,20 @@ class EpoxyVisibilityTrackerTest {
         var fullImpression = false
 
         fun assert(
+            id: Int? = null,
             visibleHeight: Int? = null,
             percentVisibleHeight: Float? = null,
             visible: Boolean? = null,
             fullImpression: Boolean? = null,
             visitedStates: IntArray? = null
         ) {
+            id?.let {
+                Assert.assertEquals(
+                    "id expected $it got ${this.id}",
+                    it,
+                    this.id
+                )
+            }
             visibleHeight?.let {
                 // assert with 1px precision
                 Assert.assertTrue(
