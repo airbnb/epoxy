@@ -64,6 +64,10 @@ class Utils {
   static final String ON_UNBIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelUnboundListener";
   static final String WRAPPED_LISTENER_TYPE = "com.airbnb.epoxy.WrappedEpoxyModelClickListener";
   static final String DATA_BINDING_MODEL_TYPE = "com.airbnb.epoxy.DataBindingEpoxyModel";
+  static final String ON_VISIBILITY_STATE_MODEL_LISTENER_TYPE =
+      "com.airbnb.epoxy.OnModelVisibilityStateChangedListener";
+  static final String ON_VISIBILITY_MODEL_LISTENER_TYPE =
+      "com.airbnb.epoxy.OnModelVisibilityChangedListener";
 
   static void throwError(String msg, Object... args)
       throws EpoxyProcessorException {

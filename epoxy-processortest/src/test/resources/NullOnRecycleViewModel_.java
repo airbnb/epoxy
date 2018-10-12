@@ -18,6 +18,10 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
 
   private OnModelUnboundListener<NullOnRecycleViewModel_, NullOnRecycleView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<NullOnRecycleViewModel_, NullOnRecycleView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<NullOnRecycleViewModel_, NullOnRecycleView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   @Nullable
@@ -70,7 +74,8 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public NullOnRecycleViewModel_ onBind(OnModelBoundListener<NullOnRecycleViewModel_, NullOnRecycleView> listener) {
+  public NullOnRecycleViewModel_ onBind(
+      OnModelBoundListener<NullOnRecycleViewModel_, NullOnRecycleView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -92,9 +97,55 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public NullOnRecycleViewModel_ onUnbind(OnModelUnboundListener<NullOnRecycleViewModel_, NullOnRecycleView> listener) {
+  public NullOnRecycleViewModel_ onUnbind(
+      OnModelUnboundListener<NullOnRecycleViewModel_, NullOnRecycleView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityStateChanged(int visibilityState, final NullOnRecycleView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.onVisibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public NullOnRecycleViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<NullOnRecycleViewModel_, NullOnRecycleView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final NullOnRecycleView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public NullOnRecycleViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<NullOnRecycleViewModel_, NullOnRecycleView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -158,7 +209,8 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
   }
 
   @Override
-  public NullOnRecycleViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public NullOnRecycleViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -191,6 +243,8 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
   public NullOnRecycleViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.title_CharSequence = (CharSequence) null;
     super.reset();
@@ -215,6 +269,12 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((title_CharSequence != null ? !title_CharSequence.equals(that.title_CharSequence) : that.title_CharSequence != null)) {
       return false;
     }
@@ -226,6 +286,8 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (title_CharSequence != null ? title_CharSequence.hashCode() : 0);
     return result;
   }

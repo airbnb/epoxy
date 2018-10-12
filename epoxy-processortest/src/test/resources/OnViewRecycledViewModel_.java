@@ -21,6 +21,10 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
 
   private OnModelUnboundListener<OnViewRecycledViewModel_, OnViewRecycledView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<OnViewRecycledViewModel_, OnViewRecycledView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<OnViewRecycledViewModel_, OnViewRecycledView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   @NonNull
@@ -76,7 +80,8 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public OnViewRecycledViewModel_ onBind(OnModelBoundListener<OnViewRecycledViewModel_, OnViewRecycledView> listener) {
+  public OnViewRecycledViewModel_ onBind(
+      OnModelBoundListener<OnViewRecycledViewModel_, OnViewRecycledView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -99,9 +104,55 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public OnViewRecycledViewModel_ onUnbind(OnModelUnboundListener<OnViewRecycledViewModel_, OnViewRecycledView> listener) {
+  public OnViewRecycledViewModel_ onUnbind(
+      OnModelUnboundListener<OnViewRecycledViewModel_, OnViewRecycledView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityStateChanged(int visibilityState, final OnViewRecycledView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.onVisibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public OnViewRecycledViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<OnViewRecycledViewModel_, OnViewRecycledView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final OnViewRecycledView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public OnViewRecycledViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<OnViewRecycledViewModel_, OnViewRecycledView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -168,7 +219,8 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
   }
 
   @Override
-  public OnViewRecycledViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public OnViewRecycledViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -201,6 +253,8 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
   public OnViewRecycledViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.title_CharSequence = null;
     super.reset();
@@ -225,6 +279,12 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((title_CharSequence != null ? !title_CharSequence.equals(that.title_CharSequence) : that.title_CharSequence != null)) {
       return false;
     }
@@ -236,6 +296,8 @@ public class OnViewRecycledViewModel_ extends EpoxyModel<OnViewRecycledView> imp
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (title_CharSequence != null ? title_CharSequence.hashCode() : 0);
     return result;
   }

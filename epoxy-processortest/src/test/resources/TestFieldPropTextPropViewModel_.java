@@ -26,6 +26,10 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
 
   private OnModelUnboundListener<TestFieldPropTextPropViewModel_, TestFieldPropTextPropView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<TestFieldPropTextPropViewModel_, TestFieldPropTextPropView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<TestFieldPropTextPropViewModel_, TestFieldPropTextPropView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   private StringAttributeData value_StringAttributeData =  new StringAttributeData();
@@ -93,7 +97,8 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public TestFieldPropTextPropViewModel_ onBind(OnModelBoundListener<TestFieldPropTextPropViewModel_, TestFieldPropTextPropView> listener) {
+  public TestFieldPropTextPropViewModel_ onBind(
+      OnModelBoundListener<TestFieldPropTextPropViewModel_, TestFieldPropTextPropView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -114,9 +119,56 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public TestFieldPropTextPropViewModel_ onUnbind(OnModelUnboundListener<TestFieldPropTextPropViewModel_, TestFieldPropTextPropView> listener) {
+  public TestFieldPropTextPropViewModel_ onUnbind(
+      OnModelUnboundListener<TestFieldPropTextPropViewModel_, TestFieldPropTextPropView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityStateChanged(int visibilityState,
+      final TestFieldPropTextPropView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.onVisibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public TestFieldPropTextPropViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<TestFieldPropTextPropViewModel_, TestFieldPropTextPropView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final TestFieldPropTextPropView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public TestFieldPropTextPropViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<TestFieldPropTextPropViewModel_, TestFieldPropTextPropView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -225,7 +277,8 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
   }
 
   @Override
-  public TestFieldPropTextPropViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public TestFieldPropTextPropViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -258,6 +311,8 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
   public TestFieldPropTextPropViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.value_StringAttributeData =  new StringAttributeData();
     super.reset();
@@ -282,6 +337,12 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((value_StringAttributeData != null ? !value_StringAttributeData.equals(that.value_StringAttributeData) : that.value_StringAttributeData != null)) {
       return false;
     }
@@ -293,6 +354,8 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (value_StringAttributeData != null ? value_StringAttributeData.hashCode() : 0);
     return result;
   }

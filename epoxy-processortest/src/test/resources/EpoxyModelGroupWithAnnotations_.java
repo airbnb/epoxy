@@ -16,6 +16,10 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
 
   private OnModelUnboundListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   public EpoxyModelGroupWithAnnotations_(int layoutRes,
       Collection<? extends EpoxyModel<?>> models) {
     super(layoutRes, models);
@@ -50,7 +54,8 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public EpoxyModelGroupWithAnnotations_ onBind(OnModelBoundListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> listener) {
+  public EpoxyModelGroupWithAnnotations_ onBind(
+      OnModelBoundListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -71,9 +76,55 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public EpoxyModelGroupWithAnnotations_ onUnbind(OnModelUnboundListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> listener) {
+  public EpoxyModelGroupWithAnnotations_ onUnbind(
+      OnModelUnboundListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityStateChanged(int visibilityState, final EpoxyModelGroup.Holder object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.onVisibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public EpoxyModelGroupWithAnnotations_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final EpoxyModelGroup.Holder object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public EpoxyModelGroupWithAnnotations_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -131,7 +182,8 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
   }
 
   @Override
-  public EpoxyModelGroupWithAnnotations_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public EpoxyModelGroupWithAnnotations_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -158,6 +210,8 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
   public EpoxyModelGroupWithAnnotations_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     super.value = 0;
     super.reset();
     return this;
@@ -181,6 +235,12 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((value != that.value)) {
       return false;
     }
@@ -192,6 +252,8 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + value;
     return result;
   }

@@ -18,6 +18,10 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
 
   private OnModelUnboundListener<DefaultPackageLayoutPatternViewModel_, DefaultPackageLayoutPatternView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<DefaultPackageLayoutPatternViewModel_, DefaultPackageLayoutPatternView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<DefaultPackageLayoutPatternViewModel_, DefaultPackageLayoutPatternView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   @Override
   public void addTo(EpoxyController controller) {
     super.addTo(controller);
@@ -60,7 +64,8 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public DefaultPackageLayoutPatternViewModel_ onBind(OnModelBoundListener<DefaultPackageLayoutPatternViewModel_, DefaultPackageLayoutPatternView> listener) {
+  public DefaultPackageLayoutPatternViewModel_ onBind(
+      OnModelBoundListener<DefaultPackageLayoutPatternViewModel_, DefaultPackageLayoutPatternView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -81,9 +86,56 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public DefaultPackageLayoutPatternViewModel_ onUnbind(OnModelUnboundListener<DefaultPackageLayoutPatternViewModel_, DefaultPackageLayoutPatternView> listener) {
+  public DefaultPackageLayoutPatternViewModel_ onUnbind(
+      OnModelUnboundListener<DefaultPackageLayoutPatternViewModel_, DefaultPackageLayoutPatternView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityStateChanged(int visibilityState,
+      final DefaultPackageLayoutPatternView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.onVisibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public DefaultPackageLayoutPatternViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<DefaultPackageLayoutPatternViewModel_, DefaultPackageLayoutPatternView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final DefaultPackageLayoutPatternView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public DefaultPackageLayoutPatternViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<DefaultPackageLayoutPatternViewModel_, DefaultPackageLayoutPatternView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -131,7 +183,8 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
   }
 
   @Override
-  public DefaultPackageLayoutPatternViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public DefaultPackageLayoutPatternViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -164,6 +217,8 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
   public DefaultPackageLayoutPatternViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     super.reset();
     return this;
@@ -187,6 +242,12 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     return true;
   }
 
@@ -195,6 +256,8 @@ public class DefaultPackageLayoutPatternViewModel_ extends EpoxyModel<DefaultPac
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     return result;
   }
 
