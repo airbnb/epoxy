@@ -86,23 +86,23 @@ class EpoxyVisibilityItem {
   }
 
   void handleVisible(@NonNull EpoxyViewHolder epoxyHolder, boolean detachEvent) {
-    if (visible && isInvisible(detachEvent)) {
+    if (visible && checkAndUpdateInvisible(detachEvent)) {
       epoxyHolder.visibilityStateChanged(VisibilityState.INVISIBLE);
-    } else if (!visible && isVisible()) {
+    } else if (!visible && checkAndUpdateVisible()) {
       epoxyHolder.visibilityStateChanged(VisibilityState.VISIBLE);
     }
   }
 
   void handleFocus(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
-    if (focusedVisible && isUnfocusedVisible(detachEvent)) {
+    if (focusedVisible && checkAndUpdateUnfocusedVisible(detachEvent)) {
       epoxyHolder.visibilityStateChanged(VisibilityState.UNFOCUSED_VISIBLE);
-    } else if (!focusedVisible && isFocusedVisible()) {
+    } else if (!focusedVisible && checkAndUpdateFocusedVisible()) {
       epoxyHolder.visibilityStateChanged(VisibilityState.FOCUSED_VISIBLE);
     }
   }
 
   void handleFullImpressionVisible(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
-    if (!fullyVisible && isFullImpressionVisible()) {
+    if (!fullyVisible && checkAndUpdateFullImpressionVisible()) {
       epoxyHolder
           .visibilityStateChanged(VisibilityState.FULL_IMPRESSION_VISIBLE);
     }
@@ -121,12 +121,18 @@ class EpoxyVisibilityItem {
     }
   }
 
-  private boolean isVisible() {
-    // true when at least one pixel of the Component is visible
+  /**
+   * @return true when at least one pixel of the Component is visible
+   */
+  private boolean checkAndUpdateVisible() {
     return visible = visibleSize > 0;
   }
 
-  private boolean isInvisible(boolean detachEvent) {
+  /**
+   * @param detachEvent true if initiated from detach event
+   * @return true when when the Component no longer has any pixels on the screen
+   */
+  private boolean checkAndUpdateInvisible(boolean detachEvent) {
     // true when when the Component no longer has any pixels on the screen
     boolean invisible = visibleSize <= 0 || detachEvent;
     if (invisible) {
@@ -135,17 +141,23 @@ class EpoxyVisibilityItem {
     return !visible;
   }
 
-  private boolean isFocusedVisible() {
-    // true when either the Component occupies at least half of the viewport, or, if the Component
-    // is smaller than half the viewport, when it is fully visible.
+  /**
+   * @return true when either the Component occupies at least half of the viewport, or, if the
+   * component is smaller than half the viewport, when it is fully visible.
+   */
+  private boolean checkAndUpdateFocusedVisible() {
     return focusedVisible =
         sizeInScrollingDirection >= viewportSize / 2 || (visibleSize == sizeInScrollingDirection
             && sizeInScrollingDirection < viewportSize / 2);
   }
 
-  private boolean isUnfocusedVisible(boolean detachEvent) {
-    // true when the Component is no longer focused, i.e. it is not fully visible and does not
-    // occupy at least half the viewport.
+  /**
+   *
+   * @param detachEvent true if initiated from detach event
+   * @return true when the Component is no longer focused, i.e. it is not fully visible and does
+   * not occupy at least half the viewport.
+   */
+  private boolean checkAndUpdateUnfocusedVisible(boolean detachEvent) {
     boolean unfocusedVisible = detachEvent
         || !(sizeInScrollingDirection >= viewportSize / 2 || (
         visibleSize == sizeInScrollingDirection && sizeInScrollingDirection < viewportSize / 2));
@@ -155,8 +167,10 @@ class EpoxyVisibilityItem {
     return !focusedVisible;
   }
 
-  private boolean isFullImpressionVisible() {
-    // true when the entire Component has passed through the viewport at some point.
+  /**
+   * @return true when the entire Component has passed through the viewport at some point.
+   */
+  private boolean checkAndUpdateFullImpressionVisible() {
     return fullyVisible = visibleSize == sizeInScrollingDirection;
   }
 }
