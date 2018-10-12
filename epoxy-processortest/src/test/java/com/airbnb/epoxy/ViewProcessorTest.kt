@@ -110,6 +110,76 @@ class ViewProcessorTest {
     }
 
     @Test
+    fun onVisibilityChanged() {
+        assertGeneration(
+            "OnVisibilityChangedView.java",
+            "OnVisibilityChangedViewModel_.java")
+    }
+
+    @Test
+    fun onVisibilityChanged_throwsIfPrivate() {
+        assertGenerationError(
+            "OnVisibilityChangedView_throwsIfPrivate.java",
+            "private")
+    }
+
+    @Test
+    fun onVisibilityChanged_throwsIfStatic() {
+        assertGenerationError(
+            "OnVisibilityChangedView_throwsIfStatic.java",
+            "static")
+    }
+
+    @Test
+    fun onVisibilityChanged_throwsIfInvalidParams() {
+        assertGenerationError(
+            "OnVisibilityChangedView_throwsIfInvalidParams.java",
+            "must have parameter types [FLOAT, FLOAT, INT, INT], found: [BOOLEAN, BOOLEAN, INT, INT] (method: onVisibilityChanged)")
+    }
+
+    @Test
+    fun onVisibilityChanged_throwsIfNoParams() {
+        assertGenerationError(
+            "OnVisibilityChangedView_throwsIfNoParams.java",
+            "must have exactly 4 parameter (method: onVisibilityChanged)")
+    }
+
+    @Test
+    fun onVisibilityStateChanged() {
+        assertGeneration(
+            "OnVisibilityStateChangedView.java",
+            "OnVisibilityStateChangedViewModel_.java")
+    }
+
+    @Test
+    fun onVisibilityStateChanged_throwsIfPrivate() {
+        assertGenerationError(
+            "OnVisibilityStateChangedView_throwsIfPrivate.java",
+            "private")
+    }
+
+    @Test
+    fun onVisibilityStateChanged_throwsIfStatic() {
+        assertGenerationError(
+            "OnVisibilityStateChangedView_throwsIfStatic.java",
+            "static")
+    }
+
+    @Test
+    fun onVisibilityStateChanged_throwsIfInvalidParams() {
+        assertGenerationError(
+            "OnVisibilityStateChangedView_throwsIfInvalidParams.java",
+            "must have parameter types [INT], found: [BOOLEAN] (method: onVisibilityStateChanged)")
+    }
+
+    @Test
+    fun onVisibilityStateChanged_throwsIfNoParams() {
+        assertGenerationError(
+            "OnVisibilityStateChangedView_throwsIfNoParams.java",
+            "must have exactly 1 parameter (method: onVisibilityStateChanged)")
+    }
+
+    @Test
     fun nullOnRecycle() {
         assertGeneration("NullOnRecycleView.java", "NullOnRecycleViewModel_.java")
     }
