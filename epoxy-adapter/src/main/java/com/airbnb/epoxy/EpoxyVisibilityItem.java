@@ -19,6 +19,8 @@ import android.view.View;
  */
 class EpoxyVisibilityItem {
 
+  private static final int NOT_NOTIFIED = -1;
+
   private final Rect localVisibleRect = new Rect();
 
   private int adapterPosition = RecyclerView.NO_POSITION;
@@ -41,7 +43,7 @@ class EpoxyVisibilityItem {
   private boolean focusedVisible = false;
 
   /** Store last value for de-duping */
-  private int lastVisibleSizeNotified = -1;
+  private int lastVisibleSizeNotified = NOT_NOTIFIED;
 
   /**
    * Update the visibility item according the current layout.
@@ -82,7 +84,7 @@ class EpoxyVisibilityItem {
     visible = false;
     focusedVisible = false;
     adapterPosition = newAdapterPosition;
-    lastVisibleSizeNotified = -1;
+    lastVisibleSizeNotified = NOT_NOTIFIED;
   }
 
   void handleVisible(@NonNull EpoxyViewHolder epoxyHolder, boolean detachEvent) {
@@ -122,7 +124,7 @@ class EpoxyVisibilityItem {
   }
 
   /**
-   * @return true when at least one pixel of the Component is visible
+   * @return true when at least one pixel of the component is visible
    */
   private boolean checkAndUpdateVisible() {
     return visible = visibleSize > 0;
@@ -130,7 +132,7 @@ class EpoxyVisibilityItem {
 
   /**
    * @param detachEvent true if initiated from detach event
-   * @return true when when the Component no longer has any pixels on the screen
+   * @return true when when the component no longer has any pixels on the screen
    */
   private boolean checkAndUpdateInvisible(boolean detachEvent) {
     // true when when the Component no longer has any pixels on the screen
@@ -142,7 +144,7 @@ class EpoxyVisibilityItem {
   }
 
   /**
-   * @return true when either the Component occupies at least half of the viewport, or, if the
+   * @return true when either the component occupies at least half of the viewport, or, if the
    * component is smaller than half the viewport, when it is fully visible.
    */
   private boolean checkAndUpdateFocusedVisible() {
@@ -152,9 +154,8 @@ class EpoxyVisibilityItem {
   }
 
   /**
-   *
    * @param detachEvent true if initiated from detach event
-   * @return true when the Component is no longer focused, i.e. it is not fully visible and does
+   * @return true when the component is no longer focused, i.e. it is not fully visible and does
    * not occupy at least half the viewport.
    */
   private boolean checkAndUpdateUnfocusedVisible(boolean detachEvent) {
@@ -168,7 +169,7 @@ class EpoxyVisibilityItem {
   }
 
   /**
-   * @return true when the entire Component has passed through the viewport at some point.
+   * @return true when the entire component has passed through the viewport at some point.
    */
   private boolean checkAndUpdateFullImpressionVisible() {
     return fullyVisible = visibleSize == sizeInScrollingDirection;
