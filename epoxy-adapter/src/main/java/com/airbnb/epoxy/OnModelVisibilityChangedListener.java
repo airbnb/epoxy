@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.FloatRange;
 import android.support.annotation.Px;
 
 /** Used to register an onVisibilityChanged callback with a generated model. */
@@ -15,11 +16,13 @@ public interface OnModelVisibilityChangedListener<T extends EpoxyModel<V>, V> {
    * <p>
    * @param model                The model being bound
    * @param view                 The view that is being bound to the model
-   * @param percentHeightVisible The percentage of height visible (0-100)
-   * @param percentWidthVisible  The percentage of width visible (0-100)
+   * @param percentVisibleHeight The percentage of height visible (0-100)
+   * @param percentVisibleWidth  The percentage of width visible (0-100)
    * @param heightVisible        The visible height in pixel
    * @param widthVisible         The visible width in pixel
    */
-   void onVisibilityChanged(T model, V view, float percentHeightVisible, float percentWidthVisible,
+  void onVisibilityChanged(T model, V view,
+      @FloatRange(from = 0, to = 100) float percentVisibleHeight,
+      @FloatRange(from = 0, to = 100) float percentVisibleWidth,
       @Px int heightVisible, @Px int widthVisible);
 }

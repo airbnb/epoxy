@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 
 import android.support.annotation.FloatRange;
 import android.support.annotation.Nullable;
+import android.support.annotation.Px;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -93,8 +94,8 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
   public void visibilityChanged(
       @FloatRange(from = 0.0f, to = 100.0f) float percentVisibleHeight,
       @FloatRange(from = 0.0f, to = 100.0f) float percentVisibleWidth,
-      int visibleHeight,
-      int visibleWidth
+      @Px int visibleHeight,
+      @Px int visibleWidth
   ) {
     assertBound();
     // noinspection unchecked

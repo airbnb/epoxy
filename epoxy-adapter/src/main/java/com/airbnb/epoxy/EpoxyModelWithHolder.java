@@ -1,6 +1,8 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
+import android.support.annotation.Px;
 
 import com.airbnb.epoxy.VisibilityState.Visibility;
 
@@ -49,8 +51,10 @@ public abstract class EpoxyModelWithHolder<T extends EpoxyHolder> extends EpoxyM
   }
 
   @Override
-  public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
-      int visibleHeight, int visibleWidth,
+  public void onVisibilityChanged(
+      @FloatRange(from = 0, to = 100) float percentVisibleHeight,
+      @FloatRange(from = 0, to = 100) float percentVisibleWidth,
+      @Px int visibleHeight, @Px int visibleWidth,
       @NonNull T view) {
     super.onVisibilityChanged(
         percentVisibleHeight, percentVisibleWidth,

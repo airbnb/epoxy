@@ -4,6 +4,7 @@ import android.support.annotation.FloatRange;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.Px;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,8 +164,8 @@ public abstract class EpoxyModel<T> {
   public void onVisibilityChanged(
       @FloatRange(from = 0.0f, to = 100.0f) float percentVisibleHeight,
       @FloatRange(from = 0.0f, to = 100.0f) float percentVisibleWidth,
-      int visibleHeight,
-      int visibleWidth,
+      @Px int visibleHeight,
+      @Px int visibleWidth,
       @NonNull T view
   ) {
   }
