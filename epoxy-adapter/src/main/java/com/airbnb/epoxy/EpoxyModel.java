@@ -158,9 +158,17 @@ public abstract class EpoxyModel<T> {
   public void unbind(@NonNull T view) {
   }
 
+  /**
+   * TODO link to the wiki
+   * @see OnVisibilityStateChanged annotation
+   */
   public void onVisibilityStateChanged(@Visibility int visibilityState, @NonNull T view) {
   }
 
+  /**
+   * TODO link to the wiki
+   * @see OnVisibilityChanged annotation
+   */
   public void onVisibilityChanged(
       @FloatRange(from = 0.0f, to = 100.0f) float percentVisibleHeight,
       @FloatRange(from = 0.0f, to = 100.0f) float percentVisibleWidth,
