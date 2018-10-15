@@ -13,6 +13,8 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
 
+import com.airbnb.viewmodeladapter.BuildConfig;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class EpoxyVisibilityTracker {
 
   private static final String TAG = "EpoxyVisibilityTracker";
 
-  static final boolean DEBUG_LOG = true;
+  static final boolean DEBUG_LOG = BuildConfig.DEBUG && false;
 
   /** Maintain visibility item indexed by view id (identity hashcode) */
   private final SparseArray<EpoxyVisibilityItem> visibilityIdToItemMap = new SparseArray<>();
