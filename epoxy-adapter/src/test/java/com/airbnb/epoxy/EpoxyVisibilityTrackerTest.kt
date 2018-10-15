@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
+import com.airbnb.epoxy.EpoxyVisibilityTracker.DEBUG_LOG
 import com.airbnb.epoxy.VisibilityState.FOCUSED_VISIBLE
 import com.airbnb.epoxy.VisibilityState.FULL_IMPRESSION_VISIBLE
 import com.airbnb.epoxy.VisibilityState.INVISIBLE
@@ -48,7 +49,6 @@ class EpoxyVisibilityTrackerTest {
             FULL_IMPRESSION_VISIBLE
         )
 
-        private const val DEBUG_LOG = true
         private fun log(message: String) {
             if (DEBUG_LOG) System.out.println(message)
         }
