@@ -271,6 +271,9 @@ public class EpoxyVisibilityTracker {
      */
     @Override
     public void onChanged() {
+      if (DEBUG_LOG) {
+        Log.d(TAG, "onChanged()");
+      }
       visibilityIdToItemMap.clear();
       visibilityIdToItems.clear();
     }
@@ -281,6 +284,9 @@ public class EpoxyVisibilityTracker {
      */
     @Override
     public void onItemRangeInserted(int positionStart, int itemCount) {
+      if (DEBUG_LOG) {
+        Log.d(TAG, String.format("onItemRangeInserted(%d, %d)", positionStart, itemCount));
+      }
       for (EpoxyVisibilityItem item : visibilityIdToItems) {
         if (item.getAdapterPosition() >= positionStart) {
           item.shiftBy(itemCount);
@@ -294,6 +300,9 @@ public class EpoxyVisibilityTracker {
      */
     @Override
     public void onItemRangeRemoved(int positionStart, int itemCount) {
+      if (DEBUG_LOG) {
+        Log.d(TAG, String.format("onItemRangeRemoved(%d, %d)", positionStart, itemCount));
+      }
       for (EpoxyVisibilityItem item : visibilityIdToItems) {
         if (item.getAdapterPosition() >= positionStart) {
           item.shiftBy(-itemCount);
@@ -303,6 +312,16 @@ public class EpoxyVisibilityTracker {
 
     @Override
     public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+      if (DEBUG_LOG) {
+        Log.d(TAG,
+            String.format("onItemRangeMoved(%d, %d, %d)", fromPosition, toPosition, itemCount));
+      }
+      for (EpoxyVisibilityItem item : visibilityIdToItems) {
+        int position = item.getAdapterPosition();
+        if (position == fromPosition) {
+          item.shiftBy(toPosition - fromPosition);
+        }
+      }
     }
   }
 }
