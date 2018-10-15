@@ -137,7 +137,7 @@ class EpoxyVisibilityTrackerTest {
     /**
      * Test visibility events when loading a recycler view
      */
-    // @Test TODO make insert works
+    @Test
     fun testInsertData() {
 
         // Build initial list
@@ -173,6 +173,7 @@ class EpoxyVisibilityTrackerTest {
                 visitedStates = intArrayOf(
                     VISIBLE,
                     FOCUSED_VISIBLE,
+                    UNFOCUSED_VISIBLE,
                     FULL_IMPRESSION_VISIBLE
                 )
             )
@@ -195,7 +196,7 @@ class EpoxyVisibilityTrackerTest {
     /**
      * Test visibility events when loading a recycler view
      */
-    // @Test TODO make delete works
+    @Test
     fun testDeleteData() {
 
         // Build initial list

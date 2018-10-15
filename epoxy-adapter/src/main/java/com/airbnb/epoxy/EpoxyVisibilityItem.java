@@ -173,5 +173,9 @@ class EpoxyVisibilityItem {
   private boolean checkAndUpdateFullImpressionVisible() {
     return fullyVisible = visibleSize == sizeInScrollingDirection;
   }
+
+  void shiftBy(int offsetPosition) {
+    adapterPosition += offsetPosition;
+  }
 }
 
