@@ -166,7 +166,6 @@ public class EpoxyVisibilityTracker {
   private void processChild(@NonNull View child, boolean detachEvent, String eventOriginForDebug) {
     final RecyclerView recyclerView = attachedRecyclerView;
     if (recyclerView != null) {
-      recyclerView.getChildViewHolder(child);
       final ViewHolder holder = recyclerView.getChildViewHolder(child);
       if (holder instanceof EpoxyViewHolder) {
         processVisibilityEvents(
