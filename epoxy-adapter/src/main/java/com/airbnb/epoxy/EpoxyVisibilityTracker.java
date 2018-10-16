@@ -321,16 +321,43 @@ public class EpoxyVisibilityTracker {
       dataChanged = true;
     }
 
+    /**
+     * This is a bit more complex, for move we need to first swap the moved position then shift the
+     * items between the swap. To simplify we split any range passed to individual item moved.
+     *
+     * ps: anyway {@link android.support.v7.util.AdapterListUpdateCallback} does not seem to use
+     * range for moved items.
+     */
     @Override
     public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+      for (int i = 0; i < itemCount; i++) {
+        onItemMoved(fromPosition + i, toPosition + i);
+      }
+      dataChanged = true;
+    }
+
+    private void onItemMoved(int fromPosition, int toPosition) {
       if (DEBUG_LOG) {
         Log.d(TAG,
-            String.format("onItemRangeMoved(%d, %d, %d)", fromPosition, toPosition, itemCount));
+            String.format("onItemRangeMoved(%d, %d, %d)", fromPosition, toPosition, 1));
       }
       for (EpoxyVisibilityItem item : visibilityIdToItems) {
         int position = item.getAdapterPosition();
         if (position == fromPosition) {
+          // We found the item to be moved, just swap the position.
           item.shiftBy(toPosition - fromPosition);
+        } else if (fromPosition < toPosition) {
+          // Item will be moved down in the list
+          if (position > fromPosition && position <= toPosition) {
+            // Item is between the moved from and to indexes, it should move up
+            item.shiftBy(-1);
+          }
+        } else if (fromPosition > toPosition) {
+          // Item will be moved up in the list
+          if (position >= toPosition && position < fromPosition) {
+            // Item is between the moved to and from indexes, it should move down
+            item.shiftBy(1);
+          }
         }
       }
     }
