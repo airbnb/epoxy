@@ -208,13 +208,13 @@ public class EpoxyVisibilityTracker {
 
     EpoxyVisibilityItem vi = visibilityIdToItemMap.get(id);
     if (vi == null) {
-      vi = new EpoxyVisibilityItem();
+      // New view discovered, assign an EpoxyVisibilityItem
+      vi = new EpoxyVisibilityItem(epoxyHolder.getAdapterPosition());
       visibilityIdToItemMap.put(id, vi);
       visibilityIdToItems.add(vi);
-    }
-
-    if (vi.getAdapterPosition() != epoxyHolder.getAdapterPosition() && !detachEvent) {
-      // EpoxyVisibilityItem being re-used for a different position
+    } else if (epoxyHolder.getAdapterPosition() != RecyclerView.NO_POSITION
+        && vi.getAdapterPosition() != epoxyHolder.getAdapterPosition()) {
+      // EpoxyVisibilityItem being re-used for a different adapter position
       vi.reset(epoxyHolder.getAdapterPosition());
     }
 
