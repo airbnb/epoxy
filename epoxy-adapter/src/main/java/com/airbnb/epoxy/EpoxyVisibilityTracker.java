@@ -96,6 +96,18 @@ public class EpoxyVisibilityTracker {
     attachedRecyclerView = null;
   }
 
+  /**
+   * The tracker is storing visibility states internally and is using if to send events, only the
+   * difference is sent. Use this method to clear the states and thus regenerate the visibility
+   * events. This may be useful when you change the adapter on the {@link
+   * android.support.v7.widget.RecyclerView}
+   */
+  public void clearVisibilityStates() {
+    // Clear our visibility items
+    visibilityIdToItemMap.clear();
+    visibilityIdToItems.clear();
+  }
+
   private void processChangeEvent(String debug) {
     processChangeEventWithDetachedView(null, debug);
   }
@@ -139,9 +151,6 @@ public class EpoxyVisibilityTracker {
         // Register the new adapter
         attachedRecyclerView.getAdapter().registerAdapterDataObserver(this.observer);
         lastAdapterSeen = attachedRecyclerView.getAdapter();
-        // Clear our visibility items
-        visibilityIdToItemMap.clear();
-        visibilityIdToItems.clear();
       }
     }
   }
