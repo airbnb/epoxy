@@ -142,7 +142,6 @@ public class EpoxyVisibilityTracker {
         // Clear our visibility items
         visibilityIdToItemMap.clear();
         visibilityIdToItems.clear();
-        System.out.println("attached on " + lastAdapterSeen);
       }
     }
   }
