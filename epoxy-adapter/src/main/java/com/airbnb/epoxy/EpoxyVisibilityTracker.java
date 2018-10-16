@@ -57,6 +57,10 @@ public class EpoxyVisibilityTracker {
 
   private boolean onChangedEnabled = true;
 
+  /** This flag is for optimizing the process on detach. If detach is from data changed then it
+   * need to re-process all views, else no need (ex: scroll). */
+  private boolean dataChanged = false;
+
   /**
    * Enable or disable visibility changed event. Default is `true`, disable it if you don't need
    * (triggered by every pixel scrolled).
@@ -93,26 +97,23 @@ public class EpoxyVisibilityTracker {
   }
 
   private void processChangeEvent(String debug) {
-    processChildren(null, debug);
+    processChangeEventWithDetachedView(null, debug);
   }
 
   private void processChangeEventWithDetachedView(@Nullable View detachedView, String debug) {
-    processChildren(detachedView, debug);
-  }
-
-  private void processChildren(@Nullable View detachedView, String debug) {
-
-    // On every every events lookup for a new adapter
-    processNewAdapterIfNecessary();
-
-    // Process the detached child if any
-    if (detachedView != null) {
-      processChild(detachedView, true, debug);
-    }
-
-    // Process all attached children
     final RecyclerView recyclerView = attachedRecyclerView;
     if (recyclerView != null) {
+
+      // On every every events lookup for a new adapter
+      processNewAdapterIfNecessary();
+
+      // Process the detached child if any
+      if (detachedView != null) {
+        processChild(detachedView, true, debug);
+      }
+
+      // Process all attached children
+
       for (int i = 0; i < recyclerView.getChildCount(); i++) {
         final View child = recyclerView.getChildAt(i);
         if (child != null && child != detachedView) {
@@ -251,13 +252,19 @@ public class EpoxyVisibilityTracker {
 
     @Override
     public void onChildViewAttachedToWindow(View child) {
-      processChangeEvent("onChildViewAttachedToWindow");
+      processChild(child, false, "onChildViewAttachedToWindow");
     }
 
     @Override
     public void onChildViewDetachedFromWindow(View child) {
-      // On detach event send the detached view
-      processChangeEventWithDetachedView(child, "onChildViewDetachedFromWindow");
+      if (dataChanged) {
+        // On detach event caused by data set changed we need to re-process all children because
+        // the removal caused the others views to changes.
+        processChangeEventWithDetachedView(child, "onChildViewDetachedFromWindow");
+        dataChanged = false;
+      } else {
+        processChild(child, true, "onChildViewDetachedFromWindow");
+      }
     }
   }
 
@@ -277,6 +284,7 @@ public class EpoxyVisibilityTracker {
       }
       visibilityIdToItemMap.clear();
       visibilityIdToItems.clear();
+      dataChanged = true;
     }
 
     /**
@@ -293,6 +301,7 @@ public class EpoxyVisibilityTracker {
           item.shiftBy(itemCount);
         }
       }
+      dataChanged = true;
     }
 
     /**
@@ -309,6 +318,7 @@ public class EpoxyVisibilityTracker {
           item.shiftBy(-itemCount);
         }
       }
+      dataChanged = true;
     }
 
     @Override
