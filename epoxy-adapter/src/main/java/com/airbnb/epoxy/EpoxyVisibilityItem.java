@@ -45,6 +45,10 @@ class EpoxyVisibilityItem {
   /** Store last value for de-duping */
   private int lastVisibleSizeNotified = NOT_NOTIFIED;
 
+  EpoxyVisibilityItem(int adapterPosition) {
+    reset(adapterPosition);
+  }
+
   /**
    * Update the visibility item according the current layout.
    *

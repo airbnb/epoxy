@@ -59,7 +59,7 @@ public class EpoxyVisibilityTracker {
 
   /** This flag is for optimizing the process on detach. If detach is from data changed then it
    * need to re-process all views, else no need (ex: scroll). */
-  private boolean dataChanged = false;
+  private boolean visibleDataChanged = false;
 
   /**
    * Enable or disable visibility changed event. Default is `true`, disable it if you don't need
@@ -257,11 +257,11 @@ public class EpoxyVisibilityTracker {
 
     @Override
     public void onChildViewDetachedFromWindow(View child) {
-      if (dataChanged) {
+      if (visibleDataChanged) {
         // On detach event caused by data set changed we need to re-process all children because
         // the removal caused the others views to changes.
         processChangeEventWithDetachedView(child, "onChildViewDetachedFromWindow");
-        dataChanged = false;
+        visibleDataChanged = false;
       } else {
         processChild(child, true, "onChildViewDetachedFromWindow");
       }
@@ -284,7 +284,7 @@ public class EpoxyVisibilityTracker {
       }
       visibilityIdToItemMap.clear();
       visibilityIdToItems.clear();
-      dataChanged = true;
+      visibleDataChanged = true;
     }
 
     /**
@@ -298,10 +298,10 @@ public class EpoxyVisibilityTracker {
       }
       for (EpoxyVisibilityItem item : visibilityIdToItems) {
         if (item.getAdapterPosition() >= positionStart) {
+          visibleDataChanged = true;
           item.shiftBy(itemCount);
         }
       }
-      dataChanged = true;
     }
 
     /**
@@ -315,10 +315,10 @@ public class EpoxyVisibilityTracker {
       }
       for (EpoxyVisibilityItem item : visibilityIdToItems) {
         if (item.getAdapterPosition() >= positionStart) {
+          visibleDataChanged = true;
           item.shiftBy(-itemCount);
         }
       }
-      dataChanged = true;
     }
 
     /**
@@ -333,7 +333,6 @@ public class EpoxyVisibilityTracker {
       for (int i = 0; i < itemCount; i++) {
         onItemMoved(fromPosition + i, toPosition + i);
       }
-      dataChanged = true;
     }
 
     private void onItemMoved(int fromPosition, int toPosition) {
@@ -346,17 +345,20 @@ public class EpoxyVisibilityTracker {
         if (position == fromPosition) {
           // We found the item to be moved, just swap the position.
           item.shiftBy(toPosition - fromPosition);
+          visibleDataChanged = true;
         } else if (fromPosition < toPosition) {
           // Item will be moved down in the list
           if (position > fromPosition && position <= toPosition) {
             // Item is between the moved from and to indexes, it should move up
             item.shiftBy(-1);
+            visibleDataChanged = true;
           }
         } else if (fromPosition > toPosition) {
           // Item will be moved up in the list
           if (position >= toPosition && position < fromPosition) {
             // Item is between the moved to and from indexes, it should move down
             item.shiftBy(1);
+            visibleDataChanged = true;
           }
         }
       }
