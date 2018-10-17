@@ -10,11 +10,8 @@ import java.lang.annotation.Target;
  * with this annotation will be called when the visibility state is changed.
  * <p>
  * Annotated methods should follow this signature :
- * `@OnVisibilityStateChanged
- *  public void method(
- *    float percentVisibleHeight, float percentVisibleWidth: Float,
- *    int visibleHeight, int visibleWidth
- *  )`
+ * `@OnVisibilityStateChange
+ * public void method(@VisibilityState int state)`
  * <p>
  * Possible States are declared in {@link com.airbnb.epoxy.OnModelVisibilityStateChangedListener}.
  * <p>

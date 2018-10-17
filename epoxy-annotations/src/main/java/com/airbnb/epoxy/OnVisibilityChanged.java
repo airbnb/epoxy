@@ -10,10 +10,14 @@ import java.lang.annotation.Target;
  * with this annotation will be called when visibility part of the view change.
  * <p>
  * Annotated methods should follow this signature :
- * `@OnVisibilityStateChange
- * public void method(@VisibilityState int state)`
+ * `@OnVisibilityChanged
+ *  public void method(
+ *    float percentVisibleHeight, float percentVisibleWidth: Float,
+ *    int visibleHeight, int visibleWidth
+ *  )`
  * <p>
- * The equivalent methods on the model is {@link EpoxyModel#onVisibilityChanged}
+ * The equivalent methods on the model is {@link com.airbnb.epoxy.EpoxyModel#onVisibilityChanged}
+ * <p>
  * @see OnModelVisibilityChangedListener
  */
 @Target(ElementType.METHOD)

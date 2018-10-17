@@ -3,10 +3,12 @@ package com.airbnb.epoxy
 import android.app.Activity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
+import com.airbnb.epoxy.EpoxyVisibilityTracker.DEBUG_LOG
 import com.airbnb.epoxy.VisibilityState.FOCUSED_VISIBLE
 import com.airbnb.epoxy.VisibilityState.FULL_IMPRESSION_VISIBLE
 import com.airbnb.epoxy.VisibilityState.INVISIBLE
@@ -19,6 +21,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.annotation.Config
+import org.robolectric.shadows.ShadowLog
 import java.lang.StringBuilder
 
 /**
@@ -33,13 +36,15 @@ class EpoxyVisibilityTrackerTest {
 
     companion object {
 
+        private const val TAG = "EpoxyVisibilityTrackerTest"
+
         /**
          * Make sure the RecyclerView display:
          * - 2 full items
          * - 50% of the next item.
          */
-        private const val VISIBLE_ITEMS = 2.5
-        private val FULLY_VISIBLE_ITEMS = Math.floor(VISIBLE_ITEMS).toInt()
+        private const val TWO_AND_HALF_VISIBLE = 2.5f
+
         private val ALL_STATES = intArrayOf(
             VISIBLE,
             INVISIBLE,
@@ -48,9 +53,10 @@ class EpoxyVisibilityTrackerTest {
             FULL_IMPRESSION_VISIBLE
         )
 
-        private const val DEBUG_LOG = true
         private fun log(message: String) {
-            if (DEBUG_LOG) System.out.println(message)
+            if (DEBUG_LOG) {
+                Log.d(TAG, message)
+            }
         }
 
         private var ids = 0
@@ -69,9 +75,9 @@ class EpoxyVisibilityTrackerTest {
      */
     @Test
     fun testDataAttachedToRecyclerView() {
-        val testHelper = buildTestData(10)
+        val testHelper = buildTestData(10, TWO_AND_HALF_VISIBLE)
 
-        val firstHalfVisibleItem = FULLY_VISIBLE_ITEMS
+        val firstHalfVisibleItem = 2
         val firstInvisibleItem = firstHalfVisibleItem + 1
 
         // Verify visibility event
@@ -135,13 +141,13 @@ class EpoxyVisibilityTrackerTest {
     }
 
     /**
-     * Test visibility events when loading a recycler view
+     * Test visibility events when adding data to a recycler view (item inserted from adapter)
      */
-    // @Test TODO make insert works
+    @Test
     fun testInsertData() {
 
         // Build initial list
-        val testHelper = buildTestData(10)
+        val testHelper = buildTestData(10, TWO_AND_HALF_VISIBLE)
         val secondFullyVisibleItemBeforeInsert = testHelper[1]
         val halfVisibleItemBeforeInsert = testHelper[2]
 
@@ -173,6 +179,7 @@ class EpoxyVisibilityTrackerTest {
                 visitedStates = intArrayOf(
                     VISIBLE,
                     FOCUSED_VISIBLE,
+                    UNFOCUSED_VISIBLE,
                     FULL_IMPRESSION_VISIBLE
                 )
             )
@@ -193,13 +200,13 @@ class EpoxyVisibilityTrackerTest {
     }
 
     /**
-     * Test visibility events when loading a recycler view
+     * Test visibility events when removing data from a recycler view (item removed from adapter)
      */
-    // @Test TODO make delete works
+    @Test
     fun testDeleteData() {
 
         // Build initial list
-        val testHelper = buildTestData(10)
+        val testHelper = buildTestData(10, TWO_AND_HALF_VISIBLE)
         val halfVisibleItemBeforeDelete = testHelper[2]
         val firstNonVisibleItemBeforeDelete = testHelper[3]
 
@@ -243,17 +250,172 @@ class EpoxyVisibilityTrackerTest {
     }
 
     /**
+     * Test visibility events when moving data from a recycler view (item moved within adapter)
+     *
+     * This test is a bit more complex so we will add more data in the sample size so we can test
+     * moving a range.
+     *
+     * What is done :
+     * - build a test adapter with a larger sample : 100 items (20 items per screen)
+     * - make sure first item is in focus
+     * - move the 2 first items to the position 14
+     * - make sure recycler view is still displaying the focused item (scrolled to ~14)
+     * - make sure the 3rd item is not visible
+     */
+    @Test
+    fun testMoveDataUp() {
+
+        val llm = recyclerView.layoutManager as LinearLayoutManager
+
+        // Build initial list
+        val itemsPerScreen = 20
+        val testHelper = buildTestData(100, itemsPerScreen.toFloat())
+
+        // First item should be visible and in focus
+        Assert.assertEquals(0, llm.findFirstCompletelyVisibleItemPosition())
+        Assert.assertEquals(20, llm.findLastVisibleItemPosition())
+
+        // Move the 2 first items to the position 24
+        val moved1 = testHelper[0]
+        val moved2 = testHelper[1]
+        val item3 = testHelper[2]
+        moveTwoItems(testHelper, from = 0, to = 14)
+
+        // Because we moved the item in focus (item 0) and the layout manager will maintain the
+        // focus the recycler view should scroll to end
+
+        Assert.assertEquals(14, llm.findFirstVisibleItemPosition())
+        Assert.assertEquals(14 + itemsPerScreen - 1, llm.findLastCompletelyVisibleItemPosition())
+
+        with(moved1) {
+            // moved 1 should still be in focus so still 100% visible
+            assert(
+                visibleHeight = itemHeight,
+                percentVisibleHeight = 100.0f,
+                visible = true,
+                fullImpression = true,
+                visitedStates = intArrayOf(
+                    VISIBLE,
+                    FOCUSED_VISIBLE,
+                    FULL_IMPRESSION_VISIBLE
+                )
+            )
+        }
+
+        with(moved2) {
+            // moved 2 should still be in focus so still 100% visible
+            assert(
+                visibleHeight = itemHeight,
+                percentVisibleHeight = 100.0f,
+                visible = true,
+                fullImpression = true,
+                visitedStates = intArrayOf(
+                    VISIBLE,
+                    FOCUSED_VISIBLE,
+                    FULL_IMPRESSION_VISIBLE
+                )
+            )
+        }
+
+        with(item3) {
+            // the item after moved2 should not be visible now
+            assert(
+                visibleHeight = 0,
+                percentVisibleHeight = 0.0f,
+                visible = false,
+                fullImpression = false,
+                visitedStates = ALL_STATES
+            )
+        }
+    }
+
+    /**
+     * Same kind of test than `testMoveDataUp()` but we move from 24 to 0.
+     */
+    @Test
+    fun testMoveDataDown() {
+
+        val llm = recyclerView.layoutManager as LinearLayoutManager
+
+        // Build initial list
+        val itemsPerScreen = 20
+        val testHelper = buildTestData(100, itemsPerScreen.toFloat())
+
+        // Scroll to item 24, sharp
+        (recyclerView.layoutManager as LinearLayoutManager)
+            .scrollToPositionWithOffset(24, 0)
+
+        // First item should be visible and in focus
+        Assert.assertEquals(24, llm.findFirstCompletelyVisibleItemPosition())
+        Assert.assertEquals(44, llm.findLastVisibleItemPosition())
+
+        // Move the 2 first items to the position 24
+        val moved1 = testHelper[24]
+        val moved2 = testHelper[25]
+        val item3 = testHelper[26]
+        moveTwoItems(testHelper, from = 24, to = 0)
+
+        // Because we moved the item in focus (item 0) and the layout manager will maintain the
+        // focus the recycler view should scroll to end
+
+        Assert.assertEquals(0, llm.findFirstVisibleItemPosition())
+        Assert.assertEquals(19, llm.findLastCompletelyVisibleItemPosition())
+
+        with(moved1) {
+            // moved 1 should still be in focus so still 100% visible
+            assert(
+                visibleHeight = itemHeight,
+                percentVisibleHeight = 100.0f,
+                visible = true,
+                fullImpression = true,
+                visitedStates = intArrayOf(
+                    VISIBLE,
+                    FOCUSED_VISIBLE,
+                    FULL_IMPRESSION_VISIBLE
+                )
+            )
+        }
+
+        with(moved2) {
+            // moved 2 should still be in focus so still 100% visible
+            assert(
+                visibleHeight = itemHeight,
+                percentVisibleHeight = 100.0f,
+                visible = true,
+                fullImpression = true,
+                visitedStates = intArrayOf(
+                    VISIBLE,
+                    FOCUSED_VISIBLE,
+                    FULL_IMPRESSION_VISIBLE
+                )
+            )
+        }
+
+        with(item3) {
+            // the item after moved2 should not be visible now
+            assert(
+                visibleHeight = 0,
+                percentVisibleHeight = 0.0f,
+                visible = false,
+                fullImpression = false,
+                visitedStates = ALL_STATES
+            )
+        }
+    }
+
+
+    /**
      * Test visibility events using scrollToPosition on the recycler view
      */
     @Test
     fun testScrollBy() {
-        val testHelper = buildTestData(10)
+        val testHelper = buildTestData(10, TWO_AND_HALF_VISIBLE)
 
         // At this point we have the 1st and 2nd item visible
         // The 3rd item is 50% visible
 
         // Now scroll to the end
-        for(to in 0..testHelper.size) {
+        for (to in 0..testHelper.size) {
             (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(to, 10)
         }
 
@@ -358,7 +520,7 @@ class EpoxyVisibilityTrackerTest {
      */
     @Test
     fun testScrollToPosition() {
-        val testHelper = buildTestData(10)
+        val testHelper = buildTestData(10, TWO_AND_HALF_VISIBLE)
 
         // At this point we have the 1st and 2nd item visible
         // The 3rd item is 50% visible
@@ -468,11 +630,14 @@ class EpoxyVisibilityTrackerTest {
     /**
      * Attach an EpoxyController on the RecyclerView
      */
-    private fun buildTestData(sampleSize: Int): MutableList<AssertHelper> {
-        // Build a test sample of  0 items
+    private fun buildTestData(sampleSize: Int, visibleItemsOnScreen: Float): MutableList<AssertHelper> {
+        // Compute individual item height
+        itemHeight = (recyclerView.measuredHeight / visibleItemsOnScreen).toInt()
+        // Build a test sample of sampleSize items
         val helpers = mutableListOf<AssertHelper>().apply {
             for (index in 0 until sampleSize) add(AssertHelper(ids++))
         }
+        log(helpers.ids())
         epoxyController.setData(helpers)
         return helpers
     }
@@ -481,6 +646,7 @@ class EpoxyVisibilityTrackerTest {
         log("insert at $position")
         val helper = AssertHelper(ids++)
         helpers.add(position, helper)
+        log(helpers.ids())
         epoxyController.setData(helpers)
         return helper
     }
@@ -488,8 +654,19 @@ class EpoxyVisibilityTrackerTest {
     private fun deleteAt(helpers: MutableList<AssertHelper>, position: Int): AssertHelper {
         log("delete at $position")
         val helper = helpers.removeAt(position)
+        log(helpers.ids())
         epoxyController.setData(helpers)
         return helper
+    }
+
+    private fun moveTwoItems(helpers: MutableList<AssertHelper>, from: Int, to: Int) {
+        log("move at $from -> $to")
+        val helper1 = helpers.removeAt(from)
+        val helper2 = helpers.removeAt(from)
+        helpers.add(to, helper2)
+        helpers.add(to, helper1)
+        log(helpers.ids())
+        epoxyController.setData(helpers)
     }
 
     /**
@@ -512,9 +689,9 @@ class EpoxyVisibilityTrackerTest {
                 recyclerView.adapter = epoxyController.adapter
             })
             viewportHeight = recyclerView.measuredHeight
-            itemHeight = (recyclerView.measuredHeight / VISIBLE_ITEMS).toInt()
             activity = this
         }
+        ShadowLog.stream = System.out
     }
 
     @After
@@ -635,6 +812,17 @@ class EpoxyVisibilityTrackerTest {
         }
     }
 
+}
+
+private fun <E> List<E>.ids(): String {
+    val builder = StringBuilder("[")
+    forEachIndexed { index, element ->
+        (element as? EpoxyVisibilityTrackerTest.AssertHelper)?.let {
+            builder.append(it.id)
+        }
+        builder.append(if (index < size - 1) "," else "]")
+    }
+    return builder.toString()
 }
 
 /**
