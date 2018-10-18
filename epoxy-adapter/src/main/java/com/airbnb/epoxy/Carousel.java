@@ -333,10 +333,10 @@ public class Carousel extends EpoxyRecyclerView {
    * @see #setPadding(Padding)
    */
   public static class Padding {
-    public final int top;
-    public final int bottom;
     public final int left;
+    public final int top;
     public final int right;
+    public final int bottom;
     public final int itemSpacing;
     public final PaddingType paddingType;
 
@@ -357,21 +357,21 @@ public class Carousel extends EpoxyRecyclerView {
     }
 
     /**
-     * @param topRes Top padding as dimension resource.
-     * @param bottomRes Bottom padding as dimension resource.
      * @param leftRes Left padding as dimension resource.
+     * @param topRes Top padding as dimension resource.
      * @param rightRes Right padding as dimension resource.
+     * @param bottomRes Bottom padding as dimension resource.
      * @param itemSpacingRes Space as dimension resource to add between each carousel item. Will be
      *     implemented via an item decoration.
      */
     public static Padding resource(
-        @DimenRes int topRes,
-        @DimenRes int bottomRes,
         @DimenRes int leftRes,
+        @DimenRes int topRes,
         @DimenRes int rightRes,
+        @DimenRes int bottomRes,
         @DimenRes int itemSpacingRes) {
       return new Padding(
-          topRes, bottomRes, leftRes, rightRes, itemSpacingRes, PaddingType.RESOURCE);
+          leftRes, topRes, rightRes, bottomRes, itemSpacingRes, PaddingType.RESOURCE);
     }
 
     /**
@@ -386,20 +386,20 @@ public class Carousel extends EpoxyRecyclerView {
     }
 
     /**
-     * @param topDp Top padding in dp.
-     * @param bottomDp Bottom padding in dp.
      * @param leftDp Left padding in dp.
+     * @param topDp Top padding in dp.
      * @param rightDp Right padding in dp.
+     * @param bottomDp Bottom padding in dp.
      * @param itemSpacingDp Space in dp to add between each carousel item. Will be implemented via
      *     an item decoration.
      */
     public static Padding dp(
-        @Dimension(unit = Dimension.DP) int topDp,
-        @Dimension(unit = Dimension.DP) int bottomDp,
         @Dimension(unit = Dimension.DP) int leftDp,
+        @Dimension(unit = Dimension.DP) int topDp,
         @Dimension(unit = Dimension.DP) int rightDp,
+        @Dimension(unit = Dimension.DP) int bottomDp,
         @Dimension(unit = Dimension.DP) int itemSpacingDp) {
-      return new Padding(topDp, bottomDp, leftDp, rightDp, itemSpacingDp, PaddingType.DP);
+      return new Padding(leftDp, topDp, rightDp, bottomDp, itemSpacingDp, PaddingType.DP);
     }
 
     /**
@@ -412,34 +412,34 @@ public class Carousel extends EpoxyRecyclerView {
     }
 
     /**
-     * @param topPx Top padding in pixels.
-     * @param bottomPx Bottom padding in pixels.
      * @param leftPx Left padding in pixels.
+     * @param topPx Top padding in pixels.
      * @param rightPx Right padding in pixels.
+     * @param bottomPx Bottom padding in pixels.
      * @param itemSpacingPx Space in pixels to add between each carousel item. Will be implemented
      *     via an item decoration.
      */
     public Padding(
-        @Px int topPx, @Px int bottomPx, @Px int leftPx, @Px int rightPx, @Px int itemSpacingPx) {
-      this(topPx, bottomPx, leftPx, rightPx, itemSpacingPx, PaddingType.PX);
+        @Px int leftPx, @Px int topPx, @Px int rightPx, @Px int bottomPx, @Px int itemSpacingPx) {
+      this(leftPx, topPx, rightPx, bottomPx, itemSpacingPx, PaddingType.PX);
     }
 
     /**
-     * @param top Top padding.
-     * @param bottom Bottom padding.
      * @param left Left padding.
+     * @param top Top padding.
      * @param right Right padding.
+     * @param bottom Bottom padding.
      * @param itemSpacing Space to add between each carousel item. Will be implemented via an item
      *     decoration.
      * @param paddingType Unit / Type of the given paddings/ itemspacing.
      */
     private Padding(
-        int top, int bottom, int left, int right, int itemSpacing, PaddingType paddingType) {
+        int left, int top, int right, int bottom, int itemSpacing, PaddingType paddingType) {
 
-      this.top = top;
-      this.bottom = bottom;
       this.left = left;
+      this.top = top;
       this.right = right;
+      this.bottom = bottom;
       this.itemSpacing = itemSpacing;
       this.paddingType = paddingType;
     }
@@ -455,16 +455,16 @@ public class Carousel extends EpoxyRecyclerView {
 
       Padding padding = (Padding) o;
 
-      if (top != padding.top) {
-        return false;
-      }
-      if (bottom != padding.bottom) {
-        return false;
-      }
       if (left != padding.left) {
         return false;
       }
+      if (top != padding.top) {
+        return false;
+      }
       if (right != padding.right) {
+        return false;
+      }
+      if (bottom != padding.bottom) {
         return false;
       }
       return itemSpacing == padding.itemSpacing;
@@ -472,10 +472,10 @@ public class Carousel extends EpoxyRecyclerView {
 
     @Override
     public int hashCode() {
-      int result = top;
-      result = 31 * result + bottom;
-      result = 31 * result + left;
+      int result = left;
+      result = 31 * result + top;
       result = 31 * result + right;
+      result = 31 * result + bottom;
       result = 31 * result + itemSpacing;
       return result;
     }
