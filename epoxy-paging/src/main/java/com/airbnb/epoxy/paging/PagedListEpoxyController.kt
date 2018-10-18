@@ -39,6 +39,9 @@ abstract class PagedListEpoxyController<T>(
   /**
    * The handler to use for building models. By default this uses the main thread, but you can use
    * [EpoxyAsyncUtil.getAsyncBackgroundHandler] to do model building in the background.
+   *
+   * The notify thread of your PagedList (from setNotifyExecutor in the PagedList Builder) must be 
+   * the same as this thread. Otherwise Epoxy will crash.
    */
   modelBuildingHandler: Handler = EpoxyController.defaultModelBuildingHandler,
   /**
