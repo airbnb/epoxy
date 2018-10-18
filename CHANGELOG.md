@@ -1,3 +1,10 @@
+# 2.19.0 (Oct 18, 2018)
+This release adds built in support for monitoring visibility of views in the RecyclerView. (https://github.com/airbnb/epoxy/pull/560)
+
+Usage instructions and details are in the wiki - https://github.com/airbnb/epoxy/wiki/Visibility-Events
+
+Huge thanks to Emmanuel Boudrant for contributing this!
+
 # 2.18.0 (Sep 26, 2018)
 - **New** A new `PagedListEpoxyController` to improve integration with the Android Paging architecture component (#533 Thanks to Yigit!)
           With this change the old `PagingEpoxyController` has been deprecated, and [the wiki](https://github.com/airbnb/epoxy/wiki/Paging-Support) is updated.
