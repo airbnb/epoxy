@@ -29,7 +29,6 @@ dependencies {
   implementation project(':epoxy-annotations')
 
   kapt project(':epoxy-processor')
-  kapt rootProject.deps.dataBindingCompiler
   kaptTest project(":epoxy-processor")
 
   testImplementation rootProject.deps.robolectric

@@ -19,7 +19,7 @@ android {
 dependencies {
   implementation rootProject.deps.kotlin
 
-  implementation "org.jetbrains.anko:anko-coroutines:0.10.4"
+  implementation "org.jetbrains.anko:anko-coroutines:0.10.5"
   implementation "androidx.room:room-common:$ANDROIDX_ROOM"
   implementation "androidx.room:room-runtime:$ANDROIDX_ROOM"
   implementation "androidx.paging:paging-common:$ANDROIDX_PAGING"

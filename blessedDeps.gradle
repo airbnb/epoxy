@@ -15,13 +15,13 @@ rootProject.ext.COMPILE_SDK_VERSION = 28
 rootProject.ext.MIN_SDK_VERSION = 14
 rootProject.ext.MIN_SDK_VERSION_LITHO = 15
 
-rootProject.ext.ANDROIDX_ANNOTATION = "1.0.0-rc01"
-rootProject.ext.ANDROIDX_RECYCLERVIEW = "1.0.0-rc01"
-rootProject.ext.ANDROIDX_MATERIAL = "1.0.0-beta01"
-rootProject.ext.ANDROIDX_APPCOMPAT = "1.0.0-rc01"
-rootProject.ext.ANDROIDX_CARDVIEW = "1.0.0-beta01"
+rootProject.ext.ANDROIDX_ANNOTATION = "1.0.0"
+rootProject.ext.ANDROIDX_RECYCLERVIEW = "1.0.0"
+rootProject.ext.ANDROIDX_MATERIAL = "1.0.0"
+rootProject.ext.ANDROIDX_APPCOMPAT = "1.0.0"
+rootProject.ext.ANDROIDX_CARDVIEW = "1.0.0"
 rootProject.ext.ANDROIDX_LEGACY = "1.0.0-beta01"
-rootProject.ext.ANDROIDX_PAGING = "2.0.0-rc01"
+rootProject.ext.ANDROIDX_PAGING = "2.0.0"
 rootProject.ext.ANDROIDX_ROOM = "2.0.0"
 rootProject.ext.ANDROIDX_RUNTIME = "2.0.0"
 rootProject.ext.ANDROIDX_DATABINDING_COMPILER = "3.2.1"
@@ -61,7 +61,6 @@ rootProject.ext.deps = [
     androidTestRunner     : "com.android.support.test:runner:$ANDROID_TEST_RUNNER",
     androidAnnotations    : "androidx.annotation:annotation:$ANDROIDX_ANNOTATION",
     androidLegacy         : "androidx.legacy:legacy-support-v4:$ANDROIDX_LEGACY",
-    dataBindingCompiler   : "androidx.databinding:databinding-compiler:$ANDROIDX_DATABINDING_COMPILER",
     dataBindingAdapters   : "androidx.databinding:databinding-adapters:$ANDROIDX_DATABINDING_ADAPTERS",
     dataBindingLibrary    : "androidx.databinding:databinding-library:$ANDROIDX_DATABINDING_LIBRARY",
     butterknifeLibrary    : "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION",
