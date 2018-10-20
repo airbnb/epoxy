@@ -27,9 +27,9 @@ dependencies {
   annotationProcessor project(':epoxy-processor')
 
   testImplementation rootProject.deps.kotlin
-  testCompile rootProject.deps.junit
-  testCompile rootProject.deps.robolectric
-  testCompile rootProject.deps.mockito
+  testImplementation rootProject.deps.junit
+  testImplementation rootProject.deps.robolectric
+  testImplementation rootProject.deps.mockito
 }
 
 apply from: rootProject.file('gradle/gradle-maven-push.gradle')
