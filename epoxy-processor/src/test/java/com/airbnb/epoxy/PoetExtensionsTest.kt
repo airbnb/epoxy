@@ -1,7 +1,7 @@
 package com.airbnb.epoxy
 
-import android.support.annotation.FloatRange
-import android.support.annotation.NonNull
+import androidx.annotation.FloatRange
+import androidx.annotation.NonNull
 import com.squareup.kotlinpoet.asTypeName
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
