@@ -29,8 +29,12 @@ import java.lang.StringBuilder
  * view port height is provided by Robolectric.
  *
  * We are just controlling how many items are displayed with VISIBLE_ITEMS constant.
+ *
+ * In order to control the RecyclerView's height we are using theses qualifiers:
+ * - `mdpi` for density factor 1
+ * - `h831dp` where : 831 = 56 (ToolBar) + 775 (RecyclerView)
  */
-@Config(sdk = [21], manifest = TestRunner.MANIFEST_PATH)
+@Config(sdk = [21], manifest = TestRunner.MANIFEST_PATH, qualifiers = "h831dp-mdpi")
 @RunWith(TestRunner::class)
 class EpoxyVisibilityTrackerTest {
 
@@ -52,6 +56,11 @@ class EpoxyVisibilityTrackerTest {
             UNFOCUSED_VISIBLE,
             FULL_IMPRESSION_VISIBLE
         )
+
+        /**
+         * Tolerance used for robolectric ui assertions when comparing data in pixels
+         */
+        private const val HEIGHT_TOLERANCE_PIXELS = 1
 
         private fun log(message: String) {
             if (DEBUG_LOG) {
@@ -766,10 +775,11 @@ class EpoxyVisibilityTrackerTest {
                 )
             }
             visibleHeight?.let {
-                // assert with 1px precision
+                // assert using tolerance, see HEIGHT_TOLERANCE_PIXELS
+                log("assert visibleHeight, got $it, expected ${this.visibleHeight}")
                 Assert.assertTrue(
-                    "visibleHeight expected $it got ${this.visibleHeight}",
-                    Math.abs(it - this.visibleHeight) < 1
+                    "visibleHeight expected ${it}px got ${this.visibleHeight}px",
+                    Math.abs(it - this.visibleHeight) < HEIGHT_TOLERANCE_PIXELS
                 )
             }
             percentVisibleHeight?.let {
