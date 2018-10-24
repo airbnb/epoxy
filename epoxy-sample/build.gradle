@@ -63,10 +63,7 @@ dependencies {
   implementation rootProject.deps.androidCardView
   implementation rootProject.deps.androidRecyclerView
   implementation rootProject.deps.androidAppcompat
-  implementation rootProject.deps.androidLegacy
   implementation rootProject.deps.lottie
-
-  implementation "com.android.support:support-annotations:27.1.1"
 
   testImplementation rootProject.deps.junit
 }

@@ -1,8 +1,8 @@
 package com.airbnb.epoxy;
 
-import androidx.support.annotation.LayoutRes;
-import androidx.support.annotation.NonNull;
-import androidx.support.annotation.Nullable;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.IllegalArgumentException;
 import java.lang.Number;

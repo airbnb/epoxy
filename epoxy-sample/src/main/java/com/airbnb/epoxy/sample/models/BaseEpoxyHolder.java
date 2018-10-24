@@ -5,6 +5,7 @@ import android.view.View;
 import com.airbnb.epoxy.EpoxyHolder;
 
 import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
 import butterknife.ButterKnife;
 
 /**
