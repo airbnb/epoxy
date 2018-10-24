@@ -28,6 +28,7 @@ android {
 
 dependencies {
   implementation rootProject.deps.kotlin
+  implementation rootProject.deps.androidRecyclerView
   implementation project(':epoxy-annotations')
   implementation project(':epoxy-adapter')
   implementation project(':epoxy-databinding')

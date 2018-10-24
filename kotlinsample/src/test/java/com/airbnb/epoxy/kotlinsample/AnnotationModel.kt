@@ -1,9 +1,9 @@
 package com.airbnb.epoxy.kotlinsample
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.FloatRange
-import android.support.annotation.StringRes
 import android.view.View
+import androidx.annotation.DrawableRes
+import androidx.annotation.FloatRange
+import androidx.annotation.StringRes
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyHolder
 import com.airbnb.epoxy.EpoxyModelClass
