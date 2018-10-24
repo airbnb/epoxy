@@ -1,0 +1,34 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion rootProject.COMPILE_SDK_VERSION
+
+    defaultConfig {
+        minSdkVersion rootProject.MIN_SDK_VERSION
+        targetSdkVersion rootProject.TARGET_SDK_VERSION
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+}
+
+dependencies {
+    implementation rootProject.deps.kotlin
+
+    // transitive to make ./gradlew check work
+    implementation  (rootProject.deps.glide) { transitive = false }
+    kapt            (rootProject.deps.glideProcessor) { transitive = false }
+    implementation  (rootProject.deps.glideRecyclerView) { transitive = false }
+
+    api project(':epoxy-annotations')
+    api project(':epoxy-adapter')
+
+    androidTestImplementation rootProject.deps.junit
+    androidTestImplementation rootProject.deps.androidArchCoreTesting
+    androidTestImplementation rootProject.deps.androidTestRunner
+
+    kaptAndroidTest project(":epoxy-processor")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
+}

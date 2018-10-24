@@ -23,6 +23,7 @@ rootProject.ext.ANDROID_TEST_RUNNER = "1.0.2"
 rootProject.ext.BUTTERKNIFE_VERSION = "8.8.1"
 rootProject.ext.SQUARE_JAVAPOET_VERSION = "1.11.1"
 rootProject.ext.SQUARE_KOTLINPOET_VERSION = "0.7.0"
+rootProject.ext.GLIDE_VERSION = "4.8.0"
 
 rootProject.ext.ASSERTJ_VERSION = "1.7.1"
 rootProject.ext.GOOGLE_TESTING_COMPILE_VERSION = "0.12"
@@ -68,5 +69,8 @@ rootProject.ext.deps = [
     lithoWidget           : "com.facebook.litho:litho-widget:$LITHO_VERSION",
     lithoAnnotations      : "com.facebook.litho:litho-annotations:$LITHO_VERSION",
     paris                 : "com.airbnb.android:paris:$PARIS_VERSION",
-    parisProcessor        : "com.airbnb.android:paris-processor:$PARIS_VERSION"
+    parisProcessor        : "com.airbnb.android:paris-processor:$PARIS_VERSION",
+    glide                 : "com.github.bumptech.glide:glide:$GLIDE_VERSION",
+    glideProcessor        : "com.github.bumptech.glide:compiler:$GLIDE_VERSION",
+    glideRecyclerView     : "com.github.bumptech.glide:recyclerview-integration:$GLIDE_VERSION"
 ]

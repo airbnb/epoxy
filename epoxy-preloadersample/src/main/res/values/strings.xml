@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">epoxy-preloadersample</string>
+
+    <string name="with_preload">With Preload</string>
+    <string name="without_preload">Without Preload</string>
+</resources>

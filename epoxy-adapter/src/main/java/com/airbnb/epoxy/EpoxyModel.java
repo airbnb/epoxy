@@ -79,6 +79,10 @@ public abstract class EpoxyModel<T> {
     return getLayout();
   }
 
+  public int getViewTypePublic() {
+    return getLayout();
+  }
+
   /**
    * Create and return a new instance of a view for this model. By default a view is created by
    * inflating the layout resource.
@@ -523,6 +527,14 @@ public abstract class EpoxyModel<T> {
   }
 
   int getSpanSizeInternal(int totalSpanCount, int position, int itemCount) {
+    if (spanSizeOverride != null) {
+      return spanSizeOverride.getSpanSize(totalSpanCount, position, itemCount);
+    }
+
+    return getSpanSize(totalSpanCount, position, itemCount);
+  }
+
+  public int getSpanSizeExternal(int totalSpanCount, int position, int itemCount) {
     if (spanSizeOverride != null) {
       return spanSizeOverride.getSpanSize(totalSpanCount, position, itemCount);
     }

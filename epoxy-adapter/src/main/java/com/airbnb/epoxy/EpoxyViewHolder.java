@@ -72,6 +72,9 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
   Object objectToBind() {
     return epoxyHolder != null ? epoxyHolder : itemView;
   }
+  public Object objectToBindPublic() {
+    return epoxyHolder != null ? epoxyHolder : itemView;
+  }
 
   public void unbind() {
     assertBound();
