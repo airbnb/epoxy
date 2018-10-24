@@ -1,11 +1,14 @@
 
 package com.airbnb.epoxy;
 
+import android.support.annotation.FloatRange;
 import android.support.annotation.Nullable;
+import android.support.annotation.Px;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.airbnb.epoxy.ViewHolderState.ViewState;
+import com.airbnb.epoxy.VisibilityState.Visibility;
 
 import java.util.List;
 
@@ -84,6 +87,25 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     epoxyModel = null;
     payloads = null;
   }
+
+  public void visibilityStateChanged(@Visibility int visibilityState) {
+    assertBound();
+    // noinspection unchecked
+    epoxyModel.onVisibilityStateChanged(visibilityState, objectToBind());
+  }
+
+  public void visibilityChanged(
+      @FloatRange(from = 0.0f, to = 100.0f) float percentVisibleHeight,
+      @FloatRange(from = 0.0f, to = 100.0f) float percentVisibleWidth,
+      @Px int visibleHeight,
+      @Px int visibleWidth
+  ) {
+    assertBound();
+    // noinspection unchecked
+    epoxyModel.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight,
+        visibleWidth, objectToBind());
+  }
+
 
   public List<Object> getPayloads() {
     assertBound();

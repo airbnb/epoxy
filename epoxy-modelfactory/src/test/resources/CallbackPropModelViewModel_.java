@@ -19,6 +19,10 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
 
   private OnModelUnboundListener<CallbackPropModelViewModel_, CallbackPropModelView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<CallbackPropModelViewModel_, CallbackPropModelView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<CallbackPropModelViewModel_, CallbackPropModelView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   @Nullable
@@ -71,7 +75,8 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public CallbackPropModelViewModel_ onBind(OnModelBoundListener<CallbackPropModelViewModel_, CallbackPropModelView> listener) {
+  public CallbackPropModelViewModel_ onBind(
+      OnModelBoundListener<CallbackPropModelViewModel_, CallbackPropModelView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -93,15 +98,62 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public CallbackPropModelViewModel_ onUnbind(OnModelUnboundListener<CallbackPropModelViewModel_, CallbackPropModelView> listener) {
+  public CallbackPropModelViewModel_ onUnbind(
+      OnModelUnboundListener<CallbackPropModelViewModel_, CallbackPropModelView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
+  @Override
+  public void onVisibilityStateChanged(int visibilityState, final CallbackPropModelView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.onVisibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public CallbackPropModelViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<CallbackPropModelViewModel_, CallbackPropModelView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final CallbackPropModelView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public CallbackPropModelViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<CallbackPropModelViewModel_, CallbackPropModelView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  public CallbackPropModelViewModel_ onClickListener(@Nullable final OnModelClickListener<CallbackPropModelViewModel_, CallbackPropModelView> onClickListener) {
+  public CallbackPropModelViewModel_ onClickListener(
+      @Nullable final OnModelClickListener<CallbackPropModelViewModel_, CallbackPropModelView> onClickListener) {
     assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     if (onClickListener == null) {
@@ -118,7 +170,8 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
    *
    * @see CallbackPropModelView#setOnClickListener(View.OnClickListener)
    */
-  public CallbackPropModelViewModel_ onClickListener(@Nullable View.OnClickListener onClickListener) {
+  public CallbackPropModelViewModel_ onClickListener(
+      @Nullable View.OnClickListener onClickListener) {
     assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     this.onClickListener_OnClickListener = onClickListener;
@@ -174,7 +227,8 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
   }
 
   @Override
-  public CallbackPropModelViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public CallbackPropModelViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -207,6 +261,8 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
   public CallbackPropModelViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.onClickListener_OnClickListener = (View.OnClickListener) null;
     super.reset();
@@ -231,6 +287,12 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if (((onClickListener_OnClickListener == null) != (that.onClickListener_OnClickListener == null))) {
       return false;
     }
@@ -242,6 +304,8 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onClickListener_OnClickListener != null ? 1 : 0);
     return result;
   }

@@ -1,11 +1,21 @@
 package com.airbnb.epoxy
 
-import com.airbnb.epoxy.Utils.*
+import com.airbnb.epoxy.Utils.belongToTheSamePackage
+import com.airbnb.epoxy.Utils.isFieldPackagePrivate
+import com.airbnb.epoxy.Utils.isSubtype
+import com.airbnb.epoxy.Utils.isSubtypeOfType
 import java.util.*
-import javax.annotation.processing.*
-import javax.lang.model.element.*
-import javax.lang.model.element.Modifier.*
-import javax.lang.model.util.*
+import javax.annotation.processing.RoundEnvironment
+import javax.lang.model.element.Element
+import javax.lang.model.element.ElementKind
+import javax.lang.model.element.ExecutableElement
+import javax.lang.model.element.Modifier.PRIVATE
+import javax.lang.model.element.Modifier.STATIC
+import javax.lang.model.element.TypeElement
+import javax.lang.model.element.VariableElement
+import javax.lang.model.type.TypeKind
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 // TODO: (eli_hart 5/30/17) allow param counts > 0 in setters
 // TODO: (eli_hart 5/23/17) Allow default values to be methods
@@ -35,6 +45,8 @@ internal class ModelViewProcessor(
 
         processSetterAnnotations(roundEnv)
         processResetAnnotations(roundEnv)
+        processVisibilityStateChangedAnnotations(roundEnv)
+        processVisibilityChangedAnnotations(roundEnv)
         processAfterBindAnnotations(roundEnv)
 
         updateViewsForInheritedViewAnnotations()
@@ -204,9 +216,10 @@ internal class ModelViewProcessor(
     }
 
     private fun validateExecutableElement(
-            element: Element,
-            annotationClass: Class<*>,
-            paramCount: Int
+        element: Element,
+        annotationClass: Class<*>,
+        paramCount: Int,
+        checkTypeParameters: List<TypeKind>? = null
     ): Boolean {
         if (element !is ExecutableElement) {
             errorLogger.logError("%s annotations can only be on a method (element: %s)",
@@ -220,6 +233,22 @@ internal class ModelViewProcessor(
                     "Methods annotated with %s must have exactly %s parameter (method: %s)",
                     annotationClass, paramCount, element.getSimpleName())
             return false
+        }
+
+        checkTypeParameters?.let { expectedTypeParameters ->
+            // Check also the parameter types
+            var hasErrors = false
+            element.parameters.forEachIndexed { i, parameter ->
+                hasErrors = hasErrors || parameter.asType().kind != expectedTypeParameters[i]
+            }
+            if (hasErrors) {
+                errorLogger.logError(
+                    "Methods annotated with %s must have parameter types %s, found: %s (method: %s)",
+                    annotationClass, expectedTypeParameters,
+                    element.parameters.map { it.asType().kind },
+                    element.simpleName
+                )
+            }
         }
 
         val modifiers = element.getModifiers()
@@ -247,6 +276,41 @@ internal class ModelViewProcessor(
             }
 
             info.addOnRecycleMethodIfNotExists(recycleMethod as ExecutableElement)
+        }
+    }
+
+    private fun processVisibilityStateChangedAnnotations(roundEnv: RoundEnvironment) {
+        for (visibilityMethod in roundEnv.getElementsAnnotatedWith(OnVisibilityStateChanged::class.java)) {
+            if (!validateVisibilityStateChangedElement(visibilityMethod)) {
+                continue
+            }
+
+            val info = getModelInfoForPropElement(visibilityMethod)
+            if (info == null) {
+                errorLogger.logError("%s annotation can only be used in classes annotated with %s",
+                                     OnVisibilityStateChanged::class.java, ModelView::class.java)
+                continue
+            }
+
+            info.addOnVisibilityStateChangedMethodIfNotExists(visibilityMethod as ExecutableElement)
+        }
+    }
+
+
+    private fun processVisibilityChangedAnnotations(roundEnv: RoundEnvironment) {
+        for (visibilityMethod in roundEnv.getElementsAnnotatedWith(OnVisibilityChanged::class.java)) {
+            if (!validateVisibilityChangedElement(visibilityMethod)) {
+                continue
+            }
+
+            val info = getModelInfoForPropElement(visibilityMethod)
+            if (info == null) {
+                errorLogger.logError("%s annotation can only be used in classes annotated with %s",
+                                     OnVisibilityChanged::class.java, ModelView::class.java)
+                continue
+            }
+
+            info.addOnVisibilityChangedMethodIfNotExists(visibilityMethod as ExecutableElement)
         }
     }
 
@@ -315,6 +379,14 @@ internal class ModelViewProcessor(
                     view.addOnRecycleMethodIfNotExists(it)
                 }
 
+                forEachElementWithAnnotation(listOf(OnVisibilityStateChanged::class.java)) {
+                    view.addOnVisibilityStateChangedMethodIfNotExists(it)
+                }
+
+                forEachElementWithAnnotation(listOf(OnVisibilityChanged::class.java)) {
+                    view.addOnVisibilityChangedMethodIfNotExists(it)
+                }
+
                 forEachElementWithAnnotation(listOf(AfterPropsSet::class.java)) {
                     view.addAfterPropsSetMethodIfNotExists(it)
                 }
@@ -354,7 +426,19 @@ internal class ModelViewProcessor(
     }
 
     private fun validateResetElement(resetMethod: Element): Boolean =
-            validateExecutableElement(resetMethod, OnViewRecycled::class.java, 0)
+        validateExecutableElement(resetMethod, OnViewRecycled::class.java, 0)
+
+    private fun validateVisibilityStateChangedElement(visibilityMethod: Element): Boolean =
+        validateExecutableElement(
+            visibilityMethod, OnVisibilityStateChanged::class.java, 1,
+            checkTypeParameters = listOf(TypeKind.INT)
+        )
+
+    private fun validateVisibilityChangedElement(visibilityMethod: Element): Boolean =
+        validateExecutableElement(
+            visibilityMethod, OnVisibilityChanged::class.java, 4,
+            checkTypeParameters = listOf(TypeKind.FLOAT, TypeKind.FLOAT, TypeKind.INT, TypeKind.INT)
+        )
 
     private fun writeJava() {
         val modelsToWrite = mutableListOf<ModelViewInfo>()

@@ -27,6 +27,10 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
 
   private OnModelUnboundListener<TestFieldPropChildViewModel_, TestFieldPropChildView> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<TestFieldPropChildViewModel_, TestFieldPropChildView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<TestFieldPropChildViewModel_, TestFieldPropChildView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   /**
    * Bitset index: 0 */
   private StringAttributeData textValue_StringAttributeData =  new StringAttributeData();
@@ -104,7 +108,8 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public TestFieldPropChildViewModel_ onBind(OnModelBoundListener<TestFieldPropChildViewModel_, TestFieldPropChildView> listener) {
+  public TestFieldPropChildViewModel_ onBind(
+      OnModelBoundListener<TestFieldPropChildViewModel_, TestFieldPropChildView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -126,9 +131,55 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public TestFieldPropChildViewModel_ onUnbind(OnModelUnboundListener<TestFieldPropChildViewModel_, TestFieldPropChildView> listener) {
+  public TestFieldPropChildViewModel_ onUnbind(
+      OnModelUnboundListener<TestFieldPropChildViewModel_, TestFieldPropChildView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityStateChanged(int visibilityState, final TestFieldPropChildView object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.onVisibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public TestFieldPropChildViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<TestFieldPropChildViewModel_, TestFieldPropChildView> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final TestFieldPropChildView object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public TestFieldPropChildViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<TestFieldPropChildViewModel_, TestFieldPropChildView> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -196,7 +247,8 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
 
   /**
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  public TestFieldPropChildViewModel_ value(@Nullable final OnModelClickListener<TestFieldPropChildViewModel_, TestFieldPropChildView> value) {
+  public TestFieldPropChildViewModel_ value(
+      @Nullable final OnModelClickListener<TestFieldPropChildViewModel_, TestFieldPropChildView> value) {
     assignedAttributes_epoxyGeneratedModel.set(1);
     onMutation();
     if (value == null) {
@@ -269,7 +321,8 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   }
 
   @Override
-  public TestFieldPropChildViewModel_ spanSizeOverride(@android.support.annotation.Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public TestFieldPropChildViewModel_ spanSizeOverride(
+      @android.support.annotation.Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -302,6 +355,8 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   public TestFieldPropChildViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
     this.textValue_StringAttributeData =  new StringAttributeData();
     this.value_OnClickListener = (View.OnClickListener) null;
@@ -327,6 +382,12 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((textValue_StringAttributeData != null ? !textValue_StringAttributeData.equals(that.textValue_StringAttributeData) : that.textValue_StringAttributeData != null)) {
       return false;
     }
@@ -341,6 +402,8 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (textValue_StringAttributeData != null ? textValue_StringAttributeData.hashCode() : 0);
     result = 31 * result + (value_OnClickListener != null ? value_OnClickListener.hashCode() : 0);
     return result;

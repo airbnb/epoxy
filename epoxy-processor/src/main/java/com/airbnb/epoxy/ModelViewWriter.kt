@@ -204,6 +204,26 @@ internal class ModelViewWriter(
                                      unbindParamName)
         }
 
+        override fun addToVisibilityStateChangedMethod(
+            visibilityBuilder: MethodSpec.Builder,
+            visibilityParamName: String
+        ) {
+            addVisibilityStateChangedMethodsToBuilder(visibilityBuilder,
+                                          modelInfo,
+                                          visibilityParamName
+            )
+        }
+
+        override fun addToVisibilityChangedMethod(
+            visibilityBuilder: MethodSpec.Builder,
+            visibilityParamName: String
+        ) {
+            addVisibilityChangedMethodsToBuilder(visibilityBuilder,
+                                          modelInfo,
+                                          visibilityParamName
+            )
+        }
+
         override fun beforeFinalBuild(builder: TypeSpec.Builder) {
             if (modelInfo.saveViewState) {
                 builder.addMethod(
@@ -271,12 +291,32 @@ internal class ModelViewWriter(
     }
 
     private fun addResetMethodsToBuilder(
-            builder: MethodSpec.Builder,
-            modelViewInfo: ModelViewInfo,
-            unbindParamName: String
+        builder: MethodSpec.Builder,
+        modelViewInfo: ModelViewInfo,
+        unbindParamName: String
     ) {
         for (methodName in modelViewInfo.resetMethodNames) {
             builder.addStatement("$unbindParamName.$methodName()")
+        }
+    }
+
+    private fun addVisibilityStateChangedMethodsToBuilder(
+        builder: MethodSpec.Builder,
+        modelViewInfo: ModelViewInfo,
+        visibilityParamName: String
+    ) {
+        for (methodName in modelViewInfo.visibilityStateChangedMethodNames) {
+            builder.addStatement("$visibilityParamName.$methodName(visibilityState)")
+        }
+    }
+
+    private fun addVisibilityChangedMethodsToBuilder(
+        builder: MethodSpec.Builder,
+        modelViewInfo: ModelViewInfo,
+        visibilityParamName: String
+    ) {
+        for (methodName in modelViewInfo.visibilityChangedMethodNames) {
+            builder.addStatement("$visibilityParamName.$methodName(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth)")
         }
     }
 
@@ -289,5 +329,4 @@ internal class ModelViewWriter(
             methodBuilder.addStatement(boundObjectParam.name + "." + methodName + "()")
         }
     }
-
 }

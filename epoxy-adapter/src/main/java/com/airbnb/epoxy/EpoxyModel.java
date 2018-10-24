@@ -1,13 +1,16 @@
 package com.airbnb.epoxy;
 
+import android.support.annotation.FloatRange;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.Px;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.airbnb.epoxy.EpoxyController.ModelInterceptorCallback;
+import com.airbnb.epoxy.VisibilityState.Visibility;
 
 import java.util.List;
 
@@ -157,6 +160,26 @@ public abstract class EpoxyModel<T> {
    * @see EpoxyAdapter#onViewRecycled(EpoxyViewHolder)
    */
   public void unbind(@NonNull T view) {
+  }
+
+  /**
+   * TODO link to the wiki
+   * @see OnVisibilityStateChanged annotation
+   */
+  public void onVisibilityStateChanged(@Visibility int visibilityState, @NonNull T view) {
+  }
+
+  /**
+   * TODO link to the wiki
+   * @see OnVisibilityChanged annotation
+   */
+  public void onVisibilityChanged(
+      @FloatRange(from = 0.0f, to = 100.0f) float percentVisibleHeight,
+      @FloatRange(from = 0.0f, to = 100.0f) float percentVisibleWidth,
+      @Px int visibleHeight,
+      @Px int visibleWidth,
+      @NonNull T view
+  ) {
   }
 
   public long id() {

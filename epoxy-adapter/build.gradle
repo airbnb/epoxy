@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
@@ -25,6 +26,7 @@ dependencies {
 
   annotationProcessor project(':epoxy-processor')
 
+  testImplementation rootProject.deps.kotlin
   testCompile rootProject.deps.junit
   testCompile rootProject.deps.robolectric
   testCompile rootProject.deps.mockito

@@ -11,6 +11,8 @@ import com.airbnb.epoxy.Utils.MODEL_CLICK_LISTENER_TYPE
 import com.airbnb.epoxy.Utils.MODEL_LONG_CLICK_LISTENER_TYPE
 import com.airbnb.epoxy.Utils.ON_BIND_MODEL_LISTENER_TYPE
 import com.airbnb.epoxy.Utils.ON_UNBIND_MODEL_LISTENER_TYPE
+import com.airbnb.epoxy.Utils.ON_VISIBILITY_MODEL_LISTENER_TYPE
+import com.airbnb.epoxy.Utils.ON_VISIBILITY_STATE_MODEL_LISTENER_TYPE
 import com.airbnb.epoxy.Utils.UNTYPED_EPOXY_MODEL_TYPE
 import com.airbnb.epoxy.Utils.WRAPPED_LISTENER_TYPE
 import com.airbnb.epoxy.Utils.getClassName
@@ -78,6 +80,22 @@ internal class GeneratedModelWriter(
 
         }
 
+        /** Opportunity to add additional code to the visibilityStateChanged method.  */
+        open fun addToVisibilityStateChangedMethod(
+            visibilityBuilder: Builder,
+            visibilityParamName: String
+        ) {
+
+        }
+
+        /** Opportunity to add additional code to the visibilityChanged method.  */
+        open fun addToVisibilityChangedMethod(
+            visibilityBuilder: MethodSpec.Builder,
+            visibilityParamName: String
+        ) {
+
+        }
+
         /**
          * True true to have the bind method build, false to not add the method to the generated class.
          */
@@ -137,6 +155,7 @@ internal class GeneratedModelWriter(
 
             addMethods(generateProgrammaticViewMethods(info))
             addMethods(generateBindMethods(info))
+            addMethods(generateVisibilityMethods(info))
             addMethods(generateStyleableViewMethods(info))
             addMethods(generateSettersAndGetters(info))
             addMethods(generateMethodsReturningClassType(info))
@@ -282,6 +301,30 @@ internal class GeneratedModelWriter(
             ).build()
         )
 
+        val onVisibilityStateChangedListenerType = ParameterizedTypeName.get(
+            getClassName(ON_VISIBILITY_STATE_MODEL_LISTENER_TYPE),
+            classInfo.parameterizedGeneratedName,
+            classInfo.modelType
+        )
+        fields.add(
+            FieldSpec.builder(
+                onVisibilityStateChangedListenerType, modelVisibilityStateChangedListenerFieldName(),
+                PRIVATE
+            ).build()
+        )
+
+        val onVisibilityChangedListenerType = ParameterizedTypeName.get(
+            getClassName(ON_VISIBILITY_MODEL_LISTENER_TYPE),
+            classInfo.parameterizedGeneratedName,
+            classInfo.modelType
+        )
+        fields.add(
+            FieldSpec.builder(
+                onVisibilityChangedListenerType, modelVisibilityChangedListenerFieldName(),
+                PRIVATE
+            ).build()
+        )
+
         classInfo.getAttributeInfo()
             .filter { it.isGenerated }
             .mapTo(fields) {
@@ -307,6 +350,12 @@ internal class GeneratedModelWriter(
 
     private fun modelBindListenerFieldName(): String =
         "onModelBoundListener$GENERATED_FIELD_SUFFIX"
+
+    private fun modelVisibilityStateChangedListenerFieldName(): String =
+        "onModelVisibilityStateChangedListener$GENERATED_FIELD_SUFFIX"
+
+    private fun modelVisibilityChangedListenerFieldName(): String =
+        "onModelVisibilityChangedListener$GENERATED_FIELD_SUFFIX"
 
     private fun getModelClickListenerType(classInfo: GeneratedModelInfo): ParameterizedTypeName {
         return ParameterizedTypeName.get(
@@ -433,6 +482,68 @@ internal class GeneratedModelWriter(
             ModelView.Size.WRAP_WIDTH_WRAP_HEIGHT -> wrapContent to wrapContent
             else -> wrapContent to wrapContent
         }
+    }
+
+    private fun generateVisibilityMethods(modelInfo: GeneratedModelInfo): Iterable<MethodSpec> {
+        val methods = ArrayList<MethodSpec>()
+
+        val visibilityObjectParam = ParameterSpec.builder(modelInfo.modelType, "object", FINAL).build()
+
+        methods.add(buildVisibilityStateChangedMethod(visibilityObjectParam))
+
+        val onVisibilityStateChangedListenerType = ParameterizedTypeName.get(
+            getClassName(ON_VISIBILITY_STATE_MODEL_LISTENER_TYPE),
+            modelInfo.parameterizedGeneratedName,
+            modelInfo.modelType
+        )
+        val visibilityStateChangedListenerParam = ParameterSpec.builder(onVisibilityStateChangedListenerType, "listener").build()
+
+        val onVisibilityStateChanged = MethodSpec.methodBuilder("onVisibilityStateChanged")
+            .addJavadoc(
+                "Register a listener that will be called when this model visibility state "
+                        + "has changed.\n"
+                        + "<p>\n"
+                        + "The listener will contribute to this model's hashCode state per the {@link\n"
+                        + "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
+            )
+            .addModifiers(PUBLIC)
+            .returns(modelInfo.parameterizedGeneratedName)
+
+        addOnMutationCall(onVisibilityStateChanged)
+            .addParameter(visibilityStateChangedListenerParam)
+            .addStatement("this.\$L = listener", modelVisibilityStateChangedListenerFieldName())
+            .addStatement("return this")
+
+        methods.add(onVisibilityStateChanged.build())
+
+        methods.add(buildVisibilityChangedMethod(visibilityObjectParam))
+
+        val onVisibilityChangedListenerType = ParameterizedTypeName.get(
+            getClassName(ON_VISIBILITY_MODEL_LISTENER_TYPE),
+            modelInfo.parameterizedGeneratedName,
+            modelInfo.modelType
+        )
+        val visibilityChangedListenerParam = ParameterSpec.builder(onVisibilityChangedListenerType, "listener").build()
+
+        val onVisibilityChanged = MethodSpec.methodBuilder("onVisibilityChanged")
+            .addJavadoc(
+                "Register a listener that will be called when this model visibility has "
+                        + "changed.\n"
+                        + "<p>\n"
+                        + "The listener will contribute to this model's hashCode state per the {@link\n"
+                        + "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
+            )
+            .addModifiers(PUBLIC)
+            .returns(modelInfo.parameterizedGeneratedName)
+
+        addOnMutationCall(onVisibilityChanged)
+            .addParameter(visibilityChangedListenerParam)
+            .addStatement("this.\$L = listener", modelVisibilityChangedListenerFieldName())
+            .addStatement("return this")
+
+        methods.add(onVisibilityChanged.build())
+
+        return methods
     }
 
     private fun generateBindMethods(modelInfo: GeneratedModelInfo): Iterable<MethodSpec> {
@@ -579,6 +690,56 @@ internal class GeneratedModelWriter(
         addStatement("super.bind(\$L)", boundObjectParam.name)
 
         builderHooks?.addToBindMethod(this, boundObjectParam)
+    }
+
+
+    private fun buildVisibilityStateChangedMethod(
+        visibilityObjectParam: ParameterSpec
+    ) = buildMethod("onVisibilityStateChanged") {
+        addAnnotation(Override::class.java)
+        addModifiers(PUBLIC)
+        addParameter(TypeName.INT, "visibilityState")
+        addParameter(visibilityObjectParam)
+
+        beginControlFlow("if (\$L != null)", modelVisibilityStateChangedListenerFieldName())
+        addStatement(
+            "\$L.onVisibilityStateChanged(this, object, visibilityState)",
+            modelVisibilityStateChangedListenerFieldName()
+        )
+        endControlFlow()
+
+        builderHooks?.addToVisibilityStateChangedMethod(this, visibilityObjectParam.name)
+
+        addStatement(
+            "super.onVisibilityStateChanged(\$L, \$L)", "visibilityState", visibilityObjectParam.name
+        )
+    }
+
+    private fun buildVisibilityChangedMethod(
+        visibilityObjectParam: ParameterSpec
+    ) = buildMethod("onVisibilityChanged") {
+        addAnnotation(Override::class.java)
+        addModifiers(PUBLIC)
+        addParameter(TypeName.FLOAT, "percentVisibleHeight")
+        addParameter(TypeName.FLOAT, "percentVisibleWidth")
+        addParameter(TypeName.INT, "visibleHeight")
+        addParameter(TypeName.INT, "visibleWidth")
+        addParameter(visibilityObjectParam)
+
+        beginControlFlow("if (\$L != null)", modelVisibilityChangedListenerFieldName())
+        addStatement(
+            "\$L.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, " +
+                    "visibleHeight, visibleWidth)",
+            modelVisibilityChangedListenerFieldName()
+        )
+        endControlFlow()
+
+        builderHooks?.addToVisibilityChangedMethod(this, visibilityObjectParam.name)
+
+        addStatement(
+            "super.onVisibilityChanged(\$L, \$L, \$L, \$L, \$L)", "percentVisibleHeight",
+            "percentVisibleWidth", "visibleHeight", "visibleWidth", visibilityObjectParam.name
+        )
     }
 
     private fun buildBindWithDiffMethod(
@@ -1200,6 +1361,24 @@ internal class GeneratedModelWriter(
         addStatement("return false")
         endControlFlow()
 
+        startNotEqualsControlFlow(
+            this,
+            false,
+            getClassName(ON_VISIBILITY_STATE_MODEL_LISTENER_TYPE),
+            modelVisibilityStateChangedListenerFieldName()
+        )
+        addStatement("return false")
+        endControlFlow()
+
+        startNotEqualsControlFlow(
+            this,
+            false,
+            getClassName(ON_VISIBILITY_MODEL_LISTENER_TYPE),
+            modelVisibilityChangedListenerFieldName()
+        )
+        addStatement("return false")
+        endControlFlow()
+
         for (attributeInfo in helperClass.getAttributeInfo()) {
             val type = attributeInfo.typeName
 
@@ -1233,6 +1412,20 @@ internal class GeneratedModelWriter(
             false,
             getClassName(ON_UNBIND_MODEL_LISTENER_TYPE),
             modelUnbindListenerFieldName()
+        )
+
+        addHashCodeLineForType(
+            this,
+            false,
+            getClassName(ON_VISIBILITY_STATE_MODEL_LISTENER_TYPE),
+            modelVisibilityStateChangedListenerFieldName()
+        )
+
+        addHashCodeLineForType(
+            this,
+            false,
+            getClassName(ON_VISIBILITY_MODEL_LISTENER_TYPE),
+            modelVisibilityChangedListenerFieldName()
         )
 
         for (attributeInfo in helperClass.getAttributeInfo()) {
@@ -1394,6 +1587,8 @@ internal class GeneratedModelWriter(
         returns(helperClass.parameterizedGeneratedName)
         addStatement("\$L = null", modelBindListenerFieldName())
         addStatement("\$L = null", modelUnbindListenerFieldName())
+        addStatement("\$L = null", modelVisibilityStateChangedListenerFieldName())
+        addStatement("\$L = null", modelVisibilityChangedListenerFieldName())
 
         if (shouldUseBitSet(helperClass)) {
             addStatement("\$L.clear()", ATTRIBUTES_BITSET_FIELD_NAME)

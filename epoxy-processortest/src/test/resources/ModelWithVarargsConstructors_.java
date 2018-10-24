@@ -16,6 +16,10 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
 
   private OnModelUnboundListener<ModelWithVarargsConstructors_, Object> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<ModelWithVarargsConstructors_, Object> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<ModelWithVarargsConstructors_, Object> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   public ModelWithVarargsConstructors_(String... varargs) {
     super(varargs);
   }
@@ -50,7 +54,8 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ModelWithVarargsConstructors_ onBind(OnModelBoundListener<ModelWithVarargsConstructors_, Object> listener) {
+  public ModelWithVarargsConstructors_ onBind(
+      OnModelBoundListener<ModelWithVarargsConstructors_, Object> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -71,9 +76,55 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ModelWithVarargsConstructors_ onUnbind(OnModelUnboundListener<ModelWithVarargsConstructors_, Object> listener) {
+  public ModelWithVarargsConstructors_ onUnbind(
+      OnModelUnboundListener<ModelWithVarargsConstructors_, Object> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityStateChanged(int visibilityState, final Object object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.onVisibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public ModelWithVarargsConstructors_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<ModelWithVarargsConstructors_, Object> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final Object object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public ModelWithVarargsConstructors_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<ModelWithVarargsConstructors_, Object> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -141,7 +192,8 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
   }
 
   @Override
-  public ModelWithVarargsConstructors_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public ModelWithVarargsConstructors_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -168,6 +220,8 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
   public ModelWithVarargsConstructors_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     super.valueInt = 0;
     super.varargs = null;
     super.reset();
@@ -192,6 +246,12 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((valueInt != that.valueInt)) {
       return false;
     }
@@ -206,6 +266,8 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + valueInt;
     result = 31 * result + Arrays.hashCode(varargs);
     return result;

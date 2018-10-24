@@ -15,6 +15,10 @@ public class BasicModelWithFinalAttribute_ extends BasicModelWithFinalAttribute 
 
   private OnModelUnboundListener<BasicModelWithFinalAttribute_, Object> onModelUnboundListener_epoxyGeneratedModel;
 
+  private OnModelVisibilityStateChangedListener<BasicModelWithFinalAttribute_, Object> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+
+  private OnModelVisibilityChangedListener<BasicModelWithFinalAttribute_, Object> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
   public BasicModelWithFinalAttribute_() {
     super();
   }
@@ -45,7 +49,8 @@ public class BasicModelWithFinalAttribute_ extends BasicModelWithFinalAttribute 
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public BasicModelWithFinalAttribute_ onBind(OnModelBoundListener<BasicModelWithFinalAttribute_, Object> listener) {
+  public BasicModelWithFinalAttribute_ onBind(
+      OnModelBoundListener<BasicModelWithFinalAttribute_, Object> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -66,9 +71,55 @@ public class BasicModelWithFinalAttribute_ extends BasicModelWithFinalAttribute 
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public BasicModelWithFinalAttribute_ onUnbind(OnModelUnboundListener<BasicModelWithFinalAttribute_, Object> listener) {
+  public BasicModelWithFinalAttribute_ onUnbind(
+      OnModelUnboundListener<BasicModelWithFinalAttribute_, Object> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityStateChanged(int visibilityState, final Object object) {
+    if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
+    }
+    super.onVisibilityStateChanged(visibilityState, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility state has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public BasicModelWithFinalAttribute_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<BasicModelWithFinalAttribute_, Object> listener) {
+    onMutation();
+    this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
+    return this;
+  }
+
+  @Override
+  public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
+      int visibleHeight, int visibleWidth, final Object object) {
+    if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
+      onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
+    }
+    super.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth, object);
+  }
+
+  /**
+   * Register a listener that will be called when this model visibility has changed.
+   * <p>
+   * The listener will contribute to this model's hashCode state per the {@link
+   * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
+   * <p>
+   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+  public BasicModelWithFinalAttribute_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<BasicModelWithFinalAttribute_, Object> listener) {
+    onMutation();
+    this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
@@ -120,7 +171,8 @@ public class BasicModelWithFinalAttribute_ extends BasicModelWithFinalAttribute 
   }
 
   @Override
-  public BasicModelWithFinalAttribute_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public BasicModelWithFinalAttribute_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -147,6 +199,8 @@ public class BasicModelWithFinalAttribute_ extends BasicModelWithFinalAttribute 
   public BasicModelWithFinalAttribute_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
+    onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
+    onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     super.reset();
     return this;
   }
@@ -169,6 +223,12 @@ public class BasicModelWithFinalAttribute_ extends BasicModelWithFinalAttribute 
     if (((onModelUnboundListener_epoxyGeneratedModel == null) != (that.onModelUnboundListener_epoxyGeneratedModel == null))) {
       return false;
     }
+    if (((onModelVisibilityStateChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityStateChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
     if ((value != that.value)) {
       return false;
     }
@@ -180,6 +240,8 @@ public class BasicModelWithFinalAttribute_ extends BasicModelWithFinalAttribute 
     int result = super.hashCode();
     result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + value;
     return result;
   }
