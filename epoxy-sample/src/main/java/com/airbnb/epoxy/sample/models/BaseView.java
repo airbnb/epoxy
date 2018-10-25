@@ -8,8 +8,7 @@ import com.airbnb.epoxy.ModelView;
 import androidx.appcompat.widget.AppCompatTextView;
 
 @ModelView
-public abstract class BaseView extends AppCompatTextView
-{
+public abstract class BaseView extends AppCompatTextView {
 
   public BaseView(Context context) {
     super(context);
