@@ -51,7 +51,8 @@ public abstract class ColorModel extends EpoxyModelWithHolder<ColorHolder> {
     if (!playAnimation) {
       if (lottieView.isAnimating()) {
         // Reverse it just for fun
-        lottieView.resumeReverseAnimation();
+        lottieView.setSpeed(-1f);
+        lottieView.resumeAnimation();
       } else {
         cancelAnimation(lottieView);
       }
@@ -77,6 +78,7 @@ public abstract class ColorModel extends EpoxyModelWithHolder<ColorHolder> {
       }
     });
 
+    lottieView.setSpeed(1f);
     lottieView.playAnimation();
   }
 
