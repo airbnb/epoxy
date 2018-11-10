@@ -14,6 +14,7 @@ import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.UNIT
 import javax.lang.model.element.Modifier
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy;
 import kotlin.reflect.jvm.internal.impl.types.KotlinType
 
 typealias JavaClassName = com.squareup.javapoet.ClassName
@@ -129,10 +130,7 @@ fun JavaWildcardTypeName.toKPoet() =
     }
 
 // Does not support transferring annotations
-fun JavaParametrizedTypeName.toKPoet() = KotlinParameterizedTypeName.get(
-    this.rawType.toKPoet(),
-    *typeArguments.toKPoet().toTypedArray()
-)
+fun JavaParametrizedTypeName.toKPoet() = this.rawType.toKPoet().parameterizedBy(*typeArguments.toKPoet().toTypedArray())
 
 // Does not support transferring annotations
 fun JavaArrayTypeName.toKPoet(): KotlinTypeName {
@@ -156,10 +154,7 @@ fun JavaArrayTypeName.toKPoet(): KotlinTypeName {
         }
     }
 
-    return KotlinParameterizedTypeName.get(
-        KotlinClassName(kotlinPkg, "Array"),
-        this.componentType.toKPoet()
-    )
+    return KotlinClassName(kotlinPkg, "Array").parameterizedBy(this.componentType.toKPoet())
 }
 
 // Does not support transferring annotations

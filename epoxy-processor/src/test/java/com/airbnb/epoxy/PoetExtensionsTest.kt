@@ -20,7 +20,7 @@ class PoetExtensionsTest {
 
         val kotlinAnnotation = javaAnnotation.toKPoet()
         assertNotNull(kotlinAnnotation)
-        assertEquals(type, kotlinAnnotation?.type)
+        assertEquals(type, kotlinAnnotation?.className)
     }
 
     @Test fun testAnnotationSpecToKPoetWithParams() {
@@ -55,7 +55,7 @@ class PoetExtensionsTest {
         assertEquals(name, kotlinParameter.name)
         assertEquals(kotlinString, kotlinParameter.type)
         assertEquals(javaParameter.annotations.size, kotlinParameter.annotations.size)
-        assertEquals(NonNull::class.java.asTypeName(), kotlinParameter.annotations[0].type)
+        assertEquals(NonNull::class.java.asTypeName(), kotlinParameter.annotations[0].className)
     }
 
     @Test fun testJavaTypeNameToKPoet() {
