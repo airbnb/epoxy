@@ -48,11 +48,19 @@ dependencies {
   annotationProcessor rootProject.deps.parisProcessor
 
   // Dependencies for the optional litho integration
-  implementation project(':epoxy-litho')
+  implementation(project(':epoxy-litho')) {
+    exclude group: 'com.android.support'
+  }
   annotationProcessor rootProject.deps.lithoProcessor
-  implementation rootProject.deps.lithoCore
-  implementation rootProject.deps.lithoWidget
-  implementation rootProject.deps.lithoSoloader
+  implementation(rootProject.deps.lithoCore) {
+    exclude group: 'com.android.support'
+  }
+  implementation(rootProject.deps.lithoWidget) {
+    exclude group: 'com.android.support'
+  }
+  implementation(rootProject.deps.lithoSoloader) {
+    exclude group: 'com.android.support'
+  }
   provided rootProject.deps.lithoAnnotations
 
   implementation rootProject.deps.butterknifeLibrary
