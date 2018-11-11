@@ -35,7 +35,7 @@ project.android.buildTypes.all { buildType ->
 
 /* Forces all transitive deps listed to our version. */
 configurations.all { strategy ->
-  strategy.resolutionStrategy.force rootProject.deps.androidCardView, rootProject.deps.junit
+  strategy.resolutionStrategy.force rootProject.deps.androidCardView, rootProject.deps.junit, rootProject.deps.versionedParcelable
 }
 
 dependencies {
@@ -48,8 +48,6 @@ dependencies {
   annotationProcessor rootProject.deps.parisProcessor
 
   // Dependencies for the optional litho integration
-    //
-    //
   implementation project(':epoxy-litho')
   annotationProcessor rootProject.deps.lithoProcessor
   implementation rootProject.deps.lithoCore
@@ -63,6 +61,7 @@ dependencies {
   implementation rootProject.deps.androidCardView
   implementation rootProject.deps.androidRecyclerView
   implementation rootProject.deps.androidAppcompat
+  implementation rootProject.deps.versionedParcelable
   implementation rootProject.deps.lottie
 
   testImplementation rootProject.deps.junit
