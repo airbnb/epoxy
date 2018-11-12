@@ -88,7 +88,7 @@ abstract class PagedListEpoxyController<T>(
    * If the `item` is `null`, you should provide the placeholder. If your [PagedList] is configured
    * without placeholders, you don't need to handle the `null` case.
    */
-  abstract fun buildItemModel(currentPosition: Int, item: T?): EpoxyModel<*>
+  abstract fun buildItemModel(currentPosition: Int, item: T?): List<EpoxyModel<*>>
 
   override fun onModelBound(
     holder: EpoxyViewHolder,
@@ -97,7 +97,7 @@ abstract class PagedListEpoxyController<T>(
     previouslyBoundModel: EpoxyModel<*>?
   ) {
     // TODO the position may not be a good value if there are too many injected items.
-    modelCache.loadAround(position)
+    modelCache.loadAround(boundModel)
   }
 
   /**
