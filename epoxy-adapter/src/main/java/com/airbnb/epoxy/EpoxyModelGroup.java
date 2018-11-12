@@ -1,8 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.CallSuper;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -15,6 +12,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import androidx.annotation.CallSuper;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 
 /**
  * An {@link EpoxyModel} that contains other models, and allows you to combine those models in
@@ -318,7 +319,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<Holder>
 
     /**
      * Get the root view group (aka
-     * {@link android.support.v7.widget.RecyclerView.ViewHolder#itemView}.
+     * {@link androidx.recyclerview.widget.RecyclerView.ViewHolder#itemView}.
      * You can override {@link EpoxyModelGroup#bind(Holder)} and use this method to make custom
      * changes to the root view.
      */

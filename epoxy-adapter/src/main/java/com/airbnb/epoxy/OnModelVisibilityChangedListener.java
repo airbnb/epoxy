@@ -1,7 +1,7 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.FloatRange;
-import android.support.annotation.Px;
+import androidx.annotation.FloatRange;
+import androidx.annotation.Px;
 
 /** Used to register an onVisibilityChanged callback with a generated model. */
 public interface OnModelVisibilityChangedListener<T extends EpoxyModel<V>, V> {

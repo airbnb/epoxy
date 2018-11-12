@@ -22,28 +22,32 @@ android {
   dataBinding {
     enabled = true
   }
+
+  defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 }
 
 dependencies {
-  compile rootProject.deps.kotlin
-  compile project(':epoxy-adapter')
-  compile project(':epoxy-databinding')
-  compile project(':epoxy-processortest2')
+  implementation rootProject.deps.kotlin
+  implementation rootProject.deps.androidRecyclerView
+  implementation project(':epoxy-annotations')
+  implementation project(':epoxy-adapter')
+  implementation project(':epoxy-databinding')
+  implementation project(':epoxy-processortest2')
 
   kapt project(':epoxy-processor')
   // Need to include the processor directly since we create an instance of it in code for testing
-  testCompile project(':epoxy-processor')
+  testImplementation project(':epoxy-processor')
 
-  compile rootProject.deps.paris
+  implementation rootProject.deps.paris
+  kapt rootProject.deps.parisProcessor
   // Need to include the processor directly since we create an instance of it in code for testing
-  testCompile rootProject.deps.parisProcessor
+  testImplementation rootProject.deps.parisProcessor
 
-  kapt rootProject.deps.dataBindingCompiler
   kapt rootProject.deps.autoValue
 
-  testCompile rootProject.deps.googleTestingCompile
-  testCompile files(getRuntimeJar())
-  testCompile files(Jvm.current().getToolsJar())
+  testImplementation files(getRuntimeJar())
+  testImplementation files(Jvm.current().getToolsJar())
+  testImplementation rootProject.deps.googleTestingCompile
 }
 
 static def getRuntimeJar() {

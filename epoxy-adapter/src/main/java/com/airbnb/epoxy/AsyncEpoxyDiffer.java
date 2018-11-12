@@ -1,18 +1,19 @@
 package com.airbnb.epoxy;
 
 import android.os.Handler;
-import android.support.annotation.AnyThread;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.util.DiffUtil.ItemCallback;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import androidx.annotation.AnyThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.DiffUtil.ItemCallback;
+
 /**
- * An adaptation of Google's {@link android.support.v7.recyclerview.extensions.AsyncListDiffer}
+ * An adaptation of Google's {@link androidx.recyclerview.widget.AsyncListDiffer}
  * that adds support for payloads in changes.
  * <p>
  * Also adds support for canceling an in progress diff, and makes everything thread safe.

@@ -1,10 +1,13 @@
 package com.airbnb.epoxy.integrationtest
 
-import android.content.*
-import android.support.annotation.*
-import android.view.*
-import com.airbnb.epoxy.*
+import android.content.Context
+import android.view.View
+import androidx.annotation.Nullable
+import com.airbnb.epoxy.CallbackProp
+import com.airbnb.epoxy.ModelProp
+import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.ModelView.Size
+import com.airbnb.epoxy.TextProp
 
 @ModelView(autoLayout = Size.WRAP_WIDTH_MATCH_HEIGHT)
 class ViewWithInterface(context: Context) : View(context), InterfaceForView, InterfaceForView2, ClassWithNestedInterface.NestedInterface, InterfaceWithNoPropMethods {

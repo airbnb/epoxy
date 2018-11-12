@@ -17,10 +17,10 @@
 package com.airbnb.epoxy.paging
 
 import android.arch.core.executor.testing.CountingTaskExecutorRule
-import android.arch.paging.PagedList
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
+import androidx.paging.PagedList
 import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyModel
 import org.hamcrest.CoreMatchers

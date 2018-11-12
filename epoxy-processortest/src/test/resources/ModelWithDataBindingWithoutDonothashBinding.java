@@ -1,14 +1,14 @@
 package com.airbnb.epoxy.databinding;
+import android.view.View;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.BR;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.View;
 @SuppressWarnings("unchecked")
-public class ModelWithDataBindingWithoutDonothashBinding extends android.databinding.ViewDataBinding  {
+public class ModelWithDataBindingWithoutDonothashBinding extends androidx.databinding.ViewDataBinding  {
 
   @Nullable
-  private static final android.databinding.ViewDataBinding.IncludedLayouts sIncludes;
+  private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
   @Nullable
   private static final android.util.SparseIntArray sViewsWithIds;
   static {
@@ -27,7 +27,7 @@ public class ModelWithDataBindingWithoutDonothashBinding extends android.databin
   // listeners
   // Inverse Binding Event Handlers
 
-  public ModelWithDataBindingWithoutDonothashBinding(@NonNull android.databinding.DataBindingComponent bindingComponent, @NonNull View root) {
+  public ModelWithDataBindingWithoutDonothashBinding(@NonNull androidx.databinding.DataBindingComponent bindingComponent, @NonNull View root) {
     super(bindingComponent, root, 0);
     final Object[] bindings = mapBindings(bindingComponent, root, 1, sIncludes, sViewsWithIds);
     this.button = (android.widget.Button) bindings[0];
@@ -125,7 +125,7 @@ public class ModelWithDataBindingWithoutDonothashBinding extends android.databin
     if ((dirtyFlags & 0x5L) != 0) {
       // api target 1
 
-      android.databinding.adapters.TextViewBindingAdapter.setText(this.button, stringValue);
+      androidx.databinding.adapters.TextViewBindingAdapter.setText(this.button, stringValue);
     }
   }
   // Listener Stub Implementations
@@ -135,26 +135,26 @@ public class ModelWithDataBindingWithoutDonothashBinding extends android.databin
 
   @NonNull
   public static ModelWithDataBindingWithoutDonothashBinding inflate(@NonNull android.view.LayoutInflater inflater, @Nullable android.view.ViewGroup root, boolean attachToRoot) {
-    return inflate(inflater, root, attachToRoot, android.databinding.DataBindingUtil.getDefaultComponent());
+    return inflate(inflater, root, attachToRoot, androidx.databinding.DataBindingUtil.getDefaultComponent());
   }
   @NonNull
-  public static ModelWithDataBindingWithoutDonothashBinding inflate(@NonNull android.view.LayoutInflater inflater, @Nullable android.view.ViewGroup root, boolean attachToRoot, @Nullable android.databinding.DataBindingComponent bindingComponent) {
-    return android.databinding.DataBindingUtil.<ModelWithDataBindingWithoutDonothashBinding>inflate(inflater, com.airbnb.epoxy.R.layout.model_with_data_binding_without_donothash, root, attachToRoot, bindingComponent);
+  public static ModelWithDataBindingWithoutDonothashBinding inflate(@NonNull android.view.LayoutInflater inflater, @Nullable android.view.ViewGroup root, boolean attachToRoot, @Nullable androidx.databinding.DataBindingComponent bindingComponent) {
+    return androidx.databinding.DataBindingUtil.<ModelWithDataBindingWithoutDonothashBinding>inflate(inflater, com.airbnb.epoxy.R.layout.model_with_data_binding_without_donothash, root, attachToRoot, bindingComponent);
   }
   @NonNull
   public static ModelWithDataBindingWithoutDonothashBinding inflate(@NonNull android.view.LayoutInflater inflater) {
-    return inflate(inflater, android.databinding.DataBindingUtil.getDefaultComponent());
+    return inflate(inflater, androidx.databinding.DataBindingUtil.getDefaultComponent());
   }
   @NonNull
-  public static ModelWithDataBindingWithoutDonothashBinding inflate(@NonNull android.view.LayoutInflater inflater, @Nullable android.databinding.DataBindingComponent bindingComponent) {
+  public static ModelWithDataBindingWithoutDonothashBinding inflate(@NonNull android.view.LayoutInflater inflater, @Nullable androidx.databinding.DataBindingComponent bindingComponent) {
     return bind(inflater.inflate(com.airbnb.epoxy.R.layout.model_with_data_binding_without_donothash, null, false), bindingComponent);
   }
   @NonNull
   public static ModelWithDataBindingWithoutDonothashBinding bind(@NonNull android.view.View view) {
-    return bind(view, android.databinding.DataBindingUtil.getDefaultComponent());
+    return bind(view, androidx.databinding.DataBindingUtil.getDefaultComponent());
   }
   @NonNull
-  public static ModelWithDataBindingWithoutDonothashBinding bind(@NonNull android.view.View view, @Nullable android.databinding.DataBindingComponent bindingComponent) {
+  public static ModelWithDataBindingWithoutDonothashBinding bind(@NonNull android.view.View view, @Nullable androidx.databinding.DataBindingComponent bindingComponent) {
     if (!"layout/model_with_data_binding_without_donothash_0".equals(view.getTag())) {
       throw new RuntimeException("view tag isn't correct on view:" + view.getTag());
     }

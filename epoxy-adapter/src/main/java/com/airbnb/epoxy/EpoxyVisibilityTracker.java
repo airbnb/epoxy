@@ -1,13 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.Adapter;
-import android.support.v7.widget.RecyclerView.AdapterDataObserver;
-import android.support.v7.widget.RecyclerView.OnChildAttachStateChangeListener;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
@@ -16,11 +8,20 @@ import android.view.View.OnLayoutChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver;
+import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener;
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+
 /**
  * A simple way to track visibility events on {@link com.airbnb.epoxy.EpoxyModel} within a {@link
- * android.support.v7.widget.RecyclerView}.
+ * androidx.recyclerview.widget.RecyclerView}.
  * <p>
- * {@link EpoxyVisibilityTracker} works with any {@link android.support.v7.widget.RecyclerView}
+ * {@link EpoxyVisibilityTracker} works with any {@link androidx.recyclerview.widget.RecyclerView}
  * backed by an Epoxy controller. Once attached the events will be forwarded to the Epoxy model (or
  * to the Epoxy view when using annotations).
  * <p>
@@ -100,7 +101,7 @@ public class EpoxyVisibilityTracker {
    * The tracker is storing visibility states internally and is using if to send events, only the
    * difference is sent. Use this method to clear the states and thus regenerate the visibility
    * events. This may be useful when you change the adapter on the {@link
-   * android.support.v7.widget.RecyclerView}
+   * androidx.recyclerview.widget.RecyclerView}
    */
   public void clearVisibilityStates() {
     // Clear our visibility items
@@ -237,7 +238,7 @@ public class EpoxyVisibilityTracker {
   }
 
   /**
-   * Helper class that host the {@link android.support.v7.widget.RecyclerView} listener
+   * Helper class that host the {@link androidx.recyclerview.widget.RecyclerView} listener
    * implementations
    */
   private class Listener extends OnScrollListener
@@ -332,8 +333,8 @@ public class EpoxyVisibilityTracker {
      * This is a bit more complex, for move we need to first swap the moved position then shift the
      * items between the swap. To simplify we split any range passed to individual item moved.
      *
-     * ps: anyway {@link android.support.v7.util.AdapterListUpdateCallback} does not seem to use
-     * range for moved items.
+     * ps: anyway {@link androidx.recyclerview.widget.AdapterListUpdateCallback}
+     * does not seem to use range for moved items.
      */
     @Override
     public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {

@@ -1,18 +1,18 @@
 package com.airbnb.epoxy.paging;
 
-import android.arch.paging.PagedList;
-import android.arch.paging.PagedList.Callback;
-import android.arch.paging.PagedList.Config;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.airbnb.epoxy.EpoxyController;
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.EpoxyViewHolder;
 
 import java.util.Collections;
 import java.util.List;
+
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.paging.PagedList;
+import androidx.paging.PagedList.Callback;
+import androidx.paging.PagedList.Config;
 
 /**
  * An {@link com.airbnb.epoxy.EpoxyController} that meant for large lists of items.

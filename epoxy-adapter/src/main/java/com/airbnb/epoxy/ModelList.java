@@ -1,7 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.NonNull;
-
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+
+import androidx.annotation.NonNull;
 
 /**
  * Used by our {@link EpoxyAdapter} to track models. It simply wraps ArrayList and notifies an

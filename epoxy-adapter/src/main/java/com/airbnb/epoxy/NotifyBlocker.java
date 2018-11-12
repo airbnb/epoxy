@@ -1,6 +1,6 @@
 package com.airbnb.epoxy;
 
-import android.support.v7.widget.RecyclerView.AdapterDataObserver;
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver;
 
 /**
  * We don't allow any data change notifications except the ones done though diffing. Forcing

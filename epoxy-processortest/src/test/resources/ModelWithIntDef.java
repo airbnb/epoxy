@@ -1,6 +1,6 @@
 package com.airbnb.epoxy.models;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 
 import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyModel;

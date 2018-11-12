@@ -1,6 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -10,6 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+
+import androidx.annotation.NonNull;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;

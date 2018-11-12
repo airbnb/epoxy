@@ -16,6 +16,9 @@ dependencies {
   api project(':epoxy-annotations')
   api project(':epoxy-adapter')
 
+  testImplementation rootProject.deps.junit
+  testImplementation rootProject.deps.robolectric
+  testImplementation rootProject.deps.mockito
   androidTestImplementation rootProject.deps.junit
   androidTestImplementation rootProject.deps.androidArchCoreTesting
   androidTestImplementation rootProject.deps.androidTestRunner

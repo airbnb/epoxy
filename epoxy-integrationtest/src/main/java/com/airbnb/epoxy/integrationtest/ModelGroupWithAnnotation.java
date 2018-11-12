@@ -1,13 +1,13 @@
 package com.airbnb.epoxy.integrationtest;
 
-import android.support.annotation.NonNull;
-
 import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.EpoxyModelClass;
 import com.airbnb.epoxy.EpoxyModelGroup;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 @EpoxyModelClass
 public abstract class ModelGroupWithAnnotation extends EpoxyModelGroup {

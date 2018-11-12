@@ -20,7 +20,7 @@ checkstyle {
 }
 
 dependencies {
-  compile rootProject.deps.androidAnnotations
+  implementation rootProject.deps.androidAnnotations
 }
 
 apply from: rootProject.file('gradle/gradle-maven-push.gradle')

@@ -1,11 +1,11 @@
 
 package com.airbnb.epoxy;
 
-import android.support.annotation.Nullable;
-import android.support.v4.util.LongSparseArray;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import androidx.annotation.Nullable;
+import androidx.collection.LongSparseArray;
 
 /** Helper class for keeping track of {@link EpoxyViewHolder}s that are currently bound. */
 @SuppressWarnings("WeakerAccess")

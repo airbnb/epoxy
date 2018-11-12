@@ -2,18 +2,23 @@
 buildscript {
 
   ext.KOTLIN_VERSION = "1.2.71"
-  ext.ANDROID_PLUGIN_VERSION = "3.1.4"
+  ext.ANDROID_PLUGIN_VERSION = "3.2.1"
 
   repositories {
     google()
     jcenter()
   }
   dependencies {
-    classpath "com.android.tools.build:gradle:$ANDROID_PLUGIN_VERSION"
+    classpath "com.android.tools.build:gradle:3.2.1"
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
     classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
   }
 }
+
+plugins {
+  id 'com.github.ben-manes.versions' version '0.20.0'
+}
+
 allprojects {
 
   repositories {
@@ -29,6 +34,7 @@ allprojects {
 
 subprojects { project ->
   apply from: "$rootDir/blessedDeps.gradle"
+  apply plugin: 'com.github.ben-manes.versions'
   apply plugin: 'checkstyle'
 
   task checkstyle(type: Checkstyle) {
@@ -75,6 +81,6 @@ def getRepositoryPassword() {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '4.4'
+  gradleVersion = '4.9'
   distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }

@@ -1,16 +1,17 @@
 package com.airbnb.epoxy;
 
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
-import android.support.v7.util.DiffUtil.ItemCallback;
-import android.support.v7.widget.RecyclerView;
 
 import com.airbnb.epoxy.AsyncEpoxyDiffer.ResultCallack;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.recyclerview.widget.DiffUtil.ItemCallback;
+import androidx.recyclerview.widget.RecyclerView;
 
 public final class EpoxyControllerAdapter extends BaseEpoxyAdapter implements ResultCallack {
   private final NotifyBlocker notifyBlocker = new NotifyBlocker();

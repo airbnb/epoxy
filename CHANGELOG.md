@@ -1,3 +1,7 @@
+# WIP 3.0.0 (TBD)
+
+- **Breaking** Migrated to androidx packages
+
 # 2.19.0 (Oct 18, 2018)
 This release adds built in support for monitoring visibility of views in the RecyclerView. (https://github.com/airbnb/epoxy/pull/560)
 

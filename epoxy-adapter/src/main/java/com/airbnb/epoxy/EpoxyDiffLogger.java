@@ -1,8 +1,9 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView.AdapterDataObserver;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver;
 
 /**
  * This data observer can be registered with an Epoxy adapter or controller to log all item change

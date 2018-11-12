@@ -1,14 +1,14 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.util.AdapterListUpdateCallback;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.util.ListUpdateCallback;
-import android.support.v7.widget.RecyclerView.Adapter;
-
 import java.util.Collections;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.AdapterListUpdateCallback;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListUpdateCallback;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 /**
  * Wraps the result of {@link AsyncEpoxyDiffer#submitList(List)}.

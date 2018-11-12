@@ -6,7 +6,8 @@ import android.os.Handler.Callback;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.MainThread;
+
+import androidx.annotation.MainThread;
 
 /**
  * Various helpers for running Epoxy operations off the main thread.

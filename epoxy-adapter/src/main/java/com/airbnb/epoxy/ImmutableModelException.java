@@ -1,6 +1,6 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Thrown if a model is changed after it is added to an {@link com.airbnb.epoxy.EpoxyController}.

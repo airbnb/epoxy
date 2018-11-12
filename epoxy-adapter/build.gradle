@@ -13,23 +13,23 @@ android {
 
 configurations.all { strategy ->
   strategy.resolutionStrategy.force rootProject.deps.androidAnnotations, rootProject.deps.androidRecyclerView,
-      rootProject.deps.androidDesignLibrary, rootProject.deps.androidSupportLibrary, rootProject.deps.junit,
+      rootProject.deps.androidDesignLibrary, rootProject.deps.androidAppcompat, rootProject.deps.junit,
       rootProject.deps.robolectric, rootProject.deps.mockito
 }
 
 dependencies {
-  compile rootProject.deps.androidAnnotations
-  compile rootProject.deps.androidRecyclerView
-  compile rootProject.deps.androidDesignLibrary
-  compile rootProject.deps.androidSupportLibrary
-  compile project(':epoxy-annotations')
+  implementation rootProject.deps.androidAppcompat
+  implementation rootProject.deps.androidAnnotations
+  implementation rootProject.deps.androidRecyclerView
+  implementation rootProject.deps.androidDesignLibrary
+  api project(':epoxy-annotations')
 
   annotationProcessor project(':epoxy-processor')
 
   testImplementation rootProject.deps.kotlin
-  testCompile rootProject.deps.junit
-  testCompile rootProject.deps.robolectric
-  testCompile rootProject.deps.mockito
+  testImplementation rootProject.deps.junit
+  testImplementation rootProject.deps.robolectric
+  testImplementation rootProject.deps.mockito
 }
 
 apply from: rootProject.file('gradle/gradle-maven-push.gradle')

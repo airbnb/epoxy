@@ -4,16 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build.VERSION;
-import android.support.annotation.CallSuper;
-import android.support.annotation.DimenRes;
-import android.support.annotation.Dimension;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.Px;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.util.TypedValue;
@@ -27,6 +17,17 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
+import androidx.annotation.CallSuper;
+import androidx.annotation.DimenRes;
+import androidx.annotation.Dimension;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.Px;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * <i>This feature is in Beta - please report bugs, feature requests, or other feedback at
@@ -65,7 +66,6 @@ import java.util.Queue;
  * desired in a scrolling list
  */
 public class EpoxyRecyclerView extends RecyclerView {
-
   private static final int DEFAULT_ADAPTER_REMOVAL_DELAY_MS = 2000;
 
   /**
@@ -254,8 +254,8 @@ public class EpoxyRecyclerView extends RecyclerView {
   }
 
   /**
-   * Create a new {@link android.support.v7.widget.RecyclerView.LayoutManager} instance to use for
-   * this RecyclerView.
+   * Create a new {@link androidx.recyclerview.widget.RecyclerView.LayoutManager}
+   * instance to use for this RecyclerView.
    * <p>
    * By default a LinearLayoutManager is used, and a reasonable default is chosen for scrolling
    * direction based on layout params.

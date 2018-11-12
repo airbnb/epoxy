@@ -1,9 +1,10 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.CallSuper;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.view.View;
+
+import androidx.annotation.CallSuper;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 
 /**
  * Helper class for cases where you don't need to do anything special when binding the view. This

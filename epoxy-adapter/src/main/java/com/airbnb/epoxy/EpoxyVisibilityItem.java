@@ -1,15 +1,16 @@
 package com.airbnb.epoxy;
 
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
-import android.support.annotation.Px;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Px;
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
- * This class represent an item in the {@link android.support.v7.widget.RecyclerView} and it is
+ * This class represent an item in the {@link androidx.recyclerview.widget.RecyclerView} and it is
  * being reused with multiple model via the update method. There is 1:1 relationship between an
- * EpoxyVisibilityItem and a child within the {@link android.support.v7.widget.RecyclerView}.
+ * EpoxyVisibilityItem and a child within the {@link androidx.recyclerview.widget.RecyclerView}.
  *
  * It contains the logic to compute the visibility state of an item. It will also invoke the
  * visibility callbacks on {@link com.airbnb.epoxy.EpoxyViewHolder}
@@ -53,7 +54,7 @@ class EpoxyVisibilityItem {
    * Update the visibility item according the current layout.
    *
    * @param view        the current {@link com.airbnb.epoxy.EpoxyViewHolder}'s itemView
-   * @param parent      the {@link android.support.v7.widget.RecyclerView}
+   * @param parent      the {@link androidx.recyclerview.widget.RecyclerView}
    * @param vertical    true if it scroll vertically
    * @return true if the view has been measured
    */

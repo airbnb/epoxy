@@ -1,14 +1,6 @@
 package com.airbnb.epoxy;
 
 import android.content.Context;
-import android.support.annotation.DimenRes;
-import android.support.annotation.Dimension;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.Px;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
-import android.support.v7.widget.SnapHelper;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -18,6 +10,15 @@ import com.airbnb.epoxy.ModelView.Size;
 import com.airbnb.viewmodeladapter.R;
 
 import java.util.List;
+
+import androidx.annotation.DimenRes;
+import androidx.annotation.Dimension;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.Px;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.SnapHelper;
 
 /**
  * <i>This feature is in Beta - please report bugs, feature requests, or other feedback at
@@ -494,7 +495,7 @@ public class Carousel extends EpoxyRecyclerView {
   /** Provide a SnapHelper implementation you want to use with a Carousel. */
   public abstract static class SnapHelperFactory {
     /**
-     * Create and return a new instance of a {@link android.support.v7.widget.SnapHelper} for use
+     * Create and return a new instance of a {@link androidx.recyclerview.widget.SnapHelper} for use
      * with a Carousel.
      */
     @NonNull

@@ -1,7 +1,7 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.NonNull;
 import android.view.View;
+import androidx.annotation.NonNull;
 
 @EpoxyModelClass
 public abstract class AbstractModelWithHolder

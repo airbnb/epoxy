@@ -1,12 +1,12 @@
 package com.airbnb.epoxy;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.PluralsRes;
-import android.support.annotation.StringRes;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.PluralsRes;
+import androidx.annotation.StringRes;
 import java.lang.CharSequence;
 import java.lang.IllegalArgumentException;
 import java.lang.IllegalStateException;
@@ -284,7 +284,7 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@android.support.annotation.Nullable Number... arg0) {
+  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
@@ -296,20 +296,20 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@android.support.annotation.Nullable CharSequence arg0) {
+  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@android.support.annotation.Nullable CharSequence arg0,
-      @android.support.annotation.Nullable CharSequence... arg1) {
+  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable CharSequence arg0,
+      @androidx.annotation.Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@android.support.annotation.Nullable CharSequence arg0,
+  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable CharSequence arg0,
       long arg1) {
     super.id(arg0, arg1);
     return this;
@@ -321,8 +321,7 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   }
 
   @Override
-  public TestFieldPropChildViewModel_ spanSizeOverride(
-      @android.support.annotation.Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public TestFieldPropChildViewModel_ spanSizeOverride(@androidx.annotation.Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }

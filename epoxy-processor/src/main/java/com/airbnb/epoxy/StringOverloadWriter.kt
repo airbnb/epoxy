@@ -1,13 +1,20 @@
 package com.airbnb.epoxy
 
-import android.support.annotation.*
+import androidx.annotation.NonNull
+import androidx.annotation.Nullable
+import androidx.annotation.PluralsRes
+import androidx.annotation.StringRes
 import com.airbnb.epoxy.GeneratedModelWriter.Companion.addOnMutationCall
 import com.airbnb.epoxy.GeneratedModelWriter.Companion.addParameterNullCheckIfNeeded
 import com.airbnb.epoxy.GeneratedModelWriter.Companion.setBitSetIfNeeded
-import com.squareup.javapoet.*
-import com.squareup.javapoet.MethodSpec.*
-import java.util.*
-import javax.lang.model.element.Modifier.*
+import com.squareup.javapoet.ArrayTypeName
+import com.squareup.javapoet.CodeBlock
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.MethodSpec.Builder
+import com.squareup.javapoet.ParameterSpec
+import com.squareup.javapoet.TypeName
+import java.util.ArrayList
+import javax.lang.model.element.Modifier.PUBLIC
 
 internal class StringOverloadWriter(
         private val modelInfo: GeneratedModelInfo,

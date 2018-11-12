@@ -15,9 +15,9 @@
  */
 package com.airbnb.epoxy.paging
 
-import android.arch.paging.PagedList
 import android.os.Handler
-import android.support.v7.util.DiffUtil
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.DiffUtil
 import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyViewHolder
@@ -117,9 +117,9 @@ abstract class PagedListEpoxyController<T>(
      * This is the default [DiffUtil.ItemCallback] which uses object equality.
      */
     val DEFAULT_ITEM_DIFF_CALLBACK = object : DiffUtil.ItemCallback<Any>() {
-      override fun areItemsTheSame(oldItem: Any?, newItem: Any?) = oldItem == newItem
+      override fun areItemsTheSame(oldItem: Any, newItem: Any) = oldItem == newItem
 
-      override fun areContentsTheSame(oldItem: Any?, newItem: Any?) = oldItem == newItem
+      override fun areContentsTheSame(oldItem: Any, newItem: Any) = oldItem == newItem
     }
   }
 }

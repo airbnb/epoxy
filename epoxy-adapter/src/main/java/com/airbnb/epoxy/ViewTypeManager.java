@@ -1,9 +1,9 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.VisibleForTesting;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.annotation.VisibleForTesting;
 
 class ViewTypeManager {
   private static final Map<Class, Integer> VIEW_TYPE_MAP = new HashMap<>();

@@ -1,7 +1,5 @@
 package com.airbnb.epoxy.sample.models;
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
@@ -11,6 +9,8 @@ import com.airbnb.epoxy.EpoxyModelWithHolder;
 import com.airbnb.epoxy.sample.R;
 import com.airbnb.epoxy.sample.models.ImageButtonModel.ImageButtonHolder;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import butterknife.BindView;
 
 import static com.airbnb.epoxy.EpoxyAttribute.Option.DoNotHash;

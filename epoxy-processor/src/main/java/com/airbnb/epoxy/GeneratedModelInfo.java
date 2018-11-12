@@ -1,7 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.Nullable;
-
 import com.airbnb.epoxy.ModelView.Size;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
@@ -32,6 +30,8 @@ import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
+
+import androidx.annotation.Nullable;
 
 import static com.airbnb.epoxy.Utils.buildEpoxyException;
 import static com.airbnb.epoxy.Utils.isSubtypeOfType;

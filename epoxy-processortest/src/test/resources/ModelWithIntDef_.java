@@ -1,7 +1,7 @@
 package com.airbnb.epoxy.models;
 
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
 import com.airbnb.epoxy.EpoxyController;
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.EpoxyViewHolder;

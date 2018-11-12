@@ -1,12 +1,12 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.FloatRange;
-import android.support.annotation.NonNull;
-import android.support.annotation.Px;
-
 import com.airbnb.epoxy.VisibilityState.Visibility;
 
 import java.util.List;
+
+import androidx.annotation.FloatRange;
+import androidx.annotation.NonNull;
+import androidx.annotation.Px;
 
 /**
  * A version of {@link com.airbnb.epoxy.EpoxyModel} that allows you to use a view holder pattern

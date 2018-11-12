@@ -1,10 +1,10 @@
 package com.airbnb.epoxy;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
-import android.support.annotation.PluralsRes;
-import android.support.annotation.StringRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.PluralsRes;
+import androidx.annotation.StringRes;
 import java.lang.CharSequence;
 import java.lang.Number;
 import java.lang.Object;

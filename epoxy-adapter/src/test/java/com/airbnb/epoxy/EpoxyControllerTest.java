@@ -1,7 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.support.v7.widget.RecyclerView.AdapterDataObserver;
-
 import com.airbnb.epoxy.EpoxyController.Interceptor;
 
 import org.junit.Test;
@@ -10,6 +8,8 @@ import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver;
 
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;

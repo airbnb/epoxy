@@ -1,15 +1,16 @@
 package com.airbnb.epoxy;
 
 import android.graphics.Canvas;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static android.support.v7.widget.helper.ItemTouchHelper.Callback.makeMovementFlags;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
+import static androidx.recyclerview.widget.ItemTouchHelper.Callback.makeMovementFlags;
 
 /**
  * A simple way to set up drag or swipe interactions with Epoxy.
@@ -56,7 +57,7 @@ public abstract class EpoxyTouchHelper {
 
     /**
      * The recyclerview that the EpoxyController has its adapter added to. An {@link
-     * android.support.v7.widget.helper.ItemTouchHelper} will be created and configured for you, and
+     * androidx.recyclerview.widget.ItemTouchHelper} will be created and configured for you, and
      * attached to this RecyclerView.
      */
     public DragBuilder2 withRecyclerView(RecyclerView recyclerView) {

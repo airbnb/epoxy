@@ -1,9 +1,9 @@
 package com.airbnb.epoxy;
 
 import android.content.Context;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.RawRes;
 import android.widget.FrameLayout;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.RawRes;
 
 import com.airbnb.epoxy.ModelProp.Option;
 

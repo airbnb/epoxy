@@ -29,7 +29,7 @@ def updateTestClass(test_class_result)
     end
 
     # The test copies the source file to the build folder. We need to modify the original file to update its expected source
-    expected_source_file_path = expected_file_match.captures[0].sub "build/intermediates/classes/test/debug", "src/test/resources"
+    expected_source_file_path = expected_file_match.captures[0].sub "build/intermediates/sourceFolderJavaResources/debug", "src/test/resources"
 
     # The error message includes the source code that was generated. We use a regex to extract the source from the following expected pattern
     #
@@ -45,6 +45,7 @@ def updateTestClass(test_class_result)
       next
     end
 
+    puts "Full path #{expected_source_file_path}"
     puts "Updating class: #{expected_source_file_path.split('/')[-1]}"
 
     # Finally we simply overwrite the original expected test source with the actual test output in order to update it

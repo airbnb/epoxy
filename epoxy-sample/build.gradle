@@ -35,30 +35,42 @@ project.android.buildTypes.all { buildType ->
 
 /* Forces all transitive deps listed to our version. */
 configurations.all { strategy ->
-  strategy.resolutionStrategy.force rootProject.deps.androidCardView, rootProject.deps.junit
+  strategy.resolutionStrategy.force rootProject.deps.androidCardView, rootProject.deps.junit, rootProject.deps.versionedParcelable
 }
 
 dependencies {
-  compile project(':epoxy-databinding')
-  compile project(':epoxy-adapter')
+  implementation project(':epoxy-databinding')
+  implementation project(':epoxy-adapter')
+  implementation project(':epoxy-annotations')
   annotationProcessor project(':epoxy-processor')
 
-  compile rootProject.deps.paris
+  implementation rootProject.deps.paris
   annotationProcessor rootProject.deps.parisProcessor
 
   // Dependencies for the optional litho integration
-  compile project(':epoxy-litho')
+  implementation(project(':epoxy-litho')) {
+    exclude group: 'com.android.support'
+  }
   annotationProcessor rootProject.deps.lithoProcessor
-  compile rootProject.deps.lithoCore
-  compile rootProject.deps.lithoWidget
-  compile rootProject.deps.lithoSoloader
+  implementation(rootProject.deps.lithoCore) {
+    exclude group: 'com.android.support'
+  }
+  implementation(rootProject.deps.lithoWidget) {
+    exclude group: 'com.android.support'
+  }
+  implementation(rootProject.deps.lithoSoloader) {
+    exclude group: 'com.android.support'
+  }
   provided rootProject.deps.lithoAnnotations
 
-  compile rootProject.deps.butterknifeLibrary
+  implementation rootProject.deps.butterknifeLibrary
   annotationProcessor rootProject.deps.butterknifeCompiler
 
-  compile rootProject.deps.androidCardView
-  compile rootProject.deps.lottie
+  implementation rootProject.deps.androidCardView
+  implementation rootProject.deps.androidRecyclerView
+  implementation rootProject.deps.androidAppcompat
+  implementation rootProject.deps.versionedParcelable
+  implementation rootProject.deps.lottie
 
-  testCompile rootProject.deps.junit
+  testImplementation rootProject.deps.junit
 }

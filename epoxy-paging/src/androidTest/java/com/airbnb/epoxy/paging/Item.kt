@@ -15,7 +15,7 @@
  */
 package com.airbnb.epoxy.paging
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 
 /**
  * Dummy item for testing.
