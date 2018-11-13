@@ -1,6 +1,10 @@
-# WIP 3.0.0 (TBD)
+# 3.0.0 (Nov 13, 2018)
 
-- **Breaking** Migrated to androidx packages
+- **Breaking** Migrated to androidx packages (Big thanks to jeffreydelooff!)
+
+- **Breaking** The `Carousel.Padding` class changed the ordering of its parameters to match Android's ordering of "left, top, right, bottom". (https://github.com/airbnb/epoxy/pull/536 thanks to martinbonnin)
+    
+   This change won't break compilation, so you _must_ manually change your parameter ordering, otherwise you will get unexpected padding results.
 
 # 2.19.0 (Oct 18, 2018)
 This release adds built in support for monitoring visibility of views in the RecyclerView. (https://github.com/airbnb/epoxy/pull/560)
