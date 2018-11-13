@@ -13,15 +13,12 @@ import com.airbnb.epoxy.sample.R;
 import com.airbnb.paris.annotations.Style;
 import com.airbnb.paris.annotations.Styleable;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 @Styleable // Dynamic styling via the Paris library
 @ModelView
 public class HeaderView extends LinearLayout {
 
-  @BindView(R.id.title_text) TextView title;
-  @BindView(R.id.caption_text) TextView caption;
+  private TextView title;
+  private TextView caption;
 
   public HeaderView(Context context) {
     super(context);
@@ -37,7 +34,8 @@ public class HeaderView extends LinearLayout {
   private void init() {
     setOrientation(VERTICAL);
     inflate(getContext(), R.layout.view_header, this);
-    ButterKnife.bind(this);
+    title = findViewById(R.id.title_text);
+    caption = findViewById(R.id.caption_text);
   }
 
   @TextProp(defaultRes = R.string.app_name)

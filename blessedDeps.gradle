@@ -32,7 +32,6 @@ rootProject.ext.ANDROIDX_VERSIONED_PARCELABLE = "1.0.0"
 rootProject.ext.ANDROID_DATA_BINDING = "1.3.1"
 rootProject.ext.ANDROID_ARCH_TESTING = "1.1.1"
 rootProject.ext.ANDROID_TEST_RUNNER = "1.0.2"
-rootProject.ext.BUTTERKNIFE_VERSION = "9.0.0-rc1"
 rootProject.ext.SQUARE_JAVAPOET_VERSION = "1.11.1"
 rootProject.ext.SQUARE_KOTLINPOET_VERSION = "1.0.0-RC2"
 
@@ -46,7 +45,7 @@ rootProject.ext.LOTTIE_VERSION = "2.8.0"
 rootProject.ext.LITHO_VERSION = "0.7.0"
 rootProject.ext.SO_LOADER_VERSION = "0.2.0"
 
-rootProject.ext.AUTO_VALUE_VERSION = "1.3"
+rootProject.ext.AUTO_VALUE_VERSION = "1.6.2"
 
 rootProject.ext.PARIS_VERSION = "1.2.0"
 
@@ -65,8 +64,6 @@ rootProject.ext.deps = [
     versionedParcelable   : "androidx.versionedparcelable:versionedparcelable:$ANDROIDX_VERSIONED_PARCELABLE",
     dataBindingAdapters   : "androidx.databinding:databinding-adapters:$ANDROIDX_DATABINDING_ADAPTERS",
     dataBindingLibrary    : "androidx.databinding:databinding-library:$ANDROIDX_DATABINDING_LIBRARY",
-    butterknifeLibrary    : "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION",
-    butterknifeCompiler   : "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION",
     squareJavaPoet        : "com.squareup:javapoet:$SQUARE_JAVAPOET_VERSION",
     squareKotlinPoet      : "com.squareup:kotlinpoet:$SQUARE_KOTLINPOET_VERSION",
     assertj               : "org.assertj:assertj-core:$ASSERTJ_VERSION",
