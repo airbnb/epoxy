@@ -1,76 +1,55 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
-  compileSdkVersion rootProject.COMPILE_SDK_VERSION
+    compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
-  // For java 8 lambdas
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
+    // For java 8 lambdas
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
-  defaultConfig {
-    applicationId "com.airbnb.android.epoxysample"
-    minSdkVersion 16
-    targetSdkVersion rootProject.TARGET_SDK_VERSION
-    vectorDrawables.useSupportLibrary = true
-    versionCode 1
-    versionName "1.0"
-  }
+    defaultConfig {
+        applicationId "com.airbnb.android.epoxysample"
+        minSdkVersion 16
+        targetSdkVersion rootProject.TARGET_SDK_VERSION
+        vectorDrawables.useSupportLibrary = true
+        versionCode 1
+        versionName "1.0"
+    }
 
-  dataBinding {
-    enabled = true
-  }
+    dataBinding {
+        enabled = true
+    }
 }
 
 project.android.buildTypes.all { buildType ->
-  buildType.javaCompileOptions.annotationProcessorOptions.arguments =
-      [
-          validateEpoxyModelUsage     : String.valueOf(buildType.name == 'debug'),
-          requireHashCodeInEpoxyModels: "true",
-          requireAbstractEpoxyModels  : "true",
-          implicitlyAddAutoModels     : "true"
-      ]
-}
-
-/* Forces all transitive deps listed to our version. */
-configurations.all { strategy ->
-  strategy.resolutionStrategy.force rootProject.deps.androidCardView, rootProject.deps.junit, rootProject.deps.versionedParcelable
+    buildType.javaCompileOptions.annotationProcessorOptions.arguments =
+            [
+                    validateEpoxyModelUsage     : String.valueOf(buildType.name == 'debug'),
+                    requireHashCodeInEpoxyModels: "true",
+                    requireAbstractEpoxyModels  : "true",
+                    implicitlyAddAutoModels     : "true"
+            ]
 }
 
 dependencies {
-  implementation project(':epoxy-databinding')
-  implementation project(':epoxy-adapter')
-  implementation project(':epoxy-annotations')
-  annotationProcessor project(':epoxy-processor')
+    implementation project(':epoxy-databinding')
+    implementation project(':epoxy-adapter')
+    implementation project(':epoxy-annotations')
+    kapt project(':epoxy-processor')
 
-  implementation rootProject.deps.paris
-  annotationProcessor rootProject.deps.parisProcessor
+    implementation rootProject.deps.paris
+    kapt rootProject.deps.parisProcessor
 
-  // Dependencies for the optional litho integration
-  implementation(project(':epoxy-litho')) {
-    exclude group: 'com.android.support'
-  }
-  annotationProcessor rootProject.deps.lithoProcessor
-  implementation(rootProject.deps.lithoCore) {
-    exclude group: 'com.android.support'
-  }
-  implementation(rootProject.deps.lithoWidget) {
-    exclude group: 'com.android.support'
-  }
-  implementation(rootProject.deps.lithoSoloader) {
-    exclude group: 'com.android.support'
-  }
-  provided rootProject.deps.lithoAnnotations
+    implementation rootProject.deps.kotlin
+    implementation rootProject.deps.androidCardView
+    implementation rootProject.deps.androidRecyclerView
+    implementation rootProject.deps.androidAppcompat
+    implementation rootProject.deps.versionedParcelable
+    implementation rootProject.deps.lottie
 
-  implementation rootProject.deps.butterknifeLibrary
-  annotationProcessor rootProject.deps.butterknifeCompiler
-
-  implementation rootProject.deps.androidCardView
-  implementation rootProject.deps.androidRecyclerView
-  implementation rootProject.deps.androidAppcompat
-  implementation rootProject.deps.versionedParcelable
-  implementation rootProject.deps.lottie
-
-  testImplementation rootProject.deps.junit
+    testImplementation rootProject.deps.junit
 }
