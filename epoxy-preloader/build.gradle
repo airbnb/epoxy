@@ -15,9 +15,7 @@ dependencies {
     implementation rootProject.deps.kotlin
 
     // transitive to make ./gradlew check work
-    implementation  (rootProject.deps.glide) { transitive = false }
-    kapt            (rootProject.deps.glideProcessor) { transitive = false }
-    implementation  (rootProject.deps.glideRecyclerView) { transitive = false }
+    implementation (rootProject.deps.glide) { transitive = false }
 
     api project(':epoxy-annotations')
     api project(':epoxy-adapter')
@@ -27,7 +25,7 @@ dependencies {
     androidTestImplementation rootProject.deps.androidTestRunner
 
     kaptAndroidTest project(":epoxy-processor")
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION"
 }
 repositories {
     mavenCentral()

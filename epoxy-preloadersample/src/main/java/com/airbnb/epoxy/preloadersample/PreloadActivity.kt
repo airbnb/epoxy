@@ -1,9 +1,12 @@
 package com.airbnb.epoxy.preloadersample
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.airbnb.epoxy.preloader.EpoxyModelPreloader
-import com.airbnb.epoxy.preloader.EpoxyPreloader
+import com.airbnb.epoxy.EpoxyController
+import com.airbnb.epoxy.EpoxyModelPreloader
+import com.airbnb.epoxy.EpoxyPreloader
+import com.airbnb.epoxy.EpoxyRecyclerView
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -27,13 +30,10 @@ class PreloadActivity : AppCompatActivity() {
         controller.setData(images)
 
         val model = EpoxyModelPreloader.with(R.id.image_view) { glide: RequestManager, model: ImageModel_, _ ->
-
             glide.loadImage(model.imageUrl, true)
         }
 
-        val preloader = EpoxyPreloader.with(this, controller, { err: RuntimeException -> err.printStackTrace() }, 10, model)
-
-        recycler_view.addOnScrollListener(preloader)
+        recycler_view.addOnScrollListener(this, controller, model)
     }
 }
 
@@ -48,4 +48,8 @@ fun RequestManager.loadImage(url: String, isPreloading: Boolean): RequestBuilder
     return asBitmap()
             .apply(options)
             .load(url)
+}
+
+fun EpoxyRecyclerView.addOnScrollListener(context: Context, controller: EpoxyController, model: EpoxyModelPreloader<*, *>, maxItemsToPreload: Int = 10) {
+    addOnScrollListener(EpoxyPreloader.with(context, controller, { err: RuntimeException -> err.printStackTrace() }, maxItemsToPreload, model))
 }

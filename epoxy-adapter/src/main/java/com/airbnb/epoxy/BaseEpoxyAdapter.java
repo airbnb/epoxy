@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
+abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
   private static final String SAVED_STATE_ARG_VIEW_HOLDERS = "saved_state_view_holders";
 
   private int spanCount = 1;
@@ -45,7 +45,7 @@ public abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHol
     }
   };
 
-  public BaseEpoxyAdapter() {
+  BaseEpoxyAdapter() {
     // Defaults to stable ids since view models generate unique ids. Set this to false in the
     // subclass if you don't want to support it
     setHasStableIds(true);
@@ -145,9 +145,6 @@ public abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHol
   protected BoundViewHolders getBoundViewHolders() {
     return boundViewHolders;
   }
-  public BoundViewHolders getBoundViewHoldersPublic() {
-    return boundViewHolders;
-  }
 
   @Override
   public int getItemViewType(int position) {
@@ -163,9 +160,6 @@ public abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHol
   }
 
   EpoxyModel<?> getModelForPosition(int position) {
-    return getCurrentModels().get(position);
-  }
-  public EpoxyModel<?> getModelForPositionPublic(int position) {
     return getCurrentModels().get(position);
   }
 

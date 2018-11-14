@@ -70,7 +70,5 @@ rootProject.ext.deps = [
     lithoAnnotations      : "com.facebook.litho:litho-annotations:$LITHO_VERSION",
     paris                 : "com.airbnb.android:paris:$PARIS_VERSION",
     parisProcessor        : "com.airbnb.android:paris-processor:$PARIS_VERSION",
-    glide                 : "com.github.bumptech.glide:glide:$GLIDE_VERSION",
-    glideProcessor        : "com.github.bumptech.glide:compiler:$GLIDE_VERSION",
-    glideRecyclerView     : "com.github.bumptech.glide:recyclerview-integration:$GLIDE_VERSION"
+    glide                 : "com.github.bumptech.glide:glide:$GLIDE_VERSION"
 ]
