@@ -236,6 +236,13 @@ class PagedListModelCacheTest {
     }
   }
 
+  @Test
+  fun clear() {
+    pagedListModelCache.clearModels()
+    pagedListModelCache.getModels()
+    assertAndResetRebuildModels()
+  }
+
   private fun assertAndResetRebuildModels() {
     assertThat(rebuildCounter > 0, CoreMatchers.`is`(true))
     rebuildCounter = 0
