@@ -374,7 +374,9 @@ public abstract class EpoxyController {
       }
     }
 
-    // Interceptors are cleared so that future model builds don't notify past models
+    // Interceptors are cleared so that future model builds don't notify past models.
+    // We need to make sure they are cleared even if there are no interceptors so that
+    // we don't leak the models.
     modelInterceptorCallbacks = null;
   }
 
