@@ -371,11 +371,13 @@ public abstract class EpoxyController {
         for (ModelInterceptorCallback callback : modelInterceptorCallbacks) {
           callback.onInterceptorsFinished(this);
         }
-
-        // Interceptors are cleared so that future model builds don't notify past models
-        modelInterceptorCallbacks = null;
       }
     }
+
+    // Interceptors are cleared so that future model builds don't notify past models.
+    // We need to make sure they are cleared even if there are no interceptors so that
+    // we don't leak the models.
+    modelInterceptorCallbacks = null;
   }
 
   /** A callback that is run after {@link #buildModels()} completes and before diffing is run. */
