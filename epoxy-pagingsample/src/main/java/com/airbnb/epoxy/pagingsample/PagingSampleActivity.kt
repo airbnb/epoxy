@@ -14,7 +14,6 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
-import com.airbnb.epoxy.EpoxyAsyncUtil
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.TextProp
@@ -36,14 +35,12 @@ class PagingSampleActivity : AppCompatActivity() {
 
         val viewModel = ViewModelProviders.of(this).get(ActivityViewModel::class.java)
         viewModel.pagedList.observe(this, Observer {
-          pagingController.submitList(it)
+            pagingController.submitList(it)
         })
     }
 }
 
-class TestController : PagedListEpoxyController<User>(
-    modelBuildingHandler = EpoxyAsyncUtil.getAsyncBackgroundHandler()
-) {
+class TestController : PagedListEpoxyController<User>() {
     override fun buildItemModel(currentPosition: Int, item: User?): EpoxyModel<*> {
         return if (item == null) {
             PagingViewModel_()
@@ -84,15 +81,16 @@ class PagingView(context: Context) : AppCompatTextView(context) {
 
 }
 
-class ActivityViewModel(app : Application) : AndroidViewModel(app) {
+class ActivityViewModel(app: Application) : AndroidViewModel(app) {
     val db by lazy {
         Room.inMemoryDatabaseBuilder(app, PagingDatabase::class.java).build()
     }
-    val pagedList : LiveData<PagedList<User>> by lazy {
+    val pagedList: LiveData<PagedList<User>> by lazy {
         LivePagedListBuilder<Int, User>(
             db.userDao().dataSource, 100
         ).build()
     }
+
     init {
         bg {
             (1..3000).map {
