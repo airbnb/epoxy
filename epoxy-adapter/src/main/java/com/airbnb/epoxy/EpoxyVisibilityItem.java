@@ -61,7 +61,6 @@ class EpoxyVisibilityItem {
   boolean update(@NonNull View view, @NonNull RecyclerView parent,
       boolean vertical, boolean detachEvent) {
     boolean visible = view.getLocalVisibleRect(localVisibleRect);
-    if (!visible) throw new RuntimeException();
     this.verticalScrolling = vertical;
     if (vertical) {
       sizeInScrollingDirection = view.getMeasuredHeight();
