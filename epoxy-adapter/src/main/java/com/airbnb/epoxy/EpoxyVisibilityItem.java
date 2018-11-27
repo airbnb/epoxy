@@ -60,19 +60,20 @@ class EpoxyVisibilityItem {
    */
   boolean update(@NonNull View view, @NonNull RecyclerView parent,
       boolean vertical, boolean detachEvent) {
+    // Clear the rect before calling getLocalVisibleRect
     localVisibleRect.setEmpty();
-    boolean visible = view.getLocalVisibleRect(localVisibleRect);
+    boolean visibleRect = view.getLocalVisibleRect(localVisibleRect);
     this.verticalScrolling = vertical;
     if (vertical) {
       sizeInScrollingDirection = view.getMeasuredHeight();
       sizeNotInScrollingDirection = view.getMeasuredWidth();
       viewportSize = parent.getMeasuredHeight();
-      visibleSize = detachEvent || !visible ? 0 : localVisibleRect.height();
+      visibleSize = detachEvent || !visibleRect ? 0 : localVisibleRect.height();
     } else {
       sizeNotInScrollingDirection = view.getMeasuredHeight();
       sizeInScrollingDirection = view.getMeasuredWidth();
       viewportSize = parent.getMeasuredWidth();
-      visibleSize = detachEvent || !visible ? 0 : localVisibleRect.width();
+      visibleSize = detachEvent || !visibleRect ? 0 : localVisibleRect.width();
     }
     percentVisibleSize = detachEvent ? 0 : 100.f / sizeInScrollingDirection * visibleSize;
     if (visibleSize != sizeInScrollingDirection) {
