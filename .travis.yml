@@ -22,8 +22,6 @@ notifications:
 
 script: "./gradlew check"
 
-sudo: false
-
 cache:
   directories:
   - $HOME/.m2
