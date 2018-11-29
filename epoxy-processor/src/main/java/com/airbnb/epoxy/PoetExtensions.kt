@@ -124,9 +124,9 @@ fun JavaClassName.setPackage(packageName: String) =
 // Does not support transferring annotations
 fun JavaWildcardTypeName.toKPoet() =
     if (!lowerBounds.isEmpty()) {
-        KotlinWildcardTypeName.supertypeOf(lowerBounds.first().toKPoet())
+        KotlinWildcardTypeName.consumerOf(lowerBounds.first().toKPoet())
     } else {
-        KotlinWildcardTypeName.subtypeOf(upperBounds.first().toKPoet())
+        KotlinWildcardTypeName.producerOf(upperBounds.first().toKPoet())
     }
 
 // Does not support transferring annotations
@@ -184,7 +184,7 @@ fun JavaTypeName.toKPoet(nullable: Boolean = false): KotlinTypeName {
     }
 
     if (nullable) {
-        return type.asNullable()
+        return type.copy(nullable = true)
     }
 
     return type
