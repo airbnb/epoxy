@@ -75,7 +75,7 @@ class EpoxyVisibilityItem {
     visibleWidth = detachEvent || !visibleRect ? 0 : localVisibleRect.width();
     percentVisibleHeight = detachEvent || !visibleRect ? 0 : 100.f / height * visibleHeight;
     percentVisibleWidth = detachEvent || !visibleRect ? 0 : 100.f / width * visibleWidth;
-    if (visibleHeight != height || visibleWidth != width ) {
+    if (visibleHeight != height || visibleWidth != width) {
       fullyVisible = false;
     }
     return height > 0 && width > 0;
@@ -165,7 +165,7 @@ class EpoxyVisibilityItem {
   private boolean checkAndUpdateUnfocusedVisible(boolean detachEvent) {
     boolean unfocusedVisibleHeight = !(height >= viewportHeight / 2 || (
         visibleHeight == height && height < viewportHeight / 2));
-    boolean unfocusedVisibleWidth= !(width >= viewportWidth / 2 || (
+    boolean unfocusedVisibleWidth = !(width >= viewportWidth / 2 || (
         viewportWidth == width && width < viewportWidth / 2));
     boolean unfocusedVisible = detachEvent || unfocusedVisibleHeight || unfocusedVisibleWidth;
     if (unfocusedVisible) {
