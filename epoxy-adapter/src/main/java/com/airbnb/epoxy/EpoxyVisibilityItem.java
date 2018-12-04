@@ -148,11 +148,8 @@ class EpoxyVisibilityItem {
    * component is smaller than half the viewport, when it is fully visible.
    */
   private boolean checkAndUpdateFocusedVisible() {
-    boolean focusedVisibleHeight = height >= viewportHeight / 2 || (visibleHeight == height
-        && height < viewportHeight / 2);
-    boolean focusedVisibleWidth = width >= viewportWidth / 2 || (visibleWidth == width
-        && width < viewportWidth / 2);
-    return focusedVisible = focusedVisibleHeight && focusedVisibleWidth;
+    focusedVisible = isInFocusVisible();
+    return focusedVisible;
   }
 
   /**
@@ -161,15 +158,23 @@ class EpoxyVisibilityItem {
    * not occupy at least half the viewport.
    */
   private boolean checkAndUpdateUnfocusedVisible(boolean detachEvent) {
-    boolean unfocusedVisibleHeight = !(height >= viewportHeight / 2 || (
-        visibleHeight == height && height < viewportHeight / 2));
-    boolean unfocusedVisibleWidth = !(width >= viewportWidth / 2 || (
-        viewportWidth == width && width < viewportWidth / 2));
-    boolean unfocusedVisible = detachEvent || unfocusedVisibleHeight || unfocusedVisibleWidth;
+    boolean unfocusedVisible = detachEvent || !isInFocusVisible();
     if (unfocusedVisible) {
       focusedVisible = false;
     }
     return !focusedVisible;
+  }
+
+  private boolean isInFocusVisible() {
+    final int halfViewportArea = viewportHeight * viewportWidth / 2;
+    final int totalArea = height * width;
+    final int visibleArea = visibleHeight * visibleWidth;
+    // The model has entered the focused range either if it is larger than half of the viewport
+    // and it occupies at least half of the viewport or if it is smaller than half of the viewport
+    // and it is fully visible.
+    return focusedVisible = (totalArea >= halfViewportArea)
+        ? (visibleArea >= halfViewportArea)
+        : totalArea == visibleArea;
   }
 
   /**
