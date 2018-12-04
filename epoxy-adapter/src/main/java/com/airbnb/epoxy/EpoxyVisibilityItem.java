@@ -31,9 +31,6 @@ class EpoxyVisibilityItem {
   @Px
   private int width;
 
-  private float percentVisibleHeight = 0.f;
-  private float percentVisibleWidth = 0.f;
-
   @Px
   private int visibleHeight;
   @Px
@@ -66,15 +63,13 @@ class EpoxyVisibilityItem {
   boolean update(@NonNull View view, @NonNull RecyclerView parent, boolean detachEvent) {
     // Clear the rect before calling getLocalVisibleRect
     localVisibleRect.setEmpty();
-    boolean visibleRect = view.getLocalVisibleRect(localVisibleRect);
-    height = view.getMeasuredHeight();
-    width = view.getMeasuredWidth();
-    viewportHeight = parent.getMeasuredHeight();
-    viewportWidth = parent.getMeasuredWidth();
-    visibleHeight = detachEvent || !visibleRect ? 0 : localVisibleRect.height();
-    visibleWidth = detachEvent || !visibleRect ? 0 : localVisibleRect.width();
-    percentVisibleHeight = detachEvent || !visibleRect ? 0 : 100.f / height * visibleHeight;
-    percentVisibleWidth = detachEvent || !visibleRect ? 0 : 100.f / width * visibleWidth;
+    boolean viewDrawn = view.getLocalVisibleRect(localVisibleRect) && !detachEvent;
+    height = view.getHeight();
+    width = view.getWidth();
+    viewportHeight = parent.getHeight();
+    viewportWidth = parent.getWidth();
+    visibleHeight = viewDrawn ? localVisibleRect.height() : 0;
+    visibleWidth = viewDrawn ? localVisibleRect.width() : 0;
     if (visibleHeight != height || visibleWidth != width) {
       fullyVisible = false;
     }
@@ -119,8 +114,11 @@ class EpoxyVisibilityItem {
 
   void handleChanged(EpoxyViewHolder epoxyHolder) {
     if (visibleHeight != lastVisibleHeightNotified || visibleWidth != lastVisibleWidthNotified) {
-        epoxyHolder.visibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight,
-            visibleWidth);
+      epoxyHolder.visibilityChanged(
+          100.f / height * visibleHeight,
+          100.f / width * visibleWidth,
+          visibleHeight, visibleWidth
+      );
       lastVisibleHeightNotified = visibleHeight;
       lastVisibleWidthNotified = visibleWidth;
     }
