@@ -1,3 +1,7 @@
+# 3.1.0 (Dec 4, 2018)
+- **Fix** Memory leak in debug mode is removed (https://github.com/airbnb/epoxy/pull/613)
+- **Fix** For visibility callbacks, wrong visibility when the view becomes not visible (https://github.com/airbnb/epoxy/pull/619)
+
 # 3.0.0 (Nov 13, 2018)
 
 - **Breaking** Migrated to androidx packages (Big thanks to jeffreydelooff!)
