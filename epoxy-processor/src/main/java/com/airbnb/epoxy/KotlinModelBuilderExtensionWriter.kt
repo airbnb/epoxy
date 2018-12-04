@@ -118,12 +118,14 @@ internal class KotlinModelBuilderExtensionWriter(
             if (constructorIsNotPublic) addModifiers(KModifier.INTERNAL)
 
             beginControlFlow(
-                "$tick%T$tick(${params.joinToString(", ") { it.name }}).apply ",
+                "val model = $tick%T$tick(${params.joinToString(", ") { it.name }}).apply ",
                 modelClass
             )
             addStatement("modelInitializer()")
             endControlFlow()
-            addStatement(".addTo(this)")
+            addStatement("model.addTo(this)")
+            addStatement("return model")
+            returns(model.getSuperClassName().toKPoet())
             return build()
         }
 
