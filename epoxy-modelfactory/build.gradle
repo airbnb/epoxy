@@ -33,6 +33,7 @@ dependencies {
   // Need to include the processor directly since we create an instance of it in code for testing
   testImplementation rootProject.deps.parisProcessor
   testImplementation rootProject.deps.robolectric
+  testImplementation rootProject.deps.androidRecyclerView
   testImplementation files(getRuntimeJar())
   testImplementation files(Jvm.current().getToolsJar())
 
