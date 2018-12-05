@@ -70,9 +70,6 @@ class EpoxyVisibilityItem {
     viewportWidth = parent.getWidth();
     visibleHeight = viewDrawn ? localVisibleRect.height() : 0;
     visibleWidth = viewDrawn ? localVisibleRect.width() : 0;
-    if (visibleHeight != height || visibleWidth != width) {
-      fullyVisible = false;
-    }
     return height > 0 && width > 0;
   }
 
@@ -90,25 +87,34 @@ class EpoxyVisibilityItem {
   }
 
   void handleVisible(@NonNull EpoxyViewHolder epoxyHolder, boolean detachEvent) {
-    if (visible && checkAndUpdateInvisible(detachEvent)) {
-      epoxyHolder.visibilityStateChanged(VisibilityState.INVISIBLE);
-    } else if (!visible && checkAndUpdateVisible()) {
-      epoxyHolder.visibilityStateChanged(VisibilityState.VISIBLE);
+    boolean previousVisible = visible;
+    visible = !detachEvent && isVisible();
+    if (visible != previousVisible) {
+      if (visible) {
+        epoxyHolder.visibilityStateChanged(VisibilityState.VISIBLE);
+      } else {
+        epoxyHolder.visibilityStateChanged(VisibilityState.INVISIBLE);
+      }
     }
   }
 
   void handleFocus(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
-    if (focusedVisible && checkAndUpdateUnfocusedVisible(detachEvent)) {
-      epoxyHolder.visibilityStateChanged(VisibilityState.UNFOCUSED_VISIBLE);
-    } else if (!focusedVisible && checkAndUpdateFocusedVisible()) {
-      epoxyHolder.visibilityStateChanged(VisibilityState.FOCUSED_VISIBLE);
+    boolean previousFocusedVisible = focusedVisible;
+    focusedVisible = !detachEvent && isInFocusVisible();
+    if (focusedVisible != previousFocusedVisible) {
+      if (focusedVisible) {
+        epoxyHolder.visibilityStateChanged(VisibilityState.FOCUSED_VISIBLE);
+      } else {
+        epoxyHolder.visibilityStateChanged(VisibilityState.UNFOCUSED_VISIBLE);
+      }
     }
   }
 
   void handleFullImpressionVisible(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
-    if (!fullyVisible && checkAndUpdateFullImpressionVisible()) {
-      epoxyHolder
-          .visibilityStateChanged(VisibilityState.FULL_IMPRESSION_VISIBLE);
+    boolean previousFullyVisible = fullyVisible;
+    fullyVisible = !detachEvent && isFullyVisible();
+    if (fullyVisible != previousFullyVisible) {
+      epoxyHolder.visibilityStateChanged(VisibilityState.FULL_IMPRESSION_VISIBLE);
     }
   }
 
@@ -124,45 +130,8 @@ class EpoxyVisibilityItem {
     }
   }
 
-  /**
-   * @return true when at least one pixel of the component is visible
-   */
-  private boolean checkAndUpdateVisible() {
-    return visible = visibleHeight > 0 && visibleWidth > 0;
-  }
-
-  /**
-   * @param detachEvent true if initiated from detach event
-   * @return true when when the component no longer has any pixels on the screen
-   */
-  private boolean checkAndUpdateInvisible(boolean detachEvent) {
-    boolean invisible = visibleHeight <= 0 && visibleWidth <= 0 || detachEvent;
-    if (invisible) {
-      visible = false;
-    }
-    return !visible;
-  }
-
-  /**
-   * @return true when either the component occupies at least half of the viewport, or, if the
-   * component is smaller than half the viewport, when it is fully visible.
-   */
-  private boolean checkAndUpdateFocusedVisible() {
-    focusedVisible = isInFocusVisible();
-    return focusedVisible;
-  }
-
-  /**
-   * @param detachEvent true if initiated from detach event
-   * @return true when the component is no longer focused, i.e. it is not fully visible and does
-   * not occupy at least half the viewport.
-   */
-  private boolean checkAndUpdateUnfocusedVisible(boolean detachEvent) {
-    boolean unfocusedVisible = detachEvent || !isInFocusVisible();
-    if (unfocusedVisible) {
-      focusedVisible = false;
-    }
-    return !focusedVisible;
+  private boolean isVisible() {
+    return visibleHeight > 0 && visibleWidth > 0;
   }
 
   private boolean isInFocusVisible() {
@@ -172,16 +141,13 @@ class EpoxyVisibilityItem {
     // The model has entered the focused range either if it is larger than half of the viewport
     // and it occupies at least half of the viewport or if it is smaller than half of the viewport
     // and it is fully visible.
-    return focusedVisible = (totalArea >= halfViewportArea)
+    return (totalArea >= halfViewportArea)
         ? (visibleArea >= halfViewportArea)
         : totalArea == visibleArea;
   }
 
-  /**
-   * @return true when the entire component has passed through the viewport at some point.
-   */
-  private boolean checkAndUpdateFullImpressionVisible() {
-    return fullyVisible = visibleHeight == height && visibleWidth == width;
+  private boolean isFullyVisible() {
+    return visibleHeight == height && visibleWidth == width;
   }
 
   void shiftBy(int offsetPosition) {
