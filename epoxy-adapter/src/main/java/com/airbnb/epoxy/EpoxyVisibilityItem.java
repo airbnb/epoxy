@@ -114,7 +114,9 @@ class EpoxyVisibilityItem {
     boolean previousFullyVisible = fullyVisible;
     fullyVisible = !detachEvent && isFullyVisible();
     if (fullyVisible != previousFullyVisible) {
-      epoxyHolder.visibilityStateChanged(VisibilityState.FULL_IMPRESSION_VISIBLE);
+      if (fullyVisible) {
+        epoxyHolder.visibilityStateChanged(VisibilityState.FULL_IMPRESSION_VISIBLE);
+      }
     }
   }
 
