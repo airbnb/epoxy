@@ -48,7 +48,13 @@ class OnVisibilityEventDrawable(context: Context) : Drawable() {
             invalidateSelf()
         }
 
-    var percent = 0.0f
+    var percentHeight = 0.0f
+        set(value) {
+            field = value
+            invalidateSelf()
+        }
+
+    var percentWidth = 0.0f
         set(value) {
             field = value
             invalidateSelf()
@@ -58,7 +64,8 @@ class OnVisibilityEventDrawable(context: Context) : Drawable() {
         visible = false
         focusedVisible = false
         fullImpression = false
-        percent = 0.0f
+        percentHeight = 0.0f
+        percentWidth = 0.0f
         invalidateSelf()
     }
 
@@ -82,8 +89,8 @@ class OnVisibilityEventDrawable(context: Context) : Drawable() {
         canvas.drawRect(
             0.0f,
             0.0f,
-            bounds.width() * percent / 100,
-            bounds.height().toFloat(),
+            bounds.width() * percentWidth / 100,
+            bounds.height().toFloat() * percentHeight / 100,
             paint
         )
     }

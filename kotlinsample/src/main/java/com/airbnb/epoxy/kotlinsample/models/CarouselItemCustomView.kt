@@ -78,13 +78,14 @@ class CarouselItemCustomView @JvmOverloads constructor(
     ) {
         Log.d(
             TAG,
-            "$id onChanged ${percentVisibleHeight.toInt()} ${percentVisibleWidth.toInt()} $visibleHeight $visibleWidth ${System.identityHashCode(this)}"
+            "$title onChanged ${percentVisibleHeight.toInt()} ${percentVisibleWidth.toInt()} $visibleHeight $visibleWidth ${System.identityHashCode(this)}"
         )
         with(onVisibilityEventDrawable) {
-            if (percentVisibleHeight < 100 && fullImpression) {
+            if ((percentVisibleHeight < 100 || percentVisibleWidth < 100) && fullImpression) {
                 fullImpression = false
             }
-            percent = percentVisibleHeight
+            percentHeight = percentVisibleHeight
+            percentWidth = percentVisibleWidth
         }
     }
 
