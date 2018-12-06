@@ -8,10 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.EpoxyVisibilityTracker
-import com.airbnb.epoxy.OnModelVisibilityStateChangedListener
+import com.airbnb.epoxy.kotlinsample.models.CarouselItemCustomViewModel_
 import com.airbnb.epoxy.kotlinsample.models.ItemDataClass
 import com.airbnb.epoxy.kotlinsample.models.itemCustomView
 import com.airbnb.epoxy.kotlinsample.models.itemEpoxyHolder
+import com.airbnb.epoxy.kotlinsample.views.carouselNoSnap
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: EpoxyRecyclerView
@@ -56,6 +57,20 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG)
                             .show()
                     }
+                }
+
+                carouselNoSnap {
+                    id("carousel $i")
+                    models(mutableListOf<CarouselItemCustomViewModel_>().apply {
+                        val lastPage = 10
+                        for (j in 0 until lastPage) {
+                            add(
+                                CarouselItemCustomViewModel_()
+                                    .id("carousel $i-$j")
+                                    .title("Page $j / $lastPage")
+                            )
+                        }
+                    })
                 }
 
                 // Since data classes do not use code generation, there's no extension generated here
