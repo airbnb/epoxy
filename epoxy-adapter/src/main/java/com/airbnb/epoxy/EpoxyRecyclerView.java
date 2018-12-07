@@ -516,6 +516,10 @@ public class EpoxyRecyclerView extends RecyclerView {
       swapAdapter(removedAdapter, false);
     }
     clearRemovedAdapterAndCancelRunnable();
+
+    // Register itself in the EpoxyVisibilityTracker. This will take care of nested list tracking
+    // (ex: carousel)
+    EpoxyVisibilityTracker.registerNestedRecyclerView(this);
   }
 
   @Override

@@ -6,7 +6,10 @@ import android.view.View;
 import android.view.View.OnLayoutChangeListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,6 +44,9 @@ public class EpoxyVisibilityTracker {
   // Not actionable at runtime. It is only useful for internal test-troubleshooting.
   static final boolean DEBUG_LOG = false;
 
+  /** Maintain a map of attached visibility trackers */
+  private static final WeakHashMap<RecyclerView, EpoxyVisibilityTracker> attachedTrackers = new WeakHashMap<>();
+
   /** Maintain visibility item indexed by view id (identity hashcode) */
   private final SparseArray<EpoxyVisibilityItem> visibilityIdToItemMap = new SparseArray<>();
   private final List<EpoxyVisibilityItem> visibilityIdToItems = new ArrayList<>();
@@ -58,9 +64,36 @@ public class EpoxyVisibilityTracker {
 
   private boolean onChangedEnabled = true;
 
+  /** */
+  private Map<RecyclerView, EpoxyVisibilityTracker> nestedTrackers = new HashMap<>();
+
   /** This flag is for optimizing the process on detach. If detach is from data changed then it
    * need to re-process all views, else no need (ex: scroll). */
   private boolean visibleDataChanged = false;
+
+  /**
+   * Register a nested recycler view. If the parent is a recycler view with a visibility tracker
+   * attached the visibility tracking will be enabled on the nested. The parent will also notify
+   * the nested tracker if necessary.
+   * @param nestedRecyclerView the nested recycler view
+   * @return a visibility tracker if one was attached
+   */
+  @Nullable
+  static EpoxyVisibilityTracker registerNestedRecyclerView(RecyclerView nestedRecyclerView) {
+    EpoxyVisibilityTracker nestedTracker = null;
+    if (attachedTrackers.get(nestedRecyclerView) == null && nestedRecyclerView.getParent() instanceof RecyclerView) {
+      RecyclerView parent = (RecyclerView) nestedRecyclerView.getParent();
+      if (parent != null) {
+        EpoxyVisibilityTracker parentTracker = attachedTrackers.get(parent);
+        if (parentTracker != null) {
+          nestedTracker = new EpoxyVisibilityTracker();
+          nestedTracker.attach(nestedRecyclerView);
+          parentTracker.nestedTrackers.put(nestedRecyclerView, nestedTracker);
+        }
+      }
+    }
+    return nestedTracker;
+  }
 
   /**
    * Enable or disable visibility changed event. Default is `true`, disable it if you don't need
@@ -83,6 +116,7 @@ public class EpoxyVisibilityTracker {
     recyclerView.addOnScrollListener(this.listener);
     recyclerView.addOnLayoutChangeListener(this.listener);
     recyclerView.addOnChildAttachStateChangeListener(this.listener);
+    attachedTrackers.put(recyclerView, this);
   }
 
   /**
@@ -95,6 +129,7 @@ public class EpoxyVisibilityTracker {
     recyclerView.removeOnLayoutChangeListener(this.listener);
     recyclerView.removeOnChildAttachStateChangeListener(this.listener);
     attachedRecyclerView = null;
+    attachedTrackers.remove(recyclerView);
   }
 
   /**
@@ -169,12 +204,21 @@ public class EpoxyVisibilityTracker {
     if (recyclerView != null) {
       final ViewHolder holder = recyclerView.getChildViewHolder(child);
       if (holder instanceof EpoxyViewHolder) {
-        processVisibilityEvents(
+        boolean changed = processVisibilityEvents(
             recyclerView,
             (EpoxyViewHolder) holder,
             detachEvent,
             eventOriginForDebug
         );
+        if (changed) {
+          if (child instanceof EpoxyRecyclerView) {
+            EpoxyVisibilityTracker tracker = nestedTrackers.get(child);
+            if (tracker != null) {
+              // If view visibility changed and there was a tracker on it then notify it.
+              tracker.processChangeEvent("parent");
+            }
+          }
+        }
       } else {
         throw new IllegalEpoxyUsage(
             "`EpoxyVisibilityTracker` cannot be used with non-epoxy view holders."
@@ -192,8 +236,9 @@ public class EpoxyVisibilityTracker {
    * @param detachEvent         true if the event originated from a view detached from the
    *                            recycler view
    * @param eventOriginForDebug a debug strings used for logs
+   * @return true if changed
    */
-  private void processVisibilityEvents(
+  private boolean processVisibilityEvents(
       @NonNull RecyclerView recyclerView,
       @NonNull EpoxyViewHolder epoxyHolder,
       boolean detachEvent,
@@ -224,15 +269,15 @@ public class EpoxyVisibilityTracker {
       vi.reset(epoxyHolder.getAdapterPosition());
     }
 
+    boolean changed = false;
     if (vi.update(itemView, recyclerView, detachEvent)) {
       // View is measured, process events
       vi.handleVisible(epoxyHolder, detachEvent);
       vi.handleFocus(epoxyHolder, detachEvent);
       vi.handleFullImpressionVisible(epoxyHolder, detachEvent);
-      if (onChangedEnabled) {
-        vi.handleChanged(epoxyHolder);
-      }
+      changed = vi.handleChanged(epoxyHolder, onChangedEnabled);
     }
+    return changed;
   }
 
   /**
