@@ -45,7 +45,8 @@ public class EpoxyVisibilityTracker {
   static final boolean DEBUG_LOG = false;
 
   /** Maintain a map of attached visibility trackers */
-  private static final WeakHashMap<RecyclerView, EpoxyVisibilityTracker> attachedTrackers = new WeakHashMap<>();
+  private static final WeakHashMap<RecyclerView, EpoxyVisibilityTracker> ATTACHED_TRACKERS
+      = new WeakHashMap<>();
 
   /** Maintain visibility item indexed by view id (identity hashcode) */
   private final SparseArray<EpoxyVisibilityItem> visibilityIdToItemMap = new SparseArray<>();
@@ -64,7 +65,7 @@ public class EpoxyVisibilityTracker {
 
   private boolean onChangedEnabled = true;
 
-  /** */
+  /** All nested visibility trackers */
   private Map<RecyclerView, EpoxyVisibilityTracker> nestedTrackers = new HashMap<>();
 
   /** This flag is for optimizing the process on detach. If detach is from data changed then it
@@ -80,11 +81,11 @@ public class EpoxyVisibilityTracker {
    */
   @Nullable
   static EpoxyVisibilityTracker registerNestedRecyclerView(RecyclerView nestedRecyclerView) {
-    EpoxyVisibilityTracker nestedTracker = null;
-    if (attachedTrackers.get(nestedRecyclerView) == null && nestedRecyclerView.getParent() instanceof RecyclerView) {
+    EpoxyVisibilityTracker nestedTracker = ATTACHED_TRACKERS.get(nestedRecyclerView);
+    if (nestedTracker == null && nestedRecyclerView.getParent() instanceof RecyclerView) {
       RecyclerView parent = (RecyclerView) nestedRecyclerView.getParent();
       if (parent != null) {
-        EpoxyVisibilityTracker parentTracker = attachedTrackers.get(parent);
+        EpoxyVisibilityTracker parentTracker = ATTACHED_TRACKERS.get(parent);
         if (parentTracker != null) {
           nestedTracker = new EpoxyVisibilityTracker();
           nestedTracker.attach(nestedRecyclerView);
@@ -116,7 +117,7 @@ public class EpoxyVisibilityTracker {
     recyclerView.addOnScrollListener(this.listener);
     recyclerView.addOnLayoutChangeListener(this.listener);
     recyclerView.addOnChildAttachStateChangeListener(this.listener);
-    attachedTrackers.put(recyclerView, this);
+    ATTACHED_TRACKERS.put(recyclerView, this);
   }
 
   /**
@@ -129,7 +130,7 @@ public class EpoxyVisibilityTracker {
     recyclerView.removeOnLayoutChangeListener(this.listener);
     recyclerView.removeOnChildAttachStateChangeListener(this.listener);
     attachedRecyclerView = null;
-    attachedTrackers.remove(recyclerView);
+    ATTACHED_TRACKERS.remove(recyclerView);
   }
 
   /**
