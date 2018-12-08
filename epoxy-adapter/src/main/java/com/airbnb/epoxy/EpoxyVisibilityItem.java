@@ -27,24 +27,27 @@ class EpoxyVisibilityItem {
   private int adapterPosition = RecyclerView.NO_POSITION;
 
   @Px
-  private int sizeInScrollingDirection;
+  private int height;
+  @Px
+  private int width;
 
-  private int sizeNotInScrollingDirection;
+  @Px
+  private int visibleHeight;
+  @Px
+  private int visibleWidth;
 
-  private boolean verticalScrolling;
-
-  private float percentVisibleSize = 0.f;
-
-  private int visibleSize;
-
-  private int viewportSize;
+  @Px
+  private int viewportHeight;
+  @Px
+  private int viewportWidth;
 
   private boolean fullyVisible = false;
   private boolean visible = false;
   private boolean focusedVisible = false;
 
   /** Store last value for de-duping */
-  private int lastVisibleSizeNotified = NOT_NOTIFIED;
+  private int lastVisibleHeightNotified = NOT_NOTIFIED;
+  private int lastVisibleWidthNotified = NOT_NOTIFIED;
 
   EpoxyVisibilityItem(int adapterPosition) {
     reset(adapterPosition);
@@ -55,31 +58,19 @@ class EpoxyVisibilityItem {
    *
    * @param view        the current {@link com.airbnb.epoxy.EpoxyViewHolder}'s itemView
    * @param parent      the {@link androidx.recyclerview.widget.RecyclerView}
-   * @param vertical    true if it scroll vertically
    * @return true if the view has been measured
    */
-  boolean update(@NonNull View view, @NonNull RecyclerView parent,
-      boolean vertical, boolean detachEvent) {
+  boolean update(@NonNull View view, @NonNull RecyclerView parent, boolean detachEvent) {
     // Clear the rect before calling getLocalVisibleRect
     localVisibleRect.setEmpty();
-    boolean visibleRect = view.getLocalVisibleRect(localVisibleRect);
-    this.verticalScrolling = vertical;
-    if (vertical) {
-      sizeInScrollingDirection = view.getMeasuredHeight();
-      sizeNotInScrollingDirection = view.getMeasuredWidth();
-      viewportSize = parent.getMeasuredHeight();
-      visibleSize = detachEvent || !visibleRect ? 0 : localVisibleRect.height();
-    } else {
-      sizeNotInScrollingDirection = view.getMeasuredHeight();
-      sizeInScrollingDirection = view.getMeasuredWidth();
-      viewportSize = parent.getMeasuredWidth();
-      visibleSize = detachEvent || !visibleRect ? 0 : localVisibleRect.width();
-    }
-    percentVisibleSize = detachEvent ? 0 : 100.f / sizeInScrollingDirection * visibleSize;
-    if (visibleSize != sizeInScrollingDirection) {
-      fullyVisible = false;
-    }
-    return sizeInScrollingDirection > 0;
+    boolean viewDrawn = view.getLocalVisibleRect(localVisibleRect) && !detachEvent;
+    height = view.getHeight();
+    width = view.getWidth();
+    viewportHeight = parent.getHeight();
+    viewportWidth = parent.getWidth();
+    visibleHeight = viewDrawn ? localVisibleRect.height() : 0;
+    visibleWidth = viewDrawn ? localVisibleRect.width() : 0;
+    return height > 0 && width > 0;
   }
 
   int getAdapterPosition() {
@@ -91,98 +82,77 @@ class EpoxyVisibilityItem {
     visible = false;
     focusedVisible = false;
     adapterPosition = newAdapterPosition;
-    lastVisibleSizeNotified = NOT_NOTIFIED;
+    lastVisibleHeightNotified = NOT_NOTIFIED;
+    lastVisibleWidthNotified = NOT_NOTIFIED;
   }
 
   void handleVisible(@NonNull EpoxyViewHolder epoxyHolder, boolean detachEvent) {
-    if (visible && checkAndUpdateInvisible(detachEvent)) {
-      epoxyHolder.visibilityStateChanged(VisibilityState.INVISIBLE);
-    } else if (!visible && checkAndUpdateVisible()) {
-      epoxyHolder.visibilityStateChanged(VisibilityState.VISIBLE);
+    boolean previousVisible = visible;
+    visible = !detachEvent && isVisible();
+    if (visible != previousVisible) {
+      if (visible) {
+        epoxyHolder.visibilityStateChanged(VisibilityState.VISIBLE);
+      } else {
+        epoxyHolder.visibilityStateChanged(VisibilityState.INVISIBLE);
+      }
     }
   }
 
   void handleFocus(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
-    if (focusedVisible && checkAndUpdateUnfocusedVisible(detachEvent)) {
-      epoxyHolder.visibilityStateChanged(VisibilityState.UNFOCUSED_VISIBLE);
-    } else if (!focusedVisible && checkAndUpdateFocusedVisible()) {
-      epoxyHolder.visibilityStateChanged(VisibilityState.FOCUSED_VISIBLE);
+    boolean previousFocusedVisible = focusedVisible;
+    focusedVisible = !detachEvent && isInFocusVisible();
+    if (focusedVisible != previousFocusedVisible) {
+      if (focusedVisible) {
+        epoxyHolder.visibilityStateChanged(VisibilityState.FOCUSED_VISIBLE);
+      } else {
+        epoxyHolder.visibilityStateChanged(VisibilityState.UNFOCUSED_VISIBLE);
+      }
     }
   }
 
   void handleFullImpressionVisible(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
-    if (!fullyVisible && checkAndUpdateFullImpressionVisible()) {
-      epoxyHolder
-          .visibilityStateChanged(VisibilityState.FULL_IMPRESSION_VISIBLE);
+    boolean previousFullyVisible = fullyVisible;
+    fullyVisible = !detachEvent && isFullyVisible();
+    if (fullyVisible != previousFullyVisible) {
+      if (fullyVisible) {
+        epoxyHolder.visibilityStateChanged(VisibilityState.FULL_IMPRESSION_VISIBLE);
+      }
     }
   }
 
   void handleChanged(EpoxyViewHolder epoxyHolder) {
-    if (visibleSize != lastVisibleSizeNotified) {
-      if (verticalScrolling) {
-        epoxyHolder.visibilityChanged(percentVisibleSize, 100.f, visibleSize,
-            sizeNotInScrollingDirection);
-      } else {
-        epoxyHolder.visibilityChanged(100.f, percentVisibleSize,
-            sizeNotInScrollingDirection, visibleSize);
-      }
-      lastVisibleSizeNotified = visibleSize;
+    if (visibleHeight != lastVisibleHeightNotified || visibleWidth != lastVisibleWidthNotified) {
+      epoxyHolder.visibilityChanged(
+          100.f / height * visibleHeight,
+          100.f / width * visibleWidth,
+          visibleHeight, visibleWidth
+      );
+      lastVisibleHeightNotified = visibleHeight;
+      lastVisibleWidthNotified = visibleWidth;
     }
   }
 
-  /**
-   * @return true when at least one pixel of the component is visible
-   */
-  private boolean checkAndUpdateVisible() {
-    return visible = visibleSize > 0;
+  private boolean isVisible() {
+    return visibleHeight > 0 && visibleWidth > 0;
   }
 
-  /**
-   * @param detachEvent true if initiated from detach event
-   * @return true when when the component no longer has any pixels on the screen
-   */
-  private boolean checkAndUpdateInvisible(boolean detachEvent) {
-    boolean invisible = visibleSize <= 0 || detachEvent;
-    if (invisible) {
-      visible = false;
-    }
-    return !visible;
+  private boolean isInFocusVisible() {
+    final int halfViewportArea = viewportHeight * viewportWidth / 2;
+    final int totalArea = height * width;
+    final int visibleArea = visibleHeight * visibleWidth;
+    // The model has entered the focused range either if it is larger than half of the viewport
+    // and it occupies at least half of the viewport or if it is smaller than half of the viewport
+    // and it is fully visible.
+    return (totalArea >= halfViewportArea)
+        ? (visibleArea >= halfViewportArea)
+        : totalArea == visibleArea;
   }
 
-  /**
-   * @return true when either the component occupies at least half of the viewport, or, if the
-   * component is smaller than half the viewport, when it is fully visible.
-   */
-  private boolean checkAndUpdateFocusedVisible() {
-    return focusedVisible =
-        sizeInScrollingDirection >= viewportSize / 2 || (visibleSize == sizeInScrollingDirection
-            && sizeInScrollingDirection < viewportSize / 2);
-  }
-
-  /**
-   * @param detachEvent true if initiated from detach event
-   * @return true when the component is no longer focused, i.e. it is not fully visible and does
-   * not occupy at least half the viewport.
-   */
-  private boolean checkAndUpdateUnfocusedVisible(boolean detachEvent) {
-    boolean unfocusedVisible = detachEvent
-        || !(sizeInScrollingDirection >= viewportSize / 2 || (
-        visibleSize == sizeInScrollingDirection && sizeInScrollingDirection < viewportSize / 2));
-    if (unfocusedVisible) {
-      focusedVisible = false;
-    }
-    return !focusedVisible;
-  }
-
-  /**
-   * @return true when the entire component has passed through the viewport at some point.
-   */
-  private boolean checkAndUpdateFullImpressionVisible() {
-    return fullyVisible = visibleSize == sizeInScrollingDirection;
+  private boolean isFullyVisible() {
+    return visibleHeight == height && visibleWidth == width;
   }
 
   void shiftBy(int offsetPosition) {
     adapterPosition += offsetPosition;
   }
 }
-

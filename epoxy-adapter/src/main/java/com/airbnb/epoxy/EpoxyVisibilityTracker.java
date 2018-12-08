@@ -172,7 +172,6 @@ public class EpoxyVisibilityTracker {
         processVisibilityEvents(
             recyclerView,
             (EpoxyViewHolder) holder,
-            recyclerView.getLayoutManager().canScrollVertically(),
             detachEvent,
             eventOriginForDebug
         );
@@ -190,7 +189,6 @@ public class EpoxyVisibilityTracker {
    *
    * @param recyclerView        the recycler view
    * @param epoxyHolder         the {@link RecyclerView}
-   * @param vertical            true if the scrolling is vertical
    * @param detachEvent         true if the event originated from a view detached from the
    *                            recycler view
    * @param eventOriginForDebug a debug strings used for logs
@@ -198,7 +196,7 @@ public class EpoxyVisibilityTracker {
   private void processVisibilityEvents(
       @NonNull RecyclerView recyclerView,
       @NonNull EpoxyViewHolder epoxyHolder,
-      boolean vertical, boolean detachEvent,
+      boolean detachEvent,
       String eventOriginForDebug
   ) {
 
@@ -226,7 +224,7 @@ public class EpoxyVisibilityTracker {
       vi.reset(epoxyHolder.getAdapterPosition());
     }
 
-    if (vi.update(itemView, recyclerView, vertical, detachEvent)) {
+    if (vi.update(itemView, recyclerView, detachEvent)) {
       // View is measured, process events
       vi.handleVisible(epoxyHolder, detachEvent);
       vi.handleFocus(epoxyHolder, detachEvent);
