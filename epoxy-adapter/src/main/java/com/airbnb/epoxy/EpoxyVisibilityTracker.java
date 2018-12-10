@@ -76,17 +76,26 @@ public class EpoxyVisibilityTracker {
    * Register a nested recycler view. If the parent is a recycler view with a visibility tracker
    * attached the visibility tracking will be enabled on the nested. The parent will also notify
    * the nested tracker if necessary.
+   *
+   * You are responsible to call this method if you are not using
+   * {@link com.airbnb.epoxy.EpoxyRecyclerView}
+   *
    * @param nestedRecyclerView the nested recycler view
    * @return a visibility tracker if one was attached
    */
   @Nullable
-  static EpoxyVisibilityTracker registerNestedRecyclerView(RecyclerView nestedRecyclerView) {
+  public static EpoxyVisibilityTracker registerNestedRecyclerView(
+      @NonNull RecyclerView parent,
+      @NonNull RecyclerView nestedRecyclerView
+  ) {
     EpoxyVisibilityTracker nestedTracker = ATTACHED_TRACKERS.get(nestedRecyclerView);
-    if (nestedTracker == null && nestedRecyclerView.getParent() instanceof RecyclerView) {
-      RecyclerView parent = (RecyclerView) nestedRecyclerView.getParent();
-      if (parent != null) {
+    if (nestedRecyclerView.getAdapter() instanceof BaseEpoxyAdapter) {
+      // Only attach a tracker if the nested RecyclerView use Epoxy and don't have a tracker yet
+      nestedTracker = ATTACHED_TRACKERS.get(nestedRecyclerView);
+      if (nestedTracker == null) {
         EpoxyVisibilityTracker parentTracker = ATTACHED_TRACKERS.get(parent);
         if (parentTracker != null) {
+          // And if the parent have visibility tracking enabled
           nestedTracker = new EpoxyVisibilityTracker();
           nestedTracker.attach(nestedRecyclerView);
           parentTracker.nestedTrackers.put(nestedRecyclerView, nestedTracker);

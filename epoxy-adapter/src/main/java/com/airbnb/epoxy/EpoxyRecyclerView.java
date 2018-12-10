@@ -7,6 +7,7 @@ import android.os.Build.VERSION;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.airbnb.viewmodeladapter.R;
@@ -508,6 +509,18 @@ public class EpoxyRecyclerView extends RecyclerView {
   }
 
   @Override
+  public void onChildAttachedToWindow(@NonNull View child) {
+    if (child instanceof RecyclerView) {
+      RecyclerView recyclerView = (RecyclerView) child;
+      if (recyclerView.getAdapter() instanceof BaseEpoxyAdapter) {
+        // Register itself in the EpoxyVisibilityTracker. This will take care of nested list tracking
+        // (ex: carousel)
+        EpoxyVisibilityTracker.registerNestedRecyclerView(this, (RecyclerView) child);
+      }
+    }
+  }
+
+  @Override
   public void onAttachedToWindow() {
     super.onAttachedToWindow();
 
@@ -516,10 +529,6 @@ public class EpoxyRecyclerView extends RecyclerView {
       swapAdapter(removedAdapter, false);
     }
     clearRemovedAdapterAndCancelRunnable();
-
-    // Register itself in the EpoxyVisibilityTracker. This will take care of nested list tracking
-    // (ex: carousel)
-    EpoxyVisibilityTracker.registerNestedRecyclerView(this);
   }
 
   @Override
