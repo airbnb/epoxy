@@ -157,6 +157,13 @@ public class Carousel extends EpoxyRecyclerView {
   }
 
   /**
+   * @return The number of views to show on screen in this carousel at a time.
+   */
+  public float getNumViewsToShowOnScreen() {
+      return numViewsToShowOnScreen;
+  }
+
+  /**
    * If you are using a Linear or Grid layout manager you can use this to set the item prefetch
    * count. Only use this if you are not using {@link #setNumViewsToShowOnScreen(float)}
    *
