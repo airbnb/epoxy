@@ -513,8 +513,8 @@ public class EpoxyRecyclerView extends RecyclerView {
     if (child instanceof RecyclerView) {
       RecyclerView recyclerView = (RecyclerView) child;
       if (recyclerView.getAdapter() instanceof BaseEpoxyAdapter) {
-        // Register itself in the EpoxyVisibilityTracker. This will take care of nested list tracking
-        // (ex: carousel)
+        // Register itself in the EpoxyVisibilityTracker. This will take care of nested list
+        // tracking (ex: carousel)
         EpoxyVisibilityTracker.registerNestedRecyclerView(this, (RecyclerView) child);
       }
     }
