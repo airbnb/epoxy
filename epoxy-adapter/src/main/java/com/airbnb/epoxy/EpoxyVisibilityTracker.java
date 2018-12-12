@@ -5,12 +5,14 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
 
+import com.airbnb.viewmodeladapter.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,12 +43,31 @@ public class EpoxyVisibilityTracker {
 
   private static final String TAG = "EpoxyVisibilityTracker";
 
+  @IdRes
+  private static final int TAG_ID = R.id.epoxy_visibility_tracker;
+
+  /**
+   * @param recyclerView the view.
+   * @return the tracker for the given {@link RecyclerView}. Null if no tracker was attached.
+   */
+  @Nullable
+  private static EpoxyVisibilityTracker getTracker(@NonNull RecyclerView recyclerView) {
+    return (EpoxyVisibilityTracker) recyclerView.getTag(TAG_ID);
+  }
+
+  /**
+   * Store the tracker for the given {@link RecyclerView}.
+   * @param recyclerView the view
+   * @param tracker the tracker
+   */
+  private static void setTracker(
+      @NonNull RecyclerView recyclerView,
+      @Nullable EpoxyVisibilityTracker tracker) {
+    recyclerView.setTag(TAG_ID, tracker);
+  }
+
   // Not actionable at runtime. It is only useful for internal test-troubleshooting.
   static final boolean DEBUG_LOG = false;
-
-  /** Maintain a map of attached visibility trackers */
-  private static final WeakHashMap<RecyclerView, EpoxyVisibilityTracker> ATTACHED_TRACKERS
-      = new WeakHashMap<>();
 
   /** Maintain visibility item indexed by view id (identity hashcode) */
   private final SparseArray<EpoxyVisibilityItem> visibilityIdToItemMap = new SparseArray<>();
@@ -91,9 +112,9 @@ public class EpoxyVisibilityTracker {
     EpoxyVisibilityTracker nestedTracker = null;
     if (nestedRecyclerView.getAdapter() instanceof BaseEpoxyAdapter) {
       // Only attach a tracker if the nested RecyclerView use Epoxy and don't have a tracker yet
-      nestedTracker = ATTACHED_TRACKERS.get(nestedRecyclerView);
+      nestedTracker = getTracker(nestedRecyclerView);
       if (nestedTracker == null) {
-        EpoxyVisibilityTracker parentTracker = ATTACHED_TRACKERS.get(parent);
+        EpoxyVisibilityTracker parentTracker = getTracker(parent);
         if (parentTracker != null) {
           // And if the parent have visibility tracking enabled
           nestedTracker = new EpoxyVisibilityTracker();
@@ -126,7 +147,7 @@ public class EpoxyVisibilityTracker {
     recyclerView.addOnScrollListener(this.listener);
     recyclerView.addOnLayoutChangeListener(this.listener);
     recyclerView.addOnChildAttachStateChangeListener(this.listener);
-    ATTACHED_TRACKERS.put(recyclerView, this);
+    setTracker(recyclerView, this);
   }
 
   /**
@@ -138,8 +159,8 @@ public class EpoxyVisibilityTracker {
     recyclerView.removeOnScrollListener(this.listener);
     recyclerView.removeOnLayoutChangeListener(this.listener);
     recyclerView.removeOnChildAttachStateChangeListener(this.listener);
+    setTracker(recyclerView, null);
     attachedRecyclerView = null;
-    ATTACHED_TRACKERS.remove(recyclerView);
   }
 
   /**
