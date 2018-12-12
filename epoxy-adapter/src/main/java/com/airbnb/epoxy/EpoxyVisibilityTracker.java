@@ -88,7 +88,7 @@ public class EpoxyVisibilityTracker {
       @NonNull RecyclerView parent,
       @NonNull RecyclerView nestedRecyclerView
   ) {
-    EpoxyVisibilityTracker nestedTracker = ATTACHED_TRACKERS.get(nestedRecyclerView);
+    EpoxyVisibilityTracker nestedTracker = null;
     if (nestedRecyclerView.getAdapter() instanceof BaseEpoxyAdapter) {
       // Only attach a tracker if the nested RecyclerView use Epoxy and don't have a tracker yet
       nestedTracker = ATTACHED_TRACKERS.get(nestedRecyclerView);
