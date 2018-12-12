@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
+import android.view.View.OnAttachStateChangeListener;
 import android.view.View.OnLayoutChangeListener;
 
 import com.airbnb.viewmodeladapter.R;
@@ -94,37 +95,37 @@ public class EpoxyVisibilityTracker {
   private boolean visibleDataChanged = false;
 
   /**
-   * Register a nested recycler view. If the parent is a recycler view with a visibility tracker
-   * attached the visibility tracking will be enabled on the nested. The parent will also notify
-   * the nested tracker if necessary.
-   *
-   * You are responsible to call this method if you are not using
-   * {@link com.airbnb.epoxy.EpoxyRecyclerView}
-   *
-   * @param nestedRecyclerView the nested recycler view
-   * @return a visibility tracker if one was attached
+   * OnAttachStateChangeListener used to lookup for tracked RecyclerView's parent. If the parent
+   * have a visibility tracker attached we will register nested tracker.
    */
-  @Nullable
-  public static EpoxyVisibilityTracker registerNestedRecyclerView(
-      @NonNull RecyclerView parent,
-      @NonNull RecyclerView nestedRecyclerView
-  ) {
-    EpoxyVisibilityTracker nestedTracker = null;
-    if (nestedRecyclerView.getAdapter() instanceof BaseEpoxyAdapter) {
-      // Only attach a tracker if the nested RecyclerView use Epoxy and don't have a tracker yet
-      nestedTracker = getTracker(nestedRecyclerView);
-      if (nestedTracker == null) {
-        EpoxyVisibilityTracker parentTracker = getTracker(parent);
-        if (parentTracker != null) {
-          // And if the parent have visibility tracking enabled
-          nestedTracker = new EpoxyVisibilityTracker();
-          nestedTracker.attach(nestedRecyclerView);
-          parentTracker.nestedTrackers.put(nestedRecyclerView, nestedTracker);
+  private final OnAttachStateChangeListener onAttachStateChangeListener =
+      new OnAttachStateChangeListener() {
+
+        @Override
+        public void onViewAttachedToWindow(View v) {
+          if (attachedRecyclerView != null) {
+            if (attachedRecyclerView.getParent() instanceof RecyclerView) {
+              RecyclerView parent = (RecyclerView) attachedRecyclerView.getParent();
+              // Register itself in the EpoxyVisibilityTracker. This will take care of nested list
+              // tracking (ex: carousel)
+              EpoxyVisibilityTracker parentTracker = getTracker(parent);
+              if (parentTracker != null) {
+                parentTracker.nestedTrackers.put(attachedRecyclerView, EpoxyVisibilityTracker.this);
+                // the nested tracker is registered to its parent, it is safe to remove the listener
+                attachedRecyclerView.removeOnAttachStateChangeListener(onAttachStateChangeListener);
+              }
+            } else if (attachedRecyclerView.getParent() != null) {
+              // The parent is not a RecyclerView, it is safe to remove the listener
+              attachedRecyclerView.removeOnAttachStateChangeListener(onAttachStateChangeListener);
+            }
+          }
         }
-      }
-    }
-    return nestedTracker;
-  }
+
+        @Override
+        public void onViewDetachedFromWindow(View view) {
+          // nothing to do
+        }
+      };
 
   /**
    * Enable or disable visibility changed event. Default is `true`, disable it if you don't need
@@ -147,6 +148,7 @@ public class EpoxyVisibilityTracker {
     recyclerView.addOnScrollListener(this.listener);
     recyclerView.addOnLayoutChangeListener(this.listener);
     recyclerView.addOnChildAttachStateChangeListener(this.listener);
+    recyclerView.addOnAttachStateChangeListener(onAttachStateChangeListener);
     setTracker(recyclerView, this);
   }
 
@@ -159,6 +161,7 @@ public class EpoxyVisibilityTracker {
     recyclerView.removeOnScrollListener(this.listener);
     recyclerView.removeOnLayoutChangeListener(this.listener);
     recyclerView.removeOnChildAttachStateChangeListener(this.listener);
+    recyclerView.removeOnAttachStateChangeListener(onAttachStateChangeListener);
     setTracker(recyclerView, null);
     attachedRecyclerView = null;
   }
