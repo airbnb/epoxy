@@ -242,7 +242,7 @@ public class EpoxyVisibilityTracker {
             eventOriginForDebug
         );
         if (changed) {
-          if (child instanceof EpoxyRecyclerView) {
+          if (child instanceof RecyclerView) {
             EpoxyVisibilityTracker tracker = nestedTrackers.get(child);
             if (tracker != null) {
               // If view visibility changed and there was a tracker on it then notify it.
