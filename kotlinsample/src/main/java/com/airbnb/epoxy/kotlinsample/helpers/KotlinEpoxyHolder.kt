@@ -8,7 +8,7 @@ import kotlin.reflect.KProperty
 /**
  * A pattern for easier view binding with an [EpoxyHolder]
  *
- * See [SampleKotlinModelWithHolder] for a usage example.
+ * See [com.airbnb.epoxy.kotlinsample.models.ItemEpoxyHolder] for a usage example.
  */
 abstract class KotlinEpoxyHolder : EpoxyHolder() {
     private lateinit var view: View
