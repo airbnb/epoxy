@@ -313,7 +313,7 @@ public class EpoxyVisibilityTracker {
     }
 
     @Override
-    public void onChildViewAttachedToWindow(View child) {
+    public void onChildViewAttachedToWindow(@NonNull View child) {
       if (child instanceof RecyclerView) {
         processChildRecyclerViewAttached((RecyclerView) child);
       }
@@ -321,7 +321,7 @@ public class EpoxyVisibilityTracker {
     }
 
     @Override
-    public void onChildViewDetachedFromWindow(View child) {
+    public void onChildViewDetachedFromWindow(@NonNull View child) {
       if (child instanceof RecyclerView) {
         processChildRecyclerViewDetached((RecyclerView) child);
       }
