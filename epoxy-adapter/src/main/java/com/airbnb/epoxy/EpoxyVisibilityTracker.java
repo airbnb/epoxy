@@ -3,7 +3,6 @@ package com.airbnb.epoxy;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
-import android.view.View.OnAttachStateChangeListener;
 import android.view.View.OnLayoutChangeListener;
 
 import com.airbnb.viewmodeladapter.R;
@@ -95,39 +94,6 @@ public class EpoxyVisibilityTracker {
   private boolean visibleDataChanged = false;
 
   /**
-   * OnAttachStateChangeListener used to lookup for tracked RecyclerView's parent. If the parent
-   * have a visibility tracker attached we will register nested tracker.
-   */
-  private final OnAttachStateChangeListener onAttachStateChangeListener =
-      new OnAttachStateChangeListener() {
-
-        @Override
-        public void onViewAttachedToWindow(View v) {
-          if (attachedRecyclerView != null) {
-            if (attachedRecyclerView.getParent() instanceof RecyclerView) {
-              RecyclerView parent = (RecyclerView) attachedRecyclerView.getParent();
-              // Register itself in the EpoxyVisibilityTracker. This will take care of nested list
-              // tracking (ex: carousel)
-              EpoxyVisibilityTracker parentTracker = getTracker(parent);
-              if (parentTracker != null) {
-                parentTracker.nestedTrackers.put(attachedRecyclerView, EpoxyVisibilityTracker.this);
-                // the nested tracker is registered to its parent, it is safe to remove the listener
-                attachedRecyclerView.removeOnAttachStateChangeListener(onAttachStateChangeListener);
-              }
-            } else if (attachedRecyclerView.getParent() != null) {
-              // The parent is not a RecyclerView, it is safe to remove the listener
-              attachedRecyclerView.removeOnAttachStateChangeListener(onAttachStateChangeListener);
-            }
-          }
-        }
-
-        @Override
-        public void onViewDetachedFromWindow(View view) {
-          // nothing to do
-        }
-      };
-
-  /**
    * Enable or disable visibility changed event. Default is `true`, disable it if you don't need
    * (triggered by every pixel scrolled).
    *
@@ -148,7 +114,6 @@ public class EpoxyVisibilityTracker {
     recyclerView.addOnScrollListener(this.listener);
     recyclerView.addOnLayoutChangeListener(this.listener);
     recyclerView.addOnChildAttachStateChangeListener(this.listener);
-    recyclerView.addOnAttachStateChangeListener(onAttachStateChangeListener);
     setTracker(recyclerView, this);
   }
 
@@ -161,7 +126,6 @@ public class EpoxyVisibilityTracker {
     recyclerView.removeOnScrollListener(this.listener);
     recyclerView.removeOnLayoutChangeListener(this.listener);
     recyclerView.removeOnChildAttachStateChangeListener(this.listener);
-    recyclerView.removeOnAttachStateChangeListener(onAttachStateChangeListener);
     setTracker(recyclerView, null);
     attachedRecyclerView = null;
   }
@@ -314,6 +278,19 @@ public class EpoxyVisibilityTracker {
     return changed;
   }
 
+  private void processChildRecyclerViewAttached(@NonNull RecyclerView childRecyclerView) {
+    // Register itself in the EpoxyVisibilityTracker. This will take care of nested list
+    // tracking (ex: carousel)
+    EpoxyVisibilityTracker tracker = getTracker(childRecyclerView);
+    if (tracker != null) {
+      nestedTrackers.put(childRecyclerView, tracker);
+    }
+  }
+
+  private void processChildRecyclerViewDetached(@NonNull RecyclerView childRecyclerView) {
+    nestedTrackers.remove(childRecyclerView);
+  }
+
   /**
    * Helper class that host the {@link androidx.recyclerview.widget.RecyclerView} listener
    * implementations
@@ -337,11 +314,17 @@ public class EpoxyVisibilityTracker {
 
     @Override
     public void onChildViewAttachedToWindow(View child) {
+      if (child instanceof RecyclerView) {
+        processChildRecyclerViewAttached((RecyclerView) child);
+      }
       processChild(child, false, "onChildViewAttachedToWindow");
     }
 
     @Override
     public void onChildViewDetachedFromWindow(View child) {
+      if (child instanceof RecyclerView) {
+        processChildRecyclerViewDetached((RecyclerView) child);
+      }
       if (visibleDataChanged) {
         // On detach event caused by data set changed we need to re-process all children because
         // the removal caused the others views to changes.
