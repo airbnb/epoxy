@@ -206,10 +206,6 @@ public abstract class EpoxyModelTouchCallback<T extends EpoxyModel>
       float dX, float dY, int actionState, boolean isCurrentlyActive) {
     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
-    if (holderBeingSwiped == null) {
-      return;
-    }
-
     EpoxyModel<?> model = viewHolder.getModel();
     if (!isTouchableModel(model)) {
       throw new IllegalStateException(
