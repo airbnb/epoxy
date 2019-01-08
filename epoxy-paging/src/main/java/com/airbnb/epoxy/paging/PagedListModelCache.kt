@@ -141,6 +141,10 @@ internal class PagedListModelCache<T>(
     return modelCache as List<EpoxyModel<*>>
   }
 
+  fun clearModels() {
+    modelCache.fill(null)
+  }
+
   fun loadAround(position: Int) {
     triggerLoadAround(position)
     lastPosition = position

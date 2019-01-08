@@ -40,7 +40,9 @@ class PagedListModelCacheTest {
   /**
    * Simple mode builder for [Item]
    */
+  private var modelBuildCounter = 0
   private val modelBuilder: (Int, Item?) -> EpoxyModel<*> = { pos, item ->
+    modelBuildCounter++
     if (item == null) {
       FakePlaceholderModel(pos)
     } else {
@@ -234,6 +236,24 @@ class PagedListModelCacheTest {
         }
       )
     }
+  }
+
+  @Test
+  fun clear() {
+    val items = createItems(PAGE_SIZE)
+    val (pagedList, _) = createPagedList(items)
+    pagedListModelCache.submitList(pagedList)
+    drain()
+    pagedListModelCache.getModels()
+    assertAndResetModelBuild()
+    pagedListModelCache.clearModels()
+    pagedListModelCache.getModels()
+    assertAndResetModelBuild()
+  }
+
+  private fun assertAndResetModelBuild() {
+    assertThat(modelBuildCounter > 0, CoreMatchers.`is`(true))
+    modelBuildCounter = 0
   }
 
   private fun assertAndResetRebuildModels() {

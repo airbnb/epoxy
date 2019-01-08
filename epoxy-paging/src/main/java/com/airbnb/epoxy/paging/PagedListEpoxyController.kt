@@ -110,6 +110,17 @@ abstract class PagedListEpoxyController<T>(
     modelCache.submitList(newList)
   }
 
+  /**
+   * Requests a model build that will run for every model, including the ones created for the paged
+   * list.
+   *
+   * Clears the current model cache to make sure that happens.
+   */
+  fun requestForcedModelBuild() {
+    modelCache.clearModels()
+    requestModelBuild()
+  }
+
   companion object {
     /**
      * [PagedListEpoxyController] calculates a diff on top of the PagedList to check which
