@@ -143,9 +143,7 @@ internal class PagedListModelCache<T>(
   }
 
   fun clearModels() {
-    (0 until modelCache.size).forEach {
-      modelCache[it] = null
-    }
+    modelCache.fill(null)
   }
 
   fun loadAround(position: Int) {
