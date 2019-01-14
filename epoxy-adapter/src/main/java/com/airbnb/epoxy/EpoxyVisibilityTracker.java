@@ -67,7 +67,7 @@ public class EpoxyVisibilityTracker {
   }
 
   // Not actionable at runtime. It is only useful for internal test-troubleshooting.
-  static final boolean DEBUG_LOG = false;
+  static final boolean DEBUG_LOG = true;
 
   /** Maintain visibility item indexed by view id (identity hashcode) */
   private final SparseArray<EpoxyVisibilityItem> visibilityIdToItemMap = new SparseArray<>();
@@ -282,9 +282,11 @@ public class EpoxyVisibilityTracker {
     // Register itself in the EpoxyVisibilityTracker. This will take care of nested list
     // tracking (ex: carousel)
     EpoxyVisibilityTracker tracker = getTracker(childRecyclerView);
-    if (tracker != null) {
-      nestedTrackers.put(childRecyclerView, tracker);
+    if (tracker == null) {
+      tracker = new EpoxyVisibilityTracker();
+      tracker.attach(childRecyclerView);
     }
+    nestedTrackers.put(childRecyclerView, tracker);
   }
 
   private void processChildRecyclerViewDetached(@NonNull RecyclerView childRecyclerView) {
@@ -347,6 +349,9 @@ public class EpoxyVisibilityTracker {
      */
     @Override
     public void onChanged() {
+      if (notEpoxyManaged(attachedRecyclerView)) {
+        return;
+      }
       if (DEBUG_LOG) {
         Log.d(TAG, "onChanged()");
       }
@@ -361,6 +366,9 @@ public class EpoxyVisibilityTracker {
      */
     @Override
     public void onItemRangeInserted(int positionStart, int itemCount) {
+      if (notEpoxyManaged(attachedRecyclerView)) {
+        return;
+      }
       if (DEBUG_LOG) {
         Log.d(TAG, String.format("onItemRangeInserted(%d, %d)", positionStart, itemCount));
       }
@@ -378,6 +386,9 @@ public class EpoxyVisibilityTracker {
      */
     @Override
     public void onItemRangeRemoved(int positionStart, int itemCount) {
+      if (notEpoxyManaged(attachedRecyclerView)) {
+        return;
+      }
       if (DEBUG_LOG) {
         Log.d(TAG, String.format("onItemRangeRemoved(%d, %d)", positionStart, itemCount));
       }
@@ -398,12 +409,18 @@ public class EpoxyVisibilityTracker {
      */
     @Override
     public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+      if (notEpoxyManaged(attachedRecyclerView)) {
+        return;
+      }
       for (int i = 0; i < itemCount; i++) {
         onItemMoved(fromPosition + i, toPosition + i);
       }
     }
 
     private void onItemMoved(int fromPosition, int toPosition) {
+      if (notEpoxyManaged(attachedRecyclerView)) {
+        return;
+      }
       if (DEBUG_LOG) {
         Log.d(TAG,
             String.format("onItemRangeMoved(%d, %d, %d)", fromPosition, toPosition, 1));
@@ -430,6 +447,14 @@ public class EpoxyVisibilityTracker {
           }
         }
       }
+    }
+
+    /**
+     * @param recyclerView the recycler view
+     * @return true if managed by an {@link BaseEpoxyAdapter}
+     */
+    private boolean notEpoxyManaged(RecyclerView recyclerView) {
+      return recyclerView == null || !(recyclerView.getAdapter() instanceof BaseEpoxyAdapter);
     }
   }
 }
