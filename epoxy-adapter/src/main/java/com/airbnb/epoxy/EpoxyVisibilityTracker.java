@@ -453,7 +453,7 @@ public class EpoxyVisibilityTracker {
      * @param recyclerView the recycler view
      * @return true if managed by an {@link BaseEpoxyAdapter}
      */
-    private boolean notEpoxyManaged(RecyclerView recyclerView) {
+    private boolean notEpoxyManaged(@Nullable RecyclerView recyclerView) {
       return recyclerView == null || !(recyclerView.getAdapter() instanceof BaseEpoxyAdapter);
     }
   }
