@@ -67,7 +67,7 @@ public class EpoxyVisibilityTracker {
   }
 
   // Not actionable at runtime. It is only useful for internal test-troubleshooting.
-  static final boolean DEBUG_LOG = true;
+  static final boolean DEBUG_LOG = false;
 
   /** Maintain visibility item indexed by view id (identity hashcode) */
   private final SparseArray<EpoxyVisibilityItem> visibilityIdToItemMap = new SparseArray<>();

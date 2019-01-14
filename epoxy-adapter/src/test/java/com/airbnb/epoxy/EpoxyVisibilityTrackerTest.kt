@@ -848,7 +848,7 @@ class EpoxyVisibilityTrackerTest {
 
 }
 
-private fun <E> List<E>.ids(): String {
+internal fun <E> List<E>.ids(): String {
     val builder = StringBuilder("[")
     forEachIndexed { index, element ->
         (element as? EpoxyVisibilityTrackerTest.AssertHelper)?.let {
