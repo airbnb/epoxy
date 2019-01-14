@@ -411,7 +411,6 @@ class EpoxyVisibilityTrackerTest {
         }
     }
 
-
     /**
      * Test visibility events using scrollToPosition on the recycler view
      */
@@ -459,7 +458,6 @@ class EpoxyVisibilityTrackerTest {
                             visitedStates = ALL_STATES
                         )
                     }
-
                 }
 
                 index in 3..6 -> {
@@ -475,7 +473,6 @@ class EpoxyVisibilityTrackerTest {
                             visitedStates = ALL_STATES
                         )
                     }
-
                 }
 
                 index == 7 -> {
@@ -576,7 +573,6 @@ class EpoxyVisibilityTrackerTest {
                             visitedStates = intArrayOf(VISIBLE, INVISIBLE)
                         )
                     }
-
                 }
 
                 index in 3..6 -> {
@@ -592,7 +588,6 @@ class EpoxyVisibilityTrackerTest {
                             visitedStates = intArrayOf()
                         )
                     }
-
                 }
 
                 index == 7 -> {
@@ -845,7 +840,6 @@ class EpoxyVisibilityTrackerTest {
             }
         }
     }
-
 }
 
 internal fun <E> List<E>.ids(): String {

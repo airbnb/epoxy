@@ -16,12 +16,12 @@ fun weakReferenceFieldForStyle(styleName: String) = "parisStyleReference_$styleN
  * This is added automatically for models generated with [ModelView] that also have Paris's Stylable annotation.
  */
 internal class ParisStyleAttributeInfo(
-        modelInfo: GeneratedModelInfo,
-        val elements: Elements,
-        val types: Types,
-        packageName: String,
-        styleBuilderClassName: ClassName,
-        styleBuilderElement: TypeMirror
+    modelInfo: GeneratedModelInfo,
+    val elements: Elements,
+    val types: Types,
+    packageName: String,
+    styleBuilderClassName: ClassName,
+    styleBuilderElement: TypeMirror
 ) : AttributeInfo() {
 
     val styles: List<ParisStyle>
@@ -50,8 +50,8 @@ internal class ParisStyleAttributeInfo(
         return types.asElement(typeMirror)
                 .enclosedElements
                 .filter {
-                    it.kind == ElementKind.METHOD
-                            && it.simpleName.startsWith(BUILDER_STYLE_METHOD_PREFIX)
+                    it.kind == ElementKind.METHOD &&
+                            it.simpleName.startsWith(BUILDER_STYLE_METHOD_PREFIX)
                 }
                 .map {
                     val name = it.simpleName
@@ -62,10 +62,9 @@ internal class ParisStyleAttributeInfo(
                     ParisStyle(name, elements.getDocComment(it))
                 }
     }
-
 }
 
 data class ParisStyle(
-        val name: String,
-        val javadoc: String?
+    val name: String,
+    val javadoc: String?
 )

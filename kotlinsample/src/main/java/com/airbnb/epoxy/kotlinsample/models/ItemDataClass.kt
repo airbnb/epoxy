@@ -1,7 +1,5 @@
 package com.airbnb.epoxy.kotlinsample.models
 
-import android.net.Uri
-import android.widget.ImageView
 import android.widget.TextView
 import com.airbnb.epoxy.kotlinsample.R
 import com.airbnb.epoxy.kotlinsample.helpers.KotlinModel

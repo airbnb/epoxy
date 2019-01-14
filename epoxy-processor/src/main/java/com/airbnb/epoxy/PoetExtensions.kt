@@ -1,6 +1,5 @@
 package com.airbnb.epoxy
 
-import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.TypeName
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
@@ -14,8 +13,7 @@ import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.UNIT
 import javax.lang.model.element.Modifier
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy;
-import kotlin.reflect.jvm.internal.impl.types.KotlinType
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
 typealias JavaClassName = com.squareup.javapoet.ClassName
 typealias JavaTypeName = com.squareup.javapoet.TypeName
@@ -258,4 +256,3 @@ private val KOTLIN_KEYWORDS = setOf(
     "interface",
     "typeof"
 )
-

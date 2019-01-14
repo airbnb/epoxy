@@ -13,11 +13,11 @@ import javax.lang.model.util.Types
  * Used for writing the java code for models generated with @ModelView.
  */
 internal class ModelViewWriter(
-        private val modelWriter: GeneratedModelWriter,
-        val errorLogger: ErrorLogger,
-        val types: Types,
-        val elements: Elements,
-        val configManager: ConfigManager
+    private val modelWriter: GeneratedModelWriter,
+    val errorLogger: ErrorLogger,
+    val types: Types,
+    val elements: Elements,
+    val configManager: ConfigManager
 ) {
 
     fun writeModels(models: List<ModelViewInfo>) {
@@ -28,14 +28,13 @@ internal class ModelViewWriter(
                 errorLogger.logError(
                         EpoxyProcessorException(e, "Error generating model view classes"))
             }
-
         }
     }
 
     private fun generateBuilderHook(modelInfo: ModelViewInfo) = object : GeneratedModelWriter.BuilderHooks() {
         override fun addToBindMethod(
-                methodBuilder: MethodSpec.Builder,
-                boundObjectParam: ParameterSpec
+            methodBuilder: MethodSpec.Builder,
+            boundObjectParam: ParameterSpec
         ) {
 
             for (attributeGroup in modelInfo.attributeGroups) {
@@ -89,13 +88,12 @@ internal class ModelViewWriter(
                     }
                 }
             }
-
         }
 
         override fun addToBindWithDiffMethod(
-                methodBuilder: MethodSpec.Builder,
-                boundObjectParam: ParameterSpec,
-                previousModelParam: ParameterSpec
+            methodBuilder: MethodSpec.Builder,
+            boundObjectParam: ParameterSpec,
+            previousModelParam: ParameterSpec
         ) {
 
             for (attributeGroup in modelInfo.attributeGroups) {
@@ -174,8 +172,8 @@ internal class ModelViewWriter(
         }
 
         override fun addToHandlePostBindMethod(
-                postBindBuilder: MethodSpec.Builder,
-                boundObjectParam: ParameterSpec
+            postBindBuilder: MethodSpec.Builder,
+            boundObjectParam: ParameterSpec
         ) {
 
             addAfterPropsAddedMethodsToBuilder(
@@ -184,8 +182,8 @@ internal class ModelViewWriter(
         }
 
         override fun addToUnbindMethod(
-                unbindBuilder: MethodSpec.Builder,
-                unbindParamName: String
+            unbindBuilder: MethodSpec.Builder,
+            unbindParamName: String
         ) {
             modelInfo.viewAttributes
                     .filter { it.resetWithNull }
@@ -237,9 +235,9 @@ internal class ModelViewWriter(
     }
 
     private fun buildCodeBlockToSetAttribute(
-            objectName: String,
-            attr: ViewAttributeInfo,
-            setToNull: Boolean = false
+        objectName: String,
+        attr: ViewAttributeInfo,
+        setToNull: Boolean = false
     ): CodeBlock {
 
         val expression = "\$L.\$L" + if (attr.viewAttributeTypeName == ViewAttributeType.Field) {
@@ -257,8 +255,8 @@ internal class ModelViewWriter(
     }
 
     private fun getValueToSetOnView(
-            viewAttribute: ViewAttributeInfo,
-            objectName: String
+        viewAttribute: ViewAttributeInfo,
+        objectName: String
     ): String {
         val fieldName = viewAttribute.fieldName
 
@@ -321,9 +319,9 @@ internal class ModelViewWriter(
     }
 
     private fun addAfterPropsAddedMethodsToBuilder(
-            methodBuilder: MethodSpec.Builder,
-            modelInfo: ModelViewInfo,
-            boundObjectParam: ParameterSpec
+        methodBuilder: MethodSpec.Builder,
+        modelInfo: ModelViewInfo,
+        boundObjectParam: ParameterSpec
     ) {
         for (methodName in modelInfo.afterPropsSetMethodNames) {
             methodBuilder.addStatement(boundObjectParam.name + "." + methodName + "()")

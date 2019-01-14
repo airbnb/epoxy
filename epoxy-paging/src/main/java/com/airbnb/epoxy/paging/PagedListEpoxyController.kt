@@ -36,26 +36,26 @@ import com.airbnb.epoxy.EpoxyViewHolder
  * @param T The type of the items in the [PagedList].
  */
 abstract class PagedListEpoxyController<T>(
-  /**
-   * The handler to use for building models. By default this uses the main thread, but you can use
-   * [EpoxyAsyncUtil.getAsyncBackgroundHandler] to do model building in the background.
-   *
-   * The notify thread of your PagedList (from setNotifyExecutor in the PagedList Builder) must be 
-   * the same as this thread. Otherwise Epoxy will crash.
-   */
-  modelBuildingHandler: Handler = EpoxyController.defaultModelBuildingHandler,
-  /**
-   * The handler to use when calculating the diff between built model lists.
-   * By default this uses the main thread, but you can use
-   * [EpoxyAsyncUtil.getAsyncBackgroundHandler] to do diffing in the background.
-   */
-  diffingHandler: Handler = EpoxyController.defaultDiffingHandler,
-  /**
-   * [PagedListEpoxyController] uses an [DiffUtil.ItemCallback] to detect changes between
-   * [PagedList]s. By default, it relies on simple object equality but you can provide a custom
-   * one if you don't use all fields in the object in your models.
-   */
-  itemDiffCallback: DiffUtil.ItemCallback<T> = DEFAULT_ITEM_DIFF_CALLBACK as DiffUtil.ItemCallback<T>
+    /**
+     * The handler to use for building models. By default this uses the main thread, but you can use
+     * [EpoxyAsyncUtil.getAsyncBackgroundHandler] to do model building in the background.
+     *
+     * The notify thread of your PagedList (from setNotifyExecutor in the PagedList Builder) must be
+     * the same as this thread. Otherwise Epoxy will crash.
+     */
+    modelBuildingHandler: Handler = EpoxyController.defaultModelBuildingHandler,
+    /**
+     * The handler to use when calculating the diff between built model lists.
+     * By default this uses the main thread, but you can use
+     * [EpoxyAsyncUtil.getAsyncBackgroundHandler] to do diffing in the background.
+     */
+    diffingHandler: Handler = EpoxyController.defaultDiffingHandler,
+    /**
+     * [PagedListEpoxyController] uses an [DiffUtil.ItemCallback] to detect changes between
+     * [PagedList]s. By default, it relies on simple object equality but you can provide a custom
+     * one if you don't use all fields in the object in your models.
+     */
+    itemDiffCallback: DiffUtil.ItemCallback<T> = DEFAULT_ITEM_DIFF_CALLBACK as DiffUtil.ItemCallback<T>
 ) : EpoxyController(modelBuildingHandler, diffingHandler) {
   // this is where we keep the already built models
   private val modelCache = PagedListModelCache(
@@ -91,10 +91,10 @@ abstract class PagedListEpoxyController<T>(
   abstract fun buildItemModel(currentPosition: Int, item: T?): EpoxyModel<*>
 
   override fun onModelBound(
-    holder: EpoxyViewHolder,
-    boundModel: EpoxyModel<*>,
-    position: Int,
-    previouslyBoundModel: EpoxyModel<*>?
+      holder: EpoxyViewHolder,
+      boundModel: EpoxyModel<*>,
+      position: Int,
+      previouslyBoundModel: EpoxyModel<*>?
   ) {
     // TODO the position may not be a good value if there are too many injected items.
     modelCache.loadAround(position)

@@ -20,7 +20,6 @@ class ModelBuilderExtensionIntegrationTest {
             assertEquals(model.value, 5)
             assertEquals(model.id(), 1)
         }
-
     }
 
     @Test
@@ -32,7 +31,6 @@ class ModelBuilderExtensionIntegrationTest {
             assertEquals(model.value, 10)
             assertEquals(model.id(), 2)
         }
-
     }
 }
 
@@ -45,5 +43,4 @@ private class Controller : EpoxyController() {
 
         modelWithConstructors(value = 10, id = 2) { }
     }
-
 }

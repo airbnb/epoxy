@@ -330,7 +330,6 @@ class PagedListModelCacheTest {
 
   class FakePlaceholderModel(val pos: Int) : EpoxyModel<View>(-pos.toLong()) {
     override fun getDefaultLayout() = throw NotImplementedError("not needed for this test")
-
   }
 
   class FakeModel(val item: Item) : EpoxyModel<View>(item.id.toLong()) {
@@ -338,8 +337,8 @@ class PagedListModelCacheTest {
   }
 
   data class Modification(
-    val newList: List<Item>,
-    val expectedModels: List<Any?>
+      val newList: List<Item>,
+      val expectedModels: List<Any?>
   )
 
   private fun List<Item>.copyToMutable(): MutableList<Item> {

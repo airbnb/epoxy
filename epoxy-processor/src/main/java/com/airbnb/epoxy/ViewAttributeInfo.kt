@@ -61,7 +61,7 @@ internal class ViewAttributeInfo(
             else -> throw IllegalStateException("Unsuppported element type $viewAttributeElement")
         }
 
-        viewAttributeTypeName = getViewAttributeType(viewAttributeElement, errorLogger);
+        viewAttributeTypeName = getViewAttributeType(viewAttributeElement, errorLogger)
 
         groupKey = ""
         var defaultConstant = ""
@@ -250,9 +250,9 @@ internal class ViewAttributeInfo(
         if (element.kind == ElementKind.FIELD && element.simpleName.toString() == constantName) {
 
             val modifiers = element.modifiers
-            if (!modifiers.contains(Modifier.FINAL)
-                || !modifiers.contains(Modifier.STATIC)
-                || modifiers.contains(Modifier.PRIVATE)
+            if (!modifiers.contains(Modifier.FINAL) ||
+                !modifiers.contains(Modifier.STATIC) ||
+                modifiers.contains(Modifier.PRIVATE)
             ) {
 
                 errorLogger.logError(
@@ -370,10 +370,10 @@ internal class ViewAttributeInfo(
         // already have it. This is to make the generated interface more effective for IDE
         // nullability tooling since we know epoxy will enforce that the param value is
         // non null at run time.
-        if (!typeName.isPrimitive
-            && !markedNullable
-            && NON_NULL_ANNOTATION_SPEC !in setterAnnotations
-            && NOT_NULL_ANNOTATION_SPEC !in setterAnnotations
+        if (!typeName.isPrimitive &&
+            !markedNullable &&
+            NON_NULL_ANNOTATION_SPEC !in setterAnnotations &&
+            NOT_NULL_ANNOTATION_SPEC !in setterAnnotations
         ) {
             setterAnnotations.add(NON_NULL_ANNOTATION_SPEC)
             getterAnnotations.add(NON_NULL_ANNOTATION_SPEC)
@@ -441,10 +441,10 @@ internal class ViewAttributeInfo(
     }
 
     override fun toString(): String {
-        return ("View Prop {"
-                + "view='" + modelInfo.viewElement.simpleName + '\''
-                + ", name='" + viewAttributeName + '\''
-                + ", type=" + typeName
-                + '}')
+        return ("View Prop {" +
+                "view='" + modelInfo.viewElement.simpleName + '\'' +
+                ", name='" + viewAttributeName + '\'' +
+                ", type=" + typeName +
+                '}')
     }
 }

@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView.withModels {
 
-            for(i in 0 until 100) {
+            for (i in 0 until 100) {
                 dataBindingItem {
                     id("data binding $i")
                     text("this is a data binding model")
@@ -93,4 +93,3 @@ fun EpoxyRecyclerView.withModels(buildModelsCallback: EpoxyController.() -> Unit
         }
     })
 }
-

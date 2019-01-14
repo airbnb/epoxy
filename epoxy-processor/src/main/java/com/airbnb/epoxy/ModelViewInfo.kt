@@ -72,8 +72,8 @@ internal class ModelViewInfo(
             .filter { interfaceElement ->
                 // Only include the interface if the view has one of the interface methods annotated with a prop annotation
                 methodsOnView.any { viewMethod ->
-                    viewMethod.hasAnyAnnotation(ModelViewProcessor.modelPropAnnotations)
-                            && interfaceElement.executableElements().any { interfaceMethod ->
+                    viewMethod.hasAnyAnnotation(ModelViewProcessor.modelPropAnnotations) &&
+                            interfaceElement.executableElements().any { interfaceMethod ->
                         // To keep this simple we only compare name and ignore parameters, should be close enough
                         viewMethod.simpleName.toString() == interfaceMethod.simpleName.toString()
                     }
@@ -239,4 +239,3 @@ internal class ModelViewInfo(
         return ResourceValue(0)
     }
 }
-

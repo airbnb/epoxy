@@ -80,7 +80,6 @@ internal class GeneratedModelWriter(
             unbindBuilder: Builder,
             unbindParamName: String
         ) {
-
         }
 
         /** Opportunity to add additional code to the visibilityStateChanged method.  */
@@ -88,7 +87,6 @@ internal class GeneratedModelWriter(
             visibilityBuilder: Builder,
             visibilityParamName: String
         ) {
-
         }
 
         /** Opportunity to add additional code to the visibilityChanged method.  */
@@ -96,7 +94,6 @@ internal class GeneratedModelWriter(
             visibilityBuilder: MethodSpec.Builder,
             visibilityParamName: String
         ) {
-
         }
 
         /**
@@ -122,7 +119,6 @@ internal class GeneratedModelWriter(
             postBindBuilder: Builder,
             boundObjectParam: ParameterSpec
         ) {
-
         }
     }
 
@@ -174,7 +170,6 @@ internal class GeneratedModelWriter(
 
             builderHooks?.beforeFinalBuild(this)
 
-
             addSuperinterface(modelInterfaceWriter.writeInterface(info, this.build().methodSpecs))
         }
 
@@ -214,7 +209,6 @@ internal class GeneratedModelWriter(
                 addStatement("layout(\$L)", otherLayout.code)
                 addStatement("return this")
             })
-
         }
 
         return result
@@ -428,7 +422,6 @@ internal class GeneratedModelWriter(
                     )
                     addCode("}\n")
                 }
-
         }
     }
 
@@ -503,11 +496,11 @@ internal class GeneratedModelWriter(
 
         val onVisibilityStateChanged = MethodSpec.methodBuilder("onVisibilityStateChanged")
             .addJavadoc(
-                "Register a listener that will be called when this model visibility state "
-                        + "has changed.\n"
-                        + "<p>\n"
-                        + "The listener will contribute to this model's hashCode state per the {@link\n"
-                        + "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
+                "Register a listener that will be called when this model visibility state " +
+                        "has changed.\n" +
+                        "<p>\n" +
+                        "The listener will contribute to this model's hashCode state per the {@link\n" +
+                        "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
             )
             .addModifiers(PUBLIC)
             .returns(modelInfo.parameterizedGeneratedName)
@@ -530,11 +523,11 @@ internal class GeneratedModelWriter(
 
         val onVisibilityChanged = MethodSpec.methodBuilder("onVisibilityChanged")
             .addJavadoc(
-                "Register a listener that will be called when this model visibility has "
-                        + "changed.\n"
-                        + "<p>\n"
-                        + "The listener will contribute to this model's hashCode state per the {@link\n"
-                        + "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
+                "Register a listener that will be called when this model visibility has " +
+                        "changed.\n" +
+                        "<p>\n" +
+                        "The listener will contribute to this model's hashCode state per the {@link\n" +
+                        "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
             )
             .addModifiers(PUBLIC)
             .returns(modelInfo.parameterizedGeneratedName)
@@ -607,13 +600,13 @@ internal class GeneratedModelWriter(
 
         val onBind = MethodSpec.methodBuilder("onBind")
             .addJavadoc(
-                "Register a listener that will be called when this model is bound to a view.\n"
-                        + "<p>\n"
-                        + "The listener will contribute to this model's hashCode state per the {@link\n"
-                        + "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
-                        + "<p>\n"
-                        + "You may clear the listener by setting a null value, or by calling "
-                        + "{@link #reset()}"
+                "Register a listener that will be called when this model is bound to a view.\n" +
+                        "<p>\n" +
+                        "The listener will contribute to this model's hashCode state per the {@link\n" +
+                        "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n" +
+                        "<p>\n" +
+                        "You may clear the listener by setting a null value, or by calling " +
+                        "{@link #reset()}"
             )
             .addModifiers(PUBLIC)
             .returns(modelInfo.parameterizedGeneratedName)
@@ -656,14 +649,14 @@ internal class GeneratedModelWriter(
 
         val onUnbind = MethodSpec.methodBuilder("onUnbind")
             .addJavadoc(
-                "Register a listener that will be called when this model is unbound from a "
-                        + "view.\n"
-                        + "<p>\n"
-                        + "The listener will contribute to this model's hashCode state per the {@link\n"
-                        + "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
-                        + "<p>\n"
-                        + "You may clear the listener by setting a null value, or by calling "
-                        + "{@link #reset()}"
+                "Register a listener that will be called when this model is unbound from a " +
+                        "view.\n" +
+                        "<p>\n" +
+                        "The listener will contribute to this model's hashCode state per the {@link\n" +
+                        "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n" +
+                        "<p>\n" +
+                        "You may clear the listener by setting a null value, or by calling " +
+                        "{@link #reset()}"
             )
             .addModifiers(PUBLIC)
             .returns(modelInfo.parameterizedGeneratedName)
@@ -694,7 +687,6 @@ internal class GeneratedModelWriter(
 
         builderHooks?.addToBindMethod(this, boundObjectParam)
     }
-
 
     private fun buildVisibilityStateChangedMethod(
         visibilityObjectParam: ParameterSpec
@@ -962,10 +954,10 @@ internal class GeneratedModelWriter(
                 .varargs(methodInfo.varargs)
                 .returns(info.parameterizedGeneratedName)
 
-            if (info.isProgrammaticView
-                && "layout" == methodInfo.name
-                && methodInfo.params.size == 1
-                && methodInfo.params[0].type === TypeName.INT
+            if (info.isProgrammaticView &&
+                "layout" == methodInfo.name &&
+                methodInfo.params.size == 1 &&
+                methodInfo.params[0].type === TypeName.INT
             ) {
 
                 builder
@@ -1205,10 +1197,9 @@ internal class GeneratedModelWriter(
 
         val annotation = classElement.getAnnotation(
             EpoxyModelClass::class.java
-        )
-                ?: // This is an error. The model must have an EpoxyModelClass annotation
+        ) // This is an error. The model must have an EpoxyModelClass annotation
                 // since getDefaultLayout is not implemented
-                return null
+                ?: return null
 
         val layoutRes: Int
         try {
@@ -1302,9 +1293,9 @@ internal class GeneratedModelWriter(
 
         val builder = MethodSpec.methodBuilder(attributeName)
             .addJavadoc(
-                "Set a click listener that will provide the parent view, model, and adapter "
-                        + "position of the clicked view. This will clear the normal View.OnClickListener "
-                        + "if one has been set"
+                "Set a click listener that will provide the parent view, model, and adapter " +
+                        "position of the clicked view. This will clear the normal View.OnClickListener " +
+                        "if one has been set"
             )
             .addModifiers(PUBLIC)
             .returns(classInfo.parameterizedGeneratedName)
@@ -1815,9 +1806,9 @@ internal class GeneratedModelWriter(
             builder: Builder
         ) {
 
-            if (configManager.shouldValidateModelUsage()
-                && attr.hasSetNullability()
-                && !attr.isNullable()
+            if (configManager.shouldValidateModelUsage() &&
+                attr.hasSetNullability() &&
+                !attr.isNullable()
             ) {
 
                 builder.beginControlFlow("if (\$L == null)", paramName)

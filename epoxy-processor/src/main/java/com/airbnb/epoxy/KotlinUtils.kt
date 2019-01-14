@@ -38,7 +38,6 @@ fun getTypeMirror(
     } catch (mte: MirroredTypeException) {
         mte.typeMirror
     }
-
 }
 
 fun Class<*>.asTypeElement(
@@ -175,7 +174,6 @@ fun TypeElement.buildAnnotationSpecs(annotationFilter: (ClassName) -> Boolean = 
         } else {
             annotationFilter(className)
         }
-
     }
     return annotationMirrors
         .map { AnnotationSpec.get(it) }

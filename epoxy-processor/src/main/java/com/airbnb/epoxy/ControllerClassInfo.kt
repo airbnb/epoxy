@@ -10,8 +10,9 @@ import javax.lang.model.util.Elements
 private val GENERATED_HELPER_CLASS_SUFFIX = "_EpoxyHelper"
 
 class ControllerClassInfo(
-        private val elementUtils: Elements,
-        val controllerClassElement: TypeElement) {
+    private val elementUtils: Elements,
+    val controllerClassElement: TypeElement
+) {
 
     val models: MutableSet<ControllerModelField> = HashSet()
     val generatedClassName: ClassName = getGeneratedClassName(controllerClassElement)

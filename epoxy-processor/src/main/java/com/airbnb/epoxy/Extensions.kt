@@ -1,6 +1,5 @@
 package com.airbnb.epoxy
 
-
 internal fun String.lowerCaseFirstLetter(): String {
     if (isEmpty()) {
         return this

@@ -16,22 +16,18 @@ class ViewWithInterface(context: Context) : View(context), InterfaceForView, Int
 
     @ModelProp
     override fun valueOnNestedInterface(value: Int) {
-
     }
 
     @ModelProp
     override fun setText(title: CharSequence?) {
-
     }
 
     @TextProp
     override fun setText2(title: CharSequence?) {
-
     }
 
     @CallbackProp
     override fun setListener(title: View.OnClickListener?) {
-
     }
 
     @ModelProp
@@ -39,7 +35,6 @@ class ViewWithInterface(context: Context) : View(context), InterfaceForView, Int
         // method has different type from method of same name in other view
     }
 }
-
 
 @ModelView(autoLayout = Size.WRAP_WIDTH_MATCH_HEIGHT)
 class ViewWithInterface2(context: Context) : View(context), InterfaceForView, InterfaceForView2 {
@@ -51,17 +46,14 @@ class ViewWithInterface2(context: Context) : View(context), InterfaceForView, In
 
     @TextProp
     override fun setText2(@Nullable title: CharSequence?) {
-
     }
 
     @CallbackProp
     override fun setListener(title: View.OnClickListener?) {
-
     }
 
     @ModelProp
     fun nonInterfaceProp(title: String) {
-
     }
 }
 

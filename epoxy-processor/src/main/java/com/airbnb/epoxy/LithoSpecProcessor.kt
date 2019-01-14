@@ -58,7 +58,6 @@ internal class LithoSpecProcessor(
             } catch (e: Exception) {
                 errorLogger.logError(e, "Error generating model classes")
             }
-
         }
 
         return modelInfoMap.values
@@ -110,6 +109,5 @@ internal class LithoSpecProcessor(
         } else {
             modelInfoMap[classElement]
         }
-
     }
 }

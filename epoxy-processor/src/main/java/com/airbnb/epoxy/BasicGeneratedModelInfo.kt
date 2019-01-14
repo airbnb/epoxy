@@ -90,5 +90,4 @@ internal class BasicGeneratedModelInfo(
             className + GeneratedModelInfo.GENERATED_CLASS_NAME_SUFFIX
         )
     }
-
 }

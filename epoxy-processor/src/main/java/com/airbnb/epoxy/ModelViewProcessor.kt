@@ -20,23 +20,21 @@ import javax.lang.model.util.Types
 // TODO: (eli_hart 5/30/17) allow param counts > 0 in setters
 // TODO: (eli_hart 5/23/17) Allow default values to be methods
 internal class ModelViewProcessor(
-        private val elements: Elements,
-        private val types: Types,
-        private val configManager: ConfigManager,
+    private val elements: Elements,
+    private val types: Types,
+    private val configManager: ConfigManager,
 
-        private val errorLogger: ErrorLogger,
-        private val modelWriter: GeneratedModelWriter,
-        private val resourceProcessor: ResourceProcessor
+    private val errorLogger: ErrorLogger,
+    private val modelWriter: GeneratedModelWriter,
+    private val resourceProcessor: ResourceProcessor
 ) {
-
-
 
     private val modelClassMap = LinkedHashMap<Element, ModelViewInfo>()
     private val styleableModelsToWrite = mutableListOf<ModelViewInfo>()
 
     fun process(
-            roundEnv: RoundEnvironment,
-            otherGeneratedModels: List<GeneratedModelInfo>
+        roundEnv: RoundEnvironment,
+        otherGeneratedModels: List<GeneratedModelInfo>
     ): Collection<GeneratedModelInfo> {
 
         modelClassMap.clear()
@@ -80,7 +78,6 @@ internal class ModelViewProcessor(
             } catch (e: Exception) {
                 errorLogger.logError(e, "Error creating model view info classes.")
             }
-
         }
     }
 
@@ -180,14 +177,13 @@ internal class ModelViewProcessor(
                 } catch (e: EpoxyProcessorException) {
                     errorLogger.logError(e)
                 }
-
             }
         }
     }
 
     private fun validatePropElement(
-            prop: Element,
-            propAnnotation: Class<out Annotation>
+        prop: Element,
+        propAnnotation: Class<out Annotation>
     ): Boolean {
         return when (prop) {
             is ExecutableElement -> validateExecutableElement(prop, propAnnotation, 1)
@@ -203,9 +199,9 @@ internal class ModelViewProcessor(
     }
 
     private fun validateVariableElement(field: Element, annotationClass: Class<*>): Boolean {
-        var isValidField =  field.kind == ElementKind.FIELD
-                && !field.modifiers.contains(PRIVATE)
-                && !field.modifiers.contains(STATIC)
+        var isValidField = field.kind == ElementKind.FIELD &&
+                !field.modifiers.contains(PRIVATE) &&
+                !field.modifiers.contains(STATIC)
 
         if (!isValidField) {
             errorLogger.logError(
@@ -296,7 +292,6 @@ internal class ModelViewProcessor(
         }
     }
 
-
     private fun processVisibilityChangedAnnotations(roundEnv: RoundEnvironment) {
         for (visibilityMethod in roundEnv.getElementsAnnotatedWith(OnVisibilityChanged::class.java)) {
             if (!validateVisibilityChangedElement(visibilityMethod)) {
@@ -347,8 +342,8 @@ internal class ModelViewProcessor(
                                                          elements)
 
                 fun forEachElementWithAnnotation(
-                        annotations: List<Class<out Annotation>>,
-                        function: (Element) -> Unit
+                    annotations: List<Class<out Annotation>>,
+                    function: (Element) -> Unit
                 ) {
                     superViewElement.enclosedElements
                             .filter {
@@ -395,8 +390,8 @@ internal class ModelViewProcessor(
     }
 
     private fun hasAnnotation(
-            element: Element,
-            annotations: List<Class<out Annotation>>
+        element: Element,
+        annotations: List<Class<out Annotation>>
     ): Boolean = annotations.any { element.getAnnotation(it) != null }
 
     /**
@@ -405,7 +400,7 @@ internal class ModelViewProcessor(
      * so.
      */
     private fun updatesViewsForInheritedBaseModelAttributes(
-            otherGeneratedModels: List<GeneratedModelInfo>
+        otherGeneratedModels: List<GeneratedModelInfo>
     ) {
 
         for (modelViewInfo in modelClassMap.values) {
@@ -422,7 +417,6 @@ internal class ModelViewProcessor(
                 .values
                 .filter { it.viewElement.hasStyleableAnnotation(elements) }
                 .also { styleableModelsToWrite.addAll(it) }
-
     }
 
     private fun validateResetElement(resetMethod: Element): Boolean =
@@ -472,5 +466,3 @@ internal class ModelViewProcessor(
                                           CallbackProp::class).map { it.java }
     }
 }
-
-

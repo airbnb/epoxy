@@ -9,9 +9,9 @@ import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 internal class LithoModelInfo(
-        typeUtils: Types,
-        elementUtils: Elements,
-        layoutSpecClassElement: TypeElement
+    typeUtils: Types,
+    elementUtils: Elements,
+    layoutSpecClassElement: TypeElement
 ) : GeneratedModelInfo() {
 
     val lithoComponentName: ClassName
@@ -37,8 +37,10 @@ internal class LithoModelInfo(
      * The name of the component that is generated for the layout spec. It will be in the same
      * package, and with the "Spec" term removed from the name.
      */
-    fun getLithoComponentName(elementUtils: Elements,
-                              layoutSpecClassElement: TypeElement): ClassName {
+    fun getLithoComponentName(
+        elementUtils: Elements,
+        layoutSpecClassElement: TypeElement
+    ): ClassName {
         val packageName = elementUtils.getPackageOf(layoutSpecClassElement).qualifiedName.toString()
 
         // Litho doesn't appear to allow specs as nested classes, so we don't check for nested

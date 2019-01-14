@@ -61,6 +61,6 @@ class ModelViewInterfaceTest {
     @Test
     fun nestedInterfaceWorks() {
         val model = ViewWithInterfaceModel_() as ClassWithNestedInterface_NestedInterfaceModel_
-        model.listener( View.OnClickListener {  })
+        model.listener(View.OnClickListener { })
     }
 }

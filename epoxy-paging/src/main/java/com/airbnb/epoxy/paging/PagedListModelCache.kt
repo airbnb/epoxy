@@ -35,9 +35,9 @@ import java.util.concurrent.Executor
 internal class PagedListModelCache<T>(
     private val modelBuilder: (itemIndex: Int, item: T?) -> EpoxyModel<*>,
     private val rebuildCallback: () -> Unit,
-    private val itemDiffCallback : DiffUtil.ItemCallback<T>,
-    private val diffExecutor : Executor? = null,
-    private val modelBuildingHandler : Handler
+    private val itemDiffCallback: DiffUtil.ItemCallback<T>,
+    private val diffExecutor: Executor? = null,
+    private val modelBuildingHandler: Handler
 ) {
   /**
    * Backing list for built models. This is a full array list that has null items for not yet build models.
@@ -85,17 +85,17 @@ internal class PagedListModelCache<T>(
       updateCallback,
       AsyncDifferConfig.Builder<T>(
           itemDiffCallback
-      ).also {builder ->
+      ).also { builder ->
         if (diffExecutor != null) {
           builder.setBackgroundThreadExecutor(diffExecutor)
         }
         // we have to reply on this private API, otherwise, paged list might be changed when models are being built,
         // potentially creating concurrent modification problems.
-        builder.setMainThreadExecutor {runnable : Runnable ->
+        builder.setMainThreadExecutor { runnable: Runnable ->
           modelBuildingHandler.post(runnable)
         }
       }.build()
-  ){
+  ) {
       init {
           if (modelBuildingHandler != EpoxyController.defaultModelBuildingHandler) {
               try {
@@ -107,7 +107,7 @@ internal class PagedListModelCache<T>(
                   mainThreadExecutorField.set(this, Executor {
                       modelBuildingHandler.post(it)
                   })
-              } catch (t : Throwable) {
+              } catch (t: Throwable) {
                   val msg = "Failed to hijack update handler in AsyncPagedListDiffer." +
                           "You can only build models on the main thread"
                   Log.e("PagedListModelCache", msg, t)

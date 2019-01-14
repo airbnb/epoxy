@@ -15,8 +15,8 @@ const val MODEL_BUILDER_INTERFACE_SUFFIX = "Builder"
  * We can also hide the setters that are legacy from usage with EpoxyAdapter.
  */
 internal class ModelBuilderInterfaceWriter(
-        private val filer: Filer,
-        val types: Types
+    private val filer: Filer,
+    val types: Types
 ) {
 
     private val viewInterfacesToGenerate = mutableMapOf<ClassName, Set<MethodDetails>>()
@@ -25,8 +25,8 @@ internal class ModelBuilderInterfaceWriter(
     private val blackListedLegacySetterNames = setOf("hide", "show", "reset")
 
     fun writeInterface(
-            modelInfo: GeneratedModelInfo,
-            methods: MutableList<MethodSpec>
+        modelInfo: GeneratedModelInfo,
+        methods: MutableList<MethodSpec>
     ): TypeName {
 
         val interfaceName = getBuilderInterfaceClassName(modelInfo)
@@ -60,9 +60,9 @@ internal class ModelBuilderInterfaceWriter(
     }
 
     private fun getInterfaceMethods(
-            modelInfo: GeneratedModelInfo,
-            methods: MutableList<MethodSpec>,
-            interfaceName: ClassName
+        modelInfo: GeneratedModelInfo,
+        methods: MutableList<MethodSpec>,
+        interfaceName: ClassName
     ): List<MethodSpec> {
         return methods
                 .filter {
@@ -143,7 +143,6 @@ internal class ModelBuilderInterfaceWriter(
             result = 31 * result + params.hashCode()
             return result
         }
-
     }
 
     /** A wrapper around ParameterSpec that allows us to compare params with equality that only
@@ -163,9 +162,7 @@ internal class ModelBuilderInterfaceWriter(
         }
 
         override fun hashCode() = type.hashCode()
-
     }
-
 }
 
 internal fun getBuilderInterfaceTypeName(modelInfo: GeneratedModelInfo): TypeName {

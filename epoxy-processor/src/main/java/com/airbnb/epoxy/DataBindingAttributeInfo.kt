@@ -4,9 +4,9 @@ import com.airbnb.epoxy.Utils.removeSetPrefix
 import javax.lang.model.element.ExecutableElement
 
 internal class DataBindingAttributeInfo(
-        modelInfo: DataBindingModelInfo,
-        setterMethod: ExecutableElement,
-        hashCodeValidator: HashCodeValidator
+    modelInfo: DataBindingModelInfo,
+    setterMethod: ExecutableElement,
+    hashCodeValidator: HashCodeValidator
 ) : AttributeInfo() {
 
     init {

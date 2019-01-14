@@ -8,11 +8,11 @@ import javax.lang.model.element.Modifier.*
 import javax.lang.model.util.*
 
 internal class ModelProcessor(
-        private val elements: Elements,
-        private val types: Types,
-        private val configManager: ConfigManager,
-        private val errorLogger: ErrorLogger,
-        private val modelWriter: GeneratedModelWriter
+    private val elements: Elements,
+    private val types: Types,
+    private val configManager: ConfigManager,
+    private val errorLogger: ErrorLogger,
+    private val modelWriter: GeneratedModelWriter
 ) {
 
     fun hasModelsToWrite() = styleableModelsToWrite.isNotEmpty()
@@ -51,9 +51,9 @@ internal class ModelProcessor(
 
         for ((_, modelInfo) in modelClassMap) {
 
-            if (modelInfo is BasicGeneratedModelInfo
-                    && modelInfo.superClassElement.annotation<EpoxyModelClass>()?.layout == 0
-                    && modelInfo.boundObjectTypeElement?.hasStyleableAnnotation(elements) == true) {
+            if (modelInfo is BasicGeneratedModelInfo &&
+                    modelInfo.superClassElement.annotation<EpoxyModelClass>()?.layout == 0 &&
+                    modelInfo.boundObjectTypeElement?.hasStyleableAnnotation(elements) == true) {
                 styleableModelsToWrite.add(modelInfo)
             } else {
                 writeModel(modelInfo)
@@ -79,8 +79,8 @@ internal class ModelProcessor(
     }
 
     private fun addAttributeToGeneratedClass(
-            attribute: Element,
-            modelClassMap: MutableMap<TypeElement, GeneratedModelInfo>
+        attribute: Element,
+        modelClassMap: MutableMap<TypeElement, GeneratedModelInfo>
     ) {
         val classElement = attribute.enclosingElement as TypeElement
         val helperClass = getOrCreateTargetClass(modelClassMap, classElement)
@@ -94,8 +94,8 @@ internal class ModelProcessor(
     }
 
     private fun getOrCreateTargetClass(
-            modelClassMap: MutableMap<TypeElement, GeneratedModelInfo>,
-            classElement: TypeElement
+        modelClassMap: MutableMap<TypeElement, GeneratedModelInfo>,
+        classElement: TypeElement
     ): GeneratedModelInfo {
 
         var generatedModelInfo: GeneratedModelInfo? = modelClassMap[classElement]
@@ -142,7 +142,7 @@ internal class ModelProcessor(
      * with the rest of the annotations.
      */
     private fun addAttributesFromOtherModules(
-            modelClassMap: Map<TypeElement, GeneratedModelInfo>
+        modelClassMap: Map<TypeElement, GeneratedModelInfo>
     ) {
         // Copy the entries in the original map so we can add new entries to the map while we iterate
         // through the old entries
@@ -165,8 +165,8 @@ internal class ModelProcessor(
                             .filter { it.getAnnotation(EpoxyAttribute::class.java) != null }
                             .map { buildAttributeInfo(it) }
                             .filter {
-                                !it.isPackagePrivate
-                                        || belongToTheSamePackage(
+                                !it.isPackagePrivate ||
+                                        belongToTheSamePackage(
                                         currentEpoxyModel,
                                         superclassEpoxyModel,
                                         elements)
@@ -189,7 +189,7 @@ internal class ModelProcessor(
      * include attributes that are package private, otherwise the generated class won't compile.
      */
     private fun updateClassesForInheritance(
-            helperClassMap: Map<TypeElement, GeneratedModelInfo>
+        helperClassMap: Map<TypeElement, GeneratedModelInfo>
     ) {
         for ((thisClass, value) in helperClassMap) {
 

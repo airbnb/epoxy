@@ -126,7 +126,6 @@ internal class KotlinModelBuilderExtensionWriter(
             addStatement(".addTo(this)")
             return build()
         }
-
     }
 
     private fun getMethodName(model: GeneratedModelInfo) = model.generatedClassName
@@ -138,7 +137,3 @@ internal class KotlinModelBuilderExtensionWriter(
         .replace("$", "")
         .removeSuffix("Epoxy")
 }
-
-
-
-

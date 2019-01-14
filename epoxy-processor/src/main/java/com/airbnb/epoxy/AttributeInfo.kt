@@ -199,11 +199,11 @@ internal abstract class AttributeInfo {
     open fun generatedGetterName(): String = fieldName
 
     override fun toString(): String {
-        return ("Attribute {"
-                + "model='" + modelName + '\''.toString()
-                + ", name='" + fieldName + '\''.toString()
-                + ", type=" + typeName
-                + '}'.toString())
+        return ("Attribute {" +
+                "model='" + modelName + '\''.toString() +
+                ", name='" + fieldName + '\''.toString() +
+                ", type=" + typeName +
+                '}'.toString())
     }
 
     override fun equals(other: Any?): Boolean {

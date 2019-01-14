@@ -17,9 +17,9 @@ import java.util.ArrayList
 import javax.lang.model.element.Modifier.PUBLIC
 
 internal class StringOverloadWriter(
-        private val modelInfo: GeneratedModelInfo,
-        private val attr: AttributeInfo,
-        private val configManager: ConfigManager
+    private val modelInfo: GeneratedModelInfo,
+    private val attr: AttributeInfo,
+    private val configManager: ConfigManager
 ) {
     private val fieldName: String = attr.fieldName
     private val nullable: Boolean = attr.isNullable == true
@@ -119,8 +119,8 @@ internal class StringOverloadWriter(
     }
 
     private fun addJavaDoc(
-            builder: Builder,
-            forStringRes: Boolean
+        builder: Builder,
+        forStringRes: Boolean
     ) {
         if (attr.javaDoc == null) {
             return

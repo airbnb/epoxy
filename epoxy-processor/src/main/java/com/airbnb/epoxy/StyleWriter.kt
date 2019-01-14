@@ -9,9 +9,9 @@ import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 internal fun addStyleApplierCode(
-        methodBuilder: MethodSpec.Builder,
-        styleInfo: ParisStyleAttributeInfo,
-        viewVariableName: String
+    methodBuilder: MethodSpec.Builder,
+    styleInfo: ParisStyleAttributeInfo,
+    viewVariableName: String
 ) {
 
     methodBuilder.apply {
@@ -29,10 +29,10 @@ internal fun addStyleApplierCode(
 }
 
 internal fun addBindStyleCodeIfNeeded(
-        modelInfo: GeneratedModelInfo,
-        methodBuilder: MethodSpec.Builder,
-        boundObjectParam: ParameterSpec,
-        hasPreviousModel: Boolean
+    modelInfo: GeneratedModelInfo,
+    methodBuilder: MethodSpec.Builder,
+    boundObjectParam: ParameterSpec,
+    hasPreviousModel: Boolean
 ) {
     val styleInfo = modelInfo.styleBuilderInfo ?: return
 
@@ -57,14 +57,14 @@ internal fun addBindStyleCodeIfNeeded(
 internal fun AnnotatedConstruct.hasStyleableAnnotation(elements: Elements) = annotationMirrors
         .map { it.annotationType.asElement() }
         .any {
-            it.simpleName.toString() == "Styleable"
-                    && elements.getPackageOf(it).qualifiedName.contains("paris")
+            it.simpleName.toString() == "Styleable" &&
+                    elements.getPackageOf(it).qualifiedName.contains("paris")
         }
 
 internal fun tryAddStyleBuilderAttribute(
-        styleableModel: GeneratedModelInfo,
-        elements: Elements,
-        types: Types
+    styleableModel: GeneratedModelInfo,
+    elements: Elements,
+    types: Types
 ): Boolean {
     // if style applier is generated
     val viewClass = (styleableModel.boundObjectTypeName as? ClassName) ?: return false

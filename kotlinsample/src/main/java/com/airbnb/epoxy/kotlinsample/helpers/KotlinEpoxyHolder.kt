@@ -43,4 +43,3 @@ abstract class KotlinEpoxyHolder : EpoxyHolder() {
         }
     }
 }
-

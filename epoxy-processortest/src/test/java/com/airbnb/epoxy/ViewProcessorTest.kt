@@ -221,25 +221,25 @@ class ViewProcessorTest {
                 .forResource("BaseModelView.java")
 
         val baseModel = JavaFileObjects
-                .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n"
-                        + "\n"
-                        + "import android.widget.FrameLayout;\n"
-                        + "\n"
-                        + "import java.util.List;\n"
-                        + "\n"
-                        + "public abstract class TestBaseModel<T extends FrameLayout> extends EpoxyModel<T> {\n"
-                        + " public TestBaseModel(long id) { super(id); }"
-                        + "\n"
-                        + "  @Override\n"
-                        + "  public void bind(T view) {\n"
-                        + "    super.bind(view);\n"
-                        + "  }\n"
-                        + "\n"
-                        + "  @Override\n"
-                        + "  public void bind(T view, List<Object> payloads) {\n"
-                        + "    super.bind(view, payloads);\n"
-                        + "  }\n"
-                        + "}\n")
+                .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
+                        "\n" +
+                        "import android.widget.FrameLayout;\n" +
+                        "\n" +
+                        "import java.util.List;\n" +
+                        "\n" +
+                        "public abstract class TestBaseModel<T extends FrameLayout> extends EpoxyModel<T> {\n" +
+                        " public TestBaseModel(long id) { super(id); }" +
+                        "\n" +
+                        "  @Override\n" +
+                        "  public void bind(T view) {\n" +
+                        "    super.bind(view);\n" +
+                        "  }\n" +
+                        "\n" +
+                        "  @Override\n" +
+                        "  public void bind(T view, List<Object> payloads) {\n" +
+                        "    super.bind(view, payloads);\n" +
+                        "  }\n" +
+                        "}\n")
 
         val generatedModel = JavaFileObjects.forResource("BaseModelViewModel_.java")
 
@@ -257,16 +257,16 @@ class ViewProcessorTest {
                 .forResource("BaseModelView.java")
 
         val baseModel = JavaFileObjects
-                .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n"
-                        + "\n"
-                        + "import android.widget.FrameLayout;\n"
-                        + "\n"
-                        + "public abstract class TestBaseModel<T extends FrameLayout> extends EpoxyModel<T> {\n"
-                        + "@Override\n"
-                        + "  public void bind(T view, EpoxyModel<?> previouslyBoundModel) {\n"
-                        + "    super.bind(view, previouslyBoundModel);\n"
-                        + "  }"
-                        + "}")
+                .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
+                        "\n" +
+                        "import android.widget.FrameLayout;\n" +
+                        "\n" +
+                        "public abstract class TestBaseModel<T extends FrameLayout> extends EpoxyModel<T> {\n" +
+                        "@Override\n" +
+                        "  public void bind(T view, EpoxyModel<?> previouslyBoundModel) {\n" +
+                        "    super.bind(view, previouslyBoundModel);\n" +
+                        "  }" +
+                        "}")
 
         val generatedModel = JavaFileObjects.forResource(
                 "BaseModelViewWithSuperDiffBindModel_.java")
@@ -285,13 +285,13 @@ class ViewProcessorTest {
                 .forResource("BaseModelView.java")
 
         val baseModel = JavaFileObjects
-                .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n"
-                        + "\n"
-                        + "import android.widget.FrameLayout;\n"
-                        + "\n"
-                        + "public abstract class TestBaseModel<T extends FrameLayout> extends EpoxyModel<T> {\n"
-                        + "  @EpoxyAttribute String baseModelString;\n"
-                        + "}\n")
+                .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
+                        "\n" +
+                        "import android.widget.FrameLayout;\n" +
+                        "\n" +
+                        "public abstract class TestBaseModel<T extends FrameLayout> extends EpoxyModel<T> {\n" +
+                        "  @EpoxyAttribute String baseModelString;\n" +
+                        "}\n")
 
         val generatedModel = JavaFileObjects.forResource("BaseModelWithAttributeViewModel_.java")
 
@@ -306,29 +306,29 @@ class ViewProcessorTest {
     @Test
     fun throwsIfBaseModelNotEpoxyModel() {
         val model = JavaFileObjects
-                .forSourceLines("com.airbnb.epoxy.BaseModelView", "package com.airbnb.epoxy;\n"
-                        + "\n"
-                        + "import android.content.Context;\n"
-                        + "import android.widget.FrameLayout;\n"
-                        + "\n"
-                        + "@ModelView(defaultLayout = 1, baseModelClass = TestBaseModel.class)\n"
-                        + "public class BaseModelView extends FrameLayout {\n"
-                        + "\n"
-                        + "  public BaseModelView(Context context) {\n"
-                        + "    super(context);\n"
-                        + "  }\n"
-                        + "\n"
-                        + "  @ModelProp\n"
-                        + "  public void setClickListener(String title) {\n"
-                        + "\n"
-                        + "  }\n"
-                        + "}")
+                .forSourceLines("com.airbnb.epoxy.BaseModelView", "package com.airbnb.epoxy;\n" +
+                        "\n" +
+                        "import android.content.Context;\n" +
+                        "import android.widget.FrameLayout;\n" +
+                        "\n" +
+                        "@ModelView(defaultLayout = 1, baseModelClass = TestBaseModel.class)\n" +
+                        "public class BaseModelView extends FrameLayout {\n" +
+                        "\n" +
+                        "  public BaseModelView(Context context) {\n" +
+                        "    super(context);\n" +
+                        "  }\n" +
+                        "\n" +
+                        "  @ModelProp\n" +
+                        "  public void setClickListener(String title) {\n" +
+                        "\n" +
+                        "  }\n" +
+                        "}")
 
         val baseModel = JavaFileObjects
-                .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n"
-                        + "\n"
-                        + "public abstract class TestBaseModel{\n"
-                        + "}\n")
+                .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
+                        "\n" +
+                        "public abstract class TestBaseModel{\n" +
+                        "}\n")
 
         assert_().about(javaSources())
                 .that(asList(baseModel, model))
@@ -341,41 +341,41 @@ class ViewProcessorTest {
     @Test
     fun baseModelFromPackageConfig() {
         val model = JavaFileObjects
-                .forSourceLines("com.airbnb.epoxy.BaseModelView", "package com.airbnb.epoxy;\n"
-                        + "\n"
-                        + "import android.content.Context;\n"
-                        + "import android.widget.FrameLayout;\n"
-                        + "\n"
-                        + "@ModelView(defaultLayout = 1)\n"
-                        + "public class BaseModelView extends FrameLayout {\n"
-                        + "\n"
-                        + "  public BaseModelView(Context context) {\n"
-                        + "    super(context);\n"
-                        + "  }\n"
-                        + "\n"
-                        + "  @ModelProp\n"
-                        + "  public void setClickListener(String title) {\n"
-                        + "\n"
-                        + "  }\n"
-                        + "}")
+                .forSourceLines("com.airbnb.epoxy.BaseModelView", "package com.airbnb.epoxy;\n" +
+                        "\n" +
+                        "import android.content.Context;\n" +
+                        "import android.widget.FrameLayout;\n" +
+                        "\n" +
+                        "@ModelView(defaultLayout = 1)\n" +
+                        "public class BaseModelView extends FrameLayout {\n" +
+                        "\n" +
+                        "  public BaseModelView(Context context) {\n" +
+                        "    super(context);\n" +
+                        "  }\n" +
+                        "\n" +
+                        "  @ModelProp\n" +
+                        "  public void setClickListener(String title) {\n" +
+                        "\n" +
+                        "  }\n" +
+                        "}")
 
         val configClass = JavaFileObjects
                 .forSourceLines("com.airbnb.epoxy.package-info",
-                                "@PackageModelViewConfig(rClass = R"
-                                        + ".class, defaultBaseModelClass = TestBaseModel.class)\n"
-                                        + "package com.airbnb.epoxy;\n"
-                                        + "\n"
-                                        + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
-                                        + "import com.airbnb.epoxy.R;\n"
-                                        + "import com.airbnb.epoxy.TestBaseModel;\n")
+                                "@PackageModelViewConfig(rClass = R" +
+                                        ".class, defaultBaseModelClass = TestBaseModel.class)\n" +
+                                        "package com.airbnb.epoxy;\n" +
+                                        "\n" +
+                                        "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
+                                        "import com.airbnb.epoxy.R;\n" +
+                                        "import com.airbnb.epoxy.TestBaseModel;\n")
 
         val baseModel = JavaFileObjects
-                .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n"
-                        + "\n"
-                        + "import android.view.View;\n"
-                        + "\n"
-                        + "public abstract class TestBaseModel<T extends View> extends EpoxyModel<T> {\n"
-                        + "}\n")
+                .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
+                        "\n" +
+                        "import android.view.View;\n" +
+                        "\n" +
+                        "public abstract class TestBaseModel<T extends View> extends EpoxyModel<T> {\n" +
+                        "}\n")
 
         val generatedModel = JavaFileObjects.forResource(
                 "BaseModelFromPackageConfigViewModel_.java")
@@ -394,41 +394,41 @@ class ViewProcessorTest {
         // own base model
 
         val model = JavaFileObjects
-                .forSourceLines("com.airbnb.epoxy.BaseModelView", "package com.airbnb.epoxy;\n"
-                        + "\n"
-                        + "import android.content.Context;\n"
-                        + "import android.view.View;\n"
-                        + "\n"
-                        + "@ModelView(defaultLayout = 1, baseModelClass = EpoxyModel.class)\n"
-                        + "public class BaseModelView extends View {\n"
-                        + "\n"
-                        + "  public BaseModelView(Context context) {\n"
-                        + "    super(context);\n"
-                        + "  }\n"
-                        + "\n"
-                        + "  @ModelProp\n"
-                        + "  public void setClickListener(String title) {\n"
-                        + "\n"
-                        + "  }\n"
-                        + "}")
+                .forSourceLines("com.airbnb.epoxy.BaseModelView", "package com.airbnb.epoxy;\n" +
+                        "\n" +
+                        "import android.content.Context;\n" +
+                        "import android.view.View;\n" +
+                        "\n" +
+                        "@ModelView(defaultLayout = 1, baseModelClass = EpoxyModel.class)\n" +
+                        "public class BaseModelView extends View {\n" +
+                        "\n" +
+                        "  public BaseModelView(Context context) {\n" +
+                        "    super(context);\n" +
+                        "  }\n" +
+                        "\n" +
+                        "  @ModelProp\n" +
+                        "  public void setClickListener(String title) {\n" +
+                        "\n" +
+                        "  }\n" +
+                        "}")
 
         val configClass = JavaFileObjects
                 .forSourceLines("com.airbnb.epoxy.package-info",
-                                "@PackageModelViewConfig(rClass = R"
-                                        + ".class, defaultBaseModelClass = TestBaseModel.class)\n"
-                                        + "package com.airbnb.epoxy;\n"
-                                        + "\n"
-                                        + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
-                                        + "import com.airbnb.epoxy.R;\n"
-                                        + "import com.airbnb.epoxy.TestBaseModel;\n")
+                                "@PackageModelViewConfig(rClass = R" +
+                                        ".class, defaultBaseModelClass = TestBaseModel.class)\n" +
+                                        "package com.airbnb.epoxy;\n" +
+                                        "\n" +
+                                        "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
+                                        "import com.airbnb.epoxy.R;\n" +
+                                        "import com.airbnb.epoxy.TestBaseModel;\n")
 
         val baseModel = JavaFileObjects
-                .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n"
-                        + "\n"
-                        + "import android.view.View;\n"
-                        + "\n"
-                        + "public abstract class TestBaseModel<T extends View> extends EpoxyModel<T> {\n"
-                        + "}\n")
+                .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
+                        "\n" +
+                        "import android.view.View;\n" +
+                        "\n" +
+                        "public abstract class TestBaseModel<T extends View> extends EpoxyModel<T> {\n" +
+                        "}\n")
 
         val generatedModel = JavaFileObjects.forResource(
                 "BaseModelOverridesPackageConfigViewModel_.java")
@@ -447,20 +447,20 @@ class ViewProcessorTest {
                 .forResource("BaseModelView.java")
 
         val baseModel = JavaFileObjects
-                .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n"
-                        + "\n"
-                        + "public abstract class TestBaseModel{\n"
-                        + "}\n")
+                .forSourceLines("com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
+                        "\n" +
+                        "public abstract class TestBaseModel{\n" +
+                        "}\n")
 
         val configClass = JavaFileObjects
                 .forSourceLines("com.airbnb.epoxy.package-info",
-                                "@PackageModelViewConfig(rClass = R"
-                                        + ".class, defaultBaseModelClass = TestBaseModel.class)\n"
-                                        + "package com.airbnb.epoxy;\n"
-                                        + "\n"
-                                        + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
-                                        + "import com.airbnb.epoxy.R;\n"
-                                        + "import com.airbnb.epoxy.TestBaseModel;\n")
+                                "@PackageModelViewConfig(rClass = R" +
+                                        ".class, defaultBaseModelClass = TestBaseModel.class)\n" +
+                                        "package com.airbnb.epoxy;\n" +
+                                        "\n" +
+                                        "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
+                                        "import com.airbnb.epoxy.R;\n" +
+                                        "import com.airbnb.epoxy.TestBaseModel;\n")
 
         assert_().about(javaSources())
                 .that(asList(baseModel, model, configClass, R))
@@ -474,18 +474,18 @@ class ViewProcessorTest {
     fun rLayoutInViewModelAnnotationWorks() {
         val model = JavaFileObjects
                 .forSourceLines("com.airbnb.epoxy.RLayoutInViewModelAnnotationWorksView",
-                                "package com.airbnb.epoxy;\n"
-                                        + "\n"
-                                        + "import android.content.Context;\n"
-                                        + "import android.view.View;\n"
-                                        + "\n"
-                                        + "@ModelView(defaultLayout = R.layout.res)\n"
-                                        + "public class RLayoutInViewModelAnnotationWorksView extends View {\n"
-                                        + "\n"
-                                        + "  public RLayoutInViewModelAnnotationWorksView(Context context) {\n"
-                                        + "    super(context);\n"
-                                        + "  }\n"
-                                        + "}")
+                                "package com.airbnb.epoxy;\n" +
+                                        "\n" +
+                                        "import android.content.Context;\n" +
+                                        "import android.view.View;\n" +
+                                        "\n" +
+                                        "@ModelView(defaultLayout = R.layout.res)\n" +
+                                        "public class RLayoutInViewModelAnnotationWorksView extends View {\n" +
+                                        "\n" +
+                                        "  public RLayoutInViewModelAnnotationWorksView(Context context) {\n" +
+                                        "    super(context);\n" +
+                                        "  }\n" +
+                                        "}")
 
         val generatedModel = JavaFileObjects.forResource(
                 "RLayoutInViewModelAnnotationWorksViewModel_.java")
@@ -502,37 +502,37 @@ class ViewProcessorTest {
     fun packageLayoutPatternDefault() {
         val model = JavaFileObjects
                 .forSourceLines("com.airbnb.epoxy.DefaultPackageLayoutPatternView",
-                                "package com.airbnb.epoxy;\n"
-                                        + "\n"
-                                        + "import android.content.Context;\n"
-                                        + "import android.view.View;\n"
-                                        + "\n"
-                                        + "@ModelView\n"
-                                        + "public class DefaultPackageLayoutPatternView extends View {\n"
-                                        + "\n"
-                                        + "  public DefaultPackageLayoutPatternView(Context context) {\n"
-                                        + "    super(context);\n"
-                                        + "  }\n"
-                                        + "\n"
-                                        + "}")
+                                "package com.airbnb.epoxy;\n" +
+                                        "\n" +
+                                        "import android.content.Context;\n" +
+                                        "import android.view.View;\n" +
+                                        "\n" +
+                                        "@ModelView\n" +
+                                        "public class DefaultPackageLayoutPatternView extends View {\n" +
+                                        "\n" +
+                                        "  public DefaultPackageLayoutPatternView(Context context) {\n" +
+                                        "    super(context);\n" +
+                                        "  }\n" +
+                                        "\n" +
+                                        "}")
 
-        val R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
-                + "package com.airbnb.epoxy;\n"
-                + "public final class R {\n"
-                + "  public static final class layout {\n"
-                + "    public static final int default_package_layout_pattern_view = 0x7f040008;\n"
-                + "  }\n"
-                + "}"
+        val R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", "" +
+                "package com.airbnb.epoxy;\n" +
+                "public final class R {\n" +
+                "  public static final class layout {\n" +
+                "    public static final int default_package_layout_pattern_view = 0x7f040008;\n" +
+                "  }\n" +
+                "}"
         )
 
         val configClass = JavaFileObjects
                 .forSourceLines("com.airbnb.epoxy.package-info",
-                                "@PackageModelViewConfig(rClass = R"
-                                        + ".class)\n"
-                                        + "package com.airbnb.epoxy;\n"
-                                        + "\n"
-                                        + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
-                                        + "import com.airbnb.epoxy.R;\n")
+                                "@PackageModelViewConfig(rClass = R" +
+                                        ".class)\n" +
+                                        "package com.airbnb.epoxy;\n" +
+                                        "\n" +
+                                        "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
+                                        "import com.airbnb.epoxy.R;\n")
 
         val generatedModel = JavaFileObjects.forResource(
                 "DefaultPackageLayoutPatternViewModel_.java")
@@ -549,46 +549,46 @@ class ViewProcessorTest {
     fun packageLayoutPatternDefaultWithR2() {
         val model = JavaFileObjects
                 .forSourceLines("com.airbnb.epoxy.DefaultPackageLayoutPatternView",
-                                "package com.airbnb.epoxy;\n"
-                                        + "\n"
-                                        + "import android.content.Context;\n"
-                                        + "import android.view.View;\n"
-                                        + "\n"
-                                        + "@ModelView\n"
-                                        + "public class DefaultPackageLayoutPatternView extends View {\n"
-                                        + "\n"
-                                        + "  public DefaultPackageLayoutPatternView(Context context) {\n"
-                                        + "    super(context);\n"
-                                        + "  }\n"
-                                        + "\n"
-                                        + "}")
+                                "package com.airbnb.epoxy;\n" +
+                                        "\n" +
+                                        "import android.content.Context;\n" +
+                                        "import android.view.View;\n" +
+                                        "\n" +
+                                        "@ModelView\n" +
+                                        "public class DefaultPackageLayoutPatternView extends View {\n" +
+                                        "\n" +
+                                        "  public DefaultPackageLayoutPatternView(Context context) {\n" +
+                                        "    super(context);\n" +
+                                        "  }\n" +
+                                        "\n" +
+                                        "}")
 
-        val R2 = JavaFileObjects.forSourceString("com.airbnb.epoxy.R2", ""
-                + "package com.airbnb.epoxy;\n"
-                + "public final class R2 {\n"
-                + "  public static final class layout {\n"
-                + "    public static final int default_package_layout_pattern_view = 0x7f040008;\n"
-                + "  }\n"
-                + "}"
+        val R2 = JavaFileObjects.forSourceString("com.airbnb.epoxy.R2", "" +
+                "package com.airbnb.epoxy;\n" +
+                "public final class R2 {\n" +
+                "  public static final class layout {\n" +
+                "    public static final int default_package_layout_pattern_view = 0x7f040008;\n" +
+                "  }\n" +
+                "}"
         )
 
-        val R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
-                + "package com.airbnb.epoxy;\n"
-                + "public final class R {\n"
-                + "  public static final class layout {\n"
-                + "    public static final int default_package_layout_pattern_view = 0x7f040008;\n"
-                + "  }\n"
-                + "}"
+        val R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", "" +
+                "package com.airbnb.epoxy;\n" +
+                "public final class R {\n" +
+                "  public static final class layout {\n" +
+                "    public static final int default_package_layout_pattern_view = 0x7f040008;\n" +
+                "  }\n" +
+                "}"
         )
 
         val configClass = JavaFileObjects
                 .forSourceLines("com.airbnb.epoxy.package-info",
-                                "@PackageModelViewConfig(rClass = R2"
-                                        + ".class)\n"
-                                        + "package com.airbnb.epoxy;\n"
-                                        + "\n"
-                                        + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
-                                        + "import com.airbnb.epoxy.R2;\n")
+                                "@PackageModelViewConfig(rClass = R2" +
+                                        ".class)\n" +
+                                        "package com.airbnb.epoxy;\n" +
+                                        "\n" +
+                                        "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
+                                        "import com.airbnb.epoxy.R2;\n")
 
         val generatedModel = JavaFileObjects.forResource(
                 "DefaultPackageLayoutPatternViewModel_.java")
@@ -605,37 +605,37 @@ class ViewProcessorTest {
     fun packageLayoutCustomPattern() {
         val model = JavaFileObjects
                 .forSourceLines("com.airbnb.epoxy.CustomPackageLayoutPatternView",
-                                "package com.airbnb.epoxy;\n"
-                                        + "\n"
-                                        + "import android.content.Context;\n"
-                                        + "import android.view.View;\n"
-                                        + "\n"
-                                        + "@ModelView\n"
-                                        + "public class CustomPackageLayoutPatternView extends View {\n"
-                                        + "\n"
-                                        + "  public CustomPackageLayoutPatternView(Context context) {\n"
-                                        + "    super(context);\n"
-                                        + "  }\n"
-                                        + "\n"
-                                        + "}")
+                                "package com.airbnb.epoxy;\n" +
+                                        "\n" +
+                                        "import android.content.Context;\n" +
+                                        "import android.view.View;\n" +
+                                        "\n" +
+                                        "@ModelView\n" +
+                                        "public class CustomPackageLayoutPatternView extends View {\n" +
+                                        "\n" +
+                                        "  public CustomPackageLayoutPatternView(Context context) {\n" +
+                                        "    super(context);\n" +
+                                        "  }\n" +
+                                        "\n" +
+                                        "}")
 
-        val R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
-                + "package com.airbnb.epoxy;\n"
-                + "public final class R {\n"
-                + "  public static final class layout {\n"
-                + "    public static final int hello_custom_package_layout_pattern_view_me = 0x7f040008;\n"
-                + "  }\n"
-                + "}"
+        val R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", "" +
+                "package com.airbnb.epoxy;\n" +
+                "public final class R {\n" +
+                "  public static final class layout {\n" +
+                "    public static final int hello_custom_package_layout_pattern_view_me = 0x7f040008;\n" +
+                "  }\n" +
+                "}"
         )
 
         val configClass = JavaFileObjects
                 .forSourceLines("com.airbnb.epoxy.package-info",
-                                "@PackageModelViewConfig(rClass = R"
-                                        + ".class, defaultLayoutPattern = \"hello_%s_me\")\n"
-                                        + "package com.airbnb.epoxy;\n"
-                                        + "\n"
-                                        + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
-                                        + "import com.airbnb.epoxy.R;\n")
+                                "@PackageModelViewConfig(rClass = R" +
+                                        ".class, defaultLayoutPattern = \"hello_%s_me\")\n" +
+                                        "package com.airbnb.epoxy;\n" +
+                                        "\n" +
+                                        "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
+                                        "import com.airbnb.epoxy.R;\n")
 
         val generatedModel = JavaFileObjects.forResource(
                 "CustomPackageLayoutPatternViewModel_.java")
@@ -652,39 +652,39 @@ class ViewProcessorTest {
     fun layoutOverloads() {
         val model = JavaFileObjects
                 .forSourceLines("com.airbnb.epoxy.LayoutOverloadsView",
-                                "package com.airbnb.epoxy;\n"
-                                        + "\n"
-                                        + "import android.content.Context;\n"
-                                        + "import android.view.View;\n"
-                                        + "\n"
-                                        + "@ModelView\n"
-                                        + "public class LayoutOverloadsView extends View {\n"
-                                        + "\n"
-                                        + "  public LayoutOverloadsView(Context context) {\n"
-                                        + "    super(context);\n"
-                                        + "  }\n"
-                                        + "\n"
-                                        + "}")
+                                "package com.airbnb.epoxy;\n" +
+                                        "\n" +
+                                        "import android.content.Context;\n" +
+                                        "import android.view.View;\n" +
+                                        "\n" +
+                                        "@ModelView\n" +
+                                        "public class LayoutOverloadsView extends View {\n" +
+                                        "\n" +
+                                        "  public LayoutOverloadsView(Context context) {\n" +
+                                        "    super(context);\n" +
+                                        "  }\n" +
+                                        "\n" +
+                                        "}")
 
-        val R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
-                + "package com.airbnb.epoxy;\n"
-                + "public final class R {\n"
-                + "  public static final class layout {\n"
-                + "    public static final int layout_overloads_view = 0x7f040008;\n"
-                + "    public static final int layout_overloads_view_one = 0x7f040009;\n"
-                + "    public static final int layout_overloads_view_two = 0x7f04000a;\n"
-                + "  }\n"
-                + "}"
+        val R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", "" +
+                "package com.airbnb.epoxy;\n" +
+                "public final class R {\n" +
+                "  public static final class layout {\n" +
+                "    public static final int layout_overloads_view = 0x7f040008;\n" +
+                "    public static final int layout_overloads_view_one = 0x7f040009;\n" +
+                "    public static final int layout_overloads_view_two = 0x7f04000a;\n" +
+                "  }\n" +
+                "}"
         )
 
         val configClass = JavaFileObjects
                 .forSourceLines("com.airbnb.epoxy.package-info",
-                                "@PackageModelViewConfig(rClass = R"
-                                        + ".class, useLayoutOverloads = true)\n"
-                                        + "package com.airbnb.epoxy;\n"
-                                        + "\n"
-                                        + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
-                                        + "import com.airbnb.epoxy.R;\n")
+                                "@PackageModelViewConfig(rClass = R" +
+                                        ".class, useLayoutOverloads = true)\n" +
+                                        "package com.airbnb.epoxy;\n" +
+                                        "\n" +
+                                        "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
+                                        "import com.airbnb.epoxy.R;\n")
 
         val generatedModel = JavaFileObjects.forResource("LayoutOverloadsViewModel_.java")
 
@@ -700,37 +700,37 @@ class ViewProcessorTest {
     fun generatedModelSuffix() {
         val model = JavaFileObjects
                 .forSourceLines("com.airbnb.epoxy.GeneratedModelSuffixView",
-                                "package com.airbnb.epoxy;\n"
-                                        + "\n"
-                                        + "import android.content.Context;\n"
-                                        + "import android.view.View;\n"
-                                        + "\n"
-                                        + "@ModelView\n"
-                                        + "public class GeneratedModelSuffixView extends View {\n"
-                                        + "\n"
-                                        + "  public GeneratedModelSuffixView(Context context) {\n"
-                                        + "    super(context);\n"
-                                        + "  }\n"
-                                        + "\n"
-                                        + "}")
+                                "package com.airbnb.epoxy;\n" +
+                                        "\n" +
+                                        "import android.content.Context;\n" +
+                                        "import android.view.View;\n" +
+                                        "\n" +
+                                        "@ModelView\n" +
+                                        "public class GeneratedModelSuffixView extends View {\n" +
+                                        "\n" +
+                                        "  public GeneratedModelSuffixView(Context context) {\n" +
+                                        "    super(context);\n" +
+                                        "  }\n" +
+                                        "\n" +
+                                        "}")
 
-        val R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
-                + "package com.airbnb.epoxy;\n"
-                + "public final class R {\n"
-                + "  public static final class layout {\n"
-                + "    public static final int generated_model_suffix_view = 0x7f040008;\n"
-                + "  }\n"
-                + "}"
+        val R = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", "" +
+                "package com.airbnb.epoxy;\n" +
+                "public final class R {\n" +
+                "  public static final class layout {\n" +
+                "    public static final int generated_model_suffix_view = 0x7f040008;\n" +
+                "  }\n" +
+                "}"
         )
 
         val configClass = JavaFileObjects
                 .forSourceLines("com.airbnb.epoxy.package-info",
-                                "@PackageModelViewConfig(rClass = R"
-                                        + ".class, generatedModelSuffix = \"Suffix_\")\n"
-                                        + "package com.airbnb.epoxy;\n"
-                                        + "\n"
-                                        + "import com.airbnb.epoxy.PackageModelViewConfig;\n"
-                                        + "import com.airbnb.epoxy.R;\n")
+                                "@PackageModelViewConfig(rClass = R" +
+                                        ".class, generatedModelSuffix = \"Suffix_\")\n" +
+                                        "package com.airbnb.epoxy;\n" +
+                                        "\n" +
+                                        "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
+                                        "import com.airbnb.epoxy.R;\n")
 
         val generatedModel = JavaFileObjects.forResource("GeneratedModelSuffixViewSuffix_.java")
 
@@ -893,11 +893,11 @@ class ViewProcessorTest {
     fun testStyleableView() {
         val configClass: JavaFileObject = JavaFileObjects
             .forSourceLines("com.airbnb.epoxy.package-info",
-                            "@ParisConfig(rClass = R.class)\n"
-                                    + "package com.airbnb.epoxy;\n"
-                                    + "\n"
-                                    + "import com.airbnb.paris.annotations.ParisConfig;\n"
-                                    + "import com.airbnb.epoxy.R;\n")
+                            "@ParisConfig(rClass = R.class)\n" +
+                                    "package com.airbnb.epoxy;\n" +
+                                    "\n" +
+                                    "import com.airbnb.paris.annotations.ParisConfig;\n" +
+                                    "import com.airbnb.epoxy.R;\n")
 
         assertGeneration(
             inputFile = "ModelViewWithParis.java",
@@ -913,16 +913,16 @@ class ViewProcessorTest {
 
     companion object {
 
-        private val R: JavaFileObject = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", ""
-                + "package com.airbnb.epoxy;\n"
-                + "public final class R {\n"
-                + "  public static final class layout {\n"
-                + "    public static final int res = 0x7f040008;\n"
-                + "  }\n"
-                + "  public static final class string {\n"
-                + "    public static final int string_resource_value = 0x7f040009;\n"
-                + "  }\n"
-                + "}"
+        private val R: JavaFileObject = JavaFileObjects.forSourceString("com.airbnb.epoxy.R", "" +
+                "package com.airbnb.epoxy;\n" +
+                "public final class R {\n" +
+                "  public static final class layout {\n" +
+                "    public static final int res = 0x7f040008;\n" +
+                "  }\n" +
+                "  public static final class string {\n" +
+                "    public static final int string_resource_value = 0x7f040009;\n" +
+                "  }\n" +
+                "}"
         )
     }
 }
