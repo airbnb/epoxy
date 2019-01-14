@@ -46,9 +46,9 @@ class EpoxyVisibilityTrackerTest {
          * - 2 full items
          * - 50% of the next item.
          */
-        private const val TWO_AND_HALF_VISIBLE = 2.5f
+        internal const val TWO_AND_HALF_VISIBLE = 2.5f
 
-        private val ALL_STATES = intArrayOf(
+        internal val ALL_STATES = intArrayOf(
             VISIBLE,
             INVISIBLE,
             FOCUSED_VISIBLE,
@@ -59,7 +59,7 @@ class EpoxyVisibilityTrackerTest {
         /**
          * Tolerance used for robolectric ui assertions when comparing data in pixels
          */
-        private const val HEIGHT_TOLERANCE_PIXELS = 1
+        private const val TOLERANCE_PIXELS = 1
 
         private fun log(message: String) {
             if (DEBUG_LOG) {
@@ -690,7 +690,13 @@ class EpoxyVisibilityTrackerTest {
                 epoxyController = object : TypedEpoxyController<List<AssertHelper>>() {
                     override fun buildModels(data: List<AssertHelper>?) {
                         data?.forEachIndexed { index, helper ->
-                            add(TestModel(index, itemHeight, helper).id(helper.id))
+                            add(
+                                TestModel(
+                                    itemPosition = index,
+                                    itemHeight = itemHeight,
+                                    helper = helper
+                                ).id(helper.id)
+                            )
                         }
                     }
                 }
@@ -713,6 +719,7 @@ class EpoxyVisibilityTrackerTest {
     internal class TestModel(
         private val itemPosition: Int,
         private val itemHeight: Int,
+        private val itemWidth: Int = FrameLayout.LayoutParams.MATCH_PARENT,
         private val helper: AssertHelper
     ) : EpoxyModelWithView<View>() {
 
@@ -720,16 +727,15 @@ class EpoxyVisibilityTrackerTest {
             log("buildView[$itemPosition](id=${helper.id})")
             return TextView(parent.context).apply {
                 // Force height
-                layoutParams = RecyclerView.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                    itemHeight
-                )
+                layoutParams = RecyclerView.LayoutParams(itemWidth, itemHeight)
             }
         }
 
         override fun onVisibilityChanged(ph: Float, pw: Float, vh: Int, vw: Int, view: View) {
             helper.percentVisibleHeight = ph
+            helper.percentVisibleWidth = pw
             helper.visibleHeight = vh
+            helper.visibleWidth = vw
             if (ph.toInt() != 100) helper.fullImpression = false
         }
 
@@ -753,7 +759,9 @@ class EpoxyVisibilityTrackerTest {
         var created = false
         var visitedStates = mutableListOf<Int>()
         var visibleHeight = 0
+        var visibleWidth = 0
         var percentVisibleHeight = 0.0f
+        var percentVisibleWidth = 0.0f
         var visible = false
         var focused = false
         var fullImpression = false
@@ -761,7 +769,9 @@ class EpoxyVisibilityTrackerTest {
         fun assert(
             id: Int? = null,
             visibleHeight: Int? = null,
+            visibleWidth: Int? = null,
             percentVisibleHeight: Float? = null,
+            percentVisibleWidth: Float? = null,
             visible: Boolean? = null,
             fullImpression: Boolean? = null,
             visitedStates: IntArray? = null
@@ -774,11 +784,19 @@ class EpoxyVisibilityTrackerTest {
                 )
             }
             visibleHeight?.let {
-                // assert using tolerance, see HEIGHT_TOLERANCE_PIXELS
+                // assert using tolerance, see TOLERANCE_PIXELS
                 log("assert visibleHeight, got $it, expected ${this.visibleHeight}")
                 Assert.assertTrue(
                     "visibleHeight expected ${it}px got ${this.visibleHeight}px",
-                    Math.abs(it - this.visibleHeight) < HEIGHT_TOLERANCE_PIXELS
+                    Math.abs(it - this.visibleHeight) < TOLERANCE_PIXELS
+                )
+            }
+            visibleWidth?.let {
+                // assert using tolerance, see TOLERANCE_PIXELS
+                log("assert visibleWidth, got $it, expected ${this.visibleWidth}")
+                Assert.assertTrue(
+                    "visibleWidth expected ${it}px got ${this.visibleWidth}px",
+                    Math.abs(it - this.visibleWidth) < TOLERANCE_PIXELS
                 )
             }
             percentVisibleHeight?.let {
@@ -786,6 +804,13 @@ class EpoxyVisibilityTrackerTest {
                     "percentVisibleHeight expected $it got ${this.percentVisibleHeight}",
                     it,
                     this.percentVisibleHeight
+                )
+            }
+            percentVisibleWidth?.let {
+                Assert.assertEquals(
+                    "percentVisibleWidth expected $it got ${this.percentVisibleWidth}",
+                    it,
+                    this.percentVisibleWidth
                 )
             }
             visible?.let {
