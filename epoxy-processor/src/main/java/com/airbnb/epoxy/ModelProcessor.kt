@@ -1,11 +1,20 @@
 package com.airbnb.epoxy
 
-import com.airbnb.epoxy.Utils.*
-import java.util.*
-import javax.annotation.processing.*
-import javax.lang.model.element.*
-import javax.lang.model.element.Modifier.*
-import javax.lang.model.util.*
+import com.airbnb.epoxy.Utils.EPOXY_MODEL_TYPE
+import com.airbnb.epoxy.Utils.belongToTheSamePackage
+import com.airbnb.epoxy.Utils.isEpoxyModel
+import com.airbnb.epoxy.Utils.isSubtype
+import com.airbnb.epoxy.Utils.validateFieldAccessibleViaGeneratedCode
+import java.util.HashSet
+import java.util.LinkedHashMap
+import javax.annotation.processing.RoundEnvironment
+import javax.lang.model.element.Element
+import javax.lang.model.element.Modifier
+import javax.lang.model.element.Modifier.ABSTRACT
+import javax.lang.model.element.Modifier.STATIC
+import javax.lang.model.element.TypeElement
+import javax.lang.model.util.Elements
+import javax.lang.model.util.Types
 
 internal class ModelProcessor(
     private val elements: Elements,
@@ -52,8 +61,9 @@ internal class ModelProcessor(
         for ((_, modelInfo) in modelClassMap) {
 
             if (modelInfo is BasicGeneratedModelInfo &&
-                    modelInfo.superClassElement.annotation<EpoxyModelClass>()?.layout == 0 &&
-                    modelInfo.boundObjectTypeElement?.hasStyleableAnnotation(elements) == true) {
+                modelInfo.superClassElement.annotation<EpoxyModelClass>()?.layout == 0 &&
+                modelInfo.boundObjectTypeElement?.hasStyleableAnnotation(elements) == true
+            ) {
                 styleableModelsToWrite.add(modelInfo)
             } else {
                 writeModel(modelInfo)
@@ -61,11 +71,11 @@ internal class ModelProcessor(
         }
 
         styleableModelsToWrite
-                .filter { tryAddStyleBuilderAttribute(it, elements, types) }
-                .forEach {
-                    writeModel(it)
-                    styleableModelsToWrite.remove(it)
-                }
+            .filter { tryAddStyleBuilderAttribute(it, elements, types) }
+            .forEach {
+                writeModel(it)
+                styleableModelsToWrite.remove(it)
+            }
 
         return modelClassMap.values
     }
@@ -88,8 +98,10 @@ internal class ModelProcessor(
     }
 
     private fun buildAttributeInfo(attribute: Element): AttributeInfo {
-        validateFieldAccessibleViaGeneratedCode(attribute, EpoxyAttribute::class.java, errorLogger,
-                                                true)
+        validateFieldAccessibleViaGeneratedCode(
+            attribute, EpoxyAttribute::class.java, errorLogger,
+            true
+        )
         return BaseModelAttributeInfo(attribute, types, elements, errorLogger)
     }
 
@@ -102,34 +114,46 @@ internal class ModelProcessor(
 
         val isFinal = classElement.modifiers.contains(Modifier.FINAL)
         if (isFinal) {
-            errorLogger.logError("Class with %s annotations cannot be final: %s",
-                                 EpoxyAttribute::class.java.simpleName, classElement.simpleName)
+            errorLogger.logError(
+                "Class with %s annotations cannot be final: %s",
+                EpoxyAttribute::class.java.simpleName, classElement.simpleName
+            )
         }
 
         // Nested classes must be static
         if (classElement.nestingKind.isNested) {
             if (!classElement.modifiers.contains(STATIC)) {
                 errorLogger.logError(
-                        "Nested model classes must be static. (class: %s)",
-                        classElement.simpleName)
+                    "Nested model classes must be static. (class: %s)",
+                    classElement.simpleName
+                )
             }
         }
 
         if (!isEpoxyModel(classElement.asType())) {
-            errorLogger.logError("Class with %s annotations must extend %s (%s)",
-                                 EpoxyAttribute::class.java.simpleName, EPOXY_MODEL_TYPE,
-                                 classElement.simpleName)
+            errorLogger.logError(
+                "Class with %s annotations must extend %s (%s)",
+                EpoxyAttribute::class.java.simpleName, EPOXY_MODEL_TYPE,
+                classElement.simpleName
+            )
         }
 
         if (configManager.requiresAbstractModels(classElement) && !classElement.modifiers.contains(
-                ABSTRACT)) {
+                ABSTRACT
+            )
+        ) {
             errorLogger
-                    .logError("Epoxy model class must be abstract (%s)", classElement.simpleName)
+                .logError(
+                    "Epoxy model class must be abstract (%s)",
+                    classElement.simpleName
+                )
         }
 
         if (generatedModelInfo == null) {
-            generatedModelInfo = BasicGeneratedModelInfo(elements, types, classElement,
-                                                         errorLogger)
+            generatedModelInfo = BasicGeneratedModelInfo(
+                elements, types, classElement,
+                errorLogger
+            )
             modelClassMap.put(classElement, generatedModelInfo)
         }
 
@@ -162,16 +186,17 @@ internal class ModelProcessor(
                     // will be created when that module is processed. If we make one as well there will
                     // be a duplicate (causes proguard errors and is just wrong).
                     superclassEpoxyModel.enclosedElements
-                            .filter { it.getAnnotation(EpoxyAttribute::class.java) != null }
-                            .map { buildAttributeInfo(it) }
-                            .filter {
-                                !it.isPackagePrivate ||
-                                        belongToTheSamePackage(
-                                        currentEpoxyModel,
-                                        superclassEpoxyModel,
-                                        elements)
-                            }
-                            .forEach { generatedModelInfo.addAttribute(it) }
+                        .filter { it.getAnnotation(EpoxyAttribute::class.java) != null }
+                        .map { buildAttributeInfo(it) }
+                        .filter {
+                            !it.isPackagePrivate ||
+                                belongToTheSamePackage(
+                                    currentEpoxyModel,
+                                    superclassEpoxyModel,
+                                    elements
+                                )
+                        }
+                        .forEach { generatedModelInfo.addAttribute(it) }
                 }
 
                 superclassType = superclassEpoxyModel.superclass
@@ -208,8 +233,8 @@ internal class ModelProcessor(
                     value.addAttributes(otherAttributes)
                 } else {
                     otherAttributes
-                            .filterNot { it.isPackagePrivate }
-                            .forEach { value.addAttribute(it) }
+                        .filterNot { it.isPackagePrivate }
+                        .forEach { value.addAttribute(it) }
                 }
             }
         }

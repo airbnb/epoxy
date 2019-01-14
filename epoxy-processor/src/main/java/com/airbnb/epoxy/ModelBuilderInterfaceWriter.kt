@@ -1,6 +1,11 @@
 package com.airbnb.epoxy
 
-import com.squareup.javapoet.*
+import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.JavaFile
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterSpec
+import com.squareup.javapoet.ParameterizedTypeName
+import com.squareup.javapoet.TypeName
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
 import javax.lang.model.util.Types
@@ -40,10 +45,10 @@ internal class ModelBuilderInterfaceWriter(
                     // Store the subset of methods common to all interface implementations so we
                     // can generate the interface with the proper methods later
                     viewInterfacesToGenerate
-                            .putOrMerge(
-                                    it,
-                                    interfaceMethods.map { MethodDetails(it) }.toSet()
-                            ) { set1, set2 -> set1 intersect set2 }
+                        .putOrMerge(
+                            it,
+                            interfaceMethods.map { MethodDetails(it) }.toSet()
+                        ) { set1, set2 -> set1 intersect set2 }
                 }
             }
 
@@ -53,8 +58,8 @@ internal class ModelBuilderInterfaceWriter(
         }
 
         JavaFile.builder(modelInfo.generatedClassName.packageName(), modelInterface)
-                .build()
-                .writeTo(filer)
+            .build()
+            .writeTo(filer)
 
         return getBuilderInterfaceTypeName(modelInfo)
     }
@@ -65,27 +70,27 @@ internal class ModelBuilderInterfaceWriter(
         interfaceName: ClassName
     ): List<MethodSpec> {
         return methods
-                .filter {
-                    !it.hasModifier(Modifier.STATIC)
-                }
-                .filter {
-                    it.returnType == modelInfo.parameterizedGeneratedName
-                }
-                .filter {
-                    !blackListedLegacySetterNames.contains(it.name)
-                }
-                .filter {
-                    // Layout throws an exception for programmatic views, so we might a well leave it out too
-                    !(modelInfo.isProgrammaticView && it.name == "layout")
-                }
-                .map {
-                    it.copy(
-                            // We have the methods return the interface type instead of the model, so
-                            // that subclasses of the model can also implement this interface
-                            returns = interfaceName,
-                            additionalModifiers = listOf(Modifier.ABSTRACT)
-                    )
-                }
+            .filter {
+                !it.hasModifier(Modifier.STATIC)
+            }
+            .filter {
+                it.returnType == modelInfo.parameterizedGeneratedName
+            }
+            .filter {
+                !blackListedLegacySetterNames.contains(it.name)
+            }
+            .filter {
+                // Layout throws an exception for programmatic views, so we might a well leave it out too
+                !(modelInfo.isProgrammaticView && it.name == "layout")
+            }
+            .map {
+                it.copy(
+                    // We have the methods return the interface type instead of the model, so
+                    // that subclasses of the model can also implement this interface
+                    returns = interfaceName,
+                    additionalModifiers = listOf(Modifier.ABSTRACT)
+                )
+            }
     }
 
     /**
@@ -113,8 +118,8 @@ internal class ModelBuilderInterfaceWriter(
             }
 
             JavaFile.builder(interfaceName.packageName(), interfaceSpec)
-                    .build()
-                    .writeTo(filer)
+                .build()
+                .writeTo(filer)
         }
 
         viewInterfacesToGenerate.clear()
@@ -180,7 +185,10 @@ internal fun getBuilderInterfaceClassName(modelInfo: GeneratedModelInfo): ClassN
     val generatedModelName = modelInfo.generatedClassName
 
     return ClassName.get(
-            generatedModelName.packageName(),
-            generatedModelName.simpleName().removeSuffix("_").replace("$",
-                                                                      "_") + MODEL_BUILDER_INTERFACE_SUFFIX)
+        generatedModelName.packageName(),
+        generatedModelName.simpleName().removeSuffix("_").replace(
+            "$",
+            "_"
+        ) + MODEL_BUILDER_INTERFACE_SUFFIX
+    )
 }

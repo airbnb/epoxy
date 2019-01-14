@@ -17,7 +17,8 @@ internal class LithoModelInfo(
     val lithoComponentName: ClassName
 
     init {
-        superClassElement = Utils.getElementByName(EPOXY_LITHO_MODEL, elementUtils, typeUtils) as TypeElement
+        superClassElement =
+            Utils.getElementByName(EPOXY_LITHO_MODEL, elementUtils, typeUtils) as TypeElement
 
         lithoComponentName = getLithoComponentName(elementUtils, layoutSpecClassElement)
         superClassName = ParameterizedTypeName.get(EPOXY_LITHO_MODEL, lithoComponentName)
@@ -55,7 +56,8 @@ internal class LithoModelInfo(
     }
 
     private fun buildGeneratedModelName(componentName: ClassName): ClassName {
-        val simpleName = "${componentName.simpleName()}Model${GeneratedModelInfo.GENERATED_CLASS_NAME_SUFFIX}"
+        val simpleName =
+            "${componentName.simpleName()}Model${GeneratedModelInfo.GENERATED_CLASS_NAME_SUFFIX}"
         return ClassName.get(componentName.packageName(), simpleName)
     }
 

@@ -293,7 +293,10 @@ class EpoxyVisibilityTrackerTest {
         // focus the recycler view should scroll to end
 
         Assert.assertEquals(14, llm.findFirstVisibleItemPosition())
-        Assert.assertEquals(14 + itemsPerScreen - 1, llm.findLastCompletelyVisibleItemPosition())
+        Assert.assertEquals(
+            14 + itemsPerScreen - 1,
+            llm.findLastCompletelyVisibleItemPosition()
+        )
 
         with(moved1) {
             // moved 1 should still be in focus so still 100% visible
@@ -423,7 +426,8 @@ class EpoxyVisibilityTrackerTest {
 
         // Now scroll to the end
         for (to in 0..testHelper.size) {
-            (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(to, 10)
+            (recyclerView.layoutManager as LinearLayoutManager)
+                .scrollToPositionWithOffset(to, 10)
         }
 
         // Verify visibility event
@@ -633,7 +637,10 @@ class EpoxyVisibilityTrackerTest {
     /**
      * Attach an EpoxyController on the RecyclerView
      */
-    private fun buildTestData(sampleSize: Int, visibleItemsOnScreen: Float): MutableList<AssertHelper> {
+    private fun buildTestData(
+        sampleSize: Int,
+        visibleItemsOnScreen: Float
+    ): MutableList<AssertHelper> {
         // Compute individual item height
         itemHeight = (recyclerView.measuredHeight / visibleItemsOnScreen).toInt()
         // Build a test sample of sampleSize items
@@ -741,7 +748,7 @@ class EpoxyVisibilityTrackerTest {
                 VISIBLE, INVISIBLE -> helper.visible = state == VISIBLE
                 FOCUSED_VISIBLE, UNFOCUSED_VISIBLE -> helper.focused = state == FOCUSED_VISIBLE
                 FULL_IMPRESSION_VISIBLE -> helper.fullImpression = state ==
-                        FULL_IMPRESSION_VISIBLE
+                    FULL_IMPRESSION_VISIBLE
             }
         }
     }
@@ -830,12 +837,18 @@ class EpoxyVisibilityTrackerTest {
             states.forEach { expectedStates.add(it) }
             for (state in expectedStates) {
                 if (!visitedStates.contains(state)) {
-                    Assert.fail("Expected visited ${expectedStates.description()}, got ${visitedStates.description()}")
+                    Assert.fail(
+                        "Expected visited ${expectedStates.description()}, " +
+                            "got ${visitedStates.description()}"
+                    )
                 }
             }
             for (state in ALL_STATES) {
                 if (!expectedStates.contains(state) && visitedStates.contains(state)) {
-                    Assert.fail("Expected ${state.description()} not visited, got ${visitedStates.description()}")
+                    Assert.fail(
+                        "Expected ${state.description()} not visited, " +
+                            "got ${visitedStates.description()}"
+                    )
                 }
             }
         }

@@ -58,8 +58,8 @@ internal abstract class AttributeInfo {
     var attributeGroup: AttributeGroup? = null
 
     /**
-     * Track whether there is a setter method for this attribute on a super class so that we can call
-     * through to super.
+     * Track whether there is a setter method for this attribute on a super class so that we can
+     * call through to super.
      */
     var hasSuperSetter: Boolean = false
     // for private fields (Kotlin case)
@@ -192,7 +192,11 @@ internal abstract class AttributeInfo {
         if (isPrivate) String.format("super.%s()", getterMethodName) else fieldName
 
     fun setterCode(): String =
-        (if (isGenerated) "this." else "super.") + if (isPrivate) setterMethodName!! + "(\$L)" else "$fieldName = \$L"
+        (if (isGenerated) "this." else "super.") +
+            if (isPrivate)
+                setterMethodName!! + "(\$L)"
+            else
+                "$fieldName = \$L"
 
     open fun generatedSetterName(): String = fieldName
 
@@ -200,10 +204,10 @@ internal abstract class AttributeInfo {
 
     override fun toString(): String {
         return ("Attribute {" +
-                "model='" + modelName + '\''.toString() +
-                ", name='" + fieldName + '\''.toString() +
-                ", type=" + typeName +
-                '}'.toString())
+            "model='" + modelName + '\''.toString() +
+            ", name='" + fieldName + '\''.toString() +
+            ", type=" + typeName +
+            '}'.toString())
     }
 
     override fun equals(other: Any?): Boolean {

@@ -1,9 +1,16 @@
 package com.airbnb.epoxy
 
-import com.squareup.javapoet.*
-import java.lang.reflect.*
+import com.squareup.javapoet.AnnotationSpec
+import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.FieldSpec
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterSpec
+import com.squareup.javapoet.TypeName
+import com.squareup.javapoet.TypeSpec
+import com.squareup.javapoet.TypeVariableName
+import java.lang.reflect.Type
 import javax.lang.model.element.Modifier
-import kotlin.reflect.*
+import kotlin.reflect.KClass
 
 internal inline fun buildClass(
     name: String,
@@ -58,16 +65,17 @@ internal fun MethodSpec.copy(
     varargs: Boolean? = null,
     typeVariables: Iterable<TypeVariableName>? = null,
     exceptions: Iterable<TypeName>? = null,
-    callback: MethodSpec.Builder.() -> Unit = {} // Any other custom init code, like adding statements
+    // Any other custom init code, like adding statements
+    callback: MethodSpec.Builder.() -> Unit = {}
 ): MethodSpec {
     val builder = MethodSpec.methodBuilder(name ?: this.name)
-            .addModifiers(modifiers ?: this.modifiers)
-            .addModifiers(additionalModifiers ?: emptyList())
-            .returns(returns ?: this.returnType)
-            .addParameters(params ?: this.parameters)
-            .varargs(varargs ?: this.varargs)
-            .addTypeVariables(typeVariables ?: this.typeVariables)
-            .addExceptions(exceptions ?: this.exceptions)
+        .addModifiers(modifiers ?: this.modifiers)
+        .addModifiers(additionalModifiers ?: emptyList())
+        .returns(returns ?: this.returnType)
+        .addParameters(params ?: this.parameters)
+        .varargs(varargs ?: this.varargs)
+        .addTypeVariables(typeVariables ?: this.typeVariables)
+        .addExceptions(exceptions ?: this.exceptions)
 
     return builder.apply(callback).build()
 }

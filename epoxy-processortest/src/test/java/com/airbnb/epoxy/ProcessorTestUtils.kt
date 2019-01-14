@@ -5,7 +5,7 @@ import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourceSubjectFactory.javaSource
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
-import java.util.*
+import java.util.ArrayList
 import javax.annotation.processing.Processor
 import javax.tools.JavaFileObject
 

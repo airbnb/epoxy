@@ -24,13 +24,13 @@ internal class KotlinModelBuilderExtensionWriter(
         val kaptGeneratedDirPath =
             processingEnv.options[EpoxyProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME]
                 ?.replace("kaptKotlin", "kapt")
-                    ?: run {
-                        // Need to change the path because of https://youtrack.jetbrains.com/issue/KT-19097
+                ?: run {
+                    // Need to change the path because of https://youtrack.jetbrains.com/issue/KT-19097
 
-                        // If the option does not exist this is not being processed by kapt,
-                        // so we don't need to generate kotlin extensions
-                        return
-                    }
+                    // If the option does not exist this is not being processed by kapt,
+                    // so we don't need to generate kotlin extensions
+                    return
+                }
 
         generatedModels
             .filter { it.shouldGenerateModel }

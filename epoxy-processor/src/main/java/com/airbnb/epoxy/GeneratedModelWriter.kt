@@ -97,7 +97,8 @@ internal class GeneratedModelWriter(
         }
 
         /**
-         * True true to have the bind method build, false to not add the method to the generated class.
+         * True true to have the bind method build, false to not add the method to the generated
+         * class.
          */
         open fun addToBindMethod(
             methodBuilder: Builder,
@@ -179,7 +180,8 @@ internal class GeneratedModelWriter(
     }
 
     private fun generateOtherLayoutOptions(info: GeneratedModelInfo): Iterable<MethodSpec> {
-        if (!info.includeOtherLayoutOptions || info.isProgrammaticView) { // Layout resources can't be mixed with programmatic views
+        if (!info.includeOtherLayoutOptions || info.isProgrammaticView) {
+            // Layout resources can't be mixed with programmatic views
             return emptyList()
         }
 
@@ -228,8 +230,8 @@ internal class GeneratedModelWriter(
         val constantFields = ArrayList<FieldSpec>()
 
         // If this is a styleable view we add a constant to store the default style builder.
-        // This is an optimization to avoid recreating the default style many times, since it is likely
-        // often needed at runtime.
+        // This is an optimization to avoid recreating the default style many times, since it is
+        // likely often needed at runtime.
         constantFields.add(
             buildField(ClassNames.PARIS_STYLE, PARIS_DEFAULT_STYLE_CONSTANT_NAME) {
                 addModifiers(FINAL, PRIVATE, STATIC)
@@ -305,7 +307,8 @@ internal class GeneratedModelWriter(
         )
         fields.add(
             FieldSpec.builder(
-                onVisibilityStateChangedListenerType, modelVisibilityStateChangedListenerFieldName(),
+                onVisibilityStateChangedListenerType,
+                modelVisibilityStateChangedListenerFieldName(),
                 PRIVATE
             ).build()
         )
@@ -362,7 +365,9 @@ internal class GeneratedModelWriter(
         )
     }
 
-    private fun getModelLongClickListenerType(classInfo: GeneratedModelInfo): ParameterizedTypeName {
+    private fun getModelLongClickListenerType(
+        classInfo: GeneratedModelInfo
+    ): ParameterizedTypeName {
         return ParameterizedTypeName.get(
             getClassName(MODEL_LONG_CLICK_LISTENER_TYPE),
             classInfo.parameterizedGeneratedName,
@@ -425,7 +430,9 @@ internal class GeneratedModelWriter(
         }
     }
 
-    private fun generateProgrammaticViewMethods(modelInfo: GeneratedModelInfo): Iterable<MethodSpec> {
+    private fun generateProgrammaticViewMethods(
+        modelInfo: GeneratedModelInfo
+    ): Iterable<MethodSpec> {
 
         if (!modelInfo.isProgrammaticView) {
             return emptyList()
@@ -473,7 +480,7 @@ internal class GeneratedModelWriter(
         return when (modelInfo.layoutParams) {
             ModelView.Size.WRAP_WIDTH_MATCH_HEIGHT -> wrapContent to matchParent
             ModelView.Size.MATCH_WIDTH_MATCH_HEIGHT -> matchParent to matchParent
-        // This will be used for Styleable views as the default
+            // This will be used for Styleable views as the default
             ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT -> matchParent to wrapContent
             ModelView.Size.WRAP_WIDTH_WRAP_HEIGHT -> wrapContent to wrapContent
             else -> wrapContent to wrapContent
@@ -483,7 +490,8 @@ internal class GeneratedModelWriter(
     private fun generateVisibilityMethods(modelInfo: GeneratedModelInfo): Iterable<MethodSpec> {
         val methods = ArrayList<MethodSpec>()
 
-        val visibilityObjectParam = ParameterSpec.builder(modelInfo.modelType, "object", FINAL).build()
+        val visibilityObjectParam =
+            ParameterSpec.builder(modelInfo.modelType, "object", FINAL).build()
 
         methods.add(buildVisibilityStateChangedMethod(visibilityObjectParam))
 
@@ -492,15 +500,16 @@ internal class GeneratedModelWriter(
             modelInfo.parameterizedGeneratedName,
             modelInfo.modelType
         )
-        val visibilityStateChangedListenerParam = ParameterSpec.builder(onVisibilityStateChangedListenerType, "listener").build()
+        val visibilityStateChangedListenerParam =
+            ParameterSpec.builder(onVisibilityStateChangedListenerType, "listener").build()
 
         val onVisibilityStateChanged = MethodSpec.methodBuilder("onVisibilityStateChanged")
             .addJavadoc(
                 "Register a listener that will be called when this model visibility state " +
-                        "has changed.\n" +
-                        "<p>\n" +
-                        "The listener will contribute to this model's hashCode state per the {@link\n" +
-                        "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
+                    "has changed.\n" +
+                    "<p>\n" +
+                    "The listener will contribute to this model's hashCode state per the {@link\n" +
+                    "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
             )
             .addModifiers(PUBLIC)
             .returns(modelInfo.parameterizedGeneratedName)
@@ -519,15 +528,16 @@ internal class GeneratedModelWriter(
             modelInfo.parameterizedGeneratedName,
             modelInfo.modelType
         )
-        val visibilityChangedListenerParam = ParameterSpec.builder(onVisibilityChangedListenerType, "listener").build()
+        val visibilityChangedListenerParam =
+            ParameterSpec.builder(onVisibilityChangedListenerType, "listener").build()
 
         val onVisibilityChanged = MethodSpec.methodBuilder("onVisibilityChanged")
             .addJavadoc(
                 "Register a listener that will be called when this model visibility has " +
-                        "changed.\n" +
-                        "<p>\n" +
-                        "The listener will contribute to this model's hashCode state per the {@link\n" +
-                        "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
+                    "changed.\n" +
+                    "<p>\n" +
+                    "The listener will contribute to this model's hashCode state per the {@link\n" +
+                    "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n"
             )
             .addModifiers(PUBLIC)
             .returns(modelInfo.parameterizedGeneratedName)
@@ -551,7 +561,8 @@ internal class GeneratedModelWriter(
         val viewHolderType = getClassName(EPOXY_VIEW_HOLDER_TYPE)
         val viewHolderParam = ParameterSpec.builder(viewHolderType, "holder", FINAL).build()
 
-        val boundObjectParam = ParameterSpec.builder(modelInfo.modelType, "object", FINAL).build()
+        val boundObjectParam = ParameterSpec.builder(modelInfo.modelType, "object", FINAL)
+            .build()
 
         methods.add(buildPreBindMethod(modelInfo, viewHolderParam, boundObjectParam))
 
@@ -601,12 +612,12 @@ internal class GeneratedModelWriter(
         val onBind = MethodSpec.methodBuilder("onBind")
             .addJavadoc(
                 "Register a listener that will be called when this model is bound to a view.\n" +
-                        "<p>\n" +
-                        "The listener will contribute to this model's hashCode state per the {@link\n" +
-                        "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n" +
-                        "<p>\n" +
-                        "You may clear the listener by setting a null value, or by calling " +
-                        "{@link #reset()}"
+                    "<p>\n" +
+                    "The listener will contribute to this model's hashCode state per the {@link\n" +
+                    "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n" +
+                    "<p>\n" +
+                    "You may clear the listener by setting a null value, or by calling " +
+                    "{@link #reset()}"
             )
             .addModifiers(PUBLIC)
             .returns(modelInfo.parameterizedGeneratedName)
@@ -645,18 +656,19 @@ internal class GeneratedModelWriter(
             modelInfo.parameterizedGeneratedName,
             modelInfo.modelType
         )
-        val unbindListenerParam = ParameterSpec.builder(onUnbindListenerType, "listener").build()
+        val unbindListenerParam = ParameterSpec.builder(onUnbindListenerType, "listener")
+            .build()
 
         val onUnbind = MethodSpec.methodBuilder("onUnbind")
             .addJavadoc(
                 "Register a listener that will be called when this model is unbound from a " +
-                        "view.\n" +
-                        "<p>\n" +
-                        "The listener will contribute to this model's hashCode state per the {@link\n" +
-                        "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n" +
-                        "<p>\n" +
-                        "You may clear the listener by setting a null value, or by calling " +
-                        "{@link #reset()}"
+                    "view.\n" +
+                    "<p>\n" +
+                    "The listener will contribute to this model's hashCode state per the {@link\n" +
+                    "com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.\n" +
+                    "<p>\n" +
+                    "You may clear the listener by setting a null value, or by calling " +
+                    "{@link #reset()}"
             )
             .addModifiers(PUBLIC)
             .returns(modelInfo.parameterizedGeneratedName)
@@ -681,7 +693,12 @@ internal class GeneratedModelWriter(
 
         // The style is applied before calling super or binding properties so that the model can
         // override style settings
-        addBindStyleCodeIfNeeded(modelInfo, this, boundObjectParam, false)
+        addBindStyleCodeIfNeeded(
+            modelInfo,
+            this,
+            boundObjectParam,
+            false
+        )
 
         addStatement("super.bind(\$L)", boundObjectParam.name)
 
@@ -703,10 +720,15 @@ internal class GeneratedModelWriter(
         )
         endControlFlow()
 
-        builderHooks?.addToVisibilityStateChangedMethod(this, visibilityObjectParam.name)
+        builderHooks?.addToVisibilityStateChangedMethod(
+            this,
+            visibilityObjectParam.name
+        )
 
         addStatement(
-            "super.onVisibilityStateChanged(\$L, \$L)", "visibilityState", visibilityObjectParam.name
+            "super.onVisibilityStateChanged(\$L, \$L)",
+            "visibilityState",
+            visibilityObjectParam.name
         )
     }
 
@@ -724,7 +746,7 @@ internal class GeneratedModelWriter(
         beginControlFlow("if (\$L != null)", modelVisibilityChangedListenerFieldName())
         addStatement(
             "\$L.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, " +
-                    "visibleHeight, visibleWidth)",
+                "visibleHeight, visibleWidth)",
             modelVisibilityChangedListenerFieldName()
         )
         endControlFlow()
@@ -767,7 +789,12 @@ internal class GeneratedModelWriter(
             generatedModelClass
         )
 
-        addBindStyleCodeIfNeeded(classInfo, this, boundObjectParam, true)
+        addBindStyleCodeIfNeeded(
+            classInfo,
+            this,
+            boundObjectParam,
+            true
+        )
 
         // We want to make sure the base model has its bind method called as well. Since the
         // user can provide a custom base class we aren't sure if it implements diff binding.
@@ -785,7 +812,11 @@ internal class GeneratedModelWriter(
             addStatement("super.bind(\$L)", boundObjectParam.name)
         }
 
-        builderHooks?.addToBindWithDiffMethod(this, boundObjectParam, previousModelParam)
+        builderHooks?.addToBindWithDiffMethod(
+            this,
+            boundObjectParam,
+            previousModelParam
+        )
     }
 
     private fun buildPreBindMethod(
@@ -821,8 +852,8 @@ internal class GeneratedModelWriter(
         if (modelInfo.isStyleable && configManager.shouldValidateModelUsage()) {
 
             // We validate that the style attributes are the same as in the default, otherwise
-            // recycling will not work correctly. It is done in the background since it is fairly slow
-            // and can noticeably add jank to scrolling in dev
+            // recycling will not work correctly. It is done in the background since it is fairly
+            // slow and can noticeably add jank to scrolling in dev
             preBindBuilder
                 .beginControlFlow(
                     "if (!\$T.equals(\$L, \$L.getTag(\$T.id.epoxy_saved_view_style)))",
@@ -846,7 +877,8 @@ internal class GeneratedModelWriter(
                 .endControlFlow()
                 .beginControlFlow("catch(\$T e)", AssertionError::class.java)
                 .addStatement(
-                    "throw new \$T(\"\$L model at position \" + \$L + \" has an invalid style:\\n\\n\" + e" + ".getMessage())",
+                    "throw new \$T(\"\$L model at position \" + \$L + \" has an invalid " +
+                        "style:\\n\\n\" + e" + ".getMessage())",
                     IllegalStateException::class.java,
                     modelInfo.generatedClassName.simpleName(),
                     positionParamName
@@ -908,8 +940,8 @@ internal class GeneratedModelWriter(
             val methodName = "with" + capitalizedStyle + "Style"
             val fieldName = weakReferenceFieldForStyle(name)
 
-            // The style is stored in a static weak reference since it is likely to be reused in other
-            // models are when models are rebuilt.
+            // The style is stored in a static weak reference since it is likely to be reused in
+            // other models are when models are rebuilt.
             val styleMethodBuilder = MethodSpec.methodBuilder(methodName)
 
             if (javadoc != null) {
@@ -962,7 +994,8 @@ internal class GeneratedModelWriter(
 
                 builder
                     .addStatement(
-                        "throw new \$T(\"Layout resources are unsupported with programmatic views.\")",
+                        "throw new \$T(\"Layout resources are unsupported with programmatic " +
+                            "views.\")",
                         UnsupportedOperationException::class.java
                     )
             } else {
@@ -987,10 +1020,12 @@ internal class GeneratedModelWriter(
     }
 
     /**
-     * Generates default implementations of certain model methods if the model is abstract and doesn't
-     * implement them.
+     * Generates default implementations of certain model methods if the model is abstract and
+     * doesn't implement them.
      */
-    private fun generateDefaultMethodImplementations(info: GeneratedModelInfo): Iterable<MethodSpec> {
+    private fun generateDefaultMethodImplementations(
+        info: GeneratedModelInfo
+    ): Iterable<MethodSpec> {
         val methods = ArrayList<MethodSpec>()
 
         if (info.isProgrammaticView) {
@@ -998,7 +1033,8 @@ internal class GeneratedModelWriter(
                 buildDefaultLayoutMethodBase()
                     .toBuilder()
                     .addStatement(
-                        "throw new \$T(\"Layout resources are unsupported for views created programmatically" + ".\")",
+                        "throw new \$T(\"Layout resources are unsupported for views created " +
+                            "programmatically" + ".\")",
                         UnsupportedOperationException::class.java
                     )
                     .build()
@@ -1106,9 +1142,9 @@ internal class GeneratedModelWriter(
     }
 
     /**
-     * Add `setDataBindingVariables` for DataBinding models if they haven't implemented it. This adds
-     * the basic method and a method that checks for payload changes and only sets the variables that
-     * changed.
+     * Add `setDataBindingVariables` for DataBinding models if they haven't implemented it. This
+     * adds the basic method and a method that checks for payload changes and only sets the
+     * variables that changed.
      */
     private fun generateDataBindingMethodsIfNeeded(info: GeneratedModelInfo): Iterable<MethodSpec> {
         if (!isDataBindingModel(info.superClassElement)) {
@@ -1116,11 +1152,14 @@ internal class GeneratedModelWriter(
         }
 
         val bindVariablesMethod = MethodSpec.methodBuilder("setDataBindingVariables")
-                .addAnnotation(Override::class.java)
-                .addParameter(ClassName.get("androidx.databinding", "ViewDataBinding"), "binding")
-                .addModifiers(Modifier.PROTECTED)
-                .returns(TypeName.VOID)
-                .build()
+            .addAnnotation(Override::class.java)
+            .addParameter(
+                ClassName.get("androidx.databinding", "ViewDataBinding"),
+                "binding"
+            )
+            .addModifiers(Modifier.PROTECTED)
+            .returns(TypeName.VOID)
+            .build()
 
         // If the base method is already implemented don't bother checking for the payload method
         if (implementsMethod(
@@ -1134,14 +1173,17 @@ internal class GeneratedModelWriter(
         val generatedModelClass = info.generatedName
 
         val moduleName = (info as? DataBindingModelInfo)?.moduleName
-                ?: dataBindingModuleLookup.getModuleName(info.superClassElement)
+            ?: dataBindingModuleLookup.getModuleName(info.superClassElement)
 
         val baseMethodBuilder = bindVariablesMethod.toBuilder()
 
         val payloadMethodBuilder = bindVariablesMethod
             .toBuilder()
             .addParameter(getClassName(UNTYPED_EPOXY_MODEL_TYPE), "previousModel")
-            .beginControlFlow("if (!(previousModel instanceof \$T))", generatedModelClass)
+            .beginControlFlow(
+                "if (!(previousModel instanceof \$T))",
+                generatedModelClass
+            )
             .addStatement("setDataBindingVariables(binding)")
             .addStatement("return")
             .endControlFlow()
@@ -1160,13 +1202,15 @@ internal class GeneratedModelWriter(
             )
 
             if (validateAttributes) {
-                // The setVariable method returns false if the variable id was not found in the layout.
-                // We can warn the user about this if they have model validations turned on, otherwise
-                // it fails silently.
+                // The setVariable method returns false if the variable id was not found in the
+                // layout. We can warn the user about this if they have model validations turned on,
+                // otherwise it fails silently.
                 baseMethodBuilder
                     .beginControlFlow("if (!\$L)", setVariableBlock)
                     .addStatement(
-                        "throw new \$T(\"The attribute \$L was defined in your data binding model (\$L) but " + "a data variable of that name was not found in the layout.\")",
+                        "throw new \$T(\"The attribute \$L was defined in your data binding " +
+                            "model (\$L) but " + "a data variable of that name was not found in " +
+                            "the layout.\")",
                         IllegalStateException::class.java, attrName,
                         info.getSuperClassName()
                     )
@@ -1198,8 +1242,8 @@ internal class GeneratedModelWriter(
         val annotation = classElement.getAnnotation(
             EpoxyModelClass::class.java
         ) // This is an error. The model must have an EpoxyModelClass annotation
-                // since getDefaultLayout is not implemented
-                ?: return null
+        // since getDefaultLayout is not implemented
+            ?: return null
 
         val layoutRes: Int
         try {
@@ -1230,7 +1274,8 @@ internal class GeneratedModelWriter(
 
         errorLogger
             .logError(
-                "Model must specify a valid layout resource in the %s annotation. (class: %s)",
+                "Model must specify a valid layout resource in the %s annotation. " +
+                    "(class: %s)",
                 EpoxyModelClass::class.java.simpleName,
                 classElement.simpleName
             )
@@ -1294,8 +1339,8 @@ internal class GeneratedModelWriter(
         val builder = MethodSpec.methodBuilder(attributeName)
             .addJavadoc(
                 "Set a click listener that will provide the parent view, model, and adapter " +
-                        "position of the clicked view. This will clear the normal View.OnClickListener " +
-                        "if one has been set"
+                    "position of the clicked view. This will clear the normal " +
+                    "View.OnClickListener if one has been set"
             )
             .addModifiers(PUBLIC)
             .returns(classInfo.parameterizedGeneratedName)
@@ -1556,8 +1601,8 @@ internal class GeneratedModelWriter(
             )
 
         // Call the super setter if it exists.
-        // No need to do this if the attribute is private since we already called the super setter to
-        // set it
+        // No need to do this if the attribute is private since we already called the super setter
+        // to set it
         if (!attribute.isPrivate && attribute.hasSuperSetter) {
             if (hasMultipleParams) {
                 errorLogger
@@ -1713,17 +1758,20 @@ internal class GeneratedModelWriter(
                     val jsonGetterName = when {
                         attributeInfo.isBoolean -> "getBoolean"
                         attributeInfo.isCharSequenceOrString
-                                || attributeInfo.isStringAttributeData -> "getString"
+                            || attributeInfo.isStringAttributeData -> "getString"
                         attributeInfo.isDouble -> "getDouble"
                         attributeInfo.isDrawableRes -> "getDrawableRes"
                         attributeInfo.isEpoxyModelList -> "getEpoxyModelList"
-                        attributeInfo.isInt && !attributeInfo.isDrawableRes && !attributeInfo.isRawRes -> "getInt"
+                        attributeInfo.isInt && !attributeInfo.isDrawableRes &&
+                            !attributeInfo.isRawRes -> "getInt"
                         attributeInfo.isLong -> "getLong"
                         attributeInfo.isRawRes -> "getRawRes"
                         attributeInfo.isStringList -> "getStringList"
                         attributeInfo.isViewClickListener -> "getOnClickListener"
                         else -> {
-                            errorLogger.logError("Missing ModelProperties method for a supported attribute type.")
+                            errorLogger.logError(
+                                "Missing ModelProperties method for a supported attribute type."
+                            )
                             null
                         }
                     }
@@ -1896,7 +1944,8 @@ internal class GeneratedModelWriter(
                             accessorCode
                         )
                         FLOAT -> addStatement(
-                            "result = 31 * result + (\$L != +0.0f " + "? Float.floatToIntBits(\$L) : 0)",
+                            "result = 31 * result + (\$L != +0.0f " + "? " +
+                                "Float.floatToIntBits(\$L) : 0)",
                             accessorCode, accessorCode
                         )
                         DOUBLE -> {

@@ -14,7 +14,8 @@ internal class DataBindingAttributeInfo(
         typeMirror = setterMethod.parameters[0].asType()
         modelName = modelInfo.generatedName.simpleName()
         packageName = modelInfo.generatedName.packageName()
-        useInHash = !modelInfo.enableDoNotHash || hashCodeValidator.implementsHashCodeAndEquals(typeMirror)
+        useInHash = !modelInfo.enableDoNotHash ||
+            hashCodeValidator.implementsHashCodeAndEquals(typeMirror)
         ignoreRequireHashCode = true
         generateSetter = true
         generateGetter = true

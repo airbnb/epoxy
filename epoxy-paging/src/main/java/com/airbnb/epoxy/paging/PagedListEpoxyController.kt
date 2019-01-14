@@ -55,82 +55,83 @@ abstract class PagedListEpoxyController<T>(
      * [PagedList]s. By default, it relies on simple object equality but you can provide a custom
      * one if you don't use all fields in the object in your models.
      */
-    itemDiffCallback: DiffUtil.ItemCallback<T> = DEFAULT_ITEM_DIFF_CALLBACK as DiffUtil.ItemCallback<T>
+    itemDiffCallback: DiffUtil.ItemCallback<T> =
+        DEFAULT_ITEM_DIFF_CALLBACK as DiffUtil.ItemCallback<T>
 ) : EpoxyController(modelBuildingHandler, diffingHandler) {
-  // this is where we keep the already built models
-  private val modelCache = PagedListModelCache(
-    modelBuilder = { pos, item ->
-      buildItemModel(pos, item)
-    },
-    rebuildCallback = {
-      requestModelBuild()
-    },
-    itemDiffCallback = itemDiffCallback,
-    modelBuildingHandler = modelBuildingHandler
-  )
+    // this is where we keep the already built models
+    private val modelCache = PagedListModelCache(
+        modelBuilder = { pos, item ->
+            buildItemModel(pos, item)
+        },
+        rebuildCallback = {
+            requestModelBuild()
+        },
+        itemDiffCallback = itemDiffCallback,
+        modelBuildingHandler = modelBuildingHandler
+    )
 
-  final override fun buildModels() {
-    addModels(modelCache.getModels())
-  }
-
-  /**
-   * This function adds all built models to the adapter. You can override this method to add extra
-   * items into the model list or remove some.
-   */
-  open fun addModels(models: List<EpoxyModel<*>>) {
-    super.add(models)
-  }
-
-  /**
-   * Builds the model for a given item. This must return a single model for each item. If you want
-   * to inject headers etc, you can override [addModels] function.
-   *
-   * If the `item` is `null`, you should provide the placeholder. If your [PagedList] is configured
-   * without placeholders, you don't need to handle the `null` case.
-   */
-  abstract fun buildItemModel(currentPosition: Int, item: T?): EpoxyModel<*>
-
-  override fun onModelBound(
-      holder: EpoxyViewHolder,
-      boundModel: EpoxyModel<*>,
-      position: Int,
-      previouslyBoundModel: EpoxyModel<*>?
-  ) {
-    // TODO the position may not be a good value if there are too many injected items.
-    modelCache.loadAround(position)
-  }
-
-  /**
-   * Submit a new paged list.
-   *
-   * A diff will be calculated between this list and the previous list so you may still get calls
-   * to [buildItemModel] with items from the previous list.
-   */
-  fun submitList(newList: PagedList<T>?) {
-    modelCache.submitList(newList)
-  }
-
-  /**
-   * Requests a model build that will run for every model, including the ones created for the paged
-   * list.
-   *
-   * Clears the current model cache to make sure that happens.
-   */
-  fun requestForcedModelBuild() {
-    modelCache.clearModels()
-    requestModelBuild()
-  }
-
-  companion object {
-    /**
-     * [PagedListEpoxyController] calculates a diff on top of the PagedList to check which
-     * models are invalidated.
-     * This is the default [DiffUtil.ItemCallback] which uses object equality.
-     */
-    val DEFAULT_ITEM_DIFF_CALLBACK = object : DiffUtil.ItemCallback<Any>() {
-      override fun areItemsTheSame(oldItem: Any, newItem: Any) = oldItem == newItem
-
-      override fun areContentsTheSame(oldItem: Any, newItem: Any) = oldItem == newItem
+    final override fun buildModels() {
+        addModels(modelCache.getModels())
     }
-  }
+
+    /**
+     * This function adds all built models to the adapter. You can override this method to add extra
+     * items into the model list or remove some.
+     */
+    open fun addModels(models: List<EpoxyModel<*>>) {
+        super.add(models)
+    }
+
+    /**
+     * Builds the model for a given item. This must return a single model for each item. If you want
+     * to inject headers etc, you can override [addModels] function.
+     *
+     * If the `item` is `null`, you should provide the placeholder. If your [PagedList] is
+     * configured without placeholders, you don't need to handle the `null` case.
+     */
+    abstract fun buildItemModel(currentPosition: Int, item: T?): EpoxyModel<*>
+
+    override fun onModelBound(
+        holder: EpoxyViewHolder,
+        boundModel: EpoxyModel<*>,
+        position: Int,
+        previouslyBoundModel: EpoxyModel<*>?
+    ) {
+        // TODO the position may not be a good value if there are too many injected items.
+        modelCache.loadAround(position)
+    }
+
+    /**
+     * Submit a new paged list.
+     *
+     * A diff will be calculated between this list and the previous list so you may still get calls
+     * to [buildItemModel] with items from the previous list.
+     */
+    fun submitList(newList: PagedList<T>?) {
+        modelCache.submitList(newList)
+    }
+
+    /**
+     * Requests a model build that will run for every model, including the ones created for the paged
+     * list.
+     *
+     * Clears the current model cache to make sure that happens.
+     */
+    fun requestForcedModelBuild() {
+        modelCache.clearModels()
+        requestModelBuild()
+    }
+
+    companion object {
+        /**
+         * [PagedListEpoxyController] calculates a diff on top of the PagedList to check which
+         * models are invalidated.
+         * This is the default [DiffUtil.ItemCallback] which uses object equality.
+         */
+        val DEFAULT_ITEM_DIFF_CALLBACK = object : DiffUtil.ItemCallback<Any>() {
+            override fun areItemsTheSame(oldItem: Any, newItem: Any) = oldItem == newItem
+
+            override fun areContentsTheSame(oldItem: Any, newItem: Any) = oldItem == newItem
+        }
+    }
 }

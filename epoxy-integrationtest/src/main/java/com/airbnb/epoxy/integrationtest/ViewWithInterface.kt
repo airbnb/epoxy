@@ -10,7 +10,8 @@ import com.airbnb.epoxy.ModelView.Size
 import com.airbnb.epoxy.TextProp
 
 @ModelView(autoLayout = Size.WRAP_WIDTH_MATCH_HEIGHT)
-class ViewWithInterface(context: Context) : View(context), InterfaceForView, InterfaceForView2, ClassWithNestedInterface.NestedInterface, InterfaceWithNoPropMethods {
+class ViewWithInterface(context: Context) : View(context), InterfaceForView, InterfaceForView2,
+    ClassWithNestedInterface.NestedInterface, InterfaceWithNoPropMethods {
 
     override fun getSomething() = 5
 
@@ -41,7 +42,8 @@ class ViewWithInterface2(context: Context) : View(context), InterfaceForView, In
 
     @TextProp
     override fun setText(@Nullable title: CharSequence?) {
-        // It is intended that this override has the nullable annotation and the other doesn't, to check that it doesn't affect the interface
+        // It is intended that this override has the nullable annotation and the other doesn't, to
+        // check that it doesn't affect the interface
     }
 
     @TextProp

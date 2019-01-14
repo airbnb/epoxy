@@ -1,10 +1,8 @@
 package com.airbnb.epoxy
 
-import com.squareup.javapoet.TypeName
-
-import javax.lang.model.element.Element
-
 import com.airbnb.epoxy.Utils.isFieldPackagePrivate
+import com.squareup.javapoet.TypeName
+import javax.lang.model.element.Element
 
 class ControllerModelField(element: Element) {
 
@@ -32,5 +30,7 @@ class ControllerModelField(element: Element) {
         return result
     }
 
-    override fun toString() = "ControllerModelField(fieldName='$fieldName', typeName=$typeName, packagePrivate=$packagePrivate)"
+    override fun toString() =
+        "ControllerModelField(fieldName='$fieldName', typeName=$typeName, " +
+            "packagePrivate=$packagePrivate)"
 }

@@ -48,7 +48,9 @@ internal class ModelViewInfo(
         this.parametrizedClassName = generatedClassName
         shouldGenerateModel = Modifier.ABSTRACT !in viewElement.modifiers
 
-        if (superClassElement.simpleName.toString() != ClassNames.EPOXY_MODEL_UNTYPED.simpleName()) {
+        if (
+            superClassElement.simpleName.toString() != ClassNames.EPOXY_MODEL_UNTYPED.simpleName()
+        ) {
             // If the view has a custom base model then we copy any custom constructors on it
             constructors.addAll(getClassConstructors(superClassElement))
         }
@@ -73,10 +75,11 @@ internal class ModelViewInfo(
                 // Only include the interface if the view has one of the interface methods annotated with a prop annotation
                 methodsOnView.any { viewMethod ->
                     viewMethod.hasAnyAnnotation(ModelViewProcessor.modelPropAnnotations) &&
-                            interfaceElement.executableElements().any { interfaceMethod ->
-                        // To keep this simple we only compare name and ignore parameters, should be close enough
-                        viewMethod.simpleName.toString() == interfaceMethod.simpleName.toString()
-                    }
+                        interfaceElement.executableElements().any { interfaceMethod ->
+                            // To keep this simple we only compare name and ignore parameters, should be close enough
+                            viewMethod.simpleName.toString() ==
+                                interfaceMethod.simpleName.toString()
+                        }
                 }
             }
 

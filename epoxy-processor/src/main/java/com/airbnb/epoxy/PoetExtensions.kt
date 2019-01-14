@@ -10,10 +10,10 @@ import com.squareup.kotlinpoet.FLOAT
 import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.LONG
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.UNIT
 import javax.lang.model.element.Modifier
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
 typealias JavaClassName = com.squareup.javapoet.ClassName
 typealias JavaTypeName = com.squareup.javapoet.TypeName
@@ -56,7 +56,12 @@ fun JavaClassName.toKPoet(): KotlinClassName {
 
 /** Some classes, like List or Byte have the same class name but a different package for their kotlin equivalent. */
 private fun JavaClassName.getPackageNameInKotlin(): String {
-    if (packageName() in listOf(javaUtilPkg, javaLangPkg, kotlinJvmFunction) && simpleNames().size == 1) {
+    if (packageName() in listOf(
+            javaUtilPkg,
+            javaLangPkg,
+            kotlinJvmFunction
+        ) && simpleNames().size == 1
+    ) {
 
         val transformedPkg = when {
             isBoxedPrimitive -> kotlinPkg
@@ -128,7 +133,8 @@ fun JavaWildcardTypeName.toKPoet() =
     }
 
 // Does not support transferring annotations
-fun JavaParametrizedTypeName.toKPoet() = this.rawType.toKPoet().parameterizedBy(*typeArguments.toKPoet().toTypedArray())
+fun JavaParametrizedTypeName.toKPoet() =
+    this.rawType.toKPoet().parameterizedBy(*typeArguments.toKPoet().toTypedArray())
 
 // Does not support transferring annotations
 fun JavaArrayTypeName.toKPoet(): KotlinTypeName {
