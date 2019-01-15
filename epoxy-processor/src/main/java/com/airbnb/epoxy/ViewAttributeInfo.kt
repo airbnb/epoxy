@@ -61,7 +61,7 @@ internal class ViewAttributeInfo(
             else -> throw IllegalStateException("Unsuppported element type $viewAttributeElement")
         }
 
-        viewAttributeTypeName = getViewAttributeType(viewAttributeElement, errorLogger);
+        viewAttributeTypeName = getViewAttributeType(viewAttributeElement, errorLogger)
 
         groupKey = ""
         var defaultConstant = ""
@@ -205,8 +205,9 @@ internal class ViewAttributeInfo(
 
     private fun isMarkedNullable(paramElement: VariableElement) =
         paramElement.annotationMirrors.any {
-            // There are multiple packages/frameworks that define a Nullable annotation and we want to
-            // support all of them. We just check for a class named Nullable and ignore the package.
+            // There are multiple packages/frameworks that define a Nullable annotation and we want
+            // to support all of them. We just check for a class named Nullable and ignore the
+            // package.
             it.annotationType.asElement().simpleName.toString() == "Nullable"
         }
 
@@ -236,7 +237,8 @@ internal class ViewAttributeInfo(
         }
 
         errorLogger.logError(
-            "The default value for (%s#%s) could not be found. Expected a constant named '%s' in the " + "view class.",
+            "The default value for (%s#%s) could not be found. Expected a constant named " +
+                "'%s' in the " + "view class.",
             modelInfo.viewElement.simpleName, viewAttributeName, defaultConstant
         )
     }
@@ -250,13 +252,14 @@ internal class ViewAttributeInfo(
         if (element.kind == ElementKind.FIELD && element.simpleName.toString() == constantName) {
 
             val modifiers = element.modifiers
-            if (!modifiers.contains(Modifier.FINAL)
-                || !modifiers.contains(Modifier.STATIC)
-                || modifiers.contains(Modifier.PRIVATE)
+            if (!modifiers.contains(Modifier.FINAL) ||
+                !modifiers.contains(Modifier.STATIC) ||
+                modifiers.contains(Modifier.PRIVATE)
             ) {
 
                 errorLogger.logError(
-                    "Default values for view props must be static, final, and not private. (%s#%s)",
+                    "Default values for view props must be static, final, and not private. " +
+                        "(%s#%s)",
                     modelInfo.viewElement.simpleName, viewAttributeName
                 )
                 return true
@@ -313,7 +316,8 @@ internal class ViewAttributeInfo(
         if (options.contains(Option.NullOnRecycle) && (!hasSetNullability() || !isNullable())) {
             errorLogger
                 .logError(
-                    "Setters with %s option must have a type that is annotated with @Nullable. (%s#%s)",
+                    "Setters with %s option must have a type that is annotated with @Nullable. " +
+                        "(%s#%s)",
                     Option.NullOnRecycle, modelName, viewAttributeName
                 )
         }
@@ -330,7 +334,7 @@ internal class ViewAttributeInfo(
             is ArrayTypeName -> getSimpleName(name.componentType)!! + "Array"
             is ParameterizedTypeName -> getSimpleName(name.rawType)
             is TypeVariableName -> capitalizeFirstLetter(name.name)
-        // Don't expect this to happen
+            // Don't expect this to happen
             else -> name.toString().replace(".", "")
         }
     }
@@ -348,7 +352,9 @@ internal class ViewAttributeInfo(
 
             val elementClassName = ClassName.get(annotationType)
 
-            if (elementClassName in ModelViewProcessor.modelPropAnnotations.map { it.className() }) {
+            if (elementClassName in ModelViewProcessor.modelPropAnnotations.map {
+                    it.className()
+                }) {
                 continue
             }
 
@@ -370,10 +376,10 @@ internal class ViewAttributeInfo(
         // already have it. This is to make the generated interface more effective for IDE
         // nullability tooling since we know epoxy will enforce that the param value is
         // non null at run time.
-        if (!typeName.isPrimitive
-            && !markedNullable
-            && NON_NULL_ANNOTATION_SPEC !in setterAnnotations
-            && NOT_NULL_ANNOTATION_SPEC !in setterAnnotations
+        if (!typeName.isPrimitive &&
+            !markedNullable &&
+            NON_NULL_ANNOTATION_SPEC !in setterAnnotations &&
+            NOT_NULL_ANNOTATION_SPEC !in setterAnnotations
         ) {
             setterAnnotations.add(NON_NULL_ANNOTATION_SPEC)
             getterAnnotations.add(NON_NULL_ANNOTATION_SPEC)
@@ -441,10 +447,10 @@ internal class ViewAttributeInfo(
     }
 
     override fun toString(): String {
-        return ("View Prop {"
-                + "view='" + modelInfo.viewElement.simpleName + '\''
-                + ", name='" + viewAttributeName + '\''
-                + ", type=" + typeName
-                + '}')
+        return ("View Prop {" +
+            "view='" + modelInfo.viewElement.simpleName + '\'' +
+            ", name='" + viewAttributeName + '\'' +
+            ", type=" + typeName +
+            '}')
     }
 }

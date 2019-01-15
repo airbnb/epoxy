@@ -4,9 +4,10 @@ package com.airbnb.epoxy
  * Stores configuration settings for a package.
  */
 class PackageConfigSettings private constructor(
-        val requireHashCode: Boolean,
-        val requireAbstractModels: Boolean,
-        val implicitlyAddAutoModels: Boolean) {
+    val requireHashCode: Boolean,
+    val requireAbstractModels: Boolean,
+    val implicitlyAddAutoModels: Boolean
+) {
 
     companion object {
 

@@ -13,7 +13,8 @@ import javax.lang.model.element.Modifier
 
 class PoetExtensionsTest {
 
-    @Test fun testAnnotationSpecToKPoet() {
+    @Test
+    fun testAnnotationSpecToKPoet() {
         val annotation = EpoxyModelClass::class.java
         val type = annotation.asTypeName()
         val javaAnnotation = JavaAnnotationSpec.builder(annotation).build()
@@ -23,7 +24,8 @@ class PoetExtensionsTest {
         assertEquals(type, kotlinAnnotation?.className)
     }
 
-    @Test fun testAnnotationSpecToKPoetWithParams() {
+    @Test
+    fun testAnnotationSpecToKPoetWithParams() {
         val annotation = FloatRange::class.java
         val javaAnnotation = JavaAnnotationSpec.builder(annotation)
             .addMember("from", "0.0")
@@ -34,19 +36,24 @@ class PoetExtensionsTest {
         assertNull(kotlinAnnotation)
     }
 
-    @Test fun testIsLambdaWithString() {
+    @Test
+    fun testIsLambdaWithString() {
         val stringType = JavaClassName.bestGuess("java.lang.String")
         assertFalse(isLambda(stringType))
     }
 
-    @Test fun testIsLambdaWithLambda() {
+    @Test
+    fun testIsLambdaWithLambda() {
         val lambdaType = JavaClassName.bestGuess("kotlin.Function2")
         assertTrue(isLambda(lambdaType))
     }
 
-    @Test fun testJavaParameterSpecToKPoet() {
+    @Test
+    fun testJavaParameterSpecToKPoet() {
         val name = "android"
-        val javaParameter = JavaParameterSpec.builder(JavaClassName.bestGuess("java.lang.String"), name, Modifier.PRIVATE)
+        val javaParameter = JavaParameterSpec.builder(
+            JavaClassName.bestGuess("java.lang.String"), name, Modifier.PRIVATE
+        )
             .addAnnotation(NonNull::class.java)
             .build()
         val kotlinString = KotlinClassName("kotlin", "String")
@@ -58,9 +65,12 @@ class PoetExtensionsTest {
         assertEquals(NonNull::class.java.asTypeName(), kotlinParameter.annotations[0].className)
     }
 
-    @Test fun testJavaTypeNameToKPoet() {
-        val javaType = JavaParametrizedTypeName.get(JavaClassName.bestGuess("java.util.List"),
-                                                    JavaClassName.bestGuess("java.lang.String"))
+    @Test
+    fun testJavaTypeNameToKPoet() {
+        val javaType = JavaParametrizedTypeName.get(
+            JavaClassName.bestGuess("java.util.List"),
+            JavaClassName.bestGuess("java.lang.String")
+        )
 
         val kotlinType = javaType.toKPoet()
         val kotlinList = KotlinClassName("kotlin.collections", "List")
@@ -69,19 +79,23 @@ class PoetExtensionsTest {
         assertEquals(kotlinString, kotlinType.typeArguments[0])
     }
 
-    @Test fun testJavaArrayTypeNameToKPoet() {
+    @Test
+    fun testJavaArrayTypeNameToKPoet() {
         val javaIntArray = JavaArrayTypeName.of(JavaClassName.INT)
         val kotlinIntArray = javaIntArray.toKPoet()
 
         assertEquals("kotlin.IntArray", kotlinIntArray.toString())
 
-        val javaFloatArray = JavaArrayTypeName.of(JavaClassName.bestGuess("java.lang.Float"))
+        val javaFloatArray = JavaArrayTypeName.of(
+            JavaClassName.bestGuess("java.lang.Float")
+        )
         val kotlinFloatArray = javaFloatArray.toKPoet()
 
         assertEquals("kotlin.Array<kotlin.Float>", kotlinFloatArray.toString())
     }
 
-    @Test fun testJavaClassNameToKPoet() {
+    @Test
+    fun testJavaClassNameToKPoet() {
         val javaClassName = JavaClassName.bestGuess("java.lang.Integer")
         val kotlinClassName = javaClassName.toKPoet()
 

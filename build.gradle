@@ -36,6 +36,7 @@ subprojects { project ->
   apply from: "$rootDir/blessedDeps.gradle"
   apply plugin: 'com.github.ben-manes.versions'
   apply plugin: 'checkstyle'
+  apply from: "${project.rootDir}/ktlint.gradle"
 
   task checkstyle(type: Checkstyle) {
     configFile rootProject.file('checkstyle.xml')
@@ -50,6 +51,7 @@ subprojects { project ->
   afterEvaluate {
     if (project.tasks.findByName('check')) {
       check.dependsOn('checkstyle')
+      check.dependsOn('ktlint')
     }
   }
 }

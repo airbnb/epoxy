@@ -1,10 +1,12 @@
 package com.airbnb.epoxy
 
-import com.airbnb.epoxy.integrationtest.*
-import org.junit.*
-import org.junit.runner.*
-import org.robolectric.*
-import org.robolectric.annotation.*
+import com.airbnb.epoxy.integrationtest.BuildConfig
+import com.airbnb.epoxy.integrationtest.ModelGroupWithAnnotation_
+import com.airbnb.epoxy.integrationtest.Model_
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 @Config(constants = BuildConfig::class, sdk = intArrayOf(21))

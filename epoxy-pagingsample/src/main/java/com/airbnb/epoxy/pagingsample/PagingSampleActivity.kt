@@ -45,7 +45,7 @@ class TestController : PagedListEpoxyController<User>() {
         return if (item == null) {
             PagingViewModel_()
                 .id(-currentPosition)
-                .name("loading ${currentPosition}")
+                .name("loading $currentPosition")
         } else {
             PagingViewModel_()
                 .id(item.uid)
@@ -68,7 +68,6 @@ class TestController : PagedListEpoxyController<User>() {
     override fun onExceptionSwallowed(exception: RuntimeException) {
         throw exception
     }
-
 }
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
@@ -78,7 +77,6 @@ class PagingView(context: Context) : AppCompatTextView(context) {
     fun name(name: CharSequence) {
         text = name
     }
-
 }
 
 class ActivityViewModel(app: Application) : AndroidViewModel(app) {

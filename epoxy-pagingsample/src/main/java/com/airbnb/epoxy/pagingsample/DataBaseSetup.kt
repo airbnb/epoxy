@@ -19,14 +19,14 @@ abstract class PagingDatabase : RoomDatabase() {
 
 @Entity
 data class User(
-        @PrimaryKey
-        var uid: Int,
+    @PrimaryKey
+    var uid: Int,
 
-        @ColumnInfo(name = "first_name")
-        var firstName: String = "first name $uid",
+    @ColumnInfo(name = "first_name")
+    var firstName: String = "first name $uid",
 
-        @ColumnInfo(name = "last_name")
-        var lastName: String = "last name $uid"
+    @ColumnInfo(name = "last_name")
+    var lastName: String = "last name $uid"
 )
 
 @Dao

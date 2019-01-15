@@ -98,11 +98,11 @@ class ModelFactoryViewProcessorTest {
 
         val configClass: JavaFileObject = JavaFileObjects
             .forSourceLines("com.airbnb.epoxy.package-info",
-                            "@ParisConfig(rClass = R.class)\n"
-                                    + "package com.airbnb.epoxy;\n"
-                                    + "\n"
-                                    + "import com.airbnb.paris.annotations.ParisConfig;\n"
-                                    + "import com.airbnb.epoxymodelfactory.R;\n")
+                            "@ParisConfig(rClass = R.class)\n" +
+                                    "package com.airbnb.epoxy;\n" +
+                                    "\n" +
+                                    "import com.airbnb.paris.annotations.ParisConfig;\n" +
+                                    "import com.airbnb.epoxymodelfactory.R;\n")
 
         assertGeneration(
             "StyleableModelView.java",

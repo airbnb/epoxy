@@ -13,14 +13,12 @@ import com.airbnb.epoxy.EpoxyModelWithHolder
 abstract class AnnotationModel(
     @StringRes val resId: Int,
     @FloatRange(from = 0.0, to = 1.0) val range: Float
-): EpoxyModelWithHolder<AnnotationHolder>() {
+) : EpoxyModelWithHolder<AnnotationHolder>() {
 
     @EpoxyAttribute @DrawableRes var drawable: Int? = null
 }
 
-class AnnotationHolder: EpoxyHolder() {
+class AnnotationHolder : EpoxyHolder() {
     override fun bindView(itemView: View) {
-
     }
-
 }
