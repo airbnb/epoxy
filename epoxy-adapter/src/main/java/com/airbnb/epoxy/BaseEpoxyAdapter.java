@@ -149,7 +149,7 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
 
   @Override
   public int getItemViewType(int position) {
-    return viewTypeManager.getViewType(getModelForPosition(position));
+    return viewTypeManager.getViewTypeAndRememberModel(getModelForPosition(position));
   }
 
   @Override

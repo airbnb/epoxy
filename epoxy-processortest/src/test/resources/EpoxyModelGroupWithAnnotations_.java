@@ -11,14 +11,14 @@ import java.util.Collection;
 
 /**
  * Generated file. Do not modify! */
-public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotations implements GeneratedModel<EpoxyModelGroup.Holder>, EpoxyModelGroupWithAnnotationsBuilder {
-  private OnModelBoundListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> onModelBoundListener_epoxyGeneratedModel;
+public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotations implements GeneratedModel<ModelGroupHolder>, EpoxyModelGroupWithAnnotationsBuilder {
+  private OnModelBoundListener<EpoxyModelGroupWithAnnotations_, ModelGroupHolder> onModelBoundListener_epoxyGeneratedModel;
 
-  private OnModelUnboundListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> onModelUnboundListener_epoxyGeneratedModel;
+  private OnModelUnboundListener<EpoxyModelGroupWithAnnotations_, ModelGroupHolder> onModelUnboundListener_epoxyGeneratedModel;
 
-  private OnModelVisibilityStateChangedListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+  private OnModelVisibilityStateChangedListener<EpoxyModelGroupWithAnnotations_, ModelGroupHolder> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
 
-  private OnModelVisibilityChangedListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> onModelVisibilityChangedListener_epoxyGeneratedModel;
+  private OnModelVisibilityChangedListener<EpoxyModelGroupWithAnnotations_, ModelGroupHolder> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
   public EpoxyModelGroupWithAnnotations_(int layoutRes,
       Collection<? extends EpoxyModel<?>> models) {
@@ -32,14 +32,14 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final EpoxyModelGroup.Holder object,
+  public void handlePreBind(final EpoxyViewHolder holder, final ModelGroupHolder object,
       final int position) {
     super.handlePreBind(holder, object, position);
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
   @Override
-  public void handlePostBind(final EpoxyModelGroup.Holder object, int position) {
+  public void handlePostBind(final ModelGroupHolder object, int position) {
     super.handlePostBind(object, position);
     if (onModelBoundListener_epoxyGeneratedModel != null) {
       onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
@@ -55,14 +55,14 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public EpoxyModelGroupWithAnnotations_ onBind(
-      OnModelBoundListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> listener) {
+      OnModelBoundListener<EpoxyModelGroupWithAnnotations_, ModelGroupHolder> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   @Override
-  public void unbind(EpoxyModelGroup.Holder object) {
+  public void unbind(ModelGroupHolder object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -77,14 +77,14 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public EpoxyModelGroupWithAnnotations_ onUnbind(
-      OnModelUnboundListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> listener) {
+      OnModelUnboundListener<EpoxyModelGroupWithAnnotations_, ModelGroupHolder> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   @Override
-  public void onVisibilityStateChanged(int visibilityState, final EpoxyModelGroup.Holder object) {
+  public void onVisibilityStateChanged(int visibilityState, final ModelGroupHolder object) {
     if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
       onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
     }
@@ -99,7 +99,7 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public EpoxyModelGroupWithAnnotations_ onVisibilityStateChanged(
-      OnModelVisibilityStateChangedListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> listener) {
+      OnModelVisibilityStateChangedListener<EpoxyModelGroupWithAnnotations_, ModelGroupHolder> listener) {
     onMutation();
     this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
     return this;
@@ -107,7 +107,7 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
 
   @Override
   public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
-      int visibleHeight, int visibleWidth, final EpoxyModelGroup.Holder object) {
+      int visibleHeight, int visibleWidth, final ModelGroupHolder object) {
     if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
       onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
     }
@@ -122,7 +122,7 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
   public EpoxyModelGroupWithAnnotations_ onVisibilityChanged(
-      OnModelVisibilityChangedListener<EpoxyModelGroupWithAnnotations_, EpoxyModelGroup.Holder> listener) {
+      OnModelVisibilityChangedListener<EpoxyModelGroupWithAnnotations_, ModelGroupHolder> listener) {
     onMutation();
     this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
