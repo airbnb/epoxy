@@ -18,11 +18,9 @@ import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.TextProp
 import com.airbnb.epoxy.paging.PagedListEpoxyController
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
-import org.jetbrains.anko.coroutines.experimental.bg
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PagingSampleActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,17 +88,15 @@ class ActivityViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     init {
-        bg {
+        GlobalScope.launch {
             (1..3000).map {
                 User(it)
             }.let {
                 it.groupBy {
                     it.uid / 200
                 }.forEach { group ->
-                    launch(CommonPool) {
-                        delay(group.key.toLong(), TimeUnit.SECONDS)
-                        db.userDao().insertAll(group.value)
-                    }
+                    delay(1000)
+                    db.userDao().insertAll(group.value)
                 }
             }
         }

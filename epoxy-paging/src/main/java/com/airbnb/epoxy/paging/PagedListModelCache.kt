@@ -117,7 +117,7 @@ internal class PagedListModelCache<T>(
      * We can't force this to happen, and must instead rely on user's configuration, but we can alert
      * when it is not configured correctly.
      *
-     * An exception is if the callback happens due to a new paged list being submitted, which can
+     * An exception is thrown if the callback happens due to a new paged list being submitted, which can
      * trigger a synchronous callback if the list goes from null to non null, or vice versa.
      *
      * Synchronization on [submitList] and other model cache access methods prevent issues when
@@ -196,12 +196,8 @@ internal class PagedListModelCache<T>(
         }
 
         (0 until modelCache.size).forEach { position ->
-            if (modelCache[position] != null) {
-                return@forEach
-            }
-
-            modelBuilder(position, currentList[position]).also {
-                modelCache[position] = it
+            if (modelCache[position] == null) {
+                modelCache[position] = modelBuilder(position, currentList[position])
             }
         }
 

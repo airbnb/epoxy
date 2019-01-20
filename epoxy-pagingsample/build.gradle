@@ -7,7 +7,7 @@ android {
 
   defaultConfig {
     applicationId "com.airbnb.epoxy.pagingsample"
-    minSdkVersion rootProject.MIN_SDK_VERSION
+    minSdkVersion 15
     targetSdkVersion rootProject.TARGET_SDK_VERSION
     versionCode 1
     versionName "1.0"
@@ -19,7 +19,7 @@ android {
 dependencies {
   implementation rootProject.deps.kotlin
 
-  implementation "org.jetbrains.anko:anko-coroutines:0.10.5"
+  implementation "org.jetbrains.anko:anko-coroutines:0.10.8"
   implementation "androidx.room:room-common:$ANDROIDX_ROOM"
   implementation "androidx.room:room-runtime:$ANDROIDX_ROOM"
   implementation "androidx.paging:paging-common:$ANDROIDX_PAGING"
