@@ -1,7 +1,6 @@
 package com.airbnb.epoxy;
 
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewStub;
 
 import java.util.ArrayList;
@@ -13,7 +12,6 @@ import java.util.List;
 import androidx.annotation.CallSuper;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * An {@link EpoxyModel} that contains other models, and allows you to combine those models in
@@ -33,7 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * viewgroups, such as a LinearLayout inside of a CardView.
  * <p>
  * 2. Include a {@link ViewStub} for each of the models in the list. There should be at least as
- * many view stubs as models. Extra stubs will be ignored. Each model will be inflated into a view
+ * many view stubs as models. Extra stubs will be ignored. Each model will have its view replace the
  * stub in order of the view stub's position in the view group. That is, the view group's children
  * will be iterated through in order. The first view stub found will be used for the first model in
  * the models list, the second view stub will be used for the second model, and so on. A depth first
@@ -46,12 +44,6 @@ import androidx.recyclerview.widget.RecyclerView;
  * view by default. If you want a model to keep the layout params from it's own layout resource you
  * can override {@link #useViewStubLayoutParams(EpoxyModel, int)}
  * <p>
- * If an {@link EpoxyModelWithView} is used then the view created by that model will simply replace
- * its ViewStub instead of inflating the view stub with a resource. If layout params are set on the
- * view created by {@link EpoxyModelWithView#buildView(ViewGroup)} then those will be kept,
- * otherwise any layout params specified on the view stub will be transferred over as with normal
- * models.
- * <p>
  * If you want to override the id used for a model's view you can set {@link
  * ViewStub#setInflatedId(int)} via xml. That id will be transferred over to the view taking that
  * stub's place. This is necessary if you want your model to save view state, since without this the
@@ -59,6 +51,10 @@ import androidx.recyclerview.widget.RecyclerView;
  * <p>
  * By default this model inherits the same id as the first model in the list. Call {@link #id(long)}
  * to override that if needed.
+ * <p>
+ * When a model group is recycled, its child views are automatically recycled to a pool that is
+ * shared with all other model groups in the activity. This enables model groups to more efficiently
+ * manage their children. The shared pool is cleaned up when the activity is destroyed.
  */
 @SuppressWarnings("rawtypes")
 public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
