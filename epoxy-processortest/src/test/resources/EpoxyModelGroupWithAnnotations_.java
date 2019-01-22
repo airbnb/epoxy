@@ -34,13 +34,11 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
   @Override
   public void handlePreBind(final EpoxyViewHolder holder, final ModelGroupHolder object,
       final int position) {
-    super.handlePreBind(holder, object, position);
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
   @Override
   public void handlePostBind(final ModelGroupHolder object, int position) {
-    super.handlePostBind(object, position);
     if (onModelBoundListener_epoxyGeneratedModel != null) {
       onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
@@ -96,8 +94,7 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public EpoxyModelGroupWithAnnotations_ onVisibilityStateChanged(
       OnModelVisibilityStateChangedListener<EpoxyModelGroupWithAnnotations_, ModelGroupHolder> listener) {
     onMutation();
@@ -119,8 +116,7 @@ public class EpoxyModelGroupWithAnnotations_ extends EpoxyModelGroupWithAnnotati
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public EpoxyModelGroupWithAnnotations_ onVisibilityChanged(
       OnModelVisibilityChangedListener<EpoxyModelGroupWithAnnotations_, ModelGroupHolder> listener) {
     onMutation();
