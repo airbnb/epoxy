@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
