@@ -7,7 +7,7 @@ android {
 
   defaultConfig {
     applicationId "com.airbnb.epoxy.pagingsample"
-    minSdkVersion rootProject.MIN_SDK_VERSION
+    minSdkVersion 15
     targetSdkVersion rootProject.TARGET_SDK_VERSION
     versionCode 1
     versionName "1.0"

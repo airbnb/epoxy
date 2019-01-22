@@ -55,8 +55,7 @@ abstract class PagedListEpoxyController<T>(
      * [PagedList]s. By default, it relies on simple object equality but you can provide a custom
      * one if you don't use all fields in the object in your models.
      */
-    itemDiffCallback: DiffUtil.ItemCallback<T> =
-        DEFAULT_ITEM_DIFF_CALLBACK as DiffUtil.ItemCallback<T>
+    itemDiffCallback: DiffUtil.ItemCallback<T> = DEFAULT_ITEM_DIFF_CALLBACK as DiffUtil.ItemCallback<T>
 ) : EpoxyController(modelBuildingHandler, diffingHandler) {
     // this is where we keep the already built models
     private val modelCache = PagedListModelCache(

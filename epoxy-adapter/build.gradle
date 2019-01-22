@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
@@ -22,11 +23,11 @@ dependencies {
   implementation rootProject.deps.androidAnnotations
   implementation rootProject.deps.androidRecyclerView
   implementation rootProject.deps.androidDesignLibrary
+  implementation rootProject.deps.kotlin
   api project(':epoxy-annotations')
 
-  annotationProcessor project(':epoxy-processor')
+  kapt project(':epoxy-processor')
 
-  testImplementation rootProject.deps.kotlin
   testImplementation rootProject.deps.junit
   testImplementation rootProject.deps.robolectric
   testImplementation rootProject.deps.mockito
