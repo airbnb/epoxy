@@ -4,6 +4,7 @@ import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyModel;
 import com.airbnb.epoxy.EpoxyModelClass;
 import com.airbnb.epoxy.EpoxyModelGroup;
+import com.airbnb.epoxy.ModelGroupHolder;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public abstract class ModelGroupWithAnnotation extends EpoxyModelGroup {
   }
 
   @Override
-  public void bind(@NonNull Holder holder) {
+  public void bind(@NonNull ModelGroupHolder holder) {
     super.bind(holder);
     holder.getRootView().setBackgroundColor(backgroundColor);
   }
