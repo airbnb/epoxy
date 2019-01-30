@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+// Though this appears to be unused, it is used so that relative version dependencies 
+// between the projects work.
 apply plugin: 'maven'
 apply plugin: 'signing'
 
