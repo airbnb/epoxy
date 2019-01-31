@@ -25,6 +25,7 @@ class DebugTimer implements Timer {
     }
 
     startTime = System.nanoTime();
+    this.sectionName = sectionName;
   }
 
   @Override
