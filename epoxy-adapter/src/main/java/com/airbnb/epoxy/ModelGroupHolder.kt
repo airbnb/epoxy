@@ -107,8 +107,7 @@ class ModelGroupHolder : EpoxyHolder() {
 
         if (usingStubs() && stubs.size < modelCount) {
             throw IllegalStateException(
-                "Insufficient view stubs for EpoxyModelGroup. " + modelCount +
-                    " models were provided but only " + stubs.size + " view stubs exist."
+                "Insufficient view stubs for EpoxyModelGroup. $modelCount models were provided but only ${stubs.size} view stubs exist."
             )
         }
         viewHolders.ensureCapacity(modelCount)
