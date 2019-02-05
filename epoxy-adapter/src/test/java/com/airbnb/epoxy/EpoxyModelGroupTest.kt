@@ -38,11 +38,11 @@ class EpoxyModelGroupTest(val useViewStubs: Boolean) {
         assertEquals(0, modelGroupHolder.viewHolders.size)
     }
 
-    private fun bind(modelGroup: EpoxyModelGroup) {
+    private fun bind(modelGroup: EpoxyModelGroup, previousGroup: EpoxyModelGroup? = null) {
         if (topLevelHolder == null) {
             topLevelHolder = EpoxyViewHolder(modelGroup.buildView(recyclerView), false)
         }
-        topLevelHolder!!.bind(modelGroup, null, emptyList(), 0)
+        topLevelHolder!!.bind(modelGroup, previousGroup, emptyList(), 0)
     }
 
     private fun assertModelsBound(modelGroup: EpoxyModelGroup) {
@@ -62,47 +62,53 @@ class EpoxyModelGroupTest(val useViewStubs: Boolean) {
 
     @Test
     fun bind_Unbind_Rebind_LinearLayoutWithLessModels() {
-        bind(createFrameLayoutGroup(3))
+        val firstGroup = createFrameLayoutGroup(3)
+        bind(firstGroup)
         unbind()
+
         createSpaceGroup(2).let {
-            bind(it)
+            bind(it, firstGroup)
             assertModelsBound(it)
         }
     }
 
     @Test
     fun bind_Unbind_Rebind_LinearLayoutWithMoreModels() {
-        bind(createFrameLayoutGroup(3))
+        val firstGroup = createFrameLayoutGroup(3)
+        bind(firstGroup)
         unbind()
         createSpaceGroup(4).let {
-            bind(it)
+            bind(it, firstGroup)
             assertModelsBound(it)
         }
     }
 
     @Test
     fun rebind_LinearLayoutWithSameViewTypes() {
-        bind(createFrameLayoutGroup(3))
+        val firstGroup = createFrameLayoutGroup(3)
+        bind(firstGroup)
         createFrameLayoutGroup(4).let {
-            bind(it)
+            bind(it, firstGroup)
             assertModelsBound(it)
         }
     }
 
     @Test
     fun rebind_LinearLayoutWithMoreModels() {
-        bind(createFrameLayoutGroup(3))
+        val firstGroup = createFrameLayoutGroup(3)
+        bind(firstGroup)
         createSpaceGroup(4).let {
-            bind(it)
+            bind(it, firstGroup)
             assertModelsBound(it)
         }
     }
 
     @Test
     fun rebind_LinearLayoutWithLessModels() {
-        bind(createFrameLayoutGroup(3))
+        val firstGroup = createFrameLayoutGroup(3)
+        bind(firstGroup)
         createSpaceGroup(2).let {
-            bind(it)
+            bind(it, firstGroup)
             assertModelsBound(it)
         }
     }
@@ -118,6 +124,54 @@ class EpoxyModelGroupTest(val useViewStubs: Boolean) {
         val secondHolders = modelGroupHolder.viewHolders.toSet()
 
         assertEquals(firstHolders, secondHolders)
+    }
+
+    @Test
+    fun viewStubsOutOfOrder() {
+        val models = (0 until 4).map { NestedModelFrameLayout().id(it) }
+
+        val modelGroup = object : EpoxyModelGroup(0, models) {
+            public override fun buildView(parent: ViewGroup): View {
+                return LinearLayout(parent.context).apply {
+
+                    addView(ViewStub(parent.context).apply {
+                        inflatedId = 0
+                    })
+
+                    addView(LinearLayout(parent.context).apply {
+                        addView(ViewStub(parent.context).apply {
+                            inflatedId = 1
+                        })
+
+                        addView(Space(parent.context))
+
+                        addView(ViewStub(parent.context).apply {
+                            inflatedId = 2
+                        })
+                    })
+
+                    addView(ViewStub(parent.context).apply {
+                        inflatedId = 3
+                    })
+                }
+            }
+        }
+
+        bind(modelGroup)
+
+        modelGroupHolder.viewHolders.forEachIndexed { index, viewholder ->
+
+            val view = viewholder.itemView
+            assertEquals(index, view.id)
+
+            val indexInsideParentView = (view.parent as ViewGroup).indexOfChild(view)
+            when (view.id) {
+                0 -> assertEquals(0, indexInsideParentView)
+                1 -> assertEquals(0, indexInsideParentView)
+                2 -> assertEquals(2, indexInsideParentView)
+                3 -> assertEquals(2, indexInsideParentView)
+            }
+        }
     }
 
     private fun createFrameLayoutGroup(modelCount: Int): EpoxyModelGroup {

@@ -141,12 +141,15 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
       public void onModel(EpoxyModel model, EpoxyViewHolder viewHolder, int modelIndex) {
         setViewVisibility(model, viewHolder);
 
-        EpoxyModel<?> previousModel = previousGroup.models.get(modelIndex);
-        if (previousModel.id() == model.id()) {
-          viewHolder.bind(model, previousModel, Collections.emptyList(), modelIndex);
-        } else {
-          viewHolder.bind(model, null, Collections.emptyList(), modelIndex);
+        if (modelIndex < previousGroup.models.size()) {
+          EpoxyModel<?> previousModel = previousGroup.models.get(modelIndex);
+          if (previousModel.id() == model.id()) {
+            viewHolder.bind(model, previousModel, Collections.emptyList(), modelIndex);
+            return;
+          }
         }
+
+        viewHolder.bind(model, null, Collections.emptyList(), modelIndex);
       }
     });
   }
