@@ -264,19 +264,19 @@ public abstract class EpoxyController {
 
       modelsBeingBuilt = new ControllerModelList(getExpectedModelCount());
 
-      timer.start();
+      timer.start("Models built");
       buildModels();
       addCurrentlyStagedModelIfExists();
-      timer.stop("Models built");
+      timer.stop();
 
       runInterceptors();
       filterDuplicatesIfNeeded(modelsBeingBuilt);
       modelsBeingBuilt.freeze();
 
-      timer.start();
+      timer.start("Models diffed");
       adapter.setModels(modelsBeingBuilt);
       // This timing is only right if diffing and model building are on the same thread
-      timer.stop("Models diffed");
+      timer.stop();
 
       modelsBeingBuilt = null;
       hasBuiltModelsEver = true;
@@ -359,13 +359,13 @@ public abstract class EpoxyController {
         }
       }
 
-      timer.start();
+      timer.start("Interceptors executed");
 
       for (Interceptor interceptor : interceptors) {
         interceptor.intercept(modelsBeingBuilt);
       }
 
-      timer.stop("Interceptors executed");
+      timer.stop();
 
       if (modelInterceptorCallbacks != null) {
         for (ModelInterceptorCallback callback : modelInterceptorCallbacks) {
@@ -537,7 +537,7 @@ public abstract class EpoxyController {
       return;
     }
 
-    timer.start();
+    timer.start("Duplicates filtered");
     Set<Long> modelIds = new HashSet<>(models.size());
 
     ListIterator<EpoxyModel<?>> modelIterator = models.listIterator();
@@ -562,7 +562,7 @@ public abstract class EpoxyController {
       }
     }
 
-    timer.stop("Duplicates filtered");
+    timer.stop();
   }
 
   private int findPositionOfDuplicate(List<EpoxyModel<?>> models, EpoxyModel<?> duplicateModel) {
