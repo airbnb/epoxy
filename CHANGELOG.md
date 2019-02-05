@@ -1,3 +1,17 @@
+# 3.3.0 (Feb 5, 2019)
+- **Fixed** Two issues related to the recent EpoxyModelGroup changes (https://github.com/airbnb/epoxy/pull/676)
+
+# 3.2.0 (Jan 21, 2019)
+- **New** Enable recycling of views within EpoxyModelGroup (https://github.com/airbnb/epoxy/pull/657)
+- **New** Add support to tracking visibility in nested RecyclerViews (https://github.com/airbnb/epoxy/pull/633)
+- **New** Add method to clear cache in paging controller (https://github.com/airbnb/epoxy/pull/586)
+- **Fix** Crashes from synchronization in PagedListEpoxyController (https://github.com/airbnb/epoxy/pull/656)
+- **Fix** Get onSwipeProgressChanged callbacks on return to original item position (https://github.com/airbnb/epoxy/pull/654)
+
+# 3.1.0 (Dec 4, 2018)
+- **Fix** Memory leak in debug mode is removed (https://github.com/airbnb/epoxy/pull/613)
+- **Fix** For visibility callbacks, wrong visibility when the view becomes not visible (https://github.com/airbnb/epoxy/pull/619)
+
 # 3.0.0 (Nov 13, 2018)
 
 - **Breaking** Migrated to androidx packages (Big thanks to jeffreydelooff!)
