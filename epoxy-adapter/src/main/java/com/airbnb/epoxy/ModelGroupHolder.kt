@@ -58,40 +58,31 @@ class ModelGroupHolder : EpoxyHolder() {
     }
 
     private fun createViewStubData(viewGroup: ViewGroup): List<ViewStubData> {
-        val stubs = ArrayList<ViewStubData>(4)
+        return ArrayList<ViewStubData>(4).apply {
 
-        while (true) {
-            val stubData = getNextViewStub(viewGroup)
-            if (stubData != null) {
-                stubs.add(stubData)
-                stubData.removeView()
-            } else {
-                break
+            collectViewStubs(viewGroup, this)
+
+            if (isEmpty()) {
+                throw IllegalStateException(
+                    "No view stubs found. If viewgroup is not empty it must contain ViewStubs."
+                )
             }
         }
-
-        if (stubs.isEmpty()) {
-            throw IllegalStateException(
-                "No view stubs found. If viewgroup is not empty it must contain ViewStubs."
-            )
-        }
-
-        return stubs
     }
 
-    private fun getNextViewStub(viewGroup: ViewGroup): ViewStubData? {
-        val childCount = viewGroup.childCount
-        for (i in 0 until childCount) {
+    private fun collectViewStubs(
+        viewGroup: ViewGroup,
+        stubs: ArrayList<ViewStubData>
+    ) {
+        for (i in 0 until viewGroup.childCount) {
             val child = viewGroup.getChildAt(i)
 
             if (child is ViewGroup) {
-                getNextViewStub(child)?.let { return it }
+                collectViewStubs(child, stubs)
             } else if (child is ViewStub) {
-                return ViewStubData(viewGroup, child, i)
+                stubs.add(ViewStubData(viewGroup, child, i))
             }
         }
-
-        return null
     }
 
     fun bindGroupIfNeeded(group: EpoxyModelGroup) {
@@ -117,7 +108,7 @@ class ModelGroupHolder : EpoxyHolder() {
         if (usingStubs() && stubs.size < modelCount) {
             throw IllegalStateException(
                 "Insufficient view stubs for EpoxyModelGroup. " + modelCount +
-                        " models were provided but only " + stubs.size + " view stubs exist."
+                    " models were provided but only " + stubs.size + " view stubs exist."
             )
         }
         viewHolders.ensureCapacity(modelCount)
@@ -180,7 +171,7 @@ class ModelGroupHolder : EpoxyHolder() {
 
     private fun removeAndRecycleView(modelPosition: Int) {
         if (usingStubs()) {
-            stubs[modelPosition].removeView()
+            stubs[modelPosition].resetStub()
         } else {
             childContainer.removeViewAt(modelPosition)
         }
@@ -204,6 +195,8 @@ private class ViewStubData(
 ) {
 
     fun setView(view: View, useStubLayoutParams: Boolean) {
+        removeCurrentView()
+
         // Carry over the stub id manually since we aren't inflating via the stub
         val inflatedId = viewStub.inflatedId
         if (inflatedId != View.NO_ID) {
@@ -217,7 +210,12 @@ private class ViewStubData(
         }
     }
 
-    fun removeView() {
+    fun resetStub() {
+        removeCurrentView()
+        viewGroup.addView(viewStub, position)
+    }
+
+    private fun removeCurrentView() {
         val view = viewGroup.getChildAt(position)
             ?: throw IllegalStateException("No view exists at position $position")
         viewGroup.removeView(view)
