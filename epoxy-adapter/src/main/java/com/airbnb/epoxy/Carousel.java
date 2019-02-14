@@ -494,6 +494,11 @@ public class Carousel extends EpoxyRecyclerView {
     super.setModels(models);
   }
 
+  @ModelProp
+  public void setRemoveAdapterWhenCarouselDetachedFromWindow(boolean removeAdapterWhenDetachedFromWindow) {
+    super.setRemoveAdapterWhenDetachedFromWindow(removeAdapterWhenDetachedFromWindow);
+  }
+
   @OnViewRecycled
   public void clear() {
     super.clear();
