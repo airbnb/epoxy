@@ -1,7 +1,7 @@
 import org.gradle.internal.jvm.Jvm
 
 apply plugin: 'com.android.library'
-apply from: 'build.workaround-missing-resource.gradle'
+apply from: rootProject.file('gradle/build.workaround-missing-resource.gradle')
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
@@ -27,6 +27,8 @@ dependencies {
   // Need to include the processor directly since we create an instance of it in code for testing
   testImplementation project(':epoxy-processor')
   testImplementation project(':epoxy-processortest')
+  testImplementation rootProject.deps.androidRecyclerView
+
   testImplementation rootProject.deps.googleTestingCompile
   testImplementation rootProject.deps.junit
   testImplementation rootProject.deps.kotlin

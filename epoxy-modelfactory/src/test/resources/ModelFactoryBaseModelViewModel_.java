@@ -1,42 +1,72 @@
 package com.airbnb.epoxy;
 
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import java.lang.CharSequence;
+import java.lang.IllegalArgumentException;
+import java.lang.IllegalStateException;
 import java.lang.Number;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-
-import androidx.annotation.LayoutRes;
-import androidx.annotation.Nullable;
+import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements GeneratedModel<Object>, BasicModelWithAttributeBuilder {
-  private OnModelBoundListener<BasicModelWithAttribute_, Object> onModelBoundListener_epoxyGeneratedModel;
+public class ModelFactoryBaseModelViewModel_ extends EpoxyModel<ModelFactoryBaseModelView> implements GeneratedModel<ModelFactoryBaseModelView>, ModelFactoryBaseModelViewModelBuilder {
+  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
-  private OnModelUnboundListener<BasicModelWithAttribute_, Object> onModelUnboundListener_epoxyGeneratedModel;
+  private OnModelBoundListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> onModelBoundListener_epoxyGeneratedModel;
 
-  private OnModelVisibilityStateChangedListener<BasicModelWithAttribute_, Object> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+  private OnModelUnboundListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> onModelUnboundListener_epoxyGeneratedModel;
 
-  private OnModelVisibilityChangedListener<BasicModelWithAttribute_, Object> onModelVisibilityChangedListener_epoxyGeneratedModel;
+  private OnModelVisibilityStateChangedListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
 
-  public BasicModelWithAttribute_() {
-    super();
-  }
+  private OnModelVisibilityChangedListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+
+  /**
+   * Bitset index: 0 */
+  @NonNull
+  private String title_String;
 
   @Override
   public void addTo(EpoxyController controller) {
     super.addTo(controller);
     addWithDebugValidation(controller);
+    if (!assignedAttributes_epoxyGeneratedModel.get(0)) {
+    	throw new IllegalStateException("A value is required for setTitle");
+    }
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final Object object, final int position) {
+  public void handlePreBind(final EpoxyViewHolder holder, final ModelFactoryBaseModelView object,
+      final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
   @Override
-  public void handlePostBind(final Object object, int position) {
+  public void bind(final ModelFactoryBaseModelView object) {
+    super.bind(object);
+    object.setTitle(title_String);
+  }
+
+  @Override
+  public void bind(final ModelFactoryBaseModelView object, EpoxyModel previousModel) {
+    if (!(previousModel instanceof ModelFactoryBaseModelViewModel_)) {
+      bind(object);
+      return;
+    }
+    ModelFactoryBaseModelViewModel_ that = (ModelFactoryBaseModelViewModel_) previousModel;
+    super.bind(object);
+
+    if ((title_String != null ? !title_String.equals(that.title_String) : that.title_String != null)) {
+      object.setTitle(title_String);
+    }
+  }
+
+  @Override
+  public void handlePostBind(final ModelFactoryBaseModelView object, int position) {
     if (onModelBoundListener_epoxyGeneratedModel != null) {
       onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
@@ -50,15 +80,15 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public BasicModelWithAttribute_ onBind(
-      OnModelBoundListener<BasicModelWithAttribute_, Object> listener) {
+  public ModelFactoryBaseModelViewModel_ onBind(
+      OnModelBoundListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   @Override
-  public void unbind(Object object) {
+  public void unbind(ModelFactoryBaseModelView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -72,15 +102,15 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public BasicModelWithAttribute_ onUnbind(
-      OnModelUnboundListener<BasicModelWithAttribute_, Object> listener) {
+  public ModelFactoryBaseModelViewModel_ onUnbind(
+      OnModelUnboundListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   @Override
-  public void onVisibilityStateChanged(int visibilityState, final Object object) {
+  public void onVisibilityStateChanged(int visibilityState, final ModelFactoryBaseModelView object) {
     if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
       onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
     }
@@ -94,8 +124,8 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public BasicModelWithAttribute_ onVisibilityStateChanged(
-      OnModelVisibilityStateChangedListener<BasicModelWithAttribute_, Object> listener) {
+  public ModelFactoryBaseModelViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> listener) {
     onMutation();
     this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
     return this;
@@ -103,7 +133,7 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
 
   @Override
   public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
-      int visibleHeight, int visibleWidth, final Object object) {
+      int visibleHeight, int visibleWidth, final ModelFactoryBaseModelView object) {
     if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
       onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
     }
@@ -117,97 +147,113 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public BasicModelWithAttribute_ onVisibilityChanged(
-      OnModelVisibilityChangedListener<BasicModelWithAttribute_, Object> listener) {
+  public ModelFactoryBaseModelViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> listener) {
     onMutation();
     this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
-  public BasicModelWithAttribute_ value(int value) {
+  /**
+   * <i>Required.</i>
+   *
+   * @see ModelFactoryBaseModelView#setTitle(String)
+   */
+  public ModelFactoryBaseModelViewModel_ title(@NonNull String title) {
+    if (title == null) {
+      throw new IllegalArgumentException("title cannot be null");
+    }
+    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
-    super.value = value;
+    this.title_String = title;
     return this;
   }
 
-  public int value() {
-    return value;
+  @NonNull
+  public String title() {
+    return title_String;
   }
 
   @Override
-  public BasicModelWithAttribute_ id(long id) {
+  public ModelFactoryBaseModelViewModel_ id(long id) {
     super.id(id);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ id(@Nullable Number... arg0) {
+  public ModelFactoryBaseModelViewModel_ id(@Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ id(long id1, long id2) {
+  public ModelFactoryBaseModelViewModel_ id(long id1, long id2) {
     super.id(id1, id2);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ id(@Nullable CharSequence arg0) {
+  public ModelFactoryBaseModelViewModel_ id(@Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
+  public ModelFactoryBaseModelViewModel_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ id(@Nullable CharSequence arg0, long arg1) {
+  public ModelFactoryBaseModelViewModel_ id(@Nullable CharSequence arg0, long arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ layout(@LayoutRes int arg0) {
+  public ModelFactoryBaseModelViewModel_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public ModelFactoryBaseModelViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ show() {
+  public ModelFactoryBaseModelViewModel_ show() {
     super.show();
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ show(boolean show) {
+  public ModelFactoryBaseModelViewModel_ show(boolean show) {
     super.show(show);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ hide() {
+  public ModelFactoryBaseModelViewModel_ hide() {
     super.hide();
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ reset() {
+  @LayoutRes
+  protected int getDefaultLayout() {
+    return 1;
+  }
+
+  @Override
+  public ModelFactoryBaseModelViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    super.value = 0;
+    assignedAttributes_epoxyGeneratedModel.clear();
+    this.title_String = null;
     super.reset();
     return this;
   }
@@ -217,13 +263,13 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
     if (o == this) {
       return true;
     }
-    if (!(o instanceof BasicModelWithAttribute_)) {
+    if (!(o instanceof ModelFactoryBaseModelViewModel_)) {
       return false;
     }
     if (!super.equals(o)) {
       return false;
     }
-    BasicModelWithAttribute_ that = (BasicModelWithAttribute_) o;
+    ModelFactoryBaseModelViewModel_ that = (ModelFactoryBaseModelViewModel_) o;
     if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
@@ -236,7 +282,7 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
     if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((value != that.value)) {
+    if ((title_String != null ? !title_String.equals(that.title_String) : that.title_String != null)) {
       return false;
     }
     return true;
@@ -249,23 +295,28 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + value;
+    result = 31 * result + (title_String != null ? title_String.hashCode() : 0);
     return result;
   }
 
   @Override
   public String toString() {
-    return "BasicModelWithAttribute_{" +
-        "value=" + value +
+    return "ModelFactoryBaseModelViewModel_{" +
+        "title_String=" + title_String +
         "}" + super.toString();
   }
 
-  public static BasicModelWithAttribute_ from(ModelProperties properties) {
-    BasicModelWithAttribute_ model = new BasicModelWithAttribute_();
+  public static ModelFactoryBaseModelViewModel_ from(ModelProperties properties) {
+    ModelFactoryBaseModelViewModel_ model = new ModelFactoryBaseModelViewModel_();
     model.id(properties.getId());
-    if (properties.has("value")) {
-      model.value(properties.getInt("value"));
+    if (properties.has("title")) {
+      model.title(properties.getString("title"));
     }
     return model;
+  }
+
+  @Override
+  public int getSpanSize(int totalSpanCount, int position, int itemCount) {
+    return totalSpanCount;
   }
 }
