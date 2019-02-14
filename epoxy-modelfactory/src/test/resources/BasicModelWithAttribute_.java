@@ -1,13 +1,12 @@
 package com.airbnb.epoxy;
 
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
 import java.lang.CharSequence;
 import java.lang.Number;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-
-import androidx.annotation.LayoutRes;
-import androidx.annotation.Nullable;
 
 /**
  * Generated file. Do not modify! */
@@ -92,8 +91,7 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public BasicModelWithAttribute_ onVisibilityStateChanged(
       OnModelVisibilityStateChangedListener<BasicModelWithAttribute_, Object> listener) {
     onMutation();
@@ -115,8 +113,7 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public BasicModelWithAttribute_ onVisibilityChanged(
       OnModelVisibilityChangedListener<BasicModelWithAttribute_, Object> listener) {
     onMutation();
