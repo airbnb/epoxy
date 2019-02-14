@@ -10,8 +10,8 @@ class ModelFactoryViewProcessorTest {
     @Test
     fun baseModel() {
         assertGeneration(
-            "BasicModelWithAttribute.java",
-            "BasicModelWithAttribute_.java"
+            "ModelFactoryBasicModelWithAttribute.java",
+            "ModelFactoryBasicModelWithAttribute_.java"
         )
     }
 
@@ -26,8 +26,8 @@ class ModelFactoryViewProcessorTest {
     @Test
     fun baseModelView() {
         assertGeneration(
-            "BaseModelView.java",
-            "BaseModelViewModel_.java"
+            "ModelFactoryBaseModelView.java",
+            "ModelFactoryBaseModelViewModel_.java"
         )
     }
 

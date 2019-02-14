@@ -10,16 +10,16 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements GeneratedModel<Object>, BasicModelWithAttributeBuilder {
-  private OnModelBoundListener<BasicModelWithAttribute_, Object> onModelBoundListener_epoxyGeneratedModel;
+public class ModelFactoryBasicModelWithAttribute_ extends ModelFactoryBasicModelWithAttribute implements GeneratedModel<Object>, ModelFactoryBasicModelWithAttributeBuilder {
+  private OnModelBoundListener<ModelFactoryBasicModelWithAttribute_, Object> onModelBoundListener_epoxyGeneratedModel;
 
-  private OnModelUnboundListener<BasicModelWithAttribute_, Object> onModelUnboundListener_epoxyGeneratedModel;
+  private OnModelUnboundListener<ModelFactoryBasicModelWithAttribute_, Object> onModelUnboundListener_epoxyGeneratedModel;
 
-  private OnModelVisibilityStateChangedListener<BasicModelWithAttribute_, Object> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+  private OnModelVisibilityStateChangedListener<ModelFactoryBasicModelWithAttribute_, Object> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
 
-  private OnModelVisibilityChangedListener<BasicModelWithAttribute_, Object> onModelVisibilityChangedListener_epoxyGeneratedModel;
+  private OnModelVisibilityChangedListener<ModelFactoryBasicModelWithAttribute_, Object> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  public BasicModelWithAttribute_() {
+  public ModelFactoryBasicModelWithAttribute_() {
     super();
   }
 
@@ -49,8 +49,8 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public BasicModelWithAttribute_ onBind(
-      OnModelBoundListener<BasicModelWithAttribute_, Object> listener) {
+  public ModelFactoryBasicModelWithAttribute_ onBind(
+      OnModelBoundListener<ModelFactoryBasicModelWithAttribute_, Object> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -71,8 +71,8 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public BasicModelWithAttribute_ onUnbind(
-      OnModelUnboundListener<BasicModelWithAttribute_, Object> listener) {
+  public ModelFactoryBasicModelWithAttribute_ onUnbind(
+      OnModelUnboundListener<ModelFactoryBasicModelWithAttribute_, Object> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
@@ -92,8 +92,8 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    */
-  public BasicModelWithAttribute_ onVisibilityStateChanged(
-      OnModelVisibilityStateChangedListener<BasicModelWithAttribute_, Object> listener) {
+  public ModelFactoryBasicModelWithAttribute_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<ModelFactoryBasicModelWithAttribute_, Object> listener) {
     onMutation();
     this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
     return this;
@@ -114,14 +114,14 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    */
-  public BasicModelWithAttribute_ onVisibilityChanged(
-      OnModelVisibilityChangedListener<BasicModelWithAttribute_, Object> listener) {
+  public ModelFactoryBasicModelWithAttribute_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<ModelFactoryBasicModelWithAttribute_, Object> listener) {
     onMutation();
     this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
-  public BasicModelWithAttribute_ value(int value) {
+  public ModelFactoryBasicModelWithAttribute_ value(int value) {
     onMutation();
     super.value = value;
     return this;
@@ -132,74 +132,74 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
   }
 
   @Override
-  public BasicModelWithAttribute_ id(long id) {
+  public ModelFactoryBasicModelWithAttribute_ id(long id) {
     super.id(id);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ id(@Nullable Number... arg0) {
+  public ModelFactoryBasicModelWithAttribute_ id(@Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ id(long id1, long id2) {
+  public ModelFactoryBasicModelWithAttribute_ id(long id1, long id2) {
     super.id(id1, id2);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ id(@Nullable CharSequence arg0) {
+  public ModelFactoryBasicModelWithAttribute_ id(@Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
+  public ModelFactoryBasicModelWithAttribute_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ id(@Nullable CharSequence arg0, long arg1) {
+  public ModelFactoryBasicModelWithAttribute_ id(@Nullable CharSequence arg0, long arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ layout(@LayoutRes int arg0) {
+  public ModelFactoryBasicModelWithAttribute_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ spanSizeOverride(
+  public ModelFactoryBasicModelWithAttribute_ spanSizeOverride(
       @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ show() {
+  public ModelFactoryBasicModelWithAttribute_ show() {
     super.show();
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ show(boolean show) {
+  public ModelFactoryBasicModelWithAttribute_ show(boolean show) {
     super.show(show);
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ hide() {
+  public ModelFactoryBasicModelWithAttribute_ hide() {
     super.hide();
     return this;
   }
 
   @Override
-  public BasicModelWithAttribute_ reset() {
+  public ModelFactoryBasicModelWithAttribute_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
@@ -214,13 +214,13 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
     if (o == this) {
       return true;
     }
-    if (!(o instanceof BasicModelWithAttribute_)) {
+    if (!(o instanceof ModelFactoryBasicModelWithAttribute_)) {
       return false;
     }
     if (!super.equals(o)) {
       return false;
     }
-    BasicModelWithAttribute_ that = (BasicModelWithAttribute_) o;
+    ModelFactoryBasicModelWithAttribute_ that = (ModelFactoryBasicModelWithAttribute_) o;
     if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
@@ -252,13 +252,13 @@ public class BasicModelWithAttribute_ extends BasicModelWithAttribute implements
 
   @Override
   public String toString() {
-    return "BasicModelWithAttribute_{" +
+    return "ModelFactoryBasicModelWithAttribute_{" +
         "value=" + value +
         "}" + super.toString();
   }
 
-  public static BasicModelWithAttribute_ from(ModelProperties properties) {
-    BasicModelWithAttribute_ model = new BasicModelWithAttribute_();
+  public static ModelFactoryBasicModelWithAttribute_ from(ModelProperties properties) {
+    ModelFactoryBasicModelWithAttribute_ model = new ModelFactoryBasicModelWithAttribute_();
     model.id(properties.getId());
     if (properties.has("value")) {
       model.value(properties.getInt("value"));

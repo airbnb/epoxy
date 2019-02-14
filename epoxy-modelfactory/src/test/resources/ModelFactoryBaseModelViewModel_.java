@@ -14,16 +14,16 @@ import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
-public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements GeneratedModel<BaseModelView>, BaseModelViewModelBuilder {
+public class ModelFactoryBaseModelViewModel_ extends EpoxyModel<ModelFactoryBaseModelView> implements GeneratedModel<ModelFactoryBaseModelView>, ModelFactoryBaseModelViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
-  private OnModelBoundListener<BaseModelViewModel_, BaseModelView> onModelBoundListener_epoxyGeneratedModel;
+  private OnModelBoundListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> onModelBoundListener_epoxyGeneratedModel;
 
-  private OnModelUnboundListener<BaseModelViewModel_, BaseModelView> onModelUnboundListener_epoxyGeneratedModel;
+  private OnModelUnboundListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> onModelUnboundListener_epoxyGeneratedModel;
 
-  private OnModelVisibilityStateChangedListener<BaseModelViewModel_, BaseModelView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+  private OnModelVisibilityStateChangedListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
 
-  private OnModelVisibilityChangedListener<BaseModelViewModel_, BaseModelView> onModelVisibilityChangedListener_epoxyGeneratedModel;
+  private OnModelVisibilityChangedListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
   /**
    * Bitset index: 0 */
@@ -40,24 +40,24 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
   }
 
   @Override
-  public void handlePreBind(final EpoxyViewHolder holder, final BaseModelView object,
+  public void handlePreBind(final EpoxyViewHolder holder, final ModelFactoryBaseModelView object,
       final int position) {
     validateStateHasNotChangedSinceAdded("The model was changed between being added to the controller and being bound.", position);
   }
 
   @Override
-  public void bind(final BaseModelView object) {
+  public void bind(final ModelFactoryBaseModelView object) {
     super.bind(object);
     object.setTitle(title_String);
   }
 
   @Override
-  public void bind(final BaseModelView object, EpoxyModel previousModel) {
-    if (!(previousModel instanceof BaseModelViewModel_)) {
+  public void bind(final ModelFactoryBaseModelView object, EpoxyModel previousModel) {
+    if (!(previousModel instanceof ModelFactoryBaseModelViewModel_)) {
       bind(object);
       return;
     }
-    BaseModelViewModel_ that = (BaseModelViewModel_) previousModel;
+    ModelFactoryBaseModelViewModel_ that = (ModelFactoryBaseModelViewModel_) previousModel;
     super.bind(object);
 
     if ((title_String != null ? !title_String.equals(that.title_String) : that.title_String != null)) {
@@ -66,7 +66,7 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
   }
 
   @Override
-  public void handlePostBind(final BaseModelView object, int position) {
+  public void handlePostBind(final ModelFactoryBaseModelView object, int position) {
     if (onModelBoundListener_epoxyGeneratedModel != null) {
       onModelBoundListener_epoxyGeneratedModel.onModelBound(this, object, position);
     }
@@ -80,15 +80,15 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public BaseModelViewModel_ onBind(
-      OnModelBoundListener<BaseModelViewModel_, BaseModelView> listener) {
+  public ModelFactoryBaseModelViewModel_ onBind(
+      OnModelBoundListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   @Override
-  public void unbind(BaseModelView object) {
+  public void unbind(ModelFactoryBaseModelView object) {
     super.unbind(object);
     if (onModelUnboundListener_epoxyGeneratedModel != null) {
       onModelUnboundListener_epoxyGeneratedModel.onModelUnbound(this, object);
@@ -102,15 +102,15 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public BaseModelViewModel_ onUnbind(
-      OnModelUnboundListener<BaseModelViewModel_, BaseModelView> listener) {
+  public ModelFactoryBaseModelViewModel_ onUnbind(
+      OnModelUnboundListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   @Override
-  public void onVisibilityStateChanged(int visibilityState, final BaseModelView object) {
+  public void onVisibilityStateChanged(int visibilityState, final ModelFactoryBaseModelView object) {
     if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
       onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
     }
@@ -124,8 +124,8 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public BaseModelViewModel_ onVisibilityStateChanged(
-      OnModelVisibilityStateChangedListener<BaseModelViewModel_, BaseModelView> listener) {
+  public ModelFactoryBaseModelViewModel_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> listener) {
     onMutation();
     this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
     return this;
@@ -133,7 +133,7 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
 
   @Override
   public void onVisibilityChanged(float percentVisibleHeight, float percentVisibleWidth,
-      int visibleHeight, int visibleWidth, final BaseModelView object) {
+      int visibleHeight, int visibleWidth, final ModelFactoryBaseModelView object) {
     if (onModelVisibilityChangedListener_epoxyGeneratedModel != null) {
       onModelVisibilityChangedListener_epoxyGeneratedModel.onVisibilityChanged(this, object, percentVisibleHeight, percentVisibleWidth, visibleHeight, visibleWidth);
     }
@@ -147,8 +147,8 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public BaseModelViewModel_ onVisibilityChanged(
-      OnModelVisibilityChangedListener<BaseModelViewModel_, BaseModelView> listener) {
+  public ModelFactoryBaseModelViewModel_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> listener) {
     onMutation();
     this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
@@ -157,9 +157,9 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
   /**
    * <i>Required.</i>
    *
-   * @see BaseModelView#setTitle(String)
+   * @see ModelFactoryBaseModelView#setTitle(String)
    */
-  public BaseModelViewModel_ title(@NonNull String title) {
+  public ModelFactoryBaseModelViewModel_ title(@NonNull String title) {
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
     }
@@ -175,67 +175,67 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
   }
 
   @Override
-  public BaseModelViewModel_ id(long id) {
+  public ModelFactoryBaseModelViewModel_ id(long id) {
     super.id(id);
     return this;
   }
 
   @Override
-  public BaseModelViewModel_ id(@Nullable Number... arg0) {
+  public ModelFactoryBaseModelViewModel_ id(@Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public BaseModelViewModel_ id(long id1, long id2) {
+  public ModelFactoryBaseModelViewModel_ id(long id1, long id2) {
     super.id(id1, id2);
     return this;
   }
 
   @Override
-  public BaseModelViewModel_ id(@Nullable CharSequence arg0) {
+  public ModelFactoryBaseModelViewModel_ id(@Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public BaseModelViewModel_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
+  public ModelFactoryBaseModelViewModel_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public BaseModelViewModel_ id(@Nullable CharSequence arg0, long arg1) {
+  public ModelFactoryBaseModelViewModel_ id(@Nullable CharSequence arg0, long arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public BaseModelViewModel_ layout(@LayoutRes int arg0) {
+  public ModelFactoryBaseModelViewModel_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
     return this;
   }
 
   @Override
-  public BaseModelViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public ModelFactoryBaseModelViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
 
   @Override
-  public BaseModelViewModel_ show() {
+  public ModelFactoryBaseModelViewModel_ show() {
     super.show();
     return this;
   }
 
   @Override
-  public BaseModelViewModel_ show(boolean show) {
+  public ModelFactoryBaseModelViewModel_ show(boolean show) {
     super.show(show);
     return this;
   }
 
   @Override
-  public BaseModelViewModel_ hide() {
+  public ModelFactoryBaseModelViewModel_ hide() {
     super.hide();
     return this;
   }
@@ -247,7 +247,7 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
   }
 
   @Override
-  public BaseModelViewModel_ reset() {
+  public ModelFactoryBaseModelViewModel_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
@@ -263,13 +263,13 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
     if (o == this) {
       return true;
     }
-    if (!(o instanceof BaseModelViewModel_)) {
+    if (!(o instanceof ModelFactoryBaseModelViewModel_)) {
       return false;
     }
     if (!super.equals(o)) {
       return false;
     }
-    BaseModelViewModel_ that = (BaseModelViewModel_) o;
+    ModelFactoryBaseModelViewModel_ that = (ModelFactoryBaseModelViewModel_) o;
     if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
@@ -301,13 +301,13 @@ public class BaseModelViewModel_ extends EpoxyModel<BaseModelView> implements Ge
 
   @Override
   public String toString() {
-    return "BaseModelViewModel_{" +
+    return "ModelFactoryBaseModelViewModel_{" +
         "title_String=" + title_String +
         "}" + super.toString();
   }
 
-  public static BaseModelViewModel_ from(ModelProperties properties) {
-    BaseModelViewModel_ model = new BaseModelViewModel_();
+  public static ModelFactoryBaseModelViewModel_ from(ModelProperties properties) {
+    ModelFactoryBaseModelViewModel_ model = new ModelFactoryBaseModelViewModel_();
     model.id(properties.getId());
     if (properties.has("title")) {
       model.title(properties.getString("title"));
