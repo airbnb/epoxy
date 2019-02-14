@@ -495,7 +495,8 @@ public class Carousel extends EpoxyRecyclerView {
   }
 
   @ModelProp
-  public void setRemoveAdapterWhenCarouselDetachedFromWindow(boolean removeAdapterWhenDetachedFromWindow) {
+  @Override
+  public void setRemoveAdapterWhenDetachedFromWindow(boolean removeAdapterWhenDetachedFromWindow) {
     super.setRemoveAdapterWhenDetachedFromWindow(removeAdapterWhenDetachedFromWindow);
   }
 
