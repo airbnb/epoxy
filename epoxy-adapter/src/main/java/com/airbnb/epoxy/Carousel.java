@@ -102,7 +102,7 @@ public class Carousel extends EpoxyRecyclerView {
     if (snapHelperFactory != null) {
       snapHelperFactory.buildSnapHelper(getContext()).attachToRecyclerView(this);
     }
-    
+
     // Carousels will be detached when their parent recyclerview is
     setRemoveAdapterWhenDetachedFromWindow(false);
   }
