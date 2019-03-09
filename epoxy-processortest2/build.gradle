@@ -10,5 +10,6 @@ android {
 }
 
 dependencies {
-  compile project(':epoxy-adapter')
+  implementation project(':epoxy-adapter')
+  implementation project(':epoxy-annotations')
 }

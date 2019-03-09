@@ -1,6 +1,6 @@
 package com.airbnb.epoxy;
 
-public class BasicModelWithAttribute extends EpoxyModel<Object> {
+public class ModelFactoryBasicModelWithAttribute extends EpoxyModel<Object> {
   @EpoxyAttribute int value;
 
   @Override

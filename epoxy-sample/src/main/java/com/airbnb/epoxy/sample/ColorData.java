@@ -2,7 +2,8 @@ package com.airbnb.epoxy.sample;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.ColorInt;
+
+import androidx.annotation.ColorInt;
 
 public class ColorData implements Parcelable {
   private final long id;

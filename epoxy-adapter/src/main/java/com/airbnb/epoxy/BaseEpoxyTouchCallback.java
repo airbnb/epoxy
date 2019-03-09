@@ -12,7 +12,7 @@ interface BaseEpoxyTouchCallback<T extends EpoxyModel> {
    *
    * @param model           The model being targeted for movement.
    * @param adapterPosition The current adapter position of the targeted model
-   * @see android.support.v7.widget.helper.ItemTouchHelper.Callback#getMovementFlags
+   * @see androidx.recyclerview.widget.ItemTouchHelper.Callback#getMovementFlags
    */
   int getMovementFlagsForModel(T model, int adapterPosition);
 

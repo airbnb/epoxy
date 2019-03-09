@@ -1,8 +1,8 @@
 package com.airbnb.epoxy.kotlinsample.helpers
 
-import android.support.annotation.IdRes
-import android.support.annotation.LayoutRes
 import android.view.View
+import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
 import com.airbnb.epoxy.EpoxyModel
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty

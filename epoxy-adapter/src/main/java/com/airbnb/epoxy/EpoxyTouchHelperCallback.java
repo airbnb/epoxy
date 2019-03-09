@@ -1,14 +1,15 @@
 package com.airbnb.epoxy;
 
 import android.graphics.Canvas;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.support.v7.widget.helper.ItemTouchHelper;
 
 import java.util.List;
 
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+
 /**
- * A wrapper around {@link android.support.v7.widget.helper.ItemTouchHelper.Callback} to cast all
+ * A wrapper around {@link androidx.recyclerview.widget.ItemTouchHelper.Callback} to cast all
  * view holders to {@link com.airbnb.epoxy.EpoxyViewHolder} for simpler use with Epoxy.
  */
 public abstract class EpoxyTouchHelperCallback extends ItemTouchHelper.Callback {

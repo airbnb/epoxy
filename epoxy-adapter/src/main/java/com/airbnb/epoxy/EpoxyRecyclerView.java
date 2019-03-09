@@ -1,32 +1,27 @@
 package com.airbnb.epoxy;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build.VERSION;
-import android.support.annotation.CallSuper;
-import android.support.annotation.DimenRes;
-import android.support.annotation.Dimension;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.Px;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 
 import com.airbnb.viewmodeladapter.R;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
+
+import androidx.annotation.CallSuper;
+import androidx.annotation.DimenRes;
+import androidx.annotation.Dimension;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.Px;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import kotlin.jvm.functions.Function0;
+
+import static com.airbnb.epoxy.ActivityRecyclerPoolKt.isActivityDestroyed;
 
 /**
  * <i>This feature is in Beta - please report bugs, feature requests, or other feedback at
@@ -65,14 +60,13 @@ import java.util.Queue;
  * desired in a scrolling list
  */
 public class EpoxyRecyclerView extends RecyclerView {
-
   private static final int DEFAULT_ADAPTER_REMOVAL_DELAY_MS = 2000;
 
   /**
    * Store one unique pool per activity. They are cleared out when activities are destroyed, so this
    * only needs to hold pools for active activities.
    */
-  private static final List<PoolReference> RECYCLER_POOLS = new ArrayList<>(5);
+  private static final ActivityRecyclerPool ACTIVITY_RECYCLER_POOL = new ActivityRecyclerPool();
 
   protected final EpoxyItemSpacingDecorator spacingDecorator = new EpoxyItemSpacingDecorator();
 
@@ -190,35 +184,13 @@ public class EpoxyRecyclerView extends RecyclerView {
       return;
     }
 
-    Context context = getContext();
-    Iterator<PoolReference> iterator = RECYCLER_POOLS.iterator();
-    PoolReference poolToUse = null;
-
-    while (iterator.hasNext()) {
-      PoolReference poolReference = iterator.next();
-      if (poolReference.context() == null) {
-        // Clean up entries from old activities so the list doesn't grow large
-        iterator.remove();
-      } else if (poolReference.context() == context) {
-        if (poolToUse != null) {
-          throw new IllegalStateException("A pool was already found");
-        }
-        poolToUse = poolReference;
-        // finish iterating to remove any old contexts
-      } else {
-        // A pool from a different activity, it may be removed soon once the activity reference
-        // is GC'd, but until then we can at least clear the pool references, which may
-        // be keeping the activity from getting GC'd
-        poolReference.clearIfActivityIsDestroyed();
-      }
-    }
-
-    if (poolToUse == null) {
-      poolToUse = new PoolReference(context, createViewPool());
-      RECYCLER_POOLS.add(poolToUse);
-    }
-
-    setRecycledViewPool(poolToUse.viewPool);
+    setRecycledViewPool(ACTIVITY_RECYCLER_POOL.getPool(getContext(),
+        new Function0<RecycledViewPool>() {
+          @Override
+          public RecycledViewPool invoke() {
+            return createViewPool();
+          }
+        }).getViewPool());
   }
 
   /**
@@ -254,8 +226,8 @@ public class EpoxyRecyclerView extends RecyclerView {
   }
 
   /**
-   * Create a new {@link android.support.v7.widget.RecyclerView.LayoutManager} instance to use for
-   * this RecyclerView.
+   * Create a new {@link androidx.recyclerview.widget.RecyclerView.LayoutManager}
+   * instance to use for this RecyclerView.
    * <p>
    * By default a LinearLayoutManager is used, and a reasonable default is chosen for scrolling
    * direction based on layout params.
@@ -564,93 +536,6 @@ public class EpoxyRecyclerView extends RecyclerView {
     // is no longer needed - the main signal we use for this is that the activity is destroyed.
     if (isActivityDestroyed(getContext())) {
       getRecycledViewPool().clear();
-    }
-  }
-
-  private static class PoolReference {
-    private final WeakReference<Context> contextReference;
-    private final RecycledViewPool viewPool;
-
-    private PoolReference(Context context,
-        RecycledViewPool viewPool) {
-      this.contextReference = new WeakReference<>(context);
-      this.viewPool = viewPool;
-    }
-
-    @Nullable
-    private Context context() {
-      return contextReference.get();
-    }
-
-    void clearIfActivityIsDestroyed() {
-      if (isActivityDestroyed(context())) {
-        viewPool.clear();
-      }
-    }
-  }
-
-  private static boolean isActivityDestroyed(@Nullable Context context) {
-    if (context == null) {
-      return true;
-    }
-
-    if (!(context instanceof Activity)) {
-      return false;
-    }
-
-    Activity activity = (Activity) context;
-    if (activity.isFinishing()) {
-      return true;
-    }
-
-    if (VERSION.SDK_INT >= 17) {
-      return activity.isDestroyed();
-    } else {
-      // Use this as a proxy for being destroyed on older devices
-      return !ViewCompat.isAttachedToWindow(activity.getWindow().getDecorView());
-    }
-  }
-
-  /**
-   * Like its parent, UnboundedViewPool lets you share Views between multiple RecyclerViews. However
-   * there is no maximum number of recycled views that it will store. This usually ends up being
-   * optimal, barring any hard memory constraints, as RecyclerViews do not recycle more Views than
-   * they need.
-   */
-  private static class UnboundedViewPool extends RecycledViewPool {
-
-    private final SparseArray<Queue<ViewHolder>> scrapHeaps = new SparseArray<>();
-
-    @Override
-    public void clear() {
-      scrapHeaps.clear();
-    }
-
-    @Override
-    public void setMaxRecycledViews(int viewType, int max) {
-      throw new UnsupportedOperationException(
-          "UnboundedViewPool does not support setting a maximum number of recycled views");
-    }
-
-    @Override
-    @Nullable
-    public ViewHolder getRecycledView(int viewType) {
-      final Queue<ViewHolder> scrapHeap = scrapHeaps.get(viewType);
-      return scrapHeap != null ? scrapHeap.poll() : null;
-    }
-
-    @Override
-    public void putRecycledView(ViewHolder viewHolder) {
-      getScrapHeapForType(viewHolder.getItemViewType()).add(viewHolder);
-    }
-
-    private Queue<ViewHolder> getScrapHeapForType(int viewType) {
-      Queue<ViewHolder> scrapHeap = scrapHeaps.get(viewType);
-      if (scrapHeap == null) {
-        scrapHeap = new LinkedList<>();
-        scrapHeaps.put(viewType, scrapHeap);
-      }
-      return scrapHeap;
     }
   }
 }

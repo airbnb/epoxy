@@ -1,13 +1,13 @@
 package com.airbnb.epoxy
 
 import android.app.Activity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyVisibilityTracker.DEBUG_LOG
 import com.airbnb.epoxy.VisibilityState.FOCUSED_VISIBLE
 import com.airbnb.epoxy.VisibilityState.FULL_IMPRESSION_VISIBLE
@@ -22,7 +22,6 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowLog
-import java.lang.StringBuilder
 
 /**
  * This class test the EpoxyVisibilityTracker by using a RecyclerView that scroll vertically. The
@@ -47,9 +46,9 @@ class EpoxyVisibilityTrackerTest {
          * - 2 full items
          * - 50% of the next item.
          */
-        private const val TWO_AND_HALF_VISIBLE = 2.5f
+        internal const val TWO_AND_HALF_VISIBLE = 2.5f
 
-        private val ALL_STATES = intArrayOf(
+        internal val ALL_STATES = intArrayOf(
             VISIBLE,
             INVISIBLE,
             FOCUSED_VISIBLE,
@@ -60,7 +59,7 @@ class EpoxyVisibilityTrackerTest {
         /**
          * Tolerance used for robolectric ui assertions when comparing data in pixels
          */
-        private const val HEIGHT_TOLERANCE_PIXELS = 1
+        private const val TOLERANCE_PIXELS = 1
 
         private fun log(message: String) {
             if (DEBUG_LOG) {
@@ -294,7 +293,10 @@ class EpoxyVisibilityTrackerTest {
         // focus the recycler view should scroll to end
 
         Assert.assertEquals(14, llm.findFirstVisibleItemPosition())
-        Assert.assertEquals(14 + itemsPerScreen - 1, llm.findLastCompletelyVisibleItemPosition())
+        Assert.assertEquals(
+            14 + itemsPerScreen - 1,
+            llm.findLastCompletelyVisibleItemPosition()
+        )
 
         with(moved1) {
             // moved 1 should still be in focus so still 100% visible
@@ -412,7 +414,6 @@ class EpoxyVisibilityTrackerTest {
         }
     }
 
-
     /**
      * Test visibility events using scrollToPosition on the recycler view
      */
@@ -425,7 +426,8 @@ class EpoxyVisibilityTrackerTest {
 
         // Now scroll to the end
         for (to in 0..testHelper.size) {
-            (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(to, 10)
+            (recyclerView.layoutManager as LinearLayoutManager)
+                .scrollToPositionWithOffset(to, 10)
         }
 
         // Verify visibility event
@@ -460,7 +462,6 @@ class EpoxyVisibilityTrackerTest {
                             visitedStates = ALL_STATES
                         )
                     }
-
                 }
 
                 index in 3..6 -> {
@@ -476,7 +477,6 @@ class EpoxyVisibilityTrackerTest {
                             visitedStates = ALL_STATES
                         )
                     }
-
                 }
 
                 index == 7 -> {
@@ -577,7 +577,6 @@ class EpoxyVisibilityTrackerTest {
                             visitedStates = intArrayOf(VISIBLE, INVISIBLE)
                         )
                     }
-
                 }
 
                 index in 3..6 -> {
@@ -593,7 +592,6 @@ class EpoxyVisibilityTrackerTest {
                             visitedStates = intArrayOf()
                         )
                     }
-
                 }
 
                 index == 7 -> {
@@ -639,7 +637,10 @@ class EpoxyVisibilityTrackerTest {
     /**
      * Attach an EpoxyController on the RecyclerView
      */
-    private fun buildTestData(sampleSize: Int, visibleItemsOnScreen: Float): MutableList<AssertHelper> {
+    private fun buildTestData(
+        sampleSize: Int,
+        visibleItemsOnScreen: Float
+    ): MutableList<AssertHelper> {
         // Compute individual item height
         itemHeight = (recyclerView.measuredHeight / visibleItemsOnScreen).toInt()
         // Build a test sample of sampleSize items
@@ -691,7 +692,13 @@ class EpoxyVisibilityTrackerTest {
                 epoxyController = object : TypedEpoxyController<List<AssertHelper>>() {
                     override fun buildModels(data: List<AssertHelper>?) {
                         data?.forEachIndexed { index, helper ->
-                            add(TestModel(index, itemHeight, helper).id(helper.id))
+                            add(
+                                TestModel(
+                                    itemPosition = index,
+                                    itemHeight = itemHeight,
+                                    helper = helper
+                                ).id(helper.id)
+                            )
                         }
                     }
                 }
@@ -714,6 +721,7 @@ class EpoxyVisibilityTrackerTest {
     internal class TestModel(
         private val itemPosition: Int,
         private val itemHeight: Int,
+        private val itemWidth: Int = FrameLayout.LayoutParams.MATCH_PARENT,
         private val helper: AssertHelper
     ) : EpoxyModelWithView<View>() {
 
@@ -721,16 +729,15 @@ class EpoxyVisibilityTrackerTest {
             log("buildView[$itemPosition](id=${helper.id})")
             return TextView(parent.context).apply {
                 // Force height
-                layoutParams = RecyclerView.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                    itemHeight
-                )
+                layoutParams = RecyclerView.LayoutParams(itemWidth, itemHeight)
             }
         }
 
         override fun onVisibilityChanged(ph: Float, pw: Float, vh: Int, vw: Int, view: View) {
             helper.percentVisibleHeight = ph
+            helper.percentVisibleWidth = pw
             helper.visibleHeight = vh
+            helper.visibleWidth = vw
             if (ph.toInt() != 100) helper.fullImpression = false
         }
 
@@ -741,7 +748,7 @@ class EpoxyVisibilityTrackerTest {
                 VISIBLE, INVISIBLE -> helper.visible = state == VISIBLE
                 FOCUSED_VISIBLE, UNFOCUSED_VISIBLE -> helper.focused = state == FOCUSED_VISIBLE
                 FULL_IMPRESSION_VISIBLE -> helper.fullImpression = state ==
-                        FULL_IMPRESSION_VISIBLE
+                    FULL_IMPRESSION_VISIBLE
             }
         }
     }
@@ -754,7 +761,9 @@ class EpoxyVisibilityTrackerTest {
         var created = false
         var visitedStates = mutableListOf<Int>()
         var visibleHeight = 0
+        var visibleWidth = 0
         var percentVisibleHeight = 0.0f
+        var percentVisibleWidth = 0.0f
         var visible = false
         var focused = false
         var fullImpression = false
@@ -762,7 +771,9 @@ class EpoxyVisibilityTrackerTest {
         fun assert(
             id: Int? = null,
             visibleHeight: Int? = null,
+            visibleWidth: Int? = null,
             percentVisibleHeight: Float? = null,
+            percentVisibleWidth: Float? = null,
             visible: Boolean? = null,
             fullImpression: Boolean? = null,
             visitedStates: IntArray? = null
@@ -775,11 +786,19 @@ class EpoxyVisibilityTrackerTest {
                 )
             }
             visibleHeight?.let {
-                // assert using tolerance, see HEIGHT_TOLERANCE_PIXELS
+                // assert using tolerance, see TOLERANCE_PIXELS
                 log("assert visibleHeight, got $it, expected ${this.visibleHeight}")
                 Assert.assertTrue(
                     "visibleHeight expected ${it}px got ${this.visibleHeight}px",
-                    Math.abs(it - this.visibleHeight) < HEIGHT_TOLERANCE_PIXELS
+                    Math.abs(it - this.visibleHeight) < TOLERANCE_PIXELS
+                )
+            }
+            visibleWidth?.let {
+                // assert using tolerance, see TOLERANCE_PIXELS
+                log("assert visibleWidth, got $it, expected ${this.visibleWidth}")
+                Assert.assertTrue(
+                    "visibleWidth expected ${it}px got ${this.visibleWidth}px",
+                    Math.abs(it - this.visibleWidth) < TOLERANCE_PIXELS
                 )
             }
             percentVisibleHeight?.let {
@@ -787,6 +806,13 @@ class EpoxyVisibilityTrackerTest {
                     "percentVisibleHeight expected $it got ${this.percentVisibleHeight}",
                     it,
                     this.percentVisibleHeight
+                )
+            }
+            percentVisibleWidth?.let {
+                Assert.assertEquals(
+                    "percentVisibleWidth expected $it got ${this.percentVisibleWidth}",
+                    it,
+                    this.percentVisibleWidth
                 )
             }
             visible?.let {
@@ -811,20 +837,25 @@ class EpoxyVisibilityTrackerTest {
             states.forEach { expectedStates.add(it) }
             for (state in expectedStates) {
                 if (!visitedStates.contains(state)) {
-                    Assert.fail("Expected visited ${expectedStates.description()}, got ${visitedStates.description()}")
+                    Assert.fail(
+                        "Expected visited ${expectedStates.description()}, " +
+                            "got ${visitedStates.description()}"
+                    )
                 }
             }
             for (state in ALL_STATES) {
                 if (!expectedStates.contains(state) && visitedStates.contains(state)) {
-                    Assert.fail("Expected ${state.description()} not visited, got ${visitedStates.description()}")
+                    Assert.fail(
+                        "Expected ${state.description()} not visited, " +
+                            "got ${visitedStates.description()}"
+                    )
                 }
             }
         }
     }
-
 }
 
-private fun <E> List<E>.ids(): String {
+internal fun <E> List<E>.ids(): String {
     val builder = StringBuilder("[")
     forEachIndexed { index, element ->
         (element as? EpoxyVisibilityTrackerTest.AssertHelper)?.let {

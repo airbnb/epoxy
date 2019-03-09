@@ -1,6 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.support.v7.widget.RecyclerView.AdapterDataObserver;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -18,8 +17,10 @@ import org.robolectric.annotation.Config;
 import java.util.Collections;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver;
+
 import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;

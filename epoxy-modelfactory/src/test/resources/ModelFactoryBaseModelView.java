@@ -4,9 +4,9 @@ import android.content.Context;
 import android.widget.FrameLayout;
 
 @ModelView(defaultLayout = 1)
-public class BaseModelView extends FrameLayout {
+public class ModelFactoryBaseModelView extends FrameLayout {
 
-  public BaseModelView(Context context) {
+  public ModelFactoryBaseModelView(Context context) {
     super(context);
   }
 

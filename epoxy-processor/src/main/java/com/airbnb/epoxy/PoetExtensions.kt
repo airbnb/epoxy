@@ -1,6 +1,5 @@
 package com.airbnb.epoxy
 
-import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.TypeName
 import com.squareup.kotlinpoet.ANY
 import com.squareup.kotlinpoet.BOOLEAN
@@ -11,10 +10,10 @@ import com.squareup.kotlinpoet.FLOAT
 import com.squareup.kotlinpoet.INT
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.LONG
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.SHORT
 import com.squareup.kotlinpoet.UNIT
 import javax.lang.model.element.Modifier
-import kotlin.reflect.jvm.internal.impl.types.KotlinType
 
 typealias JavaClassName = com.squareup.javapoet.ClassName
 typealias JavaTypeName = com.squareup.javapoet.TypeName
@@ -57,7 +56,12 @@ fun JavaClassName.toKPoet(): KotlinClassName {
 
 /** Some classes, like List or Byte have the same class name but a different package for their kotlin equivalent. */
 private fun JavaClassName.getPackageNameInKotlin(): String {
-    if (packageName() in listOf(javaUtilPkg, javaLangPkg, kotlinJvmFunction) && simpleNames().size == 1) {
+    if (packageName() in listOf(
+            javaUtilPkg,
+            javaLangPkg,
+            kotlinJvmFunction
+        ) && simpleNames().size == 1
+    ) {
 
         val transformedPkg = when {
             isBoxedPrimitive -> kotlinPkg
@@ -123,16 +127,14 @@ fun JavaClassName.setPackage(packageName: String) =
 // Does not support transferring annotations
 fun JavaWildcardTypeName.toKPoet() =
     if (!lowerBounds.isEmpty()) {
-        KotlinWildcardTypeName.supertypeOf(lowerBounds.first().toKPoet())
+        KotlinWildcardTypeName.consumerOf(lowerBounds.first().toKPoet())
     } else {
-        KotlinWildcardTypeName.subtypeOf(upperBounds.first().toKPoet())
+        KotlinWildcardTypeName.producerOf(upperBounds.first().toKPoet())
     }
 
 // Does not support transferring annotations
-fun JavaParametrizedTypeName.toKPoet() = KotlinParameterizedTypeName.get(
-    this.rawType.toKPoet(),
-    *typeArguments.toKPoet().toTypedArray()
-)
+fun JavaParametrizedTypeName.toKPoet() =
+    this.rawType.toKPoet().parameterizedBy(*typeArguments.toKPoet().toTypedArray())
 
 // Does not support transferring annotations
 fun JavaArrayTypeName.toKPoet(): KotlinTypeName {
@@ -156,10 +158,7 @@ fun JavaArrayTypeName.toKPoet(): KotlinTypeName {
         }
     }
 
-    return KotlinParameterizedTypeName.get(
-        KotlinClassName(kotlinPkg, "Array"),
-        this.componentType.toKPoet()
-    )
+    return KotlinClassName(kotlinPkg, "Array").parameterizedBy(this.componentType.toKPoet())
 }
 
 // Does not support transferring annotations
@@ -189,7 +188,7 @@ fun JavaTypeName.toKPoet(nullable: Boolean = false): KotlinTypeName {
     }
 
     if (nullable) {
-        return type.asNullable()
+        return type.copy(nullable = true)
     }
 
     return type
@@ -263,4 +262,3 @@ private val KOTLIN_KEYWORDS = setOf(
     "interface",
     "typeof"
 )
-

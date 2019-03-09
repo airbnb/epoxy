@@ -6,7 +6,7 @@ import com.airbnb.epoxy.Utils.getAnnotationClass
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeSpec.Builder
-import java.util.*
+import java.util.LinkedHashMap
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.Modifier
@@ -25,8 +25,8 @@ internal class LithoSpecProcessor(
     fun processSpecs(roundEnv: RoundEnvironment): Collection<LithoModelInfo> {
 
         if (!hasLithoEpoxyDependency()) {
-            // If the epoxy-litho module has not been included then we don't have access to the Epoxy
-            // litho model and can't build a model that extends it
+            // If the epoxy-litho module has not been included then we don't have access to the
+            // Epoxy litho model and can't build a model that extends it
             return emptyList()
         }
 
@@ -58,7 +58,6 @@ internal class LithoSpecProcessor(
             } catch (e: Exception) {
                 errorLogger.logError(e, "Error generating model classes")
             }
-
         }
 
         return modelInfoMap.values
@@ -110,6 +109,5 @@ internal class LithoSpecProcessor(
         } else {
             modelInfoMap[classElement]
         }
-
     }
 }

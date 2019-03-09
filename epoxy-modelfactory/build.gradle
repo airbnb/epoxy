@@ -1,7 +1,7 @@
 import org.gradle.internal.jvm.Jvm
 
 apply plugin: 'com.android.library'
-apply from: 'build.workaround-missing-resource.gradle'
+apply from: rootProject.file('gradle/build.workaround-missing-resource.gradle')
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
@@ -20,21 +20,23 @@ configurations.all { strategy ->
 }
 
 dependencies {
-  compile project(':epoxy-adapter')
-  compile rootProject.deps.paris
+  implementation project(':epoxy-adapter')
+  implementation rootProject.deps.paris
 
-  testCompile project(':epoxy-adapter')
+  testImplementation project(':epoxy-adapter')
   // Need to include the processor directly since we create an instance of it in code for testing
-  testCompile project(':epoxy-processor')
-  testCompile project(':epoxy-processortest')
-  testCompile rootProject.deps.googleTestingCompile
-  testCompile rootProject.deps.junit
-  testCompile rootProject.deps.kotlin
+  testImplementation project(':epoxy-processor')
+  testImplementation project(':epoxy-processortest')
+  testImplementation rootProject.deps.androidRecyclerView
+
+  testImplementation rootProject.deps.googleTestingCompile
+  testImplementation rootProject.deps.junit
+  testImplementation rootProject.deps.kotlin
   // Need to include the processor directly since we create an instance of it in code for testing
-  testCompile rootProject.deps.parisProcessor
-  testCompile rootProject.deps.robolectric
-  testCompile files(getRuntimeJar())
-  testCompile files(Jvm.current().getToolsJar())
+  testImplementation rootProject.deps.parisProcessor
+  testImplementation rootProject.deps.robolectric
+  testImplementation files(getRuntimeJar())
+  testImplementation files(Jvm.current().getToolsJar())
 
   kaptTest project(':epoxy-processor')
 }

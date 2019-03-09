@@ -1,11 +1,11 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.Nullable;
-
 import com.airbnb.epoxy.UpdateOp.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 import static com.airbnb.epoxy.UpdateOp.ADD;
 import static com.airbnb.epoxy.UpdateOp.MOVE;

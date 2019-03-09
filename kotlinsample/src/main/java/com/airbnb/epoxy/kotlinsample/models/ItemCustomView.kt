@@ -1,12 +1,12 @@
 package com.airbnb.epoxy.kotlinsample.models
 
 import android.content.Context
-import android.support.annotation.ColorInt
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import com.airbnb.epoxy.AfterPropsSet
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
@@ -52,7 +52,8 @@ class ItemCustomView @JvmOverloads constructor(
         @CallbackProp set
 
     // 2. Or you can use lateinit
-    @TextProp lateinit var title: CharSequence
+    @TextProp
+    lateinit var title: CharSequence
 
     @AfterPropsSet
     fun useProps() {
@@ -99,13 +100,17 @@ class ItemCustomView @JvmOverloads constructor(
     ) {
         Log.d(
             TAG,
-            "$title onChanged ${percentVisibleHeight.toInt()} ${percentVisibleWidth.toInt()} $visibleHeight $visibleWidth ${System.identityHashCode(this)}"
+            "$title onChanged ${percentVisibleHeight.toInt()} ${percentVisibleWidth.toInt()} " +
+                "$visibleHeight $visibleWidth ${System.identityHashCode(
+                this
+            )}"
         )
         with(onVisibilityEventDrawable) {
-            if (percentVisibleHeight < 100 && fullImpression) {
+            if ((percentVisibleHeight < 100 || percentVisibleWidth < 100) && fullImpression) {
                 fullImpression = false
             }
-            percent = percentVisibleHeight
+            percentHeight = percentVisibleHeight
+            percentWidth = percentVisibleWidth
         }
     }
 

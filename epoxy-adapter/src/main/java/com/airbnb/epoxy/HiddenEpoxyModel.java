@@ -1,7 +1,7 @@
 
 package com.airbnb.epoxy;
 
-import android.support.v4.widget.Space;
+import android.widget.Space;
 
 import com.airbnb.viewmodeladapter.R;
 

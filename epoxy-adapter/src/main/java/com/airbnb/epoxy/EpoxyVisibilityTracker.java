@@ -1,26 +1,32 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.Adapter;
-import android.support.v7.widget.RecyclerView.AdapterDataObserver;
-import android.support.v7.widget.RecyclerView.OnChildAttachStateChangeListener;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
 
+import com.airbnb.viewmodeladapter.R;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver;
+import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener;
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 /**
  * A simple way to track visibility events on {@link com.airbnb.epoxy.EpoxyModel} within a {@link
- * android.support.v7.widget.RecyclerView}.
+ * androidx.recyclerview.widget.RecyclerView}.
  * <p>
- * {@link EpoxyVisibilityTracker} works with any {@link android.support.v7.widget.RecyclerView}
+ * {@link EpoxyVisibilityTracker} works with any {@link androidx.recyclerview.widget.RecyclerView}
  * backed by an Epoxy controller. Once attached the events will be forwarded to the Epoxy model (or
  * to the Epoxy view when using annotations).
  * <p>
@@ -36,6 +42,29 @@ import java.util.List;
 public class EpoxyVisibilityTracker {
 
   private static final String TAG = "EpoxyVisibilityTracker";
+
+  @IdRes
+  private static final int TAG_ID = R.id.epoxy_visibility_tracker;
+
+  /**
+   * @param recyclerView the view.
+   * @return the tracker for the given {@link RecyclerView}. Null if no tracker was attached.
+   */
+  @Nullable
+  private static EpoxyVisibilityTracker getTracker(@NonNull RecyclerView recyclerView) {
+    return (EpoxyVisibilityTracker) recyclerView.getTag(TAG_ID);
+  }
+
+  /**
+   * Store the tracker for the given {@link RecyclerView}.
+   * @param recyclerView the view
+   * @param tracker the tracker
+   */
+  private static void setTracker(
+      @NonNull RecyclerView recyclerView,
+      @Nullable EpoxyVisibilityTracker tracker) {
+    recyclerView.setTag(TAG_ID, tracker);
+  }
 
   // Not actionable at runtime. It is only useful for internal test-troubleshooting.
   static final boolean DEBUG_LOG = false;
@@ -56,6 +85,9 @@ public class EpoxyVisibilityTracker {
   private Adapter lastAdapterSeen = null;
 
   private boolean onChangedEnabled = true;
+
+  /** All nested visibility trackers */
+  private Map<RecyclerView, EpoxyVisibilityTracker> nestedTrackers = new HashMap<>();
 
   /** This flag is for optimizing the process on detach. If detach is from data changed then it
    * need to re-process all views, else no need (ex: scroll). */
@@ -82,6 +114,7 @@ public class EpoxyVisibilityTracker {
     recyclerView.addOnScrollListener(this.listener);
     recyclerView.addOnLayoutChangeListener(this.listener);
     recyclerView.addOnChildAttachStateChangeListener(this.listener);
+    setTracker(recyclerView, this);
   }
 
   /**
@@ -93,6 +126,7 @@ public class EpoxyVisibilityTracker {
     recyclerView.removeOnScrollListener(this.listener);
     recyclerView.removeOnLayoutChangeListener(this.listener);
     recyclerView.removeOnChildAttachStateChangeListener(this.listener);
+    setTracker(recyclerView, null);
     attachedRecyclerView = null;
   }
 
@@ -100,7 +134,7 @@ public class EpoxyVisibilityTracker {
    * The tracker is storing visibility states internally and is using if to send events, only the
    * difference is sent. Use this method to clear the states and thus regenerate the visibility
    * events. This may be useful when you change the adapter on the {@link
-   * android.support.v7.widget.RecyclerView}
+   * androidx.recyclerview.widget.RecyclerView}
    */
   public void clearVisibilityStates() {
     // Clear our visibility items
@@ -168,13 +202,21 @@ public class EpoxyVisibilityTracker {
     if (recyclerView != null) {
       final ViewHolder holder = recyclerView.getChildViewHolder(child);
       if (holder instanceof EpoxyViewHolder) {
-        processVisibilityEvents(
+        boolean changed = processVisibilityEvents(
             recyclerView,
             (EpoxyViewHolder) holder,
-            recyclerView.getLayoutManager().canScrollVertically(),
             detachEvent,
             eventOriginForDebug
         );
+        if (changed) {
+          if (child instanceof RecyclerView) {
+            EpoxyVisibilityTracker tracker = nestedTrackers.get(child);
+            if (tracker != null) {
+              // If view visibility changed and there was a tracker on it then notify it.
+              tracker.processChangeEvent("parent");
+            }
+          }
+        }
       } else {
         throw new IllegalEpoxyUsage(
             "`EpoxyVisibilityTracker` cannot be used with non-epoxy view holders."
@@ -189,15 +231,15 @@ public class EpoxyVisibilityTracker {
    *
    * @param recyclerView        the recycler view
    * @param epoxyHolder         the {@link RecyclerView}
-   * @param vertical            true if the scrolling is vertical
    * @param detachEvent         true if the event originated from a view detached from the
    *                            recycler view
    * @param eventOriginForDebug a debug strings used for logs
+   * @return true if changed
    */
-  private void processVisibilityEvents(
+  private boolean processVisibilityEvents(
       @NonNull RecyclerView recyclerView,
       @NonNull EpoxyViewHolder epoxyHolder,
-      boolean vertical, boolean detachEvent,
+      boolean detachEvent,
       String eventOriginForDebug
   ) {
 
@@ -225,19 +267,34 @@ public class EpoxyVisibilityTracker {
       vi.reset(epoxyHolder.getAdapterPosition());
     }
 
-    if (vi.update(itemView, recyclerView, vertical, detachEvent)) {
+    boolean changed = false;
+    if (vi.update(itemView, recyclerView, detachEvent)) {
       // View is measured, process events
       vi.handleVisible(epoxyHolder, detachEvent);
       vi.handleFocus(epoxyHolder, detachEvent);
       vi.handleFullImpressionVisible(epoxyHolder, detachEvent);
-      if (onChangedEnabled) {
-        vi.handleChanged(epoxyHolder);
-      }
+      changed = vi.handleChanged(epoxyHolder, onChangedEnabled);
     }
+    return changed;
+  }
+
+  private void processChildRecyclerViewAttached(@NonNull RecyclerView childRecyclerView) {
+    // Register itself in the EpoxyVisibilityTracker. This will take care of nested list
+    // tracking (ex: carousel)
+    EpoxyVisibilityTracker tracker = getTracker(childRecyclerView);
+    if (tracker == null) {
+      tracker = new EpoxyVisibilityTracker();
+      tracker.attach(childRecyclerView);
+    }
+    nestedTrackers.put(childRecyclerView, tracker);
+  }
+
+  private void processChildRecyclerViewDetached(@NonNull RecyclerView childRecyclerView) {
+    nestedTrackers.remove(childRecyclerView);
   }
 
   /**
-   * Helper class that host the {@link android.support.v7.widget.RecyclerView} listener
+   * Helper class that host the {@link androidx.recyclerview.widget.RecyclerView} listener
    * implementations
    */
   private class Listener extends OnScrollListener
@@ -258,12 +315,18 @@ public class EpoxyVisibilityTracker {
     }
 
     @Override
-    public void onChildViewAttachedToWindow(View child) {
+    public void onChildViewAttachedToWindow(@NonNull View child) {
+      if (child instanceof RecyclerView) {
+        processChildRecyclerViewAttached((RecyclerView) child);
+      }
       processChild(child, false, "onChildViewAttachedToWindow");
     }
 
     @Override
-    public void onChildViewDetachedFromWindow(View child) {
+    public void onChildViewDetachedFromWindow(@NonNull View child) {
+      if (child instanceof RecyclerView) {
+        processChildRecyclerViewDetached((RecyclerView) child);
+      }
       if (visibleDataChanged) {
         // On detach event caused by data set changed we need to re-process all children because
         // the removal caused the others views to changes.
@@ -286,6 +349,9 @@ public class EpoxyVisibilityTracker {
      */
     @Override
     public void onChanged() {
+      if (notEpoxyManaged(attachedRecyclerView)) {
+        return;
+      }
       if (DEBUG_LOG) {
         Log.d(TAG, "onChanged()");
       }
@@ -300,6 +366,9 @@ public class EpoxyVisibilityTracker {
      */
     @Override
     public void onItemRangeInserted(int positionStart, int itemCount) {
+      if (notEpoxyManaged(attachedRecyclerView)) {
+        return;
+      }
       if (DEBUG_LOG) {
         Log.d(TAG, String.format("onItemRangeInserted(%d, %d)", positionStart, itemCount));
       }
@@ -317,6 +386,9 @@ public class EpoxyVisibilityTracker {
      */
     @Override
     public void onItemRangeRemoved(int positionStart, int itemCount) {
+      if (notEpoxyManaged(attachedRecyclerView)) {
+        return;
+      }
       if (DEBUG_LOG) {
         Log.d(TAG, String.format("onItemRangeRemoved(%d, %d)", positionStart, itemCount));
       }
@@ -332,17 +404,23 @@ public class EpoxyVisibilityTracker {
      * This is a bit more complex, for move we need to first swap the moved position then shift the
      * items between the swap. To simplify we split any range passed to individual item moved.
      *
-     * ps: anyway {@link android.support.v7.util.AdapterListUpdateCallback} does not seem to use
-     * range for moved items.
+     * ps: anyway {@link androidx.recyclerview.widget.AdapterListUpdateCallback}
+     * does not seem to use range for moved items.
      */
     @Override
     public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+      if (notEpoxyManaged(attachedRecyclerView)) {
+        return;
+      }
       for (int i = 0; i < itemCount; i++) {
         onItemMoved(fromPosition + i, toPosition + i);
       }
     }
 
     private void onItemMoved(int fromPosition, int toPosition) {
+      if (notEpoxyManaged(attachedRecyclerView)) {
+        return;
+      }
       if (DEBUG_LOG) {
         Log.d(TAG,
             String.format("onItemRangeMoved(%d, %d, %d)", fromPosition, toPosition, 1));
@@ -369,6 +447,14 @@ public class EpoxyVisibilityTracker {
           }
         }
       }
+    }
+
+    /**
+     * @param recyclerView the recycler view
+     * @return true if managed by an {@link BaseEpoxyAdapter}
+     */
+    private boolean notEpoxyManaged(@Nullable RecyclerView recyclerView) {
+      return recyclerView == null || !(recyclerView.getAdapter() instanceof BaseEpoxyAdapter);
     }
   }
 }

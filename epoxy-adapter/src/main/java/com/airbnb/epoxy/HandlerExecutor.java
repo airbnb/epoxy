@@ -2,9 +2,10 @@ package com.airbnb.epoxy;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
 
 import java.util.concurrent.Executor;
+
+import androidx.annotation.NonNull;
 
 /**
  * An executor that does it's work via posting to a Handler.

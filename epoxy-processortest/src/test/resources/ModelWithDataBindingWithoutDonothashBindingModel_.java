@@ -1,9 +1,9 @@
 package com.airbnb.epoxy;
 
-import android.databinding.ViewDataBinding;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
 import android.view.View;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
+import androidx.databinding.ViewDataBinding;
 import java.lang.CharSequence;
 import java.lang.IllegalStateException;
 import java.lang.Number;

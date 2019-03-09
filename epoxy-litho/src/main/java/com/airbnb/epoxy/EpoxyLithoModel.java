@@ -1,7 +1,6 @@
 package com.airbnb.epoxy;
 
 import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 
 import com.facebook.litho.Component;
@@ -11,6 +10,8 @@ import com.facebook.litho.ComponentTree;
 import com.facebook.litho.LithoView;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * Experiment support for Facebook's Litho library. Any litho component specs will automatically

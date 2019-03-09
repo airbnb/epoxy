@@ -5,35 +5,40 @@ apply plugin: 'kotlin-kapt'
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
-
   defaultConfig {
     applicationId "com.airbnb.epoxy.pagingsample"
-    minSdkVersion rootProject.MIN_SDK_VERSION
+    minSdkVersion 15
     targetSdkVersion rootProject.TARGET_SDK_VERSION
     versionCode 1
     versionName "1.0"
 
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 }
-
-
 
 dependencies {
   implementation rootProject.deps.kotlin
 
-  implementation "org.jetbrains.anko:anko-coroutines:0.10.4"
-  implementation 'android.arch.persistence.room:runtime:1.1.1'
-  implementation "android.arch.lifecycle:extensions:1.1.1"
-  kapt 'android.arch.persistence.room:compiler:1.1.1'
+  implementation "org.jetbrains.anko:anko-coroutines:0.10.5"
+  implementation "androidx.room:room-common:$ANDROIDX_ROOM"
+  implementation "androidx.room:room-runtime:$ANDROIDX_ROOM"
+  implementation "androidx.paging:paging-common:$ANDROIDX_PAGING"
+  implementation "androidx.paging:paging-runtime:$ANDROIDX_PAGING"
+  implementation "androidx.recyclerview:recyclerview:$ANDROIDX_RECYCLERVIEW"
+  kapt "androidx.room:room-compiler:$ANDROIDX_ROOM"
 
   implementation project(':epoxy-adapter')
   implementation project(':epoxy-paging')
+  implementation project(':epoxy-annotations')
   kapt project(':epoxy-processor')
 
-  implementation 'com.android.support:appcompat-v7:27.1.0'
+  implementation "androidx.appcompat:appcompat:$ANDROIDX_APPCOMPAT"
+
+  implementation "androidx.lifecycle:lifecycle-runtime:$ANDROIDX_RUNTIME"
+  implementation "androidx.lifecycle:lifecycle-extensions:$ANDROIDX_RUNTIME"
+
   testImplementation 'junit:junit:4.12'
-  androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
+  androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha2', {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
 

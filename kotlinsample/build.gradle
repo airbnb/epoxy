@@ -7,8 +7,6 @@ android {
 
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
-
-
   defaultConfig {
     applicationId "com.airbnb.epoxy.kotlinsample"
     minSdkVersion rootProject.MIN_SDK_VERSION
@@ -24,10 +22,13 @@ android {
 
 dependencies {
   implementation rootProject.deps.kotlin
+  implementation rootProject.deps.androidRecyclerView
+  implementation rootProject.deps.androidAppcompat
   implementation project(':epoxy-databinding')
+  implementation project(':epoxy-adapter')
+  implementation project(':epoxy-annotations')
 
   kapt project(':epoxy-processor')
-  kapt rootProject.deps.dataBindingCompiler
   kaptTest project(":epoxy-processor")
 
   testImplementation rootProject.deps.robolectric

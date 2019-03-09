@@ -1,9 +1,9 @@
 package com.airbnb.epoxy;
 
 import android.os.AsyncTask;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
 import android.view.ViewGroup;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
 import com.airbnb.paris.StyleApplierUtils;
 import com.airbnb.paris.styles.Style;
 import com.airbnb.viewmodeladapter.R;

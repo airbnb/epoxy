@@ -2,7 +2,7 @@ package com.airbnb.epoxy
 
 import com.airbnb.epoxy.Utils.getClassParamFromAnnotation
 import com.squareup.javapoet.ClassName
-import java.util.*
+import java.util.ArrayList
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.VariableElement
 import javax.lang.model.util.Elements
@@ -26,8 +26,8 @@ internal class DataBindingProcessor(
             val layoutResources = resourceProcessor
                 .getLayoutsInAnnotation(it, EpoxyDataBindingLayouts::class.java)
 
-            // Get the module name after parsing resources so we can use the resource classes to figure
-            // out the module name
+            // Get the module name after parsing resources so we can use the resource classes to
+            // figure out the module name
             val moduleName = dataBindingModuleLookup.getModuleName(it)
 
             val enableDoNotHash =

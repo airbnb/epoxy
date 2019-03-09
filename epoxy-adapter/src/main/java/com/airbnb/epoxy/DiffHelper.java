@@ -1,14 +1,14 @@
 
 package com.airbnb.epoxy;
 
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Helper to track changes in the models list.

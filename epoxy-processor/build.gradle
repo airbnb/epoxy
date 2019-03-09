@@ -23,6 +23,7 @@ dependencies {
     implementation deps.kotlin
     implementation deps.squareJavaPoet
     implementation deps.squareKotlinPoet
+    implementation deps.androidAnnotations
 
     /** Provides the sun javac tools for looking up the R class trees. */
     compileOnly files(Jvm.current().getToolsJar())

@@ -1,9 +1,9 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.VisibleForTesting;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.annotation.VisibleForTesting;
 
 class ViewTypeManager {
   private static final Map<Class, Integer> VIEW_TYPE_MAP = new HashMap<>();
@@ -24,12 +24,12 @@ class ViewTypeManager {
     VIEW_TYPE_MAP.clear();
   }
 
-  int getViewType(EpoxyModel<?> model) {
+  int getViewTypeAndRememberModel(EpoxyModel<?> model) {
     lastModelForViewTypeLookup = model;
-    return getViewTypeInternal(model);
+    return getViewType(model);
   }
 
-  private static int getViewTypeInternal(EpoxyModel<?> model) {
+  static int getViewType(EpoxyModel<?> model) {
     int defaultViewType = model.getViewType();
     if (defaultViewType != 0) {
       return defaultViewType;
@@ -66,7 +66,7 @@ class ViewTypeManager {
    */
   EpoxyModel<?> getModelForViewType(BaseEpoxyAdapter adapter, int viewType) {
     if (lastModelForViewTypeLookup != null
-        && getViewTypeInternal(lastModelForViewTypeLookup) == viewType) {
+        && getViewType(lastModelForViewTypeLookup) == viewType) {
       // We expect this to be a hit 100% of the time
       return lastModelForViewTypeLookup;
     }
@@ -76,7 +76,7 @@ class ViewTypeManager {
 
     // To be extra safe in case RecyclerView implementation details change...
     for (EpoxyModel<?> model : adapter.getCurrentModels()) {
-      if (getViewTypeInternal(model) == viewType) {
+      if (getViewType(model) == viewType) {
         return model;
       }
     }

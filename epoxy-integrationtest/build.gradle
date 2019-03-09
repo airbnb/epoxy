@@ -32,16 +32,20 @@ android {
 }
 
 dependencies {
-  compile rootProject.deps.kotlin
-  compile project(':epoxy-databinding')
-  compile project(':epoxy-paging')
+  implementation rootProject.deps.kotlin
+  implementation rootProject.deps.androidRecyclerView
+  implementation rootProject.deps.androidPagingComponent
+  implementation project(':epoxy-adapter')
+  implementation project(':epoxy-annotations')
+  implementation project(':epoxy-databinding')
+  implementation project(':epoxy-paging')
 
   kapt project(':epoxy-processor')
-  kapt rootProject.deps.dataBindingCompiler
 
-  testCompile rootProject.deps.robolectric
-  testCompile rootProject.deps.junit
-  testCompile rootProject.deps.mockito
+  testImplementation rootProject.deps.robolectric
+  testImplementation rootProject.deps.junit
+  testImplementation rootProject.deps.mockito
+  testImplementation rootProject.deps.mockito_inline
 }
 
 repositories {

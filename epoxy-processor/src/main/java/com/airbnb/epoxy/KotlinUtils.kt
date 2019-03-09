@@ -38,7 +38,6 @@ fun getTypeMirror(
     } catch (mte: MirroredTypeException) {
         mte.typeMirror
     }
-
 }
 
 fun Class<*>.asTypeElement(
@@ -117,7 +116,9 @@ fun ClassName.appendToName(suffix: String) = ClassName.get(
 ).annotated(annotations)!!
 
 /** Iterates through each character, allowing you to build a string by transforming the characters as needed. */
-private fun String.transformEachChar(operation: StringBuilder.(Char?, Char, Char?) -> Unit): String {
+private fun String.transformEachChar(
+    operation: StringBuilder.(Char?, Char, Char?) -> Unit
+): String {
     val stringBuilder = StringBuilder(length)
 
     for (i in 0 until length) {
@@ -166,7 +167,9 @@ inline fun <reified T : Annotation> Element.annotation(): T? = getAnnotation(T::
  *
  * @param annotationFilter Return false to exclude annotations with the given class name.
  */
-fun TypeElement.buildAnnotationSpecs(annotationFilter: (ClassName) -> Boolean = { true }): List<AnnotationSpec> {
+fun TypeElement.buildAnnotationSpecs(
+    annotationFilter: (ClassName) -> Boolean = { true }
+): List<AnnotationSpec> {
     val internalAnnotationFilter = { className: ClassName ->
         if (className.reflectionName() == "kotlin.Metadata") {
             // Don't include the generated kotlin metadata since it only applies to the original
@@ -175,7 +178,6 @@ fun TypeElement.buildAnnotationSpecs(annotationFilter: (ClassName) -> Boolean = 
         } else {
             annotationFilter(className)
         }
-
     }
     return annotationMirrors
         .map { AnnotationSpec.get(it) }

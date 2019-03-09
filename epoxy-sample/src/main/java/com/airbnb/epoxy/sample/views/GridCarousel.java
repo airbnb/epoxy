@@ -1,13 +1,14 @@
 package com.airbnb.epoxy.sample.views;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 
 import com.airbnb.epoxy.Carousel;
 import com.airbnb.epoxy.ModelView;
 import com.airbnb.epoxy.ModelView.Size;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 @ModelView(saveViewState = true, autoLayout = Size.MATCH_WIDTH_WRAP_HEIGHT)
 public class GridCarousel extends Carousel {

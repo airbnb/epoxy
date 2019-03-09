@@ -2,16 +2,17 @@ package com.airbnb.epoxy.kotlinsample
 
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.EpoxyVisibilityTracker
-import com.airbnb.epoxy.OnModelVisibilityStateChangedListener
+import com.airbnb.epoxy.kotlinsample.models.CarouselItemCustomViewModel_
 import com.airbnb.epoxy.kotlinsample.models.ItemDataClass
 import com.airbnb.epoxy.kotlinsample.models.itemCustomView
 import com.airbnb.epoxy.kotlinsample.models.itemEpoxyHolder
+import com.airbnb.epoxy.kotlinsample.views.carouselNoSnap
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: EpoxyRecyclerView
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView.withModels {
 
-            for(i in 0 until 100) {
+            for (i in 0 until 100) {
                 dataBindingItem {
                     id("data binding $i")
                     text("this is a data binding model")
@@ -58,6 +59,20 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
+                carouselNoSnap {
+                    id("carousel $i")
+                    models(mutableListOf<CarouselItemCustomViewModel_>().apply {
+                        val lastPage = 10
+                        for (j in 0 until lastPage) {
+                            add(
+                                CarouselItemCustomViewModel_()
+                                    .id("carousel $i-$j")
+                                    .title("Page $j / $lastPage")
+                            )
+                        }
+                    })
+                }
+
                 // Since data classes do not use code generation, there's no extension generated here
                 ItemDataClass("this is a Data Class Item")
                     .id("data class $i")
@@ -78,4 +93,3 @@ fun EpoxyRecyclerView.withModels(buildModelsCallback: EpoxyController.() -> Unit
         }
     })
 }
-

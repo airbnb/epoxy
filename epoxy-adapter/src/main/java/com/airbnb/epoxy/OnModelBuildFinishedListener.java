@@ -1,6 +1,6 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Used with {@link EpoxyController#addModelBuildListener(OnModelBuildFinishedListener)} to be

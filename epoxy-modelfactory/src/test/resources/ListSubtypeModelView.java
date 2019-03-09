@@ -1,8 +1,8 @@
 package com.airbnb.epoxy;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.widget.FrameLayout;
+import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 @ModelView(defaultLayout = 1)

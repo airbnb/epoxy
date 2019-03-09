@@ -2,9 +2,9 @@ package com.airbnb.epoxy.databinding;
 import com.airbnb.epoxy.R;
 import com.airbnb.epoxy.BR;
 import android.view.View;
-public class ModelWithDataBindingBinding extends android.databinding.ViewDataBinding  {
+public class ModelWithDataBindingBinding extends androidx.databinding.ViewDataBinding  {
 
-  private static final android.databinding.ViewDataBinding.IncludedLayouts sIncludes;
+  private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
   private static final android.util.SparseIntArray sViewsWithIds;
   static {
     sIncludes = null;
@@ -18,7 +18,7 @@ public class ModelWithDataBindingBinding extends android.databinding.ViewDataBin
   // listeners
   // Inverse Binding Event Handlers
 
-  public ModelWithDataBindingBinding(android.databinding.DataBindingComponent bindingComponent, View root) {
+  public ModelWithDataBindingBinding(androidx.databinding.DataBindingComponent bindingComponent, View root) {
     super(bindingComponent, root, 0);
     final Object[] bindings = mapBindings(bindingComponent, root, 1, sIncludes, sViewsWithIds);
     this.button = (android.widget.Button) bindings[0];
@@ -89,7 +89,7 @@ public class ModelWithDataBindingBinding extends android.databinding.ViewDataBin
     if ((dirtyFlags & 0x3L) != 0) {
       // api target 1
 
-      android.databinding.adapters.TextViewBindingAdapter.setText(this.button, stringValue);
+      androidx.databinding.adapters.TextViewBindingAdapter.setText(this.button, stringValue);
     }
   }
   // Listener Stub Implementations
@@ -98,21 +98,21 @@ public class ModelWithDataBindingBinding extends android.databinding.ViewDataBin
   private  long mDirtyFlags = 0xffffffffffffffffL;
 
   public static ModelWithDataBindingBinding inflate(android.view.LayoutInflater inflater, android.view.ViewGroup root, boolean attachToRoot) {
-    return inflate(inflater, root, attachToRoot, android.databinding.DataBindingUtil.getDefaultComponent());
+    return inflate(inflater, root, attachToRoot, androidx.databinding.DataBindingUtil.getDefaultComponent());
   }
-  public static ModelWithDataBindingBinding inflate(android.view.LayoutInflater inflater, android.view.ViewGroup root, boolean attachToRoot, android.databinding.DataBindingComponent bindingComponent) {
-    return android.databinding.DataBindingUtil.<ModelWithDataBindingBinding>inflate(inflater, com.airbnb.epoxy.R.layout.model_with_data_binding, root, attachToRoot, bindingComponent);
+  public static ModelWithDataBindingBinding inflate(android.view.LayoutInflater inflater, android.view.ViewGroup root, boolean attachToRoot, androidx.databinding.DataBindingComponent bindingComponent) {
+    return androidx.databinding.DataBindingUtil.<ModelWithDataBindingBinding>inflate(inflater, com.airbnb.epoxy.R.layout.model_with_data_binding, root, attachToRoot, bindingComponent);
   }
   public static ModelWithDataBindingBinding inflate(android.view.LayoutInflater inflater) {
-    return inflate(inflater, android.databinding.DataBindingUtil.getDefaultComponent());
+    return inflate(inflater, androidx.databinding.DataBindingUtil.getDefaultComponent());
   }
-  public static ModelWithDataBindingBinding inflate(android.view.LayoutInflater inflater, android.databinding.DataBindingComponent bindingComponent) {
+  public static ModelWithDataBindingBinding inflate(android.view.LayoutInflater inflater, androidx.databinding.DataBindingComponent bindingComponent) {
     return bind(inflater.inflate(com.airbnb.epoxy.R.layout.model_with_data_binding, null, false), bindingComponent);
   }
   public static ModelWithDataBindingBinding bind(android.view.View view) {
-    return bind(view, android.databinding.DataBindingUtil.getDefaultComponent());
+    return bind(view, androidx.databinding.DataBindingUtil.getDefaultComponent());
   }
-  public static ModelWithDataBindingBinding bind(android.view.View view, android.databinding.DataBindingComponent bindingComponent) {
+  public static ModelWithDataBindingBinding bind(android.view.View view, androidx.databinding.DataBindingComponent bindingComponent) {
     if (!"layout/model_with_data_binding_0".equals(view.getTag())) {
       throw new RuntimeException("view tag isn't correct on view:" + view.getTag());
     }

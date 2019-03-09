@@ -2,11 +2,6 @@ package com.airbnb.epoxy;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
-import android.support.v7.widget.RecyclerView;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,6 +12,12 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
+
 import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
 
 /**
@@ -26,8 +27,8 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
  * {@link #buildModels()}, update the adapter with the new models, and notify any changes between
  * the new and old models.
  * <p>
- * The controller maintains a {@link android.support.v7.widget.RecyclerView.Adapter} with the latest
- * models, which you can get via {@link #getAdapter()} to set on your RecyclerView.
+ * The controller maintains a {@link androidx.recyclerview.widget.RecyclerView.Adapter} with the
+ * latest models, which you can get via {@link #getAdapter()} to set on your RecyclerView.
  * <p>
  * All data change notifications are applied automatically via Epoxy's diffing algorithm. All of
  * your models must have a unique id set on them for diffing to work. You may choose to use {@link
@@ -121,8 +122,8 @@ public abstract class EpoxyController {
 
   @Retention(RetentionPolicy.SOURCE)
   @IntDef({RequestedModelBuildType.NONE,
-      RequestedModelBuildType.NEXT_FRAME,
-      RequestedModelBuildType.DELAYED})
+           RequestedModelBuildType.NEXT_FRAME,
+           RequestedModelBuildType.DELAYED})
   private @interface RequestedModelBuildType {
     int NONE = 0;
     /** A request has been made to build models immediately. It is posted. */
@@ -263,19 +264,19 @@ public abstract class EpoxyController {
 
       modelsBeingBuilt = new ControllerModelList(getExpectedModelCount());
 
-      timer.start();
+      timer.start("Models built");
       buildModels();
       addCurrentlyStagedModelIfExists();
-      timer.stop("Models built");
+      timer.stop();
 
       runInterceptors();
       filterDuplicatesIfNeeded(modelsBeingBuilt);
       modelsBeingBuilt.freeze();
 
-      timer.start();
+      timer.start("Models diffed");
       adapter.setModels(modelsBeingBuilt);
       // This timing is only right if diffing and model building are on the same thread
-      timer.stop("Models diffed");
+      timer.stop();
 
       modelsBeingBuilt = null;
       hasBuiltModelsEver = true;
@@ -358,23 +359,25 @@ public abstract class EpoxyController {
         }
       }
 
-      timer.start();
+      timer.start("Interceptors executed");
 
       for (Interceptor interceptor : interceptors) {
         interceptor.intercept(modelsBeingBuilt);
       }
 
-      timer.stop("Interceptors executed");
+      timer.stop();
 
       if (modelInterceptorCallbacks != null) {
         for (ModelInterceptorCallback callback : modelInterceptorCallbacks) {
           callback.onInterceptorsFinished(this);
         }
-
-        // Interceptors are cleared so that future model builds don't notify past models
-        modelInterceptorCallbacks = null;
       }
     }
+
+    // Interceptors are cleared so that future model builds don't notify past models.
+    // We need to make sure they are cleared even if there are no interceptors so that
+    // we don't leak the models.
+    modelInterceptorCallbacks = null;
   }
 
   /** A callback that is run after {@link #buildModels()} completes and before diffing is run. */
@@ -534,7 +537,7 @@ public abstract class EpoxyController {
       return;
     }
 
-    timer.start();
+    timer.start("Duplicates filtered");
     Set<Long> modelIds = new HashSet<>(models.size());
 
     ListIterator<EpoxyModel<?>> modelIterator = models.listIterator();
@@ -559,7 +562,7 @@ public abstract class EpoxyController {
       }
     }
 
-    timer.stop("Duplicates filtered");
+    timer.stop();
   }
 
   private int findPositionOfDuplicate(List<EpoxyModel<?>> models, EpoxyModel<?> duplicateModel) {
@@ -645,7 +648,7 @@ public abstract class EpoxyController {
 
   /**
    * An optimized way to move a model from one position to another without rebuilding all models.
-   * This is intended to be used with {@link android.support.v7.widget.helper.ItemTouchHelper} to
+   * This is intended to be used with {@link androidx.recyclerview.widget.ItemTouchHelper} to
    * allow for efficient item dragging and rearranging. It cannot be
    * <p>
    * If you call this you MUST also update the data backing your models as necessary.

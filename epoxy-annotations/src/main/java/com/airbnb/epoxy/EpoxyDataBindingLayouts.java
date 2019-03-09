@@ -1,11 +1,11 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.LayoutRes;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import androidx.annotation.LayoutRes;
 
 /**
  * Used to specify a list of databinding layout resources that you want EpoxyModels generated for.

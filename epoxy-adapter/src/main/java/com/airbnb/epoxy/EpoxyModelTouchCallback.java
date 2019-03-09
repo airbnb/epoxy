@@ -1,15 +1,16 @@
 package com.airbnb.epoxy;
 
 import android.graphics.Canvas;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.airbnb.viewmodeladapter.R;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
- * A wrapper around {@link android.support.v7.widget.helper.ItemTouchHelper.Callback} to enable
+ * A wrapper around {@link androidx.recyclerview.widget.ItemTouchHelper.Callback} to enable
  * easier touch support when working with Epoxy models.
  * <p>
  * For simplicity you can use {@link EpoxyTouchHelper} to set up touch handling via this class for
@@ -204,10 +205,6 @@ public abstract class EpoxyModelTouchCallback<T extends EpoxyModel>
   protected void onChildDraw(Canvas c, RecyclerView recyclerView, EpoxyViewHolder viewHolder,
       float dX, float dY, int actionState, boolean isCurrentlyActive) {
     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-
-    if (holderBeingSwiped == null) {
-      return;
-    }
 
     EpoxyModel<?> model = viewHolder.getModel();
     if (!isTouchableModel(model)) {

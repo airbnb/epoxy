@@ -10,8 +10,8 @@ class ModelFactoryViewProcessorTest {
     @Test
     fun baseModel() {
         assertGeneration(
-            "BasicModelWithAttribute.java",
-            "BasicModelWithAttribute_.java"
+            "ModelFactoryBasicModelWithAttribute.java",
+            "ModelFactoryBasicModelWithAttribute_.java"
         )
     }
 
@@ -26,8 +26,8 @@ class ModelFactoryViewProcessorTest {
     @Test
     fun baseModelView() {
         assertGeneration(
-            "BaseModelView.java",
-            "BaseModelViewModel_.java"
+            "ModelFactoryBaseModelView.java",
+            "ModelFactoryBaseModelViewModel_.java"
         )
     }
 
@@ -98,11 +98,11 @@ class ModelFactoryViewProcessorTest {
 
         val configClass: JavaFileObject = JavaFileObjects
             .forSourceLines("com.airbnb.epoxy.package-info",
-                            "@ParisConfig(rClass = R.class)\n"
-                                    + "package com.airbnb.epoxy;\n"
-                                    + "\n"
-                                    + "import com.airbnb.paris.annotations.ParisConfig;\n"
-                                    + "import com.airbnb.epoxymodelfactory.R;\n")
+                            "@ParisConfig(rClass = R.class)\n" +
+                                    "package com.airbnb.epoxy;\n" +
+                                    "\n" +
+                                    "import com.airbnb.paris.annotations.ParisConfig;\n" +
+                                    "import com.airbnb.epoxymodelfactory.R;\n")
 
         assertGeneration(
             "StyleableModelView.java",

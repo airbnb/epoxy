@@ -1,7 +1,5 @@
 package com.airbnb.epoxy;
 
-import android.support.annotation.Nullable;
-
 import com.squareup.javapoet.ClassName;
 
 import java.util.ArrayList;
@@ -17,6 +15,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+
+import androidx.annotation.Nullable;
 
 import static com.airbnb.epoxy.Utils.buildEpoxyException;
 import static com.airbnb.epoxy.Utils.getClassParamFromAnnotation;

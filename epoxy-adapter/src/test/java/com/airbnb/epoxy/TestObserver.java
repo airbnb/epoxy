@@ -1,11 +1,12 @@
 package com.airbnb.epoxy;
 
-import android.support.v7.widget.RecyclerView.AdapterDataObserver;
-
 import java.util.ArrayList;
 import java.util.List;
 
-class TestObserver extends AdapterDataObserver {
+import androidx.recyclerview.widget.RecyclerView;
+
+class TestObserver extends RecyclerView.AdapterDataObserver
+{
   List<TestModel> modelsAfterDiffing = new ArrayList<>();
   List<TestModel> initialModels = new ArrayList<>();
   int operationCount = 0;

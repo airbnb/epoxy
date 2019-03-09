@@ -17,9 +17,9 @@ import org.robolectric.annotation.Config
 class BindDiffTest {
 
     private inline fun validateDiff(
-            model1Props: ViewWithAnnotationsForIntegrationTestModel_.() -> Unit,
-            model2Props: ViewWithAnnotationsForIntegrationTestModel_.() -> Unit,
-            viewCallVerifications: ViewWithAnnotationsForIntegrationTest.() -> Unit
+        model1Props: ViewWithAnnotationsForIntegrationTestModel_.() -> Unit,
+        model2Props: ViewWithAnnotationsForIntegrationTestModel_.() -> Unit,
+        viewCallVerifications: ViewWithAnnotationsForIntegrationTest.() -> Unit
     ) {
         val model1 = ViewWithAnnotationsForIntegrationTestModel_().id(1).apply(model1Props)
         val model2 = ViewWithAnnotationsForIntegrationTestModel_().id(1).apply(model2Props)

@@ -1,10 +1,11 @@
 package com.airbnb.epoxy.integrationtest;
 
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.airbnb.epoxy.EpoxyAttribute;
 import com.airbnb.epoxy.EpoxyModel;
+
+import androidx.annotation.NonNull;
 
 public class ModelWithClickListener extends EpoxyModel<View> {
 

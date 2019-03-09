@@ -1,16 +1,16 @@
-
 package com.airbnb.epoxy;
 
-import android.support.annotation.FloatRange;
-import android.support.annotation.Nullable;
-import android.support.annotation.Px;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.airbnb.epoxy.ViewHolderState.ViewState;
 import com.airbnb.epoxy.VisibilityState.Visibility;
 
 import java.util.List;
+
+import androidx.annotation.FloatRange;
+import androidx.annotation.Nullable;
+import androidx.annotation.Px;
+import androidx.recyclerview.widget.RecyclerView;
 
 @SuppressWarnings("WeakerAccess")
 public class EpoxyViewHolder extends RecyclerView.ViewHolder {

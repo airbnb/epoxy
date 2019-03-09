@@ -1,18 +1,25 @@
 package com.airbnb.epoxy
 
-import android.support.annotation.*
+import androidx.annotation.NonNull
+import androidx.annotation.Nullable
+import androidx.annotation.PluralsRes
+import androidx.annotation.StringRes
 import com.airbnb.epoxy.GeneratedModelWriter.Companion.addOnMutationCall
 import com.airbnb.epoxy.GeneratedModelWriter.Companion.addParameterNullCheckIfNeeded
 import com.airbnb.epoxy.GeneratedModelWriter.Companion.setBitSetIfNeeded
-import com.squareup.javapoet.*
-import com.squareup.javapoet.MethodSpec.*
-import java.util.*
-import javax.lang.model.element.Modifier.*
+import com.squareup.javapoet.ArrayTypeName
+import com.squareup.javapoet.CodeBlock
+import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.MethodSpec.Builder
+import com.squareup.javapoet.ParameterSpec
+import com.squareup.javapoet.TypeName
+import java.util.ArrayList
+import javax.lang.model.element.Modifier.PUBLIC
 
 internal class StringOverloadWriter(
-        private val modelInfo: GeneratedModelInfo,
-        private val attr: AttributeInfo,
-        private val configManager: ConfigManager
+    private val modelInfo: GeneratedModelInfo,
+    private val attr: AttributeInfo,
+    private val configManager: ConfigManager
 ) {
     private val fieldName: String = attr.fieldName
     private val nullable: Boolean = attr.isNullable == true
@@ -50,9 +57,11 @@ internal class StringOverloadWriter(
     }
 
     private fun buildStringResSetter(builder: Builder): Builder {
-        builder.addParameter(ParameterSpec.builder(TypeName.INT, STRING_RES_PARAM)
-                                     .addAnnotation(StringRes::class.java)
-                                     .build())
+        builder.addParameter(
+            ParameterSpec.builder(TypeName.INT, STRING_RES_PARAM)
+                .addAnnotation(StringRes::class.java)
+                .build()
+        )
 
         addJavaDoc(builder, true)
         builder.addStatement("\$L.setValue(\$L)", fieldName, STRING_RES_PARAM)
@@ -61,40 +70,54 @@ internal class StringOverloadWriter(
     }
 
     private fun buildStringResWithArgsSetter(builder: Builder): Builder {
-        builder.addParameter(ParameterSpec.builder(TypeName.INT, STRING_RES_PARAM)
-                                     .addAnnotation(StringRes::class.java)
-                                     .build())
+        builder.addParameter(
+            ParameterSpec.builder(TypeName.INT, STRING_RES_PARAM)
+                .addAnnotation(StringRes::class.java)
+                .build()
+        )
 
         addJavaDoc(builder, true)
 
         builder
-                .addParameter(ParameterSpec.builder(ArrayTypeName.of(TypeName.OBJECT),
-                                                    ARGS_PARAM).build())
+            .addParameter(
+                ParameterSpec.builder(
+                    ArrayTypeName.of(TypeName.OBJECT),
+                    ARGS_PARAM
+                ).build()
+            )
 
         builder.addStatement("\$L.setValue(\$L, \$L)", fieldName, STRING_RES_PARAM, ARGS_PARAM)
-                .varargs()
+            .varargs()
 
         return builder
     }
 
     private fun buildQuantityStringResSetter(builder: Builder): Builder {
 
-        builder.addParameter(ParameterSpec.builder(TypeName.INT, PLURAL_RES_PARAM)
-                                     .addAnnotation(PluralsRes::class.java)
-                                     .build())
+        builder.addParameter(
+            ParameterSpec.builder(TypeName.INT, PLURAL_RES_PARAM)
+                .addAnnotation(PluralsRes::class.java)
+                .build()
+        )
 
         addJavaDoc(builder, true)
 
         builder.addParameter(ParameterSpec.builder(TypeName.INT, QUANTITY_PARAM).build())
 
         builder
-                .addParameter(ParameterSpec.builder(ArrayTypeName.of(TypeName.OBJECT),
-                                                    ARGS_PARAM).build())
+            .addParameter(
+                ParameterSpec.builder(
+                    ArrayTypeName.of(TypeName.OBJECT),
+                    ARGS_PARAM
+                ).build()
+            )
 
-        builder.addStatement("\$L.setValue(\$L, \$L, \$L)", fieldName, PLURAL_RES_PARAM,
-                             QUANTITY_PARAM,
-                             ARGS_PARAM)
-                .varargs()
+        builder.addStatement(
+            "\$L.setValue(\$L, \$L, \$L)", fieldName, PLURAL_RES_PARAM,
+            QUANTITY_PARAM,
+            ARGS_PARAM
+        )
+            .varargs()
 
         return builder
     }
@@ -103,8 +126,8 @@ internal class StringOverloadWriter(
         val name = attr.generatedSetterName() + suffix
 
         val builder = MethodSpec.methodBuilder(name)
-                .addModifiers(PUBLIC)
-                .returns(modelInfo.parameterizedGeneratedName)
+            .addModifiers(PUBLIC)
+            .returns(modelInfo.parameterizedGeneratedName)
 
         addOnMutationCall(builder)
         setBitSetIfNeeded(modelInfo, attr, builder)
@@ -112,8 +135,8 @@ internal class StringOverloadWriter(
     }
 
     private fun addJavaDoc(
-            builder: Builder,
-            forStringRes: Boolean
+        builder: Builder,
+        forStringRes: Boolean
     ) {
         if (attr.javaDoc == null) {
             return
@@ -126,7 +149,9 @@ internal class StringOverloadWriter(
                 javaDoc.add("Throws if a value <= 0 is set.\n<p>\n")
             } else {
                 javaDoc.add(
-                        "If a value of 0 is set then this attribute will revert to its default value.\n<p>\n")
+                    "If a value of 0 is set then this attribute will revert to its " +
+                        "default value.\n<p>\n"
+                )
             }
         }
 
@@ -135,18 +160,18 @@ internal class StringOverloadWriter(
 
     private fun buildGetter(): MethodSpec {
         val builder = MethodSpec.methodBuilder(attr.generatedGetterName())
-                .addModifiers(PUBLIC)
-                .returns(CharSequence::class.java)
+            .addModifiers(PUBLIC)
+            .returns(CharSequence::class.java)
 
         if (nullable) {
             builder.addAnnotation(Nullable::class.java)
         }
 
         return builder
-                .addAnnotations(attr.getterAnnotations)
-                .addParameter(ClassNames.ANDROID_CONTEXT, "context")
-                .addStatement("return \$L", fieldName + ".toString(context)")
-                .build()
+            .addAnnotations(attr.getterAnnotations)
+            .addParameter(ClassNames.ANDROID_CONTEXT, "context")
+            .addStatement("return \$L", fieldName + ".toString(context)")
+            .build()
     }
 
     companion object {
@@ -157,8 +182,8 @@ internal class StringOverloadWriter(
 
         private fun finishSetter(builder: MethodSpec.Builder): MethodSpec {
             return builder
-                    .addStatement("return this")
-                    .build()
+                .addStatement("return this")
+                .build()
         }
     }
 }
