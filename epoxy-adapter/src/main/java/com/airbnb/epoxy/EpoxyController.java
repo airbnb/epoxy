@@ -265,7 +265,24 @@ public abstract class EpoxyController {
       modelsBeingBuilt = new ControllerModelList(getExpectedModelCount());
 
       timer.start("Models built");
-      buildModels();
+
+      // The user's implementation of buildModels is wrapped in a try/catch so that if it fails
+      // we can reset the state of this controller. This is useful when model building is done
+      // on a dedicated thread, which may have its own error handler, and a failure may not
+      // crash the app - in which case this controller would be in an invalid state and crash later
+      // with confusing errors because "threadBuildingModels" and other properties are not
+      // correctly set. This can happen particularly with Espresso testing.
+      try {
+        buildModels();
+      } catch (Throwable throwable) {
+        timer.stop();
+        modelsBeingBuilt = null;
+        hasBuiltModelsEver = true;
+        threadBuildingModels = null;
+        stagedModel = null;
+        throw throwable;
+      }
+
       addCurrentlyStagedModelIfExists();
       timer.stop();
 
