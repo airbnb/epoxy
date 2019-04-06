@@ -203,3 +203,26 @@ fun <K, V> MutableMap<K, V>.putOrMerge(
 
     put(key, newValue)
 }
+
+/**
+ * True if the two elements represent overloads of the same function in a class.
+ */
+fun areOverloads(e1: ExecutableElement, e2: ExecutableElement): Boolean {
+    return e1.parameters.size != e2.parameters.size &&
+        e1.simpleName == e2.simpleName &&
+        e1.enclosingElement == e2.enclosingElement &&
+        e1.returnType == e2.returnType &&
+        e1.modifiers == e2.modifiers
+}
+
+fun TypeElement.findOverload(element: ExecutableElement, paramCount: Int): ExecutableElement? {
+    require(element.parameters.size != paramCount) { "Element $element already has param count $paramCount" }
+
+    return enclosedElements
+        .filterIsInstance<ExecutableElement>()
+        .firstOrNull { it.parameters.size == paramCount && areOverloads(it, element) }
+}
+
+fun TypeElement.hasOverload(element: ExecutableElement, paramCount: Int): Boolean {
+    return findOverload(element, paramCount) != null
+}

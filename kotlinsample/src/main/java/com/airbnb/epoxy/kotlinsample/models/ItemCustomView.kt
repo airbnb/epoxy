@@ -1,6 +1,7 @@
 package com.airbnb.epoxy.kotlinsample.models
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
@@ -40,8 +41,11 @@ class ItemCustomView @JvmOverloads constructor(
     }
 
     // You can annotate your methods with @ModelProp
+    // A default model property value can be set by using Kotlin default arguments, but you
+    // must use JvmOverloads for Epoxy to handle it correctly.
+    @JvmOverloads
     @ModelProp
-    fun color(@ColorInt color: Int) {
+    fun color(@ColorInt color: Int = Color.RED) {
         textView.setTextColor(color)
     }
 
