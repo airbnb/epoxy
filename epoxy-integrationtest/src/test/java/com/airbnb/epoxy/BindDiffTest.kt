@@ -69,7 +69,7 @@ class BindDiffTest {
 
     @Test
     fun propGroupChangedFromOneAttributeToAnother() {
-        val clickListener = View.OnClickListener { v -> }
+        val clickListener = View.OnClickListener {}
         validateDiff(
                 model1Props = {
                     requiredText("hello")

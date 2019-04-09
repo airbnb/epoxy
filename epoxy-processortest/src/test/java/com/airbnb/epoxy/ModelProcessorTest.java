@@ -268,6 +268,11 @@ public class ModelProcessorTest {
   }
 
   @Test
+  public void modelWithCheckedChangeListener() {
+    assertGeneration("ModelWithCheckedChangeListener.java", "ModelWithCheckedChangeListener_.java");
+  }
+
+  @Test
   public void testModelWithPrivateAttributeWithoutGetterAndSetterFails() {
     assertGenerationError("ModelWithPrivateFieldWithoutGetterAndSetter.java",
         "private fields without proper getter and setter");

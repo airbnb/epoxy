@@ -56,13 +56,19 @@ class Utils {
   static final String EPOXY_CONTROLLER_TYPE = "com.airbnb.epoxy.EpoxyController";
   static final String VIEW_CLICK_LISTENER_TYPE = "android.view.View.OnClickListener";
   static final String VIEW_LONG_CLICK_LISTENER_TYPE = "android.view.View.OnLongClickListener";
+  static final String VIEW_CHECKED_CHANGE_LISTENER_TYPE =
+      "android.widget.CompoundButton.OnCheckedChangeListener";
   static final String DRAWABLE_TYPE = "android.graphics.drawable.Drawable";
   static final String GENERATED_MODEL_INTERFACE = "com.airbnb.epoxy.GeneratedModel";
   static final String MODEL_CLICK_LISTENER_TYPE = "com.airbnb.epoxy.OnModelClickListener";
   static final String MODEL_LONG_CLICK_LISTENER_TYPE = "com.airbnb.epoxy.OnModelLongClickListener";
+  static final String MODEL_CHECKED_CHANGE_LISTENER_TYPE =
+      "com.airbnb.epoxy.OnModelCheckedChangeListener";
   static final String ON_BIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelBoundListener";
   static final String ON_UNBIND_MODEL_LISTENER_TYPE = "com.airbnb.epoxy.OnModelUnboundListener";
   static final String WRAPPED_LISTENER_TYPE = "com.airbnb.epoxy.WrappedEpoxyModelClickListener";
+  static final String WRAPPED_CHECKED_LISTENER_TYPE =
+      "com.airbnb.epoxy.WrappedEpoxyModelCheckedChangeListener";
   static final String DATA_BINDING_MODEL_TYPE = "com.airbnb.epoxy.DataBindingEpoxyModel";
   static final String ON_VISIBILITY_STATE_MODEL_LISTENER_TYPE =
       "com.airbnb.epoxy.OnModelVisibilityStateChangedListener";
@@ -117,6 +123,10 @@ class Utils {
 
   static boolean isViewLongClickListenerType(TypeMirror type) {
     return isType(type, VIEW_LONG_CLICK_LISTENER_TYPE);
+  }
+
+  static boolean isViewCheckedChangeListenerType(TypeMirror type) {
+    return isType(type, VIEW_CHECKED_CHANGE_LISTENER_TYPE);
   }
 
   static boolean isBooleanType(TypeMirror type) {

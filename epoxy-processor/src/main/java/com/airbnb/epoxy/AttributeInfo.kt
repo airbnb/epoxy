@@ -3,6 +3,7 @@ package com.airbnb.epoxy
 import com.airbnb.epoxy.GeneratedModelInfo.AttributeGroup
 import com.airbnb.epoxy.Utils.EPOXY_MODEL_TYPE
 import com.airbnb.epoxy.Utils.isSubtypeOfType
+import com.airbnb.epoxy.Utils.isViewCheckedChangeListenerType
 import com.airbnb.epoxy.Utils.isViewClickListenerType
 import com.airbnb.epoxy.Utils.isViewLongClickListenerType
 import com.squareup.javapoet.AnnotationSpec
@@ -103,6 +104,9 @@ internal abstract class AttributeInfo {
 
     val isViewLongClickListener: Boolean
         get() = isViewLongClickListenerType(typeMirror)
+
+    val isViewCheckedChangeListener: Boolean
+        get() = isViewCheckedChangeListenerType(typeMirror)
 
     val isBoolean: Boolean
         get() = Utils.isBooleanType(typeMirror)
