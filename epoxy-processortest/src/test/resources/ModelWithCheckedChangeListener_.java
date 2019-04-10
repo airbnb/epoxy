@@ -1,6 +1,6 @@
 package com.airbnb.epoxy;
 
-import android.view.View;
+import android.widget.CompoundButton;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import java.lang.CharSequence;
@@ -11,16 +11,16 @@ import java.lang.String;
 
 /**
  * Generated file. Do not modify! */
-public class ModelWithViewClickListener_ extends ModelWithViewClickListener implements GeneratedModel<Object>, ModelWithViewClickListenerBuilder {
-  private OnModelBoundListener<ModelWithViewClickListener_, Object> onModelBoundListener_epoxyGeneratedModel;
+public class ModelWithCheckedChangeListener_ extends ModelWithCheckedChangeListener implements GeneratedModel<Object>, ModelWithCheckedChangeListenerBuilder {
+  private OnModelBoundListener<ModelWithCheckedChangeListener_, Object> onModelBoundListener_epoxyGeneratedModel;
 
-  private OnModelUnboundListener<ModelWithViewClickListener_, Object> onModelUnboundListener_epoxyGeneratedModel;
+  private OnModelUnboundListener<ModelWithCheckedChangeListener_, Object> onModelUnboundListener_epoxyGeneratedModel;
 
-  private OnModelVisibilityStateChangedListener<ModelWithViewClickListener_, Object> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
+  private OnModelVisibilityStateChangedListener<ModelWithCheckedChangeListener_, Object> onModelVisibilityStateChangedListener_epoxyGeneratedModel;
 
-  private OnModelVisibilityChangedListener<ModelWithViewClickListener_, Object> onModelVisibilityChangedListener_epoxyGeneratedModel;
+  private OnModelVisibilityChangedListener<ModelWithCheckedChangeListener_, Object> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  public ModelWithViewClickListener_() {
+  public ModelWithCheckedChangeListener_() {
     super();
   }
 
@@ -50,8 +50,8 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ModelWithViewClickListener_ onBind(
-      OnModelBoundListener<ModelWithViewClickListener_, Object> listener) {
+  public ModelWithCheckedChangeListener_ onBind(
+      OnModelBoundListener<ModelWithCheckedChangeListener_, Object> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
     return this;
@@ -72,8 +72,8 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
    * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ModelWithViewClickListener_ onUnbind(
-      OnModelUnboundListener<ModelWithViewClickListener_, Object> listener) {
+  public ModelWithCheckedChangeListener_ onUnbind(
+      OnModelUnboundListener<ModelWithCheckedChangeListener_, Object> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
     return this;
@@ -92,10 +92,9 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ModelWithViewClickListener_ onVisibilityStateChanged(
-      OnModelVisibilityStateChangedListener<ModelWithViewClickListener_, Object> listener) {
+   */
+  public ModelWithCheckedChangeListener_ onVisibilityStateChanged(
+      OnModelVisibilityStateChangedListener<ModelWithCheckedChangeListener_, Object> listener) {
     onMutation();
     this.onModelVisibilityStateChangedListener_epoxyGeneratedModel = listener;
     return this;
@@ -115,114 +114,114 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
-  public ModelWithViewClickListener_ onVisibilityChanged(
-      OnModelVisibilityChangedListener<ModelWithViewClickListener_, Object> listener) {
+   */
+  public ModelWithCheckedChangeListener_ onVisibilityChanged(
+      OnModelVisibilityChangedListener<ModelWithCheckedChangeListener_, Object> listener) {
     onMutation();
     this.onModelVisibilityChangedListener_epoxyGeneratedModel = listener;
     return this;
   }
 
   /**
-   * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
-  public ModelWithViewClickListener_ clickListener(
-      final OnModelClickListener<ModelWithViewClickListener_, Object> clickListener) {
+   * Set a checked change listener that will provide the parent view, model, value, and adapter position of the checked view. This will clear the normal CompoundButton.OnCheckedChangeListener if one has been set */
+  public ModelWithCheckedChangeListener_ checkedListener(
+      final OnModelCheckedChangeListener<ModelWithCheckedChangeListener_, Object> checkedListener) {
     onMutation();
-    if (clickListener == null) {
-      super.clickListener = null;
+    if (checkedListener == null) {
+      super.checkedListener = null;
     }
     else {
-      super.clickListener = new WrappedEpoxyModelClickListener(clickListener);
+      super.checkedListener = new WrappedEpoxyModelCheckedChangeListener(checkedListener);
     }
     return this;
   }
 
-  public ModelWithViewClickListener_ clickListener(View.OnClickListener clickListener) {
+  public ModelWithCheckedChangeListener_ checkedListener(
+      CompoundButton.OnCheckedChangeListener checkedListener) {
     onMutation();
-    super.clickListener = clickListener;
+    super.checkedListener = checkedListener;
     return this;
   }
 
-  public View.OnClickListener clickListener() {
-    return clickListener;
+  public CompoundButton.OnCheckedChangeListener checkedListener() {
+    return checkedListener;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(long id) {
+  public ModelWithCheckedChangeListener_ id(long id) {
     super.id(id);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(@Nullable Number... arg0) {
+  public ModelWithCheckedChangeListener_ id(@Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(long id1, long id2) {
+  public ModelWithCheckedChangeListener_ id(long id1, long id2) {
     super.id(id1, id2);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(@Nullable CharSequence arg0) {
+  public ModelWithCheckedChangeListener_ id(@Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(@Nullable CharSequence arg0,
+  public ModelWithCheckedChangeListener_ id(@Nullable CharSequence arg0,
       @Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(@Nullable CharSequence arg0, long arg1) {
+  public ModelWithCheckedChangeListener_ id(@Nullable CharSequence arg0, long arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ layout(@LayoutRes int arg0) {
+  public ModelWithCheckedChangeListener_ layout(@LayoutRes int arg0) {
     super.layout(arg0);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ spanSizeOverride(
+  public ModelWithCheckedChangeListener_ spanSizeOverride(
       @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ show() {
+  public ModelWithCheckedChangeListener_ show() {
     super.show();
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ show(boolean show) {
+  public ModelWithCheckedChangeListener_ show(boolean show) {
     super.show(show);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ hide() {
+  public ModelWithCheckedChangeListener_ hide() {
     super.hide();
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ reset() {
+  public ModelWithCheckedChangeListener_ reset() {
     onModelBoundListener_epoxyGeneratedModel = null;
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    super.clickListener = null;
+    super.checkedListener = null;
     super.reset();
     return this;
   }
@@ -232,13 +231,13 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
     if (o == this) {
       return true;
     }
-    if (!(o instanceof ModelWithViewClickListener_)) {
+    if (!(o instanceof ModelWithCheckedChangeListener_)) {
       return false;
     }
     if (!super.equals(o)) {
       return false;
     }
-    ModelWithViewClickListener_ that = (ModelWithViewClickListener_) o;
+    ModelWithCheckedChangeListener_ that = (ModelWithCheckedChangeListener_) o;
     if (((onModelBoundListener_epoxyGeneratedModel == null) != (that.onModelBoundListener_epoxyGeneratedModel == null))) {
       return false;
     }
@@ -251,7 +250,7 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
     if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if (((clickListener == null) != (that.clickListener == null))) {
+    if (((checkedListener == null) != (that.checkedListener == null))) {
       return false;
     }
     return true;
@@ -264,14 +263,14 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
     result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (clickListener != null ? 1 : 0);
+    result = 31 * result + (checkedListener != null ? 1 : 0);
     return result;
   }
 
   @Override
   public String toString() {
-    return "ModelWithViewClickListener_{" +
-        "clickListener=" + clickListener +
+    return "ModelWithCheckedChangeListener_{" +
+        "checkedListener=" + checkedListener +
         "}" + super.toString();
   }
 }

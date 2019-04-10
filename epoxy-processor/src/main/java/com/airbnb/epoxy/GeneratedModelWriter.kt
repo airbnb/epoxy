@@ -7,6 +7,7 @@ import com.airbnb.epoxy.ClassNames.PARIS_STYLE
 import com.airbnb.epoxy.Utils.EPOXY_CONTROLLER_TYPE
 import com.airbnb.epoxy.Utils.EPOXY_VIEW_HOLDER_TYPE
 import com.airbnb.epoxy.Utils.GENERATED_MODEL_INTERFACE
+import com.airbnb.epoxy.Utils.MODEL_CHECKED_CHANGE_LISTENER_TYPE
 import com.airbnb.epoxy.Utils.MODEL_CLICK_LISTENER_TYPE
 import com.airbnb.epoxy.Utils.MODEL_LONG_CLICK_LISTENER_TYPE
 import com.airbnb.epoxy.Utils.ON_BIND_MODEL_LISTENER_TYPE
@@ -14,6 +15,7 @@ import com.airbnb.epoxy.Utils.ON_UNBIND_MODEL_LISTENER_TYPE
 import com.airbnb.epoxy.Utils.ON_VISIBILITY_MODEL_LISTENER_TYPE
 import com.airbnb.epoxy.Utils.ON_VISIBILITY_STATE_MODEL_LISTENER_TYPE
 import com.airbnb.epoxy.Utils.UNTYPED_EPOXY_MODEL_TYPE
+import com.airbnb.epoxy.Utils.WRAPPED_CHECKED_LISTENER_TYPE
 import com.airbnb.epoxy.Utils.WRAPPED_LISTENER_TYPE
 import com.airbnb.epoxy.Utils.getClassName
 import com.airbnb.epoxy.Utils.implementsMethod
@@ -370,6 +372,16 @@ internal class GeneratedModelWriter(
     ): ParameterizedTypeName {
         return ParameterizedTypeName.get(
             getClassName(MODEL_LONG_CLICK_LISTENER_TYPE),
+            classInfo.parameterizedGeneratedName,
+            classInfo.modelType
+        )
+    }
+
+    private fun getModelCheckedChangeListenerType(
+        classInfo: GeneratedModelInfo
+    ): ParameterizedTypeName {
+        return ParameterizedTypeName.get(
+            getClassName(MODEL_CHECKED_CHANGE_LISTENER_TYPE),
             classInfo.parameterizedGeneratedName,
             classInfo.modelType
         )
@@ -1309,6 +1321,10 @@ internal class GeneratedModelWriter(
                     methods.add(generateSetClickModelListener(modelInfo, attr))
                 }
 
+                if (attr.isViewCheckedChangeListener) {
+                    methods.add(generateSetCheckedChangeModelListener(modelInfo, attr))
+                }
+
                 if (attr.generateSetter && !attr.hasFinalModifier) {
                     methods.add(generateSetter(modelInfo, attr))
                 }
@@ -1360,6 +1376,46 @@ internal class GeneratedModelWriter(
             .endControlFlow()
             .beginControlFlow("else")
             .addStatement(attribute.setterCode(), wrapperClickListenerConstructor)
+            .endControlFlow()
+            .addStatement("return this")
+
+        return builder.build()
+    }
+
+    private fun generateSetCheckedChangeModelListener(
+        classInfo: GeneratedModelInfo,
+        attribute: AttributeInfo
+    ): MethodSpec {
+        val attributeName = attribute.generatedSetterName()
+        val checkedListenerType = getModelCheckedChangeListenerType(classInfo)
+
+        val param = ParameterSpec.builder(checkedListenerType, attributeName, FINAL)
+            .addAnnotations(attribute.setterAnnotations).build()
+
+        val builder = MethodSpec.methodBuilder(attributeName)
+            .addJavadoc(
+                "Set a checked change listener that will provide the parent view, model, value, and adapter " +
+                    "position of the checked view. This will clear the normal " +
+                    "CompoundButton.OnCheckedChangeListener if one has been set"
+            )
+            .addModifiers(PUBLIC)
+            .returns(classInfo.parameterizedGeneratedName)
+            .addParameter(param)
+
+        setBitSetIfNeeded(classInfo, attribute, builder)
+
+        val wrapperCheckedListenerConstructor = CodeBlock.of(
+            "new \$T(\$L)",
+            getClassName(WRAPPED_CHECKED_LISTENER_TYPE),
+            param.name
+        )
+
+        addOnMutationCall(builder)
+            .beginControlFlow("if (\$L == null)", attributeName)
+            .addStatement(attribute.setterCode(), "null")
+            .endControlFlow()
+            .beginControlFlow("else")
+            .addStatement(attribute.setterCode(), wrapperCheckedListenerConstructor)
             .endControlFlow()
             .addStatement("return this")
 
