@@ -1,3 +1,10 @@
+# 3.4.0 (April 10, 2019)
+- **New** Support kotlin default parameters in @ModelView classes (https://github.com/airbnb/epoxy/pull/722)
+- **New** Generate OnModelCheckedChangeListener override for props of type `CompoundButton.OnCheckedChangeListener` (https://github.com/airbnb/epoxy/pull/725)
+- **New** Extract ID generation methods to new public IdUtils class (https://github.com/airbnb/epoxy/pull/724)
+- **Changed** Reset controller state on failed model build (https://github.com/airbnb/epoxy/pull/720)
+- **Changed** Disabled the auto-detach behavior on Carousels by default (https://github.com/airbnb/epoxy/pull/688)
+
 # 3.3.0 (Feb 5, 2019)
 - **Fixed** Two issues related to the recent EpoxyModelGroup changes (https://github.com/airbnb/epoxy/pull/676)
 
