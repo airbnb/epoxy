@@ -21,7 +21,6 @@ import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 // TODO: (eli_hart 5/30/17) allow param counts > 0 in setters
-// TODO: (eli_hart 5/23/17) Allow default values to be methods
 internal class ModelViewProcessor(
     private val elements: Elements,
     private val types: Types,
@@ -130,10 +129,6 @@ internal class ModelViewProcessor(
 
         for (propAnnotation in modelPropAnnotations) {
             for (prop in roundEnv.getElementsAnnotatedWith(propAnnotation)) {
-                if (!validatePropElement(prop, propAnnotation)) {
-                    continue
-                }
-
                 val info = getModelInfoForPropElement(prop)
                 if (info == null) {
                     errorLogger.logError(
@@ -141,6 +136,25 @@ internal class ModelViewProcessor(
                             "annotated with ${ModelView::class.java.simpleName} " +
                             "(${prop.enclosingElement.simpleName}#${prop.simpleName})"
                     )
+                    continue
+                }
+
+                // JvmOverloads is used on properties with default arguments, which we support.
+                // However, the generated no arg version of the function will also have the
+                // @ModelProp annotation so we need to ignore it when it is processed.
+                // However, the JvmOverloads annotation is removed in the java class so we need
+                // to manually look for a valid overload function.
+                if (prop is ExecutableElement &&
+                    prop.parameters.isEmpty() &&
+                    info.viewElement.findOverload(
+                        prop,
+                        1
+                    )?.hasAnyAnnotation(modelPropAnnotations) == true
+                ) {
+                    continue
+                }
+
+                if (!validatePropElement(prop, propAnnotation)) {
                     continue
                 }
 
@@ -245,7 +259,7 @@ internal class ModelViewProcessor(
         if (element !is ExecutableElement) {
             errorLogger.logError(
                 "%s annotations can only be on a method (element: %s)",
-                annotationClass,
+                annotationClass::class.java.simpleName,
                 element.simpleName
             )
             return false
@@ -254,7 +268,7 @@ internal class ModelViewProcessor(
         if (element.parameters.size != paramCount) {
             errorLogger.logError(
                 "Methods annotated with %s must have exactly %s parameter (method: %s)",
-                annotationClass, paramCount, element.getSimpleName()
+                annotationClass::class.java.simpleName, paramCount, element.getSimpleName()
             )
             return false
         }
@@ -269,7 +283,8 @@ internal class ModelViewProcessor(
                 errorLogger.logError(
                     "Methods annotated with %s must have parameter types %s, " +
                         "found: %s (method: %s)",
-                    annotationClass, expectedTypeParameters,
+                    annotationClass::class.java.simpleName,
+                    expectedTypeParameters,
                     element.parameters.map { it.asType().kind },
                     element.simpleName
                 )
@@ -280,7 +295,7 @@ internal class ModelViewProcessor(
         if (modifiers.contains(STATIC) || modifiers.contains(PRIVATE)) {
             errorLogger.logError(
                 "Methods annotated with %s cannot be private or static (method: %s)",
-                annotationClass, element.getSimpleName()
+                annotationClass::class.java.simpleName, element.getSimpleName()
             )
             return false
         }

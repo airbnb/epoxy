@@ -36,6 +36,7 @@ sealed class ViewAttributeType {
 
 internal class ViewAttributeInfo(
     private val modelInfo: ModelViewInfo,
+    val hasDefaultKotlinValue: Boolean,
     viewAttributeElement: Element,
     types: Types,
     elements: Elements,
@@ -162,12 +163,11 @@ internal class ViewAttributeInfo(
     }
 
     override val isRequired
-        get() =
-            if (generateStringOverloads) {
-                !isNullable() && constantFieldNameForDefaultValue == null
-            } else {
-                super.isRequired
-            }
+        get() = when {
+            hasDefaultKotlinValue -> false
+            generateStringOverloads -> !isNullable() && constantFieldNameForDefaultValue == null
+            else -> super.isRequired
+        }
 
     private fun getViewAttributeType(
         element: Element,
@@ -216,6 +216,17 @@ internal class ViewAttributeInfo(
         errorLogger: ErrorLogger,
         types: Types
     ) {
+
+        if (hasDefaultKotlinValue) {
+            if (defaultConstant.isNotEmpty()) {
+                errorLogger.logError(
+                    "Default set via both kotlin parameter and annotation constant. Use only one. (%s#%s)",
+                    modelInfo.viewElement.simpleName,
+                    viewAttributeName
+                )
+            }
+            return
+        }
 
         if (defaultConstant.isEmpty()) {
             if (isPrimitive) {
@@ -410,7 +421,9 @@ internal class ViewAttributeInfo(
             builder.add("<i>Required.</i>")
         } else {
             builder.add("<i>Optional</i>: ")
-            if (constantFieldNameForDefaultValue == null) {
+            if (hasDefaultKotlinValue) {
+                builder.add("View function has a Kotlin default argument")
+            } else if (constantFieldNameForDefaultValue == null) {
                 builder.add("Default value is \$L", codeToSetDefault.value())
             } else {
                 builder.add(
@@ -451,6 +464,7 @@ internal class ViewAttributeInfo(
             "view='" + modelInfo.viewElement.simpleName + '\'' +
             ", name='" + viewAttributeName + '\'' +
             ", type=" + typeName +
+            ", hasDefaultKotlinValue=" + hasDefaultKotlinValue +
             '}')
     }
 }

@@ -3,7 +3,6 @@ package com.airbnb.epoxy;
 import com.airbnb.epoxy.ModelView.Size;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterSpec.Builder;
 import com.squareup.javapoet.TypeName;
@@ -324,14 +323,16 @@ abstract class GeneratedModelInfo {
 
     AttributeInfo defaultAttribute = null;
     for (AttributeInfo attribute : attributes) {
-      if (attribute.isRequired() || attribute.getCodeToSetDefault().isEmpty()) {
+
+      if (attribute.isRequired()
+          || (attribute.getCodeToSetDefault().isEmpty() && !hasDefaultKotlinValue(attribute))) {
         continue;
       }
 
       boolean hasSetExplicitDefault =
-          defaultAttribute != null && defaultAttribute.getCodeToSetDefault().getExplicit() != null;
+          defaultAttribute != null && hasExplicitDefault(defaultAttribute);
 
-      if (hasSetExplicitDefault && attribute.getCodeToSetDefault().getExplicit() != null) {
+      if (hasSetExplicitDefault && hasExplicitDefault(attribute)) {
         throw buildEpoxyException(
             "Only one default value can exist for a group of attributes: " + attributes);
       }
@@ -346,7 +347,7 @@ abstract class GeneratedModelInfo {
       // is a nullable object and a primitive in a group, the default value will be to null out the
       // object.
       if (defaultAttribute == null
-          || attribute.getCodeToSetDefault().getExplicit() != null
+          || hasExplicitDefault(attribute)
           || attribute.hasSetNullability()) {
         defaultAttribute = attribute;
       }
@@ -357,6 +358,26 @@ abstract class GeneratedModelInfo {
     for (AttributeInfo attribute : attributes) {
       attribute.setAttributeGroup(group);
     }
+  }
+
+  private static boolean hasDefaultKotlinValue(AttributeInfo attribute) {
+    if (attribute instanceof ViewAttributeInfo) {
+      return ((ViewAttributeInfo) attribute).getHasDefaultKotlinValue();
+    }
+
+    return false;
+  }
+
+  private static boolean hasExplicitDefault(AttributeInfo attribute) {
+    if (attribute.getCodeToSetDefault().getExplicit() != null) {
+      return true;
+    }
+
+    if (attribute instanceof ViewAttributeInfo) {
+      return ((ViewAttributeInfo) attribute).getHasDefaultKotlinValue();
+    }
+
+    return false;
   }
 
   static class AttributeGroup {
@@ -371,7 +392,9 @@ abstract class GeneratedModelInfo {
         throw buildEpoxyException("Attributes cannot be empty");
       }
 
-      if (defaultAttribute != null && defaultAttribute.getCodeToSetDefault().isEmpty()) {
+      if (defaultAttribute != null
+          && defaultAttribute.getCodeToSetDefault().isEmpty()
+          && !hasDefaultKotlinValue(defaultAttribute)) {
         throw buildEpoxyException("Default attribute has no default code");
       }
 
@@ -379,15 +402,6 @@ abstract class GeneratedModelInfo {
       isRequired = defaultAttribute == null;
       this.name = groupName;
       this.attributes = new ArrayList<>(attributes);
-    }
-
-    CodeBlock codeToSetDefaultValue() {
-      if (defaultAttribute == null || defaultAttribute.getCodeToSetDefault().isEmpty()) {
-        throw new IllegalStateException("No default value exists");
-      }
-
-      return CodeBlock
-          .of(defaultAttribute.setterCode(), defaultAttribute.getCodeToSetDefault().value());
     }
   }
 }

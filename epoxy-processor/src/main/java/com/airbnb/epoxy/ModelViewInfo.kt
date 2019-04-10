@@ -4,7 +4,11 @@ import com.airbnb.epoxy.Utils.isEpoxyModel
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
+import me.eugeniomarletti.kotlin.metadata.KotlinClassMetadata
+import me.eugeniomarletti.kotlin.metadata.declaresDefaultValue
+import me.eugeniomarletti.kotlin.metadata.kotlinMetadata
 import javax.lang.model.element.Element
+import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.Parameterizable
 import javax.lang.model.element.TypeElement
@@ -30,6 +34,7 @@ internal class ModelViewInfo(
     private val viewAnnotation: ModelView = viewElement.getAnnotation(ModelView::class.java)
     val fullSpanSize: Boolean
     private val generatedModelSuffix: String
+    val kotlinMetadata: KotlinClassMetadata? = viewElement.kotlinMetadata as? KotlinClassMetadata
 
     /** All interfaces the view implements that have at least one prop set by the interface. */
     private val viewInterfaces: List<TypeElement>
@@ -180,10 +185,50 @@ internal class ModelViewInfo(
     }
 
     fun addProp(prop: Element) {
+
+        val hasDefaultKotlinValue = prop is ExecutableElement &&
+            kotlinMetadata?.data?.let { classData ->
+
+                val matchingFunctions = classData.classProto.functionOrBuilderList
+                    .filter { it.hasName() }
+                    .filter { classData.nameResolver.getString(it.name) == prop.simpleName.toString() }
+                    .filter { it.valueParameterCount == 1 }
+                    .map { it.valueParameterList.single() }
+                    .filter { it.hasName() }
+                    .filter { classData.nameResolver.getString(it.name) == prop.parameters.single().simpleName.toString() }
+
+                when (matchingFunctions.size) {
+                    0 -> false
+                    1 -> matchingFunctions.single().declaresDefaultValue
+                    else -> throw IllegalStateException("More than one function in $viewElement found matching $prop -> $matchingFunctions")
+                }
+            } ?: false
+
+        // Since our generated code is java we need jvmoverloads so that a no arg
+        // version of the function is generated. However, the JvmOverloads annotation
+        // is stripped when generating the java code so we can't check it directly.
+        // Instead, we verify that a no arg function of the same name exists
+        val hasNoArgEquivalent = hasDefaultKotlinValue &&
+            prop is ExecutableElement &&
+            viewElement.hasOverload(prop, 0)
+
+        if (hasDefaultKotlinValue && !hasNoArgEquivalent) {
+            errorLogger.logError(
+                "Model view function with default argument must be annotated with @JvmOverloads: %s#%s",
+                viewElement.simpleName,
+                prop.simpleName
+            )
+        }
+
         addAttribute(
             ViewAttributeInfo(
-                this, prop, typeUtils, elements, errorLogger,
-                resourceProcessor
+                modelInfo = this,
+                hasDefaultKotlinValue = hasDefaultKotlinValue && hasNoArgEquivalent,
+                viewAttributeElement = prop,
+                types = typeUtils,
+                elements = elements,
+                errorLogger = errorLogger,
+                resourceProcessor = resourceProcessor
             )
         )
     }
@@ -191,8 +236,13 @@ internal class ModelViewInfo(
     fun addPropIfNotExists(prop: Element) {
         addAttributeIfNotExists(
             ViewAttributeInfo(
-                this, prop, typeUtils, elements, errorLogger,
-                resourceProcessor
+                modelInfo = this,
+                hasDefaultKotlinValue = false,
+                viewAttributeElement = prop,
+                types = typeUtils,
+                elements = elements,
+                errorLogger = errorLogger,
+                resourceProcessor = resourceProcessor
             )
         )
     }
