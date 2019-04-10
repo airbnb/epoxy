@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="10a08b85-6936-42d6-a951-213179937d19" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../epoxy-processor/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../epoxy-processor/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../epoxy-processor/src/main/java/com/airbnb/epoxy/GeneratedModelInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../epoxy-processor/src/main/java/com/airbnb/epoxy/GeneratedModelInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../epoxy-processor/src/main/java/com/airbnb/epoxy/KotlinUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../epoxy-processor/src/main/java/com/airbnb/epoxy/KotlinUtils.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../epoxy-processor/src/main/java/com/airbnb/epoxy/ModelViewInfo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../epoxy-processor/src/main/java/com/airbnb/epoxy/ModelViewInfo.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../epoxy-processor/src/main/java/com/airbnb/epoxy/ModelViewProcessor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../epoxy-processor/src/main/java/com/airbnb/epoxy/ModelViewProcessor.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../epoxy-processor/src/main/java/com/airbnb/epoxy/ModelViewWriter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../epoxy-processor/src/main/java/com/airbnb/epoxy/ModelViewWriter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../epoxy-processor/src/main/java/com/airbnb/epoxy/ViewAttributeInfo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../epoxy-processor/src/main/java/com/airbnb/epoxy/ViewAttributeInfo.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../kotlinsample/src/main/java/com/airbnb/epoxy/kotlinsample/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../kotlinsample/src/main/java/com/airbnb/epoxy/kotlinsample/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../kotlinsample/src/main/java/com/airbnb/epoxy/kotlinsample/models/ItemCustomView.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../kotlinsample/src/main/java/com/airbnb/epoxy/kotlinsample/models/ItemCustomView.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
     </list>
     <ignored path="lib.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -48,9 +40,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -142,17 +134,16 @@
       <option name="presentableId" value="Default" />
       <updated>1554593144163</updated>
       <workItem from="1554593145701" duration="13000" />
+      <workItem from="1554670594900" duration="218000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13000" />
+    <option name="totallyTimeSpent" value="231000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="1027" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Image Layers" />
       <window_info active="true" id="Project" order="0" visible="true" weight="0.24969475" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Captures" order="2" weight="0.25" />
@@ -160,7 +151,7 @@
       <window_info id="Capture Tool" order="4" />
       <window_info id="Palette&#9;" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info id="Image Layers" order="7" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -175,8 +166,7 @@
       <window_info anchor="bottom" id="Version Control" order="11" />
       <window_info anchor="bottom" id="Gradle Console" order="12" side_tool="true" />
       <window_info active="true" anchor="bottom" id="Messages" order="13" visible="true" weight="0.3299923" />
-      <window_info anchor="right" id="PsiViewer" />
-      <window_info anchor="right" id="Theme Preview" />
+      <window_info anchor="bottom" id="Docker" order="14" show_stripe_button="false" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -184,6 +174,8 @@
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="right" id="Gradle" order="5" />
       <window_info anchor="right" id="Android Model" order="6" side_tool="true" />
+      <window_info anchor="right" id="PsiViewer" order="7" />
+      <window_info anchor="right" id="Theme Preview" order="8" />
     </layout>
   </component>
 </project>
