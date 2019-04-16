@@ -1,5 +1,7 @@
-# 3.4.0 (April 10, 2019)
+# 3.4.1 (April 16, 2019)
 - **New** Support kotlin default parameters in @ModelView classes (https://github.com/airbnb/epoxy/pull/722)
+
+# 3.4.0 (April 10, 2019)
 - **New** Generate OnModelCheckedChangeListener override for props of type `CompoundButton.OnCheckedChangeListener` (https://github.com/airbnb/epoxy/pull/725)
 - **New** Extract ID generation methods to new public IdUtils class (https://github.com/airbnb/epoxy/pull/724)
 - **Changed** Reset controller state on failed model build (https://github.com/airbnb/epoxy/pull/720)
