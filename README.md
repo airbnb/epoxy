@@ -52,7 +52,7 @@ buildscript {
     mavenCentral()
    }
   dependencies {
-    classpath 'com.jakewharton:butterknife-gradle-plugin:8.7.0'
+    classpath 'com.jakewharton:butterknife-gradle-plugin:10.1.0'
   }
 }
 ```
