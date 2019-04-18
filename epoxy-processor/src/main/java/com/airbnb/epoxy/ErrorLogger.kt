@@ -8,8 +8,15 @@ class ErrorLogger {
 
     private val loggedExceptions: MutableList<Exception> = mutableListOf()
 
+    private val warnings: MutableList<String> = mutableListOf()
+
     fun writeExceptions(messager: Messager) {
         loggedExceptions.forEach { messager.printMessage(Diagnostic.Kind.ERROR, it.toString()) }
+        warnings.forEach { messager.printMessage(Diagnostic.Kind.WARNING, it) }
+    }
+
+    fun logWarning(msg: String) {
+        warnings.add(msg)
     }
 
     fun logErrors(exceptions: List<Exception>) {
@@ -33,7 +40,8 @@ class ErrorLogger {
      * If the exception is not an [EpoxyProcessorException] then the stacktrace will be shown in
      * the output.
      */
-    @JvmOverloads fun logError(e: Exception, message: String = "") {
+    @JvmOverloads
+    fun logError(e: Exception, message: String = "") {
         logEpoxyError(e as? EpoxyProcessorException ?: EpoxyProcessorException(e, message))
     }
 

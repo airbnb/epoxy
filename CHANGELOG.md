@@ -1,3 +1,6 @@
+# 3.4.2 (April 18, 2019)
+- **Fixed** Kotlin default param handling had issues with overloaded functions
+
 # 3.4.1 (April 16, 2019)
 - **New** Support kotlin default parameters in @ModelView classes (https://github.com/airbnb/epoxy/pull/722)
 
