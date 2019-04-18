@@ -36,6 +36,20 @@ class KotlinViewWithDefaultParams(context: Context) : View(context) {
         groupValue = num
     }
 
+    // Make sure that overloads with the same function name and param name are distinguished correctly by type
+    @JvmOverloads
+    @ModelProp
+    fun setImage(image: Map<String, Int> = emptyMap()) {
+    }
+
+    @ModelProp
+    fun setImage(image: String) {
+    }
+
+    @ModelProp
+    fun somePropWithoutDefault(num: Int) {
+    }
+
     var groupValue: Int? = null
 
     companion object {

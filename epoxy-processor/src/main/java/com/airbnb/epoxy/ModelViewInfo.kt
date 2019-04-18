@@ -6,7 +6,9 @@ import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import me.eugeniomarletti.kotlin.metadata.KotlinClassMetadata
 import me.eugeniomarletti.kotlin.metadata.declaresDefaultValue
+import me.eugeniomarletti.kotlin.metadata.extractFullName
 import me.eugeniomarletti.kotlin.metadata.kotlinMetadata
+import me.eugeniomarletti.kotlin.metadata.shadow.metadata.ProtoBuf
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.Modifier
@@ -187,22 +189,7 @@ internal class ModelViewInfo(
     fun addProp(prop: Element) {
 
         val hasDefaultKotlinValue = prop is ExecutableElement &&
-            kotlinMetadata?.data?.let { classData ->
-
-                val matchingFunctions = classData.classProto.functionOrBuilderList
-                    .filter { it.hasName() }
-                    .filter { classData.nameResolver.getString(it.name) == prop.simpleName.toString() }
-                    .filter { it.valueParameterCount == 1 }
-                    .map { it.valueParameterList.single() }
-                    .filter { it.hasName() }
-                    .filter { classData.nameResolver.getString(it.name) == prop.parameters.single().simpleName.toString() }
-
-                when (matchingFunctions.size) {
-                    0 -> false
-                    1 -> matchingFunctions.single().declaresDefaultValue
-                    else -> throw IllegalStateException("More than one function in $viewElement found matching $prop -> $matchingFunctions")
-                }
-            } ?: false
+            kotlinMetadata?.findMatchingSetter(prop)?.valueParameterList?.single()?.declaresDefaultValue == true
 
         // Since our generated code is java we need jvmoverloads so that a no arg
         // version of the function is generated. However, the JvmOverloads annotation
@@ -290,5 +277,129 @@ internal class ModelViewInfo(
 
         errorLogger.logError("Unable to get layout resource for view %s", viewElement.simpleName)
         return ResourceValue(0)
+    }
+
+    private fun KotlinClassMetadata.findMatchingSetter(functionElement: ExecutableElement): ProtoBuf.FunctionOrBuilder? {
+        // Given an element representing a function we want to find the corresponding function information
+        // in the kotlin metadata of this class. We do this by searching for a function matching the same
+        // name, param count, param name, and param type.
+        // This assumes the param count we're looking for is 1 since this is an epoxy setter.
+        require(functionElement.parameters.size == 1) { "Expected function $functionElement to have exactly 1 parameter" }
+        val paramName = functionElement.parameters.single().simpleName.toString()
+        val functionName = functionElement.simpleName.toString()
+
+        // Checking function name, param count, and param name are easy
+        val matchingFunctions = data.classProto.functionOrBuilderList
+            .asSequence()
+            .filter { it.hasName() && data.nameResolver.getString(it.name) == functionName }
+            .filter { it.valueParameterCount == 1 }
+            .filter {
+                val param = it.valueParameterList.single()
+                param.hasName() && data.nameResolver.getString(param.name) == paramName
+            }
+            .toList()
+
+        // However, checking param type is hard. If there are function overloads that have the same
+        // naming, but with different param types, then we need to be able to distinguish between
+        // them. This is difficult because the type information from the Kotlin metadata doesn't
+        // have a clear mapping to the Element type information.
+        if (matchingFunctions.size <= 1) {
+            return matchingFunctions.firstOrNull()
+        }
+        val propTypeClassName =
+            functionElement.parameters.single().asType().toString().let { ClassNameData.from(it) }
+
+        return matchingFunctions.map { function ->
+            function.valueParameterList.single().type
+                .extractFullName(data, outputTypeAlias = false)
+                .replace("`", "") // Back ticks separate all the words
+                .let { function to ClassNameData.from(it) }
+        }.sortedWith(Comparator<Pair<ProtoBuf.FunctionOrBuilder, ClassNameData>> { p0, p1 ->
+            // Given two kotlin metadata functions and their class names, this comparator
+            // compares them to see which is more likely to be the same as the function Element
+            // we are trying to match with.
+            compareNames(propTypeClassName, p0.second, p1.second)
+        })
+            .last().first
+    }
+
+    private fun compareNames(
+        targetType: ClassNameData,
+        leftType: ClassNameData,
+        rightType: ClassNameData
+    ): Int {
+        // The package names of kotlin metadata types use kotlin versions of things (ie kotlin.String)
+        // whereas the java Element types use the Java package names. This makes it hard to directly
+        // compare types. Additionally, generic information is presented in slightly different formats
+        // To avoid errors where we don't compare types correctly, we instead look for the closest
+        // matching types, and sort to see which type we think matches the best.
+
+        // Sanity check that generic type counts are correct
+        if (leftType.hasGenericTypes == rightType.hasGenericTypes) {
+            if (leftType.hasGenericTypes != targetType.hasGenericTypes) {
+                // Neither of the types has the right generic information, so they are equally unfit
+                return 0
+            }
+        } else {
+            return if (leftType.hasGenericTypes == targetType.hasGenericTypes) 1 else -1
+        }
+
+        targetType.packageNames.forEachIndexed { index, name ->
+            val leftName = leftType.packageNames.getOrNull(index)
+            val rightName = rightType.packageNames.getOrNull(index)
+
+            // If names are equal then don't judge based on them (difference could be in generic types)
+            // If neither side has a name that matches then don't judge based on naming alone.
+            // But, if this is the simple name, then it must at least match (package name won't necessarily match)
+            when {
+                leftName == name && rightName != name -> return 1
+                rightName == name -> return -1
+                index == 0 -> return 0
+            }
+        }
+
+        targetType.typeNames.forEachIndexed { index, typeData ->
+            val leftTypeData = leftType.typeNames.getOrNull(index)
+                ?: throw IllegalStateException("Expected type at index $index for $leftType")
+
+            val rightTypeData = rightType.typeNames.getOrNull(index) ?: throw IllegalStateException(
+                "Expected type at index $index for $rightType"
+            )
+
+            val comparisonResult = compareNames(typeData, leftTypeData, rightTypeData)
+            if (comparisonResult != 0) {
+                return comparisonResult
+            }
+        }
+
+        return 0
+    }
+
+    data class ClassNameData(
+        val reflectionName: String,
+        val fullNameWithoutTypes: String,
+        val typeNames: List<ClassNameData>
+    ) {
+        val packageNames = fullNameWithoutTypes.split(".").reversed()
+        val hasGenericTypes = typeNames.isNotEmpty()
+
+        companion object {
+            fun from(reflectionName: String): ClassNameData {
+                val fullNameWithoutTypes = reflectionName.substringBefore("<")
+
+                val typeNames = reflectionName
+                    .takeIf { it.contains("<") }
+                    ?.substringAfter("<")
+                    ?.substringBeforeLast(">")
+                    ?.split(",")
+                    ?.map { it.trim() }
+                    ?.filter { it.isNotBlank() }
+                    ?.takeIf { it.isNotEmpty() }
+                    ?.map { ClassNameData.from(it) }
+                    ?: emptyList()
+
+                return ClassNameData(reflectionName, fullNameWithoutTypes, typeNames)
+            }
+        }
     }
 }
