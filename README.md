@@ -44,7 +44,7 @@ so that `AutoModel` annotations work properly. More information [here](https://g
 Also, make sure to use `kapt` instead of `annotationProcessor` in your dependencies in the `build.gradle` file.
 
 ## Library Projects
-To use Epoxy in a library or module add [Butterknife's gradle plugin](https://github.com/JakeWharton/butterknife#library-projects) to your `buildscript`.
+If you are using layout resources in Epoxy annotations then for library projects add [Butterknife's gradle plugin](https://github.com/JakeWharton/butterknife#library-projects) to your `buildscript`.
 
 ```yaml
 buildscript {
@@ -70,6 +70,8 @@ public class HeaderView extends LinearLayout {
    ....
 }
 ```
+
+This is not necessary if you don't use resources as annotation parameters, such as with [custom view models](https://github.com/airbnb/epoxy/wiki/Generating-Models-from-View-Annotations).
 
 ## Basic Usage
 There are two main components of Epoxy:
