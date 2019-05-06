@@ -217,10 +217,6 @@ public class EpoxyVisibilityTracker {
             }
           }
         }
-      } else {
-        throw new IllegalEpoxyUsage(
-            "`EpoxyVisibilityTracker` cannot be used with non-epoxy view holders."
-        );
       }
     }
   }
