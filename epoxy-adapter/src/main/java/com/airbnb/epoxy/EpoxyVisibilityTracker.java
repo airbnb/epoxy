@@ -29,10 +29,6 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
  * {@link EpoxyVisibilityTracker} works with any {@link androidx.recyclerview.widget.RecyclerView}
  * backed by an Epoxy controller. Once attached the events will be forwarded to the Epoxy model (or
  * to the Epoxy view when using annotations).
- * <p>
- * Note regarding nested lists: The visibility event tracking is not properly handled yet. This is
- * on the todo.
- * <p>
  *
  * @see OnVisibilityChanged
  * @see OnVisibilityStateChanged
@@ -220,10 +216,6 @@ public class EpoxyVisibilityTracker {
             }
           }
         }
-      } else {
-        throw new IllegalEpoxyUsage(
-            "`EpoxyVisibilityTracker` cannot be used with non-epoxy view holders."
-        );
       }
     }
   }
