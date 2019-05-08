@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.EpoxyVisibilityTracker
 import com.airbnb.epoxy.kotlinsample.models.CarouselItemCustomViewModel_
@@ -84,12 +83,4 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "MainActivity"
     }
-}
-
-fun EpoxyRecyclerView.withModels(buildModelsCallback: EpoxyController.() -> Unit) {
-    setControllerAndBuildModels(object : EpoxyController() {
-        override fun buildModels() {
-            buildModelsCallback()
-        }
-    })
 }

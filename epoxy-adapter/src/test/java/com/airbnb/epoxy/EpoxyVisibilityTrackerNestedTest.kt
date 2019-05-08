@@ -15,8 +15,8 @@ import org.robolectric.Robolectric
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowLog
 
-internal typealias AssertHelper = EpoxyVisibilityTrackerTest.AssertHelper
-internal typealias TestModel = EpoxyVisibilityTrackerTest.TestModel
+private typealias AssertHelper = EpoxyVisibilityTrackerTest.AssertHelper
+private typealias TrackerTestModel = EpoxyVisibilityTrackerTest.TrackerTestModel
 
 /**
  * This class test the EpoxyVisibilityTracker by using a RecyclerView that scroll vertically. The
@@ -216,7 +216,7 @@ class EpoxyVisibilityTrackerNestedTest {
                             val models = mutableListOf<EpoxyModel<*>>()
                             helpers.forEach { helper ->
                                 models.add(
-                                    TestModel(
+                                    TrackerTestModel(
                                         itemPosition = index,
                                         itemHeight = itemHeight,
                                         itemWidth = itemWidth,

@@ -194,7 +194,7 @@ public class Carousel extends EpoxyRecyclerView {
       ViewGroup.LayoutParams childLayoutParams = child.getLayoutParams();
       child.setTag(R.id.epoxy_recycler_view_child_initial_size_id, childLayoutParams.width);
 
-      int itemSpacingPx = spacingDecorator.getPxBetweenItems();
+      int itemSpacingPx = getSpacingDecorator().getPxBetweenItems();
       int spaceBetweenItems = 0;
       if (itemSpacingPx > 0) {
         // The item decoration space is not counted in the width of the view
