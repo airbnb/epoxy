@@ -693,7 +693,7 @@ class EpoxyVisibilityTrackerTest {
                     override fun buildModels(data: List<AssertHelper>?) {
                         data?.forEachIndexed { index, helper ->
                             add(
-                                TestModel(
+                                TrackerTestModel(
                                     itemPosition = index,
                                     itemHeight = itemHeight,
                                     helper = helper
@@ -718,7 +718,7 @@ class EpoxyVisibilityTrackerTest {
     /**
      * Epoxy model used for test
      */
-    internal class TestModel(
+    internal class TrackerTestModel(
         private val itemPosition: Int,
         private val itemHeight: Int,
         private val itemWidth: Int = FrameLayout.LayoutParams.MATCH_PARENT,
