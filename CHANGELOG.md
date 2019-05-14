@@ -1,3 +1,7 @@
+# 3.5.0 (May 8, 2019)
+- **New** Converted EpoxyRecyclerView to Kotlin (you may need to update your usage for this). Also added built in support for `EpoxyRecyclerView#withModels` for easy inline model building with Kotlin.
+- **Fixed** Crashes in visibility tracking
+
 # 3.4.2 (April 18, 2019)
 - **Fixed** Kotlin default param handling had issues with overloaded functions
 
