@@ -89,7 +89,7 @@ internal class ModelBuilderInterfaceWriter(
                     // that subclasses of the model can also implement this interface
                     returns = interfaceName,
                     additionalModifiers = listOf(Modifier.ABSTRACT)
-                )
+                ) {}
             }
     }
 

@@ -66,7 +66,7 @@ internal fun MethodSpec.copy(
     typeVariables: Iterable<TypeVariableName>? = null,
     exceptions: Iterable<TypeName>? = null,
     // Any other custom init code, like adding statements
-    callback: MethodSpec.Builder.() -> Unit = {}
+    callback: MethodSpec.Builder.() -> Unit
 ): MethodSpec {
     val builder = MethodSpec.methodBuilder(name ?: this.name)
         .addModifiers(modifiers ?: this.modifiers)

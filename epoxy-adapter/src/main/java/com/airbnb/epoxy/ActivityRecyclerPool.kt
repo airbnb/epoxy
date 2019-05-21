@@ -23,7 +23,7 @@ internal class ActivityRecyclerPool {
     @JvmOverloads
     fun getPool(
         context: Context,
-        poolFactory: () -> RecyclerView.RecycledViewPool = { UnboundedViewPool() }
+        poolFactory: () -> RecyclerView.RecycledViewPool
     ): PoolReference {
 
         val iterator = pools.iterator()
