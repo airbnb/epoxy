@@ -168,7 +168,7 @@ inline fun <reified T : Annotation> Element.annotation(): T? = getAnnotation(T::
  * @param annotationFilter Return false to exclude annotations with the given class name.
  */
 fun TypeElement.buildAnnotationSpecs(
-    annotationFilter: (ClassName) -> Boolean = { true }
+    annotationFilter: (ClassName) -> Boolean
 ): List<AnnotationSpec> {
     val internalAnnotationFilter = { className: ClassName ->
         if (className.reflectionName() == "kotlin.Metadata") {

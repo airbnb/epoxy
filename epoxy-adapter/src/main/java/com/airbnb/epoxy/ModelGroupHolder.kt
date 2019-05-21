@@ -37,7 +37,7 @@ class ModelGroupHolder : EpoxyHolder() {
 
         rootView = itemView
         childContainer = findChildContainer(rootView)
-        poolReference = ACTIVITY_RECYCLER_POOL.getPool(itemView.context)
+        poolReference = ACTIVITY_RECYCLER_POOL.getPool(itemView.context) { UnboundedViewPool() }
 
         stubs = if (childContainer.childCount != 0) {
             createViewStubData(childContainer)
