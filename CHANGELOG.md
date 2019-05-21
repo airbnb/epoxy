@@ -1,3 +1,6 @@
+# 3.5.1 (May 21, 2019)
+- Bumped Kotlin to 1.3.31
+
 # 3.5.0 (May 8, 2019)
 - **New** Converted EpoxyRecyclerView to Kotlin (you may need to update your usage for this). Also added built in support for `EpoxyRecyclerView#withModels` for easy inline model building with Kotlin.
 - **Fixed** Crashes in visibility tracking
