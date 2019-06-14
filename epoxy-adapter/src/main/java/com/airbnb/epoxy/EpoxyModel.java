@@ -164,6 +164,7 @@ public abstract class EpoxyModel<T> {
 
   /**
    * TODO link to the wiki
+   *
    * @see OnVisibilityStateChanged annotation
    */
   public void onVisibilityStateChanged(@Visibility int visibilityState, @NonNull T view) {
@@ -171,6 +172,7 @@ public abstract class EpoxyModel<T> {
 
   /**
    * TODO link to the wiki
+   *
    * @see OnVisibilityChanged annotation
    */
   public void onVisibilityChanged(
@@ -511,7 +513,11 @@ public abstract class EpoxyModel<T> {
     int getSpanSize(int totalSpanCount, int position, int itemCount);
   }
 
-  int getSpanSizeInternal(int totalSpanCount, int position, int itemCount) {
+  /**
+   * Returns the actual span size of this model, using the {@link SpanSizeOverrideCallback} if one
+   * was set, otherwise using the value from {@link #getSpanSize(int, int, int)}
+   */
+  public final int spanSize(int totalSpanCount, int position, int itemCount) {
     if (spanSizeOverride != null) {
       return spanSizeOverride.getSpanSize(totalSpanCount, position, itemCount);
     }
@@ -591,8 +597,8 @@ public abstract class EpoxyModel<T> {
   /**
    * Called when this model's view is detached from the the window.
    *
-   * @see
-   * EpoxyAdapter#onViewDetachedFromWindow(androidx.recyclerview.widget.RecyclerView.ViewHolder)
+   * @see EpoxyAdapter#onViewDetachedFromWindow(androidx.recyclerview.widget.RecyclerView
+   * .ViewHolder)
    */
   public void onViewDetachedFromWindow(@NonNull T view) {
 

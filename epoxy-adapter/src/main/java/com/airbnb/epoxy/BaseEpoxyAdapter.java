@@ -12,7 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
 import androidx.recyclerview.widget.RecyclerView;
 
-abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
+public abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
+
   private static final String SAVED_STATE_ARG_VIEW_HOLDERS = "saved_state_view_holders";
 
   private int spanCount = 1;
@@ -31,7 +32,7 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
     public int getSpanSize(int position) {
       try {
         return getModelForPosition(position)
-            .getSpanSizeInternal(spanCount, position, getItemCount());
+            .spanSize(spanCount, position, getItemCount());
       } catch (IndexOutOfBoundsException e) {
         // There seems to be a GridLayoutManager bug where when the user is in accessibility mode
         // it incorrectly uses an outdated view position
@@ -46,7 +47,7 @@ abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
     }
   };
 
-  BaseEpoxyAdapter() {
+  public BaseEpoxyAdapter() {
     // Defaults to stable ids since view models generate unique ids. Set this to false in the
     // subclass if you don't want to support it
     setHasStableIds(true);

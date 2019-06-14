@@ -14,6 +14,12 @@ import androidx.annotation.Px
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.epoxy.preload.EpoxyModelPreloader
+import com.airbnb.epoxy.preload.EpoxyPreloader
+import com.airbnb.epoxy.preload.PreloadErrorHandler
+import com.airbnb.epoxy.preload.PreloadRequestHolder
+import com.airbnb.epoxy.preload.ViewMetadata
+import com.airbnb.epoxy.utils.isDebuggable
 
 /**
  * A RecyclerView implementation that makes for easier integration with Epoxy. The goal of this
@@ -91,6 +97,88 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
         }
     }
 
+    private val preloadScrollListeners: MutableList<EpoxyPreloader<*>> = mutableListOf()
+
+    private val preloadConfigs: MutableList<PreloadConfig<*, *, *>> = mutableListOf()
+
+    private class PreloadConfig<T : EpoxyModel<*>, U : ViewMetadata?, P : PreloadRequestHolder>(
+        val maxPreload: Int,
+        val errorHandler: PreloadErrorHandler,
+        val preloader: EpoxyModelPreloader<T, U, P>,
+        val requestHolderFactory: () -> P
+    )
+
+    /**
+     * Setup a preloader to fetch content for a model's view before it is bound.
+     * This can be called multiple times if you would like to add separate preloaders
+     * for different models or content types.
+     *
+     * Preloaders are automatically attached and run, and are updated if the adapter changes.
+     *
+     * @param maxPreloadDistance How many items to prefetch ahead of the last bound item
+     * @param errorHandler Called when the preloader encounters an exception. By default this throws only
+     * if the app is not in debug mode
+     * @param preloader Describes how view content for the EpoxyModel should be preloaded
+     * @param requestHolderFactory Should create and return a new [PreloadRequestHolder] each time it is invoked
+     */
+    fun <T : EpoxyModel<*>, U : ViewMetadata?, P : PreloadRequestHolder> addPreloader(
+        maxPreloadDistance: Int = 3,
+        errorHandler: PreloadErrorHandler = { context, err -> if (!context.isDebuggable) throw err },
+        preloader: EpoxyModelPreloader<T, U, P>,
+        requestHolderFactory: () -> P
+    ) {
+        preloadConfigs.add(
+            PreloadConfig(
+                maxPreloadDistance,
+                errorHandler,
+                preloader,
+                requestHolderFactory
+            )
+        )
+
+        updatePreloaders()
+    }
+
+    /**
+     * Clears all preloaders added with [addPreloader]
+     */
+    fun clearPreloaders() {
+        preloadConfigs.clear()
+        updatePreloaders()
+    }
+
+    private fun updatePreloaders() {
+        preloadScrollListeners.forEach { removeOnScrollListener(it) }
+        preloadScrollListeners.clear()
+        val currAdapter = adapter ?: return
+
+        preloadConfigs.forEach { preloadConfig ->
+
+            if (currAdapter is EpoxyAdapter) {
+                EpoxyPreloader.with(
+                    currAdapter,
+                    preloadConfig.requestHolderFactory,
+                    preloadConfig.errorHandler,
+                    preloadConfig.maxPreload,
+                    listOf(preloadConfig.preloader)
+                )
+            } else {
+                epoxyController?.let {
+                    EpoxyPreloader.with(
+                        it,
+                        preloadConfig.requestHolderFactory,
+                        preloadConfig.errorHandler,
+                        preloadConfig.maxPreload,
+                        listOf(preloadConfig.preloader)
+                    )
+                }
+            }?.let {
+                preloadScrollListeners.add(it)
+                addOnScrollListener(it)
+            }
+        }
+    }
+
     /**
      * If set to true, any adapter set on this recyclerview will be removed when this view is detached
      * from the window. This is useful to prevent leaking a reference to this RecyclerView. This is
@@ -131,7 +219,12 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
                 attrs, R.styleable.EpoxyRecyclerView,
                 defStyleAttr, 0
             )
-            setItemSpacingPx(a.getDimensionPixelSize(R.styleable.EpoxyRecyclerView_itemSpacing, 0))
+            setItemSpacingPx(
+                a.getDimensionPixelSize(
+                    R.styleable.EpoxyRecyclerView_itemSpacing,
+                    0
+                )
+            )
             a.recycle()
         }
 
@@ -470,6 +563,7 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
         super.setAdapter(adapter)
 
         clearRemovedAdapterAndCancelRunnable()
+        updatePreloaders()
     }
 
     override fun swapAdapter(
@@ -479,6 +573,7 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
         super.swapAdapter(adapter, removeAndRecycleExistingViews)
 
         clearRemovedAdapterAndCancelRunnable()
+        updatePreloaders()
     }
 
     public override fun onAttachedToWindow() {
@@ -493,6 +588,7 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
 
     public override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        preloadScrollListeners.forEach { it.cancelPreloadRequests() }
 
         if (removeAdapterWhenDetachedFromWindow) {
             if (delayMsWhenRemovingAdapterOnDetach > 0) {
