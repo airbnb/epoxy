@@ -128,6 +128,3 @@ abstract class EpoxyModelPreloader<T : EpoxyModel<*>, U : ViewMetadata?, P : Pre
         }
     }
 }
-
-
-

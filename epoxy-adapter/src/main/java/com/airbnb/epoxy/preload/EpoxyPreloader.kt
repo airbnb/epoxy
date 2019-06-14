@@ -289,4 +289,3 @@ interface ViewMetadata {
 open class ImageViewMetadata(
     val scaleType: ImageView.ScaleType
 ) : ViewMetadata
-

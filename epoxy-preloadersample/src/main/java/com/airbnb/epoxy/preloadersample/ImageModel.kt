@@ -36,4 +36,3 @@ class ImageHolder : KotlinHolder(), Preloadable {
     val glide by lazy { Glide.with(image.context) }
     override val viewsToPreload by lazy { listOf(image) }
 }
-

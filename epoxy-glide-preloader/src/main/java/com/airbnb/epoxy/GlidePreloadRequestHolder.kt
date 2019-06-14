@@ -29,9 +29,9 @@ open class GlidePreloadRequestHolder(
     override fun getSize(cb: SizeReadyCallback) {
         if (!Util.isValidDimensions(width, height)) {
             error(
-                "Width and height must both be > 0 or Target#SIZE_ORIGINAL, but given" + " width: "
-                    + width + " and height: " + height + ", either provide dimensions in the constructor"
-                    + " or call override()"
+                "Width and height must both be > 0 or Target#SIZE_ORIGINAL, but given" + " width: " +
+                    width + " and height: " + height + ", either provide dimensions in the constructor" +
+                    " or call override()"
             )
         }
         cb.onSizeReady(width, height)

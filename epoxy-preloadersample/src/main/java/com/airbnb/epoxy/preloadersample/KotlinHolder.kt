@@ -29,7 +29,7 @@ abstract class KotlinHolder : EpoxyHolder() {
      * https://github.com/JakeWharton/kotterknife
      */
     private class Lazy<V>(
-            private val initializer: (KotlinHolder, KProperty<*>) -> V
+        private val initializer: (KotlinHolder, KProperty<*>) -> V
     ) : ReadOnlyProperty<KotlinHolder, V> {
         private object EMPTY
 

@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity() {
             }
         }.execute()
 
-
         button_no_preload.setOnClickListener {
             val intent = Intent(this, NoPreloadActivity::class.java)
             intent.putExtra(IMAGES_LIST_TAG, images)
