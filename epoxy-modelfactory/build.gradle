@@ -23,7 +23,6 @@ dependencies {
   implementation project(':epoxy-adapter')
   implementation rootProject.deps.paris
 
-  testImplementation project(':epoxy-adapter')
   // Need to include the processor directly since we create an instance of it in code for testing
   testImplementation project(':epoxy-processor')
   testImplementation project(':epoxy-processortest')
@@ -34,11 +33,12 @@ dependencies {
   testImplementation rootProject.deps.kotlin
   // Need to include the processor directly since we create an instance of it in code for testing
   testImplementation rootProject.deps.parisProcessor
+  kapt rootProject.deps.parisProcessor
   testImplementation rootProject.deps.robolectric
   testImplementation files(getRuntimeJar())
   testImplementation files(Jvm.current().getToolsJar())
 
-  kaptTest project(':epoxy-processor')
+  kapt project(':epoxy-processor')
 }
 
 // Javadoc isn't working well with Kotlin :(
