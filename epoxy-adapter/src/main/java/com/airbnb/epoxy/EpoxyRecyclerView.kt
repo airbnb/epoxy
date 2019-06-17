@@ -4,9 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.ViewGroup
-
-import com.airbnb.viewmodeladapter.R
-
 import androidx.annotation.CallSuper
 import androidx.annotation.DimenRes
 import androidx.annotation.Dimension
@@ -19,7 +16,7 @@ import com.airbnb.epoxy.preload.EpoxyPreloader
 import com.airbnb.epoxy.preload.PreloadErrorHandler
 import com.airbnb.epoxy.preload.PreloadRequestHolder
 import com.airbnb.epoxy.preload.ViewMetadata
-import com.airbnb.epoxy.utils.isDebuggable
+import com.airbnb.viewmodeladapter.R
 
 /**
  * A RecyclerView implementation that makes for easier integration with Epoxy. The goal of this
@@ -116,14 +113,14 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
      * Preloaders are automatically attached and run, and are updated if the adapter changes.
      *
      * @param maxPreloadDistance How many items to prefetch ahead of the last bound item
-     * @param errorHandler Called when the preloader encounters an exception. By default this throws only
-     * if the app is not in debug mode
+     * @param errorHandler Called when the preloader encounters an exception. We recommend throwing an
+     * exception in debug builds, and logging an error in production.
      * @param preloader Describes how view content for the EpoxyModel should be preloaded
      * @param requestHolderFactory Should create and return a new [PreloadRequestHolder] each time it is invoked
      */
     fun <T : EpoxyModel<*>, U : ViewMetadata?, P : PreloadRequestHolder> addPreloader(
         maxPreloadDistance: Int = 3,
-        errorHandler: PreloadErrorHandler = { context, err -> if (!context.isDebuggable) throw err },
+        errorHandler: PreloadErrorHandler,
         preloader: EpoxyModelPreloader<T, U, P>,
         requestHolderFactory: () -> P
     ) {
