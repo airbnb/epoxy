@@ -1,3 +1,7 @@
+# 3.6.0 (June 18, 2019)
+- **New** Preloader system with glide extensions https://github.com/airbnb/epoxy/pull/766
+- **Fixed** model click listener crashing on nested model https://github.com/airbnb/epoxy/pull/767
+
 # 3.5.1 (May 21, 2019)
 - Bumped Kotlin to 1.3.31
 
