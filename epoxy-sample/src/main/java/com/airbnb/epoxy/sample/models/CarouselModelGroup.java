@@ -28,7 +28,8 @@ public class CarouselModelGroup extends EpoxyModelGroup {
     models.add(new ImageButtonModel_()
         .id("add")
         .imageRes(R.drawable.ic_add_circle)
-        .clickListener((model, parentView, clickedView, position) -> callbacks.onAddColorToCarouselClicked(carousel)));
+        .clickListener((model, parentView, clickedView, position) -> callbacks
+            .onAddColorToCarouselClicked(carousel)));
 
     models.add(new ImageButtonModel_()
         .id("delete")
