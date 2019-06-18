@@ -25,10 +25,10 @@ allprojects {
     google()
     jcenter()
   }
-  
+
   // Prevent javadoc task complaining about errors with kotlin files
   tasks.withType(Javadoc) {
-      excludes = ['**/*.kt']
+    excludes = ['**/*.kt']
   }
 }
 

@@ -1,0 +1,38 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+  compileSdkVersion rootProject.COMPILE_SDK_VERSION
+
+
+  defaultConfig {
+    applicationId "com.airbnb.epoxy.preloadersample"
+    minSdkVersion rootProject.MIN_SDK_VERSION
+    targetSdkVersion rootProject.TARGET_SDK_VERSION
+    versionCode 1
+    versionName "1.0"
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
+}
+
+dependencies {
+  implementation rootProject.deps.kotlin
+
+  implementation project(':epoxy-adapter')
+  implementation project(':epoxy-glide-preloader')
+  kapt project(':epoxy-processor')
+
+  // transitive to make ./gradlew check work
+  implementation  (rootProject.deps.glide)
+
+  implementation rootProject.deps.androidRecyclerView
+  implementation rootProject.deps.androidCardView
+  implementation rootProject.deps.androidAppcompat
+  testImplementation rootProject.deps.junit
+  androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha2', {
+    exclude group: 'com.android.support', module: 'support-annotations'
+  })
+}

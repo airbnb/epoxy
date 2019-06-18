@@ -1,9 +1,10 @@
 import org.gradle.internal.jvm.Jvm
 
 apply plugin: 'com.android.library'
-apply from: rootProject.file('gradle/build.workaround-missing-resource.gradle')
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+
+apply from: rootProject.file('gradle/build.workaround-missing-resource.gradle')
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
@@ -22,23 +23,21 @@ configurations.all { strategy ->
 dependencies {
   implementation project(':epoxy-adapter')
   implementation rootProject.deps.paris
+  implementation rootProject.deps.kotlin
+  implementation rootProject.deps.androidRecyclerView
 
-  testImplementation project(':epoxy-adapter')
-  // Need to include the processor directly since we create an instance of it in code for testing
+  kapt project(':epoxy-processor')
+
+  // Need to include the processors directly since we create an instance of it in code for testing
   testImplementation project(':epoxy-processor')
-  testImplementation project(':epoxy-processortest')
-  testImplementation rootProject.deps.androidRecyclerView
+  testImplementation rootProject.deps.parisProcessor
 
+  testImplementation project(':epoxy-processortest')
   testImplementation rootProject.deps.googleTestingCompile
   testImplementation rootProject.deps.junit
-  testImplementation rootProject.deps.kotlin
-  // Need to include the processor directly since we create an instance of it in code for testing
-  testImplementation rootProject.deps.parisProcessor
   testImplementation rootProject.deps.robolectric
   testImplementation files(getRuntimeJar())
   testImplementation files(Jvm.current().getToolsJar())
-
-  kaptTest project(':epoxy-processor')
 }
 
 // Javadoc isn't working well with Kotlin :(

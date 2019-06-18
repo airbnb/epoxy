@@ -208,7 +208,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
   @Override
   public int getSpanSize(int totalSpanCount, int position, int itemCount) {
     // Defaults to using the span size of the first model. Override this if you need to customize it
-    return models.get(0).getSpanSizeInternal(totalSpanCount, position, itemCount);
+    return models.get(0).spanSize(totalSpanCount, position, itemCount);
   }
 
   @Override
