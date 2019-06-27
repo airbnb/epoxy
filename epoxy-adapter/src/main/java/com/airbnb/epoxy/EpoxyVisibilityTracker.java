@@ -138,6 +138,19 @@ public class EpoxyVisibilityTracker {
     visibilityIdToItems.clear();
   }
 
+  /**
+   * Calling this method will make the visibility tracking check and trigger events if necessary. It
+   * is particularly useful when the visibility of an Epoxy model is changed outside of an Epoxy
+   * RecyclerView.
+   *
+   * An example is when you nest an horizontal Epoxy backed RecyclerView in a non Epoxy vertical
+   * RecyclerView. When the vertical RecyclerView scroll you want to notify the visibility tracker
+   * attached on the horizontal RecyclerView.
+   */
+  public void requestVisibilityCheck() {
+    processChangeEvent("requestVisibilityCheck");
+  }
+
   private void processChangeEvent(String debug) {
     processChangeEventWithDetachedView(null, debug);
   }
