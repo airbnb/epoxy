@@ -7,7 +7,7 @@ import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.TextProp
 
 @ModelView(autoLayout = ModelView.Size.WRAP_WIDTH_MATCH_HEIGHT)
-class KotlinViewWithDefaultParams(context: Context) : View(context) {
+open class KotlinViewWithDefaultParams(context: Context) : View(context) {
 
     @JvmOverloads
     @ModelProp
