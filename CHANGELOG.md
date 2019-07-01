@@ -1,3 +1,6 @@
+# 3.7.0 (July 1, 2019)
+- **New** Add a method to request visibility check externally (https://github.com/airbnb/epoxy/pull/775)
+
 # 3.6.0 (June 18, 2019)
 - **New** Preloader system with glide extensions https://github.com/airbnb/epoxy/pull/766
 - **Fixed** model click listener crashing on nested model https://github.com/airbnb/epoxy/pull/767
