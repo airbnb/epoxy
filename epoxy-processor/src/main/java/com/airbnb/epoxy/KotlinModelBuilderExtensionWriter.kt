@@ -118,7 +118,7 @@ internal class KotlinModelBuilderExtensionWriter(
             if (constructorIsNotPublic) addModifiers(KModifier.INTERNAL)
 
             beginControlFlow(
-                "$tick%T$tick(${params.joinToString(", ") { it.name }}).apply ",
+                "$tick%T$tick(${params.joinToString(", ") { it.name }}).apply",
                 modelClass
             )
             addStatement("modelInitializer()")
