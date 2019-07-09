@@ -61,29 +61,18 @@ public class EpoxyItemSpacingDecorator extends RecyclerView.ItemDecoration {
     calculatePositionDetails(parent, position, layout);
 
     boolean left = useLeftPadding();
-    boolean right = useRightPadding();
     boolean top = useTopPadding();
-    boolean bottom = useBottomPadding();
 
     if (shouldReverseLayout(layout, horizontallyScrolling)) {
       if (horizontallyScrolling) {
-        boolean temp = left;
-        left = right;
-        right = temp;
+        left = useRightPadding();
       } else {
-        boolean temp = top;
-        top = bottom;
-        bottom = temp;
+        top = useBottomPadding();
       }
     }
 
-    // Divided by two because it is applied to the left side of one item and the right of another
-    // to add up to the total desired space
-    int padding = pxBetweenItems / 2;
-    outRect.right = right ? padding : 0;
-    outRect.left = left ? padding : 0;
-    outRect.top = top ? padding : 0;
-    outRect.bottom = bottom ? padding : 0;
+    outRect.left = left ? pxBetweenItems : 0;
+    outRect.top = top ? pxBetweenItems : 0;
   }
 
   private void calculatePositionDetails(RecyclerView parent, int position, LayoutManager layout) {
