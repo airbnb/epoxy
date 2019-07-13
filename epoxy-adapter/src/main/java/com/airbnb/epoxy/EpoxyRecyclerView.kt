@@ -98,6 +98,15 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
 
     private val preloadConfigs: MutableList<PreloadConfig<*, *, *>> = mutableListOf()
 
+    private var paddingBackup: Padding
+
+    private data class Padding(
+        val left: Int,
+        val top: Int,
+        val right: Int,
+        val bottom: Int
+    )
+
     private class PreloadConfig<T : EpoxyModel<*>, U : ViewMetadata?, P : PreloadRequestHolder>(
         val maxPreload: Int,
         val errorHandler: PreloadErrorHandler,
@@ -210,7 +219,7 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
     }
 
     init {
-
+        paddingBackup = Padding(paddingLeft, paddingTop, paddingRight, paddingBottom)
         if (attrs != null) {
             val a = context.obtainStyledAttributes(
                 attrs, R.styleable.EpoxyRecyclerView,
@@ -371,6 +380,8 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
         if (spacingPx > 0) {
             addItemDecoration(spacingDecorator)
         }
+
+        updatePadding()
     }
 
     /**
@@ -629,6 +640,25 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
         // is no longer needed - the main signal we use for this is that the activity is destroyed.
         if (context.isActivityDestroyed()) {
             recycledViewPool.clear()
+        }
+    }
+
+    override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
+        paddingBackup = Padding(left, top, right, bottom)
+
+        val negativePadding = -spacingDecorator.pxBetweenItems / 2
+
+        super.setPadding(
+            left + negativePadding,
+            top + negativePadding,
+            right + negativePadding,
+            bottom + negativePadding
+        )
+    }
+
+    private fun updatePadding() {
+        paddingBackup.let {
+            setPadding(it.left, it.top, it.right, it.bottom)
         }
     }
 
