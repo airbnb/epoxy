@@ -129,6 +129,16 @@ internal class ModelViewProcessor(
 
         for (propAnnotation in modelPropAnnotations) {
             for (prop in roundEnv.getElementsAnnotatedWith(propAnnotation)) {
+
+                // Interfaces can use model property annotations freely, they will be processed if
+                // and when implementors of that interface are processed. This is particularly
+                // useful for Kotlin delegation where the model view class may not be overriding
+                // the interface properties directly, and so doesn't have an opportunity to annotate
+                // them with Epoxy model property annotations.
+                if (prop.enclosingElement.kind == ElementKind.INTERFACE) {
+                    continue
+                }
+
                 val info = getModelInfoForPropElement(prop)
                 if (info == null) {
                     errorLogger.logError(
