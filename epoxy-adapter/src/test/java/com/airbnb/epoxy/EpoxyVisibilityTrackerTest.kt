@@ -635,6 +635,25 @@ class EpoxyVisibilityTrackerTest {
     }
 
     /**
+     * Test case for https://github.com/airbnb/epoxy/issues/818
+     */
+    @Test
+    fun testRebuildData() {
+
+        log("buildTestData 1")
+        buildTestData(4, TWO_AND_HALF_VISIBLE).let {
+        }
+
+        log("buildTestData 2")
+        buildTestData(3, TWO_AND_HALF_VISIBLE).let {
+        }
+
+        log("buildTestData 3")
+        buildTestData(5, TWO_AND_HALF_VISIBLE).let {
+        }
+    }
+
+    /**
      * Attach an EpoxyController on the RecyclerView
      */
     private fun buildTestData(
