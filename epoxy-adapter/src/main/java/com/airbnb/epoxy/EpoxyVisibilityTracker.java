@@ -327,7 +327,6 @@ public class EpoxyVisibilityTracker {
       if (child instanceof RecyclerView) {
         processChildRecyclerViewAttached((RecyclerView) child);
       }
-      processChild(child, false, "onChildViewAttachedToWindow");
     }
 
     @Override
