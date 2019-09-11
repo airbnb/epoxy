@@ -636,6 +636,7 @@ class EpoxyVisibilityTrackerTest {
 
     /**
      * Test case for https://github.com/airbnb/epoxy/issues/818
+     * The data set used are taken from the sample app attached on the issue
      */
     @Test
     fun testRebuildData() {
@@ -652,6 +653,7 @@ class EpoxyVisibilityTrackerTest {
                     in 0..5 -> {
                         with(helper) {
                             assert(
+                                // If called then it should be only once
                                 onVisibilityChangedCount = 1
                             )
                         }
@@ -659,6 +661,7 @@ class EpoxyVisibilityTrackerTest {
                     else -> {
                         with(helper) {
                             assert(
+                                // 6th items and after should never be visible on current view port
                                 onVisibilityChangedCount = 0
                             )
                         }
@@ -671,13 +674,19 @@ class EpoxyVisibilityTrackerTest {
         for (i in 0..3) {
 
             log("buildTestData $i-1")
-            validateFivePlusPeek(buildTestData(24, fivePlusPeek))
+            validateFivePlusPeek(
+                buildTestData(24, fivePlusPeek)
+            )
 
             log("buildTestData $i-2")
-            validateFivePlusPeek(buildTestData(2, fivePlusPeek))
+            validateFivePlusPeek(
+                buildTestData(2, fivePlusPeek)
+            )
 
             log("buildTestData $i-3")
-            validateFivePlusPeek(buildTestData(10, fivePlusPeek))
+            validateFivePlusPeek(
+                buildTestData(10, fivePlusPeek)
+            )
         }
     }
 
