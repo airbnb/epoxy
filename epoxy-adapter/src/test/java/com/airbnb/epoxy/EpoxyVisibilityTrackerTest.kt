@@ -640,16 +640,44 @@ class EpoxyVisibilityTrackerTest {
     @Test
     fun testRebuildData() {
 
-        log("buildTestData 1")
-        buildTestData(4, TWO_AND_HALF_VISIBLE).let {
+        // To reproduce this issue we are building a RV with five full impression items and one
+        // item at 30% impression
+        val fivePlusPeek = 5.3f
+
+        // This block will validate five full impression and one 30% impression. We just want to
+        // validate that onVisibilityChanged is sent only once after rebuild (no scrolling).
+        val validateFivePlusPeek: (MutableList<AssertHelper>) -> Unit = { testHelper ->
+            testHelper.forEachIndexed { index, helper ->
+                when (index) {
+                    in 0..5 -> {
+                        with(helper) {
+                            assert(
+                                onVisibilityChangedCount = 1
+                            )
+                        }
+                    }
+                    else -> {
+                        with(helper) {
+                            assert(
+                                onVisibilityChangedCount = 0
+                            )
+                        }
+                    }
+                }
+            }
         }
 
-        log("buildTestData 2")
-        buildTestData(3, TWO_AND_HALF_VISIBLE).let {
-        }
+        // Multiple times we will rebuild the data set
+        for (i in 0..3) {
 
-        log("buildTestData 3")
-        buildTestData(5, TWO_AND_HALF_VISIBLE).let {
+            log("buildTestData $i-1")
+            validateFivePlusPeek(buildTestData(24, fivePlusPeek))
+
+            log("buildTestData $i-2")
+            validateFivePlusPeek(buildTestData(2, fivePlusPeek))
+
+            log("buildTestData $i-3")
+            validateFivePlusPeek(buildTestData(10, fivePlusPeek))
         }
     }
 
@@ -707,6 +735,8 @@ class EpoxyVisibilityTrackerTest {
             setContentView(EpoxyRecyclerView(this).apply {
                 epoxyVisibilityTracker.attach(this)
                 recyclerView = this
+                // Remove RV animations to recycling is tested too
+                recyclerView.itemAnimator = null
                 // Plug an epoxy controller
                 epoxyController = object : TypedEpoxyController<List<AssertHelper>>() {
                     override fun buildModels(data: List<AssertHelper>?) {
@@ -757,6 +787,7 @@ class EpoxyVisibilityTrackerTest {
             helper.percentVisibleWidth = pw
             helper.visibleHeight = vh
             helper.visibleWidth = vw
+            helper.onVisibilityChangedCount ++
             if (ph.toInt() != 100) helper.fullImpression = false
         }
 
@@ -786,9 +817,11 @@ class EpoxyVisibilityTrackerTest {
         var visible = false
         var focused = false
         var fullImpression = false
+        var onVisibilityChangedCount = 0
 
         fun assert(
             id: Int? = null,
+            onVisibilityChangedCount: Int? = null,
             visibleHeight: Int? = null,
             visibleWidth: Int? = null,
             percentVisibleHeight: Float? = null,
@@ -802,6 +835,15 @@ class EpoxyVisibilityTrackerTest {
                     "id expected $it got ${this.id}",
                     it,
                     this.id
+                )
+            }
+            onVisibilityChangedCount?.let {
+                // assert the number of callback expected
+                log("assert onVisibilityChangedCount, got $it, expected ${this.onVisibilityChangedCount}")
+                Assert.assertEquals(
+                    "onVisibilityChangedCount expected $it times got ${this.onVisibilityChangedCount} times",
+                    it,
+                    this.onVisibilityChangedCount
                 )
             }
             visibleHeight?.let {
