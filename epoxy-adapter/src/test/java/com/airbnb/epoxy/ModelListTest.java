@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
@@ -17,8 +18,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-@Config(sdk = 21, manifest = TestRunner.MANIFEST_PATH)
-@RunWith(TestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class ModelListTest {
 
   private final ModelList.ModelListObserver observer = mock(ModelList.ModelListObserver.class);

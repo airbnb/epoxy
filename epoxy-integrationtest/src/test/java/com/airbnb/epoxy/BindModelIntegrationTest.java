@@ -20,7 +20,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
 public class BindModelIntegrationTest {
 
   private Model_ model;

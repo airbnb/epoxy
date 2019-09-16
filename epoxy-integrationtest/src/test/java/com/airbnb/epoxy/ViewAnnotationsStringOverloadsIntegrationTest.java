@@ -2,7 +2,6 @@ package com.airbnb.epoxy;
 
 import android.content.res.Resources;
 
-import com.airbnb.epoxy.integrationtest.BuildConfig;
 import com.airbnb.epoxy.integrationtest.R;
 import com.airbnb.epoxy.integrationtest.ViewWithAnnotationsForIntegrationTest;
 import com.airbnb.epoxy.integrationtest.ViewWithAnnotationsForIntegrationTestModel_;
@@ -10,14 +9,13 @@ import com.airbnb.epoxy.integrationtest.ViewWithAnnotationsForIntegrationTestMod
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
+
+import androidx.test.core.app.ApplicationProvider;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
 public class ViewAnnotationsStringOverloadsIntegrationTest {
 
   private ControllerLifecycleHelper lifecycleHelper;
@@ -257,7 +255,7 @@ public class ViewAnnotationsStringOverloadsIntegrationTest {
 
   @Test
   public void stringOverloadsResetEachOther() {
-    Resources r = RuntimeEnvironment.application.getResources();
+    Resources r = ApplicationProvider.getApplicationContext().getResources();
 
     ViewWithAnnotationsForIntegrationTest view =
         bind(new ViewWithAnnotationsForIntegrationTestModel_()

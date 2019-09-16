@@ -18,7 +18,6 @@ import org.robolectric.annotation.Config;
 import java.util.List;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
 public class EpoxyModelValidationTest {
   @Rule
   public ExpectedException thrown = ExpectedException.none();

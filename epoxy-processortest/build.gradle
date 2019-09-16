@@ -1,7 +1,7 @@
 import org.gradle.internal.jvm.Jvm
 
 apply plugin: 'com.android.library'
-apply from: rootProject.file('gradle/build.workaround-missing-resource.gradle')
+//apply from: rootProject.file('gradle/build.workaround-missing-resource.gradle')
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
@@ -9,13 +9,20 @@ android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
   defaultConfig {
-    minSdkVersion rootProject.MIN_SDK_VERSION
+    // Using 16 here as it is the minimum version of Paris, which we are restricted to.
+    minSdkVersion 16
     targetSdkVersion rootProject.TARGET_SDK_VERSION
 
     javaCompileOptions {
       annotationProcessorOptions {
         includeCompileClasspath false
       }
+    }
+  }
+
+  testOptions {
+    unitTests {
+      includeAndroidResources = true
     }
   }
 

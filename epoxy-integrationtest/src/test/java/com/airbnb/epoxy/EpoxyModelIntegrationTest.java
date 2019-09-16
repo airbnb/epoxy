@@ -13,7 +13,6 @@ import org.robolectric.annotation.Config;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
 public class EpoxyModelIntegrationTest {
 
   static class ModelWithSpanCount extends EpoxyModel<View> {

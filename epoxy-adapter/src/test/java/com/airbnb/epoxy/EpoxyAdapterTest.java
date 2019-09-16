@@ -9,6 +9,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
@@ -22,8 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@Config(sdk = 21, manifest = TestRunner.MANIFEST_PATH)
-@RunWith(TestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class EpoxyAdapterTest {
 
   @Rule public ExpectedException thrown = ExpectedException.none();

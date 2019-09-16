@@ -18,7 +18,6 @@ import androidx.paging.PagedList;
 import static junit.framework.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
 public class PagingIntegrationTest_List {
 
   private Controller controller;

@@ -1,22 +1,10 @@
-import com.android.build.gradle.internal.LoggerWrapper
-import com.android.build.gradle.internal.SdkHandler
 import org.gradle.internal.jvm.Jvm
 
 apply plugin: 'kotlin'
+apply plugin: "com.vanniktech.maven.publish"
 
 configurations.all { strategy ->
     strategy.resolutionStrategy.force rootProject.deps.assertj, rootProject.deps.googleTestingCompile
-}
-
-// Hack to allow us to use android support library annotations (@LayoutRes) in this project.
-// Since this isn't an android module normally we couldn't access them otherwise.
-// Taken from https://github.com/JakeWharton/butterknife/pull/380
-def logger = new LoggerWrapper(project.logger)
-def sdkHandler = new SdkHandler(project, logger)
-for (File file : sdkHandler.sdkLoader.repositories) {
-    repositories.maven {
-        url = file.toURI()
-    }
 }
 
 dependencies {
@@ -28,6 +16,9 @@ dependencies {
 
     /** Provides the sun javac tools for looking up the R class trees. */
     compileOnly files(Jvm.current().getToolsJar())
+    // Allow us to use android support library annotations (@LayoutRes) in this project.
+    // Since this isn't an android module normally we couldn't access them otherwise.
+    compileOnly rootProject.deps.androidRuntime
 
     implementation project(':epoxy-annotations')
 
@@ -38,5 +29,3 @@ checkstyle {
     configFile rootProject.file('checkstyle.xml')
     showViolations true
 }
-
-apply from: rootProject.file('gradle/gradle-maven-push.gradle')

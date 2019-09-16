@@ -2,12 +2,12 @@ package com.airbnb.epoxy;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 
-@Config(sdk = 21, manifest = TestRunner.MANIFEST_PATH)
-@RunWith(TestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class TypedEpoxyControllerTest {
 
   static class TestTypedController extends TypedEpoxyController<String> {

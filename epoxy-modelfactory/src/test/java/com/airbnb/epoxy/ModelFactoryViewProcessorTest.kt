@@ -2,7 +2,10 @@ package com.airbnb.epoxy
 
 import com.airbnb.epoxy.ProcessorTestUtils.assertGeneration
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
+@RunWith(RobolectricTestRunner::class)
 class ModelFactoryViewProcessorTest {
 
     @Test

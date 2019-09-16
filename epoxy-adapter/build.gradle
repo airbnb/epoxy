@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: "com.vanniktech.maven.publish"
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
@@ -31,6 +32,5 @@ dependencies {
   testImplementation rootProject.deps.junit
   testImplementation rootProject.deps.robolectric
   testImplementation rootProject.deps.mockito
+  testImplementation rootProject.deps.androidTestCore
 }
-
-apply from: rootProject.file('gradle/gradle-maven-push.gradle')

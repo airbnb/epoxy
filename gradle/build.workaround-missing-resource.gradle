@@ -18,6 +18,10 @@ gradle.projectsEvaluated {
     def copyTestResourcesTask = project.tasks.create("copyTest${variationName}Resources", Copy)
     copyTestResourcesTask.from("${projectDir}/src/test/resources")
     copyTestResourcesTask.into("${testClassesPath}/sourceFolderJavaResources/${variationPath}")
-    copyTestResourcesTask.execute()
+
+    tasks.register("copyTest${variationName}Resources", Copy) {
+      from("${projectDir}/src/test/resources")
+      into("${testClassesPath}/sourceFolderJavaResources/${variationPath}")
+    }
   }
 }
