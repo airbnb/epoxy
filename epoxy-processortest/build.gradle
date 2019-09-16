@@ -1,7 +1,6 @@
 import org.gradle.internal.jvm.Jvm
 
 apply plugin: 'com.android.library'
-//apply from: rootProject.file('gradle/build.workaround-missing-resource.gradle')
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
@@ -70,3 +69,13 @@ static def getRuntimeJar() {
     throw new RuntimeException(e)
   }
 }
+
+// Java files in the "resources" folder are not included in the build for some reason (seems like source files are skipped?)
+// This files are needed to test the annotation processor, so we manually copy them into the build.
+task('copyTestResources', type: Copy) {
+  from("${projectDir}/src/test/resources")
+  into("${buildDir}/intermediates/sourceFolderJavaResources/debug")
+  into("${buildDir}/intermediates/sourceFolderJavaResources/release")
+}
+
+preBuild.dependsOn copyTestResources
