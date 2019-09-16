@@ -3,7 +3,6 @@ package com.airbnb.epoxy;
 import com.airbnb.epoxy.integrationtest.AdapterWithFieldAssigned;
 import com.airbnb.epoxy.integrationtest.AdapterWithIdChanged;
 import com.airbnb.epoxy.integrationtest.BasicAutoModelsAdapter;
-import com.airbnb.epoxy.integrationtest.BuildConfig;
 import com.airbnb.epoxy.integrationtest.ControllerWithoutImplicityAdding;
 import com.airbnb.epoxy.integrationtest.Model_;
 import com.airbnb.epoxy.integrationtest.autoaddautomodels.ControllerWithImplicitlyAddedModels;
@@ -13,7 +12,6 @@ import com.airbnb.epoxy.integrationtest.autoaddautomodels.ControllerWithImplicit
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
 public class AutoModelIntegrationTest {
 
   @Test

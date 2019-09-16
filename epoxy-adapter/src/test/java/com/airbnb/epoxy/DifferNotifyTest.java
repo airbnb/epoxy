@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.List;
@@ -16,8 +17,7 @@ import static junit.framework.Assert.assertEquals;
  * {@link EpoxyAdapter#notifyModelsChanged()}
  * will properly update the model state maintained by the differ.
  */
-@Config(sdk = 21, manifest = TestRunner.MANIFEST_PATH)
-@RunWith(TestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class DifferNotifyTest {
   private static final int INITIAL_MODEL_COUNT = 20;
 

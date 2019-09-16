@@ -33,7 +33,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
 public class ModelClickListenerTest {
 
   private ControllerLifecycleHelper lifecycleHelper = new ControllerLifecycleHelper();

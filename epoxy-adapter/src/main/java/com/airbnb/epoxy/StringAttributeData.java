@@ -62,7 +62,7 @@ public class StringAttributeData {
 
   private void handleInvalidStringRes() {
     if (hasDefault) {
-      if (defaultStringRes > 0) {
+      if (defaultStringRes != 0) {
         setValue(defaultStringRes);
       } else {
         setValue(defaultString);
@@ -85,13 +85,13 @@ public class StringAttributeData {
   }
 
   public CharSequence toString(Context context) {
-    if (pluralRes > 0) {
+    if (pluralRes != 0) {
       if (formatArgs != null) {
         return context.getResources().getQuantityString(pluralRes, quantity, formatArgs);
       } else {
         return context.getResources().getQuantityString(pluralRes, quantity);
       }
-    } else if (stringRes > 0) {
+    } else if (stringRes != 0) {
       if (formatArgs != null) {
         return context.getResources().getString(stringRes, formatArgs);
       } else {

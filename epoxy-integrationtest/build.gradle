@@ -46,6 +46,7 @@ dependencies {
   testImplementation rootProject.deps.junit
   testImplementation rootProject.deps.mockito
   testImplementation rootProject.deps.mockito_inline
+  testImplementation rootProject.deps.androidTestCore
 }
 
 repositories {

@@ -42,19 +42,21 @@ rootProject.ext.ASSERTJ_VERSION = "1.7.1"
 rootProject.ext.GOOGLE_TESTING_COMPILE_VERSION = "0.15"
 rootProject.ext.JUNIT_VERSION = "4.12"
 rootProject.ext.MOCKITO_VERSION = "2.21.0"
-rootProject.ext.ROBOLECTRIC_VERSION = "3.8"
+rootProject.ext.ROBOLECTRIC_VERSION = "4.3"
 
 rootProject.ext.LOTTIE_VERSION = "2.8.0"
 rootProject.ext.LITHO_VERSION = "0.7.0"
 rootProject.ext.SO_LOADER_VERSION = "0.2.0"
 
 rootProject.ext.AUTO_VALUE_VERSION = "1.6.2"
+rootProject.ext.ANDROID_RUNTIME_VERSION = "4.1.1.4"
 
 rootProject.ext.PARIS_VERSION = "1.2.1"
 
 rootProject.ext.deps = [
     kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION",
     autoValue             : "com.google.auto.value:auto-value:$AUTO_VALUE_VERSION",
+    androidRuntime        : "com.google.android:android:$ANDROID_RUNTIME_VERSION",
     androidAppcompat      : "androidx.appcompat:appcompat:$ANDROIDX_APPCOMPAT",
     androidCardView       : "androidx.cardview:cardview:$ANDROIDX_CARDVIEW",
     androidDesignLibrary  : "com.google.android.material:material:$ANDROIDX_MATERIAL",
@@ -63,6 +65,7 @@ rootProject.ext.deps = [
     androidArchCoreTesting: "android.arch.core:core-testing:$ANDROID_ARCH_TESTING",
     androidTestRunner     : "com.android.support.test:runner:$ANDROID_TEST_RUNNER",
     androidAnnotations    : "androidx.annotation:annotation:$ANDROIDX_ANNOTATION",
+    androidTestCore       : "androidx.test:core:1.2.0",
     androidLegacy         : "androidx.legacy:legacy-support-v4:$ANDROIDX_LEGACY",
     versionedParcelable   : "androidx.versionedparcelable:versionedparcelable:$ANDROIDX_VERSIONED_PARCELABLE",
     dataBindingAdapters   : "androidx.databinding:databinding-adapters:$ANDROIDX_DATABINDING_ADAPTERS",

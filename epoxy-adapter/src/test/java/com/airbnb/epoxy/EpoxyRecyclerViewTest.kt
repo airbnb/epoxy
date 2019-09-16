@@ -1,14 +1,15 @@
 package com.airbnb.epoxy
 
 import android.view.View
+import androidx.test.core.app.ApplicationProvider
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RuntimeEnvironment
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-@Config(sdk = [21], manifest = TestRunner.MANIFEST_PATH)
-@RunWith(TestRunner::class)
+@Config(sdk = [21])
+@RunWith(RobolectricTestRunner::class)
 class EpoxyRecyclerViewTest {
 
     private class TestModel : EpoxyModel<View>() {
@@ -17,7 +18,7 @@ class EpoxyRecyclerViewTest {
 
     @Test
     fun withModels() {
-        val epoxyRecyclerView = EpoxyRecyclerView(RuntimeEnvironment.application)
+        val epoxyRecyclerView = EpoxyRecyclerView(ApplicationProvider.getApplicationContext())
 
         var modelsToBuild = 1
         epoxyRecyclerView.withModels {
@@ -48,7 +49,7 @@ class EpoxyRecyclerViewTest {
 
     @Test
     fun buildModelsWith() {
-        val epoxyRecyclerView = EpoxyRecyclerView(RuntimeEnvironment.application)
+        val epoxyRecyclerView = EpoxyRecyclerView(ApplicationProvider.getApplicationContext())
 
         var modelsToBuild = 1
         epoxyRecyclerView.buildModelsWith(object : EpoxyRecyclerView.ModelBuilderCallback {

@@ -1,6 +1,5 @@
 package com.airbnb.epoxy
 
-import com.airbnb.epoxy.integrationtest.BuildConfig
 import com.airbnb.epoxy.integrationtest.KotlinViewWithDefaultParams
 import com.airbnb.epoxy.integrationtest.KotlinViewWithDefaultParamsModel_
 import org.junit.Assert.assertEquals
@@ -11,7 +10,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, sdk = [21])
+@Config(sdk = [21])
 class KotlinDefaultParamTest {
 
     private lateinit var testController: TestController

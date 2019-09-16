@@ -1,6 +1,5 @@
 package com.airbnb.epoxy
 
-import com.airbnb.epoxy.integrationtest.BuildConfig
 import com.airbnb.epoxy.integrationtest.Model
 import com.airbnb.epoxy.integrationtest.ModelWithConstructors
 import com.airbnb.epoxy.integrationtest.model
@@ -12,7 +11,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, sdk = intArrayOf(21))
+@Config(sdk = [21])
 class ModelBuilderExtensionIntegrationTest {
 
     @Test

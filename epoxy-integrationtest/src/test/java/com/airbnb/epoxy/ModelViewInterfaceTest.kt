@@ -1,7 +1,6 @@
 package com.airbnb.epoxy
 
 import android.view.View
-import com.airbnb.epoxy.integrationtest.BuildConfig
 import com.airbnb.epoxy.integrationtest.ClassWithNestedInterface_NestedInterfaceModel_
 import com.airbnb.epoxy.integrationtest.InterfaceForView2Model_
 import com.airbnb.epoxy.integrationtest.InterfaceForViewModel_
@@ -13,7 +12,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, sdk = intArrayOf(21))
+@Config(sdk = [21])
 class ModelViewInterfaceTest {
 
     @Test

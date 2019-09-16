@@ -7,16 +7,16 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.Space
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ApplicationProvider
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 
-@Config(sdk = [21], manifest = TestRunner.MANIFEST_PATH)
+@Config(sdk = [21])
 @RunWith(ParameterizedRobolectricTestRunner::class)
 class EpoxyModelGroupTest(val useViewStubs: Boolean) {
 
@@ -27,7 +27,7 @@ class EpoxyModelGroupTest(val useViewStubs: Boolean) {
 
     @Before
     fun init() {
-        recyclerView = RecyclerView(RuntimeEnvironment.application)
+        recyclerView = RecyclerView(ApplicationProvider.getApplicationContext())
         topLevelHolder?.unbind()
         topLevelHolder = null
     }

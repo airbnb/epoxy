@@ -1,3 +1,9 @@
+# 3.8.0 (Sept 16, 2019)
+- Add support for Kotlin delegation via annotated interface properties #812
+- Fix checked change crash and improve debug errors #806
+- Remove extra space in Kotlin extensions #777
+- Update project to AGP 3.5, Kotlin 1.3.50, Gradle 5.6
+
 # 3.7.0 (July 1, 2019)
 - **New** Add a method to request visibility check externally (https://github.com/airbnb/epoxy/pull/775)
 

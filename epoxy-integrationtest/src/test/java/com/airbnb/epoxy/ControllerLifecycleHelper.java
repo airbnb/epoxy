@@ -3,10 +3,10 @@ package com.airbnb.epoxy;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import org.robolectric.RuntimeEnvironment;
-
 import java.util.Collections;
 import java.util.List;
+
+import androidx.test.core.app.ApplicationProvider;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -41,7 +41,7 @@ class ControllerLifecycleHelper {
   static EpoxyViewHolder createViewHolder(BaseEpoxyAdapter adapter, int position) {
     final EpoxyViewHolder viewHolder = spy(
         adapter.onCreateViewHolder(
-            new FrameLayout(RuntimeEnvironment.application),
+            new FrameLayout(ApplicationProvider.getApplicationContext()),
             adapter.getItemViewType(position)
         )
     );

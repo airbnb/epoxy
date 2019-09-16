@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.annotation.Config;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,8 +23,7 @@ import static com.airbnb.epoxy.ModelTestUtils.remove;
 import static com.airbnb.epoxy.ModelTestUtils.removeModelsAfterPosition;
 import static junit.framework.Assert.assertEquals;
 
-@Config(sdk = 21, manifest = TestRunner.MANIFEST_PATH)
-@RunWith(TestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class DifferCorrectnessTest {
   private static final boolean SHOW_LOGS = false;
   /**

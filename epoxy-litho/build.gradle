@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: "com.vanniktech.maven.publish"
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
@@ -31,5 +32,3 @@ dependencies {
   testImplementation rootProject.deps.robolectric
   testImplementation rootProject.deps.mockito
 }
-
-apply from: rootProject.file('gradle/gradle-maven-push.gradle')

@@ -12,6 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
+import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowLog
 
@@ -28,8 +29,8 @@ private typealias TrackerTestModel = EpoxyVisibilityTrackerTest.TrackerTestModel
  * - `mdpi` for density factor 1
  * - `h831dp` where : 831 = 56 (ToolBar) + 775 (RecyclerView)
  */
-@Config(sdk = [21], manifest = TestRunner.MANIFEST_PATH, qualifiers = "h831dp-mdpi")
-@RunWith(TestRunner::class)
+@Config(sdk = [21], qualifiers = "h831dp-mdpi")
+@RunWith(RobolectricTestRunner::class)
 class EpoxyVisibilityTrackerNestedTest {
     companion object {
         private const val TAG = "EpoxyVisibilityTrackerNestedTest"

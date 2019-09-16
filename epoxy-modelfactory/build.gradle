@@ -3,22 +3,39 @@ import org.gradle.internal.jvm.Jvm
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-
-apply from: rootProject.file('gradle/build.workaround-missing-resource.gradle')
+apply plugin: "com.vanniktech.maven.publish"
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
   defaultConfig {
-    minSdkVersion rootProject.MIN_SDK_VERSION
+    // Using 16 here as it is the minimum version of Paris, which we are restricted to.
+    minSdkVersion 16
     targetSdkVersion rootProject.TARGET_SDK_VERSION
   }
+
+  testOptions.unitTests.includeAndroidResources = true
 }
 
 configurations.all { strategy ->
   strategy.resolutionStrategy.force rootProject.deps.junit, rootProject.deps.robolectric,
       rootProject.deps.mockito
 }
+
+// Java files in the "resources" folder are not included in the build for some reason (seems like source files are skipped?)
+// This files are needed to test the annotation processor, so we manually copy them into the build.
+task('copyDebugTestResources', type: Copy) {
+  from("${projectDir}/src/test/resources")
+  into("${buildDir}/intermediates/sourceFolderJavaResources/debug")
+}
+
+task('copyReleaseTestResources', type: Copy) {
+  from("${projectDir}/src/test/resources")
+  into("${buildDir}/intermediates/sourceFolderJavaResources/release")
+}
+
+preBuild.dependsOn copyReleaseTestResources
+preBuild.dependsOn copyDebugTestResources
 
 dependencies {
   implementation project(':epoxy-adapter')
@@ -56,5 +73,3 @@ static def getRuntimeJar() {
     throw new RuntimeException(e)
   }
 }
-
-apply from: rootProject.file('gradle/gradle-maven-push.gradle')
