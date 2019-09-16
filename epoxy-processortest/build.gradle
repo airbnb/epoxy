@@ -72,10 +72,15 @@ static def getRuntimeJar() {
 
 // Java files in the "resources" folder are not included in the build for some reason (seems like source files are skipped?)
 // This files are needed to test the annotation processor, so we manually copy them into the build.
-task('copyTestResources', type: Copy) {
+task('copyDebugTestResources', type: Copy) {
   from("${projectDir}/src/test/resources")
   into("${buildDir}/intermediates/sourceFolderJavaResources/debug")
+}
+
+task('copyReleaseTestResources', type: Copy) {
+  from("${projectDir}/src/test/resources")
   into("${buildDir}/intermediates/sourceFolderJavaResources/release")
 }
 
-preBuild.dependsOn copyTestResources
+preBuild.dependsOn copyReleaseTestResources
+preBuild.dependsOn copyDebugTestResources

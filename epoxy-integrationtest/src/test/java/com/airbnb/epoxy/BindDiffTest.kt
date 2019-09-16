@@ -1,7 +1,6 @@
 package com.airbnb.epoxy
 
 import android.view.View
-import com.airbnb.epoxy.integrationtest.BuildConfig
 import com.airbnb.epoxy.integrationtest.ViewWithAnnotationsForIntegrationTest
 import com.airbnb.epoxy.integrationtest.ViewWithAnnotationsForIntegrationTestModel_
 import org.junit.Test
