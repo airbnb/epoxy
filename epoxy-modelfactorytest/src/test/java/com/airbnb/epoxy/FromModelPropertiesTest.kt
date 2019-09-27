@@ -15,32 +15,52 @@ class FromModelPropertiesTest {
 
     @Test
     fun getId() {
-        val model = TestModelPropertiesViewModel_.from(TestModelProperties(id = "100"))
+        val model = TestModelPropertiesViewModel_.from(
+            TestModelProperties(
+                id = "100"
+            )
+        )
         assertFalse(model.hasDefaultId())
     }
 
     @Test
     fun getBoolean() {
-        val model = TestModelPropertiesViewModel_.from(TestModelProperties(booleanValue = true))
+        val model = TestModelPropertiesViewModel_.from(
+            TestModelProperties(
+                booleanValue = true
+            )
+        )
         assertEquals(true, model.booleanValue())
     }
 
     @Test
     fun getBoxedBoolean() {
         val model =
-            TestModelPropertiesViewModel_.from(TestModelProperties(boxedBooleanValue = true))
+            TestModelPropertiesViewModel_.from(
+                TestModelProperties(
+                    boxedBooleanValue = true
+                )
+            )
         assertEquals(true, model.boxedBooleanValue())
     }
 
     @Test
     fun getDouble() {
-        val model = TestModelPropertiesViewModel_.from(TestModelProperties(doubleValue = 42.0))
+        val model = TestModelPropertiesViewModel_.from(
+            TestModelProperties(
+                doubleValue = 42.0
+            )
+        )
         assertEquals(42.0, model.doubleValue(), 0.0)
     }
 
     @Test
     fun getBoxedDouble() {
-        val model = TestModelPropertiesViewModel_.from(TestModelProperties(boxedDoubleValue = 42.0))
+        val model = TestModelPropertiesViewModel_.from(
+            TestModelProperties(
+                boxedDoubleValue = 42.0
+            )
+        )
         assertEquals(42.0, model.boxedDoubleValue(), 0.0)
     }
 
@@ -48,7 +68,11 @@ class FromModelPropertiesTest {
     fun getDrawableRes() {
         val drawableRes = R.drawable.abc_ic_star_black_48dp
         val model =
-            TestModelPropertiesViewModel_.from(TestModelProperties(drawableRes = drawableRes))
+            TestModelPropertiesViewModel_.from(
+                TestModelProperties(
+                    drawableRes = drawableRes
+                )
+            )
         assertEquals(drawableRes, model.drawableRes())
     }
 
@@ -56,32 +80,52 @@ class FromModelPropertiesTest {
     fun getEpoxyModelList() {
         val epoxyModelList = emptyList<EpoxyModel<*>>()
         val model =
-            TestModelPropertiesViewModel_.from(TestModelProperties(epoxyModelList = epoxyModelList))
+            TestModelPropertiesViewModel_.from(
+                TestModelProperties(
+                    epoxyModelList = epoxyModelList
+                )
+            )
         assertEquals(epoxyModelList, model.epoxyModelList())
     }
 
     @Test
     fun getInt() {
-        val model = TestModelPropertiesViewModel_.from(TestModelProperties(intValue = 51))
+        val model = TestModelPropertiesViewModel_.from(
+            TestModelProperties(
+                intValue = 51
+            )
+        )
         assertEquals(51, model.intValue())
     }
 
     @Test
     fun getBoxedInt() {
-        val model = TestModelPropertiesViewModel_.from(TestModelProperties(boxedIntValue = 51))
+        val model = TestModelPropertiesViewModel_.from(
+            TestModelProperties(
+                boxedIntValue = 51
+            )
+        )
         assertEquals(51, model.boxedIntValue())
     }
 
     @Test
     fun getLong() {
-        val model = TestModelPropertiesViewModel_.from(TestModelProperties(longValue = 3000000))
+        val model = TestModelPropertiesViewModel_.from(
+            TestModelProperties(
+                longValue = 3000000
+            )
+        )
         assertEquals(3000000, model.longValue())
     }
 
     @Test
     fun getBoxedLong() {
         val model =
-            TestModelPropertiesViewModel_.from(TestModelProperties(boxedLongValue = 3000000))
+            TestModelPropertiesViewModel_.from(
+                TestModelProperties(
+                    boxedLongValue = 3000000
+                )
+            )
         assertEquals(3000000, model.boxedLongValue())
     }
 
@@ -89,13 +133,21 @@ class FromModelPropertiesTest {
     fun getOnClickListener() {
         val clickListener = View.OnClickListener { }
         val model =
-            TestModelPropertiesViewModel_.from(TestModelProperties(onClickListener = clickListener))
+            TestModelPropertiesViewModel_.from(
+                TestModelProperties(
+                    onClickListener = clickListener
+                )
+            )
         assertEquals(clickListener, model.onClickListener())
     }
 
     @Test
     fun getNullOnClickListener() {
-        val model = TestModelPropertiesViewModel_.from(TestModelProperties(onClickListener = null))
+        val model = TestModelPropertiesViewModel_.from(
+            TestModelProperties(
+                onClickListener = null
+            )
+        )
         assertNull(model.onClickListener())
     }
 
@@ -103,21 +155,33 @@ class FromModelPropertiesTest {
     fun getRawRes() {
         // We use an arbitrary int rather than adding a test-only raw resource, which isn't easy
         val model =
-            TestModelPropertiesViewModel_.from(TestModelProperties(rawRes = 42))
+            TestModelPropertiesViewModel_.from(
+                TestModelProperties(
+                    rawRes = 42
+                )
+            )
         assertEquals(42, model.rawRes())
     }
 
     @Test
     fun getString() {
         val model =
-            TestModelPropertiesViewModel_.from(TestModelProperties(stringValue = "ModelFactory"))
+            TestModelPropertiesViewModel_.from(
+                TestModelProperties(
+                    stringValue = "ModelFactory"
+                )
+            )
         assertEquals("ModelFactory", model.stringValue())
     }
 
     @Test
     fun getStringList() {
         val stringList = listOf("Model", "Factory")
-        val model = TestModelPropertiesViewModel_.from(TestModelProperties(stringList = stringList))
+        val model = TestModelPropertiesViewModel_.from(
+            TestModelProperties(
+                stringList = stringList
+            )
+        )
         assertEquals(stringList, model.stringList())
     }
 

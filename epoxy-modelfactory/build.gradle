@@ -1,8 +1,4 @@
-import org.gradle.internal.jvm.Jvm
-
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: "com.vanniktech.maven.publish"
 
 android {
@@ -13,63 +9,11 @@ android {
     minSdkVersion 16
     targetSdkVersion rootProject.TARGET_SDK_VERSION
   }
-
-  testOptions.unitTests.includeAndroidResources = true
 }
-
-configurations.all { strategy ->
-  strategy.resolutionStrategy.force rootProject.deps.junit, rootProject.deps.robolectric,
-      rootProject.deps.mockito
-}
-
-// Java files in the "resources" folder are not included in the build for some reason (seems like source files are skipped?)
-// This files are needed to test the annotation processor, so we manually copy them into the build.
-task('copyDebugTestResources', type: Copy) {
-  from("${projectDir}/src/test/resources")
-  into("${buildDir}/intermediates/sourceFolderJavaResources/debug")
-}
-
-task('copyReleaseTestResources', type: Copy) {
-  from("${projectDir}/src/test/resources")
-  into("${buildDir}/intermediates/sourceFolderJavaResources/release")
-}
-
-preBuild.dependsOn copyReleaseTestResources
-preBuild.dependsOn copyDebugTestResources
 
 dependencies {
   implementation project(':epoxy-adapter')
   implementation rootProject.deps.paris
-  implementation rootProject.deps.kotlin
   implementation rootProject.deps.androidRecyclerView
-
-  kapt project(':epoxy-processor')
-
-  // Need to include the processors directly since we create an instance of it in code for testing
-  testImplementation project(':epoxy-processor')
-  testImplementation rootProject.deps.parisProcessor
-
-  testImplementation project(':epoxy-processortest')
-  testImplementation rootProject.deps.googleTestingCompile
-  testImplementation rootProject.deps.junit
-  testImplementation rootProject.deps.robolectric
-  testImplementation files(getRuntimeJar())
-  testImplementation files(Jvm.current().getToolsJar())
 }
 
-// Javadoc isn't working well with Kotlin :(
-tasks.withType(Javadoc).all { enabled = false }
-
-static def getRuntimeJar() {
-  try {
-    final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile()
-    File runtimeJar = new File(javaBase, "lib/rt.jar")
-    if (runtimeJar.exists()) {
-      return runtimeJar
-    }
-    runtimeJar = new File(javaBase, "jre/lib/rt.jar")
-    return runtimeJar.exists() ? runtimeJar : null
-  } catch (IOException e) {
-    throw new RuntimeException(e)
-  }
-}
