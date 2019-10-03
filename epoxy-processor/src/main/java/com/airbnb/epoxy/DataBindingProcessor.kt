@@ -58,7 +58,7 @@ internal class DataBindingProcessor(
             val moduleName = rClassName.packageName()
             val layoutClassName = ClassName.get(moduleName, "R", "layout")
             val enableDoNotHash =
-                element.annotation<EpoxyDataBindingLayouts>()?.enableDoNotHash == true
+                element.annotation<EpoxyDataBindingPattern>()?.enableDoNotHash == true
 
             Utils.getElementByName(layoutClassName, elements, types)
                 .enclosedElements
