@@ -615,5 +615,4 @@ class StickyHeaderLinearLayoutManager<T> @JvmOverloads constructor(
             }
         }
     }
-
 }

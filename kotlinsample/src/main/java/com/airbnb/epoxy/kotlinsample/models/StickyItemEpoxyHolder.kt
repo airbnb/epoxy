@@ -25,5 +25,4 @@ abstract class StickyItemEpoxyHolder : EpoxyModelWithHolder<StickyItemEpoxyHolde
     class StickyHolder : KotlinEpoxyHolder() {
         val titleView by bind<TextView>(R.id.title)
     }
-
 }
