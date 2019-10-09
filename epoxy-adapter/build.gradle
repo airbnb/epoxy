@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: "com.vanniktech.maven.publish"
+apply plugin: 'kotlin-android-extensions'
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
@@ -10,6 +11,10 @@ android {
     minSdkVersion rootProject.MIN_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
     consumerProguardFiles 'proguard-rules.pro'
+  }
+
+  androidExtensions {
+    experimental = true
   }
 }
 
