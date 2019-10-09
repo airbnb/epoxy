@@ -2,6 +2,7 @@ package com.airbnb.epoxy.stickyheader
 
 import android.content.Context
 import android.graphics.PointF
+import android.os.Build
 import android.os.Parcelable
 import android.view.View
 import android.view.ViewGroup
@@ -293,7 +294,8 @@ class StickyHeaderLinearLayoutManager<T> @JvmOverloads constructor(
         if (scrollPosition != RecyclerView.NO_POSITION) {
             stickyHeader.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
-                    stickyHeader.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    if (Build.VERSION.SDK_INT < 16) stickyHeader.viewTreeObserver.removeGlobalOnLayoutListener(this)
+                    else stickyHeader.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     if (scrollPosition != RecyclerView.NO_POSITION) {
                         scrollToPositionWithOffset(scrollPosition, scrollOffset)
                         setScrollState(RecyclerView.NO_POSITION, INVALID_OFFSET)
