@@ -15,19 +15,21 @@ class ImmutableModelException extends RuntimeException {
           + " is set on the adapter. If the model is already set on the adapter then you must"
           + " call `requestModelBuild` instead to recreate all models.";
 
-  ImmutableModelException(EpoxyModel model, int modelPosition) {
-    this(model, "", modelPosition);
+  ImmutableModelException(EpoxyModel model, EpoxyController controller, int modelPosition) {
+    this(model, controller, "", modelPosition);
   }
 
-  ImmutableModelException(EpoxyModel model,
+  ImmutableModelException(EpoxyModel model, EpoxyController controller,
       String descriptionOfWhenChangeHappened, int modelPosition) {
-    super(buildMessage(model, descriptionOfWhenChangeHappened, modelPosition));
+    super(buildMessage(model, controller, descriptionOfWhenChangeHappened, modelPosition));
   }
 
   @NonNull
-  private static String buildMessage(EpoxyModel model,
+  private static String buildMessage(EpoxyModel model, EpoxyController controller,
       String descriptionOfWhenChangeHappened, int modelPosition) {
     return new StringBuilder(descriptionOfWhenChangeHappened)
+        .append(" Controller: ")
+        .append(controller.getClass().getSimpleName())
         .append(" Position: ")
         .append(modelPosition)
         .append(" Model: ")

@@ -44,20 +44,18 @@ public abstract class EpoxyModel<T> {
    * doesn't change after being diffed.
    */
   boolean addedToAdapter;
-  /**
-   * The first controller this model was added to. A reference is kept in debug mode in order to run
-   * validations. The model is allowed to be added to other controllers, but we only keep a
-   * reference to the first.
-   */
-  private EpoxyController firstControllerAddedTo;
+
   /**
    * Models are staged when they are changed. This allows them to be automatically added when they
    * are done being changed (eg the next model is changed/added or buildModels finishes). It is only
    * allowed for AutoModels, and only if implicity adding is enabled.
    */
   EpoxyController controllerToStageTo;
-  private boolean currentlyInInterceptors;
-  private int hashCodeWhenAdded;
+  /**
+   * Used to help assert that a model doesn't change after it is added to a controller.
+   * This will only be non null in debug mode, after the model is added to a controller.
+   */
+  private ModelDebugValidator modelDebugValidator;
   private boolean hasDefaultId;
   @Nullable private SpanSizeOverrideCallback spanSizeOverride;
 
@@ -194,7 +192,7 @@ public abstract class EpoxyModel<T> {
    * error to change the id after that.
    */
   public EpoxyModel<T> id(long id) {
-    if ((addedToAdapter || firstControllerAddedTo != null) && id != this.id) {
+    if ((addedToAdapter || modelDebugValidator != null) && id != this.id) {
       throw new IllegalEpoxyUsage(
           "Cannot change a model's id after it has been added to the adapter.");
     }
@@ -370,44 +368,15 @@ public abstract class EpoxyModel<T> {
    * "validateEpoxyModelUsage" is enabled and the model is used with an {@link EpoxyController}.
    */
   protected final void addWithDebugValidation(@NonNull EpoxyController controller) {
-    if (controller == null) {
-      throw new IllegalArgumentException("Controller cannot be null");
+    if (modelDebugValidator == null) {
+      modelDebugValidator = new ModelDebugValidator(this);
     }
 
-    if (controller.isModelAddedMultipleTimes(this)) {
-      throw new IllegalEpoxyUsage(
-          "This model was already added to the controller at position "
-              + controller.getFirstIndexOfModelInBuildingList(this));
-    }
-
-    if (firstControllerAddedTo == null) {
-      firstControllerAddedTo = controller;
-
-      // We save the current hashCode so we can compare it to the hashCode at later points in time
-      // in order to validate that it doesn't change and enforce mutability.
-      hashCodeWhenAdded = hashCode();
-
-      // The one time it is valid to change the model is during an interceptor callback. To support
-      // that we need to update the hashCode after interceptors have been run.
-      // The model can be added to multiple controllers, but we only allow an interceptor change
-      // the first time, since after that it will have been added to an adapter.
-      controller.addAfterInterceptorCallback(new ModelInterceptorCallback() {
-        @Override
-        public void onInterceptorsStarted(EpoxyController controller) {
-          currentlyInInterceptors = true;
-        }
-
-        @Override
-        public void onInterceptorsFinished(EpoxyController controller) {
-          hashCodeWhenAdded = EpoxyModel.this.hashCode();
-          currentlyInInterceptors = false;
-        }
-      });
-    }
+    modelDebugValidator.onAddedToController(controller);
   }
 
   boolean isDebugValidationEnabled() {
-    return firstControllerAddedTo != null;
+    return modelDebugValidator != null;
   }
 
   /**
@@ -424,26 +393,13 @@ public abstract class EpoxyModel<T> {
     // The model may be added to multiple controllers, in which case if it was already diffed
     // and added to an adapter in one controller we don't want to even allow interceptors
     // from changing the model in a different controller
-    if (isDebugValidationEnabled() && !currentlyInInterceptors) {
-      throw new ImmutableModelException(this,
-          getPosition(firstControllerAddedTo, this));
+    if (modelDebugValidator != null) {
+      modelDebugValidator.validateMutationAllowed();
     }
 
     if (controllerToStageTo != null) {
       controllerToStageTo.setStagedModel(this);
     }
-  }
-
-  private static int getPosition(@NonNull EpoxyController controller,
-      @NonNull EpoxyModel<?> model) {
-    // If the model was added to multiple controllers, or was removed from the controller and then
-    // modified, this won't be correct. But those should be very rare cases that we don't need to
-    // worry about
-    if (controller.isBuildingModels()) {
-      return controller.getFirstIndexOfModelInBuildingList(model);
-    }
-
-    return controller.getAdapter().getModelPosition(model);
   }
 
   /**
@@ -457,10 +413,8 @@ public abstract class EpoxyModel<T> {
    */
   protected final void validateStateHasNotChangedSinceAdded(String descriptionOfChange,
       int modelPosition) {
-    if (isDebugValidationEnabled()
-        && !currentlyInInterceptors
-        && hashCodeWhenAdded != hashCode()) {
-      throw new ImmutableModelException(this, descriptionOfChange, modelPosition);
+    if (modelDebugValidator != null) {
+      modelDebugValidator.validateStateHasNotChanged(descriptionOfChange, modelPosition);
     }
   }
 
@@ -579,7 +533,7 @@ public abstract class EpoxyModel<T> {
    * from the RecyclerView.
    *
    * @return True if the View should be recycled, false otherwise
-   * @see EpoxyAdapter#onFailedToRecycleView(androidx.recyclerview.widget.RecyclerView.ViewHolder)
+   * @see BaseEpoxyAdapter#onFailedToRecycleView(EpoxyViewHolder)
    */
   public boolean onFailedToRecycleView(@NonNull T view) {
     return false;
@@ -588,7 +542,7 @@ public abstract class EpoxyModel<T> {
   /**
    * Called when this model's view is attached to the window.
    *
-   * @see EpoxyAdapter#onViewAttachedToWindow(androidx.recyclerview.widget.RecyclerView.ViewHolder)
+   * @see BaseEpoxyAdapter#onViewAttachedToWindow(EpoxyViewHolder)
    */
   public void onViewAttachedToWindow(@NonNull T view) {
 
@@ -597,7 +551,7 @@ public abstract class EpoxyModel<T> {
   /**
    * Called when this model's view is detached from the the window.
    *
-   * @see EpoxyAdapter#onViewDetachedFromWindow(androidx.recyclerview.widget.RecyclerView
+   * @see BaseEpoxyAdapter#onViewDetachedFromWindow(EpoxyViewHolder)
    * .ViewHolder)
    */
   public void onViewDetachedFromWindow(@NonNull T view) {
