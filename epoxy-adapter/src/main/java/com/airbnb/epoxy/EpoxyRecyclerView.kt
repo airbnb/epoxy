@@ -364,7 +364,7 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
      * @see .setItemSpacingDp
      * @see .setItemSpacingRes
      */
-    fun setItemSpacingPx(@Px spacingPx: Int) {
+    open fun setItemSpacingPx(@Px spacingPx: Int) {
         removeItemDecoration(spacingDecorator)
         spacingDecorator.pxBetweenItems = spacingPx
 
