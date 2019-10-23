@@ -95,7 +95,7 @@ internal class KotlinModelBuilderExtensionWriter(
         )
 
         FunSpec.builder(getMethodName(model)).run {
-            receiver(ClassNames.EPOXY_CONTROLLER.toKPoet())
+            receiver(ClassNames.BASE_EPOXY_CONTROLLER.toKPoet())
             val params = constructor?.params ?: listOf()
             addParameters(params.toKParams())
 
@@ -117,13 +117,14 @@ internal class KotlinModelBuilderExtensionWriter(
             addModifiers(KModifier.INLINE)
             if (constructorIsNotPublic) addModifiers(KModifier.INTERNAL)
 
+            addStatement("add(")
             beginControlFlow(
                 "$tick%T$tick(${params.joinToString(", ") { it.name }}).apply",
                 modelClass
             )
             addStatement("modelInitializer()")
             endControlFlow()
-            addStatement(".addTo(this)")
+            addStatement(")")
             return build()
         }
     }

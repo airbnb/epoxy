@@ -39,7 +39,7 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
  * treated as immutable and never modified again. This is necessary for adapter updates to be
  * accurate.
  */
-public abstract class EpoxyController {
+public abstract class EpoxyController extends BaseEpoxyController {
 
   /**
    * We check that the adapter is not connected to multiple recyclerviews, but when a fragment has
@@ -122,8 +122,8 @@ public abstract class EpoxyController {
 
   @Retention(RetentionPolicy.SOURCE)
   @IntDef({RequestedModelBuildType.NONE,
-           RequestedModelBuildType.NEXT_FRAME,
-           RequestedModelBuildType.DELAYED})
+      RequestedModelBuildType.NEXT_FRAME,
+      RequestedModelBuildType.DELAYED})
   private @interface RequestedModelBuildType {
     int NONE = 0;
     /** A request has been made to build models immediately. It is posted. */
@@ -458,7 +458,7 @@ public abstract class EpoxyController {
    * Add the model to this controller. Can only be called from inside {@link
    * EpoxyController#buildModels()}.
    */
-  protected void add(@NonNull EpoxyModel<?> model) {
+  public void add(@NonNull EpoxyModel<?> model) {
     model.addTo(this);
   }
 
@@ -470,7 +470,7 @@ public abstract class EpoxyController {
     modelsBeingBuilt.ensureCapacity(modelsBeingBuilt.size() + modelsToAdd.length);
 
     for (EpoxyModel<?> model : modelsToAdd) {
-      model.addTo(this);
+      add(model);
     }
   }
 
@@ -482,7 +482,7 @@ public abstract class EpoxyController {
     modelsBeingBuilt.ensureCapacity(modelsBeingBuilt.size() + modelsToAdd.size());
 
     for (EpoxyModel<?> model : modelsToAdd) {
-      model.addTo(this);
+      add(model);
     }
   }
 
