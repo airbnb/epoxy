@@ -54,6 +54,7 @@ object ClassNames {
     val EPOXY_STRING_ATTRIBUTE_DATA = get(PKG_EPOXY, "StringAttributeData")!!
     @JvmField
     val EPOXY_CONTROLLER = get(PKG_EPOXY, "EpoxyController")!!
+    val BASE_EPOXY_CONTROLLER = get(PKG_EPOXY, "BaseEpoxyController")!!
     @JvmField
     val EPOXY_STYLE_BUILDER_CALLBACK = get(PKG_EPOXY, "StyleBuilderCallback")!!
     @JvmField
