@@ -80,7 +80,7 @@ There are two main components of Epoxy:
 2. The `EpoxyController` where the models are used to describe what items to show and with what data.
 
 ### Creating Models
-Epoxy generates models for you based on your view or layout. Generated model classes are suffixed with an underscore (`_`) are are used directly in your EpoxyController classes.
+Epoxy generates models for you based on your view or layout. Generated model classes are suffixed with an underscore (`_`) are used directly in your EpoxyController classes.
 
 #### From Custom Views
 Add the `@ModelView` annotation on a view class. Then, add a "prop" annotation on each setter method to mark it as a property for the model.
