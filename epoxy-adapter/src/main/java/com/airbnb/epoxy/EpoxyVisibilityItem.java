@@ -41,6 +41,7 @@ class EpoxyVisibilityItem {
   @Px
   private int viewportWidth;
 
+  private boolean partiallyVisible = false;
   private boolean fullyVisible = false;
   private boolean visible = false;
   private boolean focusedVisible = false;
@@ -110,6 +111,16 @@ class EpoxyVisibilityItem {
     }
   }
 
+  void handlePartialImpressionVisible(EpoxyViewHolder epoxyHolder, boolean detachEvent, int threshold) {
+    boolean previousPartiallyVisible = partiallyVisible;
+    partiallyVisible = !detachEvent && isPartiallyVisible(threshold);
+    if (partiallyVisible != previousPartiallyVisible) {
+      if (partiallyVisible) {
+        epoxyHolder.visibilityStateChanged(VisibilityState.PARTIAL_IMPRESSION_VISIBLE);
+      }
+    }
+  }
+
   void handleFullImpressionVisible(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
     boolean previousFullyVisible = fullyVisible;
     fullyVisible = !detachEvent && isFullyVisible();
@@ -151,6 +162,13 @@ class EpoxyVisibilityItem {
     return (totalArea >= halfViewportArea)
         ? (visibleArea >= halfViewportArea)
         : totalArea == visibleArea;
+  }
+
+  private boolean isPartiallyVisible(int threshold) {
+    final int totalArea = height * width;
+    final int visibleArea = visibleHeight * visibleWidth;
+
+    return (visibleArea / (float)totalArea) * 100 >= threshold;
   }
 
   private boolean isFullyVisible() {

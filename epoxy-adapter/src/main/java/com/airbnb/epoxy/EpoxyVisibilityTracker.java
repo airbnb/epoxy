@@ -82,6 +82,8 @@ public class EpoxyVisibilityTracker {
 
   private boolean onChangedEnabled = true;
 
+  private int partialImpressionThreshold = 0;
+
   /** All nested visibility trackers */
   private Map<RecyclerView, EpoxyVisibilityTracker> nestedTrackers = new HashMap<>();
 
@@ -98,6 +100,15 @@ public class EpoxyVisibilityTracker {
    */
   public void setOnChangedEnabled(boolean enabled) {
     onChangedEnabled = enabled;
+  }
+
+  /**
+   * Set the threshold of percentage visible area to identify the partial impression view state.
+   *
+   * @param threshold Percentage of visible area of an element. 0..100.
+   */
+  public void setPartialImpressionThreshold(int threshold) {
+    partialImpressionThreshold = threshold;
   }
 
   /**
@@ -280,6 +291,7 @@ public class EpoxyVisibilityTracker {
       // View is measured, process events
       vi.handleVisible(epoxyHolder, detachEvent);
       vi.handleFocus(epoxyHolder, detachEvent);
+      vi.handlePartialImpressionVisible(epoxyHolder, detachEvent, partialImpressionThreshold);
       vi.handleFullImpressionVisible(epoxyHolder, detachEvent);
       changed = vi.handleChanged(epoxyHolder, onChangedEnabled);
     }
