@@ -2,9 +2,7 @@ package com.airbnb.epoxy.sample.models
 
 import android.view.View
 import androidx.annotation.CallSuper
-
 import com.airbnb.epoxy.EpoxyHolder
-
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 

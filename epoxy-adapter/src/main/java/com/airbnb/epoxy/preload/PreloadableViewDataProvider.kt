@@ -1,7 +1,7 @@
 package com.airbnb.epoxy.preload
 
-import androidx.core.view.ViewCompat
 import android.view.View
+import androidx.core.view.ViewCompat
 import com.airbnb.epoxy.BaseEpoxyAdapter
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.boundViewHoldersInternal

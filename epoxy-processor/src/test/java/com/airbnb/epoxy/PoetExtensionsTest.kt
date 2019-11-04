@@ -3,13 +3,13 @@ package com.airbnb.epoxy
 import androidx.annotation.FloatRange
 import androidx.annotation.NonNull
 import com.squareup.kotlinpoet.asTypeName
+import javax.lang.model.element.Modifier
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import javax.lang.model.element.Modifier
 
 class PoetExtensionsTest {
 

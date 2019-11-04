@@ -2,16 +2,13 @@ package com.airbnb.epoxy.sample.models
 
 import android.view.View.OnClickListener
 import android.widget.ImageView
-
+import androidx.annotation.DrawableRes
 import com.airbnb.epoxy.EpoxyAttribute
+import com.airbnb.epoxy.EpoxyAttribute.Option.DoNotHash
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.airbnb.epoxy.sample.R
 import com.airbnb.epoxy.sample.models.ImageButtonModel.ImageButtonHolder
-
-import androidx.annotation.DrawableRes
-
-import com.airbnb.epoxy.EpoxyAttribute.Option.DoNotHash
 
 @EpoxyModelClass(layout = R.layout.model_image_button)
 abstract class ImageButtonModel : EpoxyModelWithHolder<ImageButtonHolder>() {
