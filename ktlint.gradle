@@ -7,25 +7,25 @@ configurations {
 }
 
 dependencies {
-  ktlint "com.github.shyiko:ktlint:0.29.0"
+  ktlint "com.pinterest:ktlint:0.35.0"
   // additional 3rd party ruleset(s) can be specified here
-  // just add them to the classpath (ktlint 'groupId:artifactId:version') and
+  // just add them to the classpath (e.g. ktlint 'groupId:artifactId:version') and
   // ktlint will pick them up
 }
 
 task ktlint(type: JavaExec, group: "verification") {
   description = "Check Kotlin code style."
-  main = "com.github.shyiko.ktlint.Main"
   classpath = configurations.ktlint
+  main = "com.pinterest.ktlint.Main"
   args "src/**/*.kt"
   // to generate report in checkstyle format prepend following args:
   // "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
-  // see https://github.com/shyiko/ktlint#usage for more
+  // see https://github.com/pinterest/ktlint#usage for more
 }
 
 task ktlintFormat(type: JavaExec, group: "formatting") {
   description = "Fix Kotlin code style deviations."
-  main = "com.github.shyiko.ktlint.Main"
   classpath = configurations.ktlint
+  main = "com.pinterest.ktlint.Main"
   args "-F", "src/**/*.kt"
 }

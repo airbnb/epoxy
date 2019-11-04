@@ -5,9 +5,9 @@ import com.airbnb.epoxy.ProcessorTestUtils.assertGenerationError
 import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
-import org.junit.Test
 import java.util.Arrays.asList
 import javax.tools.JavaFileObject
+import org.junit.Test
 
 class ViewProcessorTest {
 

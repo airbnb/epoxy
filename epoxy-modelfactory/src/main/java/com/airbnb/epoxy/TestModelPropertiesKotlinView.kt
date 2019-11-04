@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.DrawableRes
 import androidx.annotation.RawRes
-
 import com.airbnb.epoxy.ModelView.Size
 
 @ModelView(autoLayout = Size.MATCH_WIDTH_WRAP_HEIGHT)

@@ -4,11 +4,6 @@ import com.airbnb.epoxy.Utils.isEpoxyModel
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
-import me.eugeniomarletti.kotlin.metadata.KotlinClassMetadata
-import me.eugeniomarletti.kotlin.metadata.declaresDefaultValue
-import me.eugeniomarletti.kotlin.metadata.extractFullName
-import me.eugeniomarletti.kotlin.metadata.kotlinMetadata
-import me.eugeniomarletti.kotlin.metadata.shadow.metadata.ProtoBuf
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.Modifier
@@ -19,6 +14,11 @@ import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
+import me.eugeniomarletti.kotlin.metadata.KotlinClassMetadata
+import me.eugeniomarletti.kotlin.metadata.declaresDefaultValue
+import me.eugeniomarletti.kotlin.metadata.extractFullName
+import me.eugeniomarletti.kotlin.metadata.kotlinMetadata
+import me.eugeniomarletti.kotlin.metadata.shadow.metadata.ProtoBuf
 
 internal class ModelViewInfo(
     val viewElement: TypeElement,

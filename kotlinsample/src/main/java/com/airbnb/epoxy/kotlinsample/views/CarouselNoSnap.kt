@@ -1,7 +1,6 @@
 package com.airbnb.epoxy.kotlinsample.views
 
 import android.content.Context
-
 import com.airbnb.epoxy.Carousel
 import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.ModelView.Size
