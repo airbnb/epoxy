@@ -15,7 +15,7 @@ public interface GeneratedModel<T> {
    * listener.
    * <p>
    * We don't want to rely on the main onBind method to dispatch the onBind listener call because
-   * there on two onBind methods (one for payloads and one for no payloads), and one can call into
+   * there are two onBind methods (one for payloads and one for no payloads), and one can call into
    * the other. We don't want to dispatch two onBind listener calls in that case.
    */
   void handlePostBind(T objectToBind, int position);
