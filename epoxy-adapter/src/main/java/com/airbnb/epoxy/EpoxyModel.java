@@ -20,7 +20,10 @@ import static com.airbnb.epoxy.IdUtils.hashString64Bit;
 
 /**
  * Helper to bind data to a view using a builder style. The parameterized type should extend
- * Android's View.
+ * Android's View or EpoxyHolder.
+ *
+ * @see EpoxyModelWithHolder
+ * @see EpoxyModelWithView
  */
 public abstract class EpoxyModel<T> {
 
@@ -53,7 +56,7 @@ public abstract class EpoxyModel<T> {
   /**
    * Models are staged when they are changed. This allows them to be automatically added when they
    * are done being changed (eg the next model is changed/added or buildModels finishes). It is only
-   * allowed for AutoModels, and only if implicity adding is enabled.
+   * allowed for AutoModels, and only if implicit adding is enabled.
    */
   EpoxyController controllerToStageTo;
   private boolean currentlyInInterceptors;

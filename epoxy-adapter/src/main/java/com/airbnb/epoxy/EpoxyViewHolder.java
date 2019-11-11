@@ -26,7 +26,7 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     if (saveInitialState) {
       // We save the initial state of the view when it is created so that we can reset this initial
       // state before a model is bound for the first time. Otherwise the view may carry over
-      // state from a previously bound view.
+      // state from a previously bound model.
       initialViewState = new ViewState();
       initialViewState.save(itemView);
     }
