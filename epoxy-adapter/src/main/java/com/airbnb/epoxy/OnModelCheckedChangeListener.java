@@ -8,7 +8,7 @@ public interface OnModelCheckedChangeListener<T extends EpoxyModel<?>, V> {
    *
    * @param model       The model that the view is bound to.
    * @param parentView  The view bound to the model which received the click.
-   * @param clickedView The view that received the click. This is either a child of the parentView
+   * @param checkedView The view that received the click. This is either a child of the parentView
    *                    or the parentView itself
    * @param isChecked   The new value for isChecked property.
    * @param position    The position of the model in the adapter.
