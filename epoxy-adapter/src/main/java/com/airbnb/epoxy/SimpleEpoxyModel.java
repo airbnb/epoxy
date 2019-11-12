@@ -12,13 +12,11 @@ import androidx.annotation.NonNull;
  * subclass. This is useful for static layouts. You can also specify an onClick listener and the
  * span size.
  */
-public class SimpleEpoxyModel extends EpoxyModel<View> {
-  @LayoutRes private final int layoutRes;
+public class SimpleEpoxyModel extends EpoxyModelWithLayoutView<View> {
   private View.OnClickListener onClickListener;
-  private int spanCount = 1;
 
   public SimpleEpoxyModel(@LayoutRes int layoutRes) {
-    this.layoutRes = layoutRes;
+    super(layoutRes, 1 /*spanCount*/ );
   }
 
   public SimpleEpoxyModel onClick(View.OnClickListener listener) {
@@ -44,16 +42,6 @@ public class SimpleEpoxyModel extends EpoxyModel<View> {
   public void unbind(@NonNull View view) {
     super.unbind(view);
     view.setOnClickListener(null);
-  }
-
-  @Override
-  protected int getDefaultLayout() {
-    return layoutRes;
-  }
-
-  @Override
-  public int getSpanSize(int totalSpanCount, int position, int itemCount) {
-    return spanCount;
   }
 
   @Override
