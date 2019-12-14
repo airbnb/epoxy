@@ -298,7 +298,10 @@ public class EpoxyVisibilityTracker {
   }
 
   private void processChildRecyclerViewDetached(@NonNull RecyclerView childRecyclerView) {
-    nestedTrackers.remove(childRecyclerView);
+    EpoxyVisibilityTracker tracker = nestedTrackers.remove(childRecyclerView);
+    if (tracker != null) {
+      tracker.detach(childRecyclerView);
+    }
   }
 
   /**
