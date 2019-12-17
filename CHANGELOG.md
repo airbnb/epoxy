@@ -1,3 +1,12 @@
+# 3.9.0 (Dec 17, 2019)
+- Fix reading EpoxyDataBindingPattern enableDoNotHash (#837) 
+- Make EpoxyRecyclerView.setItemSpacingPx() open (#829)
+- Use same version for Mockito Core and Inline (#860)
+- Minor documentation and variable name updates. (#870)
+- Move epoxy-modelfactory tests to their own module (#834) 
+- Remove executable bit from non-executable files (#864)
+- Various repo clean ups and version bumps
+
 # 3.8.0 (Sept 16, 2019)
 - Add support for Kotlin delegation via annotated interface properties #812
 - Fix checked change crash and improve debug errors #806
