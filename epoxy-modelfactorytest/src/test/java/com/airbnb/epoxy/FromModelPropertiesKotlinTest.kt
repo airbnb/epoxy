@@ -15,21 +15,33 @@ class FromModelPropertiesKotlinTest {
 
     @Test
     fun getId() {
-        val model = TestModelPropertiesKotlinViewModel_.from(TestModelProperties(id = "100"))
+        val model = TestModelPropertiesKotlinViewModel_.from(
+            TestModelProperties(
+                id = "100"
+            )
+        )
         assertFalse(model.hasDefaultId())
     }
 
     @Test
     fun getBoolean() {
         val model =
-            TestModelPropertiesKotlinViewModel_.from(TestModelProperties(booleanValue = true))
+            TestModelPropertiesKotlinViewModel_.from(
+                TestModelProperties(
+                    booleanValue = true
+                )
+            )
         assertEquals(true, model.booleanValue())
     }
 
     @Test
     fun getDouble() {
         val model =
-            TestModelPropertiesKotlinViewModel_.from(TestModelProperties(doubleValue = 42.0))
+            TestModelPropertiesKotlinViewModel_.from(
+                TestModelProperties(
+                    doubleValue = 42.0
+                )
+            )
         assertEquals(42.0, model.doubleValue(), 0.0)
     }
 
@@ -59,14 +71,22 @@ class FromModelPropertiesKotlinTest {
 
     @Test
     fun getInt() {
-        val model = TestModelPropertiesKotlinViewModel_.from(TestModelProperties(intValue = 51))
+        val model = TestModelPropertiesKotlinViewModel_.from(
+            TestModelProperties(
+                intValue = 51
+            )
+        )
         assertEquals(51, model.intValue())
     }
 
     @Test
     fun getLong() {
         val model =
-            TestModelPropertiesKotlinViewModel_.from(TestModelProperties(longValue = 3000000L))
+            TestModelPropertiesKotlinViewModel_.from(
+                TestModelProperties(
+                    longValue = 3000000L
+                )
+            )
         assertEquals(3000000L, model.longValue())
     }
 
@@ -84,7 +104,11 @@ class FromModelPropertiesKotlinTest {
     @Test
     fun getNullOnClickListener() {
         val model =
-            TestModelPropertiesKotlinViewModel_.from(TestModelProperties(onClickListener = null))
+            TestModelPropertiesKotlinViewModel_.from(
+                TestModelProperties(
+                    onClickListener = null
+                )
+            )
         assertNull(model.onClickListener())
     }
 
@@ -92,7 +116,11 @@ class FromModelPropertiesKotlinTest {
     fun getRawRes() {
         // We use an arbitrary int rather than adding a test-only raw resource, which isn't easy
         val model =
-            TestModelPropertiesKotlinViewModel_.from(TestModelProperties(rawRes = 42))
+            TestModelPropertiesKotlinViewModel_.from(
+                TestModelProperties(
+                    rawRes = 42
+                )
+            )
         assertEquals(42, model.rawRes())
     }
 
@@ -100,7 +128,9 @@ class FromModelPropertiesKotlinTest {
     fun getString() {
         val model =
             TestModelPropertiesKotlinViewModel_.from(
-                TestModelProperties(stringValue = "ModelFactory")
+                TestModelProperties(
+                    stringValue = "ModelFactory"
+                )
             )
         assertEquals("ModelFactory", model.stringValue())
     }
@@ -109,7 +139,11 @@ class FromModelPropertiesKotlinTest {
     fun getStringList() {
         val stringList = listOf("Model", "Factory")
         val model =
-            TestModelPropertiesKotlinViewModel_.from(TestModelProperties(stringList = stringList))
+            TestModelPropertiesKotlinViewModel_.from(
+                TestModelProperties(
+                    stringList = stringList
+                )
+            )
         assertEquals(stringList, model.stringList())
     }
 
