@@ -255,6 +255,8 @@ class ControllerProcessor {
           .addMethod(buildSaveModelsForNextValidationMethod(controllerInfo));
     }
 
+    builder.addOriginatingElement(controllerInfo.getControllerClassElement());
+
     JavaFile.builder(controllerInfo.getGeneratedClassName().packageName(), builder.build())
         .build()
         .writeTo(filer);
