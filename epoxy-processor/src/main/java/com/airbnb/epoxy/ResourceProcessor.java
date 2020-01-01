@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -44,17 +43,11 @@ class ResourceProcessor {
   private final Map<ClassName, List<ResourceValue>> rClassResources = new HashMap<>();
   private final AnnotationResourceParamScanner scanner = new AnnotationResourceParamScanner();
 
-  ResourceProcessor(ProcessingEnvironment processingEnv, ErrorLogger errorLogger,
-      Elements elementUtils, Types typeUtils) {
+  ResourceProcessor(Trees trees, ErrorLogger errorLogger, Elements elementUtils, Types typeUtils) {
+    this.trees = trees;
     this.errorLogger = errorLogger;
     this.elementUtils = elementUtils;
     this.typeUtils = typeUtils;
-
-    try {
-      trees = Trees.instance(processingEnv);
-    } catch (IllegalArgumentException ignored) {
-
-    }
   }
 
   ResourceValue getLayoutInAnnotation(Element element, Class annotationClass) {

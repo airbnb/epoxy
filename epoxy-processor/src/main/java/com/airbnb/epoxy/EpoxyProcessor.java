@@ -1,5 +1,11 @@
 package com.airbnb.epoxy;
 
+import com.sun.source.util.Trees;
+
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessor;
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType;
+
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,7 +20,6 @@ import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedOptions;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
@@ -25,7 +30,7 @@ import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_IMPLICITLY_ADD_AUT
 import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS;
 import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_REQUIRE_HASHCODE;
 import static com.airbnb.epoxy.ConfigManager.PROCESSOR_OPTION_VALIDATE_MODEL_USAGE;
-import static com.airbnb.epoxy.EpoxyProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME;
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * Looks for {@link EpoxyAttribute} annotations and generates a subclass for all classes that have
@@ -34,14 +39,7 @@ import static com.airbnb.epoxy.EpoxyProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME;
  * since generated classes would have to be abstract in order to guarantee they compile, and that
  * reduces their usefulness and doesn't make as much sense to support.
  */
-@SupportedOptions({
-    PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS,
-    PROCESSOR_OPTION_VALIDATE_MODEL_USAGE,
-    PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS,
-    PROCESSOR_OPTION_REQUIRE_HASHCODE,
-    PROCESSOR_OPTION_DISABLE_KOTLIN_EXTENSION_GENERATION,
-    KAPT_KOTLIN_GENERATED_OPTION_NAME
-})
+@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.DYNAMIC)
 public class EpoxyProcessor extends AbstractProcessor {
 
   // This option will be presented when processed by kapt, and it tells us where to put our
@@ -54,6 +52,7 @@ public class EpoxyProcessor extends AbstractProcessor {
   private Messager messager;
   private Elements elementUtils;
   private Types typeUtils;
+  private Trees trees;
 
   private ConfigManager configManager;
   private final ErrorLogger errorLogger = new ErrorLogger();
@@ -99,8 +98,25 @@ public class EpoxyProcessor extends AbstractProcessor {
     elementUtils = processingEnv.getElementUtils();
     typeUtils = processingEnv.getTypeUtils();
 
+    try {
+      trees = Trees.instance(processingEnv);
+    } catch (IllegalArgumentException ignored) {
+      try {
+        // Get original ProcessingEnvironment from Gradle-wrapped one or KAPT-wrapped one.
+        for (Field field : processingEnv.getClass().getDeclaredFields()) {
+          if (field.getName().equals("delegate") || field.getName().equals("processingEnv")) {
+            field.setAccessible(true);
+            ProcessingEnvironment javacEnv = (ProcessingEnvironment) field.get(processingEnv);
+            trees = Trees.instance(javacEnv);
+            break;
+          }
+        }
+      } catch (Throwable ignored2) {
+      }
+    }
+
     ResourceProcessor resourceProcessor =
-        new ResourceProcessor(processingEnv, errorLogger, elementUtils, typeUtils);
+        new ResourceProcessor(trees, errorLogger, elementUtils, typeUtils);
 
     configManager =
         new ConfigManager(!testOptions.isEmpty() ? testOptions : processingEnv.getOptions(),
@@ -152,6 +168,21 @@ public class EpoxyProcessor extends AbstractProcessor {
     types.add(ClassNames.LITHO_ANNOTATION_LAYOUT_SPEC.reflectionName());
 
     return types;
+  }
+
+  @Override
+  public Set<String> getSupportedOptions() {
+    Set<String> options = new LinkedHashSet<>();
+    options.add(PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS);
+    options.add(PROCESSOR_OPTION_VALIDATE_MODEL_USAGE);
+    options.add(PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS);
+    options.add(PROCESSOR_OPTION_REQUIRE_HASHCODE);
+    options.add(PROCESSOR_OPTION_DISABLE_KOTLIN_EXTENSION_GENERATION);
+    options.add(KAPT_KOTLIN_GENERATED_OPTION_NAME);
+    if (trees != null) {
+      options.add(IncrementalAnnotationProcessorType.ISOLATING.getProcessorOption());
+    }
+    return unmodifiableSet(options);
   }
 
   @Override
