@@ -10,7 +10,6 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeVariableName
-import java.io.File
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Modifier
 
@@ -21,17 +20,6 @@ internal class KotlinModelBuilderExtensionWriter(
 ) {
 
     fun generateExtensionsForModels(generatedModels: List<GeneratedModelInfo>) {
-        val kaptGeneratedDirPath =
-            processingEnv.options[EpoxyProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME]
-                ?.replace("kaptKotlin", "kapt")
-                ?: run {
-                    // Need to change the path because of https://youtrack.jetbrains.com/issue/KT-19097
-
-                    // If the option does not exist this is not being processed by kapt,
-                    // so we don't need to generate kotlin extensions
-                    return
-                }
-
         generatedModels
             .filter { it.shouldGenerateModel }
             .groupBy { it.generatedClassName.packageName() }
@@ -42,7 +30,7 @@ internal class KotlinModelBuilderExtensionWriter(
                 )
             }
             .forEach {
-                it.writeTo(File(kaptGeneratedDirPath))
+                it.writeTo(processingEnv.filer)
             }
     }
 

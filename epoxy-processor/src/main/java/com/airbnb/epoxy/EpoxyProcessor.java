@@ -42,12 +42,6 @@ import static java.util.Collections.unmodifiableSet;
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.DYNAMIC)
 public class EpoxyProcessor extends AbstractProcessor {
 
-  // This option will be presented when processed by kapt, and it tells us where to put our
-  // generated kotlin files
-  // https://github.com/JetBrains/kotlin-examples/blob/master/gradle/kotlin-code-generation
-  // /annotation-processor/src/main/java/TestAnnotationProcessor.kt
-  public static final String KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated";
-
   private final Map<String, String> testOptions;
   private Messager messager;
   private Elements elementUtils;
@@ -178,7 +172,6 @@ public class EpoxyProcessor extends AbstractProcessor {
     options.add(PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS);
     options.add(PROCESSOR_OPTION_REQUIRE_HASHCODE);
     options.add(PROCESSOR_OPTION_DISABLE_KOTLIN_EXTENSION_GENERATION);
-    options.add(KAPT_KOTLIN_GENERATED_OPTION_NAME);
     if (trees != null) {
       options.add(IncrementalAnnotationProcessorType.ISOLATING.getProcessorOption());
     }
