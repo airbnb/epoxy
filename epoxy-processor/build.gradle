@@ -22,7 +22,7 @@ dependencies {
     compileOnly rootProject.deps.androidRuntime
 
     kapt deps.incapProcessor
-    compileOnly deps.incapRuntime
+    implementation deps.incapRuntime
 
     implementation project(':epoxy-annotations')
 
