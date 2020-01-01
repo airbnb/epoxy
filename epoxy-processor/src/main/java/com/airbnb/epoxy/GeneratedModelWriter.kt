@@ -174,6 +174,7 @@ internal class GeneratedModelWriter(
             builderHooks?.beforeFinalBuild(this)
 
             addSuperinterface(modelInterfaceWriter.writeInterface(info, this.build().methodSpecs))
+            addOriginatingElement(info.superClassElement)
         }
 
         JavaFile.builder(generatedModelName.packageName(), modelClass)
