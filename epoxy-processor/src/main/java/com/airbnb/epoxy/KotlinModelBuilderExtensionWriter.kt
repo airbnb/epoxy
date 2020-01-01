@@ -112,6 +112,7 @@ internal class KotlinModelBuilderExtensionWriter(
             addStatement("modelInitializer()")
             endControlFlow()
             addStatement(".addTo(this)")
+            addOriginatingElement(model.superClassElement)
             return build()
         }
     }

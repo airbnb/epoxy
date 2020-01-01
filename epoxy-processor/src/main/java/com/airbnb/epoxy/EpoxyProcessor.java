@@ -175,7 +175,11 @@ public class EpoxyProcessor extends AbstractProcessor {
     if (trees != null) {
       // TODO Footnote for later - this needs to be dependent on what annotations are being parsed
       //  likely requires splitting into multiple processors
-      options.add(IncrementalAnnotationProcessorType.ISOLATING.getProcessorOption());
+      IncrementalAnnotationProcessorType incapType = IncrementalAnnotationProcessorType.ISOLATING;
+      if (!configManager.disableKotlinExtensionGeneration()) {
+        incapType = IncrementalAnnotationProcessorType.AGGREGATING;
+      }
+      options.add(incapType.getProcessorOption());
     }
     return unmodifiableSet(options);
   }
