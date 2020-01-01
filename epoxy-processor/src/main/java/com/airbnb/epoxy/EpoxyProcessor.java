@@ -173,8 +173,6 @@ public class EpoxyProcessor extends AbstractProcessor {
     options.add(PROCESSOR_OPTION_REQUIRE_HASHCODE);
     options.add(PROCESSOR_OPTION_DISABLE_KOTLIN_EXTENSION_GENERATION);
     if (trees != null) {
-      // TODO Footnote for later - this needs to be dependent on what annotations are being parsed
-      //  likely requires splitting into multiple processors
       IncrementalAnnotationProcessorType incapType = IncrementalAnnotationProcessorType.ISOLATING;
       if (!configManager.disableKotlinExtensionGeneration()) {
         incapType = IncrementalAnnotationProcessorType.AGGREGATING;
