@@ -1,6 +1,7 @@
 import org.gradle.internal.jvm.Jvm
 
-apply plugin: 'kotlin'
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'org.jetbrains.kotlin.kapt'
 apply plugin: "com.vanniktech.maven.publish"
 
 configurations.all { strategy ->
@@ -19,6 +20,9 @@ dependencies {
     // Allow us to use android support library annotations (@LayoutRes) in this project.
     // Since this isn't an android module normally we couldn't access them otherwise.
     compileOnly rootProject.deps.androidRuntime
+
+    kapt deps.incapProcessor
+    compileOnly deps.incapRuntime
 
     implementation project(':epoxy-annotations')
 
