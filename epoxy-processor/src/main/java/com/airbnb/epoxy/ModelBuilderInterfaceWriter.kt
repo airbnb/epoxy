@@ -8,6 +8,7 @@ import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
+import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Types
 
 const val MODEL_BUILDER_INTERFACE_SUFFIX = "Builder"
@@ -24,7 +25,9 @@ internal class ModelBuilderInterfaceWriter(
     val types: Types
 ) {
 
-    private val viewInterfacesToGenerate = mutableMapOf<ClassName, Set<MethodDetails>>()
+    private data class ClassKey(val className: ClassName, val originatingElement: TypeElement)
+
+    private val viewInterfacesToGenerate = mutableMapOf<ClassKey, Set<MethodDetails>>()
 
     /** These setters can't be used with models in an EpoxyController, they were made for EpoxyAdapter. */
     private val blackListedLegacySetterNames = setOf("hide", "show", "reset")
@@ -46,7 +49,7 @@ internal class ModelBuilderInterfaceWriter(
                     // can generate the interface with the proper methods later
                     viewInterfacesToGenerate
                         .putOrMerge(
-                            it,
+                            ClassKey(it, modelInfo.superClassElement),
                             interfaceMethods.map { MethodDetails(it) }.toSet()
                         ) { set1, set2 -> set1 intersect set2 }
                 }
@@ -55,6 +58,7 @@ internal class ModelBuilderInterfaceWriter(
             addModifiers(Modifier.PUBLIC)
             addTypeVariables(modelInfo.typeVariables)
             addMethods(interfaceMethods)
+            addOriginatingElement(modelInfo.superClassElement)
         }
 
         JavaFile.builder(modelInfo.generatedClassName.packageName(), modelInterface)
@@ -105,8 +109,9 @@ internal class ModelBuilderInterfaceWriter(
         // This means that the generated interface won't necesarily map exactly to the original view interface
         // It just represents the set of props shared by all models with that view interface, which should be all we need in practice.
 
-        for ((interfaceName, methodsToWrite) in viewInterfacesToGenerate) {
+        for ((interfaceClassKey, methodsToWrite) in viewInterfacesToGenerate) {
 
+            val (interfaceName, originatingElement) = interfaceClassKey
             val interfaceSpec = buildInterface(interfaceName) {
                 addModifiers(Modifier.PUBLIC)
 
@@ -115,6 +120,7 @@ internal class ModelBuilderInterfaceWriter(
                         returns(interfaceName)
                     }
                 })
+                addOriginatingElement(originatingElement)
             }
 
             JavaFile.builder(interfaceName.packageName(), interfaceSpec)
