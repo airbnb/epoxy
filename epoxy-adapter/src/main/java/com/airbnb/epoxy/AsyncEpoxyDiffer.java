@@ -20,22 +20,22 @@ import androidx.recyclerview.widget.DiffUtil.ItemCallback;
  */
 class AsyncEpoxyDiffer {
 
-  interface ResultCallack {
+  interface ResultCallback {
     void onResult(@NonNull DiffResult result);
   }
 
   private final Executor executor;
-  private final ResultCallack resultCallack;
+  private final ResultCallback resultCallback;
   private final ItemCallback<EpoxyModel<?>> diffCallback;
   private final GenerationTracker generationTracker = new GenerationTracker();
 
   AsyncEpoxyDiffer(
       @NonNull Handler handler,
-      @NonNull ResultCallack resultCallack,
+      @NonNull ResultCallback resultCallback,
       @NonNull ItemCallback<EpoxyModel<?>> diffCallback
   ) {
     this.executor = new HandlerExecutor(handler);
-    this.resultCallack = resultCallack;
+    this.resultCallback = resultCallback;
     this.diffCallback = diffCallback;
   }
 
@@ -170,7 +170,7 @@ class AsyncEpoxyDiffer {
       public void run() {
         final boolean dispatchResult = tryLatchList(newList, runGeneration);
         if (result != null && dispatchResult) {
-          resultCallack.onResult(result);
+          resultCallback.onResult(result);
         }
       }
     });

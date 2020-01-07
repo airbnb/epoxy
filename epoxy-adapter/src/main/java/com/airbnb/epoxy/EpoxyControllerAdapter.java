@@ -2,7 +2,7 @@ package com.airbnb.epoxy;
 
 import android.os.Handler;
 
-import com.airbnb.epoxy.AsyncEpoxyDiffer.ResultCallack;
+import com.airbnb.epoxy.AsyncEpoxyDiffer.ResultCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import androidx.annotation.UiThread;
 import androidx.recyclerview.widget.DiffUtil.ItemCallback;
 import androidx.recyclerview.widget.RecyclerView;
 
-public final class EpoxyControllerAdapter extends BaseEpoxyAdapter implements ResultCallack {
+public final class EpoxyControllerAdapter extends BaseEpoxyAdapter implements ResultCallback {
   private final NotifyBlocker notifyBlocker = new NotifyBlocker();
   private final AsyncEpoxyDiffer differ;
   private final EpoxyController epoxyController;
