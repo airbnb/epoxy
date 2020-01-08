@@ -90,12 +90,8 @@ internal fun Context?.isActivityDestroyed(): Boolean {
         return true
     }
 
-    if (this is ContextWrapper) {
-        return baseContext.isActivityDestroyed()
-    }
-
     if (this !is Activity) {
-        return false
+        return (this as? ContextWrapper)?.baseContext?.isActivityDestroyed() ?: false
     }
 
     if (isFinishing) {
@@ -111,9 +107,13 @@ internal fun Context?.isActivityDestroyed(): Boolean {
 }
 
 private fun Context.lifecycle(): Lifecycle? {
+    if (this is LifecycleOwner) {
+        return lifecycle
+    }
+
     if (this is ContextWrapper) {
         return baseContext.lifecycle()
     }
 
-    return (this as? LifecycleOwner)?.lifecycle
+    return null
 }
