@@ -51,7 +51,7 @@ internal class ActivityRecyclerPool {
 
         if (poolToUse == null) {
             poolToUse = PoolReference(context, poolFactory(), this)
-            (context as? LifecycleOwner)?.lifecycle?.addObserver(poolToUse)
+            context.lifecycle()?.addObserver(poolToUse)
             pools.add(poolToUse)
         }
 
@@ -108,4 +108,12 @@ internal fun Context?.isActivityDestroyed(): Boolean {
         // Use this as a proxy for being destroyed on older devices
         !ViewCompat.isAttachedToWindow(window.decorView)
     }
+}
+
+private fun Context.lifecycle(): Lifecycle? {
+    if (this is ContextWrapper) {
+        return baseContext.lifecycle()
+    }
+
+    return (this as? LifecycleOwner)?.lifecycle
 }
