@@ -2,6 +2,7 @@ package com.airbnb.epoxy
 
 import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.os.Build
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Lifecycle
@@ -87,6 +88,10 @@ internal class PoolReference(
 internal fun Context?.isActivityDestroyed(): Boolean {
     if (this == null) {
         return true
+    }
+
+    if (this is ContextWrapper) {
+        return baseContext.isActivityDestroyed()
     }
 
     if (this !is Activity) {
