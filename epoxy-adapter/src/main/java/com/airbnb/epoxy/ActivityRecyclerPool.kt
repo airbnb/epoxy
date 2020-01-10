@@ -2,6 +2,7 @@ package com.airbnb.epoxy
 
 import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.os.Build
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Lifecycle
@@ -50,7 +51,7 @@ internal class ActivityRecyclerPool {
 
         if (poolToUse == null) {
             poolToUse = PoolReference(context, poolFactory(), this)
-            (context as? LifecycleOwner)?.lifecycle?.addObserver(poolToUse)
+            context.lifecycle()?.addObserver(poolToUse)
             pools.add(poolToUse)
         }
 
@@ -62,6 +63,18 @@ internal class ActivityRecyclerPool {
             pool.viewPool.clear()
             pools.remove(pool)
         }
+    }
+
+    private fun Context.lifecycle(): Lifecycle? {
+        if (this is LifecycleOwner) {
+            return lifecycle
+        }
+
+        if (this is ContextWrapper) {
+            return baseContext.lifecycle()
+        }
+
+        return null
     }
 }
 
@@ -90,7 +103,7 @@ internal fun Context?.isActivityDestroyed(): Boolean {
     }
 
     if (this !is Activity) {
-        return false
+        return (this as? ContextWrapper)?.baseContext?.isActivityDestroyed() ?: false
     }
 
     if (isFinishing) {
