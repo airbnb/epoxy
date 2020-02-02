@@ -97,6 +97,7 @@ public class EpoxyProcessor extends AbstractProcessor {
     } catch (IllegalArgumentException ignored) {
       try {
         // Get original ProcessingEnvironment from Gradle-wrapped one or KAPT-wrapped one.
+        // In Kapt, its field is called "delegate". In Gradle's, it's called "processingEnv"
         for (Field field : processingEnv.getClass().getDeclaredFields()) {
           if (field.getName().equals("delegate") || field.getName().equals("processingEnv")) {
             field.setAccessible(true);
