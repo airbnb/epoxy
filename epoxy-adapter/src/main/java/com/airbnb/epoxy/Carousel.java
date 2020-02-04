@@ -239,6 +239,10 @@ public class Carousel extends EpoxyRecyclerView {
       return view.getWidth();
     }
 
+    if (view.getMeasuredWidth() > 0) {
+      return view.getMeasuredWidth();
+    }
+
     // Fall back to assuming we want the full screen width
     DisplayMetrics metrics = view.getContext().getResources().getDisplayMetrics();
     return metrics.widthPixels;
@@ -248,6 +252,10 @@ public class Carousel extends EpoxyRecyclerView {
   private static int getTotalHeightPx(View view) {
     if (view.getHeight() > 0) {
       return view.getHeight();
+    }
+
+    if (view.getMeasuredHeight() > 0) {
+      return view.getMeasuredHeight();
     }
 
     // Fall back to assuming we want the full screen width
