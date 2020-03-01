@@ -9,20 +9,20 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.epoxy.BaseEpoxyAdapter
 import kotlinx.android.parcel.Parcelize
 
 /**
  * Adds sticky headers capabilities to your [RecyclerView.Adapter]. It must implement [HasStickyHeader] to
  * indicate which items are headers.
  */
-class StickyHeaderLinearLayoutManager<T> @JvmOverloads constructor(
+class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
     context: Context,
     orientation: Int = RecyclerView.VERTICAL,
     reverseLayout: Boolean = false
-) : LinearLayoutManager(context, orientation, reverseLayout)
-    where T : RecyclerView.Adapter<*>, T : HasStickyHeader {
+) : LinearLayoutManager(context, orientation, reverseLayout) {
 
-    private lateinit var adapter: T
+    private lateinit var adapter: BaseEpoxyAdapter
 
     // Translation for header
     private var translationX: Float = 0f
@@ -53,7 +53,7 @@ class StickyHeaderLinearLayoutManager<T> @JvmOverloads constructor(
     @Suppress("UNCHECKED_CAST")
     private fun setAdapter(newAdapter: RecyclerView.Adapter<*>) {
         if (::adapter.isInitialized) adapter.unregisterAdapterDataObserver(headerPositionsObserver)
-        adapter = newAdapter as T
+        adapter = newAdapter as BaseEpoxyAdapter
         adapter.registerAdapterDataObserver(headerPositionsObserver)
         headerPositionsObserver.onChanged()
     }

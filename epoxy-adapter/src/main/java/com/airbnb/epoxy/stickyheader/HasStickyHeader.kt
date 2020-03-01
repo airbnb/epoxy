@@ -5,13 +5,13 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
 /**
- * Adds sticky headers capabilities to the [RecyclerView.Adapter]. Should return `true` for all
- * positions that represent sticky headers.
+ * Adds sticky headers capabilities to any [RecyclerView.Adapter]
+ * combined with [StickyHeaderLinearLayoutManager].
  */
 interface HasStickyHeader {
 
     /**
-     * Returns true if the view at the specified [position] needs to be sticky
+     * Return true if the view at the specified [position] needs to be sticky
      * else false.
      */
     fun isStickyHeader(position: Int): Boolean
@@ -19,7 +19,9 @@ interface HasStickyHeader {
     //region Optional callbacks
 
     /**
-     * Adjusts any necessary properties of the `holder` that is being used as a sticky header.
+     * Callback to adjusts any necessary properties of the [stickyHeader] view
+     * that is being used as a sticky, eg. elevation.
+     * Default behaviour is no-op.
      *
      * [teardownStickyHeaderView] will be called sometime after this method
      * and before any other calls to this method go through.
@@ -27,7 +29,8 @@ interface HasStickyHeader {
     fun setupStickyHeaderView(stickyHeader: View) = Unit
 
     /**
-     * Reverts any properties changed in [setupStickyHeaderView].
+     * Callback to revert any properties changed in [setupStickyHeaderView].
+     * Default behaviour is no-op.
      *
      * Called after [setupStickyHeaderView].
      */
