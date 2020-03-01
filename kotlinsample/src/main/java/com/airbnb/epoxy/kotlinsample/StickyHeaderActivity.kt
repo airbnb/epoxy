@@ -18,7 +18,12 @@ class StickyHeaderActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recycler_view)
 
-        recyclerView.layoutManager = StickyHeaderLinearLayoutManager<StickyHeaderAdapter>(this)
-        recyclerView.adapter = StickyHeaderAdapter(this)
+//        Sample usage when using [EpoxyAdapter]
+//        recyclerView.layoutManager = StickyHeaderLinearLayoutManager(this)
+//        recyclerView.adapter = StickyHeaderAdapter(this)
+
+        recyclerView.layoutManager = StickyHeaderLinearLayoutManager(this)
+        recyclerView.setController(StickyHeaderController(this))
+        recyclerView.requestModelBuild()
     }
 }
