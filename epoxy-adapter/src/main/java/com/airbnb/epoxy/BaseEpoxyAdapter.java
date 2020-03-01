@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.airbnb.epoxy.stickyheader.HasStickyHeader;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -12,7 +14,9 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
 import androidx.recyclerview.widget.RecyclerView;
 
-public abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
+public abstract class BaseEpoxyAdapter
+    extends RecyclerView.Adapter<EpoxyViewHolder>
+    implements HasStickyHeader {
 
   private static final String SAVED_STATE_ARG_VIEW_HOLDERS = "saved_state_view_holders";
 

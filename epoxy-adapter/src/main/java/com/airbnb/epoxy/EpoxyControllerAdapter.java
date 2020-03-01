@@ -1,8 +1,11 @@
 package com.airbnb.epoxy;
 
 import android.os.Handler;
+import android.view.View;
 
 import com.airbnb.epoxy.AsyncEpoxyDiffer.ResultCallack;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -225,4 +228,31 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter implements Re
           return new DiffPayload(oldItem);
         }
       };
+
+  /**
+   * Delegates the callbacks received in the adapter
+   * to the controller.
+   */
+  @Override
+  public boolean isStickyHeader(int position) {
+    return epoxyController.isStickyHeader(position);
+  }
+
+  /**
+   * Delegates the callbacks received in the adapter
+   * to the controller.
+   */
+  @Override
+  public void setupStickyHeaderView(@NotNull View stickyHeader) {
+    epoxyController.setupStickyHeaderView(stickyHeader);
+  }
+
+  /**
+   * Delegates the callbacks received in the adapter
+   * to the controller.
+   */
+  @Override
+  public void teardownStickyHeaderView(@NotNull View stickyHeader) {
+    epoxyController.teardownStickyHeaderView(stickyHeader);
+  }
 }

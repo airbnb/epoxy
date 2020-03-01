@@ -1,6 +1,10 @@
 
 package com.airbnb.epoxy;
 
+import android.view.View;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -356,4 +360,44 @@ public abstract class EpoxyAdapter extends BaseEpoxyAdapter {
   private void resumeModelListNotifications() {
     ((ModelList) models).resumeNotifications();
   }
+
+  //region Sticky header
+
+  /**
+   * Optional callback to setup the sticky view,
+   * by default it doesn't do anything.
+   *
+   * The sub-classes should override the function if they are
+   * using sticky header feature.
+   */
+  @Override
+  public void setupStickyHeaderView(@NotNull View stickyHeader) {
+    // no-op
+  }
+
+  /**
+   * Optional callback to perform tear down operation on the
+   * sticky view, by default it doesn't do anything.
+   *
+   * The sub-classes should override the function if they are
+   * using sticky header feature.
+   */
+  @Override
+  public void teardownStickyHeaderView(@NotNull View stickyHeader) {
+    // no-op
+  }
+
+  /**
+   * Called to check if the item at the position is a sticky item,
+   * by default returns false.
+   *
+   * The sub-classes should override the function if they are
+   * using sticky header feature.
+   */
+  @Override
+  public boolean isStickyHeader(int position) {
+    return false;
+  }
+
+  //endregion
 }
