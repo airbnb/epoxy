@@ -1,7 +1,6 @@
 package com.airbnb.epoxy.stickyheader
 
 import android.view.View
-
 import androidx.recyclerview.widget.RecyclerView
 
 /**
