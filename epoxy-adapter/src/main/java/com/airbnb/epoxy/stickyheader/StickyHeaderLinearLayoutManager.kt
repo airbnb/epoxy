@@ -13,8 +13,9 @@ import com.airbnb.epoxy.BaseEpoxyAdapter
 import kotlinx.android.parcel.Parcelize
 
 /**
- * Adds sticky headers capabilities to your [RecyclerView.Adapter]. It must implement [HasStickyHeader] to
- * indicate which items are headers.
+ * Adds sticky headers capabilities to your [RecyclerView.Adapter].
+ * The adapter must implement [HasStickyHeader] to indicate which items are
+ * sticky.
  */
 class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
     context: Context,
