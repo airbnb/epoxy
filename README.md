@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.com/airbnb/epoxy.svg?branch=master)](https://travis-ci.com/github/airbnb/epoxy)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.airbnb.android/epoxy/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.airbnb.android/epoxy)
 
 # Epoxy
 
