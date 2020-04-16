@@ -7,8 +7,7 @@ import com.airbnb.epoxy.kotlinsample.databinding.ViewBindingHolderItemBinding
 import com.airbnb.epoxy.kotlinsample.helpers.ViewBindingEpoxyModel
 
 @EpoxyModelClass(layout = R.layout.view_binding_holder_item)
-abstract class ItemViewBindingEpoxyHolder :
-        ViewBindingEpoxyModel<ViewBindingHolderItemBinding>(ViewBindingHolderItemBinding::bind) {
+abstract class ItemViewBindingEpoxyHolder : ViewBindingEpoxyModel<ViewBindingHolderItemBinding>() {
 
     @EpoxyAttribute lateinit var listener: () -> Unit
     @EpoxyAttribute lateinit var title: String
