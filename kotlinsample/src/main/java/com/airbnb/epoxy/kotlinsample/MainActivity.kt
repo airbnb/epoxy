@@ -10,6 +10,7 @@ import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.EpoxyVisibilityTracker
 import com.airbnb.epoxy.kotlinsample.models.CarouselItemCustomViewModel_
 import com.airbnb.epoxy.kotlinsample.models.ItemDataClass
+import com.airbnb.epoxy.kotlinsample.models.ItemViewBindingDataClass
 import com.airbnb.epoxy.kotlinsample.models.itemCustomView
 import com.airbnb.epoxy.kotlinsample.models.itemEpoxyHolder
 import com.airbnb.epoxy.kotlinsample.models.itemViewBindingEpoxyHolder
@@ -87,6 +88,10 @@ class MainActivity : AppCompatActivity() {
                 // Since data classes do not use code generation, there's no extension generated here
                 ItemDataClass("this is a Data Class Item")
                     .id("data class $i")
+                    .addTo(this)
+
+                ItemViewBindingDataClass("This is a Data Class Item using ViewBinding")
+                    .id("data class view binding $i")
                     .addTo(this)
             }
         }
