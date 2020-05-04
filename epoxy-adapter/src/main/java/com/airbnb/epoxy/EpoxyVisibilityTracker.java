@@ -52,8 +52,10 @@ public class EpoxyVisibilityTracker {
       new ItemAnimatorFinishedListener() {
         @Override
         public void onAnimationsFinished() {
-          // Process change event without checking the ItemAnimator
-          processChangeEvent("ItemAnimatorFinishedListener.onAnimationsFinished", false);
+          processChangeEvent(
+              "ItemAnimatorFinishedListener.onAnimationsFinished",
+              /* don't check item animator to prevent recursion */ false
+          );
         }
       };
 
