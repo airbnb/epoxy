@@ -186,10 +186,13 @@ public class EpoxyVisibilityTracker {
     if (recyclerView != null) {
       final ItemAnimator itemAnimator = recyclerView.getItemAnimator();
       if (checkItemAnimator && itemAnimator != null) {
-        // `itemAnimatorFinishedListener.onAnimationsFinished` will request a visibility check
+        // `itemAnimatorFinishedListener.onAnimationsFinished` will process visibility check
         // - If the animations are running `onAnimationsFinished` will be invoked on animations end.
         // - If the animations are not running `onAnimationsFinished` will be invoked right away.
-        itemAnimator.isRunning(itemAnimatorFinishedListener);
+        if (itemAnimator.isRunning(itemAnimatorFinishedListener)) {
+          // If running process visibility now as `onAnimationsFinished` was not yet called
+          processChangeEventWithDetachedView(null, debug);
+        }
       } else {
         processChangeEventWithDetachedView(null, debug);
       }
