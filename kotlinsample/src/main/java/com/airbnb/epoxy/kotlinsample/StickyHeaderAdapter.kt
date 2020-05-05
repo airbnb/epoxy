@@ -6,14 +6,14 @@ import com.airbnb.epoxy.EpoxyAdapter
 import com.airbnb.epoxy.kotlinsample.models.ItemEpoxyHolder_
 import com.airbnb.epoxy.kotlinsample.models.StickyItemEpoxyHolder
 import com.airbnb.epoxy.kotlinsample.models.StickyItemEpoxyHolder_
-import com.airbnb.epoxy.stickyheader.HasStickyHeader
+import com.airbnb.epoxy.stickyheader.StickyHeaderCallbacks
 
 /**
  * Showcases [EpoxyAdapter] with sticky header support
  */
 class StickyHeaderAdapter(
     private val context: Context
-) : EpoxyAdapter(), HasStickyHeader {
+) : EpoxyAdapter(), StickyHeaderCallbacks {
 
     init {
         enableDiffing()

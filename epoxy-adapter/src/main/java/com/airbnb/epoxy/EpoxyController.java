@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
-import com.airbnb.epoxy.stickyheader.HasStickyHeader;
+import com.airbnb.epoxy.stickyheader.StickyHeaderCallbacks;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -44,7 +44,7 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
  * treated as immutable and never modified again. This is necessary for adapter updates to be
  * accurate.
  */
-public abstract class EpoxyController implements HasStickyHeader {
+public abstract class EpoxyController implements StickyHeaderCallbacks {
 
   /**
    * We check that the adapter is not connected to multiple recyclerviews, but when a fragment has

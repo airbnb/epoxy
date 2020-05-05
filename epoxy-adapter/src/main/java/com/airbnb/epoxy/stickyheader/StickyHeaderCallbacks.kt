@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
  * Adds sticky headers capabilities to any [RecyclerView.Adapter]
  * combined with [StickyHeaderLinearLayoutManager].
  */
-interface HasStickyHeader {
+interface StickyHeaderCallbacks {
 
     /**
      * Return true if the view at the specified [position] needs to be sticky

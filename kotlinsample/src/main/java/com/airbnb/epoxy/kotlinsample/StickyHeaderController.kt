@@ -6,14 +6,14 @@ import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.kotlinsample.models.StickyItemEpoxyHolder
 import com.airbnb.epoxy.kotlinsample.models.itemEpoxyHolder
 import com.airbnb.epoxy.kotlinsample.models.stickyItemEpoxyHolder
-import com.airbnb.epoxy.stickyheader.HasStickyHeader
+import com.airbnb.epoxy.stickyheader.StickyHeaderCallbacks
 
 /**
  * Showcases [EpoxyController] with sticky header support
  */
 class StickyHeaderController(
     private val context: Context
-) : EpoxyController(), HasStickyHeader {
+) : EpoxyController(), StickyHeaderCallbacks {
 
     override fun buildModels() {
         for (i in 0 until 100) {

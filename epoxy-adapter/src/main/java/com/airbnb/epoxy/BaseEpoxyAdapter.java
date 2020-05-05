@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.airbnb.epoxy.stickyheader.HasStickyHeader;
+import com.airbnb.epoxy.stickyheader.StickyHeaderCallbacks;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class BaseEpoxyAdapter
     extends RecyclerView.Adapter<EpoxyViewHolder>
-    implements HasStickyHeader {
+    implements StickyHeaderCallbacks {
 
   private static final String SAVED_STATE_ARG_VIEW_HOLDERS = "saved_state_view_holders";
 
