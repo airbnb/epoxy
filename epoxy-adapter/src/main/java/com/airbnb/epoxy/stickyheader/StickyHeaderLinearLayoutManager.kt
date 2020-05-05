@@ -23,7 +23,7 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
     reverseLayout: Boolean = false
 ) : LinearLayoutManager(context, orientation, reverseLayout) {
 
-    private lateinit var adapter: BaseEpoxyAdapter
+    private var adapter: BaseEpoxyAdapter? = null
 
     // Translation for header
     private var translationX: Float = 0f
@@ -43,20 +43,25 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
 
     override fun onAttachedToWindow(recyclerView: RecyclerView) {
         super.onAttachedToWindow(recyclerView)
-        recyclerView.adapter?.let(this::setAdapter)
+        setAdapter(recyclerView.adapter)
     }
 
     override fun onAdapterChanged(oldAdapter: RecyclerView.Adapter<*>?, newAdapter: RecyclerView.Adapter<*>?) {
         super.onAdapterChanged(oldAdapter, newAdapter)
-        newAdapter?.let(this::setAdapter)
+        setAdapter(newAdapter)
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun setAdapter(newAdapter: RecyclerView.Adapter<*>) {
-        if (::adapter.isInitialized) adapter.unregisterAdapterDataObserver(headerPositionsObserver)
-        adapter = newAdapter as BaseEpoxyAdapter
-        adapter.registerAdapterDataObserver(headerPositionsObserver)
-        headerPositionsObserver.onChanged()
+    private fun setAdapter(newAdapter: RecyclerView.Adapter<*>?) {
+        adapter?.unregisterAdapterDataObserver(headerPositionsObserver)
+        if (newAdapter is BaseEpoxyAdapter) {
+            adapter = newAdapter
+            adapter?.registerAdapterDataObserver(headerPositionsObserver)
+            headerPositionsObserver.onChanged()
+        } else {
+            adapter = null
+            headerPositions.clear()
+        }
     }
 
     override fun onSaveInstanceState(): Parcelable {
@@ -220,6 +225,7 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
                 val headerIndex = findHeaderIndexOrBefore(anchorPos)
                 val headerPos = if (headerIndex != -1) headerPositions[headerIndex] else -1
                 val nextHeaderPos = if (headerCount > headerIndex + 1) headerPositions[headerIndex + 1] else -1
+                val itemViewType = adapter?.getItemViewType(headerPos) ?: -1
 
                 // Show sticky header if:
                 // - There's one to show;
@@ -229,7 +235,7 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
                     (headerPos != anchorPos || isViewOnBoundary(anchorView)) &&
                     nextHeaderPos != headerPos + 1) {
                     // 1. Ensure existing sticky header, if any, is of correct type.
-                    if (stickyHeader != null && getItemViewType(stickyHeader!!) != adapter.getItemViewType(headerPos)) {
+                    if (stickyHeader != null && getItemViewType(stickyHeader!!) != itemViewType) {
                         // A sticky header was shown before but is not of the correct type. Scrap it.
                         scrapStickyHeader(recycler)
                     }
@@ -268,7 +274,7 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
         val stickyHeader = recycler.getViewForPosition(position)
 
         // Setup sticky header if the adapter requires it.
-        adapter.setupStickyHeaderView(stickyHeader)
+        adapter?.setupStickyHeaderView(stickyHeader)
 
         // Add sticky header as a child view, to be detached / reattached whenever LinearLayoutManager#fill() is called,
         // which happens on layout and scroll (see overrides).
@@ -333,7 +339,7 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
         stickyHeader.translationY = 0f
 
         // Teardown holder if the adapter requires it.
-        adapter.teardownStickyHeaderView(stickyHeader)
+        adapter?.teardownStickyHeaderView(stickyHeader)
 
         // Stop ignoring sticky header so that it can be recycled.
         stopIgnoringView(stickyHeader)
@@ -504,9 +510,10 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
         override fun onChanged() {
             // There's no hint at what changed, so go through the adapter.
             headerPositions.clear()
-            val itemCount = adapter.itemCount
+            val itemCount = adapter?.itemCount ?: 0
             for (i in 0 until itemCount) {
-                if (adapter.isStickyHeader(i)) {
+                val isSticky = adapter?.isStickyHeader(i) ?: false
+                if (isSticky) {
                     headerPositions.add(i)
                 }
             }
@@ -530,7 +537,8 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
 
             // Add new headers.
             for (i in positionStart until positionStart + itemCount) {
-                if (adapter.isStickyHeader(i)) {
+                val isSticky = adapter?.isStickyHeader(i) ?: false
+                if (isSticky) {
                     val headerIndex = findHeaderIndexOrNext(i)
                     if (headerIndex != -1) {
                         headerPositions.add(headerIndex, i)
