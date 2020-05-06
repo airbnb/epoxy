@@ -3,6 +3,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: "com.vanniktech.maven.publish"
 
+mavenPublish {
+    // must use legacy mode until we update to AGP 3.6.x
+    useLegacyMode = true
+}
+
 android {
     compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
