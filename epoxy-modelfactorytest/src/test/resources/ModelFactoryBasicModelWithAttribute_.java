@@ -156,7 +156,8 @@ public class ModelFactoryBasicModelWithAttribute_ extends ModelFactoryBasicModel
   }
 
   @Override
-  public ModelFactoryBasicModelWithAttribute_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
+  public ModelFactoryBasicModelWithAttribute_ id(@Nullable CharSequence arg0,
+      @Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
@@ -241,13 +242,13 @@ public class ModelFactoryBasicModelWithAttribute_ extends ModelFactoryBasicModel
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + value;
-    return result;
+    int _result = super.hashCode();
+    _result = 31 * _result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + value;
+    return _result;
   }
 
   @Override

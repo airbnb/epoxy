@@ -110,7 +110,8 @@ public class ModelFactoryBaseModelViewModel_ extends EpoxyModel<ModelFactoryBase
   }
 
   @Override
-  public void onVisibilityStateChanged(int visibilityState, final ModelFactoryBaseModelView object) {
+  public void onVisibilityStateChanged(int visibilityState,
+      final ModelFactoryBaseModelView object) {
     if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
       onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
     }
@@ -122,8 +123,7 @@ public class ModelFactoryBaseModelViewModel_ extends EpoxyModel<ModelFactoryBase
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public ModelFactoryBaseModelViewModel_ onVisibilityStateChanged(
       OnModelVisibilityStateChangedListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> listener) {
     onMutation();
@@ -145,8 +145,7 @@ public class ModelFactoryBaseModelViewModel_ extends EpoxyModel<ModelFactoryBase
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public ModelFactoryBaseModelViewModel_ onVisibilityChanged(
       OnModelVisibilityChangedListener<ModelFactoryBaseModelViewModel_, ModelFactoryBaseModelView> listener) {
     onMutation();
@@ -199,7 +198,8 @@ public class ModelFactoryBaseModelViewModel_ extends EpoxyModel<ModelFactoryBase
   }
 
   @Override
-  public ModelFactoryBaseModelViewModel_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
+  public ModelFactoryBaseModelViewModel_ id(@Nullable CharSequence arg0,
+      @Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
@@ -217,7 +217,8 @@ public class ModelFactoryBaseModelViewModel_ extends EpoxyModel<ModelFactoryBase
   }
 
   @Override
-  public ModelFactoryBaseModelViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public ModelFactoryBaseModelViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -290,13 +291,13 @@ public class ModelFactoryBaseModelViewModel_ extends EpoxyModel<ModelFactoryBase
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (title_String != null ? title_String.hashCode() : 0);
-    return result;
+    int _result = super.hashCode();
+    _result = 31 * _result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (title_String != null ? title_String.hashCode() : 0);
+    return _result;
   }
 
   @Override

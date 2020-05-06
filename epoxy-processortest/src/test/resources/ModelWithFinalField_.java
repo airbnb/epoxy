@@ -90,8 +90,7 @@ public class ModelWithFinalField_ extends ModelWithFinalField implements Generat
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public ModelWithFinalField_ onVisibilityStateChanged(
       OnModelVisibilityStateChangedListener<ModelWithFinalField_, Object> listener) {
     onMutation();
@@ -113,8 +112,7 @@ public class ModelWithFinalField_ extends ModelWithFinalField implements Generat
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public ModelWithFinalField_ onVisibilityChanged(
       OnModelVisibilityChangedListener<ModelWithFinalField_, Object> listener) {
     onMutation();
@@ -234,13 +232,13 @@ public class ModelWithFinalField_ extends ModelWithFinalField implements Generat
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + valueInt;
-    return result;
+    int _result = super.hashCode();
+    _result = 31 * _result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + valueInt;
+    return _result;
   }
 
   @Override

@@ -9,13 +9,18 @@ require 'rubygems'
 require 'nokogiri'
 
 def updateTestClass(test_class_result)
-  puts "\nUpdating " + test_class_result + "\n"
   page = Nokogiri::HTML(open(test_class_result))
 
   # Failing processor tests have their output in a <pre></pre> block
   page.css('pre').each do |preBlock|
+
+    if preBlock.to_s.include? "[Robolectric]"
+      # This block is a robolectric info output, and is not a test failure
+      next
+    end
+
     # Just a sanity check to make sure the pre block we're looking at is a processor source output
-    if preBlock.include? "Source declared the same top-level types of an expected source"
+    if preBlock.to_s.include? "Source declared the same top-level types of an expected source"
       puts "Pre block did not contain source. (#{test_class_result}"
       next
     end
@@ -26,6 +31,8 @@ def updateTestClass(test_class_result)
     expected_file_match = /Expected file: <([^>]*)>/m.match(preBlock)
     if expected_file_match.nil? || expected_file_match.captures.empty?
       puts "Could not find expected file name in pre block (#{test_class_result})"
+      puts preBlock.class
+      puts preBlock
       next
     end
 

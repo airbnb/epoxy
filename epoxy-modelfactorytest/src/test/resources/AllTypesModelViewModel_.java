@@ -290,8 +290,7 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public AllTypesModelViewModel_ onVisibilityStateChanged(
       OnModelVisibilityStateChangedListener<AllTypesModelViewModel_, AllTypesModelView> listener) {
     onMutation();
@@ -313,8 +312,7 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public AllTypesModelViewModel_ onVisibilityChanged(
       OnModelVisibilityChangedListener<AllTypesModelViewModel_, AllTypesModelView> listener) {
     onMutation();
@@ -789,29 +787,29 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    int _result = super.hashCode();
+    _result = 31 * _result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     long temp;
-    result = 31 * result + (booleanValue_Boolean ? 1 : 0);
-    result = 31 * result + (boxedBooleanValue_Boolean != null ? boxedBooleanValue_Boolean.hashCode() : 0);
-    result = 31 * result + (charSequenceValue_CharSequence != null ? charSequenceValue_CharSequence.hashCode() : 0);
-    result = 31 * result + (boxedDoubleValue_Double != null ? boxedDoubleValue_Double.hashCode() : 0);
+    _result = 31 * _result + (booleanValue_Boolean ? 1 : 0);
+    _result = 31 * _result + (boxedBooleanValue_Boolean != null ? boxedBooleanValue_Boolean.hashCode() : 0);
+    _result = 31 * _result + (charSequenceValue_CharSequence != null ? charSequenceValue_CharSequence.hashCode() : 0);
+    _result = 31 * _result + (boxedDoubleValue_Double != null ? boxedDoubleValue_Double.hashCode() : 0);
     temp = Double.doubleToLongBits(doubleValue_Double);
-    result = 31 * result + (int) (temp ^ (temp >>> 32));
-    result = 31 * result + drawableRes_Int;
-    result = 31 * result + (epoxyModelList_List != null ? epoxyModelList_List.hashCode() : 0);
-    result = 31 * result + intValue_Int;
-    result = 31 * result + (boxedIntValue_Integer != null ? boxedIntValue_Integer.hashCode() : 0);
-    result = 31 * result + (int) (longValue_Long ^ (longValue_Long >>> 32));
-    result = 31 * result + (boxedLongValue_Long != null ? boxedLongValue_Long.hashCode() : 0);
-    result = 31 * result + (onClickListener_OnClickListener != null ? 1 : 0);
-    result = 31 * result + rawRes_Int;
-    result = 31 * result + (stringValue_String != null ? stringValue_String.hashCode() : 0);
-    result = 31 * result + (stringList_List != null ? stringList_List.hashCode() : 0);
-    return result;
+    _result = 31 * _result + (int) (temp ^ (temp >>> 32));
+    _result = 31 * _result + drawableRes_Int;
+    _result = 31 * _result + (epoxyModelList_List != null ? epoxyModelList_List.hashCode() : 0);
+    _result = 31 * _result + intValue_Int;
+    _result = 31 * _result + (boxedIntValue_Integer != null ? boxedIntValue_Integer.hashCode() : 0);
+    _result = 31 * _result + (int) (longValue_Long ^ (longValue_Long >>> 32));
+    _result = 31 * _result + (boxedLongValue_Long != null ? boxedLongValue_Long.hashCode() : 0);
+    _result = 31 * _result + (onClickListener_OnClickListener != null ? 1 : 0);
+    _result = 31 * _result + rawRes_Int;
+    _result = 31 * _result + (stringValue_String != null ? stringValue_String.hashCode() : 0);
+    _result = 31 * _result + (stringList_List != null ? stringList_List.hashCode() : 0);
+    return _result;
   }
 
   @Override

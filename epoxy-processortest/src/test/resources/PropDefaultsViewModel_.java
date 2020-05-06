@@ -170,8 +170,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public PropDefaultsViewModel_ onVisibilityStateChanged(
       OnModelVisibilityStateChangedListener<PropDefaultsViewModel_, PropDefaultsView> listener) {
     onMutation();
@@ -193,8 +192,7 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public PropDefaultsViewModel_ onVisibilityChanged(
       OnModelVisibilityChangedListener<PropDefaultsViewModel_, PropDefaultsView> listener) {
     onMutation();
@@ -448,18 +446,18 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (defaultsToNull_CharSequence != null ? defaultsToNull_CharSequence.hashCode() : 0);
-    result = 31 * result + (noDefaultSoItIsRequired_CharSequence != null ? noDefaultSoItIsRequired_CharSequence.hashCode() : 0);
-    result = 31 * result + primitivesHaveImplicitDefaultsAndCannotBeRequired_Int;
-    result = 31 * result + primitiveWithExplicitDefault_Int;
-    result = 31 * result + (objectWithDefault_String != null ? objectWithDefault_String.hashCode() : 0);
-    result = 31 * result + (objectWithDefaultAndNullable_String != null ? objectWithDefaultAndNullable_String.hashCode() : 0);
-    return result;
+    int _result = super.hashCode();
+    _result = 31 * _result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (defaultsToNull_CharSequence != null ? defaultsToNull_CharSequence.hashCode() : 0);
+    _result = 31 * _result + (noDefaultSoItIsRequired_CharSequence != null ? noDefaultSoItIsRequired_CharSequence.hashCode() : 0);
+    _result = 31 * _result + primitivesHaveImplicitDefaultsAndCannotBeRequired_Int;
+    _result = 31 * _result + primitiveWithExplicitDefault_Int;
+    _result = 31 * _result + (objectWithDefault_String != null ? objectWithDefault_String.hashCode() : 0);
+    _result = 31 * _result + (objectWithDefaultAndNullable_String != null ? objectWithDefaultAndNullable_String.hashCode() : 0);
+    return _result;
   }
 
   @Override
