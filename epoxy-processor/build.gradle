@@ -3,6 +3,11 @@ import org.gradle.internal.jvm.Jvm
 apply plugin: 'kotlin'
 apply plugin: "com.vanniktech.maven.publish"
 
+mavenPublish {
+    // must use legacy mode until we update to AGP 3.6.x
+    useLegacyMode = true
+}
+
 configurations.all { strategy ->
     strategy.resolutionStrategy.force rootProject.deps.assertj, rootProject.deps.googleTestingCompile
 }
