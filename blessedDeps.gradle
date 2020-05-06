@@ -35,7 +35,6 @@ rootProject.ext.ANDROID_TEST_RUNNER = "1.0.2"
 rootProject.ext.SQUARE_JAVAPOET_VERSION = "1.11.1"
 rootProject.ext.SQUARE_KOTLINPOET_VERSION = "1.0.1"
 rootProject.ext.KOTLIN_COROUTINES_VERSION = "1.2.1"
-rootProject.ext.KOTLIN_METADATA_VERSION = "1.4.0"
 rootProject.ext.GLIDE_VERSION = "4.9.0"
 
 rootProject.ext.ASSERTJ_VERSION = "1.7.1"
@@ -86,6 +85,5 @@ rootProject.ext.deps = [
     lithoAnnotations      : "com.facebook.litho:litho-annotations:$LITHO_VERSION",
     paris                 : "com.airbnb.android:paris:$PARIS_VERSION",
     parisProcessor        : "com.airbnb.android:paris-processor:$PARIS_VERSION",
-    kotlinMetadata        : "me.eugeniomarletti.kotlin.metadata:kotlin-metadata:$KOTLIN_METADATA_VERSION",
     glide                 : "com.github.bumptech.glide:glide:$GLIDE_VERSION"
 ]

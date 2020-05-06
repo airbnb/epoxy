@@ -4,6 +4,12 @@ import com.airbnb.epoxy.Utils.isEpoxyModel
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
+import kotlinx.metadata.Flag.ValueParameter.DECLARES_DEFAULT_VALUE
+import kotlinx.metadata.KmClassifier
+import kotlinx.metadata.KmFunction
+import kotlinx.metadata.KmType
+import kotlinx.metadata.jvm.KotlinClassHeader
+import kotlinx.metadata.jvm.KotlinClassMetadata
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.Modifier
@@ -14,11 +20,6 @@ import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
-import me.eugeniomarletti.kotlin.metadata.KotlinClassMetadata
-import me.eugeniomarletti.kotlin.metadata.declaresDefaultValue
-import me.eugeniomarletti.kotlin.metadata.extractFullName
-import me.eugeniomarletti.kotlin.metadata.kotlinMetadata
-import me.eugeniomarletti.kotlin.metadata.shadow.metadata.ProtoBuf
 
 internal class ModelViewInfo(
     val viewElement: TypeElement,
@@ -36,7 +37,7 @@ internal class ModelViewInfo(
     private val viewAnnotation: ModelView = viewElement.getAnnotation(ModelView::class.java)
     val fullSpanSize: Boolean
     private val generatedModelSuffix: String
-    val kotlinMetadata: KotlinClassMetadata? = viewElement.kotlinMetadata as? KotlinClassMetadata
+    val kotlinMetadata: KotlinClassMetadata? = viewElement.kotlinMetadata()
 
     /** All interfaces the view implements that have at least one prop set by the interface. */
     private val viewInterfaces: List<TypeElement>
@@ -102,6 +103,24 @@ internal class ModelViewInfo(
         viewInterfaces.map {
             ClassName.get(it).appendToName("Model_")
         }
+    }
+
+    fun Element.kotlinMetadata(): KotlinClassMetadata? {
+        // https://github.com/JetBrains/kotlin/tree/master/libraries/kotlinx-metadata/jvm
+        val kotlinMetadataAnnotation = getAnnotation(Metadata::class.java) ?: return null
+
+        val header = KotlinClassHeader(
+            kind = kotlinMetadataAnnotation.kind,
+            metadataVersion = kotlinMetadataAnnotation.metadataVersion,
+            bytecodeVersion = kotlinMetadataAnnotation.bytecodeVersion,
+            data1 = kotlinMetadataAnnotation.data1,
+            data2 = kotlinMetadataAnnotation.data2,
+            extraString = kotlinMetadataAnnotation.extraString,
+            packageName = kotlinMetadataAnnotation.packageName,
+            extraInt = kotlinMetadataAnnotation.extraInt
+        )
+
+        return KotlinClassMetadata.read(header)
     }
 
     private fun lookUpSuperClassElement(): TypeElement {
@@ -189,7 +208,7 @@ internal class ModelViewInfo(
     fun addProp(prop: Element) {
 
         val hasDefaultKotlinValue = prop is ExecutableElement &&
-            kotlinMetadata?.findMatchingSetter(prop)?.valueParameterList?.single()?.declaresDefaultValue == true
+            kotlinMetadata?.findMatchingSetter(prop)?.hasSingleDefaultParameter() == true
 
         // Since our generated code is java we need jvmoverloads so that a no arg
         // version of the function is generated. However, the JvmOverloads annotation
@@ -279,7 +298,9 @@ internal class ModelViewInfo(
         return ResourceValue(0)
     }
 
-    private fun KotlinClassMetadata.findMatchingSetter(functionElement: ExecutableElement): ProtoBuf.FunctionOrBuilder? {
+    private fun KotlinClassMetadata.findMatchingSetter(functionElement: ExecutableElement): KmFunction? {
+        if (this !is KotlinClassMetadata.Class) return null
+
         // Given an element representing a function we want to find the corresponding function information
         // in the kotlin metadata of this class. We do this by searching for a function matching the same
         // name, param count, param name, and param type.
@@ -288,16 +309,16 @@ internal class ModelViewInfo(
         val paramName = functionElement.parameters.single().simpleName.toString()
         val functionName = functionElement.simpleName.toString()
 
+        val propTypeClassName =
+            functionElement.parameters.single().asType().toString().let { ClassNameData.from(it) }
+
         // Checking function name, param count, and param name are easy
-        val matchingFunctions = data.classProto.functionOrBuilderList
-            .asSequence()
-            .filter { it.hasName() && data.nameResolver.getString(it.name) == functionName }
-            .filter { it.valueParameterCount == 1 }
+        val matchingFunctions = toKmClass().functions
+            .filter { it.name == functionName }
             .filter {
-                val param = it.valueParameterList.single()
-                param.hasName() && data.nameResolver.getString(param.name) == paramName
+                val param = it.valueParameters.singleOrNull()
+                param?.name == paramName
             }
-            .toList()
 
         // However, checking param type is hard. If there are function overloads that have the same
         // naming, but with different param types, then we need to be able to distinguish between
@@ -306,21 +327,26 @@ internal class ModelViewInfo(
         if (matchingFunctions.size <= 1) {
             return matchingFunctions.firstOrNull()
         }
-        val propTypeClassName =
-            functionElement.parameters.single().asType().toString().let { ClassNameData.from(it) }
 
-        return matchingFunctions.map { function ->
-            function.valueParameterList.single().type
-                .extractFullName(data, outputTypeAlias = false)
-                .replace("`", "") // Back ticks separate all the words
-                .let { function to ClassNameData.from(it) }
-        }.sortedWith(Comparator<Pair<ProtoBuf.FunctionOrBuilder, ClassNameData>> { p0, p1 ->
+        return matchingFunctions.mapNotNull { function ->
+            val className = ClassNameData.from(function.valueParameters.single().type)
+
+            if (className == null) {
+                null
+            } else {
+                function to className
+            }
+        }.sortedWith(Comparator { p0, p1 ->
             // Given two kotlin metadata functions and their class names, this comparator
             // compares them to see which is more likely to be the same as the function Element
             // we are trying to match with.
             compareNames(propTypeClassName, p0.second, p1.second)
-        })
-            .last().first
+        }).lastOrNull()?.first
+    }
+
+    private fun KmFunction.hasSingleDefaultParameter(): Boolean {
+        val param = valueParameters.singleOrNull() ?: return false
+        return DECLARES_DEFAULT_VALUE(param.flags)
     }
 
     private fun compareNames(
@@ -334,41 +360,29 @@ internal class ModelViewInfo(
         // To avoid errors where we don't compare types correctly, we instead look for the closest
         // matching types, and sort to see which type we think matches the best.
 
-        // Sanity check that generic type counts are correct
-        if (leftType.hasGenericTypes == rightType.hasGenericTypes) {
-            if (leftType.hasGenericTypes != targetType.hasGenericTypes) {
+        // Sanity check that generic type counts are correct.
+        // Because of type erasure a function can't have the same signature with something of the same
+        // class and different generic types, so we don't have to check generic types
+        if (leftType.typeNames.size == rightType.typeNames.size) {
+            if (leftType.typeNames.size != targetType.typeNames.size) {
                 // Neither of the types has the right generic information, so they are equally unfit
                 return 0
             }
         } else {
-            return if (leftType.hasGenericTypes == targetType.hasGenericTypes) 1 else -1
+            return when {
+                leftType.typeNames.size == targetType.typeNames.size -> 1
+                rightType.typeNames.size == targetType.typeNames.size -> -1
+                else -> 0
+            }
         }
 
         targetType.packageNames.forEachIndexed { index, name ->
             val leftName = leftType.packageNames.getOrNull(index)
             val rightName = rightType.packageNames.getOrNull(index)
 
-            // If names are equal then don't judge based on them (difference could be in generic types)
-            // If neither side has a name that matches then don't judge based on naming alone.
-            // But, if this is the simple name, then it must at least match (package name won't necessarily match)
             when {
                 leftName == name && rightName != name -> return 1
-                rightName == name -> return -1
-                index == 0 -> return 0
-            }
-        }
-
-        targetType.typeNames.forEachIndexed { index, typeData ->
-            val leftTypeData = leftType.typeNames.getOrNull(index)
-                ?: throw IllegalStateException("Expected type at index $index for $leftType")
-
-            val rightTypeData = rightType.typeNames.getOrNull(index) ?: throw IllegalStateException(
-                "Expected type at index $index for $rightType"
-            )
-
-            val comparisonResult = compareNames(typeData, leftTypeData, rightTypeData)
-            if (comparisonResult != 0) {
-                return comparisonResult
+                leftName != name && rightName == name -> return -1
             }
         }
 
@@ -376,14 +390,29 @@ internal class ModelViewInfo(
     }
 
     data class ClassNameData(
-        val reflectionName: String,
         val fullNameWithoutTypes: String,
-        val typeNames: List<ClassNameData>
+        val typeNames: List<ClassNameData?>
     ) {
-        val packageNames = fullNameWithoutTypes.split(".").reversed()
-        val hasGenericTypes = typeNames.isNotEmpty()
+        val packageNames: List<String> = fullNameWithoutTypes.split(".").reversed()
 
         companion object {
+            fun from(kmType: KmType?): ClassNameData? {
+                if (kmType == null) return null
+
+                val fullyQualifiedName = when (val classifier = kmType.classifier) {
+                    is KmClassifier.Class -> classifier.name
+                    is KmClassifier.TypeParameter -> return null
+                    is KmClassifier.TypeAlias -> classifier.name
+                }
+                    // package parts are separate with "/"
+                    .replace("/", ".")
+
+                return ClassNameData(
+                    fullyQualifiedName,
+                    typeNames = kmType.arguments.map { ClassNameData.from(it.type) }
+                )
+            }
+
             fun from(reflectionName: String): ClassNameData {
                 val fullNameWithoutTypes = reflectionName.substringBefore("<")
 
@@ -395,10 +424,18 @@ internal class ModelViewInfo(
                     ?.map { it.trim() }
                     ?.filter { it.isNotBlank() }
                     ?.takeIf { it.isNotEmpty() }
-                    ?.map { ClassNameData.from(it) }
+                    ?.map {
+                        if (it == "?") {
+                            // Represent a star projection as null, which is what the kotlin
+                            // metadata does too.
+                            null
+                        } else {
+                            ClassNameData.from(it)
+                        }
+                    }
                     ?: emptyList()
 
-                return ClassNameData(reflectionName, fullNameWithoutTypes, typeNames)
+                return ClassNameData(fullNameWithoutTypes, typeNames)
             }
         }
     }
