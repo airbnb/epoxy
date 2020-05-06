@@ -1,5 +1,6 @@
 package com.airbnb.epoxy.kotlinsample
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -43,9 +44,10 @@ class MainActivity : AppCompatActivity() {
                 itemCustomView {
                     id("custom view $i")
                     color(Color.GREEN)
-                    title("this is a green custom view item")
+                    title("Open sticky header activity")
                     listener { _ ->
                         Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
+                        startActivity(Intent(this@MainActivity, StickyHeaderActivity::class.java))
                     }
                 }
 
