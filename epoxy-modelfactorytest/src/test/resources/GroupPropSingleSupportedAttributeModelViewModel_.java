@@ -142,8 +142,7 @@ public class GroupPropSingleSupportedAttributeModelViewModel_ extends EpoxyModel
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public GroupPropSingleSupportedAttributeModelViewModel_ onVisibilityStateChanged(
       OnModelVisibilityStateChangedListener<GroupPropSingleSupportedAttributeModelViewModel_, GroupPropSingleSupportedAttributeModelView> listener) {
     onMutation();
@@ -166,8 +165,7 @@ public class GroupPropSingleSupportedAttributeModelViewModel_ extends EpoxyModel
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public GroupPropSingleSupportedAttributeModelViewModel_ onVisibilityChanged(
       OnModelVisibilityChangedListener<GroupPropSingleSupportedAttributeModelViewModel_, GroupPropSingleSupportedAttributeModelView> listener) {
     onMutation();
@@ -342,14 +340,14 @@ public class GroupPropSingleSupportedAttributeModelViewModel_ extends EpoxyModel
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (title_String != null ? title_String.hashCode() : 0);
-    result = 31 * result + (title_Object != null ? title_Object.hashCode() : 0);
-    return result;
+    int _result = super.hashCode();
+    _result = 31 * _result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (title_String != null ? title_String.hashCode() : 0);
+    _result = 31 * _result + (title_Object != null ? title_Object.hashCode() : 0);
+    return _result;
   }
 
   @Override

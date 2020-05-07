@@ -174,8 +174,7 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public ModelViewWithParisModel_ onVisibilityStateChanged(
       OnModelVisibilityStateChangedListener<ModelViewWithParisModel_, ModelViewWithParis> listener) {
     onMutation();
@@ -197,8 +196,7 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public ModelViewWithParisModel_ onVisibilityChanged(
       OnModelVisibilityChangedListener<ModelViewWithParisModel_, ModelViewWithParis> listener) {
     onMutation();
@@ -221,7 +219,8 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
   }
 
   /**
-   *  @see ModelViewWithParis#headerStyle(ModelViewWithParisStyleApplier.StyleBuilder)  */
+   *  @see ModelViewWithParis#headerStyle(ModelViewWithParisStyleApplier.StyleBuilder)
+   */
   public ModelViewWithParisModel_ withHeaderStyle() {
     Style style = parisStyleReference_header != null ? parisStyleReference_header.get() : null;
     if (style == null) {
@@ -232,7 +231,8 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
   }
 
   /**
-   *  @see ModelViewWithParis#otherStyle(ModelViewWithParisStyleApplier.StyleBuilder)  */
+   *  @see ModelViewWithParis#otherStyle(ModelViewWithParisStyleApplier.StyleBuilder)
+   */
   public ModelViewWithParisModel_ withOtherStyle() {
     Style style = parisStyleReference_other != null ? parisStyleReference_other.get() : null;
     if (style == null) {
@@ -243,7 +243,8 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
   }
 
   /**
-   *  @see ModelViewWithParis#headerStyle(ModelViewWithParisStyleApplier.StyleBuilder)  */
+   *  @see ModelViewWithParis#headerStyle(ModelViewWithParisStyleApplier.StyleBuilder)
+   */
   public ModelViewWithParisModel_ withDefaultStyle() {
     Style style = parisStyleReference_default != null ? parisStyleReference_default.get() : null;
     if (style == null) {
@@ -389,14 +390,14 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + value_Int;
-    result = 31 * result + (style != null ? style.hashCode() : 0);
-    return result;
+    int _result = super.hashCode();
+    _result = 31 * _result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + value_Int;
+    _result = 31 * _result + (style != null ? style.hashCode() : 0);
+    return _result;
   }
 
   @Override

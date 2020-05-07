@@ -1493,7 +1493,7 @@ internal class GeneratedModelWriter(
         addAnnotation(Override::class.java)
         addModifiers(PUBLIC)
         returns(TypeName.INT)
-        addStatement("int result = super.hashCode()")
+        addStatement("int $HASH_CODE_RESULT_PROPERTY = super.hashCode()")
 
         addHashCodeLineForType(
             this,
@@ -1546,7 +1546,7 @@ internal class GeneratedModelWriter(
             )
         }
 
-        addStatement("return result")
+        addStatement("return $HASH_CODE_RESULT_PROPERTY")
     }
 
     private fun generateToString(helperClass: GeneratedModelInfo) = buildMethod("toString") {
@@ -1991,38 +1991,38 @@ internal class GeneratedModelWriter(
                 if (useObjectHashCode) {
                     when (type) {
                         BYTE, CHAR, SHORT, INT -> addStatement(
-                            "result = 31 * result + \$L",
+                            "$HASH_CODE_RESULT_PROPERTY = 31 * $HASH_CODE_RESULT_PROPERTY + \$L",
                             accessorCode
                         )
                         LONG -> addStatement(
-                            "result = 31 * result + (int) (\$L ^ (\$L >>> 32))",
+                            "$HASH_CODE_RESULT_PROPERTY = 31 * $HASH_CODE_RESULT_PROPERTY + (int) (\$L ^ (\$L >>> 32))",
                             accessorCode,
                             accessorCode
                         )
                         FLOAT -> addStatement(
-                            "result = 31 * result + (\$L != +0.0f " + "? " +
+                            "$HASH_CODE_RESULT_PROPERTY = 31 * $HASH_CODE_RESULT_PROPERTY + (\$L != +0.0f " + "? " +
                                 "Float.floatToIntBits(\$L) : 0)",
                             accessorCode, accessorCode
                         )
                         DOUBLE -> {
                             addStatement("temp = Double.doubleToLongBits(\$L)", accessorCode)
-                            addStatement("result = 31 * result + (int) (temp ^ (temp >>> 32))")
+                            addStatement("$HASH_CODE_RESULT_PROPERTY = 31 * $HASH_CODE_RESULT_PROPERTY + (int) (temp ^ (temp >>> 32))")
                         }
                         BOOLEAN -> addStatement(
-                            "result = 31 * result + (\$L ? 1 : 0)",
+                            "$HASH_CODE_RESULT_PROPERTY = 31 * $HASH_CODE_RESULT_PROPERTY + (\$L ? 1 : 0)",
                             accessorCode
                         )
                         is ArrayTypeName -> addStatement(
-                            "result = 31 * result + Arrays.hashCode(\$L)", accessorCode
+                            "$HASH_CODE_RESULT_PROPERTY = 31 * $HASH_CODE_RESULT_PROPERTY + Arrays.hashCode(\$L)", accessorCode
                         )
                         else -> addStatement(
-                            "result = 31 * result + (\$L != null ? \$L.hashCode() : 0)",
+                            "$HASH_CODE_RESULT_PROPERTY = 31 * $HASH_CODE_RESULT_PROPERTY + (\$L != null ? \$L.hashCode() : 0)",
                             accessorCode,
                             accessorCode
                         )
                     }
                 } else {
-                    addStatement("result = 31 * result + (\$L != null ? 1 : 0)", accessorCode)
+                    addStatement("$HASH_CODE_RESULT_PROPERTY = 31 * $HASH_CODE_RESULT_PROPERTY + (\$L != null ? 1 : 0)", accessorCode)
                 }
             }
         }
@@ -2052,3 +2052,9 @@ internal class GeneratedModelWriter(
         }
     }
 }
+
+/**
+ * Property name of the int property used to build the hashcode result.
+ * An underscore is used to not clash with any attribute names a user might choose.
+ */
+private const val HASH_CODE_RESULT_PROPERTY = "_result"
