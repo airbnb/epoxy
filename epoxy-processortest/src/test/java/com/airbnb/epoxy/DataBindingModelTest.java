@@ -73,10 +73,10 @@ public class DataBindingModelTest {
   @Test
   public void testSimpleModel() {
     JavaFileObject model = JavaFileObjects
-        .forResource("DataBindingModelWithAllFieldTypes.java");
+        .forResource(GuavaPatch.patchResource("DataBindingModelWithAllFieldTypes.java"));
 
     JavaFileObject generatedModel =
-        JavaFileObjects.forResource("DataBindingModelWithAllFieldTypes_.java");
+        JavaFileObjects.forResource(GuavaPatch.patchResource("DataBindingModelWithAllFieldTypes_.java"));
 
     assert_().about(javaSources())
         .that(asList(model, BR_CLASS, R))
@@ -89,10 +89,10 @@ public class DataBindingModelTest {
   @Test
   public void testSimpleModelNoValidation() {
     JavaFileObject model = JavaFileObjects
-        .forResource("DataBindingModelWithAllFieldTypesNoValidation.java");
+        .forResource(GuavaPatch.patchResource("DataBindingModelWithAllFieldTypesNoValidation.java"));
 
     JavaFileObject generatedModel =
-        JavaFileObjects.forResource("DataBindingModelWithAllFieldTypesNoValidation_.java");
+        JavaFileObjects.forResource(GuavaPatch.patchResource("DataBindingModelWithAllFieldTypesNoValidation_.java"));
 
     assert_().about(javaSources())
         .that(asList(model, BR_CLASS, R))
@@ -105,13 +105,13 @@ public class DataBindingModelTest {
   @Test
   public void testFullyGeneratedModel() {
     JavaFileObject packageInfo = JavaFileObjects
-        .forResource("package-info.java");
+        .forResource(GuavaPatch.patchResource("package-info.java"));
 
     JavaFileObject binding = JavaFileObjects
-        .forResource("ModelWithDataBindingBinding.java");
+        .forResource(GuavaPatch.patchResource("ModelWithDataBindingBinding.java"));
 
     JavaFileObject generatedModel =
-        JavaFileObjects.forResource("ModelWithDataBindingBindingModel_.java");
+        JavaFileObjects.forResource(GuavaPatch.patchResource("ModelWithDataBindingBindingModel_.java"));
 
     assert_().about(javaSources())
         .that(asList(packageInfo, binding, BR_CLASS, R))
@@ -131,10 +131,10 @@ public class DataBindingModelTest {
         );
 
     JavaFileObject binding = JavaFileObjects
-        .forResource("ModelWithDataBindingWithoutDonothashBinding.java");
+        .forResource(GuavaPatch.patchResource("ModelWithDataBindingWithoutDonothashBinding.java"));
 
     JavaFileObject generatedModel =
-        JavaFileObjects.forResource("ModelWithDataBindingWithoutDonothashBindingModel_.java");
+        JavaFileObjects.forResource(GuavaPatch.patchResource("ModelWithDataBindingWithoutDonothashBindingModel_.java"));
 
     assert_().about(javaSources())
         .that(asList(packageInfo, binding, BR_CLASS, R))

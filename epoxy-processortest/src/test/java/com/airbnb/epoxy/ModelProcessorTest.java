@@ -48,11 +48,11 @@ public class ModelProcessorTest {
   @Test
   public void testModelWithSuperClass() {
     JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithSuperAttributes.java");
+        .forResource(GuavaPatch.patchResource("ModelWithSuperAttributes.java"));
 
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelWithSuperAttributes_.java");
+    JavaFileObject generatedModel = JavaFileObjects.forResource(GuavaPatch.patchResource("ModelWithSuperAttributes_.java"));
     JavaFileObject generatedSubClassModel =
-        JavaFileObjects.forResource("ModelWithSuperAttributes$SubModelWithSuperAttributes_.java");
+        JavaFileObjects.forResource(GuavaPatch.patchResource("ModelWithSuperAttributes$SubModelWithSuperAttributes_.java"));
 
     assert_().about(javaSource())
         .that(model)
@@ -120,7 +120,7 @@ public class ModelProcessorTest {
   @Test
   public void testModelWithAbstractClass() {
     JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithAbstractClass.java");
+        .forResource(GuavaPatch.patchResource("ModelWithAbstractClass.java"));
 
     assert_().about(javaSource())
         .that(model)
@@ -130,7 +130,7 @@ public class ModelProcessorTest {
     // We don't generate subclasses if the model is abstract unless it has a class annotation.
     boolean modelNotGenerated;
     try {
-      JavaFileObjects.forResource("ModelWithAbstractClass_.java");
+      JavaFileObjects.forResource("non-sense? Any wrong path will generate IAE");
       modelNotGenerated = false;
     } catch (IllegalArgumentException e) {
       modelNotGenerated = true;
@@ -148,13 +148,14 @@ public class ModelProcessorTest {
   @Test
   public void testModelWithAnnotatedClassAndSuperClass() {
     JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithAnnotatedClassAndSuperAttributes.java");
+        .forResource(GuavaPatch.patchResource("ModelWithAnnotatedClassAndSuperAttributes.java"));
 
     JavaFileObject generatedModel = JavaFileObjects
-        .forResource("ModelWithAnnotatedClassAndSuperAttributes_.java");
+        .forResource(GuavaPatch.patchResource("ModelWithAnnotatedClassAndSuperAttributes_.java"));
     JavaFileObject generatedSubClassModel =
-        JavaFileObjects.forResource("ModelWithAnnotatedClassAndSuperAttributes$SubModel"
-            + "WithAnnotatedClassAndSuperAttributes_.java");
+        JavaFileObjects.forResource(GuavaPatch.patchResource(
+                "ModelWithAnnotatedClassAndSuperAttributes$SubModel"
+            + "WithAnnotatedClassAndSuperAttributes_.java"));
 
     assert_().about(javaSource())
         .that(model)
@@ -204,12 +205,12 @@ public class ModelProcessorTest {
   @Test
   public void testGeneratedDefaultMethodWithLayoutSpecifiedInParent() {
     JavaFileObject model = JavaFileObjects
-        .forResource("GenerateDefaultLayoutMethodParentLayout.java");
+        .forResource(GuavaPatch.patchResource("GenerateDefaultLayoutMethodParentLayout.java"));
 
     JavaFileObject generatedNoLayoutModel = JavaFileObjects
-        .forResource("GenerateDefaultLayoutMethodParentLayout$NoLayout_.java");
+        .forResource(GuavaPatch.patchResource("GenerateDefaultLayoutMethodParentLayout$NoLayout_.java"));
     JavaFileObject generatedWithLayoutModel =
-        JavaFileObjects.forResource("GenerateDefaultLayoutMethodParentLayout$WithLayout_.java");
+        JavaFileObjects.forResource(GuavaPatch.patchResource("GenerateDefaultLayoutMethodParentLayout$WithLayout_.java"));
 
     assert_().about(javaSource())
         .that(model)
@@ -222,14 +223,14 @@ public class ModelProcessorTest {
   @Test
   public void testGeneratedDefaultMethodWithLayoutSpecifiedInNextParent() {
     JavaFileObject model = JavaFileObjects
-        .forResource("GenerateDefaultLayoutMethodNextParentLayout.java");
+        .forResource(GuavaPatch.patchResource("GenerateDefaultLayoutMethodNextParentLayout.java"));
 
     JavaFileObject generatedNoLayoutModel = JavaFileObjects
-        .forResource("GenerateDefaultLayoutMethodNextParentLayout$NoLayout_.java");
+        .forResource(GuavaPatch.patchResource("GenerateDefaultLayoutMethodNextParentLayout$NoLayout_.java"));
     JavaFileObject generatedStillNoLayoutModel = JavaFileObjects
-        .forResource("GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_.java");
+        .forResource(GuavaPatch.patchResource("GenerateDefaultLayoutMethodNextParentLayout$StillNoLayout_.java"));
     JavaFileObject generatedWithLayoutModel =
-        JavaFileObjects.forResource("GenerateDefaultLayoutMethodNextParentLayout$WithLayout_.java");
+        JavaFileObjects.forResource(GuavaPatch.patchResource("GenerateDefaultLayoutMethodNextParentLayout$WithLayout_.java"));
 
     assert_().about(javaSource())
         .that(model)
@@ -254,10 +255,10 @@ public class ModelProcessorTest {
   @Test
   public void modelWithViewClickLongListener() {
     JavaFileObject model = JavaFileObjects
-        .forResource("ModelWithViewLongClickListener.java");
+        .forResource(GuavaPatch.patchResource("ModelWithViewLongClickListener.java"));
 
     JavaFileObject generatedNoLayoutModel = JavaFileObjects
-        .forResource("ModelWithViewLongClickListener_.java");
+        .forResource(GuavaPatch.patchResource("ModelWithViewLongClickListener_.java"));
 
     assert_().about(javaSource())
         .that(model)
