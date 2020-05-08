@@ -1,3 +1,4 @@
+@file:JvmName("GuavaPatch")
 package com.airbnb.epoxy
 
 import java.io.File
@@ -9,14 +10,5 @@ import java.net.URL
  * which is valid on JVM but not supposed to be supported on Android.
  * As the project paths are simple enough, we can hardcode them for now.
  */
-
-// For Kotlin
 fun String.patchResource(): URL =
     File("build/intermediates/sourceFolderJavaResources/debug/$this").toURI().toURL()
-
-// For Java
-object GuavaPatch {
-    @JvmStatic
-    fun String.patchResource(): URL =
-        File("build/intermediates/sourceFolderJavaResources/debug/$this").toURI().toURL()
-}

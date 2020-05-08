@@ -1,7 +1,6 @@
 package com.airbnb.epoxy.kotlinsample.helpers
 
 import android.view.View
-import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.viewbinding.ViewBinding
 import com.airbnb.epoxy.EpoxyModel
@@ -9,8 +8,6 @@ import com.airbnb.epoxy.kotlinsample.R
 import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 
 /**
  * A pattern for using epoxy models with Kotlin with no annotations or code generation.
@@ -22,13 +19,11 @@ abstract class ViewBindingKotlinModel<T : ViewBinding>(
 ) : EpoxyModel<View>() {
     // Using reflection to get the static binding method.
     // Lazy so it's computed only once by instance, when the 1st ViewHolder is actually created.
-    private val actualTypeOfThis by lazy { this::class.java.genericSuperclass as ParameterizedType }
-    private val kClass by lazy { (actualTypeOfThis.actualTypeArguments[0] as Class<ViewBinding>) }
-    private val bindingMethod by lazy { getBindMethod(kClass)!! }
-
+    private val bindingMethod by lazy { getBindMethodFrom(this::class.java) }
 
     abstract fun T.bind()
 
+    @Suppress("UNCHECKED_CAST")
     override fun bind(view: View) {
         var binding = view.getTag(R.id.epoxy_viewbinding) as? T
         if (binding == null) {
@@ -42,16 +37,20 @@ abstract class ViewBindingKotlinModel<T : ViewBinding>(
 }
 
 // Static cache of a method pointer for each type of item used.
-private val sBindingMethodByClass = ConcurrentHashMap<Class<out ViewBinding>, Method>()
+private val sBindingMethodByClass = ConcurrentHashMap<Class<*>, Method>()
 
-private fun getBindMethod(javaClass: Class<out ViewBinding>): Method? {
-    var method: Method? = sBindingMethodByClass[javaClass]
-    if (method == null) {
-        // Generated bind method is static and accept only one parameter of type View.
-        method = javaClass.getDeclaredMethod("bind", View::class.java)
-        if (method != null) {
-            sBindingMethodByClass[javaClass] = method
-        }
+@Suppress("UNCHECKED_CAST")
+@Synchronized
+private fun getBindMethodFrom(javaClass: Class<*>): Method =
+    sBindingMethodByClass.getOrPut(javaClass) {
+        val actualTypeOfThis = getSuperclassParameterizedType(javaClass)
+        val viewBindingClass = actualTypeOfThis.actualTypeArguments[0] as Class<ViewBinding>
+        viewBindingClass.getDeclaredMethod("bind", View::class.java)
+            ?: error("The binder class ${javaClass.canonicalName} should have a method bind(View)")
     }
-    return method
+
+private fun getSuperclassParameterizedType(klass: Class<*>): ParameterizedType {
+    val genericSuperclass = klass.genericSuperclass
+    return (genericSuperclass as? ParameterizedType)
+        ?: getSuperclassParameterizedType(genericSuperclass as Class<*>)
 }
