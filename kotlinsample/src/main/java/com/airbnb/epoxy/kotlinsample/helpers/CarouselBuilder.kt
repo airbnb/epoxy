@@ -1,6 +1,26 @@
-package com.airbnb.epoxy
+package com.airbnb.epoxy.kotlinsample.helpers
 
-fun BaseEpoxyController.epoxyCarouselBuilder(builder: EpoxyCarouselBuilder.() -> Unit): CarouselModel_ {
+import com.airbnb.epoxy.BaseEpoxyController
+import com.airbnb.epoxy.CarouselModelBuilder
+import com.airbnb.epoxy.CarouselModel_
+import com.airbnb.epoxy.EpoxyModel
+
+/**
+ * Example that illustrate how to add a builder for nested list (ex: carousel) that allow building
+ * it using DSL :
+ *
+ *   carouselBuilder {
+ *     id(...)
+ *     for (...) {
+ *       carouselItemCustomView {
+ *         id(...)
+ *       }
+ *     }
+ *   }
+ *
+ * @link https://github.com/airbnb/epoxy/issues/847
+ */
+fun BaseEpoxyController.carouselBuilder(builder: EpoxyCarouselBuilder.() -> Unit): CarouselModel_ {
     val carouselBuilder = EpoxyCarouselBuilder().apply { builder() }
     add(carouselBuilder.carouselModel)
     return carouselBuilder.carouselModel
