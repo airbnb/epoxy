@@ -1,9 +1,9 @@
 package com.airbnb.epoxy.kotlinsample.helpers
 
 import com.airbnb.epoxy.BaseEpoxyController
-import com.airbnb.epoxy.CarouselModelBuilder
-import com.airbnb.epoxy.CarouselModel_
 import com.airbnb.epoxy.EpoxyModel
+import com.airbnb.epoxy.kotlinsample.views.CarouselNoSnapModelBuilder
+import com.airbnb.epoxy.kotlinsample.views.CarouselNoSnapModel_
 
 /**
  * Example that illustrate how to add a builder for nested list (ex: carousel) that allow building
@@ -20,15 +20,15 @@ import com.airbnb.epoxy.EpoxyModel
  *
  * @link https://github.com/airbnb/epoxy/issues/847
  */
-fun BaseEpoxyController.carouselBuilder(builder: EpoxyCarouselBuilder.() -> Unit): CarouselModel_ {
-    val carouselBuilder = EpoxyCarouselBuilder().apply { builder() }
-    add(carouselBuilder.carouselModel)
-    return carouselBuilder.carouselModel
+fun BaseEpoxyController.carouselNoSnapBuilder(builder: EpoxyCarouselNoSnapBuilder.() -> Unit): CarouselNoSnapModel_ {
+    val carouselBuilder = EpoxyCarouselNoSnapBuilder().apply { builder() }
+    add(carouselBuilder.carouselNoSnapModel)
+    return carouselBuilder.carouselNoSnapModel
 }
 
-class EpoxyCarouselBuilder(
-    internal val carouselModel: CarouselModel_ = CarouselModel_()
-) : BaseEpoxyController(), CarouselModelBuilder by carouselModel {
+class EpoxyCarouselNoSnapBuilder(
+    internal val carouselNoSnapModel: CarouselNoSnapModel_ = CarouselNoSnapModel_()
+) : BaseEpoxyController(), CarouselNoSnapModelBuilder by carouselNoSnapModel {
     private val models = mutableListOf<EpoxyModel<*>>()
 
     override fun add(model: EpoxyModel<*>) {
