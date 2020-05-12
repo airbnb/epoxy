@@ -16,7 +16,7 @@ internal object ProcessorTestUtils {
         errorMessage: String
     ) {
         val model = JavaFileObjects
-            .forResource(inputFile)
+            .forResource(inputFile.patchResource())
 
         assert_().about(javaSource())
             .that(model)
@@ -28,7 +28,7 @@ internal object ProcessorTestUtils {
     @JvmStatic
     fun checkFileCompiles(inputFile: String) {
         val model = JavaFileObjects
-            .forResource(inputFile)
+            .forResource(inputFile.patchResource())
 
         assert_().about(javaSource())
             .that(model)
@@ -44,10 +44,9 @@ internal object ProcessorTestUtils {
         useParis: Boolean = false,
         helperObjects: List<JavaFileObject> = emptyList()
     ) {
-        val model = JavaFileObjects
-            .forResource(inputFile)
+        val model = JavaFileObjects.forResource(inputFile.patchResource())
 
-        val generatedModel = JavaFileObjects.forResource(generatedFile)
+        val generatedModel = JavaFileObjects.forResource(generatedFile.patchResource())
 
         val processors = mutableListOf<Processor>().apply {
             add(EpoxyProcessor())
@@ -72,13 +71,13 @@ internal object ProcessorTestUtils {
         for (inputFile in inputFiles) {
             sources.add(
                 JavaFileObjects
-                    .forResource(inputFile)
+                    .forResource(inputFile.patchResource())
             )
         }
 
         val generatedFiles = ArrayList<JavaFileObject>()
         for (i in fileNames.indices) {
-            generatedFiles.add(JavaFileObjects.forResource(fileNames[i]))
+            generatedFiles.add(JavaFileObjects.forResource(fileNames[i].patchResource()))
         }
 
         assert_().about(javaSources())

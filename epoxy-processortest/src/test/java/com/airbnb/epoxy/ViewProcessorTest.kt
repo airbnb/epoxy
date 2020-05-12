@@ -237,7 +237,7 @@ class ViewProcessorTest {
     @Test
     fun baseModel() {
         val model = JavaFileObjects
-            .forResource("BaseModelView.java")
+            .forResource("BaseModelView.java".patchResource())
 
         val baseModel = JavaFileObjects
             .forSourceLines(
@@ -263,7 +263,7 @@ class ViewProcessorTest {
                     "}\n"
             )
 
-        val generatedModel = JavaFileObjects.forResource("BaseModelViewModel_.java")
+        val generatedModel = JavaFileObjects.forResource("BaseModelViewModel_.java".patchResource())
 
         assert_().about(javaSources())
             .that(asList(baseModel, model))
@@ -276,7 +276,7 @@ class ViewProcessorTest {
     @Test
     fun baseModelWithDiffBind() {
         val model = JavaFileObjects
-            .forResource("BaseModelView.java")
+            .forResource("BaseModelView.java".patchResource())
 
         val baseModel = JavaFileObjects
             .forSourceLines(
@@ -294,7 +294,7 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource(
-            "BaseModelViewWithSuperDiffBindModel_.java"
+            "BaseModelViewWithSuperDiffBindModel_.java".patchResource()
         )
 
         assert_().about(javaSources())
@@ -308,7 +308,7 @@ class ViewProcessorTest {
     @Test
     fun baseModelWithAttribute() {
         val model = JavaFileObjects
-            .forResource("BaseModelView.java")
+            .forResource("BaseModelView.java".patchResource())
 
         val baseModel = JavaFileObjects
             .forSourceLines(
@@ -322,7 +322,7 @@ class ViewProcessorTest {
                     "}\n"
             )
 
-        val generatedModel = JavaFileObjects.forResource("BaseModelWithAttributeViewModel_.java")
+        val generatedModel = JavaFileObjects.forResource("BaseModelWithAttributeViewModel_.java".patchResource())
 
         assert_().about(javaSources())
             .that(asList(baseModel, model))
@@ -419,7 +419,7 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource(
-            "BaseModelFromPackageConfigViewModel_.java"
+            "BaseModelFromPackageConfigViewModel_.java".patchResource()
         )
 
         assert_().about(javaSources())
@@ -480,7 +480,7 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource(
-            "BaseModelOverridesPackageConfigViewModel_.java"
+            "BaseModelOverridesPackageConfigViewModel_.java".patchResource()
         )
 
         assert_().about(javaSources())
@@ -494,7 +494,7 @@ class ViewProcessorTest {
     @Test
     fun throwsIfBaseModelNotEpoxyModelInPackageConfig() {
         val model = JavaFileObjects
-            .forResource("BaseModelView.java")
+            .forResource("BaseModelView.java".patchResource())
 
         val baseModel = JavaFileObjects
             .forSourceLines(
@@ -546,7 +546,7 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource(
-            "RLayoutInViewModelAnnotationWorksViewModel_.java"
+            "RLayoutInViewModelAnnotationWorksViewModel_.java".patchResource()
         )
 
         assert_().about(javaSources())
@@ -599,7 +599,7 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource(
-            "DefaultPackageLayoutPatternViewModel_.java"
+            "DefaultPackageLayoutPatternViewModel_.java".patchResource()
         )
 
         assert_().about(javaSources())
@@ -662,7 +662,7 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource(
-            "DefaultPackageLayoutPatternViewModel_.java"
+            "DefaultPackageLayoutPatternViewModel_.java".patchResource()
         )
 
         assert_().about(javaSources())
@@ -716,7 +716,7 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource(
-            "CustomPackageLayoutPatternViewModel_.java"
+            "CustomPackageLayoutPatternViewModel_.java".patchResource()
         )
 
         assert_().about(javaSources())
@@ -770,7 +770,9 @@ class ViewProcessorTest {
                     "import com.airbnb.epoxy.R;\n"
             )
 
-        val generatedModel = JavaFileObjects.forResource("LayoutOverloadsViewModel_.java")
+        val generatedModel = JavaFileObjects.forResource(
+            "LayoutOverloadsViewModel_.java".patchResource()
+        )
 
         assert_().about(javaSources())
             .that(asList(model, configClass, R))
@@ -821,7 +823,9 @@ class ViewProcessorTest {
                     "import com.airbnb.epoxy.R;\n"
             )
 
-        val generatedModel = JavaFileObjects.forResource("GeneratedModelSuffixViewSuffix_.java")
+        val generatedModel = JavaFileObjects.forResource(
+            "GeneratedModelSuffixViewSuffix_.java".patchResource()
+        )
 
         assert_().about(javaSources())
             .that(asList(model, configClass, R))
@@ -834,12 +838,12 @@ class ViewProcessorTest {
     @Test
     fun afterBindProps() {
         val model = JavaFileObjects
-            .forResource("TestAfterBindPropsView.java")
+            .forResource("TestAfterBindPropsView.java".patchResource())
 
         val superModel = JavaFileObjects
-            .forResource("TestAfterBindPropsSuperView.java")
+            .forResource("TestAfterBindPropsSuperView.java".patchResource())
 
-        val generatedModel = JavaFileObjects.forResource("TestAfterBindPropsViewModel_.java")
+        val generatedModel = JavaFileObjects.forResource("TestAfterBindPropsViewModel_.java".patchResource())
 
         assert_().about(javaSources())
             .that(asList(model, superModel))
@@ -862,9 +866,9 @@ class ViewProcessorTest {
     @Test
     fun textPropDefault() {
         val model = JavaFileObjects
-            .forResource("TextPropDefaultView.java")
+            .forResource("TextPropDefaultView.java".patchResource())
 
-        val generatedModel = JavaFileObjects.forResource("TextPropDefaultViewModel_.java")
+        val generatedModel = JavaFileObjects.forResource("TextPropDefaultViewModel_.java".patchResource())
 
         assert_().about(javaSources())
             .that(asList(model, R))
@@ -877,7 +881,7 @@ class ViewProcessorTest {
     @Test
     fun textPropDefault_throwsForNonStringRes() {
         val model = JavaFileObjects
-            .forResource("TextPropDefaultView_throwsForNonStringRes.java")
+            .forResource("TextPropDefaultView_throwsForNonStringRes.java".patchResource())
 
         assert_().about(javaSources())
             .that(asList(model, R))

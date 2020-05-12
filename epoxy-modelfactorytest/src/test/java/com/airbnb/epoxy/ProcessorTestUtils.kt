@@ -4,6 +4,7 @@ import com.airbnb.paris.processor.ParisProcessor
 import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
+import java.io.File
 import javax.annotation.processing.Processor
 import javax.tools.JavaFileObject
 
@@ -16,9 +17,9 @@ internal object ProcessorTestUtils {
         helperObjects: List<JavaFileObject> = emptyList()
     ) {
         val model = JavaFileObjects
-            .forResource(inputFile)
+            .forResource(inputFile.patchResource())
 
-        val generatedModel = JavaFileObjects.forResource(generatedFile)
+        val generatedModel = JavaFileObjects.forResource(generatedFile.patchResource())
 
         val processors = mutableListOf<Processor>().apply {
             add(EpoxyProcessor())
@@ -32,4 +33,8 @@ internal object ProcessorTestUtils {
             .and()
             .generatesSources(generatedModel)
     }
+
+    // See epoxy-processortest/src/test/java/com/airbnb/epoxy/GuavaPatch.kt
+    private fun String.patchResource() =
+        File("build/intermediates/sourceFolderJavaResources/debug/$this").toURI().toURL()
 }

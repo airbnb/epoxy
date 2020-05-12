@@ -51,10 +51,10 @@ public class EpoxyResourceProcessorTest {
   @Test
   public void testGenerateDefaultLayoutMethod() {
     JavaFileObject model = JavaFileObjects
-        .forResource("ModelForRProcessingTest.java");
+        .forResource(GuavaPatch.patchResource("ModelForRProcessingTest.java"));
 
     JavaFileObject generatedModel = JavaFileObjects
-        .forResource("ModelForRProcessingTest_.java");
+        .forResource(GuavaPatch.patchResource("ModelForRProcessingTest_.java"));
 
     assert_().about(javaSources())
         .that(Arrays.asList(model, R))
@@ -71,16 +71,16 @@ public class EpoxyResourceProcessorTest {
     // avoid collisions between the two identical layout values.
     
     JavaFileObject model = JavaFileObjects
-        .forResource("ModelForRProcessingTest.java");
+        .forResource(GuavaPatch.patchResource("ModelForRProcessingTest.java"));
 
     JavaFileObject modelWithDifferentRClass = JavaFileObjects
-        .forResource("ModelForTestingDuplicateRValues.java");
+        .forResource(GuavaPatch.patchResource("ModelForTestingDuplicateRValues.java"));
 
     JavaFileObject generatedModel = JavaFileObjects
-        .forResource("ModelForRProcessingTest_.java");
+        .forResource(GuavaPatch.patchResource("ModelForRProcessingTest_.java"));
 
     JavaFileObject generatedModelWithDifferentRClass = JavaFileObjects
-        .forResource("ModelForTestingDuplicateRValues_.java");
+        .forResource(GuavaPatch.patchResource("ModelForTestingDuplicateRValues_.java"));
 
     assert_().about(javaSources())
         .that(Arrays
