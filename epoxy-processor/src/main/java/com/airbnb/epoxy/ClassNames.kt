@@ -55,6 +55,8 @@ object ClassNames {
     @JvmField
     val EPOXY_CONTROLLER = get(PKG_EPOXY, "EpoxyController")!!
     @JvmField
+    val MODEL_COLLECTOR = get(PKG_EPOXY, "ModelCollector")!!
+    @JvmField
     val EPOXY_STYLE_BUILDER_CALLBACK = get(PKG_EPOXY, "StyleBuilderCallback")!!
     @JvmField
     val EPOXY_CONTROLLER_HELPER = get(PKG_EPOXY, "ControllerHelper")!!

@@ -8,13 +8,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.EpoxyVisibilityTracker
-import com.airbnb.epoxy.kotlinsample.models.CarouselItemCustomViewModel_
+import com.airbnb.epoxy.kotlinsample.helpers.carouselNoSnapBuilder
 import com.airbnb.epoxy.kotlinsample.models.ItemDataClass
 import com.airbnb.epoxy.kotlinsample.models.ItemViewBindingDataClass
+import com.airbnb.epoxy.kotlinsample.models.carouselItemCustomView
 import com.airbnb.epoxy.kotlinsample.models.itemCustomView
 import com.airbnb.epoxy.kotlinsample.models.itemEpoxyHolder
 import com.airbnb.epoxy.kotlinsample.models.itemViewBindingEpoxyHolder
-import com.airbnb.epoxy.kotlinsample.views.carouselNoSnap
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: EpoxyRecyclerView
@@ -71,18 +71,15 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                carouselNoSnap {
+                carouselNoSnapBuilder {
                     id("carousel $i")
-                    models(mutableListOf<CarouselItemCustomViewModel_>().apply {
-                        val lastPage = 10
-                        for (j in 0 until lastPage) {
-                            add(
-                                CarouselItemCustomViewModel_()
-                                    .id("carousel $i-$j")
-                                    .title("Page $j / $lastPage")
-                            )
+                    val lastPage = 10
+                    for (j in 0 until lastPage) {
+                        carouselItemCustomView {
+                            id("carousel $i-$j")
+                            title("Page $j / $lastPage")
                         }
-                    })
+                    }
                 }
 
                 // Since data classes do not use code generation, there's no extension generated here
