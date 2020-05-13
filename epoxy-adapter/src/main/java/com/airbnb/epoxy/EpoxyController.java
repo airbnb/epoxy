@@ -44,7 +44,7 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
  * treated as immutable and never modified again. This is necessary for adapter updates to be
  * accurate.
  */
-public abstract class EpoxyController extends BaseEpoxyController implements StickyHeaderCallbacks {
+public abstract class EpoxyController implements ModelCollector, StickyHeaderCallbacks {
 
   /**
    * We check that the adapter is not connected to multiple recyclerviews, but when a fragment has

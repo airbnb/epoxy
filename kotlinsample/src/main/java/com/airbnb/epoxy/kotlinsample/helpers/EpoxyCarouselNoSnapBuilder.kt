@@ -1,7 +1,7 @@
 package com.airbnb.epoxy.kotlinsample.helpers
 
-import com.airbnb.epoxy.BaseEpoxyController
 import com.airbnb.epoxy.EpoxyModel
+import com.airbnb.epoxy.ModelCollector
 import com.airbnb.epoxy.kotlinsample.views.CarouselNoSnapModelBuilder
 import com.airbnb.epoxy.kotlinsample.views.CarouselNoSnapModel_
 
@@ -20,7 +20,7 @@ import com.airbnb.epoxy.kotlinsample.views.CarouselNoSnapModel_
  *
  * @link https://github.com/airbnb/epoxy/issues/847
  */
-fun BaseEpoxyController.carouselNoSnapBuilder(builder: EpoxyCarouselNoSnapBuilder.() -> Unit): CarouselNoSnapModel_ {
+fun ModelCollector.carouselNoSnapBuilder(builder: EpoxyCarouselNoSnapBuilder.() -> Unit): CarouselNoSnapModel_ {
     val carouselBuilder = EpoxyCarouselNoSnapBuilder().apply { builder() }
     add(carouselBuilder.carouselNoSnapModel)
     return carouselBuilder.carouselNoSnapModel
@@ -28,7 +28,7 @@ fun BaseEpoxyController.carouselNoSnapBuilder(builder: EpoxyCarouselNoSnapBuilde
 
 class EpoxyCarouselNoSnapBuilder(
     internal val carouselNoSnapModel: CarouselNoSnapModel_ = CarouselNoSnapModel_()
-) : BaseEpoxyController(), CarouselNoSnapModelBuilder by carouselNoSnapModel {
+) : ModelCollector, CarouselNoSnapModelBuilder by carouselNoSnapModel {
     private val models = mutableListOf<EpoxyModel<*>>()
 
     override fun add(model: EpoxyModel<*>) {
@@ -36,10 +36,6 @@ class EpoxyCarouselNoSnapBuilder(
 
         // Set models list every time a model is added so that it can run debug validations to
         // ensure it is still valid to mutate the carousel model.
-        models(models)
-    }
-
-    override fun buildModels() {
-        error("This should not be called")
+        carouselNoSnapModel.models(models)
     }
 }

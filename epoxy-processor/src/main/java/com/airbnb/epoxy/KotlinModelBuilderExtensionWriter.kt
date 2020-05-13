@@ -95,7 +95,7 @@ internal class KotlinModelBuilderExtensionWriter(
         )
 
         FunSpec.builder(getMethodName(model)).run {
-            receiver(ClassNames.BASE_EPOXY_CONTROLLER.toKPoet())
+            receiver(ClassNames.MODEL_COLLECTOR.toKPoet())
             val params = constructor?.params ?: listOf()
             addParameters(params.toKParams())
 
