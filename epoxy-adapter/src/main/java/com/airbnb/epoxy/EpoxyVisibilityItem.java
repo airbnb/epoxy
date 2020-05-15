@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import android.graphics.Rect;
 import android.view.View;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Px;
 import androidx.recyclerview.widget.RecyclerView;
@@ -111,9 +112,10 @@ class EpoxyVisibilityItem {
     }
   }
 
-  void handlePartialImpressionVisible(EpoxyViewHolder epoxyHolder, boolean detachEvent, int threshold) {
+  void handlePartialImpressionVisible(EpoxyViewHolder epoxyHolder, boolean detachEvent,
+      @IntRange(from = 0, to = 100) int thresholdPercentage) {
     boolean previousPartiallyVisible = partiallyVisible;
-    partiallyVisible = !detachEvent && isPartiallyVisible(threshold);
+    partiallyVisible = !detachEvent && isPartiallyVisible(thresholdPercentage);
     if (partiallyVisible != previousPartiallyVisible) {
       if (partiallyVisible) {
         epoxyHolder.visibilityStateChanged(VisibilityState.PARTIAL_IMPRESSION_VISIBLE);
@@ -164,11 +166,14 @@ class EpoxyVisibilityItem {
         : totalArea == visibleArea;
   }
 
-  private boolean isPartiallyVisible(int threshold) {
+  private boolean isPartiallyVisible(@IntRange(from = 0, to = 100) int thresholdPercentage) {
+    if (thresholdPercentage == 0) return false;
+
     final int totalArea = height * width;
     final int visibleArea = visibleHeight * visibleWidth;
+    final float visibleAreaPercentage = (visibleArea / (float)totalArea) * 100;
 
-    return (visibleArea / (float)totalArea) * 100 >= threshold;
+    return visibleAreaPercentage >= thresholdPercentage;
   }
 
   private boolean isFullyVisible() {

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.IdRes;
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
@@ -82,7 +83,7 @@ public class EpoxyVisibilityTracker {
 
   private boolean onChangedEnabled = true;
 
-  private int partialImpressionThreshold = 0;
+  private int partialImpressionThresholdPercentage = 0;
 
   /** All nested visibility trackers */
   private Map<RecyclerView, EpoxyVisibilityTracker> nestedTrackers = new HashMap<>();
@@ -105,10 +106,14 @@ public class EpoxyVisibilityTracker {
   /**
    * Set the threshold of percentage visible area to identify the partial impression view state.
    *
-   * @param threshold Percentage of visible area of an element. 0..100.
+   * @param thresholdPercentage Percentage of visible area of an element. 0..100. A value of 0
+   *                            effectively disables
+   *                            {@link VisibilityState#PARTIAL_IMPRESSION_VISIBLE} events.
    */
-  public void setPartialImpressionThreshold(int threshold) {
-    partialImpressionThreshold = threshold;
+  public void setPartialImpressionThresholdPercentage(
+      @IntRange(from = 0, to = 100) int thresholdPercentage
+  ) {
+    partialImpressionThresholdPercentage = thresholdPercentage;
   }
 
   /**
@@ -291,7 +296,8 @@ public class EpoxyVisibilityTracker {
       // View is measured, process events
       vi.handleVisible(epoxyHolder, detachEvent);
       vi.handleFocus(epoxyHolder, detachEvent);
-      vi.handlePartialImpressionVisible(epoxyHolder, detachEvent, partialImpressionThreshold);
+      vi.handlePartialImpressionVisible(epoxyHolder, detachEvent,
+          partialImpressionThresholdPercentage);
       vi.handleFullImpressionVisible(epoxyHolder, detachEvent);
       changed = vi.handleChanged(epoxyHolder, onChangedEnabled);
     }
