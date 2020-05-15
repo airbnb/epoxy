@@ -119,6 +119,8 @@ class EpoxyVisibilityItem {
     if (partiallyVisible != previousPartiallyVisible) {
       if (partiallyVisible) {
         epoxyHolder.visibilityStateChanged(VisibilityState.PARTIAL_IMPRESSION_VISIBLE);
+      } else {
+        epoxyHolder.visibilityStateChanged(VisibilityState.PARTIAL_IMPRESSION_INVISIBLE);
       }
     }
   }
