@@ -909,7 +909,6 @@ class EpoxyVisibilityTrackerTest {
 
     @After
     fun tearDown() {
-        epoxyVisibilityTracker.setPartialImpressionThresholdPercentage(0)
         epoxyVisibilityTracker.detach(recyclerView)
     }
 
