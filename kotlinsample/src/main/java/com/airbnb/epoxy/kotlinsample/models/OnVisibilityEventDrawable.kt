@@ -87,11 +87,11 @@ class OnVisibilityEventDrawable(context: Context) : Drawable() {
         canvas.drawCircle(x, y, diameter / 2, paint)
 
         x += diameter + padding
-        paint.style = if (focusedVisible) Paint.Style.FILL_AND_STROKE else Paint.Style.STROKE
+        paint.style = if (partialImpression) Paint.Style.FILL_AND_STROKE else Paint.Style.STROKE
         canvas.drawCircle(x, y, diameter / 2, paint)
 
         x += diameter + padding
-        paint.style = if (partialImpression) Paint.Style.FILL_AND_STROKE else Paint.Style.STROKE
+        paint.style = if (focusedVisible) Paint.Style.FILL_AND_STROKE else Paint.Style.STROKE
         canvas.drawCircle(x, y, diameter / 2, paint)
 
         x += diameter + padding
