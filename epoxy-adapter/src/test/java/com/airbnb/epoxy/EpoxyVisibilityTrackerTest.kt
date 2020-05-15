@@ -12,6 +12,8 @@ import com.airbnb.epoxy.EpoxyVisibilityTracker.DEBUG_LOG
 import com.airbnb.epoxy.VisibilityState.FOCUSED_VISIBLE
 import com.airbnb.epoxy.VisibilityState.FULL_IMPRESSION_VISIBLE
 import com.airbnb.epoxy.VisibilityState.INVISIBLE
+import com.airbnb.epoxy.VisibilityState.PARTIAL_IMPRESSION_INVISIBLE
+import com.airbnb.epoxy.VisibilityState.PARTIAL_IMPRESSION_VISIBLE
 import com.airbnb.epoxy.VisibilityState.UNFOCUSED_VISIBLE
 import com.airbnb.epoxy.VisibilityState.VISIBLE
 import org.junit.After
@@ -54,6 +56,8 @@ class EpoxyVisibilityTrackerTest {
             INVISIBLE,
             FOCUSED_VISIBLE,
             UNFOCUSED_VISIBLE,
+            PARTIAL_IMPRESSION_VISIBLE,
+            PARTIAL_IMPRESSION_INVISIBLE,
             FULL_IMPRESSION_VISIBLE
         )
 
@@ -102,10 +106,12 @@ class EpoxyVisibilityTrackerTest {
                             visibleHeight = itemHeight,
                             percentVisibleHeight = 100.0f,
                             visible = true,
+                            partialImpression = true,
                             fullImpression = true,
                             visitedStates = intArrayOf(
                                 VISIBLE,
                                 FOCUSED_VISIBLE,
+                                PARTIAL_IMPRESSION_VISIBLE,
                                 FULL_IMPRESSION_VISIBLE
                             )
                         )
@@ -121,8 +127,12 @@ class EpoxyVisibilityTrackerTest {
                             visibleHeight = itemHeight / 2,
                             percentVisibleHeight = 50.0f,
                             visible = true,
+                            partialImpression = true,
                             fullImpression = false,
-                            visitedStates = intArrayOf(VISIBLE)
+                            visitedStates = intArrayOf(
+                                VISIBLE,
+                                PARTIAL_IMPRESSION_VISIBLE
+                            )
                         )
                     }
                 }
@@ -136,6 +146,7 @@ class EpoxyVisibilityTrackerTest {
                             visibleHeight = 0,
                             percentVisibleHeight = 0.0f,
                             visible = false,
+                            partialImpression = false,
                             fullImpression = false,
                             visitedStates = intArrayOf()
                         )
@@ -170,10 +181,12 @@ class EpoxyVisibilityTrackerTest {
                 visibleHeight = itemHeight,
                 percentVisibleHeight = 100.0f,
                 visible = true,
+                partialImpression = true,
                 fullImpression = true,
                 visitedStates = intArrayOf(
                     VISIBLE,
                     FOCUSED_VISIBLE,
+                    PARTIAL_IMPRESSION_VISIBLE,
                     FULL_IMPRESSION_VISIBLE
                 )
             )
@@ -184,10 +197,12 @@ class EpoxyVisibilityTrackerTest {
                 visibleHeight = itemHeight / 2,
                 percentVisibleHeight = 50.0f,
                 visible = true,
+                partialImpression = true,
                 fullImpression = false,
                 visitedStates = intArrayOf(
                     VISIBLE,
                     FOCUSED_VISIBLE,
+                    PARTIAL_IMPRESSION_VISIBLE,
                     UNFOCUSED_VISIBLE,
                     FULL_IMPRESSION_VISIBLE
                 )
@@ -199,9 +214,12 @@ class EpoxyVisibilityTrackerTest {
                 visibleHeight = 0,
                 percentVisibleHeight = 0.0f,
                 visible = false,
+                partialImpression = false,
                 fullImpression = false,
                 visitedStates = intArrayOf(
                     VISIBLE,
+                    PARTIAL_IMPRESSION_VISIBLE,
+                    PARTIAL_IMPRESSION_INVISIBLE,
                     INVISIBLE
                 )
             )
@@ -228,6 +246,7 @@ class EpoxyVisibilityTrackerTest {
                 visibleHeight = 0,
                 percentVisibleHeight = 0.0f,
                 visible = false,
+                partialImpression = false,
                 fullImpression = false,
                 visitedStates = ALL_STATES
             )
@@ -238,10 +257,12 @@ class EpoxyVisibilityTrackerTest {
                 visibleHeight = itemHeight,
                 percentVisibleHeight = 100.0f,
                 visible = true,
+                partialImpression = true,
                 fullImpression = true,
                 visitedStates = intArrayOf(
                     VISIBLE,
                     FOCUSED_VISIBLE,
+                    PARTIAL_IMPRESSION_VISIBLE,
                     FULL_IMPRESSION_VISIBLE
                 )
             )
@@ -252,8 +273,12 @@ class EpoxyVisibilityTrackerTest {
                 visibleHeight = itemHeight / 2,
                 percentVisibleHeight = 50.0f,
                 visible = true,
+                partialImpression = true,
                 fullImpression = false,
-                visitedStates = intArrayOf(VISIBLE)
+                visitedStates = intArrayOf(
+                    VISIBLE,
+                    PARTIAL_IMPRESSION_VISIBLE
+                )
             )
         }
     }
@@ -305,10 +330,12 @@ class EpoxyVisibilityTrackerTest {
                 visibleHeight = itemHeight,
                 percentVisibleHeight = 100.0f,
                 visible = true,
+                partialImpression = true,
                 fullImpression = true,
                 visitedStates = intArrayOf(
                     VISIBLE,
                     FOCUSED_VISIBLE,
+                    PARTIAL_IMPRESSION_VISIBLE,
                     FULL_IMPRESSION_VISIBLE
                 )
             )
@@ -320,10 +347,12 @@ class EpoxyVisibilityTrackerTest {
                 visibleHeight = itemHeight,
                 percentVisibleHeight = 100.0f,
                 visible = true,
+                partialImpression = true,
                 fullImpression = true,
                 visitedStates = intArrayOf(
                     VISIBLE,
                     FOCUSED_VISIBLE,
+                    PARTIAL_IMPRESSION_VISIBLE,
                     FULL_IMPRESSION_VISIBLE
                 )
             )
@@ -335,6 +364,7 @@ class EpoxyVisibilityTrackerTest {
                 visibleHeight = 0,
                 percentVisibleHeight = 0.0f,
                 visible = false,
+                partialImpression = false,
                 fullImpression = false,
                 visitedStates = ALL_STATES
             )
@@ -379,10 +409,12 @@ class EpoxyVisibilityTrackerTest {
                 visibleHeight = itemHeight,
                 percentVisibleHeight = 100.0f,
                 visible = true,
+                partialImpression = true,
                 fullImpression = true,
                 visitedStates = intArrayOf(
                     VISIBLE,
                     FOCUSED_VISIBLE,
+                    PARTIAL_IMPRESSION_VISIBLE,
                     FULL_IMPRESSION_VISIBLE
                 )
             )
@@ -394,10 +426,12 @@ class EpoxyVisibilityTrackerTest {
                 visibleHeight = itemHeight,
                 percentVisibleHeight = 100.0f,
                 visible = true,
+                partialImpression = true,
                 fullImpression = true,
                 visitedStates = intArrayOf(
                     VISIBLE,
                     FOCUSED_VISIBLE,
+                    PARTIAL_IMPRESSION_VISIBLE,
                     FULL_IMPRESSION_VISIBLE
                 )
             )
@@ -409,6 +443,7 @@ class EpoxyVisibilityTrackerTest {
                 visibleHeight = 0,
                 percentVisibleHeight = 0.0f,
                 visible = false,
+                partialImpression = false,
                 fullImpression = false,
                 visitedStates = ALL_STATES
             )
@@ -444,6 +479,7 @@ class EpoxyVisibilityTrackerTest {
                             visibleHeight = 0,
                             percentVisibleHeight = 0.0f,
                             visible = false,
+                            partialImpression = false,
                             fullImpression = false,
                             visitedStates = ALL_STATES
                         )
@@ -459,6 +495,7 @@ class EpoxyVisibilityTrackerTest {
                             visibleHeight = 0,
                             percentVisibleHeight = 0.0f,
                             visible = false,
+                            partialImpression = false,
                             fullImpression = false,
                             visitedStates = ALL_STATES
                         )
@@ -474,6 +511,7 @@ class EpoxyVisibilityTrackerTest {
                             visibleHeight = 0,
                             percentVisibleHeight = 0.0f,
                             visible = false,
+                            partialImpression = false,
                             fullImpression = false,
                             visitedStates = ALL_STATES
                         )
@@ -489,10 +527,12 @@ class EpoxyVisibilityTrackerTest {
                             visibleHeight = itemHeight / 2,
                             percentVisibleHeight = 50.0f,
                             visible = true,
+                            partialImpression = true,
                             fullImpression = false,
                             visitedStates = intArrayOf(
                                 VISIBLE,
                                 FOCUSED_VISIBLE,
+                                PARTIAL_IMPRESSION_VISIBLE,
                                 FULL_IMPRESSION_VISIBLE,
                                 UNFOCUSED_VISIBLE
                             )
@@ -509,10 +549,12 @@ class EpoxyVisibilityTrackerTest {
                             visibleHeight = itemHeight,
                             percentVisibleHeight = 100.0f,
                             visible = true,
+                            partialImpression = true,
                             fullImpression = true,
                             visitedStates = intArrayOf(
                                 VISIBLE,
                                 FOCUSED_VISIBLE,
+                                PARTIAL_IMPRESSION_VISIBLE,
                                 FULL_IMPRESSION_VISIBLE
                             )
                         )
@@ -553,12 +595,15 @@ class EpoxyVisibilityTrackerTest {
                             visibleHeight = 0,
                             percentVisibleHeight = 0.0f,
                             visible = false,
+                            partialImpression = false,
                             fullImpression = false,
                             visitedStates = intArrayOf(
                                 VISIBLE,
+                                PARTIAL_IMPRESSION_VISIBLE,
                                 FOCUSED_VISIBLE,
                                 FULL_IMPRESSION_VISIBLE,
                                 UNFOCUSED_VISIBLE,
+                                PARTIAL_IMPRESSION_INVISIBLE,
                                 INVISIBLE
                             )
                         )
@@ -574,8 +619,14 @@ class EpoxyVisibilityTrackerTest {
                             visibleHeight = 0,
                             percentVisibleHeight = 0.0f,
                             visible = false,
+                            partialImpression = false,
                             fullImpression = false,
-                            visitedStates = intArrayOf(VISIBLE, INVISIBLE)
+                            visitedStates = intArrayOf(
+                                VISIBLE,
+                                PARTIAL_IMPRESSION_VISIBLE,
+                                PARTIAL_IMPRESSION_INVISIBLE,
+                                INVISIBLE
+                            )
                         )
                     }
                 }
@@ -589,6 +640,7 @@ class EpoxyVisibilityTrackerTest {
                             visibleHeight = 0,
                             percentVisibleHeight = 0.0f,
                             visible = false,
+                            partialImpression = false,
                             fullImpression = false,
                             visitedStates = intArrayOf()
                         )
@@ -604,8 +656,12 @@ class EpoxyVisibilityTrackerTest {
                             visibleHeight = itemHeight / 2,
                             percentVisibleHeight = 50.0f,
                             visible = true,
+                            partialImpression = true,
                             fullImpression = false,
-                            visitedStates = intArrayOf(VISIBLE)
+                            visitedStates = intArrayOf(
+                                VISIBLE,
+                                PARTIAL_IMPRESSION_VISIBLE
+                            )
                         )
                     }
                 }
@@ -619,9 +675,11 @@ class EpoxyVisibilityTrackerTest {
                             visibleHeight = itemHeight,
                             percentVisibleHeight = 100.0f,
                             visible = true,
+                            partialImpression = true,
                             fullImpression = true,
                             visitedStates = intArrayOf(
                                 VISIBLE,
+                                PARTIAL_IMPRESSION_VISIBLE,
                                 FOCUSED_VISIBLE,
                                 FULL_IMPRESSION_VISIBLE
                             )
@@ -687,6 +745,7 @@ class EpoxyVisibilityTrackerTest {
     fun setup() {
         Robolectric.setupActivity(Activity::class.java).apply {
             setContentView(EpoxyRecyclerView(this).apply {
+                epoxyVisibilityTracker.setPartialImpressionThresholdPercentage(50)
                 epoxyVisibilityTracker.attach(this)
                 recyclerView = this
                 // Plug an epoxy controller
@@ -713,6 +772,7 @@ class EpoxyVisibilityTrackerTest {
 
     @After
     fun tearDown() {
+        epoxyVisibilityTracker.setPartialImpressionThresholdPercentage(0)
         epoxyVisibilityTracker.detach(recyclerView)
     }
 
@@ -746,10 +806,14 @@ class EpoxyVisibilityTrackerTest {
             log("onVisibilityStateChanged[$itemPosition](id=${helper.id})=${state.description()}")
             helper.visitedStates.add(state)
             when (state) {
-                VISIBLE, INVISIBLE -> helper.visible = state == VISIBLE
-                FOCUSED_VISIBLE, UNFOCUSED_VISIBLE -> helper.focused = state == FOCUSED_VISIBLE
-                FULL_IMPRESSION_VISIBLE -> helper.fullImpression = state ==
-                    FULL_IMPRESSION_VISIBLE
+                VISIBLE, INVISIBLE ->
+                    helper.visible = state == VISIBLE
+                FOCUSED_VISIBLE, UNFOCUSED_VISIBLE ->
+                    helper.focused = state == FOCUSED_VISIBLE
+                PARTIAL_IMPRESSION_VISIBLE, PARTIAL_IMPRESSION_INVISIBLE ->
+                    helper.partialImpression = state == PARTIAL_IMPRESSION_VISIBLE
+                FULL_IMPRESSION_VISIBLE ->
+                    helper.fullImpression = state == FULL_IMPRESSION_VISIBLE
             }
         }
     }
@@ -767,6 +831,7 @@ class EpoxyVisibilityTrackerTest {
         var percentVisibleWidth = 0.0f
         var visible = false
         var focused = false
+        var partialImpression = false
         var fullImpression = false
 
         fun assert(
@@ -776,6 +841,7 @@ class EpoxyVisibilityTrackerTest {
             percentVisibleHeight: Float? = null,
             percentVisibleWidth: Float? = null,
             visible: Boolean? = null,
+            partialImpression: Boolean? = null,
             fullImpression: Boolean? = null,
             visitedStates: IntArray? = null
         ) {
@@ -821,6 +887,13 @@ class EpoxyVisibilityTrackerTest {
                     "visible expected $it got ${this.visible}",
                     it,
                     this.visible
+                )
+            }
+            partialImpression?.let {
+                Assert.assertEquals(
+                    "partialImpression expected $it got ${this.partialImpression}",
+                    it,
+                    this.partialImpression
                 )
             }
             fullImpression?.let {
@@ -888,6 +961,8 @@ private fun Int.description(): String {
         INVISIBLE -> "INVISIBLE"
         FOCUSED_VISIBLE -> "FOCUSED_VISIBLE"
         UNFOCUSED_VISIBLE -> "UNFOCUSED_VISIBLE"
+        PARTIAL_IMPRESSION_VISIBLE -> "PARTIAL_IMPRESSION_VISIBLE"
+        PARTIAL_IMPRESSION_INVISIBLE -> "PARTIAL_IMPRESSION_INVISIBLE"
         FULL_IMPRESSION_VISIBLE -> "FULL_IMPRESSION_VISIBLE"
         else -> throw IllegalStateException("Please declare new state here")
     }
