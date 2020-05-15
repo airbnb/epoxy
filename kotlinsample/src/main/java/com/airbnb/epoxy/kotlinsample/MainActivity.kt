@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         // Attach the visibility tracker to the RecyclerView. This will enable visibility events.
         val epoxyVisibilityTracker = EpoxyVisibilityTracker()
+        epoxyVisibilityTracker.setPartialImpressionThresholdPercentage(75)
         epoxyVisibilityTracker.attach(recyclerView)
 
         recyclerView.withModels {
