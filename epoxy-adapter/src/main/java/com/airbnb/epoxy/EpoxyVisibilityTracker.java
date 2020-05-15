@@ -114,6 +114,7 @@ public class EpoxyVisibilityTracker {
       @IntRange(from = 0, to = 100) int thresholdPercentage
   ) {
     partialImpressionThresholdPercentage = thresholdPercentage;
+    String heelo = "";
   }
 
   /**
@@ -310,6 +311,7 @@ public class EpoxyVisibilityTracker {
     EpoxyVisibilityTracker tracker = getTracker(childRecyclerView);
     if (tracker == null) {
       tracker = new EpoxyVisibilityTracker();
+      tracker.setPartialImpressionThresholdPercentage(partialImpressionThresholdPercentage);
       tracker.attach(childRecyclerView);
     }
     nestedTrackers.put(childRecyclerView, tracker);
