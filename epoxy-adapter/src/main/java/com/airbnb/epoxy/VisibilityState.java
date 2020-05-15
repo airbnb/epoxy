@@ -55,7 +55,7 @@ public final class VisibilityState {
   /**
    * Event triggered when a Component enters the Partial Impression Range. This happens, for
    * instance in the case of a vertical RecyclerView, when the percentage of the visible area is
-   * greater than a specified threshold. The threshold can be set in
+   * at least the specified threshold. The threshold can be set in
    * {@link EpoxyVisibilityTracker#setPartialImpressionThresholdPercentage(int)}.
    */
   public static final int PARTIAL_IMPRESSION_VISIBLE = 5;
