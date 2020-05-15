@@ -161,6 +161,143 @@ class EpoxyVisibilityTrackerTest {
     }
 
     /**
+     * Test visibility events when loading a recycler view but without any partial visible states
+     */
+    @Test
+    fun testDataAttachedToRecyclerView_WithoutPartial() {
+        // disable partial visibility states
+        epoxyVisibilityTracker.setPartialImpressionThresholdPercentage(0)
+
+        val testHelper = buildTestData(10, TWO_AND_HALF_VISIBLE)
+
+        val firstHalfVisibleItem = 2
+        val firstInvisibleItem = firstHalfVisibleItem + 1
+
+        // Verify visibility event
+        testHelper.forEachIndexed { index, helper ->
+            when {
+
+                index in 0 until firstHalfVisibleItem -> {
+
+                    // Item expected to be 100% visible
+
+                    with(helper) {
+                        assert(
+                            visibleHeight = itemHeight,
+                            percentVisibleHeight = 100.0f,
+                            visible = true,
+                            partialImpression = false,
+                            fullImpression = true,
+                            visitedStates = intArrayOf(
+                                VISIBLE,
+                                FOCUSED_VISIBLE,
+                                FULL_IMPRESSION_VISIBLE
+                            )
+                        )
+                    }
+                }
+
+                index == firstHalfVisibleItem -> {
+
+                    // Item expected to be 50% visible
+
+                    with(helper) {
+                        assert(
+                            visibleHeight = itemHeight / 2,
+                            percentVisibleHeight = 50.0f,
+                            visible = true,
+                            partialImpression = false,
+                            fullImpression = false,
+                            visitedStates = intArrayOf(
+                                VISIBLE
+                            )
+                        )
+                    }
+                }
+
+                index in firstInvisibleItem..9 -> {
+
+                    // Item expected not to be visible
+
+                    with(helper) {
+                        assert(
+                            visibleHeight = 0,
+                            percentVisibleHeight = 0.0f,
+                            visible = false,
+                            partialImpression = false,
+                            fullImpression = false,
+                            visitedStates = intArrayOf()
+                        )
+                    }
+                }
+
+                else -> throw IllegalStateException("index should not be bigger than 9")
+            }
+
+            log("$index valid")
+        }
+    }
+
+    /**
+     * Test partial visibility events when loading a recycler view
+     */
+    @Test
+    fun testDataAttachedToRecyclerView_OneElementJustBelowPartialThreshold() {
+        val testHelper = buildTestData(2, 1.49f)
+
+        val firstAlmostPartiallyVisibleItem = 1
+
+        // Verify visibility event
+        testHelper.forEachIndexed { index, helper ->
+            when {
+
+                index in 0 until firstAlmostPartiallyVisibleItem -> {
+
+                    // Item expected to be 100% visible
+
+                    with(helper) {
+                        assert(
+                            visibleHeight = itemHeight,
+                            percentVisibleHeight = 100.0f,
+                            visible = true,
+                            partialImpression = true,
+                            fullImpression = true,
+                            visitedStates = intArrayOf(
+                                VISIBLE,
+                                FOCUSED_VISIBLE,
+                                PARTIAL_IMPRESSION_VISIBLE,
+                                FULL_IMPRESSION_VISIBLE
+                            )
+                        )
+                    }
+                }
+
+                index == firstAlmostPartiallyVisibleItem -> {
+
+                    // Item expected to be 49% visible
+
+                    with(helper) {
+                        assert(
+                            visibleHeight = (itemHeight * 0.49).toInt(),
+                            percentVisibleHeight = 49.0f,
+                            visible = true,
+                            partialImpression = false,
+                            fullImpression = false,
+                            visitedStates = intArrayOf(
+                                VISIBLE
+                            )
+                        )
+                    }
+                }
+
+                else -> throw IllegalStateException("index should not be bigger than 9")
+            }
+
+            log("$index valid")
+        }
+    }
+
+    /**
      * Test visibility events when adding data to a recycler view (item inserted from adapter)
      */
     @Test
@@ -857,7 +994,7 @@ class EpoxyVisibilityTrackerTest {
                 log("assert visibleHeight, got $it, expected ${this.visibleHeight}")
                 Assert.assertTrue(
                     "visibleHeight expected ${it}px got ${this.visibleHeight}px",
-                    Math.abs(it - this.visibleHeight) < TOLERANCE_PIXELS
+                    Math.abs(it - this.visibleHeight) <= TOLERANCE_PIXELS
                 )
             }
             visibleWidth?.let {
@@ -865,21 +1002,23 @@ class EpoxyVisibilityTrackerTest {
                 log("assert visibleWidth, got $it, expected ${this.visibleWidth}")
                 Assert.assertTrue(
                     "visibleWidth expected ${it}px got ${this.visibleWidth}px",
-                    Math.abs(it - this.visibleWidth) < TOLERANCE_PIXELS
+                    Math.abs(it - this.visibleWidth) <= TOLERANCE_PIXELS
                 )
             }
             percentVisibleHeight?.let {
                 Assert.assertEquals(
                     "percentVisibleHeight expected $it got ${this.percentVisibleHeight}",
                     it,
-                    this.percentVisibleHeight
+                    this.percentVisibleHeight,
+                    0.05f
                 )
             }
             percentVisibleWidth?.let {
                 Assert.assertEquals(
                     "percentVisibleWidth expected $it got ${this.percentVisibleWidth}",
                     it,
-                    this.percentVisibleWidth
+                    this.percentVisibleWidth,
+                    0.05f
                 )
             }
             visible?.let {
