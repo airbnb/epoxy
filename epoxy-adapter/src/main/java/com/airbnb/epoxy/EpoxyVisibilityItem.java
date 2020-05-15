@@ -173,7 +173,7 @@ class EpoxyVisibilityItem {
 
     final int totalArea = height * width;
     final int visibleArea = visibleHeight * visibleWidth;
-    final float visibleAreaPercentage = (visibleArea / (float)totalArea) * 100;
+    final float visibleAreaPercentage = (visibleArea / (float) totalArea) * 100;
 
     return visibleAreaPercentage >= thresholdPercentage;
   }
