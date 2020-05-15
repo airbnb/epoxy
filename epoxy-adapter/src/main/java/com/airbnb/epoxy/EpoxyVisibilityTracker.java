@@ -114,7 +114,6 @@ public class EpoxyVisibilityTracker {
       @IntRange(from = 0, to = 100) int thresholdPercentage
   ) {
     partialImpressionThresholdPercentage = thresholdPercentage;
-    String heelo = "";
   }
 
   /**
