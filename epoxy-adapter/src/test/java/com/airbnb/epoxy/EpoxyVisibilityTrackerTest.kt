@@ -166,7 +166,7 @@ class EpoxyVisibilityTrackerTest {
     @Test
     fun testDataAttachedToRecyclerView_WithoutPartial() {
         // disable partial visibility states
-        epoxyVisibilityTracker.setPartialImpressionThresholdPercentage(0)
+        epoxyVisibilityTracker.setPartialImpressionThresholdPercentage(null)
 
         val testHelper = buildTestData(10, TWO_AND_HALF_VISIBLE)
 

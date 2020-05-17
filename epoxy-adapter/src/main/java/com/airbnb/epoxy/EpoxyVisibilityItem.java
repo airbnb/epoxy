@@ -169,7 +169,8 @@ class EpoxyVisibilityItem {
   }
 
   private boolean isPartiallyVisible(@IntRange(from = 0, to = 100) int thresholdPercentage) {
-    if (thresholdPercentage == 0) return false;
+    // special case 0%: trigger as soon as some pixels are one the screen
+    if (thresholdPercentage == 0) return isVisible();
 
     final int totalArea = height * width;
     final int visibleArea = visibleHeight * visibleWidth;

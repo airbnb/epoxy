@@ -83,7 +83,8 @@ public class EpoxyVisibilityTracker {
 
   private boolean onChangedEnabled = true;
 
-  private int partialImpressionThresholdPercentage = 0;
+  @Nullable
+  private Integer partialImpressionThresholdPercentage = null;
 
   /** All nested visibility trackers */
   private Map<RecyclerView, EpoxyVisibilityTracker> nestedTrackers = new HashMap<>();
@@ -106,12 +107,13 @@ public class EpoxyVisibilityTracker {
   /**
    * Set the threshold of percentage visible area to identify the partial impression view state.
    *
-   * @param thresholdPercentage Percentage of visible area of an element. 0..100. A value of 0
-   *                            effectively disables
-   *                            {@link VisibilityState#PARTIAL_IMPRESSION_VISIBLE} events.
+   * @param thresholdPercentage Percentage of visible area of an element in the range [0..100].
+   *                            Defaults to <code>null</code>, which disables
+   *                            {@link VisibilityState#PARTIAL_IMPRESSION_VISIBLE} and
+   *                            {@link VisibilityState#PARTIAL_IMPRESSION_INVISIBLE} events.
    */
   public void setPartialImpressionThresholdPercentage(
-      @IntRange(from = 0, to = 100) int thresholdPercentage
+      @Nullable @IntRange(from = 0, to = 100) Integer thresholdPercentage
   ) {
     partialImpressionThresholdPercentage = thresholdPercentage;
   }
@@ -295,9 +297,13 @@ public class EpoxyVisibilityTracker {
     if (vi.update(itemView, recyclerView, detachEvent)) {
       // View is measured, process events
       vi.handleVisible(epoxyHolder, detachEvent);
+
+      if (partialImpressionThresholdPercentage != null) {
+        vi.handlePartialImpressionVisible(epoxyHolder, detachEvent,
+            partialImpressionThresholdPercentage);
+      }
+
       vi.handleFocus(epoxyHolder, detachEvent);
-      vi.handlePartialImpressionVisible(epoxyHolder, detachEvent,
-          partialImpressionThresholdPercentage);
       vi.handleFullImpressionVisible(epoxyHolder, detachEvent);
       changed = vi.handleChanged(epoxyHolder, onChangedEnabled);
     }
