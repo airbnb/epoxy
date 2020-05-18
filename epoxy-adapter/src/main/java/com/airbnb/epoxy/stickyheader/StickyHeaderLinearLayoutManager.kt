@@ -234,7 +234,6 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
                 val headerIndex = findHeaderIndexOrBefore(anchorPos)
                 val headerPos = if (headerIndex != -1) headerPositions[headerIndex] else -1
                 val nextHeaderPos = if (headerCount > headerIndex + 1) headerPositions[headerIndex + 1] else -1
-                val itemViewType = adapter?.getItemViewType(headerPos) ?: -1
 
                 // Show sticky header if:
                 // - There's one to show;
@@ -244,7 +243,7 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
                     (headerPos != anchorPos || isViewOnBoundary(anchorView)) &&
                     nextHeaderPos != headerPos + 1) {
                     // 1. Ensure existing sticky header, if any, is of correct type.
-                    if (stickyHeader != null && getItemViewType(stickyHeader!!) != itemViewType) {
+                    if (stickyHeader != null && getItemViewType(stickyHeader!!) != adapter?.getItemViewType(headerPos)) {
                         // A sticky header was shown before but is not of the correct type. Scrap it.
                         scrapStickyHeader(recycler)
                     }
