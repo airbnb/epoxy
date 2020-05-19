@@ -62,6 +62,14 @@ class CarouselItemCustomView @JvmOverloads constructor(
                 Log.d(TAG, "$title UnfocusedVisible")
                 onVisibilityEventDrawable.focusedVisible = false
             }
+            VisibilityState.PARTIAL_IMPRESSION_VISIBLE -> {
+                Log.d(TAG, "$title PartialImpressionVisible")
+                onVisibilityEventDrawable.partialImpression = true
+            }
+            VisibilityState.PARTIAL_IMPRESSION_INVISIBLE -> {
+                Log.d(TAG, "$title PartialImpressionInVisible")
+                onVisibilityEventDrawable.partialImpression = false
+            }
             VisibilityState.FULL_IMPRESSION_VISIBLE -> {
                 Log.d(TAG, "$title FullImpressionVisible")
                 onVisibilityEventDrawable.fullImpression = true

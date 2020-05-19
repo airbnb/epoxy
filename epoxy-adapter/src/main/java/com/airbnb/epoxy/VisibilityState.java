@@ -8,7 +8,13 @@ import androidx.annotation.IntDef;
 public final class VisibilityState {
 
   @Retention(RetentionPolicy.SOURCE)
-  @IntDef({VISIBLE, INVISIBLE, FOCUSED_VISIBLE, UNFOCUSED_VISIBLE, FULL_IMPRESSION_VISIBLE})
+  @IntDef({VISIBLE,
+           INVISIBLE,
+           FOCUSED_VISIBLE,
+           UNFOCUSED_VISIBLE,
+           FULL_IMPRESSION_VISIBLE,
+           PARTIAL_IMPRESSION_VISIBLE,
+           PARTIAL_IMPRESSION_INVISIBLE})
   public @interface Visibility {
   }
 
@@ -45,4 +51,20 @@ public final class VisibilityState {
    * become visible.
    */
   public static final int FULL_IMPRESSION_VISIBLE = 4;
+
+  /**
+   * Event triggered when a Component enters the Partial Impression Range. This happens, for
+   * instance in the case of a vertical RecyclerView, when the percentage of the visible area is
+   * at least the specified threshold. The threshold can be set in
+   * {@link EpoxyVisibilityTracker#setPartialImpressionThresholdPercentage(int)}.
+   */
+  public static final int PARTIAL_IMPRESSION_VISIBLE = 5;
+
+  /**
+   * Event triggered when a Component exits the Partial Impression Range. This happens, for
+   * instance in the case of a vertical RecyclerView, when the percentage of the visible area is
+   * less than a specified threshold. The threshold can be set in
+   * {@link EpoxyVisibilityTracker#setPartialImpressionThresholdPercentage(int)}.
+   */
+  public static final int PARTIAL_IMPRESSION_INVISIBLE = 6;
 }

@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import android.graphics.Rect;
 import android.view.View;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Px;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,6 +42,7 @@ class EpoxyVisibilityItem {
   @Px
   private int viewportWidth;
 
+  private boolean partiallyVisible = false;
   private boolean fullyVisible = false;
   private boolean visible = false;
   private boolean focusedVisible = false;
@@ -110,6 +112,19 @@ class EpoxyVisibilityItem {
     }
   }
 
+  void handlePartialImpressionVisible(EpoxyViewHolder epoxyHolder, boolean detachEvent,
+      @IntRange(from = 0, to = 100) int thresholdPercentage) {
+    boolean previousPartiallyVisible = partiallyVisible;
+    partiallyVisible = !detachEvent && isPartiallyVisible(thresholdPercentage);
+    if (partiallyVisible != previousPartiallyVisible) {
+      if (partiallyVisible) {
+        epoxyHolder.visibilityStateChanged(VisibilityState.PARTIAL_IMPRESSION_VISIBLE);
+      } else {
+        epoxyHolder.visibilityStateChanged(VisibilityState.PARTIAL_IMPRESSION_INVISIBLE);
+      }
+    }
+  }
+
   void handleFullImpressionVisible(EpoxyViewHolder epoxyHolder, boolean detachEvent) {
     boolean previousFullyVisible = fullyVisible;
     fullyVisible = !detachEvent && isFullyVisible();
@@ -151,6 +166,17 @@ class EpoxyVisibilityItem {
     return (totalArea >= halfViewportArea)
         ? (visibleArea >= halfViewportArea)
         : totalArea == visibleArea;
+  }
+
+  private boolean isPartiallyVisible(@IntRange(from = 0, to = 100) int thresholdPercentage) {
+    // special case 0%: trigger as soon as some pixels are one the screen
+    if (thresholdPercentage == 0) return isVisible();
+
+    final int totalArea = height * width;
+    final int visibleArea = visibleHeight * visibleWidth;
+    final float visibleAreaPercentage = (visibleArea / (float) totalArea) * 100;
+
+    return visibleAreaPercentage >= thresholdPercentage;
   }
 
   private boolean isFullyVisible() {
