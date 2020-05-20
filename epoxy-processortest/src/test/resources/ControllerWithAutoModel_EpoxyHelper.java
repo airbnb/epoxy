@@ -12,9 +12,9 @@ import java.lang.String;
 public class ControllerWithAutoModel_EpoxyHelper extends ControllerHelper<ControllerWithAutoModel> {
   private final ControllerWithAutoModel controller;
 
-  private EpoxyModel modelWithAttribute1;
-
   private EpoxyModel modelWithAttribute2;
+
+  private EpoxyModel modelWithAttribute1;
 
   public ControllerWithAutoModel_EpoxyHelper(ControllerWithAutoModel controller) {
     this.controller = controller;
@@ -23,16 +23,16 @@ public class ControllerWithAutoModel_EpoxyHelper extends ControllerHelper<Contro
   @Override
   public void resetAutoModels() {
     validateModelsHaveNotChanged();
-    controller.modelWithAttribute1 = new BasicModelWithAttribute_();
-    controller.modelWithAttribute1.id(-1);
     controller.modelWithAttribute2 = new BasicModelWithAttribute_();
-    controller.modelWithAttribute2.id(-2);
+    controller.modelWithAttribute2.id(-1);
+    controller.modelWithAttribute1 = new BasicModelWithAttribute_();
+    controller.modelWithAttribute1.id(-2);
     saveModelsForNextValidation();
   }
 
   private void validateModelsHaveNotChanged() {
-    validateSameModel(modelWithAttribute1, controller.modelWithAttribute1, "modelWithAttribute1", -1);
-    validateSameModel(modelWithAttribute2, controller.modelWithAttribute2, "modelWithAttribute2", -2);
+    validateSameModel(modelWithAttribute2, controller.modelWithAttribute2, "modelWithAttribute2", -1);
+    validateSameModel(modelWithAttribute1, controller.modelWithAttribute1, "modelWithAttribute1", -2);
     validateModelHashCodesHaveNotChanged(controller);
   }
 
@@ -47,7 +47,7 @@ public class ControllerWithAutoModel_EpoxyHelper extends ControllerHelper<Contro
   }
 
   private void saveModelsForNextValidation() {
-    modelWithAttribute1 = controller.modelWithAttribute1;
     modelWithAttribute2 = controller.modelWithAttribute2;
+    modelWithAttribute1 = controller.modelWithAttribute1;
   }
 }

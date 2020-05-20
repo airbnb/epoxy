@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import javax.tools.JavaFileObject;
 
+import static com.airbnb.epoxy.ProcessorTestUtils.processors;
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaFileObjects.forResource;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
@@ -48,7 +49,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model, subPackageConfig))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -76,7 +77,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(topLevelParentConfig, secondLevelParentConfig, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile()
         .withErrorContaining("Attribute does not implement hashCode");
   }
@@ -88,7 +89,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile()
         .withErrorContaining("Attribute does not implement hashCode");
   }
@@ -100,7 +101,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile()
         .withErrorContaining("Attribute does not implement equals");
   }
@@ -112,7 +113,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile()
         .withErrorContaining("Type in Iterable does not implement hashCode");
   }
@@ -124,7 +125,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -135,7 +136,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile()
         .withErrorContaining("Type in array does not implement hashCode");
   }
@@ -147,7 +148,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -159,7 +160,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -171,7 +172,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -183,7 +184,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -195,7 +196,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -207,7 +208,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -221,7 +222,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_ABSTRACT, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -233,7 +234,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_ABSTRACT, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile()
         .withErrorContaining(
             "Epoxy model class must be abstract (RequireAbstractModelFailsClassWithAttribute)");
@@ -247,7 +248,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_ABSTRACT, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -259,7 +260,7 @@ public class ConfigTest {
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_ABSTRACT, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile()
         .withErrorContaining(
             "Epoxy model class must be abstract (RequireAbstractModelFailsEpoxyModelClass)");
@@ -274,7 +275,8 @@ public class ConfigTest {
 
     assert_().about(javaSource())
         .that(model)
-        .processedWith(EpoxyProcessor.withNoValidation())
+        .withCompilerOptions(ProcessorTestUtils.options(true, false))
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedModel);

@@ -21,6 +21,13 @@ android {
   androidExtensions {
     experimental = true
   }
+
+  buildTypes.all { buildType ->
+    buildType.javaCompileOptions.annotationProcessorOptions.arguments =
+        [
+            logEpoxyTimings: "true"
+        ]
+  }
 }
 
 configurations.all { strategy ->

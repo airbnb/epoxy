@@ -1,7 +1,8 @@
-package com.airbnb.epoxy
+package com.airbnb.epoxy.processor
 
 import androidx.annotation.FloatRange
 import androidx.annotation.NonNull
+import com.airbnb.epoxy.EpoxyModelClass
 import com.squareup.kotlinpoet.asTypeName
 import javax.lang.model.element.Modifier
 import org.junit.Assert.assertEquals

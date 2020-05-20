@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import javax.tools.JavaFileObject;
 
+import static com.airbnb.epoxy.ProcessorTestUtils.processors;
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaSourcesSubjectFactory.javaSources;
 
@@ -58,7 +59,7 @@ public class EpoxyResourceProcessorTest {
 
     assert_().about(javaSources())
         .that(Arrays.asList(model, R))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedModel);
@@ -85,7 +86,7 @@ public class EpoxyResourceProcessorTest {
     assert_().about(javaSources())
         .that(Arrays
             .asList(model, modelWithDifferentRClass, R, R_FROM_DIFFERENT_PACKAGE_WITH_SAME_VALUE))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedModel, generatedModelWithDifferentRClass);
