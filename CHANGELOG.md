@@ -1,3 +1,7 @@
+# 3.11.0 (May 20, 2020)
+- Introduce partial impression visibility states (#973)
+- Fix sticky header crash (#976)
+
 # 3.10.0 (May 15, 2020)
 - Carousel building with Kotlin DSL (#967)
 - Android ViewBinding: added an example in the sample project. (#939)
