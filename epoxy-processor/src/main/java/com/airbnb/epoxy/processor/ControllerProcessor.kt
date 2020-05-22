@@ -27,7 +27,7 @@ class ControllerProcessor : BaseProcessorWithPackageConfigs() {
     override val usesPackageEpoxyConfig: Boolean = true
     override val usesModelViewConfig: Boolean = false
 
-    override fun supportedAnnotations(): List<KClass<*>> = super.supportedAnnotations() + listOf(
+    override fun additionalSupportedAnnotations(): List<KClass<*>> = listOf(
         AutoModel::class
     )
 

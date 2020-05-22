@@ -6,6 +6,7 @@ import com.airbnb.epoxy.processor.Utils.getEpoxyObjectType
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeVariableName
+import javax.lang.model.element.Element
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
@@ -89,6 +90,5 @@ internal class BasicGeneratedModelInfo(
         )
     }
 
-    // This is the base model class that the generated model inherits from
-    override fun originatingElements() = super.originatingElements() + listOf(superClassElement)
+    override fun additionalOriginatingElements(): List<Element> = listOf(superClassElement)
 }

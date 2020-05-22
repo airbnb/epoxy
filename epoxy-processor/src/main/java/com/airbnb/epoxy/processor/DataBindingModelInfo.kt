@@ -96,7 +96,6 @@ internal class DataBindingModelInfo(
         )
     }
 
-    // The annotation that specifics the
-    override fun originatingElements() =
-        super.originatingElements() + listOfNotNull(annotatedElement, dataBindingClassElement)
+    override fun additionalOriginatingElements() =
+        listOfNotNull(annotatedElement, dataBindingClassElement)
 }

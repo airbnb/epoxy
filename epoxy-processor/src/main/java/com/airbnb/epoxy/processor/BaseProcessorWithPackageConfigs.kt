@@ -11,19 +11,19 @@ abstract class BaseProcessorWithPackageConfigs : BaseProcessor() {
     abstract val usesPackageEpoxyConfig: Boolean
     abstract val usesModelViewConfig: Boolean
 
-    override fun supportedAnnotations(): List<KClass<*>> = mutableListOf<KClass<*>>().apply {
+    final override fun supportedAnnotations(): List<KClass<*>> = mutableListOf<KClass<*>>().apply {
         if (usesPackageEpoxyConfig) {
             add(PackageEpoxyConfig::class)
         }
         if (usesModelViewConfig) {
             add(PackageModelViewConfig::class)
         }
-    }
+    }.plus(additionalSupportedAnnotations())
+
+    abstract fun additionalSupportedAnnotations(): List<KClass<*>>
 
     /**
      * Returns all of the package config elements applicable to this processor.
-     *
-     *
      */
     fun originatingConfigElements(): List<Element> = mutableListOf<Element>().apply {
         // TODO: Be more discerning about which config elements are returned here, eg

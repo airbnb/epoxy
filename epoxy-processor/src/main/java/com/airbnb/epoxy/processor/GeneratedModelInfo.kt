@@ -61,9 +61,12 @@ abstract class GeneratedModelInfo(val memoizer: Memoizer) {
      * The elements that influence the generation of this model.
      * eg base model class for @EpoxyModelClass, view class for @ModelView, etc
      */
-    open fun originatingElements(): List<Element> {
-        return styleBuilderInfo?.let { listOf(it.styleBuilderElement) } ?: emptyList()
+    fun originatingElements(): List<Element> {
+        return listOfNotNull(styleBuilderInfo?.styleBuilderElement)
+            .plus(additionalOriginatingElements())
     }
+
+    open fun additionalOriginatingElements(): List<Element> = emptyList()
 
     /**
      * Get information about constructors of the original class so we can duplicate them in the

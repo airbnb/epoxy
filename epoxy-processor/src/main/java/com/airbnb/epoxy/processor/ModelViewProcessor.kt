@@ -34,7 +34,7 @@ class ModelViewProcessor : BaseProcessorWithPackageConfigs() {
     private val modelClassMap = ConcurrentHashMap<Element, ModelViewInfo>()
     private val styleableModelsToWrite = mutableListOf<ModelViewInfo>()
 
-    override fun supportedAnnotations(): List<KClass<*>> = super.supportedAnnotations() + listOf(
+    override fun additionalSupportedAnnotations(): List<KClass<*>> = listOf(
         ModelView::class,
         TextProp::class,
         CallbackProp::class

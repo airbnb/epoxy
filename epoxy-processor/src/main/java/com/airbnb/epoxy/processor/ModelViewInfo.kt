@@ -250,5 +250,5 @@ class ModelViewInfo(
         }
     }
 
-    override fun originatingElements() = super.originatingElements() + listOf(viewElement)
+    override fun additionalOriginatingElements() = listOf(viewElement)
 }

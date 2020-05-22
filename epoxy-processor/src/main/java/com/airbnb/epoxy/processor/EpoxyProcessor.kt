@@ -28,7 +28,7 @@ class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
     override val usesModelViewConfig: Boolean = false
     private val styleableModelsToWrite = mutableListOf<BasicGeneratedModelInfo>()
 
-    override fun supportedAnnotations(): List<KClass<*>> = super.supportedAnnotations() + listOf(
+    override fun additionalSupportedAnnotations(): List<KClass<*>> = listOf(
         EpoxyModelClass::class,
         EpoxyAttribute::class
     )
