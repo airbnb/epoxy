@@ -8,9 +8,9 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeVariableName
-import kotlinx.coroutines.coroutineScope
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
+import kotlinx.coroutines.coroutineScope
 
 internal class KotlinModelBuilderExtensionWriter(
     val filer: Filer,
