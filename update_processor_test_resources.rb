@@ -20,8 +20,8 @@ def updateTestClass(test_class_result)
     end
 
     # Just a sanity check to make sure the pre block we're looking at is a processor source output
-    if preBlock.to_s.include? "Source declared the same top-level types of an expected source"
-      puts "Pre block did not contain source. (#{test_class_result}"
+    if !preBlock.to_s.include? "Source declared the same top-level types of an expected source"
+      puts "Pre block did not contain source. (#{test_class_result})"
       next
     end
 
@@ -37,9 +37,11 @@ def updateTestClass(test_class_result)
     end
 
     # The test copies the source file to the build folder. We need to modify the original file to update its expected source
-    expected_source_file_name = expected_file_match.captures[0]
-    module_path = test_class_result.split("build/reports/").first
-    expected_source_file_path = module_path + "src/test/resources" + expected_source_file_name
+    expected_source_file_path_in_build_folder = expected_file_match.captures[0]
+    expected_source_file_path = expected_source_file_path_in_build_folder.sub!(
+      "build/intermediates/sourceFolderJavaResources/debug",
+      "src/test/resources"
+    )
 
     # The error message includes the source code that was generated. We use a regex to extract the source from the following expected pattern
     #
@@ -49,13 +51,12 @@ def updateTestClass(test_class_result)
     #     at com.google.testing.compile.JavaSourcesSubject$CompilationClause.failWithCandidate(JavaSourcesSubject.java:224)
     # at com.google.testing.compile.JavaSourcesSubject$CompilationClause.parsesAs(JavaSourcesSubject.java:186)
     # at com.google.testing.compile.JavaSourcesSubject.parsesAs(JavaSourcesSubject.java:95)
-    actual_source_match = /Actual Source:[\s]*=*[\s]*(package.*?})[\s]*at com\.google/m.match(preBlock)
+    actual_source_match = /Actual Source:[\s]*=*[\s]*(package.*?})[\s]*javaSources was/m.match(preBlock)
     if actual_source_match.nil? || actual_source_match.captures.empty?
       puts "Could not find actual source in pre block (#{test_class_result})"
       next
     end
 
-    puts "Full path #{expected_source_file_path}"
     puts "Updating class: #{expected_source_file_path.split('/')[-1]}"
 
     # Finally we simply overwrite the original expected test source with the actual test output in order to update it

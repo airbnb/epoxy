@@ -7,8 +7,6 @@ buildscript {
   repositories {
     google()
     jcenter()
-    // For gradle-maven-publish-plugin snapshot
-    maven { url "https://oss.sonatype.org/service/local/repositories/snapshots/content/" }
   }
   dependencies {
     classpath "com.android.tools.build:gradle:$ANDROID_PLUGIN_VERSION"

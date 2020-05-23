@@ -19,6 +19,15 @@ android {
     }
   }
 
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  kotlinOptions {
+    jvmTarget = "1.8"
+  }
+
   testOptions {
     unitTests {
       includeAndroidResources = true
@@ -39,10 +48,15 @@ dependencies {
   implementation project(':epoxy-adapter')
   implementation project(':epoxy-databinding')
   implementation project(':epoxy-processortest2')
+  // The processor uses coroutines, and for some reason we need to include it here too for the
+  // compiler tester to be able to instantiate the processor, otherwise the coroutine classes
+  // aren't found.
+  implementation rootProject.deps.kotlinCoroutines
 
   kapt project(':epoxy-processor')
-  // Need to include the processor directly since we create an instance of it in code for testing
-  testImplementation project(':epoxy-processor')
+  // Need to include the processor directly as well since we create an instance of it in code for testing
+  implementation project(':epoxy-processor')
+
 
   implementation rootProject.deps.paris
   kapt rootProject.deps.parisProcessor

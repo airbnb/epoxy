@@ -9,6 +9,7 @@ import javax.tools.JavaFileObject;
 import static com.airbnb.epoxy.ProcessorTestUtils.assertGenerationError;
 import static com.airbnb.epoxy.ProcessorTestUtils.checkFileCompiles;
 import static com.airbnb.epoxy.ProcessorTestUtils.assertGeneration;
+import static com.airbnb.epoxy.ProcessorTestUtils.processors;
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static junit.framework.Assert.assertTrue;
@@ -56,7 +57,7 @@ public class ModelProcessorTest {
 
     assert_().about(javaSource())
         .that(model)
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedModel, generatedSubClassModel);
@@ -124,7 +125,7 @@ public class ModelProcessorTest {
 
     assert_().about(javaSource())
         .that(model)
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
 
     // We don't generate subclasses if the model is abstract unless it has a class annotation.
@@ -159,7 +160,7 @@ public class ModelProcessorTest {
 
     assert_().about(javaSource())
         .that(model)
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedModel, generatedSubClassModel);
@@ -214,7 +215,7 @@ public class ModelProcessorTest {
 
     assert_().about(javaSource())
         .that(model)
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedNoLayoutModel, generatedWithLayoutModel);
@@ -234,7 +235,7 @@ public class ModelProcessorTest {
 
     assert_().about(javaSource())
         .that(model)
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedNoLayoutModel, generatedStillNoLayoutModel,
@@ -262,7 +263,7 @@ public class ModelProcessorTest {
 
     assert_().about(javaSource())
         .that(model)
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedNoLayoutModel);

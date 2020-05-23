@@ -1,11 +1,15 @@
 package com.airbnb.epoxy
 
+import com.airbnb.epoxy.processor.ControllerProcessor
+import com.airbnb.epoxy.processor.DataBindingProcessor
+import com.airbnb.epoxy.processor.EpoxyProcessor
+import com.airbnb.epoxy.processor.ModelViewProcessor
 import com.airbnb.paris.processor.ParisProcessor
 import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourceSubjectFactory.javaSource
+import com.google.testing.compile.JavaSourcesSubject
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
-import java.util.ArrayList
 import javax.annotation.processing.Processor
 import javax.tools.JavaFileObject
 
@@ -20,7 +24,7 @@ internal object ProcessorTestUtils {
 
         assert_().about(javaSource())
             .that(model)
-            .processedWith(EpoxyProcessor())
+            .processedWith(processors())
             .failsToCompile()
             .withErrorContaining(errorMessage)
     }
@@ -32,8 +36,31 @@ internal object ProcessorTestUtils {
 
         assert_().about(javaSource())
             .that(model)
-            .processedWith(EpoxyProcessor())
+            .processedWith(processors())
             .compilesWithoutError()
+    }
+
+    @JvmStatic
+    @JvmOverloads
+    fun processors(useParis: Boolean = false): MutableList<Processor> {
+        return mutableListOf<Processor>().apply {
+            add(EpoxyProcessor())
+            add(ControllerProcessor())
+            add(DataBindingProcessor())
+            add(ModelViewProcessor())
+            if (useParis) add(ParisProcessor())
+        }
+    }
+
+    @JvmStatic
+    fun options(
+        withNoValidation: Boolean = false,
+        withImplicitAdding: Boolean = false
+    ): List<String> {
+        return mutableListOf<String>().apply {
+            if (withNoValidation) add("validateEpoxyModelUsage" setTo false)
+            if (withImplicitAdding) add("implicitlyAddAutoModels" setTo true)
+        }
     }
 
     @JvmOverloads
@@ -44,51 +71,73 @@ internal object ProcessorTestUtils {
         useParis: Boolean = false,
         helperObjects: List<JavaFileObject> = emptyList()
     ) {
-        val model = JavaFileObjects.forResource(inputFile.patchResource())
-
-        val generatedModel = JavaFileObjects.forResource(generatedFile.patchResource())
-
-        val processors = mutableListOf<Processor>().apply {
-            add(EpoxyProcessor())
-            if (useParis) add(ParisProcessor())
-        }
-
-        assert_().about(javaSources())
-            .that(helperObjects + listOf(model))
-            .processedWith(processors)
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel)
+        assertGeneration(
+            sourceFileNames = listOf(inputFile),
+            sourceObjects = helperObjects,
+            generatedFileNames = listOf(generatedFile),
+            useParis = useParis
+        )
     }
 
     @JvmStatic
     fun assertGeneration(
         inputFiles: List<String>,
-        fileNames: List<String>
+        fileNames: List<String>,
+        useParis: Boolean = false
     ) {
-        val sources = ArrayList<JavaFileObject>()
+        assertGeneration(
+            sourceFileNames = inputFiles,
+            generatedFileNames = fileNames,
+            useParis = useParis
+        )
+    }
 
-        for (inputFile in inputFiles) {
-            sources.add(
-                JavaFileObjects
-                    .forResource(inputFile.patchResource())
-            )
-        }
-
-        val generatedFiles = ArrayList<JavaFileObject>()
-        for (i in fileNames.indices) {
-            generatedFiles.add(JavaFileObjects.forResource(fileNames[i].patchResource()))
-        }
+    @JvmName("assertGenerationWithFileObjects")
+    fun assertGeneration(
+        sourceFileNames: List<String> = emptyList(),
+        sourceObjects: List<JavaFileObject> = emptyList(),
+        generatedFileNames: List<String> = emptyList(),
+        generatedFileObjects: List<JavaFileObject> = emptyList(),
+        useParis: Boolean = false
+    ) {
+        val generatedFiles = generatedFileObjects + generatedFileNames.toJavaFileObjects()
 
         assert_().about(javaSources())
-            .that(sources)
-            .processedWith(EpoxyProcessor())
+            .that(sourceObjects + sourceFileNames.toJavaFileObjects())
+            .processedWith(processors(useParis))
             .compilesWithoutError()
             .and()
             .generatesSources(
                 generatedFiles[0],
-                *generatedFiles.subList(1, generatedFiles.size)
-                    .toTypedArray()
+                *generatedFiles.drop(1).toTypedArray()
+            )
+
+        assert_().about(javaSources())
+            .that(sourceObjects + sourceFileNames.toJavaFileObjects())
+            // Also compile using these flags, since they run different code and could help
+            // catch concurrency issues, as well as indeterminate ways that the order of generated
+            // code may change due to concurrent processing. Generated code output must be stable
+            // to provide stable build cache keys
+            .withAnnotationProcessorOptions(
+                "enableParallelEpoxyProcessing" to true,
+                "logEpoxyTimings" to true
+            )
+            .processedWith(processors(useParis))
+            .compilesWithoutError()
+            .and()
+            .generatesSources(
+                generatedFiles[0],
+                *generatedFiles.drop(1).toTypedArray()
             )
     }
 }
+
+infix fun String.setTo(value: Any) = "-A$this=$value"
+
+fun JavaSourcesSubject.withAnnotationProcessorOptions(vararg option: Pair<String, Any>): JavaSourcesSubject {
+    return withCompilerOptions(option.map { it.first setTo it.second })
+}
+
+fun List<String>.toJavaFileObjects() = map { JavaFileObjects.forResource(it.patchResource()) }
+
+fun javaFile(name: String) = JavaFileObjects.forResource(name.patchResource())

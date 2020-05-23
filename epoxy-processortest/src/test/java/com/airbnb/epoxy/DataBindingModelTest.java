@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import javax.tools.JavaFileObject;
 
+import static com.airbnb.epoxy.ProcessorTestUtils.processors;
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaSourcesSubjectFactory.javaSources;
 import static java.util.Arrays.asList;
@@ -80,7 +81,7 @@ public class DataBindingModelTest {
 
     assert_().about(javaSources())
         .that(asList(model, BR_CLASS, R))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedModel);
@@ -96,7 +97,8 @@ public class DataBindingModelTest {
 
     assert_().about(javaSources())
         .that(asList(model, BR_CLASS, R))
-        .processedWith(EpoxyProcessor.withNoValidation())
+        .withCompilerOptions(ProcessorTestUtils.options(true, false))
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedModel);
@@ -115,7 +117,7 @@ public class DataBindingModelTest {
 
     assert_().about(javaSources())
         .that(asList(packageInfo, binding, BR_CLASS, R))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedModel);
@@ -138,7 +140,7 @@ public class DataBindingModelTest {
 
     assert_().about(javaSources())
         .that(asList(packageInfo, binding, BR_CLASS, R))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedModel);

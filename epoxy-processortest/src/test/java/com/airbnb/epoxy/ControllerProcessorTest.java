@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import javax.tools.JavaFileObject;
 
+import static com.airbnb.epoxy.ProcessorTestUtils.processors;
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static com.google.testing.compile.JavaSourcesSubjectFactory.javaSources;
@@ -26,7 +27,7 @@ public class ControllerProcessorTest {
 
     assert_().about(javaSources())
         .that(asList(model, controller))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedHelper);
@@ -45,7 +46,8 @@ public class ControllerProcessorTest {
 
     assert_().about(javaSources())
         .that(asList(model, controller))
-        .processedWith(EpoxyProcessor.withNoValidation())
+        .withCompilerOptions(ProcessorTestUtils.options(true, false))
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedHelper);
@@ -67,7 +69,7 @@ public class ControllerProcessorTest {
 
     assert_().about(javaSources())
         .that(asList(model, controller))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedHelper, generatedSubHelper);
@@ -80,7 +82,7 @@ public class ControllerProcessorTest {
 
     assert_().about(javaSource())
         .that(badClass)
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile();
   }
 
@@ -91,7 +93,7 @@ public class ControllerProcessorTest {
 
     assert_().about(javaSource())
         .that(badClass)
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile();
   }
 
@@ -108,7 +110,8 @@ public class ControllerProcessorTest {
 
     assert_().about(javaSources())
         .that(asList(model, controller))
-        .processedWith(EpoxyProcessor.withImplicitAdding())
+        .withCompilerOptions(ProcessorTestUtils.options(false, true))
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedHelper);

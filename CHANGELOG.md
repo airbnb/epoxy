@@ -1,3 +1,24 @@
+# 4.0.0-beta1 (May 22, 2020)
+- Support for incremental annotation processing as an Aggregating processor (#972)
+- Removed Litho support
+- A new annotation processor argument `logEpoxyTimings` can be set to get a detailed breakdown of how long the processors took and where they spent their time (off by default)
+- Another new argument `enableParallelEpoxyProcessing` can be set to true to have the annotation processor process annotations and generate files in parallel (via coroutines).
+
+You can enable these processor options in your build.gradle file like so:
+```
+project.android.buildTypes.all { buildType ->
+  buildType.javaCompileOptions.annotationProcessorOptions.arguments =
+      [
+          logEpoxyTimings  : "true",
+          enableParallelEpoxyProcessing     : "true"
+      ]
+}
+```
+
+Parallel processing can greatly speed up processing time (moreso than the incremental support), but given the nature of parallel processing it is still incubating.
+Please report any issues or crashes that you notice.
+(We are currently using parallel mode in our large project at Airbnb with no problems.)
+
 # 3.11.0 (May 20, 2020)
 - Introduce partial impression visibility states (#973)
 - Fix sticky header crash (#976)

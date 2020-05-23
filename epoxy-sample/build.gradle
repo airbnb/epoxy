@@ -25,13 +25,19 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 project.android.buildTypes.all { buildType ->
     buildType.javaCompileOptions.annotationProcessorOptions.arguments =
             [
                     validateEpoxyModelUsage     : String.valueOf(buildType.name == 'debug'),
                     requireHashCodeInEpoxyModels: "true",
                     requireAbstractEpoxyModels  : "true",
-                    implicitlyAddAutoModels     : "true"
+                    implicitlyAddAutoModels     : "true",
+                    logEpoxyTimings     : "true",
+                    enableParallelEpoxyProcessing     : "true",
             ]
 }
 
