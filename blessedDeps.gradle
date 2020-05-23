@@ -33,7 +33,7 @@ rootProject.ext.ANDROID_ARCH_TESTING = "1.1.1"
 rootProject.ext.ANDROID_TEST_RUNNER = "1.0.2"
 rootProject.ext.SQUARE_JAVAPOET_VERSION = "1.11.1"
 rootProject.ext.SQUARE_KOTLINPOET_VERSION = "1.5.0"
-rootProject.ext.KOTLIN_COROUTINES_VERSION = "1.2.1"
+rootProject.ext.KOTLIN_COROUTINES_VERSION = "1.3.7"
 rootProject.ext.GLIDE_VERSION = "4.9.0"
 
 rootProject.ext.ASSERTJ_VERSION = "1.7.1"
@@ -55,6 +55,7 @@ rootProject.ext.KOTLIN_METADATA_VERSION = "1.4.0"
 
 rootProject.ext.deps = [
     kotlin                : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$KOTLIN_VERSION",
+    kotlinCoroutines      : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$KOTLIN_COROUTINES_VERSION",
     autoValue             : "com.google.auto.value:auto-value:$AUTO_VALUE_VERSION",
     androidRuntime        : "com.google.android:android:$ANDROID_RUNTIME_VERSION",
     androidAppcompat      : "androidx.appcompat:appcompat:$ANDROIDX_APPCOMPAT",

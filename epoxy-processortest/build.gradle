@@ -51,7 +51,7 @@ dependencies {
   // The processor uses coroutines, and for some reason we need to include it here too for the
   // compiler tester to be able to instantiate the processor, otherwise the coroutine classes
   // aren't found.
-  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.6"
+  implementation rootProject.deps.kotlinCoroutines
 
   kapt project(':epoxy-processor')
   // Need to include the processor directly as well since we create an instance of it in code for testing
