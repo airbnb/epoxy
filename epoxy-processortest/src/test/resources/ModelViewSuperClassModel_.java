@@ -9,13 +9,10 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.UnsupportedOperationException;
-import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
 public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> implements GeneratedModel<ModelViewSuperClass>, ModelViewSuperClassModelBuilder {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
-
   private OnModelBoundListener<ModelViewSuperClassModel_, ModelViewSuperClass> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelViewSuperClassModel_, ModelViewSuperClass> onModelUnboundListener_epoxyGeneratedModel;
@@ -24,8 +21,6 @@ public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> i
 
   private OnModelVisibilityChangedListener<ModelViewSuperClassModel_, ModelViewSuperClass> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  /**
-   * Bitset index: 0 */
   private int superClassValue_Int = 0;
 
   @Override
@@ -167,7 +162,6 @@ public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> i
    * @see ModelViewSuperClass#superClassValue(int)
    */
   public ModelViewSuperClassModel_ superClassValue(int superClassValue) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     this.superClassValue_Int = superClassValue;
     return this;
@@ -255,7 +249,6 @@ public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> i
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    assignedAttributes_epoxyGeneratedModel.clear();
     this.superClassValue_Int = 0;
     super.reset();
     return this;

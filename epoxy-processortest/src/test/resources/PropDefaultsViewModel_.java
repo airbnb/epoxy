@@ -25,8 +25,6 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
 
   private OnModelVisibilityChangedListener<PropDefaultsViewModel_, PropDefaultsView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  /**
-   * Bitset index: 0 */
   @Nullable
   private CharSequence defaultsToNull_CharSequence = (CharSequence) null;
 
@@ -35,21 +33,13 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   @NonNull
   private CharSequence noDefaultSoItIsRequired_CharSequence;
 
-  /**
-   * Bitset index: 2 */
   private int primitivesHaveImplicitDefaultsAndCannotBeRequired_Int = 0;
 
-  /**
-   * Bitset index: 3 */
   private int primitiveWithExplicitDefault_Int = PropDefaultsView.PRIMITIVE_DEFAULT;
 
-  /**
-   * Bitset index: 4 */
   @NonNull
   private String objectWithDefault_String = PropDefaultsView.STRING_DEFAULT;
 
-  /**
-   * Bitset index: 5 */
   @Nullable
   private String objectWithDefaultAndNullable_String = PropDefaultsView.STRING_DEFAULT;
 
@@ -206,7 +196,6 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
    * @see PropDefaultsView#defaultsToNull(CharSequence)
    */
   public PropDefaultsViewModel_ defaultsToNull(@Nullable CharSequence defaultsToNull) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     this.defaultsToNull_CharSequence = defaultsToNull;
     return this;
@@ -245,7 +234,6 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
    */
   public PropDefaultsViewModel_ primitivesHaveImplicitDefaultsAndCannotBeRequired(
       int primitivesHaveImplicitDefaultsAndCannotBeRequired) {
-    assignedAttributes_epoxyGeneratedModel.set(2);
     onMutation();
     this.primitivesHaveImplicitDefaultsAndCannotBeRequired_Int = primitivesHaveImplicitDefaultsAndCannotBeRequired;
     return this;
@@ -261,7 +249,6 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
    * @see PropDefaultsView#primitiveWithExplicitDefault(int)
    */
   public PropDefaultsViewModel_ primitiveWithExplicitDefault(int primitiveWithExplicitDefault) {
-    assignedAttributes_epoxyGeneratedModel.set(3);
     onMutation();
     this.primitiveWithExplicitDefault_Int = primitiveWithExplicitDefault;
     return this;
@@ -280,7 +267,6 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
     if (objectWithDefault == null) {
       throw new IllegalArgumentException("objectWithDefault cannot be null");
     }
-    assignedAttributes_epoxyGeneratedModel.set(4);
     onMutation();
     this.objectWithDefault_String = objectWithDefault;
     return this;
@@ -298,7 +284,6 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
    */
   public PropDefaultsViewModel_ objectWithDefaultAndNullable(
       @Nullable String objectWithDefaultAndNullable) {
-    assignedAttributes_epoxyGeneratedModel.set(5);
     onMutation();
     this.objectWithDefaultAndNullable_String = objectWithDefaultAndNullable;
     return this;

@@ -9,13 +9,10 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.UnsupportedOperationException;
-import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
 public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropModelPropView> implements GeneratedModel<TestFieldPropModelPropView>, TestFieldPropModelPropViewModelBuilder {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
-
   private OnModelBoundListener<TestFieldPropModelPropViewModel_, TestFieldPropModelPropView> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<TestFieldPropModelPropViewModel_, TestFieldPropModelPropView> onModelUnboundListener_epoxyGeneratedModel;
@@ -24,8 +21,6 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
 
   private OnModelVisibilityChangedListener<TestFieldPropModelPropViewModel_, TestFieldPropModelPropView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  /**
-   * Bitset index: 0 */
   private int value_Int = 0;
 
   @Override
@@ -167,7 +162,6 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
    * @see TestFieldPropModelPropView#value
    */
   public TestFieldPropModelPropViewModel_ value(int value) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     this.value_Int = value;
     return this;
@@ -256,7 +250,6 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    assignedAttributes_epoxyGeneratedModel.clear();
     this.value_Int = 0;
     super.reset();
     return this;

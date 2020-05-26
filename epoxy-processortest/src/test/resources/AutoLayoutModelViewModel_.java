@@ -9,13 +9,10 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.UnsupportedOperationException;
-import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
 public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> implements GeneratedModel<AutoLayoutModelView>, AutoLayoutModelViewModelBuilder {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
-
   private OnModelBoundListener<AutoLayoutModelViewModel_, AutoLayoutModelView> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<AutoLayoutModelViewModel_, AutoLayoutModelView> onModelUnboundListener_epoxyGeneratedModel;
@@ -24,8 +21,6 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
 
   private OnModelVisibilityChangedListener<AutoLayoutModelViewModel_, AutoLayoutModelView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  /**
-   * Bitset index: 0 */
   private int value_Int = 0;
 
   @Override
@@ -165,7 +160,6 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
    * @see AutoLayoutModelView#setValue(int)
    */
   public AutoLayoutModelViewModel_ value(int value) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     this.value_Int = value;
     return this;
@@ -253,7 +247,6 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    assignedAttributes_epoxyGeneratedModel.clear();
     this.value_Int = 0;
     super.reset();
     return this;

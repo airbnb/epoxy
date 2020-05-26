@@ -40,37 +40,25 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   @NonNull
   private String stringValue_String;
 
-  /**
-   * Bitset index: 1 */
   @Nullable
   private String nullableStringValue_String = (String) null;
 
-  /**
-   * Bitset index: 2 */
   private int intValue_Int = 0;
 
-  /**
-   * Bitset index: 3 */
   @StringRes
   private int intValueWithAnnotation_Int = 0;
 
-  /**
-   * Bitset index: 4 */
   @IntRange(
       from = 0,
       to = 200
   )
   private int intValueWithRangeAnnotation_Int = 0;
 
-  /**
-   * Bitset index: 5 */
   @Dimension(
       unit = 0
   )
   private int intValueWithDimenTypeAnnotation_Int = 0;
 
-  /**
-   * Bitset index: 6 */
   @IntRange(
       from = 0,
       to = 200
@@ -85,8 +73,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   @NonNull
   private Integer integerValue_Integer;
 
-  /**
-   * Bitset index: 8 */
   private boolean boolValue_Boolean = false;
 
   /**
@@ -109,8 +95,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   @NonNull
   private View.OnClickListener clickListener_OnClickListener;
 
-  /**
-   * Bitset index: 13 */
   private StringAttributeData title_StringAttributeData =  new StringAttributeData((CharSequence) null);
 
   @Override
@@ -341,7 +325,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * @see TestManyTypesView#setNullableStringValue(String)
    */
   public TestManyTypesViewModel_ nullableStringValue(@Nullable String nullableStringValue) {
-    assignedAttributes_epoxyGeneratedModel.set(1);
     onMutation();
     this.nullableStringValue_String = nullableStringValue;
     return this;
@@ -358,7 +341,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * @see TestManyTypesView#setIntValue(int)
    */
   public TestManyTypesViewModel_ intValue(int intValue) {
-    assignedAttributes_epoxyGeneratedModel.set(2);
     onMutation();
     this.intValue_Int = intValue;
     return this;
@@ -374,7 +356,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * @see TestManyTypesView#setIntValueWithAnnotation(int)
    */
   public TestManyTypesViewModel_ intValueWithAnnotation(@StringRes int intValueWithAnnotation) {
-    assignedAttributes_epoxyGeneratedModel.set(3);
     onMutation();
     this.intValueWithAnnotation_Int = intValueWithAnnotation;
     return this;
@@ -392,7 +373,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    */
   public TestManyTypesViewModel_ intValueWithRangeAnnotation(
       @IntRange(from = 0, to = 200) int intValueWithRangeAnnotation) {
-    assignedAttributes_epoxyGeneratedModel.set(4);
     onMutation();
     this.intValueWithRangeAnnotation_Int = intValueWithRangeAnnotation;
     return this;
@@ -413,7 +393,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    */
   public TestManyTypesViewModel_ intValueWithDimenTypeAnnotation(
       @Dimension(unit = 0) int intValueWithDimenTypeAnnotation) {
-    assignedAttributes_epoxyGeneratedModel.set(5);
     onMutation();
     this.intValueWithDimenTypeAnnotation_Int = intValueWithDimenTypeAnnotation;
     return this;
@@ -433,7 +412,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    */
   public TestManyTypesViewModel_ intWithMultipleAnnotations(
       @IntRange(from = 0, to = 200) @Dimension(unit = 0) int intWithMultipleAnnotations) {
-    assignedAttributes_epoxyGeneratedModel.set(6);
     onMutation();
     this.intWithMultipleAnnotations_Int = intWithMultipleAnnotations;
     return this;
@@ -476,7 +454,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * @see TestManyTypesView#setBoolValue(boolean)
    */
   public TestManyTypesViewModel_ boolValue(boolean boolValue) {
-    assignedAttributes_epoxyGeneratedModel.set(8);
     onMutation();
     this.boolValue_Boolean = boolValue;
     return this;
@@ -593,7 +570,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    */
   public TestManyTypesViewModel_ title(@Nullable CharSequence title) {
     onMutation();
-    assignedAttributes_epoxyGeneratedModel.set(13);
     title_StringAttributeData.setValue(title);
     return this;
   }
@@ -607,7 +583,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    */
   public TestManyTypesViewModel_ title(@StringRes int stringRes) {
     onMutation();
-    assignedAttributes_epoxyGeneratedModel.set(13);
     title_StringAttributeData.setValue(stringRes);
     return this;
   }
@@ -621,7 +596,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    */
   public TestManyTypesViewModel_ title(@StringRes int stringRes, Object... formatArgs) {
     onMutation();
-    assignedAttributes_epoxyGeneratedModel.set(13);
     title_StringAttributeData.setValue(stringRes, formatArgs);
     return this;
   }
@@ -636,7 +610,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   public TestManyTypesViewModel_ titleQuantityRes(@PluralsRes int pluralRes, int quantity,
       Object... formatArgs) {
     onMutation();
-    assignedAttributes_epoxyGeneratedModel.set(13);
     title_StringAttributeData.setValue(pluralRes, quantity, formatArgs);
     return this;
   }

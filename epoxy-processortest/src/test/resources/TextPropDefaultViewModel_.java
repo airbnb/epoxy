@@ -32,8 +32,6 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
    * Bitset index: 0 */
   private StringAttributeData textWithDefault_StringAttributeData =  new StringAttributeData(R.string.string_resource_value);
 
-  /**
-   * Bitset index: 1 */
   private StringAttributeData nullableTextWithDefault_StringAttributeData =  new StringAttributeData(R.string.string_resource_value);
 
   @Override
@@ -238,7 +236,6 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   public TextPropDefaultViewModel_ nullableTextWithDefault(
       @Nullable CharSequence nullableTextWithDefault) {
     onMutation();
-    assignedAttributes_epoxyGeneratedModel.set(1);
     nullableTextWithDefault_StringAttributeData.setValue(nullableTextWithDefault);
     return this;
   }
@@ -252,7 +249,6 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
    */
   public TextPropDefaultViewModel_ nullableTextWithDefault(@StringRes int stringRes) {
     onMutation();
-    assignedAttributes_epoxyGeneratedModel.set(1);
     nullableTextWithDefault_StringAttributeData.setValue(stringRes);
     return this;
   }
@@ -267,7 +263,6 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   public TextPropDefaultViewModel_ nullableTextWithDefault(@StringRes int stringRes,
       Object... formatArgs) {
     onMutation();
-    assignedAttributes_epoxyGeneratedModel.set(1);
     nullableTextWithDefault_StringAttributeData.setValue(stringRes, formatArgs);
     return this;
   }
@@ -282,7 +277,6 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   public TextPropDefaultViewModel_ nullableTextWithDefaultQuantityRes(@PluralsRes int pluralRes,
       int quantity, Object... formatArgs) {
     onMutation();
-    assignedAttributes_epoxyGeneratedModel.set(1);
     nullableTextWithDefault_StringAttributeData.setValue(pluralRes, quantity, formatArgs);
     return this;
   }

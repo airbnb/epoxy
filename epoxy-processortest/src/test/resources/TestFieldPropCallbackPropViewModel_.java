@@ -10,13 +10,10 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.UnsupportedOperationException;
-import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
 public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPropCallbackPropView> implements GeneratedModel<TestFieldPropCallbackPropView>, TestFieldPropCallbackPropViewModelBuilder {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
-
   private OnModelBoundListener<TestFieldPropCallbackPropViewModel_, TestFieldPropCallbackPropView> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<TestFieldPropCallbackPropViewModel_, TestFieldPropCallbackPropView> onModelUnboundListener_epoxyGeneratedModel;
@@ -25,8 +22,6 @@ public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPro
 
   private OnModelVisibilityChangedListener<TestFieldPropCallbackPropViewModel_, TestFieldPropCallbackPropView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  /**
-   * Bitset index: 0 */
   @Nullable
   private View.OnClickListener value_OnClickListener = (View.OnClickListener) null;
 
@@ -168,7 +163,6 @@ public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPro
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
   public TestFieldPropCallbackPropViewModel_ value(
       @Nullable final OnModelClickListener<TestFieldPropCallbackPropViewModel_, TestFieldPropCallbackPropView> value) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     if (value == null) {
       this.value_OnClickListener = null;
@@ -185,7 +179,6 @@ public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPro
    * @see TestFieldPropCallbackPropView#value
    */
   public TestFieldPropCallbackPropViewModel_ value(@Nullable View.OnClickListener value) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     this.value_OnClickListener = value;
     return this;
@@ -275,7 +268,6 @@ public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPro
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    assignedAttributes_epoxyGeneratedModel.clear();
     this.value_OnClickListener = (View.OnClickListener) null;
     super.reset();
     return this;

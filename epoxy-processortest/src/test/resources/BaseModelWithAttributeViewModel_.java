@@ -177,7 +177,6 @@ public class BaseModelViewModel_ extends TestBaseModel<BaseModelView> implements
   }
 
   public BaseModelViewModel_ baseModelString(String baseModelString) {
-    assignedAttributes_epoxyGeneratedModel.set(1);
     onMutation();
     super.baseModelString = baseModelString;
     return this;

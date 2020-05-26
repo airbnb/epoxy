@@ -9,14 +9,11 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.UnsupportedOperationException;
-import java.util.BitSet;
 import javax.annotation.Nullable;
 
 /**
  * Generated file. Do not modify! */
 public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestFieldPropNullOnRecycleOptionView> implements GeneratedModel<TestFieldPropNullOnRecycleOptionView>, TestFieldPropNullOnRecycleOptionViewModelBuilder {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
-
   private OnModelBoundListener<TestFieldPropNullOnRecycleOptionViewModel_, TestFieldPropNullOnRecycleOptionView> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<TestFieldPropNullOnRecycleOptionViewModel_, TestFieldPropNullOnRecycleOptionView> onModelUnboundListener_epoxyGeneratedModel;
@@ -25,8 +22,6 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
 
   private OnModelVisibilityChangedListener<TestFieldPropNullOnRecycleOptionViewModel_, TestFieldPropNullOnRecycleOptionView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  /**
-   * Bitset index: 0 */
   @Nullable
   private View.OnClickListener value_OnClickListener = (View.OnClickListener) null;
 
@@ -168,7 +163,6 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
   public TestFieldPropNullOnRecycleOptionViewModel_ value(
       @Nullable final OnModelClickListener<TestFieldPropNullOnRecycleOptionViewModel_, TestFieldPropNullOnRecycleOptionView> value) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     if (value == null) {
       this.value_OnClickListener = null;
@@ -185,7 +179,6 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
    * @see TestFieldPropNullOnRecycleOptionView#value
    */
   public TestFieldPropNullOnRecycleOptionViewModel_ value(@Nullable View.OnClickListener value) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     this.value_OnClickListener = value;
     return this;
@@ -279,7 +272,6 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    assignedAttributes_epoxyGeneratedModel.clear();
     this.value_OnClickListener = (View.OnClickListener) null;
     super.reset();
     return this;

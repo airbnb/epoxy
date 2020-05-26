@@ -7,13 +7,10 @@ import java.lang.Number;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
 public class TestAfterBindPropsViewModel_ extends EpoxyModel<TestAfterBindPropsView> implements GeneratedModel<TestAfterBindPropsView>, TestAfterBindPropsViewModelBuilder {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(2);
-
   private OnModelBoundListener<TestAfterBindPropsViewModel_, TestAfterBindPropsView> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<TestAfterBindPropsViewModel_, TestAfterBindPropsView> onModelUnboundListener_epoxyGeneratedModel;
@@ -22,12 +19,8 @@ public class TestAfterBindPropsViewModel_ extends EpoxyModel<TestAfterBindPropsV
 
   private OnModelVisibilityChangedListener<TestAfterBindPropsViewModel_, TestAfterBindPropsView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  /**
-   * Bitset index: 0 */
   private boolean flag_Boolean = false;
 
-  /**
-   * Bitset index: 1 */
   private boolean flagSuper_Boolean = false;
 
   @Override
@@ -162,7 +155,6 @@ public class TestAfterBindPropsViewModel_ extends EpoxyModel<TestAfterBindPropsV
    * @see TestAfterBindPropsView#setFlag(boolean)
    */
   public TestAfterBindPropsViewModel_ flag(boolean flag) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     this.flag_Boolean = flag;
     return this;
@@ -178,7 +170,6 @@ public class TestAfterBindPropsViewModel_ extends EpoxyModel<TestAfterBindPropsV
    * @see TestAfterBindPropsSuperView#setFlagSuper(boolean)
    */
   public TestAfterBindPropsViewModel_ flagSuper(boolean flagSuper) {
-    assignedAttributes_epoxyGeneratedModel.set(1);
     onMutation();
     this.flagSuper_Boolean = flagSuper;
     return this;
@@ -268,7 +259,6 @@ public class TestAfterBindPropsViewModel_ extends EpoxyModel<TestAfterBindPropsV
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    assignedAttributes_epoxyGeneratedModel.clear();
     this.flag_Boolean = false;
     this.flagSuper_Boolean = false;
     super.reset();

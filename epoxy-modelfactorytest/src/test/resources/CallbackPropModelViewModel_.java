@@ -8,13 +8,10 @@ import java.lang.Number;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
 public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelView> implements GeneratedModel<CallbackPropModelView>, CallbackPropModelViewModelBuilder {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
-
   private OnModelBoundListener<CallbackPropModelViewModel_, CallbackPropModelView> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<CallbackPropModelViewModel_, CallbackPropModelView> onModelUnboundListener_epoxyGeneratedModel;
@@ -23,8 +20,6 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
 
   private OnModelVisibilityChangedListener<CallbackPropModelViewModel_, CallbackPropModelView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  /**
-   * Bitset index: 0 */
   @Nullable
   private View.OnClickListener onClickListener_OnClickListener = (View.OnClickListener) null;
 
@@ -152,7 +147,6 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
   public CallbackPropModelViewModel_ onClickListener(
       @Nullable final OnModelClickListener<CallbackPropModelViewModel_, CallbackPropModelView> onClickListener) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     if (onClickListener == null) {
       this.onClickListener_OnClickListener = null;
@@ -170,7 +164,6 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
    */
   public CallbackPropModelViewModel_ onClickListener(
       @Nullable View.OnClickListener onClickListener) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     this.onClickListener_OnClickListener = onClickListener;
     return this;
@@ -261,7 +254,6 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    assignedAttributes_epoxyGeneratedModel.clear();
     this.onClickListener_OnClickListener = (View.OnClickListener) null;
     super.reset();
     return this;

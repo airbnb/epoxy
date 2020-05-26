@@ -33,8 +33,6 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
 
   private OnModelVisibilityChangedListener<AllTypesModelViewModel_, AllTypesModelView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  /**
-   * Bitset index: 0 */
   private boolean booleanValue_Boolean = false;
 
   /**
@@ -52,12 +50,8 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   @NonNull
   private Double boxedDoubleValue_Double;
 
-  /**
-   * Bitset index: 4 */
   private double doubleValue_Double = 0.0d;
 
-  /**
-   * Bitset index: 5 */
   @DrawableRes
   private int drawableRes_Int = 0;
 
@@ -66,8 +60,6 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   @NonNull
   private List<? extends EpoxyModel<?>> epoxyModelList_List;
 
-  /**
-   * Bitset index: 7 */
   private int intValue_Int = 0;
 
   /**
@@ -75,8 +67,6 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   @NonNull
   private Integer boxedIntValue_Integer;
 
-  /**
-   * Bitset index: 9 */
   private long longValue_Long = 0L;
 
   /**
@@ -89,8 +79,6 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   @NonNull
   private View.OnClickListener onClickListener_OnClickListener;
 
-  /**
-   * Bitset index: 12 */
   @RawRes
   private int rawRes_Int = 0;
 
@@ -326,7 +314,6 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
    * @see AllTypesModelView#setBooleanValue(boolean)
    */
   public AllTypesModelViewModel_ booleanValue(boolean booleanValue) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     this.booleanValue_Boolean = booleanValue;
     return this;
@@ -402,7 +389,6 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
    * @see AllTypesModelView#setDoubleValue(double)
    */
   public AllTypesModelViewModel_ doubleValue(double doubleValue) {
-    assignedAttributes_epoxyGeneratedModel.set(4);
     onMutation();
     this.doubleValue_Double = doubleValue;
     return this;
@@ -418,7 +404,6 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
    * @see AllTypesModelView#setDrawableRes(int)
    */
   public AllTypesModelViewModel_ drawableRes(@DrawableRes int drawableRes) {
-    assignedAttributes_epoxyGeneratedModel.set(5);
     onMutation();
     this.drawableRes_Int = drawableRes;
     return this;
@@ -456,7 +441,6 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
    * @see AllTypesModelView#setIntValue(int)
    */
   public AllTypesModelViewModel_ intValue(int intValue) {
-    assignedAttributes_epoxyGeneratedModel.set(7);
     onMutation();
     this.intValue_Int = intValue;
     return this;
@@ -492,7 +476,6 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
    * @see AllTypesModelView#setLongValue(long)
    */
   public AllTypesModelViewModel_ longValue(long longValue) {
-    assignedAttributes_epoxyGeneratedModel.set(9);
     onMutation();
     this.longValue_Long = longValue;
     return this;
@@ -563,7 +546,6 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
    * @see AllTypesModelView#setRawRes(int)
    */
   public AllTypesModelViewModel_ rawRes(@RawRes int rawRes) {
-    assignedAttributes_epoxyGeneratedModel.set(12);
     onMutation();
     this.rawRes_Int = rawRes;
     return this;
