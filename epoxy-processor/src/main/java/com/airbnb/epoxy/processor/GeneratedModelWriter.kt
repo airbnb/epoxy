@@ -333,17 +333,17 @@ class GeneratedModelWriter(
 
         classInfo.attributeInfo
             .filter { it.isGenerated }
-            .mapTo(fields) {
-                buildField(it.typeName, it.fieldName) {
+            .mapTo(fields) { attributeInfo ->
+                buildField(attributeInfo.typeName, attributeInfo.fieldName) {
                     addModifiers(PRIVATE)
-                    addAnnotations(it.setterAnnotations)
+                    addAnnotations(attributeInfo.setterAnnotations)
 
-                    if (shouldUseBitSet(classInfo)) {
-                        addJavadoc("Bitset index: \$L", attributeIndex(classInfo, it))
+                    if (shouldUseBitSet(classInfo, attr = attributeInfo)) {
+                        addJavadoc("Bitset index: \$L", attributeIndex(classInfo, attributeInfo))
                     }
 
-                    if (it.codeToSetDefault.isPresent) {
-                        initializer(it.codeToSetDefault.value())
+                    if (attributeInfo.codeToSetDefault.isPresent) {
+                        initializer(attributeInfo.codeToSetDefault.value())
                     }
                 }
             }
@@ -1888,21 +1888,21 @@ class GeneratedModelWriter(
         private val GENERATED_FIELD_SUFFIX = "_epoxyGeneratedModel"
         private val CREATE_NEW_HOLDER_METHOD_NAME = "createNewHolder"
         private val GET_DEFAULT_LAYOUT_METHOD_NAME = "getDefaultLayout"
-        val ATTRIBUTES_BITSET_FIELD_NAME = "assignedAttributes" + GENERATED_FIELD_SUFFIX
+        val ATTRIBUTES_BITSET_FIELD_NAME = "assignedAttributes$GENERATED_FIELD_SUFFIX"
 
         fun shouldUseBitSet(info: GeneratedModelInfo): Boolean {
-            return shouldUseBitSet(info, null)
+            return info.attributeInfo.any { shouldUseBitSet(info, it) }
         }
 
-        fun shouldUseBitSet(info: GeneratedModelInfo, attr: AttributeInfo?): Boolean {
+        fun shouldUseBitSet(info: GeneratedModelInfo, attr: AttributeInfo): Boolean {
             if (info !is ModelViewInfo) return false
 
-            // This essentially checks for whether the attribute is going to have "bind" code
-            // generated for it. The main case is a BaseModel class whose attributes we inherit -
-            // we want to generate a set call to "super", but the original model handles its own
-            // bind. In this case we don't have to generate the code for the bitset for that attribute
-            // since we aren't binding it, which saves lines of code generated.
-            return attr == null || info.isInGroup(attr)
+            // Avoid generating bitset code for attributes that don't need it.
+            // We only use the bitset to differentiate which attribute in a group
+            // was set, or to check if an attribute was set if it is required.
+            // If the attribute is not generated then we assume that its parent model
+            // handles its binding.
+            return attr.isRequired || (attr.isGenerated && info.isOverload(attr))
         }
 
         fun isAttributeSetCode(
@@ -1929,7 +1929,7 @@ class GeneratedModelWriter(
             attr: AttributeInfo,
             stringSetter: Builder
         ) {
-            if (shouldUseBitSet(modelInfo)) {
+            if (shouldUseBitSet(modelInfo, attr)) {
                 stringSetter.addStatement(
                     "\$L.set(\$L)", ATTRIBUTES_BITSET_FIELD_NAME,
                     attributeIndex(modelInfo, attr)
