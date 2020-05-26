@@ -216,6 +216,8 @@ abstract class GeneratedModelInfo(val memoizer: Memoizer) {
             ?: emptyList()
     }
 
+    fun isInGroup(attribute: AttributeInfo): Boolean = attributeToGroup.containsKey(attribute)
+
     fun isOverload(attribute: AttributeInfo): Boolean {
         return attributeToGroup[attribute]?.attributes?.let { it.size > 1 } == true
     }

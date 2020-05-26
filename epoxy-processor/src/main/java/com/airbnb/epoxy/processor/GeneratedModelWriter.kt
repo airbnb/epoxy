@@ -162,7 +162,9 @@ class GeneratedModelWriter(
             addMethods(generateDefaultMethodImplementations(info))
             addMethods(generateOtherLayoutOptions(info))
             addMethods(generateDataBindingMethodsIfNeeded(info))
-            addMethod(generateReset(info))
+            if (!configManager.disableGenerateReset(info)) {
+                addMethod(generateReset(info))
+            }
             addMethod(generateEquals(info))
             addMethod(generateHashCode(info))
             addMethod(generateToString(info))
@@ -1000,7 +1002,8 @@ class GeneratedModelWriter(
     }
 
     private fun generateMethodsReturningClassType(info: GeneratedModelInfo): Iterable<MethodSpec> {
-        return info.methodsReturningClassType.map { methodInfo ->
+        return info.methodsReturningClassType.mapNotNull { methodInfo ->
+
             val builder = MethodSpec.methodBuilder(methodInfo.name)
                 .addModifiers(methodInfo.modifiers)
                 .addParameters(methodInfo.params)
@@ -1008,12 +1011,12 @@ class GeneratedModelWriter(
                 .varargs(methodInfo.varargs)
                 .returns(info.parameterizedGeneratedName)
 
-            if (info.isProgrammaticView &&
+            val isLayoutUnsupportedOverload = info.isProgrammaticView &&
                 "layout" == methodInfo.name &&
                 methodInfo.params.size == 1 &&
                 methodInfo.params[0].type === TypeName.INT
-            ) {
 
+            if (isLayoutUnsupportedOverload) {
                 builder.addStatement(
                     "throw new \$T(\"Layout resources are unsupported with programmatic " +
                         "views.\")",
@@ -1034,7 +1037,15 @@ class GeneratedModelWriter(
                     .addStatement("return this")
             }
 
-            builder.build()
+            if (configManager.disableGenerateBuilderOverloads(info) && !isLayoutUnsupportedOverload) {
+                // We want to keep the layout overload when it is throwing an UnsupportedOperationException
+                // because that actually adds new behavior. All other overloads simply call super
+                // and return "this", which can be disabled when builder chaining is not needed
+                // (ie with kotlin).
+                null
+            } else {
+                builder.build()
+            }
         }
     }
 
@@ -1338,7 +1349,7 @@ class GeneratedModelWriter(
                     methods.add(generateSetter(modelInfo, attr))
                 }
 
-                if (attr.generateGetter) {
+                if (attr.generateGetter && !configManager.disableGenerateGetters(modelInfo)) {
                     methods.add(generateGetter(modelInfo, attr))
                 }
             }
@@ -1879,7 +1890,20 @@ class GeneratedModelWriter(
         private val GET_DEFAULT_LAYOUT_METHOD_NAME = "getDefaultLayout"
         val ATTRIBUTES_BITSET_FIELD_NAME = "assignedAttributes" + GENERATED_FIELD_SUFFIX
 
-        fun shouldUseBitSet(info: GeneratedModelInfo): Boolean = info is ModelViewInfo
+        fun shouldUseBitSet(info: GeneratedModelInfo): Boolean {
+            return shouldUseBitSet(info, null)
+        }
+
+        fun shouldUseBitSet(info: GeneratedModelInfo, attr: AttributeInfo?): Boolean {
+            if (info !is ModelViewInfo) return false
+
+            // This essentially checks for whether the attribute is going to have "bind" code
+            // generated for it. The main case is a BaseModel class whose attributes we inherit -
+            // we want to generate a set call to "super", but the original model handles its own
+            // bind. In this case we don't have to generate the code for the bitset for that attribute
+            // since we aren't binding it, which saves lines of code generated.
+            return attr == null || info.isInGroup(attr)
+        }
 
         fun isAttributeSetCode(
             info: GeneratedModelInfo,

@@ -27,6 +27,9 @@ class ConfigManager internal constructor(
     private val globalRequireAbstractModels: Boolean
     private val globalImplicitlyAddAutoModels: Boolean
     private val disableKotlinExtensionGeneration: Boolean
+    private val disableGenerateReset: Boolean
+    private val disableGenerateGetters: Boolean
+    private val disableGenerateBuilderOverloads: Boolean
     val logTimings: Boolean
     val enableCoroutines: Boolean
 
@@ -69,6 +72,24 @@ class ConfigManager internal constructor(
         enableCoroutines = getBooleanOption(
             options,
             PROCESSOR_OPTION_ENABLE_PARALLEL,
+            defaultValue = false
+        )
+
+        disableGenerateReset = getBooleanOption(
+            options,
+            PROCESSOR_OPTION_DISABLE_GENERATE_RESET,
+            defaultValue = false
+        )
+
+        disableGenerateGetters = getBooleanOption(
+            options,
+            PROCESSOR_OPTION_DISABLE_GENERATE_GETTERS,
+            defaultValue = false
+        )
+
+        disableGenerateBuilderOverloads = getBooleanOption(
+            options,
+            PROCESSOR_OPTION_DISABLE_GENERATE_BUILDER_OVERLOADS,
             defaultValue = false
         )
     }
@@ -185,6 +206,11 @@ class ConfigManager internal constructor(
      */
     fun shouldValidateModelUsage(): Boolean = validateModelUsage
 
+    fun getModelViewConfig(modelViewInfo: ModelViewInfo?): PackageModelViewSettings? {
+        if (modelViewInfo == null) return null
+        return getModelViewConfig(modelViewInfo.viewElement)
+    }
+
     fun getModelViewConfig(viewElement: Element): PackageModelViewSettings? {
         val packageName = elementUtils.getPackageOf(viewElement).qualifiedName.toString()
         return getObjectFromPackageMap(
@@ -207,6 +233,21 @@ class ConfigManager internal constructor(
             ?: GeneratedModelInfo.GENERATED_MODEL_SUFFIX
     }
 
+    fun disableGenerateBuilderOverloads(modelInfo: GeneratedModelInfo): Boolean {
+        return getModelViewConfig(modelInfo as? ModelViewInfo)?.disableGenerateBuilderOverloads
+            ?: disableGenerateBuilderOverloads
+    }
+
+    fun disableGenerateReset(modelInfo: GeneratedModelInfo): Boolean {
+        return getModelViewConfig(modelInfo as? ModelViewInfo)?.disableGenerateReset
+            ?: disableGenerateReset
+    }
+
+    fun disableGenerateGetters(modelInfo: GeneratedModelInfo): Boolean {
+        return getModelViewConfig(modelInfo as? ModelViewInfo)?.disableGenerateGetters
+            ?: disableGenerateGetters
+    }
+
     private fun getConfigurationForElement(element: Element): PackageConfigSettings {
         return getConfigurationForPackage(elementUtils.getPackageOf(element))
     }
@@ -225,6 +266,10 @@ class ConfigManager internal constructor(
     }
 
     companion object {
+        const val PROCESSOR_OPTION_DISABLE_GENERATE_RESET = "epoxyDisableGenerateReset"
+        const val PROCESSOR_OPTION_DISABLE_GENERATE_GETTERS = "epoxyDisableGenerateGetters"
+        const val PROCESSOR_OPTION_DISABLE_GENERATE_BUILDER_OVERLOADS =
+            "epoxyDisableGenerateOverloads"
         const val PROCESSOR_OPTION_LOG_TIMINGS = "logEpoxyTimings"
         const val PROCESSOR_OPTION_ENABLE_PARALLEL = "enableParallelEpoxyProcessing"
         const val PROCESSOR_OPTION_VALIDATE_MODEL_USAGE = "validateEpoxyModelUsage"

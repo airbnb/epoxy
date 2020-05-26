@@ -1,5 +1,6 @@
 package com.airbnb.epoxy.processor
 
+import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.PackageModelViewConfig
 import com.squareup.javapoet.ClassName
 import javax.lang.model.element.TypeElement
@@ -16,6 +17,10 @@ class PackageModelViewSettings(
     val layoutName: String = annotation.defaultLayoutPattern
     val includeAlternateLayouts: Boolean = annotation.useLayoutOverloads
     val generatedModelSuffix: String = annotation.generatedModelSuffix
+    val disableGenerateBuilderOverloads: Boolean? =
+        annotation.disableGenerateBuilderOverloads.toBoolean()
+    val disableGenerateGetters: Boolean? = annotation.disableGenerateGetters.toBoolean()
+    val disableGenerateReset: Boolean? = annotation.disableGenerateReset.toBoolean()
 
     val defaultBaseModel: TypeMirror? by lazy {
 
@@ -40,5 +45,13 @@ class PackageModelViewSettings(
         val viewName = Utils.toSnakeCase(viewElement.simpleName.toString())
         val resourceName = layoutName.replace("%s", viewName)
         return ResourceValue(rClass, resourceName, 0)
+    }
+
+    private fun PackageModelViewConfig.Option.toBoolean(): Boolean? {
+        return when (this) {
+            PackageModelViewConfig.Option.Default -> null
+            PackageModelViewConfig.Option.Enabled -> true
+            PackageModelViewConfig.Option.Disabled -> false
+        }
     }
 }

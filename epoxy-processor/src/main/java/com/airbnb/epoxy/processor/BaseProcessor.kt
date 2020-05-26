@@ -1,5 +1,15 @@
 package com.airbnb.epoxy.processor
 
+import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_DISABLE_GENERATE_BUILDER_OVERLOADS
+import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_DISABLE_GENERATE_GETTERS
+import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_DISABLE_GENERATE_RESET
+import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_DISABLE_KOTLIN_EXTENSION_GENERATION
+import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_ENABLE_PARALLEL
+import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS
+import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_LOG_TIMINGS
+import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS
+import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_REQUIRE_HASHCODE
+import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_VALIDATE_MODEL_USAGE
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager
@@ -77,13 +87,16 @@ abstract class BaseProcessor : AbstractProcessor(), Asyncable {
     abstract fun supportedAnnotations(): List<KClass<*>>
 
     override fun getSupportedOptions(): Set<String> = setOf(
-        ConfigManager.PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS,
-        ConfigManager.PROCESSOR_OPTION_VALIDATE_MODEL_USAGE,
-        ConfigManager.PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS,
-        ConfigManager.PROCESSOR_OPTION_REQUIRE_HASHCODE,
-        ConfigManager.PROCESSOR_OPTION_DISABLE_KOTLIN_EXTENSION_GENERATION,
-        ConfigManager.PROCESSOR_OPTION_LOG_TIMINGS,
-        ConfigManager.PROCESSOR_OPTION_ENABLE_PARALLEL
+        PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS,
+        PROCESSOR_OPTION_VALIDATE_MODEL_USAGE,
+        PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS,
+        PROCESSOR_OPTION_REQUIRE_HASHCODE,
+        PROCESSOR_OPTION_DISABLE_KOTLIN_EXTENSION_GENERATION,
+        PROCESSOR_OPTION_LOG_TIMINGS,
+        PROCESSOR_OPTION_ENABLE_PARALLEL,
+        PROCESSOR_OPTION_DISABLE_GENERATE_RESET,
+        PROCESSOR_OPTION_DISABLE_GENERATE_GETTERS,
+        PROCESSOR_OPTION_DISABLE_GENERATE_BUILDER_OVERLOADS
     )
 
     override fun init(processingEnv: ProcessingEnvironment) {

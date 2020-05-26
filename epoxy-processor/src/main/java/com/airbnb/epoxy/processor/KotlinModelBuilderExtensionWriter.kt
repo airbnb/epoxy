@@ -57,6 +57,10 @@ internal class KotlinModelBuilderExtensionWriter(
                 }
             }
             .flatten()
+            // Sort by function name to keep ordering consistent across builds. Otherwise if the
+            // processor processes models in differing orders we can have indeterminate source file
+            // generation which breaks cache keys.
+            .sortedBy { it.name }
             .forEach { fileBuilder.addFunction(it) }
 
         // We suppress Deprecation warnings for this class in case any of the models used are deprecated.
