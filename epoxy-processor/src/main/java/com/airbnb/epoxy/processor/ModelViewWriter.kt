@@ -46,7 +46,7 @@ internal class ModelViewWriter(
 
                     // If there are multiple attributes, or a default kotlin value, then we need to generate code to
                     // check which properties have been set.
-                    val noConditionals = attrCount == 1 && !attr(0).hasDefaultKotlinValue
+                    val noConditionals = !hasConditionals(attributeGroup)
 
                     for (i in 0 until attrCount) {
                         val viewAttribute = attr(i)
@@ -123,8 +123,7 @@ internal class ModelViewWriter(
 
                 for (attributeGroup in modelInfo.attributeGroups) {
                     val attributes = attributeGroup.attributes
-                    val noConditionals = attributes.size == 1 &&
-                        !(attributes.first() as ViewAttributeInfo).hasDefaultKotlinValue
+                    val noConditionals = !hasConditionals(attributeGroup)
 
                     methodBuilder.addCode("\n")
 
@@ -396,6 +395,14 @@ internal class ModelViewWriter(
     ) {
         for (methodName in modelInfo.afterPropsSetMethodNames) {
             methodBuilder.addStatement(boundObjectParam.name + "." + methodName + "()")
+        }
+    }
+
+    companion object {
+        fun hasConditionals(attributeGroup: GeneratedModelInfo.AttributeGroup?): Boolean {
+            if (attributeGroup == null) return false
+            
+            return attributeGroup.attributes.size > 1 || (attributeGroup.defaultAttribute as ViewAttributeInfo?)?.hasDefaultKotlinValue == true
         }
     }
 }

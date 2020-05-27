@@ -50,9 +50,10 @@ public @interface PackageModelViewConfig {
    * Controls whether "builder" setter functions that returns the model type will be duplicated
    * from super model classes with the function return type updated to use the generated model name.
    * This helps make all setters (such as id(...) ) return the same generated model so they can be
-   * chained in a builder pattern. This is mainly intended for Java usage and is generally unnecessary
-   * when using models in kotlin, especially if the generated kotlin model build extension functions
-   * are used. Disabling this can greatly reduce the number of methods generated on models.
+   * chained in a builder pattern. This is mainly intended for Java usage and is generally
+   * unnecessary when using models in kotlin, especially if the generated kotlin model
+   * build extension functions are used. Disabling this can greatly reduce the number of
+   * methods generated on models.
    *
    * Default is false. This may also be set project wide with an annotation processor option.
    */

@@ -1,3 +1,15 @@
+# 4.0.0-beta3 (May 27, 2020)
+- Sort functions in generated kotlin extension function files deterministically to prevent generated sources from changing
+- Avoid generating bitset checks in models when not needed
+- Add options to skip generation of functions for getters, reset, and method overloads to reduce generated code
+
+New annotation processor options are:
+- epoxyDisableGenerateOverloads
+- epoxyDisableGenerateGetters
+- epoxyDisableGenerateReset
+
+These can also be controlled (and overridden) on a per package level with the `PackageModelViewConfig` package annotation.
+
 # 4.0.0-beta1 (May 22, 2020)
 - Support for incremental annotation processing as an Aggregating processor (#972)
 - Removed Litho support

@@ -9,13 +9,10 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.UnsupportedOperationException;
-import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
 public class ModelViewExtendingSuperClassModel_ extends EpoxyModel<ModelViewExtendingSuperClass> implements GeneratedModel<ModelViewExtendingSuperClass>, ModelViewExtendingSuperClassModelBuilder {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(2);
-
   private OnModelBoundListener<ModelViewExtendingSuperClassModel_, ModelViewExtendingSuperClass> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelViewExtendingSuperClassModel_, ModelViewExtendingSuperClass> onModelUnboundListener_epoxyGeneratedModel;
@@ -24,12 +21,8 @@ public class ModelViewExtendingSuperClassModel_ extends EpoxyModel<ModelViewExte
 
   private OnModelVisibilityChangedListener<ModelViewExtendingSuperClassModel_, ModelViewExtendingSuperClass> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  /**
-   * Bitset index: 0 */
   private int subClassValue_Int = 0;
 
-  /**
-   * Bitset index: 1 */
   private int superClassValue_Int = 0;
 
   @Override
@@ -179,7 +172,6 @@ public class ModelViewExtendingSuperClassModel_ extends EpoxyModel<ModelViewExte
    * @see ModelViewExtendingSuperClass#subClassValue(int)
    */
   public ModelViewExtendingSuperClassModel_ subClassValue(int subClassValue) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     this.subClassValue_Int = subClassValue;
     return this;
@@ -195,7 +187,6 @@ public class ModelViewExtendingSuperClassModel_ extends EpoxyModel<ModelViewExte
    * @see ModelViewExtendingSuperClass#superClassValue(int)
    */
   public ModelViewExtendingSuperClassModel_ superClassValue(int superClassValue) {
-    assignedAttributes_epoxyGeneratedModel.set(1);
     onMutation();
     this.superClassValue_Int = superClassValue;
     return this;
@@ -284,7 +275,6 @@ public class ModelViewExtendingSuperClassModel_ extends EpoxyModel<ModelViewExte
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    assignedAttributes_epoxyGeneratedModel.clear();
     this.subClassValue_Int = 0;
     this.superClassValue_Int = 0;
     super.reset();

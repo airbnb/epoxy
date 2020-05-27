@@ -1894,15 +1894,20 @@ class GeneratedModelWriter(
             return info.attributeInfo.any { shouldUseBitSet(info, it) }
         }
 
+        // Avoid generating bitset code for attributes that don't need it.
         fun shouldUseBitSet(info: GeneratedModelInfo, attr: AttributeInfo): Boolean {
             if (info !is ModelViewInfo) return false
 
-            // Avoid generating bitset code for attributes that don't need it.
-            // We only use the bitset to differentiate which attribute in a group
-            // was set, or to check if an attribute was set if it is required.
+            // We use the bitset to validate if a required attribute had a value set on it
+            if (attr.isRequired) return true
+
             // If the attribute is not generated then we assume that its parent model
             // handles its binding.
-            return attr.isRequired || (attr.isGenerated && info.isOverload(attr))
+            if (!attr.isGenerated) return false
+
+            // With default values we use the bitset when our bind code needs to conditionally
+            // check which attribute value to set (either because its in a group or it has a default value)
+            return ModelViewWriter.hasConditionals(info.attributeGroup(attr))
         }
 
         fun isAttributeSetCode(
