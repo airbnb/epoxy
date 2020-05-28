@@ -74,8 +74,7 @@ internal class PagedListModelCache<T>(
      * Observer for the PagedList changes that invalidates the model cache when data is updated.
      */
     private val updateCallback = object : ListUpdateCallback {
-        @Synchronized
-        override fun onChanged(position: Int, count: Int, payload: Any?) {
+        override fun onChanged(position: Int, count: Int, payload: Any?) = synchronizedWithCache {
             assertUpdateCallbacksAllowed()
             (position until (position + count)).forEach {
                 modelCache[it] = null
@@ -83,16 +82,14 @@ internal class PagedListModelCache<T>(
             rebuildCallback()
         }
 
-        @Synchronized
-        override fun onMoved(fromPosition: Int, toPosition: Int) {
+        override fun onMoved(fromPosition: Int, toPosition: Int) = synchronizedWithCache {
             assertUpdateCallbacksAllowed()
             val model = modelCache.removeAt(fromPosition)
             modelCache.add(toPosition, model)
             rebuildCallback()
         }
 
-        @Synchronized
-        override fun onInserted(position: Int, count: Int) {
+        override fun onInserted(position: Int, count: Int) = synchronizedWithCache {
             assertUpdateCallbacksAllowed()
             (0 until count).forEach {
                 modelCache.add(position, null)
@@ -100,13 +97,18 @@ internal class PagedListModelCache<T>(
             rebuildCallback()
         }
 
-        @Synchronized
-        override fun onRemoved(position: Int, count: Int) {
+        override fun onRemoved(position: Int, count: Int) = synchronizedWithCache {
             assertUpdateCallbacksAllowed()
             (0 until count).forEach {
                 modelCache.removeAt(position)
             }
             rebuildCallback()
+        }
+
+        private fun synchronizedWithCache(block: () -> Unit) {
+            synchronized(this@PagedListModelCache) {
+                block()
+            }
         }
     }
 
