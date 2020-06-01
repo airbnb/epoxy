@@ -13,23 +13,35 @@ def updateTestClass(test_class_result)
 
   # Failing processor tests have their output in a <pre></pre> block
   page.css('pre').each do |preBlock|
+
+    if preBlock.to_s.include? "[Robolectric]"
+      # This block is a robolectric info output, and is not a test failure
+      next
+    end
+
     # Just a sanity check to make sure the pre block we're looking at is a processor source output
-    if preBlock.include? "Source declared the same top-level types of an expected source"
-      puts "Pre block did not contain source. (#{test_class_result}"
+    if !preBlock.to_s.include? "Source declared the same top-level types of an expected source"
+      puts "Pre block did not contain source. (#{test_class_result})"
       next
     end
 
     # We expect to see a line like:
-    # Expected file: </Users/eli_hart/repos/epoxy/epoxy-processortest/build/intermediates/classes/test/debug/ModelWithViewClickListener_.java>;
+    # Expected file: </ModelWithViewClickListener_.java>;
     # Which tells us where the original processor test file lives
     expected_file_match = /Expected file: <([^>]*)>/m.match(preBlock)
     if expected_file_match.nil? || expected_file_match.captures.empty?
       puts "Could not find expected file name in pre block (#{test_class_result})"
+      puts preBlock.class
+      puts preBlock
       next
     end
 
     # The test copies the source file to the build folder. We need to modify the original file to update its expected source
-    expected_source_file_path = expected_file_match.captures[0].sub "build/intermediates/sourceFolderJavaResources/debug", "src/test/resources"
+    expected_source_file_path_in_build_folder = expected_file_match.captures[0]
+    expected_source_file_path = expected_source_file_path_in_build_folder.sub!(
+      "build/intermediates/sourceFolderJavaResources/debug",
+      "src/test/resources"
+    )
 
     # The error message includes the source code that was generated. We use a regex to extract the source from the following expected pattern
     #
@@ -39,20 +51,17 @@ def updateTestClass(test_class_result)
     #     at com.google.testing.compile.JavaSourcesSubject$CompilationClause.failWithCandidate(JavaSourcesSubject.java:224)
     # at com.google.testing.compile.JavaSourcesSubject$CompilationClause.parsesAs(JavaSourcesSubject.java:186)
     # at com.google.testing.compile.JavaSourcesSubject.parsesAs(JavaSourcesSubject.java:95)
-    actual_source_match = /Actual Source:[\s]*=*[\s]*(package.*?})[\s]*at com\.google/m.match(preBlock)
+    actual_source_match = /Actual Source:[\s]*=*[\s]*(package.*?})[\s]*javaSources was/m.match(preBlock)
     if actual_source_match.nil? || actual_source_match.captures.empty?
       puts "Could not find actual source in pre block (#{test_class_result})"
       next
     end
 
-    puts "Full path #{expected_source_file_path}"
     puts "Updating class: #{expected_source_file_path.split('/')[-1]}"
 
     # Finally we simply overwrite the original expected test source with the actual test output in order to update it
     actual_source = actual_source_match.captures[0]
-    File.open(expected_source_file_path, "w") do |f|
-      f.write actual_source
-    end
+    File.write(expected_source_file_path, actual_source)
   end
 end
 

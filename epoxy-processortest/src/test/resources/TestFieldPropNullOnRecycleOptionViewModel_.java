@@ -134,8 +134,7 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public TestFieldPropNullOnRecycleOptionViewModel_ onVisibilityStateChanged(
       OnModelVisibilityStateChangedListener<TestFieldPropNullOnRecycleOptionViewModel_, TestFieldPropNullOnRecycleOptionView> listener) {
     onMutation();
@@ -157,8 +156,7 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public TestFieldPropNullOnRecycleOptionViewModel_ onVisibilityChanged(
       OnModelVisibilityChangedListener<TestFieldPropNullOnRecycleOptionViewModel_, TestFieldPropNullOnRecycleOptionView> listener) {
     onMutation();
@@ -205,7 +203,8 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
   }
 
   @Override
-  public TestFieldPropNullOnRecycleOptionViewModel_ id(@androidx.annotation.Nullable Number... arg0) {
+  public TestFieldPropNullOnRecycleOptionViewModel_ id(
+      @androidx.annotation.Nullable Number... arg0) {
     super.id(arg0);
     return this;
   }
@@ -217,21 +216,23 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
   }
 
   @Override
-  public TestFieldPropNullOnRecycleOptionViewModel_ id(@androidx.annotation.Nullable CharSequence arg0) {
+  public TestFieldPropNullOnRecycleOptionViewModel_ id(
+      @androidx.annotation.Nullable CharSequence arg0) {
     super.id(arg0);
     return this;
   }
 
   @Override
-  public TestFieldPropNullOnRecycleOptionViewModel_ id(@androidx.annotation.Nullable CharSequence arg0,
+  public TestFieldPropNullOnRecycleOptionViewModel_ id(
+      @androidx.annotation.Nullable CharSequence arg0,
       @androidx.annotation.Nullable CharSequence... arg1) {
     super.id(arg0, arg1);
     return this;
   }
 
   @Override
-  public TestFieldPropNullOnRecycleOptionViewModel_ id(@androidx.annotation.Nullable CharSequence arg0,
-      long arg1) {
+  public TestFieldPropNullOnRecycleOptionViewModel_ id(
+      @androidx.annotation.Nullable CharSequence arg0, long arg1) {
     super.id(arg0, arg1);
     return this;
   }
@@ -242,7 +243,8 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
   }
 
   @Override
-  public TestFieldPropNullOnRecycleOptionViewModel_ spanSizeOverride(@androidx.annotation.Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
+  public TestFieldPropNullOnRecycleOptionViewModel_ spanSizeOverride(
+      @androidx.annotation.Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
     super.spanSizeOverride(arg0);
     return this;
   }
@@ -315,13 +317,13 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (value_OnClickListener != null ? value_OnClickListener.hashCode() : 0);
-    return result;
+    int _result = super.hashCode();
+    _result = 31 * _result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (value_OnClickListener != null ? value_OnClickListener.hashCode() : 0);
+    return _result;
   }
 
   @Override

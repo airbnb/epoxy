@@ -110,7 +110,8 @@ public class OnVisibilityStateChangedViewModel_ extends EpoxyModel<OnVisibilityS
   }
 
   @Override
-  public void onVisibilityStateChanged(int visibilityState, final OnVisibilityStateChangedView object) {
+  public void onVisibilityStateChanged(int visibilityState,
+      final OnVisibilityStateChangedView object) {
     if (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null) {
       onModelVisibilityStateChangedListener_epoxyGeneratedModel.onVisibilityStateChanged(this, object, visibilityState);
     }
@@ -292,13 +293,13 @@ public class OnVisibilityStateChangedViewModel_ extends EpoxyModel<OnVisibilityS
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (title_CharSequence != null ? title_CharSequence.hashCode() : 0);
-    return result;
+    int _result = super.hashCode();
+    _result = 31 * _result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (title_CharSequence != null ? title_CharSequence.hashCode() : 0);
+    return _result;
   }
 
   @Override

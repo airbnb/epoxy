@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import javax.tools.JavaFileObject;
 
+import static com.airbnb.epoxy.ProcessorTestUtils.processors;
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaFileObjects.forResource;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
@@ -44,11 +45,11 @@ public class ConfigTest {
                 + "import com.airbnb.epoxy.PackageEpoxyConfig;");
 
     JavaFileObject model =
-        forResource("ModelConfigSubPackageOverridesParent.java");
+        forResource(GuavaPatch.patchResource("ModelConfigSubPackageOverridesParent.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model, subPackageConfig))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -72,11 +73,11 @@ public class ConfigTest {
                 + "import com.airbnb.epoxy.PackageEpoxyConfig;");
 
     JavaFileObject model =
-        forResource("ModelPackageWithNoConfigInheritsNearestParentConfig.java");
+        forResource(GuavaPatch.patchResource("ModelPackageWithNoConfigInheritsNearestParentConfig.java"));
 
     assert_().about(javaSources())
         .that(asList(topLevelParentConfig, secondLevelParentConfig, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile()
         .withErrorContaining("Attribute does not implement hashCode");
   }
@@ -84,11 +85,11 @@ public class ConfigTest {
   @Test
   public void testConfigRequireHashCode() {
     JavaFileObject model =
-        forResource("ModelRequiresHashCodeFailsBasicObject.java");
+        forResource(GuavaPatch.patchResource("ModelRequiresHashCodeFailsBasicObject.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile()
         .withErrorContaining("Attribute does not implement hashCode");
   }
@@ -96,11 +97,11 @@ public class ConfigTest {
   @Test
   public void testConfigRequireEquals() {
     JavaFileObject model =
-        forResource("ModelRequiresEqualsFailsBasicObject.java");
+        forResource(GuavaPatch.patchResource("ModelRequiresEqualsFailsBasicObject.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile()
         .withErrorContaining("Attribute does not implement equals");
   }
@@ -108,11 +109,11 @@ public class ConfigTest {
   @Test
   public void testConfigRequireHashCodeIterableFails() {
     JavaFileObject model =
-        forResource("ModelRequiresHashCodeIterableFails.java");
+        forResource(GuavaPatch.patchResource("ModelRequiresHashCodeIterableFails.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile()
         .withErrorContaining("Type in Iterable does not implement hashCode");
   }
@@ -120,22 +121,22 @@ public class ConfigTest {
   @Test
   public void testConfigRequireHashCodeIterablePasses() {
     JavaFileObject model =
-        forResource("ModelRequiresHashCodeIterableSucceeds.java");
+        forResource(GuavaPatch.patchResource("ModelRequiresHashCodeIterableSucceeds.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
   @Test
   public void testConfigRequireHashCodeArrayFails() {
     JavaFileObject model =
-        forResource("ModelRequiresHashCodeArrayFails.java");
+        forResource(GuavaPatch.patchResource("ModelRequiresHashCodeArrayFails.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile()
         .withErrorContaining("Type in array does not implement hashCode");
   }
@@ -143,11 +144,11 @@ public class ConfigTest {
   @Test
   public void testConfigRequireHashCodeArrayPasses() {
     JavaFileObject model =
-        forResource("ModelRequiresHashCodeArraySucceeds.java");
+        forResource(GuavaPatch.patchResource("ModelRequiresHashCodeArraySucceeds.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -155,11 +156,11 @@ public class ConfigTest {
   public void testConfigRequireHashCodeEnumAttributePasses() {
     // Verify that enum attributes pass the hashcode requirement
     JavaFileObject model =
-        forResource("ModelRequiresHashCodeEnumPasses.java");
+        forResource(GuavaPatch.patchResource("ModelRequiresHashCodeEnumPasses.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -167,11 +168,11 @@ public class ConfigTest {
   public void testConfigRequireHashCodeCharSequencePasses() {
     // Verify that AutoValue class attributes pass the hashcode requirement
     JavaFileObject model =
-        forResource("ModelConfigRequireHashCodeCharSequencePasses.java");
+        forResource(GuavaPatch.patchResource("ModelConfigRequireHashCodeCharSequencePasses.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -179,11 +180,11 @@ public class ConfigTest {
   public void testConfigRequireHashCodeInterfaceWithHashCodePasses() {
     // Verify that AutoValue class attributes pass the hashcode requirement
     JavaFileObject model =
-        forResource("ModelConfigRequireHashCodeInterfaceWithHashCodePasses.java");
+        forResource(GuavaPatch.patchResource("ModelConfigRequireHashCodeInterfaceWithHashCodePasses.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -191,11 +192,11 @@ public class ConfigTest {
   public void testConfigRequireHashCodeAutoValueAttributePasses() {
     // Verify that AutoValue class attributes pass the hashcode requirement
     JavaFileObject model = JavaFileObjects
-        .forResource("ModelRequiresHashCodeAutoValueClassPasses.java");
+        .forResource(GuavaPatch.patchResource("ModelRequiresHashCodeAutoValueClassPasses.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -203,11 +204,11 @@ public class ConfigTest {
   public void testConfigRequireHashCodeAllowsMarkedAttributes() {
     // Verify that AutoValue class attributes pass the hashcode requirement
     JavaFileObject model = JavaFileObjects
-        .forResource("ModelConfigRequireHashCodeAllowsMarkedAttributes.java");
+        .forResource(GuavaPatch.patchResource("ModelConfigRequireHashCodeAllowsMarkedAttributes.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -217,11 +218,11 @@ public class ConfigTest {
     // classes in the module since AutoValue has a retention of Source so it is discarded after
     // compilation
     JavaFileObject model =
-        forResource("RequireAbstractModelPassesClassWithAttribute.java");
+        forResource(GuavaPatch.patchResource("RequireAbstractModelPassesClassWithAttribute.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_ABSTRACT, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -229,11 +230,11 @@ public class ConfigTest {
   public void testConfigRequireAbstractModelFailsClassWithAttribute() {
     // Verify that AutoValue class attributes pass the hashcode requirement
     JavaFileObject model =
-        forResource("RequireAbstractModelFailsClassWithAttribute.java");
+        forResource(GuavaPatch.patchResource("RequireAbstractModelFailsClassWithAttribute.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_ABSTRACT, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile()
         .withErrorContaining(
             "Epoxy model class must be abstract (RequireAbstractModelFailsClassWithAttribute)");
@@ -243,11 +244,11 @@ public class ConfigTest {
   public void testConfigRequireAbstractModelPassesEpoxyModelClass() {
     // Verify that AutoValue class attributes pass the hashcode requirement
     JavaFileObject model =
-        forResource("RequireAbstractModelPassesEpoxyModelClass.java");
+        forResource(GuavaPatch.patchResource("RequireAbstractModelPassesEpoxyModelClass.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_ABSTRACT, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError();
   }
 
@@ -255,11 +256,11 @@ public class ConfigTest {
   public void testConfigRequireAbstractModelFailsEpoxyModelClass() {
     // Verify that AutoValue class attributes pass the hashcode requirement
     JavaFileObject model =
-        forResource("RequireAbstractModelFailsEpoxyModelClass.java");
+        forResource(GuavaPatch.patchResource("RequireAbstractModelFailsEpoxyModelClass.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_ABSTRACT, model))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile()
         .withErrorContaining(
             "Epoxy model class must be abstract (RequireAbstractModelFailsEpoxyModelClass)");
@@ -268,13 +269,14 @@ public class ConfigTest {
   @Test
   public void testConfigNoModelValidation() {
     JavaFileObject model =
-        forResource("ModelNoValidation.java");
+        forResource(GuavaPatch.patchResource("ModelNoValidation.java"));
 
-    JavaFileObject generatedModel = JavaFileObjects.forResource("ModelNoValidation_.java");
+    JavaFileObject generatedModel = JavaFileObjects.forResource(GuavaPatch.patchResource("ModelNoValidation_.java"));
 
     assert_().about(javaSource())
         .that(model)
-        .processedWith(EpoxyProcessor.withNoValidation())
+        .withCompilerOptions(ProcessorTestUtils.options(true, false))
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedModel);

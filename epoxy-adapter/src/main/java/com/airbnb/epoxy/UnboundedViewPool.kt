@@ -1,11 +1,10 @@
 package com.airbnb.epoxy
 
 import android.util.SparseArray
-
-import java.util.LinkedList
-import java.util.Queue
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import java.util.LinkedList
+import java.util.Queue
 
 /**
  * Like its parent, UnboundedViewPool lets you share Views between multiple RecyclerViews. However

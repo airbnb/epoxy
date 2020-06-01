@@ -2,6 +2,11 @@ package com.airbnb.epoxy;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+
+import com.airbnb.epoxy.stickyheader.StickyHeaderCallbacks;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -39,7 +44,7 @@ import static com.airbnb.epoxy.ControllerHelperLookup.getHelperForController;
  * treated as immutable and never modified again. This is necessary for adapter updates to be
  * accurate.
  */
-public abstract class EpoxyController {
+public abstract class EpoxyController implements ModelCollector, StickyHeaderCallbacks {
 
   /**
    * We check that the adapter is not connected to multiple recyclerviews, but when a fragment has
@@ -122,8 +127,8 @@ public abstract class EpoxyController {
 
   @Retention(RetentionPolicy.SOURCE)
   @IntDef({RequestedModelBuildType.NONE,
-           RequestedModelBuildType.NEXT_FRAME,
-           RequestedModelBuildType.DELAYED})
+      RequestedModelBuildType.NEXT_FRAME,
+      RequestedModelBuildType.DELAYED})
   private @interface RequestedModelBuildType {
     int NONE = 0;
     /** A request has been made to build models immediately. It is posted. */
@@ -458,7 +463,7 @@ public abstract class EpoxyController {
    * Add the model to this controller. Can only be called from inside {@link
    * EpoxyController#buildModels()}.
    */
-  protected void add(@NonNull EpoxyModel<?> model) {
+  public void add(@NonNull EpoxyModel<?> model) {
     model.addTo(this);
   }
 
@@ -470,7 +475,7 @@ public abstract class EpoxyController {
     modelsBeingBuilt.ensureCapacity(modelsBeingBuilt.size() + modelsToAdd.length);
 
     for (EpoxyModel<?> model : modelsToAdd) {
-      model.addTo(this);
+      add(model);
     }
   }
 
@@ -482,7 +487,7 @@ public abstract class EpoxyController {
     modelsBeingBuilt.ensureCapacity(modelsBeingBuilt.size() + modelsToAdd.size());
 
     for (EpoxyModel<?> model : modelsToAdd) {
-      model.addTo(this);
+      add(model);
     }
   }
 
@@ -906,4 +911,44 @@ public abstract class EpoxyController {
       @NonNull EpoxyModel<?> model) {
 
   }
+
+  //region Sticky header
+
+  /**
+   * Optional callback to setup the sticky view,
+   * by default it doesn't do anything.
+   *
+   * The sub-classes should override the function if they are
+   * using sticky header feature.
+   */
+  @Override
+  public void setupStickyHeaderView(@NotNull View stickyHeader) {
+    // no-op
+  }
+
+  /**
+   * Optional callback to perform tear down operation on the
+   * sticky view, by default it doesn't do anything.
+   *
+   * The sub-classes should override the function if they are
+   * using sticky header feature.
+   */
+  @Override
+  public void teardownStickyHeaderView(@NotNull View stickyHeader) {
+    // no-op
+  }
+
+  /**
+   * Called to check if the item at the position is a sticky item,
+   * by default returns false.
+   *
+   * The sub-classes should override the function if they are
+   * using sticky header feature.
+   */
+  @Override
+  public boolean isStickyHeader(int position) {
+    return false;
+  }
+
+  //endregion
 }

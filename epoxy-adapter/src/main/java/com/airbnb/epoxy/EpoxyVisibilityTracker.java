@@ -13,11 +13,14 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.IdRes;
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver;
+import androidx.recyclerview.widget.RecyclerView.ItemAnimator;
+import androidx.recyclerview.widget.RecyclerView.ItemAnimator.ItemAnimatorFinishedListener;
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener;
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
@@ -41,6 +44,21 @@ public class EpoxyVisibilityTracker {
 
   @IdRes
   private static final int TAG_ID = R.id.epoxy_visibility_tracker;
+
+  /**
+   * Used to listen to {@link RecyclerView.ItemAnimator} ending animations.
+   */
+  @NonNull
+  private final ItemAnimatorFinishedListener itemAnimatorFinishedListener =
+      new ItemAnimatorFinishedListener() {
+        @Override
+        public void onAnimationsFinished() {
+          processChangeEvent(
+              "ItemAnimatorFinishedListener.onAnimationsFinished",
+              /* don't check item animator to prevent recursion */ false
+          );
+        }
+      };
 
   /**
    * @param recyclerView the view.
@@ -82,6 +100,9 @@ public class EpoxyVisibilityTracker {
 
   private boolean onChangedEnabled = true;
 
+  @Nullable
+  private Integer partialImpressionThresholdPercentage = null;
+
   /** All nested visibility trackers */
   private Map<RecyclerView, EpoxyVisibilityTracker> nestedTrackers = new HashMap<>();
 
@@ -98,6 +119,20 @@ public class EpoxyVisibilityTracker {
    */
   public void setOnChangedEnabled(boolean enabled) {
     onChangedEnabled = enabled;
+  }
+
+  /**
+   * Set the threshold of percentage visible area to identify the partial impression view state.
+   *
+   * @param thresholdPercentage Percentage of visible area of an element in the range [0..100].
+   *                            Defaults to <code>null</code>, which disables
+   *                            {@link VisibilityState#PARTIAL_IMPRESSION_VISIBLE} and
+   *                            {@link VisibilityState#PARTIAL_IMPRESSION_INVISIBLE} events.
+   */
+  public void setPartialImpressionThresholdPercentage(
+      @Nullable @IntRange(from = 0, to = 100) Integer thresholdPercentage
+  ) {
+    partialImpressionThresholdPercentage = thresholdPercentage;
   }
 
   /**
@@ -151,8 +186,35 @@ public class EpoxyVisibilityTracker {
     processChangeEvent("requestVisibilityCheck");
   }
 
+  /**
+   * Process a change event. It will also check the itemAnimator
+   * @param debug: string for debug usually the source of the call
+   */
   private void processChangeEvent(String debug) {
-    processChangeEventWithDetachedView(null, debug);
+    processChangeEvent(debug, true);
+  }
+
+  /**
+   * Process a change event.
+   * @param debug: string for debug usually the source of the call
+   * @param checkItemAnimator: true if it need to check if ItemAnimator is running
+   */
+  private void processChangeEvent(String debug, boolean checkItemAnimator) {
+    final RecyclerView recyclerView = attachedRecyclerView;
+    if (recyclerView != null) {
+      final ItemAnimator itemAnimator = recyclerView.getItemAnimator();
+      if (checkItemAnimator && itemAnimator != null) {
+        // `itemAnimatorFinishedListener.onAnimationsFinished` will process visibility check
+        // - If the animations are running `onAnimationsFinished` will be invoked on animations end.
+        // - If the animations are not running `onAnimationsFinished` will be invoked right away.
+        if (itemAnimator.isRunning(itemAnimatorFinishedListener)) {
+          // If running process visibility now as `onAnimationsFinished` was not yet called
+          processChangeEventWithDetachedView(null, debug);
+        }
+      } else {
+        processChangeEventWithDetachedView(null, debug);
+      }
+    }
   }
 
   private void processChangeEventWithDetachedView(@Nullable View detachedView, String debug) {
@@ -279,6 +341,12 @@ public class EpoxyVisibilityTracker {
     if (vi.update(itemView, recyclerView, detachEvent)) {
       // View is measured, process events
       vi.handleVisible(epoxyHolder, detachEvent);
+
+      if (partialImpressionThresholdPercentage != null) {
+        vi.handlePartialImpressionVisible(epoxyHolder, detachEvent,
+            partialImpressionThresholdPercentage);
+      }
+
       vi.handleFocus(epoxyHolder, detachEvent);
       vi.handleFullImpressionVisible(epoxyHolder, detachEvent);
       changed = vi.handleChanged(epoxyHolder, onChangedEnabled);
@@ -292,6 +360,7 @@ public class EpoxyVisibilityTracker {
     EpoxyVisibilityTracker tracker = getTracker(childRecyclerView);
     if (tracker == null) {
       tracker = new EpoxyVisibilityTracker();
+      tracker.setPartialImpressionThresholdPercentage(partialImpressionThresholdPercentage);
       tracker.attach(childRecyclerView);
     }
     nestedTrackers.put(childRecyclerView, tracker);

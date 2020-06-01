@@ -1,3 +1,50 @@
+# 4.0.0-beta1 (May 22, 2020)
+- Support for incremental annotation processing as an Aggregating processor (#972)
+- Removed Litho support
+- A new annotation processor argument `logEpoxyTimings` can be set to get a detailed breakdown of how long the processors took and where they spent their time (off by default)
+- Another new argument `enableParallelEpoxyProcessing` can be set to true to have the annotation processor process annotations and generate files in parallel (via coroutines).
+
+You can enable these processor options in your build.gradle file like so:
+```
+project.android.buildTypes.all { buildType ->
+  buildType.javaCompileOptions.annotationProcessorOptions.arguments =
+      [
+          logEpoxyTimings  : "true",
+          enableParallelEpoxyProcessing     : "true"
+      ]
+}
+```
+
+Parallel processing can greatly speed up processing time (moreso than the incremental support), but given the nature of parallel processing it is still incubating.
+Please report any issues or crashes that you notice.
+(We are currently using parallel mode in our large project at Airbnb with no problems.)
+
+# 3.11.0 (May 20, 2020)
+- Introduce partial impression visibility states (#973)
+- Fix sticky header crash (#976)
+
+# 3.10.0 (May 15, 2020)
+- Carousel building with Kotlin DSL (#967)
+- Android ViewBinding: added an example in the sample project. (#939)
+- Fix setter with default value lookup in kotlin 1.4 (#966)
+- Change "result" property name in generated model (#965)
+- Add support for Sticky Headers (#842)
+- Use measured width/height if it exists in Carousel. (#915)
+- Add a getter to EpoxyViewHolder.getHolder(). (#952) (#953)
+- Fix visibility tracking during RecyclerView animations (#962)
+- Fix leak in ActivityRecyclerPool ((#906)
+- Rename ResultCallack to ResultCallback in AsyncEpoxyDiffer (#899)
+- Fix incorrect license attributes in POM file (#898)
+
+# 3.9.0 (Dec 17, 2019)
+- Fix reading EpoxyDataBindingPattern enableDoNotHash (#837) 
+- Make EpoxyRecyclerView.setItemSpacingPx() open (#829)
+- Use same version for Mockito Core and Inline (#860)
+- Minor documentation and variable name updates. (#870)
+- Move epoxy-modelfactory tests to their own module (#834) 
+- Remove executable bit from non-executable files (#864)
+- Various repo clean ups and version bumps
+
 # 3.8.0 (Sept 16, 2019)
 - Add support for Kotlin delegation via annotated interface properties #812
 - Fix checked change crash and improve debug errors #806

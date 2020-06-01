@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyVisibilityTracker.DEBUG_LOG
 import com.airbnb.epoxy.VisibilityState.INVISIBLE
+import com.airbnb.epoxy.VisibilityState.PARTIAL_IMPRESSION_INVISIBLE
+import com.airbnb.epoxy.VisibilityState.PARTIAL_IMPRESSION_VISIBLE
 import com.airbnb.epoxy.VisibilityState.VISIBLE
 import org.junit.After
 import org.junit.Before
@@ -98,6 +100,7 @@ class EpoxyVisibilityTrackerNestedTest {
                                 percentVisibleHeight = 0.0f,
                                 percentVisibleWidth = 0.0f,
                                 visible = false,
+                                partialImpression = false,
                                 fullImpression = false,
                                 visitedStates = EpoxyVisibilityTrackerTest.ALL_STATES
                             )
@@ -110,9 +113,12 @@ class EpoxyVisibilityTrackerNestedTest {
                                 percentVisibleHeight = 0.0f,
                                 percentVisibleWidth = 0.0f,
                                 visible = false,
+                                partialImpression = false,
                                 fullImpression = false,
                                 visitedStates = intArrayOf(
                                     VISIBLE,
+                                    PARTIAL_IMPRESSION_VISIBLE,
+                                    PARTIAL_IMPRESSION_INVISIBLE,
                                     INVISIBLE
                                 )
                             )
@@ -127,8 +133,12 @@ class EpoxyVisibilityTrackerNestedTest {
                                 visibleHeight = 50,
                                 visibleWidth = 100,
                                 visible = true,
+                                partialImpression = true,
                                 fullImpression = false,
-                                visitedStates = intArrayOf(VISIBLE)
+                                visitedStates = intArrayOf(
+                                    VISIBLE,
+                                    PARTIAL_IMPRESSION_VISIBLE
+                                )
                             )
                         }
                     }
@@ -138,8 +148,12 @@ class EpoxyVisibilityTrackerNestedTest {
                                 visibleHeight = 50,
                                 visibleWidth = 50,
                                 visible = true,
+                                partialImpression = true,
                                 fullImpression = false,
-                                visitedStates = intArrayOf(VISIBLE)
+                                visitedStates = intArrayOf(
+                                    VISIBLE,
+                                    PARTIAL_IMPRESSION_VISIBLE
+                                )
                             )
                         }
                     }
@@ -152,6 +166,7 @@ class EpoxyVisibilityTrackerNestedTest {
                                 percentVisibleHeight = 100.0f,
                                 percentVisibleWidth = 100.0f,
                                 visible = false,
+                                partialImpression = true,
                                 fullImpression = true,
                                 visitedStates = EpoxyVisibilityTrackerTest.ALL_STATES
                             )
@@ -163,8 +178,12 @@ class EpoxyVisibilityTrackerNestedTest {
                                 percentVisibleHeight = 100.0f,
                                 percentVisibleWidth = 50.0f,
                                 visible = false,
+                                partialImpression = true,
                                 fullImpression = false,
-                                visitedStates = intArrayOf(VISIBLE)
+                                visitedStates = intArrayOf(
+                                    VISIBLE,
+                                    PARTIAL_IMPRESSION_VISIBLE
+                                )
                             )
                         }
                     }

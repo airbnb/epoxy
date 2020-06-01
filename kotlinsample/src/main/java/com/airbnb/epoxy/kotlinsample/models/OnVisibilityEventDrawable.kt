@@ -12,7 +12,8 @@ import android.graphics.drawable.Drawable
  * Drawable for sample app that draw the current visibility state :
  * - circle #1 : visible
  * - circle #2 : focused
- * - circle #3 : full impression
+ * - circle #3 : partial impression
+ * - circle #4 : full impression
  * - rectangle : visibility percentage
  */
 class OnVisibilityEventDrawable(context: Context) : Drawable() {
@@ -25,9 +26,10 @@ class OnVisibilityEventDrawable(context: Context) : Drawable() {
         isAntiAlias = true
         strokeWidth = density
     }
+    private val circleCount = 4
 
     init {
-        setBounds(0, 0, padding.toInt() * 4 + diameter.toInt() * 3, diameter.toInt())
+        setBounds(0, 0, padding.toInt() * (circleCount + 1) + diameter.toInt() * circleCount, diameter.toInt())
     }
 
     var visible = false
@@ -37,6 +39,12 @@ class OnVisibilityEventDrawable(context: Context) : Drawable() {
         }
 
     var focusedVisible = false
+        set(value) {
+            field = value
+            invalidateSelf()
+        }
+
+    var partialImpression = false
         set(value) {
             field = value
             invalidateSelf()
@@ -63,6 +71,7 @@ class OnVisibilityEventDrawable(context: Context) : Drawable() {
     fun reset() {
         visible = false
         focusedVisible = false
+        partialImpression = false
         fullImpression = false
         percentHeight = 0.0f
         percentWidth = 0.0f
@@ -75,6 +84,10 @@ class OnVisibilityEventDrawable(context: Context) : Drawable() {
         var x = diameter / 2 + padding
 
         paint.style = if (visible) Paint.Style.FILL_AND_STROKE else Paint.Style.STROKE
+        canvas.drawCircle(x, y, diameter / 2, paint)
+
+        x += diameter + padding
+        paint.style = if (partialImpression) Paint.Style.FILL_AND_STROKE else Paint.Style.STROKE
         canvas.drawCircle(x, y, diameter / 2, paint)
 
         x += diameter + padding

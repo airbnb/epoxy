@@ -2,12 +2,12 @@ package com.airbnb.epoxy
 
 import com.airbnb.epoxy.ProcessorTestUtils.assertGeneration
 import com.airbnb.epoxy.ProcessorTestUtils.assertGenerationError
+import com.airbnb.epoxy.ProcessorTestUtils.processors
 import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
-import org.junit.Test
-import java.util.Arrays.asList
 import javax.tools.JavaFileObject
+import org.junit.Test
 
 class ViewProcessorTest {
 
@@ -237,7 +237,7 @@ class ViewProcessorTest {
     @Test
     fun baseModel() {
         val model = JavaFileObjects
-            .forResource("BaseModelView.java")
+            .forResource("BaseModelView.java".patchResource())
 
         val baseModel = JavaFileObjects
             .forSourceLines(
@@ -263,11 +263,11 @@ class ViewProcessorTest {
                     "}\n"
             )
 
-        val generatedModel = JavaFileObjects.forResource("BaseModelViewModel_.java")
+        val generatedModel = JavaFileObjects.forResource("BaseModelViewModel_.java".patchResource())
 
         assert_().about(javaSources())
-            .that(asList(baseModel, model))
-            .processedWith(EpoxyProcessor())
+            .that(listOf(baseModel, model))
+            .processedWith(processors())
             .compilesWithoutError()
             .and()
             .generatesSources(generatedModel)
@@ -275,58 +275,49 @@ class ViewProcessorTest {
 
     @Test
     fun baseModelWithDiffBind() {
-        val model = JavaFileObjects
-            .forResource("BaseModelView.java")
-
-        val baseModel = JavaFileObjects
-            .forSourceLines(
-                "com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
-                    "\n" +
-                    "import android.widget.FrameLayout;\n" +
-                    "\n" +
-                    "public abstract class TestBaseModel<T extends FrameLayout> " +
-                    "extends EpoxyModel<T> {\n" +
-                    "@Override\n" +
-                    "  public void bind(T view, EpoxyModel<?> previouslyBoundModel) {\n" +
-                    "    super.bind(view, previouslyBoundModel);\n" +
-                    "  }" +
-                    "}"
-            )
-
-        val generatedModel = JavaFileObjects.forResource(
-            "BaseModelViewWithSuperDiffBindModel_.java"
+        val baseModel = JavaFileObjects.forSourceLines(
+            "com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
+                "\n" +
+                "import android.widget.FrameLayout;\n" +
+                "\n" +
+                "public abstract class TestBaseModel<T extends FrameLayout> " +
+                "extends EpoxyModel<T> {\n" +
+                "@Override\n" +
+                "  public void bind(T view, EpoxyModel<?> previouslyBoundModel) {\n" +
+                "    super.bind(view, previouslyBoundModel);\n" +
+                "  }" +
+                "}"
         )
 
-        assert_().about(javaSources())
-            .that(asList(baseModel, model))
-            .processedWith(EpoxyProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel)
+        assertGeneration(
+            sourceFileNames = listOf("BaseModelView.java"),
+            sourceObjects = listOf(baseModel),
+            generatedFileNames = listOf("BaseModelViewWithSuperDiffBindModel_.java")
+        )
     }
 
     @Test
     fun baseModelWithAttribute() {
         val model = JavaFileObjects
-            .forResource("BaseModelView.java")
+            .forResource("BaseModelView.java".patchResource())
 
-        val baseModel = JavaFileObjects
-            .forSourceLines(
-                "com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
-                    "\n" +
-                    "import android.widget.FrameLayout;\n" +
-                    "\n" +
-                    "public abstract class TestBaseModel<T extends FrameLayout> " +
-                    "extends EpoxyModel<T> {\n" +
-                    "  @EpoxyAttribute String baseModelString;\n" +
-                    "}\n"
-            )
+        val baseModel = JavaFileObjects.forSourceLines(
+            "com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
+                "\n" +
+                "import android.widget.FrameLayout;\n" +
+                "\n" +
+                "public abstract class TestBaseModel<T extends FrameLayout> " +
+                "extends EpoxyModel<T> {\n" +
+                "  @EpoxyAttribute String baseModelString;\n" +
+                "}\n"
+        )
 
-        val generatedModel = JavaFileObjects.forResource("BaseModelWithAttributeViewModel_.java")
+        val generatedModel =
+            JavaFileObjects.forResource("BaseModelWithAttributeViewModel_.java".patchResource())
 
         assert_().about(javaSources())
-            .that(asList(baseModel, model))
-            .processedWith(EpoxyProcessor())
+            .that(listOf(baseModel, model))
+            .processedWith(processors())
             .compilesWithoutError()
             .and()
             .generatesSources(generatedModel)
@@ -364,8 +355,8 @@ class ViewProcessorTest {
             )
 
         assert_().about(javaSources())
-            .that(asList(baseModel, model))
-            .processedWith(EpoxyProcessor())
+            .that(listOf(baseModel, model))
+            .processedWith(processors())
             .failsToCompile()
             .withErrorContaining(
                 "The base model provided to an ModelView must extend EpoxyModel"
@@ -419,12 +410,12 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource(
-            "BaseModelFromPackageConfigViewModel_.java"
+            "BaseModelFromPackageConfigViewModel_.java".patchResource()
         )
 
         assert_().about(javaSources())
-            .that(asList(baseModel, model, configClass, R))
-            .processedWith(EpoxyProcessor())
+            .that(listOf(baseModel, model, configClass, R))
+            .processedWith(processors())
             .compilesWithoutError()
             .and()
             .generatesSources(generatedModel)
@@ -480,12 +471,12 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource(
-            "BaseModelOverridesPackageConfigViewModel_.java"
+            "BaseModelOverridesPackageConfigViewModel_.java".patchResource()
         )
 
         assert_().about(javaSources())
-            .that(asList(baseModel, model, configClass, R))
-            .processedWith(EpoxyProcessor())
+            .that(listOf(baseModel, model, configClass, R))
+            .processedWith(processors())
             .compilesWithoutError()
             .and()
             .generatesSources(generatedModel)
@@ -494,7 +485,7 @@ class ViewProcessorTest {
     @Test
     fun throwsIfBaseModelNotEpoxyModelInPackageConfig() {
         val model = JavaFileObjects
-            .forResource("BaseModelView.java")
+            .forResource("BaseModelView.java".patchResource())
 
         val baseModel = JavaFileObjects
             .forSourceLines(
@@ -518,8 +509,8 @@ class ViewProcessorTest {
             )
 
         assert_().about(javaSources())
-            .that(asList(baseModel, model, configClass, R))
-            .processedWith(EpoxyProcessor())
+            .that(listOf(baseModel, model, configClass, R))
+            .processedWith(processors())
             .failsToCompile()
             .withErrorContaining(
                 "The base model provided to an ModelView must extend EpoxyModel"
@@ -546,12 +537,12 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource(
-            "RLayoutInViewModelAnnotationWorksViewModel_.java"
+            "RLayoutInViewModelAnnotationWorksViewModel_.java".patchResource()
         )
 
         assert_().about(javaSources())
-            .that(asList(model, R))
-            .processedWith(EpoxyProcessor())
+            .that(listOf(model, R))
+            .processedWith(processors())
             .compilesWithoutError()
             .and()
             .generatesSources(generatedModel)
@@ -599,12 +590,12 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource(
-            "DefaultPackageLayoutPatternViewModel_.java"
+            "DefaultPackageLayoutPatternViewModel_.java".patchResource()
         )
 
         assert_().about(javaSources())
-            .that(asList(model, configClass, R))
-            .processedWith(EpoxyProcessor())
+            .that(listOf(model, configClass, R))
+            .processedWith(processors())
             .compilesWithoutError()
             .and()
             .generatesSources(generatedModel)
@@ -662,12 +653,12 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource(
-            "DefaultPackageLayoutPatternViewModel_.java"
+            "DefaultPackageLayoutPatternViewModel_.java".patchResource()
         )
 
         assert_().about(javaSources())
-            .that(asList(model, configClass, R2, R))
-            .processedWith(EpoxyProcessor())
+            .that(listOf(model, configClass, R2, R))
+            .processedWith(processors())
             .compilesWithoutError()
             .and()
             .generatesSources(generatedModel)
@@ -716,12 +707,12 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource(
-            "CustomPackageLayoutPatternViewModel_.java"
+            "CustomPackageLayoutPatternViewModel_.java".patchResource()
         )
 
         assert_().about(javaSources())
-            .that(asList(model, configClass, R))
-            .processedWith(EpoxyProcessor())
+            .that(listOf(model, configClass, R))
+            .processedWith(processors())
             .compilesWithoutError()
             .and()
             .generatesSources(generatedModel)
@@ -770,11 +761,13 @@ class ViewProcessorTest {
                     "import com.airbnb.epoxy.R;\n"
             )
 
-        val generatedModel = JavaFileObjects.forResource("LayoutOverloadsViewModel_.java")
+        val generatedModel = JavaFileObjects.forResource(
+            "LayoutOverloadsViewModel_.java".patchResource()
+        )
 
         assert_().about(javaSources())
-            .that(asList(model, configClass, R))
-            .processedWith(EpoxyProcessor())
+            .that(listOf(model, configClass, R))
+            .processedWith(processors())
             .compilesWithoutError()
             .and()
             .generatesSources(generatedModel)
@@ -782,23 +775,22 @@ class ViewProcessorTest {
 
     @Test
     fun generatedModelSuffix() {
-        val model = JavaFileObjects
-            .forSourceLines(
-                "com.airbnb.epoxy.GeneratedModelSuffixView",
-                "package com.airbnb.epoxy;\n" +
-                    "\n" +
-                    "import android.content.Context;\n" +
-                    "import android.view.View;\n" +
-                    "\n" +
-                    "@ModelView\n" +
-                    "public class GeneratedModelSuffixView extends View {\n" +
-                    "\n" +
-                    "  public GeneratedModelSuffixView(Context context) {\n" +
-                    "    super(context);\n" +
-                    "  }\n" +
-                    "\n" +
-                    "}"
-            )
+        val model = JavaFileObjects.forSourceLines(
+            "com.airbnb.epoxy.GeneratedModelSuffixView",
+            "package com.airbnb.epoxy;\n" +
+                "\n" +
+                "import android.content.Context;\n" +
+                "import android.view.View;\n" +
+                "\n" +
+                "@ModelView\n" +
+                "public class GeneratedModelSuffixView extends View {\n" +
+                "\n" +
+                "  public GeneratedModelSuffixView(Context context) {\n" +
+                "    super(context);\n" +
+                "  }\n" +
+                "\n" +
+                "}"
+        )
 
         val R = JavaFileObjects.forSourceString(
             "com.airbnb.epoxy.R", "" +
@@ -810,40 +802,36 @@ class ViewProcessorTest {
                 "}"
         )
 
-        val configClass = JavaFileObjects
-            .forSourceLines(
-                "com.airbnb.epoxy.package-info",
-                "@PackageModelViewConfig(rClass = R" +
-                    ".class, generatedModelSuffix = \"Suffix_\")\n" +
-                    "package com.airbnb.epoxy;\n" +
-                    "\n" +
-                    "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
-                    "import com.airbnb.epoxy.R;\n"
-            )
+        val configClass = JavaFileObjects.forSourceLines(
+            "com.airbnb.epoxy.package-info",
+            "@PackageModelViewConfig(rClass = R" +
+                ".class, generatedModelSuffix = \"Suffix_\")\n" +
+                "package com.airbnb.epoxy;\n" +
+                "\n" +
+                "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
+                "import com.airbnb.epoxy.R;\n"
+        )
 
-        val generatedModel = JavaFileObjects.forResource("GeneratedModelSuffixViewSuffix_.java")
-
-        assert_().about(javaSources())
-            .that(asList(model, configClass, R))
-            .processedWith(EpoxyProcessor())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel)
+        assertGeneration(
+            sourceObjects = listOf(model, configClass, R),
+            generatedFileNames = listOf("GeneratedModelSuffixViewSuffix_.java")
+        )
     }
 
     @Test
     fun afterBindProps() {
         val model = JavaFileObjects
-            .forResource("TestAfterBindPropsView.java")
+            .forResource("TestAfterBindPropsView.java".patchResource())
 
         val superModel = JavaFileObjects
-            .forResource("TestAfterBindPropsSuperView.java")
+            .forResource("TestAfterBindPropsSuperView.java".patchResource())
 
-        val generatedModel = JavaFileObjects.forResource("TestAfterBindPropsViewModel_.java")
+        val generatedModel =
+            JavaFileObjects.forResource("TestAfterBindPropsViewModel_.java".patchResource())
 
         assert_().about(javaSources())
-            .that(asList(model, superModel))
-            .processedWith(EpoxyProcessor())
+            .that(listOf(model, superModel))
+            .processedWith(processors())
             .compilesWithoutError()
             .and()
             .generatesSources(generatedModel)
@@ -862,13 +850,14 @@ class ViewProcessorTest {
     @Test
     fun textPropDefault() {
         val model = JavaFileObjects
-            .forResource("TextPropDefaultView.java")
+            .forResource("TextPropDefaultView.java".patchResource())
 
-        val generatedModel = JavaFileObjects.forResource("TextPropDefaultViewModel_.java")
+        val generatedModel =
+            JavaFileObjects.forResource("TextPropDefaultViewModel_.java".patchResource())
 
         assert_().about(javaSources())
-            .that(asList(model, R))
-            .processedWith(EpoxyProcessor())
+            .that(listOf(model, R))
+            .processedWith(processors())
             .compilesWithoutError()
             .and()
             .generatesSources(generatedModel)
@@ -877,11 +866,11 @@ class ViewProcessorTest {
     @Test
     fun textPropDefault_throwsForNonStringRes() {
         val model = JavaFileObjects
-            .forResource("TextPropDefaultView_throwsForNonStringRes.java")
+            .forResource("TextPropDefaultView_throwsForNonStringRes.java".patchResource())
 
         assert_().about(javaSources())
-            .that(asList(model, R))
-            .processedWith(EpoxyProcessor())
+            .that(listOf(model, R))
+            .processedWith(processors())
             .failsToCompile()
             .withErrorContaining("requires a string resource")
     }

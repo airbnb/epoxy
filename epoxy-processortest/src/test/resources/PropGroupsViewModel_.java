@@ -335,8 +335,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public PropGroupsViewModel_ onVisibilityStateChanged(
       OnModelVisibilityStateChangedListener<PropGroupsViewModel_, PropGroupsView> listener) {
     onMutation();
@@ -358,8 +357,7 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public PropGroupsViewModel_ onVisibilityChanged(
       OnModelVisibilityChangedListener<PropGroupsViewModel_, PropGroupsView> listener) {
     onMutation();
@@ -810,26 +808,26 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (something_CharSequence != null ? something_CharSequence.hashCode() : 0);
-    result = 31 * result + something_Int;
-    result = 31 * result + (somethingElse_CharSequence != null ? somethingElse_CharSequence.hashCode() : 0);
-    result = 31 * result + somethingElse_Int;
-    result = 31 * result + primitive_Int;
-    result = 31 * result + (int) (primitive_Long ^ (primitive_Long >>> 32));
-    result = 31 * result + primitiveWithDefault_Int;
-    result = 31 * result + (int) (primitiveWithDefault_Long ^ (primitiveWithDefault_Long >>> 32));
-    result = 31 * result + (int) (primitiveAndObjectGroupWithPrimitiveDefault_Long ^ (primitiveAndObjectGroupWithPrimitiveDefault_Long >>> 32));
-    result = 31 * result + (primitiveAndObjectGroupWithPrimitiveDefault_CharSequence != null ? primitiveAndObjectGroupWithPrimitiveDefault_CharSequence.hashCode() : 0);
-    result = 31 * result + (int) (oneThing_Long ^ (oneThing_Long >>> 32));
-    result = 31 * result + (anotherThing_CharSequence != null ? anotherThing_CharSequence.hashCode() : 0);
-    result = 31 * result + (requiredGroup_String != null ? requiredGroup_String.hashCode() : 0);
-    result = 31 * result + (requiredGroup_CharSequence != null ? requiredGroup_CharSequence.hashCode() : 0);
-    return result;
+    int _result = super.hashCode();
+    _result = 31 * _result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (something_CharSequence != null ? something_CharSequence.hashCode() : 0);
+    _result = 31 * _result + something_Int;
+    _result = 31 * _result + (somethingElse_CharSequence != null ? somethingElse_CharSequence.hashCode() : 0);
+    _result = 31 * _result + somethingElse_Int;
+    _result = 31 * _result + primitive_Int;
+    _result = 31 * _result + (int) (primitive_Long ^ (primitive_Long >>> 32));
+    _result = 31 * _result + primitiveWithDefault_Int;
+    _result = 31 * _result + (int) (primitiveWithDefault_Long ^ (primitiveWithDefault_Long >>> 32));
+    _result = 31 * _result + (int) (primitiveAndObjectGroupWithPrimitiveDefault_Long ^ (primitiveAndObjectGroupWithPrimitiveDefault_Long >>> 32));
+    _result = 31 * _result + (primitiveAndObjectGroupWithPrimitiveDefault_CharSequence != null ? primitiveAndObjectGroupWithPrimitiveDefault_CharSequence.hashCode() : 0);
+    _result = 31 * _result + (int) (oneThing_Long ^ (oneThing_Long >>> 32));
+    _result = 31 * _result + (anotherThing_CharSequence != null ? anotherThing_CharSequence.hashCode() : 0);
+    _result = 31 * _result + (requiredGroup_String != null ? requiredGroup_String.hashCode() : 0);
+    _result = 31 * _result + (requiredGroup_CharSequence != null ? requiredGroup_CharSequence.hashCode() : 0);
+    return _result;
   }
 
   @Override

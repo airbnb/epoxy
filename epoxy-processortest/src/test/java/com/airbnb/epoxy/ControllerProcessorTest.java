@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import javax.tools.JavaFileObject;
 
+import static com.airbnb.epoxy.ProcessorTestUtils.processors;
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static com.google.testing.compile.JavaSourcesSubjectFactory.javaSources;
@@ -16,17 +17,17 @@ public class ControllerProcessorTest {
   @Test
   public void controllerWithAutoModel() {
     JavaFileObject model = JavaFileObjects
-        .forResource("BasicModelWithAttribute.java");
+        .forResource(GuavaPatch.patchResource("BasicModelWithAttribute.java"));
 
     JavaFileObject controller = JavaFileObjects
-        .forResource("ControllerWithAutoModel.java");
+        .forResource(GuavaPatch.patchResource("ControllerWithAutoModel.java"));
 
     JavaFileObject generatedHelper = JavaFileObjects
-        .forResource("ControllerWithAutoModel_EpoxyHelper.java");
+        .forResource(GuavaPatch.patchResource("ControllerWithAutoModel_EpoxyHelper.java"));
 
     assert_().about(javaSources())
         .that(asList(model, controller))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedHelper);
@@ -35,17 +36,18 @@ public class ControllerProcessorTest {
   @Test
   public void controllerWithAutoModelWithoutValidation() {
     JavaFileObject model = JavaFileObjects
-        .forResource("BasicModelWithAttribute.java");
+        .forResource(GuavaPatch.patchResource("BasicModelWithAttribute.java"));
 
     JavaFileObject controller = JavaFileObjects
-        .forResource("ControllerWithAutoModelWithoutValidation.java");
+        .forResource(GuavaPatch.patchResource("ControllerWithAutoModelWithoutValidation.java"));
 
     JavaFileObject generatedHelper = JavaFileObjects
-        .forResource("ControllerWithAutoModelWithoutValidation_EpoxyHelper.java");
+        .forResource(GuavaPatch.patchResource("ControllerWithAutoModelWithoutValidation_EpoxyHelper.java"));
 
     assert_().about(javaSources())
         .that(asList(model, controller))
-        .processedWith(EpoxyProcessor.withNoValidation())
+        .withCompilerOptions(ProcessorTestUtils.options(true, false))
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedHelper);
@@ -54,20 +56,20 @@ public class ControllerProcessorTest {
   @Test
   public void controllerWithSuperClassWithAutoModel() {
     JavaFileObject model = JavaFileObjects
-        .forResource("BasicModelWithAttribute.java");
+        .forResource(GuavaPatch.patchResource("BasicModelWithAttribute.java"));
 
     JavaFileObject controller = JavaFileObjects
-        .forResource("ControllerWithAutoModelWithSuperClass.java");
+        .forResource(GuavaPatch.patchResource("ControllerWithAutoModelWithSuperClass.java"));
 
     JavaFileObject generatedHelper = JavaFileObjects
-        .forResource("ControllerWithAutoModelWithSuperClass_EpoxyHelper.java");
+        .forResource(GuavaPatch.patchResource("ControllerWithAutoModelWithSuperClass_EpoxyHelper.java"));
 
     JavaFileObject generatedSubHelper = JavaFileObjects
-        .forResource("ControllerWithAutoModelWithSuperClass$SubControllerWithAutoModelWithSuperClass_EpoxyHelper.java");
+        .forResource(GuavaPatch.patchResource("ControllerWithAutoModelWithSuperClass$SubControllerWithAutoModelWithSuperClass_EpoxyHelper.java"));
 
     assert_().about(javaSources())
         .that(asList(model, controller))
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedHelper, generatedSubHelper);
@@ -76,39 +78,40 @@ public class ControllerProcessorTest {
   @Test
   public void autoModelNotInAutoAdapterFails() {
     JavaFileObject badClass = JavaFileObjects
-        .forResource("AutoModelNotInAutoAdapter.java");
+        .forResource(GuavaPatch.patchResource("AutoModelNotInAutoAdapter.java"));
 
     assert_().about(javaSource())
         .that(badClass)
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile();
   }
 
   @Test
   public void autoModelAnnotationNotOnModelFails() {
     JavaFileObject badClass = JavaFileObjects
-        .forResource("AutoModelNotOnModelField.java");
+        .forResource(GuavaPatch.patchResource("AutoModelNotOnModelField.java"));
 
     assert_().about(javaSource())
         .that(badClass)
-        .processedWith(new EpoxyProcessor())
+        .processedWith(processors())
         .failsToCompile();
   }
 
   @Test
   public void setsStagingControllerWhenImplicitlyAddingModels() {
     JavaFileObject model = JavaFileObjects
-        .forResource("BasicModelWithAttribute.java");
+        .forResource(GuavaPatch.patchResource("BasicModelWithAttribute.java"));
 
     JavaFileObject controller = JavaFileObjects
-        .forResource("ControllerWithAutoModelAndImplicitAdding.java");
+        .forResource(GuavaPatch.patchResource("ControllerWithAutoModelAndImplicitAdding.java"));
 
     JavaFileObject generatedHelper = JavaFileObjects
-        .forResource("ControllerWithAutoModelAndImplicitAdding_EpoxyHelper.java");
+        .forResource(GuavaPatch.patchResource("ControllerWithAutoModelAndImplicitAdding_EpoxyHelper.java"));
 
     assert_().about(javaSources())
         .that(asList(model, controller))
-        .processedWith(EpoxyProcessor.withImplicitAdding())
+        .withCompilerOptions(ProcessorTestUtils.options(false, true))
+        .processedWith(processors())
         .compilesWithoutError()
         .and()
         .generatesSources(generatedHelper);

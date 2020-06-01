@@ -12,29 +12,30 @@ import java.lang.String;
 public class ControllerWithAutoModelAndImplicitAdding_EpoxyHelper extends ControllerHelper<ControllerWithAutoModelAndImplicitAdding> {
   private final ControllerWithAutoModelAndImplicitAdding controller;
 
-  private EpoxyModel modelWithAttribute1;
-
   private EpoxyModel modelWithAttribute2;
 
-  public ControllerWithAutoModelAndImplicitAdding_EpoxyHelper(ControllerWithAutoModelAndImplicitAdding controller) {
+  private EpoxyModel modelWithAttribute1;
+
+  public ControllerWithAutoModelAndImplicitAdding_EpoxyHelper(
+      ControllerWithAutoModelAndImplicitAdding controller) {
     this.controller = controller;
   }
 
   @Override
   public void resetAutoModels() {
     validateModelsHaveNotChanged();
-    controller.modelWithAttribute1 = new BasicModelWithAttribute_();
-    controller.modelWithAttribute1.id(-1);
-    setControllerToStageTo(controller.modelWithAttribute1, controller);
     controller.modelWithAttribute2 = new BasicModelWithAttribute_();
-    controller.modelWithAttribute2.id(-2);
+    controller.modelWithAttribute2.id(-1);
     setControllerToStageTo(controller.modelWithAttribute2, controller);
+    controller.modelWithAttribute1 = new BasicModelWithAttribute_();
+    controller.modelWithAttribute1.id(-2);
+    setControllerToStageTo(controller.modelWithAttribute1, controller);
     saveModelsForNextValidation();
   }
 
   private void validateModelsHaveNotChanged() {
-    validateSameModel(modelWithAttribute1, controller.modelWithAttribute1, "modelWithAttribute1", -1);
-    validateSameModel(modelWithAttribute2, controller.modelWithAttribute2, "modelWithAttribute2", -2);
+    validateSameModel(modelWithAttribute2, controller.modelWithAttribute2, "modelWithAttribute2", -1);
+    validateSameModel(modelWithAttribute1, controller.modelWithAttribute1, "modelWithAttribute1", -2);
     validateModelHashCodesHaveNotChanged(controller);
   }
 
@@ -49,7 +50,7 @@ public class ControllerWithAutoModelAndImplicitAdding_EpoxyHelper extends Contro
   }
 
   private void saveModelsForNextValidation() {
-    modelWithAttribute1 = controller.modelWithAttribute1;
     modelWithAttribute2 = controller.modelWithAttribute2;
+    modelWithAttribute1 = controller.modelWithAttribute1;
   }
 }

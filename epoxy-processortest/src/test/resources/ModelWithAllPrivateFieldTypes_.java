@@ -101,8 +101,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public ModelWithAllPrivateFieldTypes_ onVisibilityStateChanged(
       OnModelVisibilityStateChangedListener<ModelWithAllPrivateFieldTypes_, Object> listener) {
     onMutation();
@@ -124,8 +123,7 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public ModelWithAllPrivateFieldTypes_ onVisibilityChanged(
       OnModelVisibilityChangedListener<ModelWithAllPrivateFieldTypes_, Object> listener) {
     onMutation();
@@ -540,35 +538,35 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    int _result = super.hashCode();
+    _result = 31 * _result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     long temp;
-    result = 31 * result + getValueInt();
-    result = 31 * result + (getValueInteger() != null ? getValueInteger().hashCode() : 0);
-    result = 31 * result + getValueShort();
-    result = 31 * result + (getValueShortWrapper() != null ? getValueShortWrapper().hashCode() : 0);
-    result = 31 * result + getValueChar();
-    result = 31 * result + (getValueCharacter() != null ? getValueCharacter().hashCode() : 0);
-    result = 31 * result + getValuebByte();
-    result = 31 * result + (getValueByteWrapper() != null ? getValueByteWrapper().hashCode() : 0);
-    result = 31 * result + (int) (getValueLong() ^ (getValueLong() >>> 32));
-    result = 31 * result + (getValueLongWrapper() != null ? getValueLongWrapper().hashCode() : 0);
+    _result = 31 * _result + getValueInt();
+    _result = 31 * _result + (getValueInteger() != null ? getValueInteger().hashCode() : 0);
+    _result = 31 * _result + getValueShort();
+    _result = 31 * _result + (getValueShortWrapper() != null ? getValueShortWrapper().hashCode() : 0);
+    _result = 31 * _result + getValueChar();
+    _result = 31 * _result + (getValueCharacter() != null ? getValueCharacter().hashCode() : 0);
+    _result = 31 * _result + getValuebByte();
+    _result = 31 * _result + (getValueByteWrapper() != null ? getValueByteWrapper().hashCode() : 0);
+    _result = 31 * _result + (int) (getValueLong() ^ (getValueLong() >>> 32));
+    _result = 31 * _result + (getValueLongWrapper() != null ? getValueLongWrapper().hashCode() : 0);
     temp = Double.doubleToLongBits(getValueDouble());
-    result = 31 * result + (int) (temp ^ (temp >>> 32));
-    result = 31 * result + (getValueDoubleWrapper() != null ? getValueDoubleWrapper().hashCode() : 0);
-    result = 31 * result + (getValueFloat() != +0.0f ? Float.floatToIntBits(getValueFloat()) : 0);
-    result = 31 * result + (getValueFloatWrapper() != null ? getValueFloatWrapper().hashCode() : 0);
-    result = 31 * result + (isValueBoolean() ? 1 : 0);
-    result = 31 * result + (getValueBooleanWrapper() != null ? getValueBooleanWrapper().hashCode() : 0);
-    result = 31 * result + Arrays.hashCode(getValueIntArray());
-    result = 31 * result + Arrays.hashCode(getValueObjectArray());
-    result = 31 * result + (getValueString() != null ? getValueString().hashCode() : 0);
-    result = 31 * result + (getValueObject() != null ? getValueObject().hashCode() : 0);
-    result = 31 * result + (getValueList() != null ? getValueList().hashCode() : 0);
-    return result;
+    _result = 31 * _result + (int) (temp ^ (temp >>> 32));
+    _result = 31 * _result + (getValueDoubleWrapper() != null ? getValueDoubleWrapper().hashCode() : 0);
+    _result = 31 * _result + (getValueFloat() != +0.0f ? Float.floatToIntBits(getValueFloat()) : 0);
+    _result = 31 * _result + (getValueFloatWrapper() != null ? getValueFloatWrapper().hashCode() : 0);
+    _result = 31 * _result + (isValueBoolean() ? 1 : 0);
+    _result = 31 * _result + (getValueBooleanWrapper() != null ? getValueBooleanWrapper().hashCode() : 0);
+    _result = 31 * _result + Arrays.hashCode(getValueIntArray());
+    _result = 31 * _result + Arrays.hashCode(getValueObjectArray());
+    _result = 31 * _result + (getValueString() != null ? getValueString().hashCode() : 0);
+    _result = 31 * _result + (getValueObject() != null ? getValueObject().hashCode() : 0);
+    _result = 31 * _result + (getValueList() != null ? getValueList().hashCode() : 0);
+    return _result;
   }
 
   @Override

@@ -285,8 +285,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public TestManyTypesViewModel_ onVisibilityStateChanged(
       OnModelVisibilityStateChangedListener<TestManyTypesViewModel_, TestManyTypesView> listener) {
     onMutation();
@@ -308,8 +307,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * <p>
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
-   * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   */
   public TestManyTypesViewModel_ onVisibilityChanged(
       OnModelVisibilityChangedListener<TestManyTypesViewModel_, TestManyTypesView> listener) {
     onMutation();
@@ -812,26 +810,26 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    result = 31 * result + (stringValue_String != null ? stringValue_String.hashCode() : 0);
-    result = 31 * result + (nullableStringValue_String != null ? nullableStringValue_String.hashCode() : 0);
-    result = 31 * result + intValue_Int;
-    result = 31 * result + intValueWithAnnotation_Int;
-    result = 31 * result + intValueWithRangeAnnotation_Int;
-    result = 31 * result + intValueWithDimenTypeAnnotation_Int;
-    result = 31 * result + intWithMultipleAnnotations_Int;
-    result = 31 * result + (integerValue_Integer != null ? integerValue_Integer.hashCode() : 0);
-    result = 31 * result + (boolValue_Boolean ? 1 : 0);
-    result = 31 * result + (booleanValue_Boolean != null ? booleanValue_Boolean.hashCode() : 0);
-    result = 31 * result + Arrays.hashCode(arrayValue_StringArray);
-    result = 31 * result + (listValue_List != null ? listValue_List.hashCode() : 0);
-    result = 31 * result + (clickListener_OnClickListener != null ? 1 : 0);
-    result = 31 * result + (title_StringAttributeData != null ? title_StringAttributeData.hashCode() : 0);
-    return result;
+    int _result = super.hashCode();
+    _result = 31 * _result + (onModelBoundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + (stringValue_String != null ? stringValue_String.hashCode() : 0);
+    _result = 31 * _result + (nullableStringValue_String != null ? nullableStringValue_String.hashCode() : 0);
+    _result = 31 * _result + intValue_Int;
+    _result = 31 * _result + intValueWithAnnotation_Int;
+    _result = 31 * _result + intValueWithRangeAnnotation_Int;
+    _result = 31 * _result + intValueWithDimenTypeAnnotation_Int;
+    _result = 31 * _result + intWithMultipleAnnotations_Int;
+    _result = 31 * _result + (integerValue_Integer != null ? integerValue_Integer.hashCode() : 0);
+    _result = 31 * _result + (boolValue_Boolean ? 1 : 0);
+    _result = 31 * _result + (booleanValue_Boolean != null ? booleanValue_Boolean.hashCode() : 0);
+    _result = 31 * _result + Arrays.hashCode(arrayValue_StringArray);
+    _result = 31 * _result + (listValue_List != null ? listValue_List.hashCode() : 0);
+    _result = 31 * _result + (clickListener_OnClickListener != null ? 1 : 0);
+    _result = 31 * _result + (title_StringAttributeData != null ? title_StringAttributeData.hashCode() : 0);
+    return _result;
   }
 
   @Override

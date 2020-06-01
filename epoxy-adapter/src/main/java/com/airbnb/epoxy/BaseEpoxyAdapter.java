@@ -4,6 +4,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.airbnb.epoxy.stickyheader.StickyHeaderCallbacks;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -12,7 +16,9 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
 import androidx.recyclerview.widget.RecyclerView;
 
-public abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHolder> {
+public abstract class BaseEpoxyAdapter
+    extends RecyclerView.Adapter<EpoxyViewHolder>
+    implements StickyHeaderCallbacks {
 
   private static final String SAVED_STATE_ARG_VIEW_HOLDERS = "saved_state_view_holders";
 
@@ -283,4 +289,44 @@ public abstract class BaseEpoxyAdapter extends RecyclerView.Adapter<EpoxyViewHol
   public boolean isMultiSpan() {
     return spanCount > 1;
   }
+
+  //region Sticky header
+
+  /**
+   * Optional callback to setup the sticky view,
+   * by default it doesn't do anything.
+   *
+   * The sub-classes should override the function if they are
+   * using sticky header feature.
+   */
+  @Override
+  public void setupStickyHeaderView(@NotNull View stickyHeader) {
+    // no-op
+  }
+
+  /**
+   * Optional callback to perform tear down operation on the
+   * sticky view, by default it doesn't do anything.
+   *
+   * The sub-classes should override the function if they are
+   * using sticky header feature.
+   */
+  @Override
+  public void teardownStickyHeaderView(@NotNull View stickyHeader) {
+    // no-op
+  }
+
+  /**
+   * Called to check if the item at the position is a sticky item,
+   * by default returns false.
+   *
+   * The sub-classes should override the function if they are
+   * using sticky header feature.
+   */
+  @Override
+  public boolean isStickyHeader(int position) {
+    return false;
+  }
+
+  //endregion
 }

@@ -4,9 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStub
 import androidx.recyclerview.widget.RecyclerView
-
 import com.airbnb.viewmodeladapter.R
-
 import java.util.ArrayList
 
 class ModelGroupHolder : EpoxyHolder() {
