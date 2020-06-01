@@ -1,7 +1,6 @@
 package com.airbnb.epoxy;
 
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -15,27 +14,31 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 public abstract class EpoxyModelStaggeredGrid<T extends View> extends EpoxyModel<T> {
 
   /**
-   * The flag to mark a model view is full span or not.
+   * The attribute to make a view can be full span or not in StaggeredLayoutManager
    */
-  private boolean isFullSpanModel = false;
-
-  /**
-   * The method to set a model view can be full span or not.
-   *
-   * @param isFullSpanModel if true, the model view will be full span.
-   * @return The model view.
-   */
-  public EpoxyModelStaggeredGrid<T> setFullSpanModel(boolean isFullSpanModel) {
-    this.isFullSpanModel = isFullSpanModel;
-    return this;
-  }
+  @EpoxyAttribute
+  public boolean staggeredFullSpan = false;
 
   @Override
   public void bind(@NonNull T view) {
-    if (isFullSpanModel) {
-      makeFullSpan(view);
-    }
+    syncStaggeredLayoutSpan(view);
     super.bind(view);
+  }
+
+  @Override
+  public void bind(@NonNull T view, @NonNull EpoxyModel<?> previouslyBoundModel) {
+    if (!(previouslyBoundModel instanceof EpoxyModelStaggeredGrid)) {
+      super.bind(view, previouslyBoundModel);
+      return;
+    }
+
+    EpoxyModelStaggeredGrid that = (EpoxyModelStaggeredGrid) previouslyBoundModel;
+
+    if (staggeredFullSpan != that.staggeredFullSpan) {
+      bind(view);
+      return;
+    }
+    super.bind(view, previouslyBoundModel);
   }
 
   /**
@@ -44,17 +47,18 @@ public abstract class EpoxyModelStaggeredGrid<T extends View> extends EpoxyModel
    *
    * @param view The view to set full span.
    */
-  private void makeFullSpan(@NonNull T view) {
-    LayoutParams layoutParams = view.getLayoutParams();
-    if (layoutParams != null) {
-      try {
-        StaggeredGridLayoutManager.LayoutParams params =
-            (StaggeredGridLayoutManager.LayoutParams) layoutParams;
-        params.setFullSpan(true);
-      } catch (ClassCastException e) {
-        throw new ClassCastException(
-            "Couldn't use EpoxyModelStaggeredGrid without the StaggeredGridLayoutManager.");
+  private void syncStaggeredLayoutSpan(@NonNull T view) {
+    try {
+      StaggeredGridLayoutManager.LayoutParams layoutParams =
+          (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
+      if (staggeredFullSpan && !layoutParams.isFullSpan()) {
+        layoutParams.setFullSpan(true);
+      } else if (!staggeredFullSpan && layoutParams.isFullSpan()) {
+        layoutParams.setFullSpan(false);
       }
+    } catch (ClassCastException e) {
+      throw new ClassCastException("Please use attribute "
+          + "staggeredFullSpan within StaggeredLayoutManager.");
     }
   }
 }
