@@ -9,11 +9,6 @@ mavenPublish {
 sourceCompatibility = rootProject.JAVA_SOURCE_VERSION
 targetCompatibility = rootProject.JAVA_TARGET_VERSION
 
-checkstyle {
-  configFile rootProject.file('checkstyle.xml')
-  showViolations true
-}
-
 dependencies {
   implementation rootProject.deps.androidAnnotations
   // Allow us to use android support library annotations (@LayoutRes) in this project.
