@@ -162,7 +162,9 @@ class GeneratedModelWriter(
             addMethods(generateDefaultMethodImplementations(info))
             addMethods(generateOtherLayoutOptions(info))
             addMethods(generateDataBindingMethodsIfNeeded(info))
-            addMethod(generateReset(info))
+            if (!configManager.disableGenerateReset(info)) {
+                addMethod(generateReset(info))
+            }
             addMethod(generateEquals(info))
             addMethod(generateHashCode(info))
             addMethod(generateToString(info))
@@ -331,17 +333,17 @@ class GeneratedModelWriter(
 
         classInfo.attributeInfo
             .filter { it.isGenerated }
-            .mapTo(fields) {
-                buildField(it.typeName, it.fieldName) {
+            .mapTo(fields) { attributeInfo ->
+                buildField(attributeInfo.typeName, attributeInfo.fieldName) {
                     addModifiers(PRIVATE)
-                    addAnnotations(it.setterAnnotations)
+                    addAnnotations(attributeInfo.setterAnnotations)
 
-                    if (shouldUseBitSet(classInfo)) {
-                        addJavadoc("Bitset index: \$L", attributeIndex(classInfo, it))
+                    if (shouldUseBitSet(classInfo, attr = attributeInfo)) {
+                        addJavadoc("Bitset index: \$L", attributeIndex(classInfo, attributeInfo))
                     }
 
-                    if (it.codeToSetDefault.isPresent) {
-                        initializer(it.codeToSetDefault.value())
+                    if (attributeInfo.codeToSetDefault.isPresent) {
+                        initializer(attributeInfo.codeToSetDefault.value())
                     }
                 }
             }
@@ -1000,7 +1002,8 @@ class GeneratedModelWriter(
     }
 
     private fun generateMethodsReturningClassType(info: GeneratedModelInfo): Iterable<MethodSpec> {
-        return info.methodsReturningClassType.map { methodInfo ->
+        return info.methodsReturningClassType.mapNotNull { methodInfo ->
+
             val builder = MethodSpec.methodBuilder(methodInfo.name)
                 .addModifiers(methodInfo.modifiers)
                 .addParameters(methodInfo.params)
@@ -1008,12 +1011,12 @@ class GeneratedModelWriter(
                 .varargs(methodInfo.varargs)
                 .returns(info.parameterizedGeneratedName)
 
-            if (info.isProgrammaticView &&
+            val isLayoutUnsupportedOverload = info.isProgrammaticView &&
                 "layout" == methodInfo.name &&
                 methodInfo.params.size == 1 &&
                 methodInfo.params[0].type === TypeName.INT
-            ) {
 
+            if (isLayoutUnsupportedOverload) {
                 builder.addStatement(
                     "throw new \$T(\"Layout resources are unsupported with programmatic " +
                         "views.\")",
@@ -1034,7 +1037,15 @@ class GeneratedModelWriter(
                     .addStatement("return this")
             }
 
-            builder.build()
+            if (configManager.disableGenerateBuilderOverloads(info) && !isLayoutUnsupportedOverload) {
+                // We want to keep the layout overload when it is throwing an UnsupportedOperationException
+                // because that actually adds new behavior. All other overloads simply call super
+                // and return "this", which can be disabled when builder chaining is not needed
+                // (ie with kotlin).
+                null
+            } else {
+                builder.build()
+            }
         }
     }
 
@@ -1338,7 +1349,7 @@ class GeneratedModelWriter(
                     methods.add(generateSetter(modelInfo, attr))
                 }
 
-                if (attr.generateGetter) {
+                if (attr.generateGetter && !configManager.disableGenerateGetters(modelInfo)) {
                     methods.add(generateGetter(modelInfo, attr))
                 }
             }
@@ -1877,9 +1888,27 @@ class GeneratedModelWriter(
         private val GENERATED_FIELD_SUFFIX = "_epoxyGeneratedModel"
         private val CREATE_NEW_HOLDER_METHOD_NAME = "createNewHolder"
         private val GET_DEFAULT_LAYOUT_METHOD_NAME = "getDefaultLayout"
-        val ATTRIBUTES_BITSET_FIELD_NAME = "assignedAttributes" + GENERATED_FIELD_SUFFIX
+        val ATTRIBUTES_BITSET_FIELD_NAME = "assignedAttributes$GENERATED_FIELD_SUFFIX"
 
-        fun shouldUseBitSet(info: GeneratedModelInfo): Boolean = info is ModelViewInfo
+        fun shouldUseBitSet(info: GeneratedModelInfo): Boolean {
+            return info.attributeInfo.any { shouldUseBitSet(info, it) }
+        }
+
+        // Avoid generating bitset code for attributes that don't need it.
+        fun shouldUseBitSet(info: GeneratedModelInfo, attr: AttributeInfo): Boolean {
+            if (info !is ModelViewInfo) return false
+
+            // We use the bitset to validate if a required attribute had a value set on it
+            if (attr.isRequired) return true
+
+            // If the attribute is not generated then we assume that its parent model
+            // handles its binding.
+            if (!attr.isGenerated) return false
+
+            // With default values we use the bitset when our bind code needs to conditionally
+            // check which attribute value to set (either because its in a group or it has a default value)
+            return ModelViewWriter.hasConditionals(info.attributeGroup(attr))
+        }
 
         fun isAttributeSetCode(
             info: GeneratedModelInfo,
@@ -1905,7 +1934,7 @@ class GeneratedModelWriter(
             attr: AttributeInfo,
             stringSetter: Builder
         ) {
-            if (shouldUseBitSet(modelInfo)) {
+            if (shouldUseBitSet(modelInfo, attr)) {
                 stringSetter.addStatement(
                     "\$L.set(\$L)", ATTRIBUTES_BITSET_FIELD_NAME,
                     attributeIndex(modelInfo, attr)

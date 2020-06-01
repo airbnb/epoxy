@@ -7,13 +7,10 @@ import java.lang.Number;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
 public class RLayoutInViewModelAnnotationWorksViewModel_ extends EpoxyModel<RLayoutInViewModelAnnotationWorksView> implements GeneratedModel<RLayoutInViewModelAnnotationWorksView>, RLayoutInViewModelAnnotationWorksViewModelBuilder {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(0);
-
   private OnModelBoundListener<RLayoutInViewModelAnnotationWorksViewModel_, RLayoutInViewModelAnnotationWorksView> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<RLayoutInViewModelAnnotationWorksViewModel_, RLayoutInViewModelAnnotationWorksView> onModelUnboundListener_epoxyGeneratedModel;
@@ -217,7 +214,6 @@ public class RLayoutInViewModelAnnotationWorksViewModel_ extends EpoxyModel<RLay
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    assignedAttributes_epoxyGeneratedModel.clear();
     super.reset();
     return this;
   }

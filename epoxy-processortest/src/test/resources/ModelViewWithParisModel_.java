@@ -17,7 +17,6 @@ import java.lang.Runnable;
 import java.lang.String;
 import java.lang.UnsupportedOperationException;
 import java.lang.ref.WeakReference;
-import java.util.BitSet;
 import java.util.Objects;
 
 /**
@@ -31,8 +30,6 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
 
   private static WeakReference<Style> parisStyleReference_default;
 
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(2);
-
   private OnModelBoundListener<ModelViewWithParisModel_, ModelViewWithParis> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<ModelViewWithParisModel_, ModelViewWithParis> onModelUnboundListener_epoxyGeneratedModel;
@@ -41,12 +38,8 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
 
   private OnModelVisibilityChangedListener<ModelViewWithParisModel_, ModelViewWithParis> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  /**
-   * Bitset index: 0 */
   private int value_Int = 0;
 
-  /**
-   * Bitset index: 1 */
   private Style style = DEFAULT_PARIS_STYLE;
 
   @Override
@@ -205,7 +198,6 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
   }
 
   public ModelViewWithParisModel_ style(Style style) {
-    assignedAttributes_epoxyGeneratedModel.set(1);
     onMutation();
     this.style = style;
     return this;
@@ -260,7 +252,6 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
    * @see ModelViewWithParis#value
    */
   public ModelViewWithParisModel_ value(int value) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     this.value_Int = value;
     return this;
@@ -348,7 +339,6 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    assignedAttributes_epoxyGeneratedModel.clear();
     this.value_Int = 0;
     this.style = DEFAULT_PARIS_STYLE;
     super.reset();

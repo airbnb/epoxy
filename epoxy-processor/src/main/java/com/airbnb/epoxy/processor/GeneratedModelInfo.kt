@@ -220,6 +220,10 @@ abstract class GeneratedModelInfo(val memoizer: Memoizer) {
         return attributeToGroup[attribute]?.attributes?.let { it.size > 1 } == true
     }
 
+    fun attributeGroup(attribute: AttributeInfo): AttributeGroup? {
+        return attributeToGroup[attribute]
+    }
+
     class AttributeGroup internal constructor(
         groupName: String?,
         attributes: List<AttributeInfo>,

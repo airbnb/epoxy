@@ -45,4 +45,47 @@ public @interface PackageModelViewConfig {
    * Suffix, which will be appended to generated model's names. "Model_" is a default value.
    */
   String generatedModelSuffix() default "Model_";
+
+  /**
+   * Controls whether "builder" setter functions that returns the model type will be duplicated
+   * from super model classes with the function return type updated to use the generated model name.
+   * This helps make all setters (such as id(...) ) return the same generated model so they can be
+   * chained in a builder pattern. This is mainly intended for Java usage and is generally
+   * unnecessary when using models in kotlin, especially if the generated kotlin model
+   * build extension functions are used. Disabling this can greatly reduce the number of
+   * methods generated on models.
+   *
+   * Default is false. This may also be set project wide with an annotation processor option.
+   */
+  Option disableGenerateBuilderOverloads() default Option.Default;
+
+  /**
+   * Controls whether getter functions (that return the value of each attribute) are generated
+   * on models.
+   *
+   * Disabling this can greatly reduce the number of methods generated on models.
+   *
+   * Default is false. This may also be set project wide with an annotation processor option.
+   */
+  Option disableGenerateGetters() default Option.Default;
+
+  /**
+   * Controls whether the "reset" function (that clears all attribute values) are generated
+   * on models. This function is generally legacy and is not recommended to be used with the modern
+   * immutable model approach of EpoxyControllers.
+   *
+   * Disabling this reduces the amount of generated code.
+   *
+   * Default is false. This may also be set project wide with an annotation processor option.
+   */
+  Option disableGenerateReset() default Option.Default;
+
+  /**
+   * Enable or Disable an option, or inherit the default.
+   */
+  enum Option {
+    Default,
+    Enabled,
+    Disabled
+  }
 }

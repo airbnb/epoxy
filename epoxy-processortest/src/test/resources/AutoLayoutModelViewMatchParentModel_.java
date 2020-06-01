@@ -9,13 +9,10 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.lang.UnsupportedOperationException;
-import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
 public class AutoLayoutModelViewMatchParentModel_ extends EpoxyModel<AutoLayoutModelViewMatchParent> implements GeneratedModel<AutoLayoutModelViewMatchParent>, AutoLayoutModelViewMatchParentModelBuilder {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
-
   private OnModelBoundListener<AutoLayoutModelViewMatchParentModel_, AutoLayoutModelViewMatchParent> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<AutoLayoutModelViewMatchParentModel_, AutoLayoutModelViewMatchParent> onModelUnboundListener_epoxyGeneratedModel;
@@ -24,8 +21,6 @@ public class AutoLayoutModelViewMatchParentModel_ extends EpoxyModel<AutoLayoutM
 
   private OnModelVisibilityChangedListener<AutoLayoutModelViewMatchParentModel_, AutoLayoutModelViewMatchParent> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  /**
-   * Bitset index: 0 */
   private int value_Int = 0;
 
   @Override
@@ -166,7 +161,6 @@ public class AutoLayoutModelViewMatchParentModel_ extends EpoxyModel<AutoLayoutM
    * @see AutoLayoutModelViewMatchParent#setValue(int)
    */
   public AutoLayoutModelViewMatchParentModel_ value(int value) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     this.value_Int = value;
     return this;
@@ -255,7 +249,6 @@ public class AutoLayoutModelViewMatchParentModel_ extends EpoxyModel<AutoLayoutM
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    assignedAttributes_epoxyGeneratedModel.clear();
     this.value_Int = 0;
     super.reset();
     return this;

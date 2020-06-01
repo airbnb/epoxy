@@ -7,13 +7,10 @@ import java.lang.Number;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
 public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> implements GeneratedModel<NullOnRecycleView>, NullOnRecycleViewModelBuilder {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
-
   private OnModelBoundListener<NullOnRecycleViewModel_, NullOnRecycleView> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<NullOnRecycleViewModel_, NullOnRecycleView> onModelUnboundListener_epoxyGeneratedModel;
@@ -22,8 +19,6 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
 
   private OnModelVisibilityChangedListener<NullOnRecycleViewModel_, NullOnRecycleView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  /**
-   * Bitset index: 0 */
   @Nullable
   private CharSequence title_CharSequence = (CharSequence) null;
 
@@ -153,7 +148,6 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
    * @see NullOnRecycleView#setTitle(CharSequence)
    */
   public NullOnRecycleViewModel_ title(@Nullable CharSequence title) {
-    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
     this.title_CharSequence = title;
     return this;
@@ -243,7 +237,6 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    assignedAttributes_epoxyGeneratedModel.clear();
     this.title_CharSequence = (CharSequence) null;
     super.reset();
     return this;

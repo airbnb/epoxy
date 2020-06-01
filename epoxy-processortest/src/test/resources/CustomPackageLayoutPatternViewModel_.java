@@ -7,13 +7,10 @@ import java.lang.Number;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.util.BitSet;
 
 /**
  * Generated file. Do not modify! */
 public class CustomPackageLayoutPatternViewModel_ extends EpoxyModel<CustomPackageLayoutPatternView> implements GeneratedModel<CustomPackageLayoutPatternView>, CustomPackageLayoutPatternViewModelBuilder {
-  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(0);
-
   private OnModelBoundListener<CustomPackageLayoutPatternViewModel_, CustomPackageLayoutPatternView> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<CustomPackageLayoutPatternViewModel_, CustomPackageLayoutPatternView> onModelUnboundListener_epoxyGeneratedModel;
@@ -217,7 +214,6 @@ public class CustomPackageLayoutPatternViewModel_ extends EpoxyModel<CustomPacka
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    assignedAttributes_epoxyGeneratedModel.clear();
     super.reset();
     return this;
   }

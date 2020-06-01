@@ -35,8 +35,6 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
    * Bitset index: 0 */
   private StringAttributeData textValue_StringAttributeData =  new StringAttributeData();
 
-  /**
-   * Bitset index: 1 */
   @Nullable
   private View.OnClickListener value_OnClickListener = (View.OnClickListener) null;
 
@@ -247,7 +245,6 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
   public TestFieldPropChildViewModel_ value(
       @Nullable final OnModelClickListener<TestFieldPropChildViewModel_, TestFieldPropChildView> value) {
-    assignedAttributes_epoxyGeneratedModel.set(1);
     onMutation();
     if (value == null) {
       this.value_OnClickListener = null;
@@ -261,10 +258,9 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   /**
    * <i>Optional</i>: Default value is (View.OnClickListener) null
    *
-   * @see TestFieldPropChildView#value
+   * @see TestFieldPropParentView#value
    */
   public TestFieldPropChildViewModel_ value(@Nullable View.OnClickListener value) {
-    assignedAttributes_epoxyGeneratedModel.set(1);
     onMutation();
     this.value_OnClickListener = value;
     return this;

@@ -62,6 +62,8 @@ class ModelViewProcessor : BaseProcessorWithPackageConfigs() {
             // Up until here our code generation has assumed that that all attributes in a group are
             // view attributes (and not attributes inherited from a base model class), so this should be
             // done after grouping attributes, and these attributes should not be grouped.
+            // No code to bind these attributes is generated, as it is assumed that the original model
+            // handles its own bind (also we can't know how to bind these).
             updatesViewsForInheritedBaseModelAttributes()
             addStyleAttributes()
         }
