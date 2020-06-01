@@ -31,6 +31,16 @@ Parallel processing can greatly speed up processing time (moreso than the increm
 Please report any issues or crashes that you notice.
 (We are currently using parallel mode in our large project at Airbnb with no problems.)
 
+## Breaking
+In order to enable incremental annotation processing a change had to be made in how the processor of
+`@AutoModel` annotations work. If you use `@AutoModel` in an EpoxyController the annotated Model types
+must be either declared in a different module from the EpoxyController, or in the same module in the same java package.
+
+Also make sure you have kapt error types enabled.
+
+However, generally `@AutoModel` is considered legacy and is not recommended. It is a relic of Java Epoxy usage
+and instead the current best practice is to use Kotlin with the Kotlin model extension functions to build models.
+ 
 # 3.11.0 (May 20, 2020)
 - Introduce partial impression visibility states (#973)
 - Fix sticky header crash (#976)
