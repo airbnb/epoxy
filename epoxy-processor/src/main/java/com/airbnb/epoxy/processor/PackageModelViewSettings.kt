@@ -1,6 +1,5 @@
 package com.airbnb.epoxy.processor
 
-import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.PackageModelViewConfig
 import com.squareup.javapoet.ClassName
 import javax.lang.model.element.TypeElement
