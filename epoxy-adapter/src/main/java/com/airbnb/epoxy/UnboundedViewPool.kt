@@ -35,6 +35,10 @@ internal class UnboundedViewPool : RecycledViewPool() {
         getScrapHeapForType(viewHolder.itemViewType).add(viewHolder)
     }
 
+    override fun getRecycledViewCount(viewType: Int): Int {
+        return scrapHeaps.get(viewType)?.size ?: 0
+    }
+
     private fun getScrapHeapForType(viewType: Int): Queue<ViewHolder> {
         var scrapHeap: Queue<ViewHolder>? = scrapHeaps.get(viewType)
         if (scrapHeap == null) {
