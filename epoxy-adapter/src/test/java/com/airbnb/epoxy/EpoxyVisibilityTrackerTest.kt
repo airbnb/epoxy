@@ -881,26 +881,28 @@ class EpoxyVisibilityTrackerTest {
     @Before
     fun setup() {
         Robolectric.setupActivity(Activity::class.java).apply {
-            setContentView(EpoxyRecyclerView(this).apply {
-                epoxyVisibilityTracker.setPartialImpressionThresholdPercentage(50)
-                epoxyVisibilityTracker.attach(this)
-                recyclerView = this
-                // Plug an epoxy controller
-                epoxyController = object : TypedEpoxyController<List<AssertHelper>>() {
-                    override fun buildModels(data: List<AssertHelper>?) {
-                        data?.forEachIndexed { index, helper ->
-                            add(
-                                TrackerTestModel(
-                                    itemPosition = index,
-                                    itemHeight = itemHeight,
-                                    helper = helper
-                                ).id(helper.id)
-                            )
+            setContentView(
+                EpoxyRecyclerView(this).apply {
+                    epoxyVisibilityTracker.setPartialImpressionThresholdPercentage(50)
+                    epoxyVisibilityTracker.attach(this)
+                    recyclerView = this
+                    // Plug an epoxy controller
+                    epoxyController = object : TypedEpoxyController<List<AssertHelper>>() {
+                        override fun buildModels(data: List<AssertHelper>?) {
+                            data?.forEachIndexed { index, helper ->
+                                add(
+                                    TrackerTestModel(
+                                        itemPosition = index,
+                                        itemHeight = itemHeight,
+                                        helper = helper
+                                    ).id(helper.id)
+                                )
+                            }
                         }
                     }
+                    recyclerView.adapter = epoxyController.adapter
                 }
-                recyclerView.adapter = epoxyController.adapter
-            })
+            )
             viewportHeight = recyclerView.measuredHeight
             activity = this
         }

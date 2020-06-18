@@ -158,10 +158,12 @@ abstract class GeneratedModelInfo(val memoizer: Memoizer) {
     )
 
     override fun toString(): String {
-        return ("GeneratedModelInfo{" +
-            "attributeInfo=" + attributeInfo +
-            ", superClassName=" + superClassName +
-            '}')
+        return (
+            "GeneratedModelInfo{" +
+                "attributeInfo=" + attributeInfo +
+                ", superClassName=" + superClassName +
+                '}'
+            )
     }
 
     @Throws(EpoxyProcessorException::class)

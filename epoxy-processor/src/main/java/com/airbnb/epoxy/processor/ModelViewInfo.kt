@@ -3,6 +3,10 @@ package com.airbnb.epoxy.processor
 import com.airbnb.epoxy.ModelView
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.ParameterizedTypeName
+import kotlinx.metadata.Flag.ValueParameter.DECLARES_DEFAULT_VALUE
+import kotlinx.metadata.KmFunction
+import kotlinx.metadata.jvm.KotlinClassHeader
+import kotlinx.metadata.jvm.KotlinClassMetadata
 import java.util.Collections
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
@@ -12,10 +16,6 @@ import javax.lang.model.type.DeclaredType
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
-import kotlinx.metadata.Flag.ValueParameter.DECLARES_DEFAULT_VALUE
-import kotlinx.metadata.KmFunction
-import kotlinx.metadata.jvm.KotlinClassHeader
-import kotlinx.metadata.jvm.KotlinClassMetadata
 
 class ModelViewInfo(
     val viewElement: TypeElement,

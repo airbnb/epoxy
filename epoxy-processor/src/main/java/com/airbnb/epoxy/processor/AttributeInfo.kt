@@ -200,11 +200,13 @@ abstract class AttributeInfo : Comparable<AttributeInfo> {
     open fun generatedGetterName(isOverload: Boolean): String = fieldName
 
     override fun toString(): String {
-        return ("Attribute {" +
-            "model='" + rootClass + '\''.toString() +
-            ", name='" + fieldName + '\''.toString() +
-            ", type=" + typeName +
-            '}'.toString())
+        return (
+            "Attribute {" +
+                "model='" + rootClass + '\''.toString() +
+                ", name='" + fieldName + '\''.toString() +
+                ", type=" + typeName +
+                '}'.toString()
+            )
     }
 
     override fun equals(other: Any?): Boolean {

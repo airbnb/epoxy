@@ -57,10 +57,10 @@ fun JavaClassName.toKPoet(): KotlinClassName {
 /** Some classes, like List or Byte have the same class name but a different package for their kotlin equivalent. */
 private fun JavaClassName.getPackageNameInKotlin(): String {
     if (packageName() in listOf(
-            javaUtilPkg,
-            javaLangPkg,
-            kotlinJvmFunction
-        ) && simpleNames().size == 1
+        javaUtilPkg,
+        javaLangPkg,
+        kotlinJvmFunction
+    ) && simpleNames().size == 1
     ) {
 
         val transformedPkg = when {

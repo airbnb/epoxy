@@ -6,8 +6,8 @@ import com.airbnb.epoxy.ProcessorTestUtils.processors
 import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
-import javax.tools.JavaFileObject
 import org.junit.Test
+import javax.tools.JavaFileObject
 
 class ViewProcessorTest {
 
@@ -241,7 +241,8 @@ class ViewProcessorTest {
 
         val baseModel = JavaFileObjects
             .forSourceLines(
-                "com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
+                "com.airbnb.epoxy.TestBaseModel",
+                "package com.airbnb.epoxy;\n" +
                     "\n" +
                     "import android.widget.FrameLayout;\n" +
                     "\n" +
@@ -276,7 +277,8 @@ class ViewProcessorTest {
     @Test
     fun baseModelWithDiffBind() {
         val baseModel = JavaFileObjects.forSourceLines(
-            "com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
+            "com.airbnb.epoxy.TestBaseModel",
+            "package com.airbnb.epoxy;\n" +
                 "\n" +
                 "import android.widget.FrameLayout;\n" +
                 "\n" +
@@ -302,7 +304,8 @@ class ViewProcessorTest {
             .forResource("BaseModelView.java".patchResource())
 
         val baseModel = JavaFileObjects.forSourceLines(
-            "com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
+            "com.airbnb.epoxy.TestBaseModel",
+            "package com.airbnb.epoxy;\n" +
                 "\n" +
                 "import android.widget.FrameLayout;\n" +
                 "\n" +
@@ -327,7 +330,8 @@ class ViewProcessorTest {
     fun throwsIfBaseModelNotEpoxyModel() {
         val model = JavaFileObjects
             .forSourceLines(
-                "com.airbnb.epoxy.BaseModelView", "package com.airbnb.epoxy;\n" +
+                "com.airbnb.epoxy.BaseModelView",
+                "package com.airbnb.epoxy;\n" +
                     "\n" +
                     "import android.content.Context;\n" +
                     "import android.widget.FrameLayout;\n" +
@@ -348,7 +352,8 @@ class ViewProcessorTest {
 
         val baseModel = JavaFileObjects
             .forSourceLines(
-                "com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
+                "com.airbnb.epoxy.TestBaseModel",
+                "package com.airbnb.epoxy;\n" +
                     "\n" +
                     "public abstract class TestBaseModel{\n" +
                     "}\n"
@@ -367,7 +372,8 @@ class ViewProcessorTest {
     fun baseModelFromPackageConfig() {
         val model = JavaFileObjects
             .forSourceLines(
-                "com.airbnb.epoxy.BaseModelView", "package com.airbnb.epoxy;\n" +
+                "com.airbnb.epoxy.BaseModelView",
+                "package com.airbnb.epoxy;\n" +
                     "\n" +
                     "import android.content.Context;\n" +
                     "import android.widget.FrameLayout;\n" +
@@ -400,7 +406,8 @@ class ViewProcessorTest {
 
         val baseModel = JavaFileObjects
             .forSourceLines(
-                "com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
+                "com.airbnb.epoxy.TestBaseModel",
+                "package com.airbnb.epoxy;\n" +
                     "\n" +
                     "import android.view.View;\n" +
                     "\n" +
@@ -428,7 +435,8 @@ class ViewProcessorTest {
 
         val model = JavaFileObjects
             .forSourceLines(
-                "com.airbnb.epoxy.BaseModelView", "package com.airbnb.epoxy;\n" +
+                "com.airbnb.epoxy.BaseModelView",
+                "package com.airbnb.epoxy;\n" +
                     "\n" +
                     "import android.content.Context;\n" +
                     "import android.view.View;\n" +
@@ -461,7 +469,8 @@ class ViewProcessorTest {
 
         val baseModel = JavaFileObjects
             .forSourceLines(
-                "com.airbnb.epoxy.TestBaseModel", "package com.airbnb.epoxy;\n" +
+                "com.airbnb.epoxy.TestBaseModel",
+                "package com.airbnb.epoxy;\n" +
                     "\n" +
                     "import android.view.View;\n" +
                     "\n" +
@@ -569,7 +578,8 @@ class ViewProcessorTest {
             )
 
         val R = JavaFileObjects.forSourceString(
-            "com.airbnb.epoxy.R", "" +
+            "com.airbnb.epoxy.R",
+            "" +
                 "package com.airbnb.epoxy;\n" +
                 "public final class R {\n" +
                 "  public static final class layout {\n" +
@@ -622,7 +632,8 @@ class ViewProcessorTest {
             )
 
         val R2 = JavaFileObjects.forSourceString(
-            "com.airbnb.epoxy.R2", "" +
+            "com.airbnb.epoxy.R2",
+            "" +
                 "package com.airbnb.epoxy;\n" +
                 "public final class R2 {\n" +
                 "  public static final class layout {\n" +
@@ -632,7 +643,8 @@ class ViewProcessorTest {
         )
 
         val R = JavaFileObjects.forSourceString(
-            "com.airbnb.epoxy.R", "" +
+            "com.airbnb.epoxy.R",
+            "" +
                 "package com.airbnb.epoxy;\n" +
                 "public final class R {\n" +
                 "  public static final class layout {\n" +
@@ -685,7 +697,8 @@ class ViewProcessorTest {
             )
 
         val R = JavaFileObjects.forSourceString(
-            "com.airbnb.epoxy.R", "" +
+            "com.airbnb.epoxy.R",
+            "" +
                 "package com.airbnb.epoxy;\n" +
                 "public final class R {\n" +
                 "  public static final class layout {\n" +
@@ -739,7 +752,8 @@ class ViewProcessorTest {
             )
 
         val R = JavaFileObjects.forSourceString(
-            "com.airbnb.epoxy.R", "" +
+            "com.airbnb.epoxy.R",
+            "" +
                 "package com.airbnb.epoxy;\n" +
                 "public final class R {\n" +
                 "  public static final class layout {\n" +
@@ -793,7 +807,8 @@ class ViewProcessorTest {
         )
 
         val R = JavaFileObjects.forSourceString(
-            "com.airbnb.epoxy.R", "" +
+            "com.airbnb.epoxy.R",
+            "" +
                 "package com.airbnb.epoxy;\n" +
                 "public final class R {\n" +
                 "  public static final class layout {\n" +
@@ -1019,7 +1034,8 @@ class ViewProcessorTest {
     companion object {
 
         private val R: JavaFileObject = JavaFileObjects.forSourceString(
-            "com.airbnb.epoxy.R", "" +
+            "com.airbnb.epoxy.R",
+            "" +
                 "package com.airbnb.epoxy;\n" +
                 "public final class R {\n" +
                 "  public static final class layout {\n" +

@@ -133,8 +133,8 @@ class WrappedEpoxyModelClickListener<T : EpoxyModel<*>, V> : OnClickListener, On
         }
 
         if (if (originalClickListener != null) {
-                originalClickListener != other.originalClickListener
-            } else {
+            originalClickListener != other.originalClickListener
+        } else {
                 other.originalClickListener != null
             }
         ) {
