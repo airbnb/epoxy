@@ -74,6 +74,14 @@ class ModelBuilderInterfaceWriter(
             addTypeVariables(modelInfo.typeVariables)
             addMethods(interfaceMethods)
 
+            for (implements in modelInfo.superClassElement.interfaces) {
+                if (implements.toString() == ClassNames.MODEL_COLLECTOR.toString()) {
+                    // If the model implements `ModelCollector` we want the builder too
+                    addSuperinterface(ClassNames.MODEL_COLLECTOR)
+                    break
+                }
+            }
+
             addOriginatingElement(modelInfo.superClassElement)
         }
 
