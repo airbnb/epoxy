@@ -59,9 +59,9 @@ import androidx.annotation.NonNull;
 @SuppressWarnings("rawtypes")
 public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
 
-  protected final List<? extends EpoxyModel<?>> models;
-  /** By default we save view state if any of the models need to save state. */
-  private final boolean shouldSaveViewState;
+  protected final List<EpoxyModel<?>> models;
+
+  private boolean shouldSaveViewState = false;
 
   /**
    * @param layoutRes The layout to use with these models.
@@ -83,7 +83,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
    * @param layoutRes The layout to use with these models.
    * @param models    The models that will be used to bind the views in the given layout.
    */
-  private EpoxyModelGroup(@LayoutRes int layoutRes, List<? extends EpoxyModel<?>> models) {
+  private EpoxyModelGroup(@LayoutRes int layoutRes, List<EpoxyModel<?>> models) {
     if (models.isEmpty()) {
       throw new IllegalArgumentException("Models cannot be empty");
     }
@@ -99,8 +99,22 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
         break;
       }
     }
-
+    // By default we save view state if any of the models need to save state.
     shouldSaveViewState = saveState;
+  }
+
+  /**
+   * Constructor use for DSL
+   */
+  protected EpoxyModelGroup() {
+    models = new ArrayList<>();
+    shouldSaveViewState = false;
+  }
+
+  protected void addModel(EpoxyModel<?> model) {
+    // By default we save view state if any of the models need to save state.
+    shouldSaveViewState |= model.shouldSaveViewState();
+    models.add(model);
   }
 
   @CallSuper
