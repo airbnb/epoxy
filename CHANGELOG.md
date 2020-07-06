@@ -1,3 +1,8 @@
+# 4.0.0-beta4 (June 1, 2020)
+Fixes:
+- Synchronize ListUpdateCallback and PagedListModelCache functions (#987)
+- 4.0.0.beta1 generating duplicate method layout(int) #988
+
 # 4.0.0-beta3 (May 27, 2020)
 - Sort functions in generated kotlin extension function files deterministically to prevent generated sources from changing
 - Avoid generating bitset checks in models when not needed
