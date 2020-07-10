@@ -65,4 +65,6 @@ class ResourceValue {
     override fun toString(): String {
         throw UnsupportedOperationException("Please use value or code explicitly")
     }
+
+    fun debugDetails(): String = code.toString()
 }

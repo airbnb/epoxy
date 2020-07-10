@@ -107,7 +107,7 @@ public class DataBindingModelTest {
   @Test
   public void testFullyGeneratedModel() {
     JavaFileObject packageInfo = JavaFileObjects
-        .forResource(GuavaPatch.patchResource("package-info.java"));
+        .forResource(GuavaPatch.patchResource("DataBindingConfig.java"));
 
     JavaFileObject binding = JavaFileObjects
         .forResource(GuavaPatch.patchResource("ModelWithDataBindingBinding.java"));
@@ -126,10 +126,11 @@ public class DataBindingModelTest {
   @Test
   public void testFullyGeneratedModelWithoutDoNotHash() {
     JavaFileObject packageInfo = JavaFileObjects
-        .forSourceString("com.airbnb.epoxy.package-info",
-            "@EpoxyDataBindingLayouts(value = {R.layout"
+        .forSourceString("EpoxyDataBindingConfig.java",
+                "package com.airbnb.epoxy;\n"
+            + "@EpoxyDataBindingLayouts(value = {R.layout"
                 + ".model_with_data_binding_without_donothash}, enableDoNotHash = false)\n"
-                + "package com.airbnb.epoxy;\n"
+            + "interface EpoxyDataBindingConfig {} "
         );
 
     JavaFileObject binding = JavaFileObjects
