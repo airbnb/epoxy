@@ -131,11 +131,13 @@ class ModelBuilderInterfaceWriter(
             val interfaceSpec = buildInterface(interfaceName) {
                 addModifiers(Modifier.PUBLIC)
 
-                addMethods(details.methodsOnInterface.map {
-                    it.methodSpec.copy {
-                        returns(interfaceName)
+                addMethods(
+                    details.methodsOnInterface.map {
+                        it.methodSpec.copy {
+                            returns(interfaceName)
+                        }
                     }
-                })
+                )
 
                 details.implementingViews.forEach {
                     // Note: If a brand new model view class is added that implements this interface

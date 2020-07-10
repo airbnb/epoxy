@@ -114,8 +114,8 @@ class ItemCustomView @JvmOverloads constructor(
             TAG,
             "$title onChanged ${percentVisibleHeight.toInt()} ${percentVisibleWidth.toInt()} " +
                 "$visibleHeight $visibleWidth ${System.identityHashCode(
-                this
-            )}"
+                    this
+                )}"
         )
         with(onVisibilityEventDrawable) {
             if ((percentVisibleHeight < 100 || percentVisibleWidth < 100) && fullImpression) {

@@ -183,13 +183,17 @@ class ConfigManager internal constructor(
     }
 
     fun requiresAbstractModels(classElement: TypeElement): Boolean {
-        return (globalRequireAbstractModels ||
-            getConfigurationForElement(classElement).requireAbstractModels)
+        return (
+            globalRequireAbstractModels ||
+                getConfigurationForElement(classElement).requireAbstractModels
+            )
     }
 
     fun implicitlyAddAutoModels(controller: ControllerClassInfo): Boolean {
-        return (globalImplicitlyAddAutoModels ||
-            getConfigurationForElement(controller.controllerClassElement).implicitlyAddAutoModels)
+        return (
+            globalImplicitlyAddAutoModels ||
+                getConfigurationForElement(controller.controllerClassElement).implicitlyAddAutoModels
+            )
     }
 
     fun disableKotlinExtensionGeneration(): Boolean = disableKotlinExtensionGeneration

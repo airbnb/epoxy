@@ -137,8 +137,10 @@ internal object Utils {
 
     @JvmStatic
     fun isEpoxyModel(type: TypeMirror): Boolean {
-        return (isSubtypeOfType(type, EPOXY_MODEL_TYPE) ||
-            isSubtypeOfType(type, UNTYPED_EPOXY_MODEL_TYPE))
+        return (
+            isSubtypeOfType(type, EPOXY_MODEL_TYPE) ||
+                isSubtypeOfType(type, UNTYPED_EPOXY_MODEL_TYPE)
+            )
     }
 
     fun isEpoxyModel(type: TypeElement): Boolean {
@@ -248,9 +250,11 @@ internal object Utils {
     @JvmStatic
     fun isFieldPackagePrivate(element: Element): Boolean {
         val modifiers = element.modifiers
-        return (Modifier.PUBLIC !in modifiers &&
-            Modifier.PROTECTED !in modifiers &&
-            Modifier.PRIVATE !in modifiers)
+        return (
+            Modifier.PUBLIC !in modifiers &&
+                Modifier.PROTECTED !in modifiers &&
+                Modifier.PRIVATE !in modifiers
+            )
     }
 
     /**
@@ -288,11 +292,11 @@ internal object Utils {
                     continue
                 }
                 if (!areParamsTheSame(
-                        methodElement,
-                        method,
-                        typeUtils,
-                        elements
-                    )
+                    methodElement,
+                    method,
+                    typeUtils,
+                    elements
+                )
                 ) {
                     continue
                 }
@@ -341,7 +345,7 @@ internal object Utils {
      * Returns the type of the Epoxy model.
      *
      * Eg for "class MyModel extends EpoxyModel<TextView>" it would return TextView.
-    </TextView> */
+     </TextView> */
     fun getEpoxyObjectType(
         clazz: TypeElement,
         typeUtils: Types
@@ -369,9 +373,9 @@ internal object Utils {
             // to figure out the base model type. We just look for the first type that is a view or
             // view holder.
             if (isSubtypeOfType(
-                    superTypeArgument,
-                    ANDROID_VIEW_TYPE
-                ) ||
+                superTypeArgument,
+                ANDROID_VIEW_TYPE
+            ) ||
                 isSubtypeOfType(
                     superTypeArgument,
                     EPOXY_HOLDER_TYPE
@@ -395,8 +399,8 @@ internal object Utils {
         // Verify method modifiers.
         val modifiers = fieldElement.modifiers
         if (modifiers.contains(Modifier.PRIVATE) && !skipPrivateFieldCheck || modifiers.contains(
-                Modifier.STATIC
-            )
+            Modifier.STATIC
+        )
         ) {
             logger.logError(
                 "%s annotations must not be on private or static fields. (class: %s, field: %s)",
@@ -453,8 +457,10 @@ internal object Utils {
         }
         val method = element as ExecutableElement
         val methodName = method.simpleName.toString()
-        return (PATTERN_STARTS_WITH_SET.matcher(methodName).matches() &&
-            method.parametersThreadSafe.size == 1)
+        return (
+            PATTERN_STARTS_WITH_SET.matcher(methodName).matches() &&
+                method.parametersThreadSafe.size == 1
+            )
     }
 
     fun removeSetPrefix(string: String): String {

@@ -10,8 +10,12 @@ import com.airbnb.epoxy.ModelView.Size
 import com.airbnb.epoxy.TextProp
 
 @ModelView(autoLayout = Size.WRAP_WIDTH_MATCH_HEIGHT)
-class ViewWithInterface(context: Context) : View(context), InterfaceForView, InterfaceForView2,
-    ClassWithNestedInterface.NestedInterface, InterfaceWithNoPropMethods {
+class ViewWithInterface(context: Context) :
+    View(context),
+    InterfaceForView,
+    InterfaceForView2,
+    ClassWithNestedInterface.NestedInterface,
+    InterfaceWithNoPropMethods {
 
     override fun getSomething() = 5
 

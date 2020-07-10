@@ -241,7 +241,8 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
                 // - Isn't followed by another sticky header;
                 if (headerPos != -1 &&
                     (headerPos != anchorPos || isViewOnBoundary(anchorView)) &&
-                    nextHeaderPos != headerPos + 1) {
+                    nextHeaderPos != headerPos + 1
+                ) {
                     // 1. Ensure existing sticky header, if any, is of correct type.
                     if (stickyHeader != null && getItemViewType(stickyHeader!!) != adapter?.getItemViewType(headerPos)) {
                         // A sticky header was shown before but is not of the correct type. Scrap it.

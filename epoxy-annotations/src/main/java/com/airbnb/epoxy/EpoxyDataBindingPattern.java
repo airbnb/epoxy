@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * The layouts must not specify a custom databinding class name or package via the
  * class="com.example.CustomClassName" override in the layout xml.
  */
-@Target(ElementType.PACKAGE)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
 public @interface EpoxyDataBindingPattern {
   /**

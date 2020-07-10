@@ -134,25 +134,35 @@ class EpoxyModelGroupTest(val useViewStubs: Boolean) {
             public override fun buildView(parent: ViewGroup): View {
                 return LinearLayout(parent.context).apply {
 
-                    addView(ViewStub(parent.context).apply {
-                        inflatedId = 0
-                    })
+                    addView(
+                        ViewStub(parent.context).apply {
+                            inflatedId = 0
+                        }
+                    )
 
-                    addView(LinearLayout(parent.context).apply {
-                        addView(ViewStub(parent.context).apply {
-                            inflatedId = 1
-                        })
+                    addView(
+                        LinearLayout(parent.context).apply {
+                            addView(
+                                ViewStub(parent.context).apply {
+                                    inflatedId = 1
+                                }
+                            )
 
-                        addView(Space(parent.context))
+                            addView(Space(parent.context))
 
-                        addView(ViewStub(parent.context).apply {
-                            inflatedId = 2
-                        })
-                    })
+                            addView(
+                                ViewStub(parent.context).apply {
+                                    inflatedId = 2
+                                }
+                            )
+                        }
+                    )
 
-                    addView(ViewStub(parent.context).apply {
-                        inflatedId = 3
-                    })
+                    addView(
+                        ViewStub(parent.context).apply {
+                            inflatedId = 3
+                        }
+                    )
                 }
             }
         }

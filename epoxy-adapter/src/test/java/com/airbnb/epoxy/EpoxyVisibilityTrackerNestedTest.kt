@@ -208,11 +208,13 @@ class EpoxyVisibilityTrackerNestedTest {
         // Build a test sample of sampleSize items
         val helpers = mutableListOf<List<AssertHelper>>().apply {
             for (i in 0 until verticalSampleSize) {
-                add(mutableListOf<AssertHelper>().apply {
-                    for (j in 0 until horizontalSampleSize) {
-                        add(AssertHelper(ids++))
+                add(
+                    mutableListOf<AssertHelper>().apply {
+                        for (j in 0 until horizontalSampleSize) {
+                            add(AssertHelper(ids++))
+                        }
                     }
-                })
+                )
             }
         }
         log(helpers.ids())
@@ -226,35 +228,37 @@ class EpoxyVisibilityTrackerNestedTest {
     @Before
     fun setup() {
         Robolectric.setupActivity(Activity::class.java).apply {
-            setContentView(EpoxyRecyclerView(this).apply {
-                epoxyVisibilityTracker.attach(this)
-                recyclerView = this
-                // Plug an epoxy controller
-                epoxyController = object : TypedEpoxyController<List<List<AssertHelper>>>() {
-                    override fun buildModels(data: List<List<AssertHelper>>?) {
-                        data?.forEachIndexed { index, helpers ->
-                            val models = mutableListOf<EpoxyModel<*>>()
-                            helpers.forEach { helper ->
-                                models.add(
-                                    TrackerTestModel(
-                                        itemPosition = index,
-                                        itemHeight = itemHeight,
-                                        itemWidth = itemWidth,
-                                        helper = helper
-                                    ).id("$index-${helper.id}")
+            setContentView(
+                EpoxyRecyclerView(this).apply {
+                    epoxyVisibilityTracker.attach(this)
+                    recyclerView = this
+                    // Plug an epoxy controller
+                    epoxyController = object : TypedEpoxyController<List<List<AssertHelper>>>() {
+                        override fun buildModels(data: List<List<AssertHelper>>?) {
+                            data?.forEachIndexed { index, helpers ->
+                                val models = mutableListOf<EpoxyModel<*>>()
+                                helpers.forEach { helper ->
+                                    models.add(
+                                        TrackerTestModel(
+                                            itemPosition = index,
+                                            itemHeight = itemHeight,
+                                            itemWidth = itemWidth,
+                                            helper = helper
+                                        ).id("$index-${helper.id}")
+                                    )
+                                }
+                                add(
+                                    CarouselModel_()
+                                        .id(index)
+                                        .paddingDp(0)
+                                        .models(models)
                                 )
                             }
-                            add(
-                                CarouselModel_()
-                                    .id(index)
-                                    .paddingDp(0)
-                                    .models(models)
-                            )
                         }
                     }
+                    recyclerView.adapter = epoxyController.adapter
                 }
-                recyclerView.adapter = epoxyController.adapter
-            })
+            )
             viewportHeight = recyclerView.measuredHeight
             activity = this
         }

@@ -18,7 +18,7 @@ import androidx.annotation.LayoutRes;
  * Alternatively you can use {@link EpoxyDataBindingPattern} to avoid explicitly declaring each
  * layout.
  */
-@Target(ElementType.PACKAGE)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
 public @interface EpoxyDataBindingLayouts {
   /** A list of databinding layout resources that should have EpoxyModel's generated for them. */

@@ -23,14 +23,14 @@ import android.view.View
 import androidx.paging.PagedList
 import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyModel
-import java.util.concurrent.Executor
-import java.util.concurrent.TimeUnit
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.concurrent.Executor
+import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class PagedListModelCacheTest {
@@ -317,7 +317,8 @@ class PagedListModelCacheTest {
     private fun createPagedList(items: List<Item>): Pair<PagedList<Item>, ListDataSource<Item>> {
         val dataSource = ListDataSource(items)
         val pagedList = PagedList.Builder<Int, Item>(
-            dataSource, PagedList.Config.Builder()
+            dataSource,
+            PagedList.Config.Builder()
                 .setEnablePlaceholders(true)
                 .setInitialLoadSizeHint(PAGE_SIZE * 2)
                 .setPageSize(PAGE_SIZE)

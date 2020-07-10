@@ -9,6 +9,8 @@ import com.airbnb.epoxy.OnVisibilityChanged
 import com.airbnb.epoxy.OnVisibilityStateChanged
 import com.airbnb.epoxy.TextProp
 import com.airbnb.epoxy.processor.Utils.isSubtypeOfType
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 import java.util.HashMap
 import java.util.HashSet
 import java.util.concurrent.ConcurrentHashMap
@@ -22,8 +24,6 @@ import javax.lang.model.element.TypeElement
 import javax.lang.model.element.VariableElement
 import javax.lang.model.type.TypeKind
 import kotlin.reflect.KClass
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.AGGREGATING)
 class ModelViewProcessor : BaseProcessorWithPackageConfigs() {

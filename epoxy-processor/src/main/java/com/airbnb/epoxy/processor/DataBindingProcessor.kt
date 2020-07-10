@@ -4,12 +4,12 @@ import com.airbnb.epoxy.EpoxyDataBindingLayouts
 import com.airbnb.epoxy.EpoxyDataBindingPattern
 import com.airbnb.epoxy.processor.Utils.getClassParamFromAnnotation
 import com.squareup.javapoet.ClassName
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 import java.util.Collections
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.VariableElement
 import kotlin.reflect.KClass
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.AGGREGATING)
 class DataBindingProcessor : BaseProcessor() {

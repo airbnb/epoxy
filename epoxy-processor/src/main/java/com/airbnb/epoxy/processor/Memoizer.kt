@@ -86,10 +86,10 @@ class Memoizer(
 
                         val methodReturnType = (subElement.asType() as ExecutableType).returnType
                         if (methodReturnType != classType && !isSubtype(
-                                classType,
-                                methodReturnType,
-                                types
-                            )
+                            classType,
+                            methodReturnType,
+                            types
+                        )
                         ) {
                             return@mapNotNull null
                         }
@@ -335,7 +335,8 @@ class Memoizer(
                                                 resourceProcessor = resourceProcessor,
                                                 memoizer = this
                                             )
-                                        })
+                                        }
+                                    )
                                 )
                         }
                     }

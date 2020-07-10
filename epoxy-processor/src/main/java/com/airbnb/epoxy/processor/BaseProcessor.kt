@@ -10,6 +10,12 @@ import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_LOG_T
 import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS
 import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_REQUIRE_HASHCODE
 import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_VALIDATE_MODEL_USAGE
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager
@@ -21,12 +27,6 @@ import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 import kotlin.reflect.KClass
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
 
 abstract class BaseProcessor : AbstractProcessor(), Asyncable {
 
