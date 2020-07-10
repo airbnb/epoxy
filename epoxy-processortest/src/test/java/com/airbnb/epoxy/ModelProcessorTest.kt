@@ -153,8 +153,10 @@ class ModelProcessorTest {
             .forResource("ModelWithAnnotatedClassAndSuperAttributes_.java".patchResource())
 
         val generatedSubClassModel = JavaFileObjects.forResource(
-            ("ModelWithAnnotatedClassAndSuperAttributes\$SubModel" +
-                "WithAnnotatedClassAndSuperAttributes_.java").patchResource()
+            (
+                "ModelWithAnnotatedClassAndSuperAttributes\$SubModel" +
+                    "WithAnnotatedClassAndSuperAttributes_.java"
+                ).patchResource()
         )
         Truth.assert_()
             .about(JavaSourceSubjectFactory.javaSource())
