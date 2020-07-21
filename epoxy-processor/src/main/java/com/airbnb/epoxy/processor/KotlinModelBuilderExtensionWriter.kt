@@ -10,7 +10,6 @@ import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeVariableName
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
-import kotlinx.coroutines.coroutineScope
 
 internal class KotlinModelBuilderExtensionWriter(
     val filer: Filer,
@@ -36,26 +35,25 @@ internal class KotlinModelBuilderExtensionWriter(
             }
     }
 
-    private suspend fun buildExtensionFile(
+    private fun buildExtensionFile(
         packageName: String,
         models: List<GeneratedModelInfo>,
         processorName: String
-    ): FileSpec = coroutineScope {
+    ): FileSpec {
         val fileBuilder = FileSpec.builder(
             packageName,
             "Epoxy${processorName.removePrefix("Epoxy")}KotlinExtensions"
         )
 
-        models
-            .map("buildExtensionFile") {
-                if (it.constructors.isEmpty()) {
-                    listOf(buildExtensionsForModel(it, null))
-                } else {
-                    it.constructors.map { constructor ->
-                        buildExtensionsForModel(it, constructor)
-                    }
+        models.map {
+            if (it.constructors.isEmpty()) {
+                listOf(buildExtensionsForModel(it, null))
+            } else {
+                it.constructors.map { constructor ->
+                    buildExtensionsForModel(it, constructor)
                 }
             }
+        }
             .flatten()
             // Sort by function name to keep ordering consistent across builds. Otherwise if the
             // processor processes models in differing orders we can have indeterminate source file
@@ -71,7 +69,7 @@ internal class KotlinModelBuilderExtensionWriter(
                 .build()
         )
 
-        fileBuilder.build()
+        return fileBuilder.build()
     }
 
     private fun buildExtensionsForModel(

@@ -34,9 +34,12 @@ class PagingSampleActivity : AppCompatActivity() {
         recyclerView.adapter = pagingController.adapter
 
         val viewModel = ViewModelProviders.of(this).get(ActivityViewModel::class.java)
-        viewModel.pagedList.observe(this, Observer {
-            pagingController.submitList(it)
-        })
+        viewModel.pagedList.observe(
+            this,
+            Observer {
+                pagingController.submitList(it)
+            }
+        )
     }
 }
 

@@ -18,23 +18,25 @@ class StickyHeaderAdapter(
     init {
         enableDiffing()
         for (i in 0 until 100) {
-            addModel(when {
-                i % 5 == 0 -> StickyItemEpoxyHolder_().apply {
-                    id("sticky-header $i")
-                    title("Sticky header $i")
-                    listener {
-                        Toast.makeText(context, "clicked", Toast.LENGTH_LONG).show()
+            addModel(
+                when {
+                    i % 5 == 0 -> StickyItemEpoxyHolder_().apply {
+                        id("sticky-header $i")
+                        title("Sticky header $i")
+                        listener {
+                            Toast.makeText(context, "clicked", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                    else -> ItemEpoxyHolder_().apply {
+                        id("view holder $i")
+                        title("this is a View Holder item")
+                        listener {
+                            Toast.makeText(context, "clicked", Toast.LENGTH_LONG)
+                                .show()
+                        }
                     }
                 }
-                else -> ItemEpoxyHolder_().apply {
-                    id("view holder $i")
-                    title("this is a View Holder item")
-                    listener {
-                        Toast.makeText(context, "clicked", Toast.LENGTH_LONG)
-                            .show()
-                    }
-                }
-            })
+            )
         }
         notifyModelsChanged()
     }

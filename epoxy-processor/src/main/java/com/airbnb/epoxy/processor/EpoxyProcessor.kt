@@ -2,6 +2,8 @@ package com.airbnb.epoxy.processor
 
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 import java.util.LinkedHashMap
 import java.util.concurrent.ConcurrentHashMap
 import javax.annotation.processing.RoundEnvironment
@@ -11,8 +13,6 @@ import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 import kotlin.reflect.KClass
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 
 /**
  * Looks for [EpoxyAttribute] annotations and generates a subclass for all classes that have
@@ -140,8 +140,8 @@ class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
         }
 
         if (configManager.requiresAbstractModels(classElement) && !classElement.modifiers.contains(
-                Modifier.ABSTRACT
-            )
+            Modifier.ABSTRACT
+        )
         ) {
             logger
                 .logError(

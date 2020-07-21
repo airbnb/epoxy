@@ -45,10 +45,10 @@ rootProject.ext.ROBOLECTRIC_VERSION = "4.3"
 rootProject.ext.LOTTIE_VERSION = "2.8.0"
 rootProject.ext.SO_LOADER_VERSION = "0.2.0"
 
-rootProject.ext.AUTO_VALUE_VERSION = "1.6.2"
+rootProject.ext.AUTO_VALUE_VERSION = "1.7.4"
 rootProject.ext.ANDROID_RUNTIME_VERSION = "4.1.1.4"
 
-rootProject.ext.PARIS_VERSION = "1.2.1"
+rootProject.ext.PARIS_VERSION = "1.5.0"
 
 rootProject.ext.INCAP_VERSION = "0.2"
 rootProject.ext.KOTLIN_METADATA_VERSION = "1.4.0"

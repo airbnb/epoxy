@@ -59,9 +59,9 @@ class Memoizer(
         getTypeMirror(ClassNames.ANDROID_VIEW, elements, types)
     }
 
-    private val methodsReturningClassType = mutableMapOf<Name, List<MethodInfo>>()
+    private val methodsReturningClassType = mutableMapOf<Name, Set<MethodInfo>>()
 
-    fun getMethodsReturningClassType(classType: TypeMirror): List<MethodInfo> =
+    fun getMethodsReturningClassType(classType: TypeMirror): Set<MethodInfo> =
         synchronized(methodsReturningClassType) {
             val classElement = types.asElement(classType) as TypeElement
             methodsReturningClassType.getOrPut(classElement.qualifiedName) {
@@ -71,7 +71,7 @@ class Memoizer(
                 val superClassType = classElement.superclass
                 superClassType.ensureLoaded()
                 // Check for base Object class
-                if (superClassType.kind == TypeKind.NONE) return@getOrPut emptyList()
+                if (superClassType.kind == TypeKind.NONE) return@getOrPut emptySet()
 
                 val methodInfos: List<MethodInfo> =
                     classElement.enclosedElementsThreadSafe.mapNotNull { subElement ->
@@ -86,10 +86,10 @@ class Memoizer(
 
                         val methodReturnType = (subElement.asType() as ExecutableType).returnType
                         if (methodReturnType != classType && !isSubtype(
-                                classType,
-                                methodReturnType,
-                                types
-                            )
+                            classType,
+                            methodReturnType,
+                            types
+                        )
                         ) {
                             return@mapNotNull null
                         }
@@ -114,7 +114,10 @@ class Memoizer(
                         )
                     }
 
-                methodInfos + getMethodsReturningClassType(superClassType)
+                // Note: Adding super type methods second preserves any overloads in the base
+                // type that may have changes (ie, a new return type or annotation), since
+                // Set.plus only adds items that don't already exist.
+                methodInfos.toSet() + getMethodsReturningClassType(superClassType)
             }
         }
 
@@ -332,7 +335,8 @@ class Memoizer(
                                                 resourceProcessor = resourceProcessor,
                                                 memoizer = this
                                             )
-                                        })
+                                        }
+                                    )
                                 )
                         }
                     }

@@ -42,8 +42,3 @@ dependencies {
 
     testImplementation rootProject.deps.junit
 }
-
-checkstyle {
-    configFile rootProject.file('checkstyle.xml')
-    showViolations true
-}

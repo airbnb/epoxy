@@ -36,7 +36,7 @@ project.android.buildTypes.all { buildType ->
                     requireHashCodeInEpoxyModels: "true",
                     requireAbstractEpoxyModels  : "true",
                     implicitlyAddAutoModels     : "true",
-                    logEpoxyTimings     : "true",
+                    logEpoxyTimings     : "false",
                     enableParallelEpoxyProcessing     : "true",
             ]
 }

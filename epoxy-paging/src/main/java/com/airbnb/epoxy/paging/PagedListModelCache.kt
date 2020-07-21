@@ -156,9 +156,12 @@ internal class PagedListModelCache<T>(
                     val mainThreadExecutorField =
                         AsyncPagedListDiffer::class.java.getDeclaredField("mMainThreadExecutor")
                     mainThreadExecutorField.isAccessible = true
-                    mainThreadExecutorField.set(this, Executor {
-                        modelBuildingHandler.post(it)
-                    })
+                    mainThreadExecutorField.set(
+                        this,
+                        Executor {
+                            modelBuildingHandler.post(it)
+                        }
+                    )
                 } catch (t: Throwable) {
                     val msg = "Failed to hijack update handler in AsyncPagedListDiffer." +
                         "You can only build models on the main thread"

@@ -70,7 +70,8 @@ internal class DataBindingModelInfo(
         layoutResource: ResourceValue,
         moduleName: String
     ): ClassName {
-        val modelName = layoutResource.resourceName!!.toUpperCamelCase().plus(BINDING_SUFFIX)
+        val modelName = layoutResource.resourceName?.toUpperCamelCase()?.plus(BINDING_SUFFIX)
+            ?: error("Resource name not found for layout: ${layoutResource.debugDetails()}")
 
         return ClassName.get("$moduleName.databinding", modelName)
     }

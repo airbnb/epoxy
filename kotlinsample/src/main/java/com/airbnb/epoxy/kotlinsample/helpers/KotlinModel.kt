@@ -38,7 +38,7 @@ abstract class KotlinModel(
             // be optimized with a map
             @Suppress("UNCHECKED_CAST")
             return view?.findViewById(id) as V?
-                    ?: throw IllegalStateException("View ID $id for '${property.name}' not found.")
+                ?: throw IllegalStateException("View ID $id for '${property.name}' not found.")
         }
     }
 }

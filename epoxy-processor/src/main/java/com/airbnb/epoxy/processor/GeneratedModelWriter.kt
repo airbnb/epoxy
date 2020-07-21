@@ -205,18 +205,22 @@ class GeneratedModelWriter(
             }
 
             var layoutDescription = ""
-            for (namePart in otherLayout.resourceName!!.substring(defaultLayoutNameLength).split(
-                "_".toRegex()
-            ).dropLastWhile { it.isEmpty() }) {
+            for (
+                namePart in otherLayout.resourceName!!.substring(defaultLayoutNameLength).split(
+                    "_".toRegex()
+                ).dropLastWhile { it.isEmpty() }
+            ) {
                 layoutDescription += Utils.capitalizeFirstLetter(namePart)
             }
 
-            result.add(buildMethod("with" + layoutDescription + "Layout") {
-                returns(info.parameterizedGeneratedName)
-                addModifiers(PUBLIC)
-                addStatement("layout(\$L)", otherLayout.code)
-                addStatement("return this")
-            })
+            result.add(
+                buildMethod("with" + layoutDescription + "Layout") {
+                    returns(info.parameterizedGeneratedName)
+                    addModifiers(PUBLIC)
+                    addStatement("layout(\$L)", otherLayout.code)
+                    addStatement("return this")
+                }
+            )
         }
 
         return result
@@ -245,7 +249,8 @@ class GeneratedModelWriter(
                     "new \$T().addDefault().build()",
                     styleBuilderInfo.styleBuilderClass
                 )
-            })
+            }
+        )
 
         // We store styles in a weak reference since if a controller uses it
         // once it is likely to be used in other models and when models are rebuilt
@@ -278,7 +283,8 @@ class GeneratedModelWriter(
                         "new \$T(\$L)", BitSet::class.java,
                         classInfo.attributeInfo.size
                     )
-                })
+                }
+            )
         }
 
         // Add fields for the bind/unbind listeners
@@ -457,33 +463,37 @@ class GeneratedModelWriter(
         val methods = ArrayList<MethodSpec>()
 
         // getViewType method so that view type is generated at runtime
-        methods.add(buildMethod("getViewType") {
-            addAnnotation(Override::class.java)
-            addModifiers(PROTECTED)
-            returns(TypeName.INT)
-            addStatement("return 0", modelInfo.modelType)
-        })
+        methods.add(
+            buildMethod("getViewType") {
+                addAnnotation(Override::class.java)
+                addModifiers(PROTECTED)
+                returns(TypeName.INT)
+                addStatement("return 0", modelInfo.modelType)
+            }
+        )
 
         // buildView method to return new view instance
-        methods.add(buildMethod("buildView") {
-            addAnnotation(Override::class.java)
-            addParameter(ClassNames.ANDROID_VIEW_GROUP, "parent")
-            addModifiers(PROTECTED)
-            returns(modelInfo.modelType)
-            addStatement(
-                "\$T v = new \$T(parent.getContext())", modelInfo.modelType,
-                modelInfo.modelType
-            )
+        methods.add(
+            buildMethod("buildView") {
+                addAnnotation(Override::class.java)
+                addParameter(ClassNames.ANDROID_VIEW_GROUP, "parent")
+                addModifiers(PROTECTED)
+                returns(modelInfo.modelType)
+                addStatement(
+                    "\$T v = new \$T(parent.getContext())", modelInfo.modelType,
+                    modelInfo.modelType
+                )
 
-            val (layoutWidth, layoutHeight) = getLayoutDimensions(modelInfo)
+                val (layoutWidth, layoutHeight) = getLayoutDimensions(modelInfo)
 
-            addStatement(
-                "v.setLayoutParams(new \$T(\$L, \$L))",
-                ClassNames.ANDROID_MARGIN_LAYOUT_PARAMS, layoutWidth, layoutHeight
-            )
+                addStatement(
+                    "v.setLayoutParams(new \$T(\$L, \$L))",
+                    ClassNames.ANDROID_MARGIN_LAYOUT_PARAMS, layoutWidth, layoutHeight
+                )
 
-            addStatement("return v")
-        })
+                addStatement("return v")
+            }
+        )
 
         return methods
     }
@@ -1193,11 +1203,11 @@ class GeneratedModelWriter(
 
         // If the base method is already implemented don't bother checking for the payload method
         if (implementsMethod(
-                info.superClassElement,
-                bindVariablesMethod,
-                types,
-                elements
-            )
+            info.superClassElement,
+            bindVariablesMethod,
+            types,
+            elements
+        )
         ) {
             return emptyList()
         }
@@ -1274,7 +1284,7 @@ class GeneratedModelWriter(
         val annotation = classElement.getAnnotation(
             EpoxyModelClass::class.java
         ) // This is an error. The model must have an EpoxyModelClass annotation
-        // since getDefaultLayout is not implemented
+            // since getDefaultLayout is not implemented
             ?: return null
 
         val layoutRes: Int
@@ -1673,7 +1683,7 @@ class GeneratedModelWriter(
             .addStatement(
                 attribute.setterCode(),
                 if (hasMultipleParams)
-                    (attribute as MultiParamAttribute).valueToSetOnAttribute
+                (attribute as MultiParamAttribute).valueToSetOnAttribute
                 else
                     paramName
             )

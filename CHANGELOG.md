@@ -1,3 +1,30 @@
+# 4.0.0-beta5 (July 9, 2020)
+Fixes:
+- An occasional processor crash when the option to log timings is enabled
+- Incremental annotation processing of databinding models would fail to generate models (#1014)
+
+Breaking!
+- The annotation that support databinding, `EpoxyDataBindingLayouts` and `EpoxyDataBindingPattern`,
+must now be placed on a class or interface instead of in a `package-info.java` file. The interface
+or class must be in Java, Kotlin is not supported. This is necessary to support incremental processing.
+
+Example usage:
+```java
+package com.example.app;
+
+import com.airbnb.epoxy.EpoxyDataBindingLayouts;
+import com.airbnb.epoxy.EpoxyDataBindingPattern;
+
+@EpoxyDataBindingPattern(rClass = R.class, layoutPrefix = "my_view_prefix")
+@EpoxyDataBindingLayouts({R.layout.my_model_layout})
+interface EpoxyDataBindingConfig {} 
+```
+
+# 4.0.0-beta4 (June 1, 2020)
+Fixes:
+- Synchronize ListUpdateCallback and PagedListModelCache functions (#987)
+- 4.0.0.beta1 generating duplicate method layout(int) #988
+
 # 4.0.0-beta3 (May 27, 2020)
 - Sort functions in generated kotlin extension function files deterministically to prevent generated sources from changing
 - Avoid generating bitset checks in models when not needed

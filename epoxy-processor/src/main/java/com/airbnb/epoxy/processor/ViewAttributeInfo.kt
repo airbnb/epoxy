@@ -17,6 +17,7 @@ import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeVariableName
+import org.jetbrains.annotations.NotNull
 import java.util.HashSet
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
@@ -27,7 +28,6 @@ import javax.lang.model.element.VariableElement
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
-import org.jetbrains.annotations.NotNull
 
 private val NOT_NULL_ANNOTATION_SPEC = AnnotationSpec.builder(NotNull::class.java).build()
 private val NON_NULL_ANNOTATION_SPEC = AnnotationSpec.builder(NonNull::class.java).build()
@@ -324,8 +324,8 @@ class ViewAttributeInfo(
         }
 
         if (options.contains(Option.GenerateStringOverloads) && !isAssignable(
-                getTypeMirror(CharSequence::class.java, elements), typeMirror, types
-            )
+            getTypeMirror(CharSequence::class.java, elements), typeMirror, types
+        )
         ) {
             logger
                 .logError(
@@ -374,8 +374,9 @@ class ViewAttributeInfo(
             val elementClassName = ClassName.get(annotationType)
 
             if (elementClassName in ModelViewProcessor.modelPropAnnotations.map {
-                    it.className()
-                }) {
+                it.className()
+            }
+            ) {
                 continue
             }
 
@@ -473,11 +474,13 @@ class ViewAttributeInfo(
     }
 
     override fun toString(): String {
-        return ("View Prop {" +
-            "view='" + viewElement.simpleName + '\'' +
-            ", name='" + viewAttributeName + '\'' +
-            ", type=" + typeName +
-            ", hasDefaultKotlinValue=" + hasDefaultKotlinValue +
-            '}')
+        return (
+            "View Prop {" +
+                "view='" + viewElement.simpleName + '\'' +
+                ", name='" + viewAttributeName + '\'' +
+                ", type=" + typeName +
+                ", hasDefaultKotlinValue=" + hasDefaultKotlinValue +
+                '}'
+            )
     }
 }

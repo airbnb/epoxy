@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
             for (i in 0 until 100) {
                 dataBindingItem {
                     id("data binding $i")
-                    text("this is a data binding model")
+                    text("this is a data binding model2")
                     onClick { _ ->
                         Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
                     }

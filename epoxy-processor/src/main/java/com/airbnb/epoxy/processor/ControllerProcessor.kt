@@ -9,6 +9,8 @@ import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 import java.util.ArrayList
 import java.util.LinkedHashMap
 import javax.annotation.processing.RoundEnvironment
@@ -17,8 +19,6 @@ import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeKind
 import kotlin.reflect.KClass
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 
 // TODO: This could be an isolating processor except that the PackageEpoxyConfig annotation
 // can change the `implicitlyAddAutoModels` setting.
@@ -83,10 +83,10 @@ class ControllerProcessor : BaseProcessorWithPackageConfigs() {
                 }
                 val otherControllerModelFields: Set<ControllerModelField> = controllerInfo.models
                 if (Utils.belongToTheSamePackage(
-                        thisClass,
-                        otherClass,
-                        elementUtils
-                    )
+                    thisClass,
+                    otherClass,
+                    elementUtils
+                )
                 ) {
                     value.addModels(otherControllerModelFields)
                 } else {
@@ -159,7 +159,7 @@ class ControllerProcessor : BaseProcessorWithPackageConfigs() {
                 .imports
                 .firstOrNull { it.endsWith(simpleName) }
                 ?.substringBeforeLast(".$simpleName")
-            // With no import we assume the model is in the same package as the controller
+                // With no import we assume the model is in the same package as the controller
                 ?: controllerClass.generatedClassName.packageName()
 
             ClassName.get(packageName, simpleName)
