@@ -12,6 +12,7 @@ import java.util.List;
 import androidx.annotation.CallSuper;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * An {@link EpoxyModel} that contains other models, and allows you to combine those models in
@@ -61,7 +62,10 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
 
   protected final List<EpoxyModel<?>> models;
 
-  private boolean shouldSaveViewState = false;
+  private boolean shouldSaveViewStateDefault = false;
+
+  @Nullable
+  public Boolean shouldSaveViewState = null;
 
   /**
    * @param layoutRes The layout to use with these models.
@@ -100,7 +104,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
       }
     }
     // By default we save view state if any of the models need to save state.
-    shouldSaveViewState = saveState;
+    shouldSaveViewStateDefault = saveState;
   }
 
   /**
@@ -108,12 +112,12 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
    */
   protected EpoxyModelGroup() {
     models = new ArrayList<>();
-    shouldSaveViewState = false;
+    shouldSaveViewStateDefault = false;
   }
 
   protected void addModel(EpoxyModel<?> model) {
     // By default we save view state if any of the models need to save state.
-    shouldSaveViewState |= model.shouldSaveViewState();
+    shouldSaveViewStateDefault |= model.shouldSaveViewState();
     models.add(model);
   }
 
@@ -231,11 +235,22 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
         "You should set a layout with layout(...) instead of using this.");
   }
 
+  @NonNull
+  public EpoxyModelGroup shouldSaveViewState(boolean shouldSaveViewState) {
+    onMutation();
+    this.shouldSaveViewState = shouldSaveViewState;
+    return this;
+  }
+
   @Override
   public boolean shouldSaveViewState() {
     // By default state is saved if any of the models have saved state enabled.
     // Override this if you need custom behavior.
-    return shouldSaveViewState;
+    if (shouldSaveViewState != null) {
+      return shouldSaveViewState;
+    } else {
+      return shouldSaveViewStateDefault;
+    }
   }
 
   /**
