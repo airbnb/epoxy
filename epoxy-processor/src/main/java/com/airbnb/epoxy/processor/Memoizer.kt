@@ -359,10 +359,11 @@ class Memoizer(
     private val implementsModelCollectorMap = mutableMapOf<GeneratedModelInfo, Boolean>()
     fun implementsModelCollector(modelInfo: GeneratedModelInfo): Boolean {
         return synchronized(typeMap) {
-            val implementsModelCollector = modelInfo.superClassElement.interfaces.firstOrNull {
-                it.toString() == ClassNames.MODEL_COLLECTOR.toString()
-            } != null
-            implementsModelCollectorMap.getOrPut(modelInfo) { implementsModelCollector }
+            implementsModelCollectorMap.getOrPut(modelInfo) {
+                modelInfo.superClassElement.interfaces.any {
+                    it.toString() == ClassNames.MODEL_COLLECTOR.toString()
+                }
+            }
         }
     }
 }
