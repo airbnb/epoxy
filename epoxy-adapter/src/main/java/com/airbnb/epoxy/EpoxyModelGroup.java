@@ -65,7 +65,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
   private boolean shouldSaveViewStateDefault = false;
 
   @Nullable
-  public Boolean shouldSaveViewState = null;
+  private Boolean shouldSaveViewState = null;
 
   /**
    * @param layoutRes The layout to use with these models.
