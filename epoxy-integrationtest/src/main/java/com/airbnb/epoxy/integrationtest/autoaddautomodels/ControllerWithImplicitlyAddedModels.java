@@ -8,6 +8,7 @@ import com.airbnb.epoxy.integrationtest.Model_;
 import java.util.ArrayList;
 import java.util.List;
 
+//
 public class ControllerWithImplicitlyAddedModels extends EpoxyController {
   @AutoModel Model_ model1;
   @AutoModel Model_ model2;
