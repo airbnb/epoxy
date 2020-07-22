@@ -115,7 +115,8 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> impl
     shouldSaveViewStateDefault = false;
   }
 
-  protected void addModel(EpoxyModel<?> model) {
+  @Override
+  public void add(@NonNull EpoxyModel<?> model) {
     // By default we save view state if any of the models need to save state.
     shouldSaveViewStateDefault |= model.shouldSaveViewState();
     models.add(model);
@@ -251,11 +252,6 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> impl
     } else {
       return shouldSaveViewStateDefault;
     }
-  }
-
-  @Override
-  public void add(@NonNull EpoxyModel<?> model) {
-    addModel(model);
   }
 
   /**
