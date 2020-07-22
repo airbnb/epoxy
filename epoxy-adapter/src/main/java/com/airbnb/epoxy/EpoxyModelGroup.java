@@ -58,7 +58,7 @@ import androidx.annotation.Nullable;
  * manage their children. The shared pool is cleaned up when the activity is destroyed.
  */
 @SuppressWarnings("rawtypes")
-public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> implements ModelCollector {
+public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
 
   protected final List<EpoxyModel<?>> models;
 
@@ -115,8 +115,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> impl
     shouldSaveViewStateDefault = false;
   }
 
-  @Override
-  public void add(@NonNull EpoxyModel<?> model) {
+  protected void addModel(@NonNull EpoxyModel<?> model) {
     // By default we save view state if any of the models need to save state.
     shouldSaveViewStateDefault |= model.shouldSaveViewState();
     models.add(model);
