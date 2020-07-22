@@ -74,7 +74,7 @@ class ModelBuilderInterfaceWriter(
             addTypeVariables(modelInfo.typeVariables)
             addMethods(interfaceMethods)
 
-            if (modelInfo.memoizer.implementsModelCollector(modelInfo)) {
+            if (modelInfo.memoizer.implementsModelCollector(modelInfo.superClassElement)) {
                 // If the model implements "ModelCollector" we want the builder too
                 addSuperinterface(ClassNames.MODEL_COLLECTOR)
             }
