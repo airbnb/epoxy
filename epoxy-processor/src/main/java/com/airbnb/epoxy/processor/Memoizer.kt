@@ -359,6 +359,20 @@ class Memoizer(
             }
         }
     }
+
+    private val implementsModelCollectorMap = mutableMapOf<Name, Boolean>()
+    fun implementsModelCollector(classElement: TypeElement): Boolean {
+        return synchronized(typeMap) {
+            implementsModelCollectorMap.getOrPut(classElement.qualifiedName) {
+                classElement.interfaces.any {
+                    it.toString() == ClassNames.MODEL_COLLECTOR.toString()
+                } || classElement.superClassElement(types)?.let { superClassElement ->
+                    // Also check the class hierarchy
+                    implementsModelCollector(superClassElement)
+                } ?: false
+            }
+        }
+    }
 }
 
 private val viewModelAnnotations = listOf(
