@@ -1,5 +1,7 @@
 package com.airbnb.epoxy
 
+import androidx.annotation.LayoutRes
+
 /**
  * An [EpoxyModelGroup] usable in a DSL manner via the [group] extension.
  * <p>
@@ -20,7 +22,8 @@ package com.airbnb.epoxy
  * ```
  */
 @EpoxyModelClass
-abstract class GroupModel : EpoxyModelGroup(), ModelCollector {
+abstract class GroupModel(@LayoutRes layoutRes: Int = 0) : EpoxyModelGroup(layoutRes),
+    ModelCollector {
 
     override fun add(model: EpoxyModel<*>) {
         super.addModel(model)

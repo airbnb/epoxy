@@ -110,9 +110,10 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
   /**
    * Constructor use for DSL
    */
-  protected EpoxyModelGroup() {
+  protected EpoxyModelGroup(@LayoutRes int layoutRes) {
     models = new ArrayList<>();
     shouldSaveViewStateDefault = false;
+    layout(layoutRes);
   }
 
   protected void addModel(@NonNull EpoxyModel<?> model) {
