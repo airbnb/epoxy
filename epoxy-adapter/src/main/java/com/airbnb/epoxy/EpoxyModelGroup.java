@@ -147,8 +147,8 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
 
   @Override
   public void bind(@NonNull ModelGroupHolder holder, @NonNull EpoxyModel<?> previouslyBoundModel) {
+    bind(holder);
     if (!(previouslyBoundModel instanceof EpoxyModelGroup)) {
-      bind(holder);
       return;
     }
 
