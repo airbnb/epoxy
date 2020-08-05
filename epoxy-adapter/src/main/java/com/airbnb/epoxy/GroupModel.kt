@@ -22,8 +22,8 @@ import androidx.annotation.LayoutRes
  * ```
  */
 @EpoxyModelClass
-abstract class GroupModel(@LayoutRes layoutRes: Int = 0) : EpoxyModelGroup(layoutRes),
-    ModelCollector {
+abstract class GroupModel(@LayoutRes layoutRes: Int = 0) :
+    EpoxyModelGroup(layoutRes), ModelCollector {
 
     override fun add(model: EpoxyModel<*>) {
         super.addModel(model)
