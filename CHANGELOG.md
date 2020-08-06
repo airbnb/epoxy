@@ -1,3 +1,6 @@
+# 4.0.0-beta6 (July 15, 2020)
+- PackageModelViewConfig can now be applied to classes and interfaces in addition to package-info.java
+
 # 4.0.0-beta5 (July 9, 2020)
 Fixes:
 - An occasional processor crash when the option to log timings is enabled
