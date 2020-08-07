@@ -14,6 +14,7 @@ import com.airbnb.epoxy.kotlinsample.models.ItemDataClass
 import com.airbnb.epoxy.kotlinsample.models.ItemViewBindingDataClass
 import com.airbnb.epoxy.kotlinsample.models.carouselItemCustomView
 import com.airbnb.epoxy.kotlinsample.models.coloredSquareView
+import com.airbnb.epoxy.kotlinsample.models.decoratedLinearGroup
 import com.airbnb.epoxy.kotlinsample.models.itemCustomView
 import com.airbnb.epoxy.kotlinsample.models.itemEpoxyHolder
 import com.airbnb.epoxy.kotlinsample.models.itemViewBindingEpoxyHolder
@@ -37,6 +38,25 @@ class MainActivity : AppCompatActivity() {
             group {
                 id("epoxyModelGroupDsl")
                 layout(R.layout.vertical_linear_group)
+
+                coloredSquareView {
+                    id("coloredSquareView 1")
+                    color(Color.DKGRAY)
+                }
+
+                coloredSquareView {
+                    id("coloredSquareView 2")
+                    color(Color.GRAY)
+                }
+
+                coloredSquareView {
+                    id("coloredSquareView 3")
+                    color(Color.LTGRAY)
+                }
+            }
+
+            decoratedLinearGroup {
+                id("epoxyModelGroupWithLayoutDsl")
 
                 coloredSquareView {
                     id("coloredSquareView 1")

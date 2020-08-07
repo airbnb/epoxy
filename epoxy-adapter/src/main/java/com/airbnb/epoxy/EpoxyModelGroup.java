@@ -115,6 +115,14 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
     shouldSaveViewStateDefault = false;
   }
 
+  /**
+   * Constructor use for DSL
+   */
+  protected EpoxyModelGroup(@LayoutRes int layoutRes) {
+    this();
+    layout(layoutRes);
+  }
+
   protected void addModel(@NonNull EpoxyModel<?> model) {
     // By default we save view state if any of the models need to save state.
     shouldSaveViewStateDefault |= model.shouldSaveViewState();
