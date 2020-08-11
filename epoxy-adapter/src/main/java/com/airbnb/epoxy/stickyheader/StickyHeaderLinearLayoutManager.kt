@@ -328,8 +328,8 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
         measureChildWithMargins(stickyHeader, 0, 0)
         val lp = stickyHeader.layoutParams as RecyclerView.LayoutParams
         when (orientation) {
-            VERTICAL -> stickyHeader.layout(paddingLeft+lp.leftMargin, 0, width - paddingRight-lp.rightMargin, stickyHeader.measuredHeight)
-            else -> stickyHeader.layout(0, paddingTop+lp.topMargin, stickyHeader.measuredWidth, height - paddingBottom-lp.bottomMargin)
+            VERTICAL -> stickyHeader.layout(paddingLeft + lp.leftMargin, 0, width - paddingRight - lp.rightMargin, stickyHeader.measuredHeight)
+            else -> stickyHeader.layout(0, paddingTop + lp.topMargin, stickyHeader.measuredWidth, height - paddingBottom - lp.bottomMargin)
         }
     }
 
