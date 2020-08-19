@@ -92,14 +92,20 @@ class PagedListModelCacheTest {
         val (pagedList, dataSource) = createPagedList(items)
         dataSource.stop()
         pagedListModelCache.submitList(pagedList)
-        assertModelItems(items.subList(0,
-            INITIAL_LOAD_SIZE
-        ) + listOf(20, 21))
+        assertModelItems(
+            items.subList(
+                0,
+                INITIAL_LOAD_SIZE
+            ) + listOf(20, 21)
+        )
         assertAndResetRebuildModels()
         pagedListModelCache.loadAround(INITIAL_LOAD_SIZE)
-        assertModelItems(items.subList(0,
-            INITIAL_LOAD_SIZE
-        ) + listOf(20, 21))
+        assertModelItems(
+            items.subList(
+                0,
+                INITIAL_LOAD_SIZE
+            ) + listOf(20, 21)
+        )
         assertThat(rebuildCounter, `is`(0))
         dataSource.start()
         assertModelItems(items)
