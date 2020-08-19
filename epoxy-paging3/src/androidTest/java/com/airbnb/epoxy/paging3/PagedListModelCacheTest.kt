@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.airbnb.epoxy.paging
+package com.airbnb.epoxy.paging3
 
 import android.arch.core.executor.testing.CountingTaskExecutorRule
 import android.support.test.InstrumentationRegistry
@@ -37,6 +37,7 @@ class PagedListModelCacheTest {
     @Rule
     @JvmField
     val archExecutor = CountingTaskExecutorRule()
+
     /**
      * Simple mode builder for [Item]
      */
@@ -44,7 +45,9 @@ class PagedListModelCacheTest {
     private val modelBuilder: (Int, Item?) -> EpoxyModel<*> = { pos, item ->
         modelBuildCounter++
         if (item == null) {
-            FakePlaceholderModel(pos)
+            FakePlaceholderModel(
+                pos
+            )
         } else {
             FakeModel(item)
         }
@@ -58,15 +61,16 @@ class PagedListModelCacheTest {
         rebuildCounter++
     }
 
-    private val pagedListModelCache = PagedListModelCache(
-        modelBuilder = modelBuilder,
-        rebuildCallback = rebuildCallback,
-        itemDiffCallback = Item.DIFF_CALLBACK,
-        diffExecutor = Executor {
-            it.run()
-        },
-        modelBuildingHandler = EpoxyController.defaultModelBuildingHandler
-    )
+    private val pagedListModelCache =
+        PagedListModelCache(
+            modelBuilder = modelBuilder,
+            rebuildCallback = rebuildCallback,
+            itemDiffCallback = Item.DIFF_CALLBACK,
+            diffExecutor = Executor {
+                it.run()
+            },
+            modelBuildingHandler = EpoxyController.defaultModelBuildingHandler
+        )
 
     @Test
     fun empty() {
@@ -88,10 +92,14 @@ class PagedListModelCacheTest {
         val (pagedList, dataSource) = createPagedList(items)
         dataSource.stop()
         pagedListModelCache.submitList(pagedList)
-        assertModelItems(items.subList(0, INITIAL_LOAD_SIZE) + listOf(20, 21))
+        assertModelItems(items.subList(0,
+            INITIAL_LOAD_SIZE
+        ) + listOf(20, 21))
         assertAndResetRebuildModels()
         pagedListModelCache.loadAround(INITIAL_LOAD_SIZE)
-        assertModelItems(items.subList(0, INITIAL_LOAD_SIZE) + listOf(20, 21))
+        assertModelItems(items.subList(0,
+            INITIAL_LOAD_SIZE
+        ) + listOf(20, 21))
         assertThat(rebuildCounter, `is`(0))
         dataSource.start()
         assertModelItems(items)
@@ -179,7 +187,8 @@ class PagedListModelCacheTest {
     @Test
     fun insert() {
         testListUpdate { items, models ->
-            val newItem = Item(id = 100, value = "item x")
+            val newItem =
+                Item(id = 100, value = "item x")
             Modification(
                 newList = items.copyToMutable().also {
                     it.add(5, newItem)
@@ -323,8 +332,8 @@ class PagedListModelCacheTest {
                 .setInitialLoadSizeHint(PAGE_SIZE * 2)
                 .setPageSize(PAGE_SIZE)
                 .build()
-        ).setFetchExecutor { it.run() }
-            .setNotifyExecutor { it.run() }
+        ).setFetchExecutor(Executor { it.run() })
+            .setNotifyExecutor(Executor { it.run() })
             .build()
         return pagedList to dataSource
     }

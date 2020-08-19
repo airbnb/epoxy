@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.airbnb.epoxy.paging
+package com.airbnb.epoxy.paging3
 
 import androidx.paging.PositionalDataSource
 
 /**
  * Simple data source that works with a given list and its loading can be stopped / started.
  */
-class ListDataSource<T>(
+class ListDataSource<T : Any>(
     private val data: List<T>
 ) : PositionalDataSource<T>() {
     private var pendingActions = arrayListOf<() -> Unit>()

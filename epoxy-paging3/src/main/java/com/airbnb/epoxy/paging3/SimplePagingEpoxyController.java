@@ -1,6 +1,8 @@
-package com.airbnb.epoxy.paging;
+package com.airbnb.epoxy.paging3;
 
 import com.airbnb.epoxy.EpoxyModel;
+import com.airbnb.epoxy.paging3.PagedListEpoxyController;
+import com.airbnb.epoxy.paging3.PagingEpoxyController;
 
 import java.util.List;
 
