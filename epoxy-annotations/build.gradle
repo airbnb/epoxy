@@ -1,11 +1,6 @@
 apply plugin: 'java'
 apply plugin: "com.vanniktech.maven.publish"
 
-mavenPublish {
-  // must use legacy mode until we update to AGP 3.6.x
-  useLegacyMode = true
-}
-
 sourceCompatibility = rootProject.JAVA_SOURCE_VERSION
 targetCompatibility = rootProject.JAVA_TARGET_VERSION
 
