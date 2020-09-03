@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation on any class in your package to specify default behavior for the Epoxy
+ * Use this annotation on any class or interface in your package to specify default behavior for the Epoxy
  * annotation processor for that package. You can only have one instance of this annotation per
  * package.
  * <p>
@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  * <p>
  * See https://github.com/airbnb/epoxy/wiki/Configuration for more details on these options.
  */
-@Target(ElementType.PACKAGE)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
 public @interface PackageEpoxyConfig {
   boolean REQUIRE_HASHCODE_DEFAULT = false;

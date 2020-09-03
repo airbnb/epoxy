@@ -17,32 +17,37 @@ public class ConfigTest {
 
   private static final JavaFileObject CONFIG_CLASS_REQUIRE_HASH =
       JavaFileObjects
-          .forSourceString("com.airbnb.epoxy.configtest.package-info", "@PackageEpoxyConfig(\n"
-              + "    requireHashCode = true\n"
-              + ")\n"
-              + "package com.airbnb.epoxy.configtest;\n"
-              + "\n"
-              + "import com.airbnb.epoxy.PackageEpoxyConfig;");
+          .forSourceString("com.airbnb.epoxy.configtest.EpoxyConfig",
+              "package com.airbnb.epoxy.configtest;\n" +
+                  "import com.airbnb.epoxy.PackageEpoxyConfig;\n" +
+                  "@PackageEpoxyConfig(\n"
+                  + "    requireHashCode = true\n"
+                  + ")\n"
+                  + "interface EpoxyConfig {}"
+                  + "\n");
 
   private static final JavaFileObject CONFIG_CLASS_REQUIRE_ABSTRACT =
       JavaFileObjects
-          .forSourceString("com.airbnb.epoxy.configtest.package-info", "@PackageEpoxyConfig(\n"
-              + "    requireAbstractModels = true\n"
-              + ")\n"
-              + "package com.airbnb.epoxy.configtest;\n"
-              + "\n"
-              + "import com.airbnb.epoxy.PackageEpoxyConfig;");
+          .forSourceString("com.airbnb.epoxy.configtest.EpoxyConfig",
+              "package com.airbnb.epoxy.configtest;\n" +
+                  "import com.airbnb.epoxy.PackageEpoxyConfig;\n" +
+                  "@PackageEpoxyConfig(\n"
+                  + "    requireAbstractModels = true\n"
+                  + ")\n"
+                  + "interface EpoxyConfig {}"
+                  + "\n");
 
   @Test
   public void testSubPackageOverridesParent() {
     JavaFileObject subPackageConfig =
-        JavaFileObjects.forSourceString("com.airbnb.epoxy.configtest.sub.package-info",
-            "@PackageEpoxyConfig(\n"
+        JavaFileObjects.forSourceString("com.airbnb.epoxy.configtest.sub.EpoxyConfig",
+            "package com.airbnb.epoxy.configtest.sub;\n" +
+                "import com.airbnb.epoxy.PackageEpoxyConfig;\n" +
+                "@PackageEpoxyConfig(\n"
                 + "    requireHashCode = false\n"
                 + ")\n"
-                + "package com.airbnb.epoxy.configtest.sub;\n"
-                + "\n"
-                + "import com.airbnb.epoxy.PackageEpoxyConfig;");
+                + "interface EpoxyConfig {}"
+                + "\n");
 
     JavaFileObject model =
         forResource(GuavaPatch.patchResource("ModelConfigSubPackageOverridesParent.java"));
@@ -55,25 +60,29 @@ public class ConfigTest {
 
   @Test
   public void testPackageWithNoConfigInheritsNearestParentConfig() {
-    JavaFileObject topLevelParentConfig = JavaFileObjects
-        .forSourceString("com.airbnb.epoxy.configtest.package-info", "@PackageEpoxyConfig(\n"
-            + "    requireHashCode = false\n"
-            + ")\n"
-            + "package com.airbnb.epoxy.configtest;\n"
-            + "\n"
-            + "import com.airbnb.epoxy.PackageEpoxyConfig;");
+    JavaFileObject topLevelParentConfig =
+        JavaFileObjects.forSourceString("com.airbnb.epoxy.configtest.EpoxyConfig",
+            "package com.airbnb.epoxy.configtest;\n" +
+                "import com.airbnb.epoxy.PackageEpoxyConfig;\n" +
+                "@PackageEpoxyConfig(\n"
+                + "    requireHashCode = false\n"
+                + ")\n"
+                + "interface EpoxyConfig {}"
+                + "\n");
 
     JavaFileObject secondLevelParentConfig =
-        JavaFileObjects.forSourceString("com.airbnb.epoxy.configtest.sub.package-info",
-            "@PackageEpoxyConfig(\n"
+        JavaFileObjects.forSourceString("com.airbnb.epoxy.configtest.sub.EpoxyConfig",
+            "package com.airbnb.epoxy.configtest.sub;\n" +
+                "import com.airbnb.epoxy.PackageEpoxyConfig;\n" +
+                "@PackageEpoxyConfig(\n"
                 + "    requireHashCode = true\n"
                 + ")\n"
-                + "package com.airbnb.epoxy.configtest.sub;\n"
-                + "\n"
-                + "import com.airbnb.epoxy.PackageEpoxyConfig;");
+                + "interface EpoxyConfig {}"
+                + "\n");
 
     JavaFileObject model =
-        forResource(GuavaPatch.patchResource("ModelPackageWithNoConfigInheritsNearestParentConfig.java"));
+        forResource(
+            GuavaPatch.patchResource("ModelPackageWithNoConfigInheritsNearestParentConfig.java"));
 
     assert_().about(javaSources())
         .that(asList(topLevelParentConfig, secondLevelParentConfig, model))
@@ -180,7 +189,8 @@ public class ConfigTest {
   public void testConfigRequireHashCodeInterfaceWithHashCodePasses() {
     // Verify that AutoValue class attributes pass the hashcode requirement
     JavaFileObject model =
-        forResource(GuavaPatch.patchResource("ModelConfigRequireHashCodeInterfaceWithHashCodePasses.java"));
+        forResource(
+            GuavaPatch.patchResource("ModelConfigRequireHashCodeInterfaceWithHashCodePasses.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
@@ -204,7 +214,8 @@ public class ConfigTest {
   public void testConfigRequireHashCodeAllowsMarkedAttributes() {
     // Verify that AutoValue class attributes pass the hashcode requirement
     JavaFileObject model = JavaFileObjects
-        .forResource(GuavaPatch.patchResource("ModelConfigRequireHashCodeAllowsMarkedAttributes.java"));
+        .forResource(
+            GuavaPatch.patchResource("ModelConfigRequireHashCodeAllowsMarkedAttributes.java"));
 
     assert_().about(javaSources())
         .that(asList(CONFIG_CLASS_REQUIRE_HASH, model))
@@ -271,7 +282,8 @@ public class ConfigTest {
     JavaFileObject model =
         forResource(GuavaPatch.patchResource("ModelNoValidation.java"));
 
-    JavaFileObject generatedModel = JavaFileObjects.forResource(GuavaPatch.patchResource("ModelNoValidation_.java"));
+    JavaFileObject generatedModel =
+        JavaFileObjects.forResource(GuavaPatch.patchResource("ModelNoValidation_.java"));
 
     assert_().about(javaSource())
         .that(model)

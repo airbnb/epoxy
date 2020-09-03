@@ -392,17 +392,19 @@ class ViewProcessorTest {
                     "}"
             )
 
-        val configClass = JavaFileObjects
-            .forSourceLines(
-                "com.airbnb.epoxy.package-info",
-                "@PackageModelViewConfig(rClass = R" +
-                    ".class, defaultBaseModelClass = TestBaseModel.class)\n" +
-                    "package com.airbnb.epoxy;\n" +
-                    "\n" +
-                    "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
-                    "import com.airbnb.epoxy.R;\n" +
-                    "import com.airbnb.epoxy.TestBaseModel;\n"
-            )
+        val configClass = JavaFileObjects.forSourceString(
+            "com.airbnb.epoxy.EpoxyModelViewConfig",
+            """
+                    package com.airbnb.epoxy;
+                    
+                    import com.airbnb.epoxy.PackageModelViewConfig;
+                    import com.airbnb.epoxy.R;
+                    import com.airbnb.epoxy.TestBaseModel;
+                    
+                    @PackageModelViewConfig(rClass = R.class, defaultBaseModelClass = TestBaseModel.class)
+                    interface EpoxyModelViewConfig {}
+                """.trimIndent()
+        )
 
         val baseModel = JavaFileObjects
             .forSourceLines(
@@ -455,17 +457,19 @@ class ViewProcessorTest {
                     "}"
             )
 
-        val configClass = JavaFileObjects
-            .forSourceLines(
-                "com.airbnb.epoxy.package-info",
-                "@PackageModelViewConfig(rClass = R" +
-                    ".class, defaultBaseModelClass = TestBaseModel.class)\n" +
-                    "package com.airbnb.epoxy;\n" +
-                    "\n" +
-                    "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
-                    "import com.airbnb.epoxy.R;\n" +
-                    "import com.airbnb.epoxy.TestBaseModel;\n"
-            )
+        val configClass = JavaFileObjects.forSourceString(
+            "com.airbnb.epoxy.EpoxyModelViewConfig",
+            """
+                    package com.airbnb.epoxy;
+                    
+                    import com.airbnb.epoxy.PackageModelViewConfig;
+                    import com.airbnb.epoxy.R;
+                    import com.airbnb.epoxy.TestBaseModel;
+                    
+                    @PackageModelViewConfig(rClass = R.class, defaultBaseModelClass = TestBaseModel.class)
+                    interface EpoxyModelViewConfig {}
+                """.trimIndent()
+        )
 
         val baseModel = JavaFileObjects
             .forSourceLines(
@@ -505,17 +509,19 @@ class ViewProcessorTest {
                     "}\n"
             )
 
-        val configClass = JavaFileObjects
-            .forSourceLines(
-                "com.airbnb.epoxy.package-info",
-                "@PackageModelViewConfig(rClass = R" +
-                    ".class, defaultBaseModelClass = TestBaseModel.class)\n" +
-                    "package com.airbnb.epoxy;\n" +
-                    "\n" +
-                    "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
-                    "import com.airbnb.epoxy.R;\n" +
-                    "import com.airbnb.epoxy.TestBaseModel;\n"
-            )
+        val configClass = JavaFileObjects.forSourceString(
+            "com.airbnb.epoxy.EpoxyModelViewConfig",
+            """
+                    package com.airbnb.epoxy;
+                    
+                    import com.airbnb.epoxy.PackageModelViewConfig;
+                    import com.airbnb.epoxy.R;
+                    import com.airbnb.epoxy.TestBaseModel;
+                    
+                    @PackageModelViewConfig(rClass = R.class, defaultBaseModelClass = TestBaseModel.class)
+                    interface EpoxyModelViewConfig {}
+                """.trimIndent()
+        )
 
         assert_().about(javaSources())
             .that(listOf(baseModel, model, configClass, R))
@@ -588,16 +594,18 @@ class ViewProcessorTest {
                 "}"
         )
 
-        val configClass = JavaFileObjects
-            .forSourceLines(
-                "com.airbnb.epoxy.package-info",
-                "@PackageModelViewConfig(rClass = R" +
-                    ".class)\n" +
-                    "package com.airbnb.epoxy;\n" +
-                    "\n" +
-                    "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
-                    "import com.airbnb.epoxy.R;\n"
-            )
+        val configClass = JavaFileObjects.forSourceString(
+            "com.airbnb.epoxy.EpoxyModelViewConfig",
+            """
+                    package com.airbnb.epoxy;
+                    
+                    import com.airbnb.epoxy.PackageModelViewConfig;
+                    import com.airbnb.epoxy.R;
+                    
+                    @PackageModelViewConfig(rClass = R.class)
+                    interface EpoxyModelViewConfig {}
+                """.trimIndent()
+        )
 
         val generatedModel = JavaFileObjects.forResource(
             "DefaultPackageLayoutPatternViewModel_.java".patchResource()
@@ -653,16 +661,18 @@ class ViewProcessorTest {
                 "}"
         )
 
-        val configClass = JavaFileObjects
-            .forSourceLines(
-                "com.airbnb.epoxy.package-info",
-                "@PackageModelViewConfig(rClass = R2" +
-                    ".class)\n" +
-                    "package com.airbnb.epoxy;\n" +
-                    "\n" +
-                    "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
-                    "import com.airbnb.epoxy.R2;\n"
-            )
+        val configClass = JavaFileObjects.forSourceString(
+            "com.airbnb.epoxy.EpoxyModelViewConfig",
+            """
+                    package com.airbnb.epoxy;
+                    
+                    import com.airbnb.epoxy.PackageModelViewConfig;
+                    import com.airbnb.epoxy.R2;
+                    
+                    @PackageModelViewConfig(rClass = R2.class)
+                    interface EpoxyModelViewConfig {}
+                """.trimIndent()
+        )
 
         val generatedModel = JavaFileObjects.forResource(
             "DefaultPackageLayoutPatternViewModel_.java".patchResource()
@@ -708,16 +718,18 @@ class ViewProcessorTest {
                 "}"
         )
 
-        val configClass = JavaFileObjects
-            .forSourceLines(
-                "com.airbnb.epoxy.package-info",
-                "@PackageModelViewConfig(rClass = R" +
-                    ".class, defaultLayoutPattern = \"hello_%s_me\")\n" +
-                    "package com.airbnb.epoxy;\n" +
-                    "\n" +
-                    "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
-                    "import com.airbnb.epoxy.R;\n"
-            )
+        val configClass = JavaFileObjects.forSourceString(
+            "com.airbnb.epoxy.EpoxyModelViewConfig",
+            """
+                    package com.airbnb.epoxy;
+                    
+                    import com.airbnb.epoxy.PackageModelViewConfig;
+                    import com.airbnb.epoxy.R;
+                    
+                    @PackageModelViewConfig(rClass = R.class, defaultLayoutPattern = "hello_%s_me")
+                    interface EpoxyModelViewConfig {}
+                """.trimIndent()
+        )
 
         val generatedModel = JavaFileObjects.forResource(
             "CustomPackageLayoutPatternViewModel_.java".patchResource()
@@ -764,16 +776,18 @@ class ViewProcessorTest {
                 "}"
         )
 
-        val configClass = JavaFileObjects
-            .forSourceLines(
-                "com.airbnb.epoxy.package-info",
-                "@PackageModelViewConfig(rClass = R" +
-                    ".class, useLayoutOverloads = true)\n" +
-                    "package com.airbnb.epoxy;\n" +
-                    "\n" +
-                    "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
-                    "import com.airbnb.epoxy.R;\n"
-            )
+        val configClass = JavaFileObjects.forSourceString(
+            "com.airbnb.epoxy.EpoxyModelViewConfig",
+            """
+                    package com.airbnb.epoxy;
+                    
+                    import com.airbnb.epoxy.PackageModelViewConfig;
+                    import com.airbnb.epoxy.R;
+                    
+                    @PackageModelViewConfig(rClass = R.class, useLayoutOverloads = true)
+                    interface EpoxyModelViewConfig {}
+                """.trimIndent()
+        )
 
         val generatedModel = JavaFileObjects.forResource(
             "LayoutOverloadsViewModel_.java".patchResource()
@@ -817,14 +831,17 @@ class ViewProcessorTest {
                 "}"
         )
 
-        val configClass = JavaFileObjects.forSourceLines(
-            "com.airbnb.epoxy.package-info",
-            "@PackageModelViewConfig(rClass = R" +
-                ".class, generatedModelSuffix = \"Suffix_\")\n" +
-                "package com.airbnb.epoxy;\n" +
-                "\n" +
-                "import com.airbnb.epoxy.PackageModelViewConfig;\n" +
-                "import com.airbnb.epoxy.R;\n"
+        val configClass = JavaFileObjects.forSourceString(
+            "com.airbnb.epoxy.EpoxyModelViewConfig",
+            """
+                    package com.airbnb.epoxy;
+                    
+                    import com.airbnb.epoxy.PackageModelViewConfig;
+                    import com.airbnb.epoxy.R;
+                    
+                    @PackageModelViewConfig(rClass = R.class, generatedModelSuffix = "Suffix_")
+                    interface EpoxyModelViewConfig {}
+                """.trimIndent()
         )
 
         assertGeneration(

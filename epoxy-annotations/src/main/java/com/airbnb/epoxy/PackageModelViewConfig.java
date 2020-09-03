@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * package. Also applies to subpackages, unless other package config values are set in those sub
  * packages.
  */
-@Target({ElementType.PACKAGE, ElementType.TYPE})
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
 public @interface PackageModelViewConfig {
   /**
