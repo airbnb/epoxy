@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
 import androidx.recyclerview.widget.RecyclerView;
@@ -78,6 +79,19 @@ public abstract class BaseEpoxyAdapter
 
   public boolean isEmpty() {
     return getCurrentModels().isEmpty();
+  }
+
+  @Override
+  public long getItemId(int position) {
+    // This does not call getModelForPosition so that we don't use the id of the empty model when
+    // hidden,
+    // so that the id stays constant when gone vs shown
+    return getCurrentModels().get(position).id();
+  }
+
+  @Override
+  public int getItemViewType(int position) {
+    return viewTypeManager.getViewTypeAndRememberModel(getModelForPosition(position));
   }
 
   @Override
@@ -154,19 +168,6 @@ public abstract class BaseEpoxyAdapter
     return boundViewHolders;
   }
 
-  @Override
-  public int getItemViewType(int position) {
-    return viewTypeManager.getViewTypeAndRememberModel(getModelForPosition(position));
-  }
-
-  @Override
-  public long getItemId(int position) {
-    // This does not call getModelForPosition so that we don't use the id of the empty model when
-    // hidden,
-    // so that the id stays constant when gone vs shown
-    return getCurrentModels().get(position).id();
-  }
-
   EpoxyModel<?> getModelForPosition(int position) {
     return getCurrentModels().get(position);
   }
@@ -179,6 +180,15 @@ public abstract class BaseEpoxyAdapter
     EpoxyModel<?> model = holder.getModel();
     holder.unbind();
     onModelUnbound(holder, model);
+  }
+
+  @CallSuper
+  @Override
+  public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+    // The last model is saved for optimization, but holding onto it can leak anything saved inside
+    // the model (like a click listener that references a Fragment). This is only needed during
+    // the viewholder creation phase, so it is safe to clear now.
+    viewTypeManager.lastModelForViewTypeLookup = null;
   }
 
   /**
@@ -295,7 +305,7 @@ public abstract class BaseEpoxyAdapter
   /**
    * Optional callback to setup the sticky view,
    * by default it doesn't do anything.
-   *
+   * <p>
    * The sub-classes should override the function if they are
    * using sticky header feature.
    */
@@ -307,7 +317,7 @@ public abstract class BaseEpoxyAdapter
   /**
    * Optional callback to perform tear down operation on the
    * sticky view, by default it doesn't do anything.
-   *
+   * <p>
    * The sub-classes should override the function if they are
    * using sticky header feature.
    */
@@ -319,7 +329,7 @@ public abstract class BaseEpoxyAdapter
   /**
    * Called to check if the item at the position is a sticky item,
    * by default returns false.
-   *
+   * <p>
    * The sub-classes should override the function if they are
    * using sticky header feature.
    */

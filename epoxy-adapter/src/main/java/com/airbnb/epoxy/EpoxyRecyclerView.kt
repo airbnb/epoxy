@@ -82,7 +82,7 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
     /**
      * Tracks whether [.removeAdapterRunnable] has been posted to run
      * later. This lets us know if we should cancel the runnable at certain times. This removes the
-     * overhead of needlessly attemping to remove the runnable when it isn't posted.
+     * overhead of needlessly attempting to remove the runnable when it isn't posted.
      */
     private var isRemoveAdapterRunnablePosted: Boolean = false
     private val removeAdapterRunnable = Runnable {

@@ -15,7 +15,7 @@ rootProject.ext.COMPILE_SDK_VERSION = 28
 rootProject.ext.MIN_SDK_VERSION = 14
 
 rootProject.ext.ANDROIDX_ANNOTATION = "1.0.0"
-rootProject.ext.ANDROIDX_RECYCLERVIEW = "1.0.0"
+rootProject.ext.ANDROIDX_RECYCLERVIEW = "1.1.0"
 rootProject.ext.ANDROIDX_MATERIAL = "1.0.0"
 rootProject.ext.ANDROIDX_APPCOMPAT = "1.0.0"
 rootProject.ext.ANDROIDX_CARDVIEW = "1.0.0"
