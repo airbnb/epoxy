@@ -7,9 +7,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.LooperMode
 
 @Config(sdk = [21])
 @RunWith(RobolectricTestRunner::class)
+@LooperMode(LooperMode.Mode.LEGACY)
 class EpoxyRecyclerViewTest {
 
     private class TestModel : EpoxyModel<View>() {

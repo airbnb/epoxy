@@ -16,6 +16,7 @@ android {
   androidExtensions {
     experimental = true
   }
+  testOptions.unitTests.includeAndroidResources = true
 
   buildTypes.all { buildType ->
     buildType.javaCompileOptions.annotationProcessorOptions.arguments =

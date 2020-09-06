@@ -403,7 +403,7 @@ class ViewProcessorTest {
                     
                     @PackageModelViewConfig(rClass = R.class, defaultBaseModelClass = TestBaseModel.class)
                     interface EpoxyModelViewConfig {}
-                """.trimIndent()
+            """.trimIndent()
         )
 
         val baseModel = JavaFileObjects
@@ -468,7 +468,7 @@ class ViewProcessorTest {
                     
                     @PackageModelViewConfig(rClass = R.class, defaultBaseModelClass = TestBaseModel.class)
                     interface EpoxyModelViewConfig {}
-                """.trimIndent()
+            """.trimIndent()
         )
 
         val baseModel = JavaFileObjects
@@ -520,7 +520,7 @@ class ViewProcessorTest {
                     
                     @PackageModelViewConfig(rClass = R.class, defaultBaseModelClass = TestBaseModel.class)
                     interface EpoxyModelViewConfig {}
-                """.trimIndent()
+            """.trimIndent()
         )
 
         assert_().about(javaSources())
@@ -604,7 +604,7 @@ class ViewProcessorTest {
                     
                     @PackageModelViewConfig(rClass = R.class)
                     interface EpoxyModelViewConfig {}
-                """.trimIndent()
+            """.trimIndent()
         )
 
         val generatedModel = JavaFileObjects.forResource(
@@ -671,7 +671,7 @@ class ViewProcessorTest {
                     
                     @PackageModelViewConfig(rClass = R2.class)
                     interface EpoxyModelViewConfig {}
-                """.trimIndent()
+            """.trimIndent()
         )
 
         val generatedModel = JavaFileObjects.forResource(
@@ -728,7 +728,7 @@ class ViewProcessorTest {
                     
                     @PackageModelViewConfig(rClass = R.class, defaultLayoutPattern = "hello_%s_me")
                     interface EpoxyModelViewConfig {}
-                """.trimIndent()
+            """.trimIndent()
         )
 
         val generatedModel = JavaFileObjects.forResource(
@@ -786,7 +786,7 @@ class ViewProcessorTest {
                     
                     @PackageModelViewConfig(rClass = R.class, useLayoutOverloads = true)
                     interface EpoxyModelViewConfig {}
-                """.trimIndent()
+            """.trimIndent()
         )
 
         val generatedModel = JavaFileObjects.forResource(
@@ -841,7 +841,7 @@ class ViewProcessorTest {
                     
                     @PackageModelViewConfig(rClass = R.class, generatedModelSuffix = "Suffix_")
                     interface EpoxyModelViewConfig {}
-                """.trimIndent()
+            """.trimIndent()
         )
 
         assertGeneration(
