@@ -30,6 +30,7 @@ Please report any issues or crashes that you notice.
 ## Fixes
 - Synchronize ListUpdateCallback and PagedListModelCache functions (#987)
 - Avoid generating bitset checks in models when not needed (reduces code size)
+- Fix minor memory leak
 
 ## Breaking
 
