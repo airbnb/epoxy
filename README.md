@@ -1,5 +1,8 @@
 [![Build Status](https://travis-ci.com/airbnb/epoxy.svg?branch=master)](https://travis-ci.com/github/airbnb/epoxy)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.airbnb.android/epoxy/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.airbnb.android/epoxy)
+[![GitHub license](https://img.shields.io/github/license/airbnb/epoxy)](https://github.com/airbnb/epoxy/blob/master/LICENSE)
+![GitHub contributors](https://img.shields.io/github/contributors/airbnb/epoxy)
+[![HitCount](http://hits.dwyl.com/airbnb/epoxy.svg)](http://hits.dwyl.com/airbnb/epoxy)
 
 # Epoxy
 
