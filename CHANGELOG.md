@@ -2,6 +2,7 @@
 
 ## New
 - Incremental annotation processing for faster builds
+- Support for Android Jetpack Paging v3 library in new `epoxy-paging3` artifact
 - A new annotation processor argument `logEpoxyTimings` can be set to get a detailed breakdown of how long the processors took and where they spent their time (off by default)
 - Another new argument `enableParallelEpoxyProcessing` can be set to true to have the annotation processor process annotations and generate files in parallel (via coroutines).
 
