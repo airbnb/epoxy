@@ -3,6 +3,7 @@ package com.airbnb.epoxy;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 class ViewTypeManager {
@@ -11,7 +12,8 @@ class ViewTypeManager {
    * The last model that had its view type looked up. This is stored so in most cases we can quickly
    * look up what view type belongs to which model.
    */
-  private EpoxyModel<?> lastModelForViewTypeLookup;
+  @Nullable
+  EpoxyModel<?> lastModelForViewTypeLookup;
 
   /**
    * The type map is static so that models of the same class share the same views across different

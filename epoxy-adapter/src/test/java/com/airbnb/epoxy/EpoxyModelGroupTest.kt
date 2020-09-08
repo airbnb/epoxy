@@ -15,9 +15,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.ParameterizedRobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.LooperMode
 
 @Config(sdk = [21])
 @RunWith(ParameterizedRobolectricTestRunner::class)
+@LooperMode(LooperMode.Mode.LEGACY)
 class EpoxyModelGroupTest(val useViewStubs: Boolean) {
 
     private lateinit var recyclerView: RecyclerView

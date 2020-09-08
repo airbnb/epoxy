@@ -122,14 +122,15 @@ If you use Android DataBinding you can simply set up your xml layouts like norma
 </layout>
 ```
 
-Then, create a `package-info.java` file in any package and add an `EpoxyDataBindingLayouts` annotation to declare your databinding layouts.
+Then, create an interface or class in any package and add an `EpoxyDataBindingLayouts` annotation to declare your databinding layouts.
 
 ```java
-@EpoxyDataBindingLayouts({R.layout.header_view, ... // other layouts })
 package com.airbnb.epoxy.sample;
 
 import com.airbnb.epoxy.EpoxyDataBindingLayouts;
-import com.airbnb.epoxy.R;
+
+@EpoxyDataBindingLayouts({R.layout.header_view, ... // other layouts })
+interface EpoxyConfig {}
 ```
 
 From this layout name Epoxy generates a `HeaderViewBindingModel_`.

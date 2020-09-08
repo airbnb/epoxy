@@ -12,6 +12,8 @@ import com.airbnb.epoxy.EpoxyAdapter
 import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.getModelForPositionInternal
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * A scroll listener that prefetches view content.
@@ -156,7 +158,7 @@ class EpoxyPreloader<P : PreloadRequestHolder> private constructor(
     /** Check if an item index is valid. It may not be if the adapter is empty, or if adapter changes have been dispatched since the last layout pass. */
     private fun Int.isInvalid() = this == RecyclerView.NO_POSITION || this >= totalItemCount
 
-    private fun Int.clampToAdapterRange() = Math.min(totalItemCount - 1, Math.max(this, 0))
+    private fun Int.clampToAdapterRange() = min(totalItemCount - 1, max(this, 0))
 
     private fun preloadAdapterPosition(position: Int) {
         @Suppress("UNCHECKED_CAST")

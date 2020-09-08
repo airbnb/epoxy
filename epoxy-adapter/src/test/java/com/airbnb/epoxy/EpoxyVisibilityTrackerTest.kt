@@ -24,6 +24,7 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowLog
 
 /**
@@ -38,6 +39,7 @@ import org.robolectric.shadows.ShadowLog
  */
 @Config(sdk = [21], qualifiers = "h831dp-mdpi")
 @RunWith(RobolectricTestRunner::class)
+@LooperMode(LooperMode.Mode.LEGACY)
 class EpoxyVisibilityTrackerTest {
 
     companion object {

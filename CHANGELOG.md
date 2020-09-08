@@ -1,3 +1,54 @@
+# 4.0.0 (Sept 5, 2020)
+
+## New
+- Incremental annotation processing for faster builds
+- A new annotation processor argument `logEpoxyTimings` can be set to get a detailed breakdown of how long the processors took and where they spent their time (off by default)
+- Another new argument `enableParallelEpoxyProcessing` can be set to true to have the annotation processor process annotations and generate files in parallel (via coroutines).
+
+You can enable these processor options in your build.gradle file like so:
+```
+project.android.buildTypes.all { buildType ->
+  buildType.javaCompileOptions.annotationProcessorOptions.arguments =
+      [
+          logEpoxyTimings  : "true",
+          enableParallelEpoxyProcessing     : "true"
+      ]
+}
+```
+
+Parallel processing can greatly speed up processing time (moreso than the incremental support), but given the hairy nature of parallel processing it is still incubating.
+Please report any issues or crashes that you notice.
+(We are currently using parallel mode in our large project at Airbnb with no problems.)
+
+- Add options to skip generation of functions for getters, reset, and method overloads to reduce generated code
+    - New annotation processor options are:
+        - epoxyDisableGenerateOverloads
+        - epoxyDisableGenerateGetters
+        - epoxyDisableGenerateReset
+
+
+## Fixes
+- Synchronize ListUpdateCallback and PagedListModelCache functions (#987)
+- Avoid generating bitset checks in models when not needed (reduces code size)
+- Fix minor memory leak
+
+## Breaking
+
+- Annotations that previously targeted package elements now target types (classes or interfaces).
+  This includes: `EpoxyDataBindingPattern`, `EpoxyDataBindingLayouts`, `PackageModelViewConfig`, `PackageEpoxyConfig`
+  This was necessary to work around an incremental annotation processor issue where annotation on package-info elements are not properly recompiled
+
+- In order to enable incremental annotation processing a change had to be made in how the processor of
+  `@AutoModel` annotations work. If you use `@AutoModel` in an EpoxyController the annotated Model types
+  must be either declared in a different module from the EpoxyController, or in the same module in the same java package.
+
+  Also make sure you have kapt error types enabled.
+
+  However, generally `@AutoModel` is considered legacy and is not recommended. It is a relic of Java Epoxy usage
+  and instead the current best practice is to use Kotlin with the Kotlin model extension functions to build models.
+
+- Removed support for generating Epoxy models from Litho components
+
 # 4.0.0-beta6 (July 15, 2020)
 - PackageModelViewConfig can now be applied to classes and interfaces in addition to package-info.java
 
