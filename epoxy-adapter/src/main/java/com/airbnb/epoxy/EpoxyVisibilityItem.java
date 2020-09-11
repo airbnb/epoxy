@@ -2,6 +2,7 @@ package com.airbnb.epoxy;
 
 import android.graphics.Rect;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
@@ -9,9 +10,9 @@ import androidx.annotation.Px;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * This class represent an item in the {@link androidx.recyclerview.widget.RecyclerView} and it is
+ * This class represent an item in a {@link android.view.ViewGroup} and it is
  * being reused with multiple model via the update method. There is 1:1 relationship between an
- * EpoxyVisibilityItem and a child within the {@link androidx.recyclerview.widget.RecyclerView}.
+ * EpoxyVisibilityItem and a child within the {@link android.view.ViewGroup}.
  *
  * It contains the logic to compute the visibility state of an item. It will also invoke the
  * visibility callbacks on {@link com.airbnb.epoxy.EpoxyViewHolder}
@@ -46,10 +47,14 @@ class EpoxyVisibilityItem {
   private boolean fullyVisible = false;
   private boolean visible = false;
   private boolean focusedVisible = false;
+  private int viewVisibility = View.GONE;
 
   /** Store last value for de-duping */
   private int lastVisibleHeightNotified = NOT_NOTIFIED;
   private int lastVisibleWidthNotified = NOT_NOTIFIED;
+
+  EpoxyVisibilityItem() {
+  }
 
   EpoxyVisibilityItem(int adapterPosition) {
     reset(adapterPosition);
@@ -59,10 +64,10 @@ class EpoxyVisibilityItem {
    * Update the visibility item according the current layout.
    *
    * @param view        the current {@link com.airbnb.epoxy.EpoxyViewHolder}'s itemView
-   * @param parent      the {@link androidx.recyclerview.widget.RecyclerView}
+   * @param parent      the {@link android.view.ViewGroup}
    * @return true if the view has been measured
    */
-  boolean update(@NonNull View view, @NonNull RecyclerView parent, boolean detachEvent) {
+  boolean update(@NonNull View view, @NonNull ViewGroup parent, boolean detachEvent) {
     // Clear the rect before calling getLocalVisibleRect
     localVisibleRect.setEmpty();
     boolean viewDrawn = view.getLocalVisibleRect(localVisibleRect) && !detachEvent;
@@ -72,6 +77,7 @@ class EpoxyVisibilityItem {
     viewportWidth = parent.getWidth();
     visibleHeight = viewDrawn ? localVisibleRect.height() : 0;
     visibleWidth = viewDrawn ? localVisibleRect.width() : 0;
+    viewVisibility = view.getVisibility();
     return height > 0 && width > 0;
   }
 
@@ -139,11 +145,15 @@ class EpoxyVisibilityItem {
     boolean changed = false;
     if (visibleHeight != lastVisibleHeightNotified || visibleWidth != lastVisibleWidthNotified) {
       if (visibilityChangedEnabled) {
-        epoxyHolder.visibilityChanged(
-            100.f / height * visibleHeight,
-            100.f / width * visibleWidth,
-            visibleHeight, visibleWidth
-        );
+        if (viewVisibility == View.GONE) {
+          epoxyHolder.visibilityChanged(0f, 0f, 0, 0);
+        } else {
+          epoxyHolder.visibilityChanged(
+              100.f / height * visibleHeight,
+              100.f / width * visibleWidth,
+              visibleHeight, visibleWidth
+          );
+        }
       }
       lastVisibleHeightNotified = visibleHeight;
       lastVisibleWidthNotified = visibleWidth;
@@ -153,7 +163,7 @@ class EpoxyVisibilityItem {
   }
 
   private boolean isVisible() {
-    return visibleHeight > 0 && visibleWidth > 0;
+    return viewVisibility == View.VISIBLE && visibleHeight > 0 && visibleWidth > 0;
   }
 
   private boolean isInFocusVisible() {
@@ -163,9 +173,10 @@ class EpoxyVisibilityItem {
     // The model has entered the focused range either if it is larger than half of the viewport
     // and it occupies at least half of the viewport or if it is smaller than half of the viewport
     // and it is fully visible.
-    return (totalArea >= halfViewportArea)
-        ? (visibleArea >= halfViewportArea)
-        : totalArea == visibleArea;
+    return viewVisibility == View.VISIBLE &&
+        ((totalArea >= halfViewportArea)
+            ? (visibleArea >= halfViewportArea)
+            : totalArea == visibleArea);
   }
 
   private boolean isPartiallyVisible(@IntRange(from = 0, to = 100) int thresholdPercentage) {
@@ -176,11 +187,11 @@ class EpoxyVisibilityItem {
     final int visibleArea = visibleHeight * visibleWidth;
     final float visibleAreaPercentage = (visibleArea / (float) totalArea) * 100;
 
-    return visibleAreaPercentage >= thresholdPercentage;
+    return viewVisibility == View.VISIBLE && visibleAreaPercentage >= thresholdPercentage;
   }
 
   private boolean isFullyVisible() {
-    return visibleHeight == height && visibleWidth == width;
+    return viewVisibility == View.VISIBLE && visibleHeight == height && visibleWidth == width;
   }
 
   void shiftBy(int offsetPosition) {

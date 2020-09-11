@@ -56,6 +56,10 @@ dependencies {
   testImplementation rootProject.deps.mockito
   testImplementation rootProject.deps.mockito_inline
   testImplementation rootProject.deps.androidTestCore
+  testImplementation rootProject.deps.androidTestExtJunitKtx
+  testImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha2', {
+    exclude group: 'com.android.support', module: 'support-annotations'
+  })
 }
 
 repositories {
