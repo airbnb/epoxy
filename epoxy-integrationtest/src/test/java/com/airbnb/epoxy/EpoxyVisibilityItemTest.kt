@@ -115,7 +115,7 @@ class EpoxyVisibilityItemTest {
     }
 
     @Test
-    fun testHandleVisible_subsequentHandling() {
+    fun testHandleVisible_subsequentCall() {
         activityRule.scenario.onActivity {
             val item = it.createViewAndUpdate()
 
@@ -127,11 +127,27 @@ class EpoxyVisibilityItemTest {
     }
 
     @Test
-    fun testHandleVisible_viewVisibilityGone() {
+    fun testHandleVisible_viewInitiallyGone() {
         activityRule.scenario.onActivity {
-            val item = it.createViewAndUpdate { view ->
-                view.visibility = View.GONE
-            }
+            val item = it.createViewAndUpdate(
+                onPreViewAdded = { view ->
+                    view.visibility = View.GONE
+                }
+            )
+
+            item.handleVisible(mockEpoxyHolder, false)
+            verifyNoInteractions(mockEpoxyHolder)
+        }
+    }
+
+    @Test
+    fun testHandleVisible_viewTransitionToGone() {
+        activityRule.scenario.onActivity {
+            val item = it.createViewAndUpdate(
+                onPostViewAdded = { view ->
+                    view.visibility = View.GONE
+                }
+            )
 
             item.handleVisible(mockEpoxyHolder, false)
             verifyNoInteractions(mockEpoxyHolder)
@@ -161,11 +177,27 @@ class EpoxyVisibilityItemTest {
     }
 
     @Test
-    fun testHandleFocus_viewVisibilityGone() {
+    fun testHandleFocus_viewInitiallyGone() {
         activityRule.scenario.onActivity {
-            val item = it.createViewAndUpdate { view ->
-                view.visibility = View.GONE
-            }
+            val item = it.createViewAndUpdate(
+                onPreViewAdded = { view ->
+                    view.visibility = View.GONE
+                }
+            )
+
+            item.handleFocus(mockEpoxyHolder, false)
+            verifyNoInteractions(mockEpoxyHolder)
+        }
+    }
+
+    @Test
+    fun testHandleFocus_viewTransitionToGone() {
+        activityRule.scenario.onActivity {
+            val item = it.createViewAndUpdate(
+                onPostViewAdded = { view ->
+                    view.visibility = View.GONE
+                }
+            )
 
             item.handleFocus(mockEpoxyHolder, false)
             verifyNoInteractions(mockEpoxyHolder)
@@ -195,13 +227,29 @@ class EpoxyVisibilityItemTest {
     }
 
     @Test
-    fun testHandlePartialImpressionVisible_viewVisibilityGone() {
+    fun testHandlePartialImpressionVisible_viewInitiallyGone() {
         activityRule.scenario.onActivity {
-            val item = it.createViewAndUpdate { view ->
-                view.visibility = View.GONE
-            }
+            val item = it.createViewAndUpdate(
+                onPreViewAdded = { view ->
+                    view.visibility = View.GONE
+                }
+            )
 
-            item.handlePartialImpressionVisible(mockEpoxyHolder, false, 50)
+            item.handlePartialImpressionVisible(mockEpoxyHolder, false, 100)
+            verifyNoInteractions(mockEpoxyHolder)
+        }
+    }
+
+    @Test
+    fun testHandlePartialImpressionVisible_viewTransitionToGone() {
+        activityRule.scenario.onActivity {
+            val item = it.createViewAndUpdate(
+                onPostViewAdded = { view ->
+                    view.visibility = View.GONE
+                }
+            )
+
+            item.handlePartialImpressionVisible(mockEpoxyHolder, false, 100)
             verifyNoInteractions(mockEpoxyHolder)
         }
     }
@@ -229,11 +277,27 @@ class EpoxyVisibilityItemTest {
     }
 
     @Test
-    fun testHandleFullImpressionVisible_viewVisibilityGone() {
+    fun testHandleFullImpressionVisible_viewInitiallyGone() {
         activityRule.scenario.onActivity {
-            val item = it.createViewAndUpdate { view ->
-                view.visibility = View.GONE
-            }
+            val item = it.createViewAndUpdate(
+                onPreViewAdded = { view ->
+                    view.visibility = View.GONE
+                }
+            )
+
+            item.handleFullImpressionVisible(mockEpoxyHolder, false)
+            verifyNoInteractions(mockEpoxyHolder)
+        }
+    }
+
+    @Test
+    fun testHandleFullImpressionVisible_viewTransitionToGone() {
+        activityRule.scenario.onActivity {
+            val item = it.createViewAndUpdate(
+                onPostViewAdded = { view ->
+                    view.visibility = View.GONE
+                }
+            )
 
             item.handleFullImpressionVisible(mockEpoxyHolder, false)
             verifyNoInteractions(mockEpoxyHolder)
@@ -263,11 +327,27 @@ class EpoxyVisibilityItemTest {
     }
 
     @Test
-    fun testHandleChanged_viewVisibilityGone() {
+    fun testHandleChanged_viewInitiallyGone() {
         activityRule.scenario.onActivity {
-            val item = it.createViewAndUpdate { view ->
-                view.visibility = View.GONE
-            }
+            val item = it.createViewAndUpdate(
+                onPreViewAdded = { view ->
+                    view.visibility = View.GONE
+                }
+            )
+
+            item.handleChanged(mockEpoxyHolder, true)
+            verify(mockEpoxyHolder).visibilityChanged(eq(0f), eq(0f), eq(0), eq(0))
+        }
+    }
+
+    @Test
+    fun testHandleChanged_viewTransitionToGone() {
+        activityRule.scenario.onActivity {
+            val item = it.createViewAndUpdate(
+                onPostViewAdded = { view ->
+                    view.visibility = View.GONE
+                }
+            )
 
             item.handleChanged(mockEpoxyHolder, true)
             verify(mockEpoxyHolder).visibilityChanged(eq(0f), eq(0f), eq(0), eq(0))
@@ -280,19 +360,23 @@ class EpoxyVisibilityItemTest {
      * * Creates a [View] and adds it to the [FrameLayout]. Default size is 100px x 100px.
      * * Creates and returns an [EpoxyVisibilityItem] and calls [EpoxyVisibilityItem.update] on it.
      *
-     * @param viewBuilder this is invoked before the view is added to the [FrameLayout] so use this
-     * to customize the view (e.g set visibility, change size, etc).
+     * @param onPreViewAdded invoked before the view is added to the [FrameLayout]. Use this to
+     * customize the view (e.g set visibility, change size, etc).
+     * @param onPostViewAdded invoked after the view is added to the [FrameLayout]. Use this to
+     * customize the view (e.g set visibility, change size, etc).
      */
     private fun TestActivity.createViewAndUpdate(
         detachEvent: Boolean = false,
-        viewBuilder: (View) -> (Unit) = {}
+        onPreViewAdded: (View) -> (Unit) = {},
+        onPostViewAdded: (View) -> (Unit) = {}
     ): EpoxyVisibilityItem {
         val frameLayout = FrameLayout(this)
         setContentView(frameLayout)
         val view = View(frameLayout.context).apply {
             layoutParams = FrameLayout.LayoutParams(100, 100)
-            viewBuilder.invoke(this)
+            onPreViewAdded.invoke(this)
             frameLayout.addView(this)
+            onPostViewAdded.invoke(this)
         }
 
         return EpoxyVisibilityItem().apply {
