@@ -22,13 +22,13 @@ Gradle is the only supported build configuration, so just add the dependency to 
 
 ```groovy
 dependencies {
-  implementation 'com.airbnb.android:epoxy:3.x.y'
+  implementation "com.airbnb.android:epoxy:$epoxyVersion"
   // Add the annotation processor if you are using Epoxy's annotations (recommended)
-  annotationProcessor 'com.airbnb.android:epoxy-processor:3.x.y'
+  annotationProcessor "com.airbnb.android:epoxy-processor:$epoxyVersion"
 }
 ```
 
-Replace `x` and `y` with the latest version number: [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.airbnb.android/epoxy/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.airbnb.android/epoxy)
+Replace the variable `$epoxyVersion` with the latest version : [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.airbnb.android/epoxy/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.airbnb.android/epoxy)
 
 See the [releases page](https://github.com/airbnb/epoxy/releases) for up to date release versions and details
 
