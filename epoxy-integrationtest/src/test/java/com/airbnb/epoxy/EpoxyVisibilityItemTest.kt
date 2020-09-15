@@ -1,5 +1,6 @@
 package com.airbnb.epoxy
 
+import android.app.Activity
 import android.view.View
 import android.widget.FrameLayout
 import androidx.test.ext.junit.rules.activityScenarioRule
@@ -354,33 +355,78 @@ class EpoxyVisibilityItemTest {
         }
     }
 
+    @Test
+    fun testHandleChanged_goneTransitionsToVisible() {
+        activityRule.scenario.onActivity {
+            val wrapper = EpoxyVisibilityItemWrapper(
+                activity = it,
+                onPostViewAdded = { view ->
+                    view.visibility = View.GONE
+                }
+            )
+            val item = wrapper.item
+
+            item.handleChanged(mockEpoxyHolder, true)
+            verify(mockEpoxyHolder).visibilityChanged(eq(0f), eq(0f), eq(0), eq(0))
+
+            // Change visibility and update the item
+            wrapper.view.visibility = View.VISIBLE
+            item.update(wrapper.view, wrapper.rootLayout, false)
+
+            // Ensure holder is is notified
+            item.handleChanged(mockEpoxyHolder, true)
+            verify(mockEpoxyHolder).visibilityChanged(eq(100f), eq(100f), eq(100), eq(100))
+            verifyNoMoreInteractions(mockEpoxyHolder)
+        }
+    }
+
     /**
-     * Helper function that:
-     * * Creates a [FrameLayout] and sets it as the content view in the activity.
-     * * Creates a [View] and adds it to the [FrameLayout]. Default size is 100px x 100px.
-     * * Creates and returns an [EpoxyVisibilityItem] and calls [EpoxyVisibilityItem.update] on it.
+     * This class wraps an [EpoxyVisibilityItem] and contains references to the views needed to
+     * perform subsequent [EpoxyVisibilityItem.update] calls. This will:
+     * * Create a [FrameLayout] and set it as the content view in the activity.
+     * * Create a [View] and add it to the [FrameLayout]. Default size is 100px x 100px.
+     * * Create an [EpoxyVisibilityItem] and call [EpoxyVisibilityItem.update] on it.
      *
      * @param onPreViewAdded invoked before the view is added to the [FrameLayout]. Use this to
      * customize the view (e.g set visibility, change size, etc).
      * @param onPostViewAdded invoked after the view is added to the [FrameLayout]. Use this to
      * customize the view (e.g set visibility, change size, etc).
      */
+    private class EpoxyVisibilityItemWrapper(
+        activity: Activity,
+        detachEvent: Boolean = false,
+        onPreViewAdded: (View) -> (Unit) = {},
+        onPostViewAdded: (View) -> (Unit) = {},
+    ) {
+
+        val rootLayout: FrameLayout = FrameLayout(activity)
+        val view: View
+        val item: EpoxyVisibilityItem
+
+        init {
+            activity.setContentView(rootLayout)
+            view = View(rootLayout.context).apply {
+                layoutParams = FrameLayout.LayoutParams(100, 100)
+                onPreViewAdded.invoke(this)
+                rootLayout.addView(this)
+                onPostViewAdded.invoke(this)
+            }
+
+            item = EpoxyVisibilityItem().apply {
+                update(view, rootLayout, detachEvent)
+            }
+        }
+    }
+
+    /**
+     * Helper function that gets the [EpoxyVisibilityItem] from the [EpoxyVisibilityItemWrapper]
+     * for simple tests.
+     */
     private fun TestActivity.createViewAndUpdate(
         detachEvent: Boolean = false,
         onPreViewAdded: (View) -> (Unit) = {},
         onPostViewAdded: (View) -> (Unit) = {}
     ): EpoxyVisibilityItem {
-        val frameLayout = FrameLayout(this)
-        setContentView(frameLayout)
-        val view = View(frameLayout.context).apply {
-            layoutParams = FrameLayout.LayoutParams(100, 100)
-            onPreViewAdded.invoke(this)
-            frameLayout.addView(this)
-            onPostViewAdded.invoke(this)
-        }
-
-        return EpoxyVisibilityItem().apply {
-            update(view, frameLayout, detachEvent)
-        }
+        return EpoxyVisibilityItemWrapper(this, detachEvent, onPreViewAdded, onPostViewAdded).item
     }
 }

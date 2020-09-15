@@ -52,6 +52,7 @@ class EpoxyVisibilityItem {
   /** Store last value for de-duping */
   private int lastVisibleHeightNotified = NOT_NOTIFIED;
   private int lastVisibleWidthNotified = NOT_NOTIFIED;
+  private int lastVisibilityNotified = NOT_NOTIFIED;
 
   EpoxyVisibilityItem() {
   }
@@ -92,6 +93,7 @@ class EpoxyVisibilityItem {
     adapterPosition = newAdapterPosition;
     lastVisibleHeightNotified = NOT_NOTIFIED;
     lastVisibleWidthNotified = NOT_NOTIFIED;
+    lastVisibilityNotified = NOT_NOTIFIED;
   }
 
   void handleVisible(@NonNull EpoxyViewHolder epoxyHolder, boolean detachEvent) {
@@ -143,7 +145,8 @@ class EpoxyVisibilityItem {
 
   boolean handleChanged(EpoxyViewHolder epoxyHolder, boolean visibilityChangedEnabled) {
     boolean changed = false;
-    if (visibleHeight != lastVisibleHeightNotified || visibleWidth != lastVisibleWidthNotified) {
+    if (visibleHeight != lastVisibleHeightNotified || visibleWidth != lastVisibleWidthNotified
+        || viewVisibility != lastVisibilityNotified) {
       if (visibilityChangedEnabled) {
         if (viewVisibility == View.GONE) {
           epoxyHolder.visibilityChanged(0f, 0f, 0, 0);
@@ -157,6 +160,7 @@ class EpoxyVisibilityItem {
       }
       lastVisibleHeightNotified = visibleHeight;
       lastVisibleWidthNotified = visibleWidth;
+      lastVisibilityNotified = viewVisibility;
       changed = true;
     }
     return changed;
