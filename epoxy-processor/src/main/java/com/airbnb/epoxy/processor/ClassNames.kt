@@ -1,5 +1,6 @@
 package com.airbnb.epoxy.processor
 
+import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.ClassName.get
 
 object ClassNames {
@@ -53,6 +54,20 @@ object ClassNames {
     val PARIS_STYLE_UTILS = get(PKG_PARIS, "StyleApplierUtils", "Companion")!!
     @JvmField
     val PARIS_STYLE = get("$PKG_PARIS.styles", "Style")!!
+
+    val EPOXY_VIEW_HOLDER = ClassName.bestGuess(Utils.EPOXY_VIEW_HOLDER_TYPE)
+
+    val EPOXY_GENERATED_MODEL_INTERFACE = ClassName.bestGuess(Utils.GENERATED_MODEL_INTERFACE)
+
+    val EPOXY_ON_BIND_MODEL_LISTENER = ClassName.bestGuess(Utils.ON_BIND_MODEL_LISTENER_TYPE)
+    val EPOXY_ON_UNBIND_MODEL_LISTENER = ClassName.bestGuess(Utils.ON_UNBIND_MODEL_LISTENER_TYPE)
+    val EPOXY_ON_VISIBILITY_STATE_MODEL_LISTENER = ClassName.bestGuess(Utils.ON_VISIBILITY_STATE_MODEL_LISTENER_TYPE)
+    val EPOXY_ON_VISIBILITY_MODEL_LISTENER = ClassName.bestGuess(Utils.ON_VISIBILITY_MODEL_LISTENER_TYPE)
+    val EPOXY_WRAPPED_CHECKED_LISTENER = ClassName.bestGuess(Utils.WRAPPED_CHECKED_LISTENER_TYPE)
+    val EPOXY_WRAPPED_LISTENER = ClassName.bestGuess(Utils.WRAPPED_LISTENER_TYPE)
+    val EPOXY_MODEL_CLICK_LISTENER = ClassName.bestGuess(Utils.MODEL_CLICK_LISTENER_TYPE)
+    val EPOXY_MODEL_LONG_CLICK_LISTENER = ClassName.bestGuess(Utils.MODEL_LONG_CLICK_LISTENER_TYPE)
+    val EPOXY_MODEL_CHECKED_CHANGE_LISTENER = ClassName.bestGuess(Utils.MODEL_CHECKED_CHANGE_LISTENER_TYPE)
 }
 
 const val DEPRECATED = "Deprecated"

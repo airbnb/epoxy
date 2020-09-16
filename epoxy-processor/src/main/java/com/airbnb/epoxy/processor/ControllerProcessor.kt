@@ -1,6 +1,7 @@
 package com.airbnb.epoxy.processor
 
 import com.airbnb.epoxy.AutoModel
+import com.airbnb.epoxy.processor.ClassNames.EPOXY_MODEL_UNTYPED
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.JavaFile
@@ -81,7 +82,7 @@ class ControllerProcessor : BaseProcessorWithPackageConfigs() {
                 if (!Utils.isSubtype(thisClass, otherClass, typeUtils)) {
                     continue
                 }
-                val otherControllerModelFields: Set<ControllerModelField> = controllerInfo.models
+                val otherControllerModelFields: Set<ControllerModelField> = controllerInfo.modelsImmutable
                 if (Utils.belongToTheSamePackage(
                     thisClass,
                     otherClass,
@@ -245,7 +246,7 @@ class ControllerProcessor : BaseProcessorWithPackageConfigs() {
         for (model in controllerInfo.models) {
             fields.add(
                 FieldSpec.builder(
-                    Utils.getClassName(Utils.UNTYPED_EPOXY_MODEL_TYPE),
+                    ClassNames.EPOXY_MODEL_UNTYPED,
                     model.fieldName, Modifier.PRIVATE
                 ).build()
             )
@@ -274,11 +275,11 @@ class ControllerProcessor : BaseProcessorWithPackageConfigs() {
         return MethodSpec.methodBuilder("validateSameModel")
             .addModifiers(Modifier.PRIVATE)
             .addParameter(
-                Utils.getClassName(Utils.UNTYPED_EPOXY_MODEL_TYPE),
+                EPOXY_MODEL_UNTYPED,
                 "expectedObject"
             )
             .addParameter(
-                Utils.getClassName(Utils.UNTYPED_EPOXY_MODEL_TYPE),
+                EPOXY_MODEL_UNTYPED,
                 "actualObject"
             )
             .addParameter(String::class.java, "fieldName")

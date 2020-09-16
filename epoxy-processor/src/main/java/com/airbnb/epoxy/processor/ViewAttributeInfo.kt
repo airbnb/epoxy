@@ -56,9 +56,9 @@ class ViewAttributeInfo(
     var constantFieldNameForDefaultValue: String? = null
 
     init {
-        val propAnnotation = viewAttributeElement.getAnnotation(ModelProp::class.java)
-        val textAnnotation = viewAttributeElement.getAnnotation(TextProp::class.java)
-        val callbackAnnotation = viewAttributeElement.getAnnotation(CallbackProp::class.java)
+        val propAnnotation = viewAttributeElement.getAnnotation<ModelProp>()
+        val textAnnotation = viewAttributeElement.getAnnotation<TextProp>()
+        val callbackAnnotation = viewAttributeElement.getAnnotation<CallbackProp>()
 
         val options = HashSet<Option>()
         val param: VariableElement = when (viewAttributeElement) {
@@ -214,7 +214,7 @@ class ViewAttributeInfo(
     }
 
     private fun isMarkedNullable(paramElement: VariableElement) =
-        paramElement.annotationMirrors.any {
+        paramElement.annotationMirrorsThreadSafe.any {
             // There are multiple packages/frameworks that define a Nullable annotation and we want
             // to support all of them. We just check for a class named Nullable and ignore the
             // package.
@@ -272,7 +272,7 @@ class ViewAttributeInfo(
     ): Boolean {
         if (element.kind == ElementKind.FIELD && element.simpleName.toString() == constantName) {
 
-            val modifiers = element.modifiers
+            val modifiers = element.modifiersThreadSafe
             if (!modifiers.contains(Modifier.FINAL) ||
                 !modifiers.contains(Modifier.STATIC) ||
                 modifiers.contains(Modifier.PRIVATE)

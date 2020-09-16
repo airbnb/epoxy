@@ -85,7 +85,7 @@ internal class KotlinModelBuilderExtensionWriter(
 
         val initializerLambda = LambdaTypeName.get(
             receiver = getBuilderInterfaceTypeName(model).toKPoet(),
-            returnType = ClassName.bestGuess("kotlin.Unit")
+            returnType = KClassNames.KOTLIN_UNIT
         )
 
         FunSpec.builder(getMethodName(model)).run {

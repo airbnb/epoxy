@@ -7,9 +7,13 @@ import com.sun.tools.javac.code.Symbol
 import com.sun.tools.javac.code.Type
 import javax.annotation.processing.Filer
 import javax.annotation.processing.RoundEnvironment
+import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
+import javax.lang.model.element.Modifier
+import javax.lang.model.element.Parameterizable
 import javax.lang.model.element.TypeElement
+import javax.lang.model.element.TypeParameterElement
 import javax.lang.model.element.VariableElement
 import javax.lang.model.type.TypeMirror
 import javax.tools.StandardLocation
@@ -89,7 +93,7 @@ val Element.enclosedElementsThreadSafe: List<Element>
 
 val ExecutableElement.parametersThreadSafe: List<VariableElement>
     get() {
-        return if (!synchronizationEnabled || (this is Symbol.MethodSymbol && params != null)) {
+        return if (!synchronizationEnabled) {
             parameters
         } else {
             ensureLoaded()
@@ -100,6 +104,53 @@ val ExecutableElement.parametersThreadSafe: List<VariableElement>
             }
         }
     }
+
+val Parameterizable.typeParametersThreadSafe: List<TypeParameterElement>
+    get() {
+        return if (!synchronizationEnabled) {
+            typeParameters
+        } else {
+            ensureLoaded()
+            // After being initially loaded, typeParameters are lazily built into a list and stored
+            // as a class field
+            synchronizedForTypeLookup {
+                typeParameters.onEach { it.ensureLoaded() }
+            }
+        }
+    }
+
+val Element.modifiersThreadSafe: Set<Modifier>
+    get() {
+        ensureLoaded()
+        return modifiers
+    }
+
+val ExecutableElement.isVarArgsThreadSafe: Boolean
+    get() {
+        ensureLoaded()
+        return isVarArgs
+    }
+
+val Element.annotationMirrorsThreadSafe: List<AnnotationMirror>
+    get() {
+        return if (!synchronizationEnabled) {
+            annotationMirrors
+        } else {
+            ensureLoaded()
+            synchronizedForTypeLookup {
+                annotationMirrors
+            }
+        }
+    }
+
+fun <A : Annotation> Element.getAnnotationThreadSafe(annotationClass: Class<A>): A? {
+    // Getting an annotation internally accesses type mirrors, so we have to make sure those are loaded first.
+    annotationMirrorsThreadSafe
+    return getAnnotation(annotationClass)
+}
+
+inline fun <reified A : Annotation> Element.getAnnotation(): A? =
+    getAnnotationThreadSafe(A::class.java)
 
 // Copied from javapoet and made threadsafe
 fun JavaFile.writeSynchronized(filer: Filer) {
@@ -154,7 +205,10 @@ fun FileSpec.writeSynchronized(filer: Filer) {
     }
 }
 
-suspend fun RoundEnvironment.getElementsAnnotatedWith(logger: Logger, annotation: KClass<out Annotation>): Set<Element> {
+suspend fun RoundEnvironment.getElementsAnnotatedWith(
+    logger: Logger,
+    annotation: KClass<out Annotation>
+): Set<Element> {
     return logger.measure("get annotations: ${annotation.simpleName}") {
         getElementsAnnotatedWith(annotation.java).onEach { it.ensureLoaded() }
     }

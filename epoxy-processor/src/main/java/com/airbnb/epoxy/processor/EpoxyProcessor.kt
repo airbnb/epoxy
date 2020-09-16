@@ -72,7 +72,7 @@ class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
 
         val styleableModels = modelInfos.map("Check for styleable") { modelInfo ->
             if (modelInfo is BasicGeneratedModelInfo &&
-                modelInfo.superClassElement.annotation<EpoxyModelClass>()?.layout == 0 &&
+                modelInfo.superClassElement.getAnnotation<EpoxyModelClass>()?.layout == 0 &&
                 modelInfo.boundObjectTypeElement?.hasStyleableAnnotation(elementUtils) == true
             ) {
                 modelInfo
@@ -113,7 +113,7 @@ class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
     ): GeneratedModelInfo = synchronizedByElement(classElement) {
         modelClassMap[classElement]?.let { return it }
 
-        val isFinal = classElement.modifiers.contains(Modifier.FINAL)
+        val isFinal = classElement.modifiersThreadSafe.contains(Modifier.FINAL)
         if (isFinal) {
             logger.logError(
                 "Class with %s annotations cannot be final: %s",
@@ -123,7 +123,7 @@ class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
 
         // Nested classes must be static
         if (classElement.nestingKind.isNested) {
-            if (!classElement.modifiers.contains(Modifier.STATIC)) {
+            if (!classElement.modifiersThreadSafe.contains(Modifier.STATIC)) {
                 logger.logError(
                     "Nested model classes must be static. (class: %s)",
                     classElement.simpleName
@@ -139,7 +139,7 @@ class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
             )
         }
 
-        if (configManager.requiresAbstractModels(classElement) && !classElement.modifiers.contains(
+        if (configManager.requiresAbstractModels(classElement) && !classElement.modifiersThreadSafe.contains(
             Modifier.ABSTRACT
         )
         ) {
@@ -208,7 +208,7 @@ class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
                     Utils.isSubtype(thisModelClass, otherClass, typeUtils)
                 }
                 .forEach { (otherClass, modelInfo) ->
-                    val otherAttributes = modelInfo.attributeInfo
+                    val otherAttributes = modelInfo.attributeInfoImmutable
 
                     if (Utils.belongToTheSamePackage(thisModelClass, otherClass, elementUtils)) {
                         generatedModelInfo.addAttributes(otherAttributes)

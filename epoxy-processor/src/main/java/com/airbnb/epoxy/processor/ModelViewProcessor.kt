@@ -104,7 +104,7 @@ class ModelViewProcessor : BaseProcessorWithPackageConfigs() {
             return false
         }
 
-        val modifiers = viewElement.getModifiers()
+        val modifiers = viewElement.modifiersThreadSafe
         if (modifiers.contains(PRIVATE)) {
             logger.logError(
                 "${ModelView::class.java} annotations must not be on private classes. " +
@@ -255,8 +255,8 @@ class ModelViewProcessor : BaseProcessorWithPackageConfigs() {
 
     private fun validateVariableElement(field: Element, annotationClass: Class<*>): Boolean {
         val isValidField = field.kind == ElementKind.FIELD &&
-            !field.modifiers.contains(PRIVATE) &&
-            !field.modifiers.contains(STATIC)
+            !field.modifiersThreadSafe.contains(PRIVATE) &&
+            !field.modifiersThreadSafe.contains(STATIC)
 
         if (!isValidField) {
             logger.logError(
@@ -309,7 +309,7 @@ class ModelViewProcessor : BaseProcessorWithPackageConfigs() {
             }
         }
 
-        val modifiers = element.modifiers
+        val modifiers = element.modifiersThreadSafe
         if (modifiers.contains(STATIC) || modifiers.contains(PRIVATE)) {
             logger.logError(
                 "Methods annotated with %s cannot be private or static (method: %s)",

@@ -5,6 +5,7 @@ import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterSpec
 import java.util.Objects
 import javax.lang.model.AnnotatedConstruct
+import javax.lang.model.element.Element
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
@@ -62,7 +63,7 @@ internal fun addBindStyleCodeIfNeeded(
     }
 }
 
-internal fun AnnotatedConstruct.hasStyleableAnnotation(elements: Elements) = annotationMirrors
+internal fun Element.hasStyleableAnnotation(elements: Elements) = annotationMirrorsThreadSafe
     .map { it.annotationType.asElement() }
     .any {
         it.simpleName.toString() == "Styleable" &&

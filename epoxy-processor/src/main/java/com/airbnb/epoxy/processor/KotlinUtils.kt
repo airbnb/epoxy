@@ -128,11 +128,11 @@ fun TypeElement.executableElements() =
     enclosedElementsThreadSafe.filterIsInstance<ExecutableElement>()
 
 /** @return Whether at least one of the given annotations is present on the receiver. */
-fun AnnotatedConstruct.hasAnyAnnotation(annotationClasses: List<KClass<out Annotation>>) =
+fun Element.hasAnyAnnotation(annotationClasses: List<KClass<out Annotation>>) =
     synchronizedForTypeLookup {
         annotationClasses.any {
             try {
-                getAnnotation(it.java) != null
+                getAnnotationThreadSafe(it.java) != null
             } catch (e: MirroredTypeException) {
                 // This will be thrown if the annotation contains a param of type Class. This is fine,
                 // it still means that the annotation is present
@@ -140,12 +140,6 @@ fun AnnotatedConstruct.hasAnyAnnotation(annotationClasses: List<KClass<out Annot
             }
         }
     }
-
-fun AnnotatedConstruct.hasAnnotation(annotationClass: KClass<out Annotation>) =
-    hasAnyAnnotation(listOf(annotationClass))
-
-inline fun <reified T : Annotation> AnnotatedConstruct.annotation(): T? =
-    getAnnotation(T::class.java)
 
 /** Creates a new version of the classname where the simple name has the given suffix added to it.
  *
@@ -201,8 +195,6 @@ fun Element.iterateSuperClasses(
     }
 }
 
-inline fun <reified T : Annotation> Element.annotation(): T? = getAnnotation(T::class.java)
-
 /**
  * Returns a list of annotations specs representing annotations on the given type element.
  *
@@ -220,7 +212,7 @@ fun TypeElement.buildAnnotationSpecs(
             annotationFilter(className)
         }
     }
-    return annotationMirrors
+    return annotationMirrorsThreadSafe
         .map { AnnotationSpec.get(it) }
         .filter { internalAnnotationFilter(it.type as ClassName) }
 }

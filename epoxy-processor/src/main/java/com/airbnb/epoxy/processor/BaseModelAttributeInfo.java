@@ -49,7 +49,8 @@ class BaseModelAttributeInfo extends AttributeInfo {
     this.setHasFinalModifier(attribute.getModifiers().contains(FINAL));
     this.setPackagePrivate(isFieldPackagePrivate(attribute));
 
-    EpoxyAttribute annotation = attribute.getAnnotation(EpoxyAttribute.class);
+    EpoxyAttribute annotation =
+        SynchronizationKt.getAnnotationThreadSafe(attribute, EpoxyAttribute.class);
 
     Set<Option> options = new HashSet<>(Arrays.asList(annotation.value()));
     validateAnnotationOptions(logger, annotation, options);
@@ -68,7 +69,7 @@ class BaseModelAttributeInfo extends AttributeInfo {
       findGetterAndSetterForPrivateField(logger);
     }
 
-    buildAnnotationLists(attribute.getAnnotationMirrors());
+    buildAnnotationLists(SynchronizationKt.getAnnotationMirrorsThreadSafe(attribute));
   }
 
   /**
@@ -198,7 +199,8 @@ class BaseModelAttributeInfo extends AttributeInfo {
       DeclaredType annotationType = annotationMirror.getAnnotationType();
       // A target may exist on an annotation type to specify where the annotation can
       // be used, for example fields, methods, or parameters.
-      Target targetAnnotation = annotationType.asElement().getAnnotation(Target.class);
+      Target targetAnnotation =
+          SynchronizationKt.getAnnotationThreadSafe(annotationType.asElement(), Target.class);
 
       // Allow all target types if no target was specified on the annotation
       List<ElementType> elementTypes =

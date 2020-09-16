@@ -111,10 +111,6 @@ internal object Utils {
         }?.ensureLoaded()
     }
 
-    fun getClassName(className: String?): ClassName {
-        return ClassName.bestGuess(className)
-    }
-
     @JvmStatic
     fun buildEpoxyException(
         msg: String?,
@@ -249,7 +245,7 @@ internal object Utils {
      */
     @JvmStatic
     fun isFieldPackagePrivate(element: Element): Boolean {
-        val modifiers = element.modifiers
+        val modifiers = element.modifiersThreadSafe
         return (
             Modifier.PUBLIC !in modifiers &&
                 Modifier.PROTECTED !in modifiers &&
@@ -268,7 +264,7 @@ internal object Utils {
         elements: Elements
     ): Boolean {
         val methodOnClass = getMethodOnClass(clazz, method, typeUtils, elements) ?: return false
-        return Modifier.ABSTRACT !in methodOnClass.modifiers
+        return Modifier.ABSTRACT !in methodOnClass.modifiersThreadSafe
     }
 
     /**
@@ -281,7 +277,7 @@ internal object Utils {
         method: MethodSpec,
         typeUtils: Types,
         elements: Elements
-    ): ExecutableElement? {
+    ): ExecutableElement? = synchronizedForTypeLookup{
         if (clazz.asType().kind != TypeKind.DECLARED) {
             return null
         }
@@ -397,7 +393,7 @@ internal object Utils {
         val enclosingElement = fieldElement.enclosingElement as TypeElement
 
         // Verify method modifiers.
-        val modifiers = fieldElement.modifiers
+        val modifiers = fieldElement.modifiersThreadSafe
         if (modifiers.contains(Modifier.PRIVATE) && !skipPrivateFieldCheck || modifiers.contains(
             Modifier.STATIC
         )
@@ -411,7 +407,7 @@ internal object Utils {
 
         // Nested classes must be static
         if (enclosingElement.nestingKind.isNested) {
-            if (!enclosingElement.modifiers.contains(Modifier.STATIC)) {
+            if (!enclosingElement.modifiersThreadSafe.contains(Modifier.STATIC)) {
                 logger.logError(
                     "Nested classes with %s annotations must be static. (class: %s, field: %s)",
                     annotationClass.simpleName,
@@ -430,7 +426,7 @@ internal object Utils {
         }
 
         // Verify containing class visibility is not private.
-        if (enclosingElement.modifiers.contains(Modifier.PRIVATE)) {
+        if (enclosingElement.modifiersThreadSafe.contains(Modifier.PRIVATE)) {
             logger.logError(
                 "%s annotations may not be contained in private classes. (class: %s, field: %s)",
                 annotationClass.simpleName,
@@ -499,7 +495,7 @@ internal object Utils {
         annotationClass: Class<out Annotation>
     ): AnnotationMirror? {
         val clazzName = annotationClass.name
-        return typeElement.annotationMirrors.firstOrNull { m ->
+        return typeElement.annotationMirrorsThreadSafe.firstOrNull { m ->
             m.annotationType.toString() == clazzName
         }
     }
