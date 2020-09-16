@@ -1,3 +1,6 @@
+# 4.1.0 (Sept , 2020)
+- Fix some synchronization issues with the parallel Epoxy processing option
+
 # 4.0.0 (Sept 5, 2020)
 
 ## New
