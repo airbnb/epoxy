@@ -192,9 +192,9 @@ class GeneratedModelWriter(
 
             var layoutDescription = ""
             for (
-            namePart in otherLayout.resourceName!!.substring(defaultLayoutNameLength).split(
-                "_".toRegex()
-            ).dropLastWhile { it.isEmpty() }
+                namePart in otherLayout.resourceName!!.substring(defaultLayoutNameLength).split(
+                    "_".toRegex()
+                ).dropLastWhile { it.isEmpty() }
             ) {
                 layoutDescription += Utils.capitalizeFirstLetter(namePart)
             }
@@ -1189,11 +1189,11 @@ class GeneratedModelWriter(
 
         // If the base method is already implemented don't bother checking for the payload method
         if (implementsMethod(
-                info.superClassElement,
-                bindVariablesMethod,
-                types,
-                elements
-            )
+            info.superClassElement,
+            bindVariablesMethod,
+            types,
+            elements
+        )
         ) {
             return emptyList()
         }
@@ -1268,8 +1268,8 @@ class GeneratedModelWriter(
         }
 
         val annotation = classElement.getAnnotation<EpoxyModelClass>()
-        // This is an error. The model must have an EpoxyModelClass annotation
-        // since getDefaultLayout is not implemented
+            // This is an error. The model must have an EpoxyModelClass annotation
+            // since getDefaultLayout is not implemented
             ?: return null
 
         val layoutRes: Int
@@ -1668,7 +1668,7 @@ class GeneratedModelWriter(
             .addStatement(
                 attribute.setterCode(),
                 if (hasMultipleParams)
-                    (attribute as MultiParamAttribute).valueToSetOnAttribute
+                (attribute as MultiParamAttribute).valueToSetOnAttribute
                 else
                     paramName
             )

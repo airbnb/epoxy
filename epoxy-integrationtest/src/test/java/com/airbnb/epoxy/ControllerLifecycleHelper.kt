@@ -3,7 +3,6 @@ package com.airbnb.epoxy
 import android.view.View
 import android.widget.FrameLayout
 import androidx.test.core.app.ApplicationProvider
-import org.mockito.Mockito
 
 internal class ControllerLifecycleHelper {
     private var viewHolder: EpoxyViewHolder? = null
@@ -38,7 +37,7 @@ internal class ControllerLifecycleHelper {
     companion object {
         @JvmStatic
         fun createViewHolder(adapter: BaseEpoxyAdapter, position: Int): EpoxyViewHolder {
-            return  adapter.onCreateViewHolder(
+            return adapter.onCreateViewHolder(
                 FrameLayout(ApplicationProvider.getApplicationContext()),
                 adapter.getItemViewType(position)
             )

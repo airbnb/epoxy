@@ -277,7 +277,7 @@ internal object Utils {
         method: MethodSpec,
         typeUtils: Types,
         elements: Elements
-    ): ExecutableElement? = synchronizedForTypeLookup{
+    ): ExecutableElement? = synchronizedForTypeLookup {
         if (clazz.asType().kind != TypeKind.DECLARED) {
             return null
         }
