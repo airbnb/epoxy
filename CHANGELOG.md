@@ -1,5 +1,6 @@
-# 4.1.0 (Sept , 2020)
+# 4.1.0 (Sept 17, 2020)
 - Fix some synchronization issues with the parallel Epoxy processing option
+- Add view visibility checks to EpoxyVisibilityItem and decouple RecyclerView #1052
 
 # 4.0.0 (Sept 5, 2020)
 
