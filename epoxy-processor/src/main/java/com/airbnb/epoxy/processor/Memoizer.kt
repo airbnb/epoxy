@@ -100,15 +100,14 @@ class Memoizer(
                         if (methodName == RESET_METHOD && params.isEmpty()) {
                             return@mapNotNull null
                         }
-                        val isEpoxyAttribute = castedSubElement.getAnnotation(
-                            EpoxyAttribute::class.java
-                        ) != null
+                        val isEpoxyAttribute =
+                            castedSubElement.getAnnotation<EpoxyAttribute>() != null
 
                         MethodInfo(
                             methodName,
                             modifiers,
                             buildParamSpecs(params),
-                            castedSubElement.isVarArgs,
+                            castedSubElement.isVarArgsThreadSafe,
                             isEpoxyAttribute,
                             castedSubElement
                         )
@@ -136,16 +135,16 @@ class Memoizer(
                     .enclosedElementsThreadSafe
                     .filter { subElement ->
                         subElement.kind == ElementKind.CONSTRUCTOR &&
-                            !subElement.modifiers.contains(Modifier.PRIVATE)
+                            !subElement.modifiersThreadSafe.contains(Modifier.PRIVATE)
                     }
                     .map { subElement ->
                         val constructor = subElement as ExecutableElement
                         val params: List<VariableElement> = constructor.parametersThreadSafe
 
                         GeneratedModelInfo.ConstructorInfo(
-                            subElement.getModifiers(),
+                            subElement.modifiersThreadSafe,
                             buildParamSpecs(params),
-                            constructor.isVarArgs
+                            constructor.isVarArgsThreadSafe
                         )
                     }
             }
@@ -184,7 +183,7 @@ class Memoizer(
     private fun validateSuperClassIsTypedCorrectly(classType: TypeElement): Boolean {
         val classElement = classType as? Parameterizable ?: return false
 
-        val typeParameters = classElement.typeParameters
+        val typeParameters = classElement.typeParametersThreadSafe
         if (typeParameters.size != 1) {
             // TODO: (eli_hart 6/15/17) It should be valid to have multiple or no types as long as they
             // are correct, but that should be a rare case
@@ -261,7 +260,7 @@ class Memoizer(
                 } else {
                     val attributes = classElement
                         .enclosedElementsThreadSafe
-                        .filter { it.getAnnotation(EpoxyAttribute::class.java) != null }
+                        .filter { it.getAnnotationThreadSafe(EpoxyAttribute::class.java) != null }
                         .map {
                             EpoxyProcessor.buildAttributeInfo(
                                 it,
@@ -316,7 +315,7 @@ class Memoizer(
                     val isPackagePrivate by lazy { Utils.isFieldPackagePrivate(element) }
 
                     viewModelAnnotations.forEach { annotation ->
-                        if (element.getAnnotation(annotation) != null) {
+                        if (element.getAnnotationThreadSafe(annotation) != null) {
                             annotatedElements
                                 .getOrPut(annotation) { mutableListOf() }
                                 .add(

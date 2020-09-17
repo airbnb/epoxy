@@ -15,6 +15,8 @@ class ControllerClassInfo(
 ) {
 
     val models: MutableSet<ControllerModelField> = HashSet()
+    val modelsImmutable: Set<ControllerModelField> get() = synchronized(models) { models.toSet() }
+
     val generatedClassName: ClassName = getGeneratedClassName(controllerClassElement)
     val controllerClassType: TypeName = controllerClassElement.asType().typeNameSynchronized()
 
@@ -26,11 +28,11 @@ class ControllerClassInfo(
             ?: emptyList()
     }
 
-    fun addModel(controllerModelField: ControllerModelField) {
+    fun addModel(controllerModelField: ControllerModelField) = synchronized(models) {
         models.add(controllerModelField)
     }
 
-    fun addModels(controllerModelFields: Collection<ControllerModelField>) {
+    fun addModels(controllerModelFields: Collection<ControllerModelField>) = synchronized(models) {
         models.addAll(controllerModelFields)
     }
 

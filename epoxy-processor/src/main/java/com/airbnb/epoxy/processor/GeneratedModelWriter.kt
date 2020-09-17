@@ -6,20 +6,6 @@ import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.processor.ClassNames.ANDROID_ASYNC_TASK
 import com.airbnb.epoxy.processor.ClassNames.EPOXY_MODEL_PROPERTIES
 import com.airbnb.epoxy.processor.ClassNames.PARIS_STYLE
-import com.airbnb.epoxy.processor.Utils.EPOXY_CONTROLLER_TYPE
-import com.airbnb.epoxy.processor.Utils.EPOXY_VIEW_HOLDER_TYPE
-import com.airbnb.epoxy.processor.Utils.GENERATED_MODEL_INTERFACE
-import com.airbnb.epoxy.processor.Utils.MODEL_CHECKED_CHANGE_LISTENER_TYPE
-import com.airbnb.epoxy.processor.Utils.MODEL_CLICK_LISTENER_TYPE
-import com.airbnb.epoxy.processor.Utils.MODEL_LONG_CLICK_LISTENER_TYPE
-import com.airbnb.epoxy.processor.Utils.ON_BIND_MODEL_LISTENER_TYPE
-import com.airbnb.epoxy.processor.Utils.ON_UNBIND_MODEL_LISTENER_TYPE
-import com.airbnb.epoxy.processor.Utils.ON_VISIBILITY_MODEL_LISTENER_TYPE
-import com.airbnb.epoxy.processor.Utils.ON_VISIBILITY_STATE_MODEL_LISTENER_TYPE
-import com.airbnb.epoxy.processor.Utils.UNTYPED_EPOXY_MODEL_TYPE
-import com.airbnb.epoxy.processor.Utils.WRAPPED_CHECKED_LISTENER_TYPE
-import com.airbnb.epoxy.processor.Utils.WRAPPED_LISTENER_TYPE
-import com.airbnb.epoxy.processor.Utils.getClassName
 import com.airbnb.epoxy.processor.Utils.implementsMethod
 import com.airbnb.epoxy.processor.Utils.isDataBindingModel
 import com.airbnb.epoxy.processor.Utils.isEpoxyModel
@@ -228,7 +214,7 @@ class GeneratedModelWriter(
 
     private fun getGeneratedModelInterface(info: GeneratedModelInfo): ParameterizedTypeName {
         return ParameterizedTypeName.get(
-            getClassName(GENERATED_MODEL_INTERFACE),
+            ClassNames.EPOXY_GENERATED_MODEL_INTERFACE,
             info.modelType
         )
     }
@@ -289,7 +275,7 @@ class GeneratedModelWriter(
 
         // Add fields for the bind/unbind listeners
         val onBindListenerType = ParameterizedTypeName.get(
-            getClassName(ON_BIND_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_BIND_MODEL_LISTENER,
             classInfo.parameterizedGeneratedName,
             classInfo.modelType
         )
@@ -301,7 +287,7 @@ class GeneratedModelWriter(
         )
 
         val onUnbindListenerType = ParameterizedTypeName.get(
-            getClassName(ON_UNBIND_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_UNBIND_MODEL_LISTENER,
             classInfo.parameterizedGeneratedName,
             classInfo.modelType
         )
@@ -313,7 +299,7 @@ class GeneratedModelWriter(
         )
 
         val onVisibilityStateChangedListenerType = ParameterizedTypeName.get(
-            getClassName(ON_VISIBILITY_STATE_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_VISIBILITY_STATE_MODEL_LISTENER,
             classInfo.parameterizedGeneratedName,
             classInfo.modelType
         )
@@ -326,7 +312,7 @@ class GeneratedModelWriter(
         )
 
         val onVisibilityChangedListenerType = ParameterizedTypeName.get(
-            getClassName(ON_VISIBILITY_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_VISIBILITY_MODEL_LISTENER,
             classInfo.parameterizedGeneratedName,
             classInfo.modelType
         )
@@ -371,7 +357,7 @@ class GeneratedModelWriter(
 
     private fun getModelClickListenerType(classInfo: GeneratedModelInfo): ParameterizedTypeName {
         return ParameterizedTypeName.get(
-            getClassName(MODEL_CLICK_LISTENER_TYPE),
+            ClassNames.EPOXY_MODEL_CLICK_LISTENER,
             classInfo.parameterizedGeneratedName,
             classInfo.modelType
         )
@@ -381,7 +367,7 @@ class GeneratedModelWriter(
         classInfo: GeneratedModelInfo
     ): ParameterizedTypeName {
         return ParameterizedTypeName.get(
-            getClassName(MODEL_LONG_CLICK_LISTENER_TYPE),
+            ClassNames.EPOXY_MODEL_LONG_CLICK_LISTENER,
             classInfo.parameterizedGeneratedName,
             classInfo.modelType
         )
@@ -391,7 +377,7 @@ class GeneratedModelWriter(
         classInfo: GeneratedModelInfo
     ): ParameterizedTypeName {
         return ParameterizedTypeName.get(
-            getClassName(MODEL_CHECKED_CHANGE_LISTENER_TYPE),
+            ClassNames.EPOXY_MODEL_CHECKED_CHANGE_LISTENER,
             classInfo.parameterizedGeneratedName,
             classInfo.modelType
         )
@@ -421,7 +407,7 @@ class GeneratedModelWriter(
         }
 
         classBuilder.addMethod("addTo") {
-            addParameter(getClassName(EPOXY_CONTROLLER_TYPE), "controller")
+            addParameter(ClassNames.EPOXY_CONTROLLER, "controller")
             addAnnotation(Override::class.java)
             addModifiers(PUBLIC)
             addStatement("super.addTo(controller)")
@@ -525,7 +511,7 @@ class GeneratedModelWriter(
         methods.add(buildVisibilityStateChangedMethod(builderHooks, visibilityObjectParam))
 
         val onVisibilityStateChangedListenerType = ParameterizedTypeName.get(
-            getClassName(ON_VISIBILITY_STATE_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_VISIBILITY_STATE_MODEL_LISTENER,
             modelInfo.parameterizedGeneratedName,
             modelInfo.modelType
         )
@@ -553,7 +539,7 @@ class GeneratedModelWriter(
         methods.add(buildVisibilityChangedMethod(builderHooks, visibilityObjectParam))
 
         val onVisibilityChangedListenerType = ParameterizedTypeName.get(
-            getClassName(ON_VISIBILITY_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_VISIBILITY_MODEL_LISTENER,
             modelInfo.parameterizedGeneratedName,
             modelInfo.modelType
         )
@@ -590,7 +576,7 @@ class GeneratedModelWriter(
         // Add bind/unbind methods so the class can set the epoxyModelBoundObject and
         // boundEpoxyViewHolder fields for the model click listener to access
 
-        val viewHolderType = getClassName(EPOXY_VIEW_HOLDER_TYPE)
+        val viewHolderType = ClassNames.EPOXY_VIEW_HOLDER
         val viewHolderParam = ParameterSpec.builder(viewHolderType, "holder", FINAL).build()
 
         val boundObjectParam = ParameterSpec.builder(modelInfo.modelType, "object", FINAL)
@@ -635,7 +621,7 @@ class GeneratedModelWriter(
         methods.add(postBind)
 
         val onBindListenerType = ParameterizedTypeName.get(
-            getClassName(ON_BIND_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_BIND_MODEL_LISTENER,
             modelInfo.parameterizedGeneratedName,
             modelInfo.modelType
         )
@@ -684,7 +670,7 @@ class GeneratedModelWriter(
         )
 
         val onUnbindListenerType = ParameterizedTypeName.get(
-            getClassName(ON_UNBIND_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_UNBIND_MODEL_LISTENER,
             modelInfo.parameterizedGeneratedName,
             modelInfo.modelType
         )
@@ -801,7 +787,7 @@ class GeneratedModelWriter(
     ) = buildMethod("bind") {
 
         val previousModelParam = ParameterSpec.builder(
-            getClassName(UNTYPED_EPOXY_MODEL_TYPE),
+            ClassNames.EPOXY_MODEL_UNTYPED,
             "previousModel"
         ).build()
 
@@ -1221,7 +1207,7 @@ class GeneratedModelWriter(
 
         val payloadMethodBuilder = bindVariablesMethod
             .toBuilder()
-            .addParameter(getClassName(UNTYPED_EPOXY_MODEL_TYPE), "previousModel")
+            .addParameter(ClassNames.EPOXY_MODEL_UNTYPED, "previousModel")
             .beginControlFlow(
                 "if (!(previousModel instanceof \$T))",
                 generatedModelClass
@@ -1281,9 +1267,8 @@ class GeneratedModelWriter(
             return null
         }
 
-        val annotation = classElement.getAnnotation(
-            EpoxyModelClass::class.java
-        ) // This is an error. The model must have an EpoxyModelClass annotation
+        val annotation = classElement.getAnnotation<EpoxyModelClass>()
+            // This is an error. The model must have an EpoxyModelClass annotation
             // since getDefaultLayout is not implemented
             ?: return null
 
@@ -1396,7 +1381,7 @@ class GeneratedModelWriter(
 
         val wrapperClickListenerConstructor = CodeBlock.of(
             "new \$T(\$L)",
-            getClassName(WRAPPED_LISTENER_TYPE),
+            ClassNames.EPOXY_WRAPPED_LISTENER,
             param.name
         )
 
@@ -1436,7 +1421,7 @@ class GeneratedModelWriter(
 
         val wrapperCheckedListenerConstructor = CodeBlock.of(
             "new \$T(\$L)",
-            getClassName(WRAPPED_CHECKED_LISTENER_TYPE),
+            ClassNames.EPOXY_WRAPPED_CHECKED_LISTENER,
             param.name
         )
 
@@ -1471,7 +1456,7 @@ class GeneratedModelWriter(
         startNotEqualsControlFlow(
             this,
             false,
-            getClassName(ON_BIND_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_BIND_MODEL_LISTENER,
             modelBindListenerFieldName()
         )
         addStatement("return false")
@@ -1480,7 +1465,7 @@ class GeneratedModelWriter(
         startNotEqualsControlFlow(
             this,
             false,
-            getClassName(ON_UNBIND_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_UNBIND_MODEL_LISTENER,
             modelUnbindListenerFieldName()
         )
         addStatement("return false")
@@ -1489,7 +1474,7 @@ class GeneratedModelWriter(
         startNotEqualsControlFlow(
             this,
             false,
-            getClassName(ON_VISIBILITY_STATE_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_VISIBILITY_STATE_MODEL_LISTENER,
             modelVisibilityStateChangedListenerFieldName()
         )
         addStatement("return false")
@@ -1498,7 +1483,7 @@ class GeneratedModelWriter(
         startNotEqualsControlFlow(
             this,
             false,
-            getClassName(ON_VISIBILITY_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_VISIBILITY_MODEL_LISTENER,
             modelVisibilityChangedListenerFieldName()
         )
         addStatement("return false")
@@ -1528,28 +1513,28 @@ class GeneratedModelWriter(
         addHashCodeLineForType(
             this,
             false,
-            getClassName(ON_BIND_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_BIND_MODEL_LISTENER,
             modelBindListenerFieldName()
         )
 
         addHashCodeLineForType(
             this,
             false,
-            getClassName(ON_UNBIND_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_UNBIND_MODEL_LISTENER,
             modelUnbindListenerFieldName()
         )
 
         addHashCodeLineForType(
             this,
             false,
-            getClassName(ON_VISIBILITY_STATE_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_VISIBILITY_STATE_MODEL_LISTENER,
             modelVisibilityStateChangedListenerFieldName()
         )
 
         addHashCodeLineForType(
             this,
             false,
-            getClassName(ON_VISIBILITY_MODEL_LISTENER_TYPE),
+            ClassNames.EPOXY_ON_VISIBILITY_MODEL_LISTENER,
             modelVisibilityChangedListenerFieldName()
         )
 
@@ -2095,7 +2080,7 @@ class GeneratedModelWriter(
                 elements
             ) ?: return false
 
-            if (Modifier.ABSTRACT in methodOnClass.modifiers) {
+            if (Modifier.ABSTRACT in methodOnClass.modifiersThreadSafe) {
                 return false
             }
 

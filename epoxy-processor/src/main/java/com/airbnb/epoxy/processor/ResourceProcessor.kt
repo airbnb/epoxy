@@ -182,7 +182,7 @@ class ResourceProcessor internal constructor(
         element: Element,
         annotationClass: Class<*>
     ): AnnotationMirror? {
-        for (annotationMirror in element.annotationMirrors) {
+        for (annotationMirror in element.annotationMirrorsThreadSafe) {
             if (annotationMirror.annotationType.toString()
                 == annotationClass.canonicalName
             ) {
@@ -363,7 +363,7 @@ class ResourceProcessor internal constructor(
         ): List<Int> {
             element.ensureLoaded()
             // We could do this in a more generic way if we ever need to support more annotation types
-            return when (val annotation = element.getAnnotation(annotationClass)) {
+            return when (val annotation = element.getAnnotationThreadSafe(annotationClass)) {
                 is EpoxyModelClass -> listOf(annotation.layout)
                 is EpoxyDataBindingLayouts -> {
                     annotation.value.toList()

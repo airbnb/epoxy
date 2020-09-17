@@ -17,6 +17,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.airbnb.epoxy.processor.KotlinUtilsKt.typeNameSynchronized;
 import static com.airbnb.epoxy.processor.SynchronizationKt.ensureLoaded;
 import static com.airbnb.epoxy.processor.Utils.getMethodOnClass;
 import static com.airbnb.epoxy.processor.Utils.isIterableType;
@@ -82,7 +83,7 @@ class HashCodeValidator {
       return;
     }
 
-    if (TypeName.get(mirror).isPrimitive()) {
+    if (typeNameSynchronized(mirror).isPrimitive()) {
       return;
     }
 
@@ -198,7 +199,7 @@ class HashCodeValidator {
    * discarded after compilation.
    */
   private boolean isAutoValueType(Element element) {
-    for (AnnotationMirror annotationMirror : element.getAnnotationMirrors()) {
+    for (AnnotationMirror annotationMirror : SynchronizationKt.getAnnotationMirrorsThreadSafe(element)) {
       DeclaredType annotationType = annotationMirror.getAnnotationType();
       boolean isAutoValue = isSubtypeOfType(annotationType, "com.google.auto.value.AutoValue");
       if (isAutoValue) {

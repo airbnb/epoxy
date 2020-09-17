@@ -109,7 +109,7 @@ class ConfigManager internal constructor(
                 )
                 continue
             }
-            val annotation = element.getAnnotation(PackageEpoxyConfig::class.java)
+            val annotation = element.getAnnotation<PackageEpoxyConfig>()!!
             configurationMap[packageName] = create(annotation)
         }
 
@@ -162,7 +162,7 @@ class ConfigManager internal constructor(
                 )
                 continue
             }
-            val annotation = element.getAnnotation(PackageModelViewConfig::class.java)
+            val annotation = element.getAnnotation<PackageModelViewConfig>()!!
             modelViewNamingMap[packageName] = PackageModelViewSettings(rClassName, annotation)
         }
 

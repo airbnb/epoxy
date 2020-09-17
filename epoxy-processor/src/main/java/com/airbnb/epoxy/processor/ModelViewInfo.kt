@@ -31,7 +31,7 @@ class ModelViewInfo(
     val visibilityStateChangedMethodNames = Collections.synchronizedSet(mutableSetOf<String>())
     val visibilityChangedMethodNames = Collections.synchronizedSet(mutableSetOf<String>())
     val afterPropsSetMethodNames = Collections.synchronizedSet(mutableSetOf<String>())
-    private val viewAnnotation: ModelView = viewElement.getAnnotation(ModelView::class.java)
+    private val viewAnnotation: ModelView = viewElement.getAnnotation<ModelView>()!!
     val kotlinMetadata: KotlinClassMetadata? = viewElement.kotlinMetadata()
 
     val functionsWithSingleDefaultParameter: List<KmFunction> =
@@ -63,7 +63,7 @@ class ModelViewInfo(
         generatedName = buildGeneratedModelName(viewElement, elements)
         // We don't have any type parameters on our generated model
         this.parameterizedGeneratedName = generatedName
-        shouldGenerateModel = Modifier.ABSTRACT !in viewElement.modifiers
+        shouldGenerateModel = Modifier.ABSTRACT !in viewElement.modifiersThreadSafe
 
         if (
             superClassElement.simpleName.toString() != ClassNames.EPOXY_MODEL_UNTYPED.simpleName()
@@ -115,7 +115,7 @@ class ModelViewInfo(
 
     fun Element.kotlinMetadata(): KotlinClassMetadata? {
         // https://github.com/JetBrains/kotlin/tree/master/libraries/kotlinx-metadata/jvm
-        val kotlinMetadataAnnotation = getAnnotation(Metadata::class.java) ?: return null
+        val kotlinMetadataAnnotation = getAnnotation<Metadata>() ?: return null
 
         val header = KotlinClassHeader(
             kind = kotlinMetadataAnnotation.kind,
@@ -205,7 +205,7 @@ class ModelViewInfo(
     }
 
     fun getLayoutResource(resourceProcessor: ResourceProcessor): ResourceValue {
-        val annotation = viewElement.getAnnotation(ModelView::class.java)
+        val annotation = viewElement.getAnnotation<ModelView>()!!
         val layoutValue = annotation.defaultLayout
         if (layoutValue != 0) {
             return resourceProcessor.getLayoutInAnnotation(viewElement, ModelView::class.java)

@@ -27,7 +27,7 @@ internal class BasicGeneratedModelInfo(
         this.superClassElement = superClassElement
         generatedName = buildGeneratedModelName(superClassElement)
 
-        for (typeParameterElement in superClassElement.typeParameters) {
+        for (typeParameterElement in superClassElement.typeParametersThreadSafe) {
             typeVariableNames.add(TypeVariableName.get(typeParameterElement))
         }
 
@@ -59,13 +59,13 @@ internal class BasicGeneratedModelInfo(
         modelType = boundObjectTypeMirror!!.typeNameSynchronized()
         this.boundObjectTypeElement = (modelType as? ClassName)?.asTypeElement(elements)
 
-        val annotation = superClassElement.getAnnotation(EpoxyModelClass::class.java)
+        val annotation = superClassElement.getAnnotation<EpoxyModelClass>()
 
         // By default we don't extend classes that are abstract; if they don't contain all required
         // methods then our generated class won't compile. If there is a EpoxyModelClass annotation
         // though we will always generate the subclass
         shouldGenerateModel =
-            annotation != null || Modifier.ABSTRACT !in superClassElement.modifiers
+            annotation != null || Modifier.ABSTRACT !in superClassElement.modifiersThreadSafe
         includeOtherLayoutOptions = annotation?.useLayoutOverloads ?: false
 
         annotations.addAll(

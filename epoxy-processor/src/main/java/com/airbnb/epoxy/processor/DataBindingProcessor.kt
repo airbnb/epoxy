@@ -37,7 +37,7 @@ class DataBindingProcessor : BaseProcessor() {
                 val moduleName = dataBindingModuleLookup.getModuleName(layoutsAnnotatedElement)
 
                 val enableDoNotHash =
-                    layoutsAnnotatedElement.annotation<EpoxyDataBindingLayouts>()?.enableDoNotHash == true
+                    layoutsAnnotatedElement.getAnnotation<EpoxyDataBindingLayouts>()?.enableDoNotHash == true
 
                 layoutResources.map { resourceValue ->
                     DataBindingModelInfo(
@@ -57,8 +57,7 @@ class DataBindingProcessor : BaseProcessor() {
         roundEnv.getElementsAnnotatedWith(EpoxyDataBindingPattern::class)
             .map("parse EpoxyDataBindingPattern") { annotatedElement ->
 
-                val patternAnnotation =
-                    annotatedElement.getAnnotation(EpoxyDataBindingPattern::class.java)
+                val patternAnnotation = annotatedElement.getAnnotation<EpoxyDataBindingPattern>()!!
 
                 val layoutPrefix = patternAnnotation.layoutPrefix
                 val rClassName = getClassParamFromAnnotation(
@@ -71,7 +70,7 @@ class DataBindingProcessor : BaseProcessor() {
                 val moduleName = rClassName.packageName()
                 val layoutClassName = ClassName.get(moduleName, "R", "layout")
                 val enableDoNotHash =
-                    annotatedElement.annotation<EpoxyDataBindingPattern>()?.enableDoNotHash == true
+                    annotatedElement.getAnnotation<EpoxyDataBindingPattern>()?.enableDoNotHash == true
 
                 val rClassElement = Utils.getElementByName(layoutClassName, elementUtils, typeUtils)
                 rClassElement.ensureLoaded()

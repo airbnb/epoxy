@@ -36,6 +36,11 @@ abstract class GeneratedModelInfo(val memoizer: Memoizer) {
     var includeOtherLayoutOptions = false
 
     val attributeInfo: MutableList<AttributeInfo> = mutableListOf()
+
+    @get:Synchronized
+    val attributeInfoImmutable: List<AttributeInfo>
+        get() = attributeInfo.toList()
+
     val typeVariableNames: MutableList<TypeVariableName> = ArrayList()
     val constructors: MutableList<ConstructorInfo> = ArrayList()
     val methodsReturningClassType: MutableSet<MethodInfo> = LinkedHashSet()
@@ -265,7 +270,7 @@ abstract class GeneratedModelInfo(val memoizer: Memoizer) {
                     param.asType().typeNameSynchronized(),
                     param.simpleName.toString()
                 )
-                for (annotation in param.annotationMirrors) {
+                for (annotation in param.annotationMirrorsThreadSafe) {
                     builder.addAnnotation(AnnotationSpec.get(annotation))
                 }
                 result.add(builder.build())
