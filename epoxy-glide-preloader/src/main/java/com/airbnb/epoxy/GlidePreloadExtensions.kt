@@ -19,7 +19,7 @@ import com.bumptech.glide.RequestManager
  *
  * @param maxPreloadDistance How many items to prefetch ahead of the last bound item
  * @param errorHandler Called when the preloader encounters an exception. By default this throws only
- * if the app is not in a debuggle model
+ * if the app is not in a debuggable model
  * @param preloader Describes how Glide should preload images for the EpoxyModel. Use [glidePreloader]
  * to easily create this.
  */
@@ -47,7 +47,7 @@ fun <T : EpoxyModel<*>, U : ViewMetadata?> RecyclerView.addGlidePreloader(
  *
  * @param maxPreloadDistance How many items to prefetch ahead of the last bound item
  * @param errorHandler Called when the preloader encounters an exception. By default this throws only
- * if the app is not in a debuggle model
+ * if the app is not in a debuggable model
  * @param preloader Describes how Glide should preload images for the EpoxyModel. Use [glidePreloader]
  * to easily create this.
  */
