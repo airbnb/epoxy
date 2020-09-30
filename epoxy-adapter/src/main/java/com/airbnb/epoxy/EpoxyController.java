@@ -690,6 +690,22 @@ public abstract class EpoxyController implements ModelCollector, StickyHeaderCal
     requestDelayedModelBuild(500);
   }
 
+
+  /**
+   * An way to notify the adapter that a model has changed. This is intended to be used with
+   * {@link androidx.recyclerview.widget.ItemTouchHelper} to allow revert swiping a model.
+   * <p>
+   * This will immediately notify the change to the RecyclerView.
+   *
+   * @param position Position of the item.
+   */
+  public void notifyModelChanged(int position) {
+    assertNotBuildingModels();
+
+    adapter.notifyModelChanged(position);
+  }
+
+
   /**
    * Get the underlying adapter built by this controller. Use this to get the adapter to set on a
    * RecyclerView, or to get information about models currently in use.
