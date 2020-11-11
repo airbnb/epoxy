@@ -1,3 +1,7 @@
+# 4.2.0 (Nov 11, 2020)
+- Add notify model changed method (#1063)
+- Update to Kotlin 1.4.20-RC and remove dependency on kotlin-android-extensions
+
 # 4.1.0 (Sept 17, 2020)
 - Fix some synchronization issues with the parallel Epoxy processing option
 - Add view visibility checks to EpoxyVisibilityItem and decouple RecyclerView #1052

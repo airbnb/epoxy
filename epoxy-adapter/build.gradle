@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: "com.vanniktech.maven.publish"
 
 android {
@@ -13,9 +13,6 @@ android {
     consumerProguardFiles 'proguard-rules.pro'
   }
 
-  androidExtensions {
-    experimental = true
-  }
   testOptions.unitTests.includeAndroidResources = true
 
   buildTypes.all { buildType ->

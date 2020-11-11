@@ -103,47 +103,4 @@ public class DataBindingModelTest {
         .and()
         .generatesSources(generatedModel);
   }
-
-  @Test
-  public void testFullyGeneratedModel() {
-    JavaFileObject packageInfo = JavaFileObjects
-        .forResource(GuavaPatch.patchResource("DataBindingConfig.java"));
-
-    JavaFileObject binding = JavaFileObjects
-        .forResource(GuavaPatch.patchResource("ModelWithDataBindingBinding.java"));
-
-    JavaFileObject generatedModel =
-        JavaFileObjects.forResource(GuavaPatch.patchResource("ModelWithDataBindingBindingModel_.java"));
-
-    assert_().about(javaSources())
-        .that(asList(packageInfo, binding, BR_CLASS, R))
-        .processedWith(processors())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
-  }
-
-  @Test
-  public void testFullyGeneratedModelWithoutDoNotHash() {
-    JavaFileObject packageInfo = JavaFileObjects
-        .forSourceString("EpoxyDataBindingConfig.java",
-                "package com.airbnb.epoxy;\n"
-            + "@EpoxyDataBindingLayouts(value = {R.layout"
-                + ".model_with_data_binding_without_donothash}, enableDoNotHash = false)\n"
-            + "interface EpoxyDataBindingConfig {} "
-        );
-
-    JavaFileObject binding = JavaFileObjects
-        .forResource(GuavaPatch.patchResource("ModelWithDataBindingWithoutDonothashBinding.java"));
-
-    JavaFileObject generatedModel =
-        JavaFileObjects.forResource(GuavaPatch.patchResource("ModelWithDataBindingWithoutDonothashBindingModel_.java"));
-
-    assert_().about(javaSources())
-        .that(asList(packageInfo, binding, BR_CLASS, R))
-        .processedWith(processors())
-        .compilesWithoutError()
-        .and()
-        .generatesSources(generatedModel);
-  }
 }
