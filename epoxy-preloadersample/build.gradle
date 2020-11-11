@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
@@ -15,6 +14,10 @@ android {
     versionName "1.0"
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
+
+  buildFeatures {
+    viewBinding true
   }
 }
 

@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.airbnb.epoxy.preloadersample.databinding.ActivityMainBinding
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,7 +34,8 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("StaticFieldLeak")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        val binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Memory and disk cache is cleared to give accurate representation of load times
         Glide.get(this).clearMemory()
@@ -45,14 +46,14 @@ class MainActivity : AppCompatActivity() {
             }
         }.execute()
 
-        button_no_preload.setOnClickListener {
+        binding.buttonNoPreload.setOnClickListener {
             val intent = Intent(this, NoPreloadActivity::class.java)
             intent.putExtra(IMAGES_LIST_TAG, images)
 
             startActivity(intent)
         }
 
-        button_preload.setOnClickListener {
+        binding.buttonPreload.setOnClickListener {
             val intent = Intent(this, PreloadActivity::class.java)
             intent.putExtra(IMAGES_LIST_TAG, images)
 
