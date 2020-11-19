@@ -4,7 +4,7 @@ import android.app.Activity
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.airbnb.epoxy.EpoxyVisibilityTracker.DEBUG_LOG
+import com.airbnb.epoxy.EpoxyVisibilityTracker.Companion.DEBUG_LOG
 import com.airbnb.epoxy.VisibilityState.INVISIBLE
 import com.airbnb.epoxy.VisibilityState.PARTIAL_IMPRESSION_INVISIBLE
 import com.airbnb.epoxy.VisibilityState.PARTIAL_IMPRESSION_VISIBLE
