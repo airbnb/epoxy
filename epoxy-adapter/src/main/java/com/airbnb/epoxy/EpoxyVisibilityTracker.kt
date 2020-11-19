@@ -190,15 +190,13 @@ class EpoxyVisibilityTracker {
      * clear the current visibility states
      */
     private fun processNewAdapterIfNecessary() {
-        if (attachedRecyclerView != null && attachedRecyclerView!!.adapter != null) {
-            if (lastAdapterSeen !== attachedRecyclerView!!.adapter) {
-                if (lastAdapterSeen != null) {
-                    // Unregister the old adapter
-                    lastAdapterSeen!!.unregisterAdapterDataObserver(observer)
-                }
+        attachedRecyclerView?.adapter?.let { adapter ->
+            if (lastAdapterSeen != adapter) {
+                // Unregister the old adapter
+                lastAdapterSeen?.unregisterAdapterDataObserver(observer)
                 // Register the new adapter
-                attachedRecyclerView!!.adapter!!.registerAdapterDataObserver(observer)
-                lastAdapterSeen = attachedRecyclerView!!.adapter
+                adapter.registerAdapterDataObserver(observer)
+                lastAdapterSeen = adapter
             }
         }
     }
@@ -281,10 +279,10 @@ class EpoxyVisibilityTracker {
         if (vi.update(itemView, recyclerView, detachEvent)) {
             // View is measured, process events
             vi.handleVisible(epoxyHolder, detachEvent)
-            if (partialImpressionThresholdPercentage != null) {
+            partialImpressionThresholdPercentage?.let { percentage ->
                 vi.handlePartialImpressionVisible(
                     epoxyHolder, detachEvent,
-                    partialImpressionThresholdPercentage!!
+                    percentage
                 )
             }
             vi.handleFocus(epoxyHolder, detachEvent)
