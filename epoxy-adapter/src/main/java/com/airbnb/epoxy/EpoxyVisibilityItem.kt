@@ -167,7 +167,7 @@ internal class EpoxyVisibilityItem {
     // and it occupies at least half of the viewport or if it is smaller than half of the viewport
     // and it is fully visible.
     private val isInFocusVisible: Boolean
-        private get() {
+        get() {
             val halfViewportArea = viewportHeight * viewportWidth / 2
             val totalArea = height * width
             val visibleArea = visibleHeight * visibleWidth
