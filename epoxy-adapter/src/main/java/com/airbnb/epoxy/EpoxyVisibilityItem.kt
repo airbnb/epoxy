@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IntRange
 import androidx.annotation.Px
+import androidx.annotation.VisibleForTesting
 import androidx.recyclerview.widget.RecyclerView
 
 /**
@@ -18,7 +19,8 @@ import androidx.recyclerview.widget.RecyclerView
  * This class should remain non-public and is intended to be used by [EpoxyVisibilityTracker]
  * only.
  */
-internal class EpoxyVisibilityItem {
+@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+class EpoxyVisibilityItem {
     private val localVisibleRect = Rect()
     var adapterPosition = RecyclerView.NO_POSITION
         private set
