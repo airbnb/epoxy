@@ -112,7 +112,8 @@ internal class EpoxyVisibilityItem {
     }
 
     fun handlePartialImpressionVisible(
-        epoxyHolder: EpoxyViewHolder, detachEvent: Boolean,
+        epoxyHolder: EpoxyViewHolder,
+        detachEvent: Boolean,
         @IntRange(from = 0, to = 100) thresholdPercentage: Int
     ) {
         val previousPartiallyVisible = partiallyVisible

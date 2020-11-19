@@ -33,7 +33,7 @@ class EpoxyVisibilityTracker {
     private val itemAnimatorFinishedListener =
         RecyclerView.ItemAnimator.ItemAnimatorFinishedListener {
             processChangeEvent(
-                "ItemAnimatorFinishedListener.onAnimationsFinished",  /* don't check item animator to prevent recursion */
+                "ItemAnimatorFinishedListener.onAnimationsFinished", /* don't check item animator to prevent recursion */
                 false
             )
         }
@@ -252,7 +252,8 @@ class EpoxyVisibilityTracker {
     ): Boolean {
         if (DEBUG_LOG) {
             Log.d(
-                TAG, String.format(
+                TAG,
+                String.format(
                     "%s.processVisibilityEvents %s, %s, %s",
                     eventOriginForDebug,
                     System.identityHashCode(epoxyHolder),
@@ -269,8 +270,8 @@ class EpoxyVisibilityTracker {
             vi = EpoxyVisibilityItem(epoxyHolder.adapterPosition)
             visibilityIdToItemMap.put(id, vi)
             visibilityIdToItems.add(vi)
-        } else if (epoxyHolder.adapterPosition != RecyclerView.NO_POSITION
-            && vi.adapterPosition != epoxyHolder.adapterPosition
+        } else if (epoxyHolder.adapterPosition != RecyclerView.NO_POSITION &&
+            vi.adapterPosition != epoxyHolder.adapterPosition
         ) {
             // EpoxyVisibilityItem being re-used for a different adapter position
             vi.reset(epoxyHolder.adapterPosition)
@@ -312,12 +313,20 @@ class EpoxyVisibilityTracker {
      * Helper class that host the [androidx.recyclerview.widget.RecyclerView] listener
      * implementations
      */
-    private inner class Listener : RecyclerView.OnScrollListener(), View.OnLayoutChangeListener,
+    private inner class Listener :
+        RecyclerView.OnScrollListener(),
+        View.OnLayoutChangeListener,
         RecyclerView.OnChildAttachStateChangeListener {
         override fun onLayoutChange(
             recyclerView: View,
-            left: Int, top: Int, right: Int, bottom: Int,
-            oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int
+            left: Int,
+            top: Int,
+            right: Int,
+            bottom: Int,
+            oldLeft: Int,
+            oldTop: Int,
+            oldRight: Int,
+            oldBottom: Int
         ) {
             processChangeEvent("onLayoutChange")
         }
