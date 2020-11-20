@@ -293,11 +293,9 @@ class EpoxyVisibilityTracker {
     private fun processChildRecyclerViewAttached(childRecyclerView: RecyclerView) {
         // Register itself in the EpoxyVisibilityTracker. This will take care of nested list
         // tracking (ex: carousel)
-        var tracker = getTracker(childRecyclerView)
-        if (tracker == null) {
-            tracker = EpoxyVisibilityTracker()
-            tracker.setPartialImpressionThresholdPercentage(partialImpressionThresholdPercentage)
-            tracker.attach(childRecyclerView)
+        val tracker = getTracker(childRecyclerView) ?: EpoxyVisibilityTracker().apply {
+            setPartialImpressionThresholdPercentage(partialImpressionThresholdPercentage)
+            attach(childRecyclerView)
         }
         nestedTrackers[childRecyclerView] = tracker
     }
