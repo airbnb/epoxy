@@ -169,9 +169,7 @@ class EpoxyVisibilityTracker {
             processNewAdapterIfNecessary()
 
             // Process the detached child if any
-            if (detachedView != null) {
-                processChild(detachedView, true, debug)
-            }
+            detachedView?.let { processChild(it, true, debug) }
 
             // Process all attached children
             for (i in 0 until recyclerView.childCount) {
