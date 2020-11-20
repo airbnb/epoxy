@@ -168,7 +168,7 @@ class EpoxyVisibilityTrackerTest {
     @Test
     fun testDataAttachedToRecyclerView_WithoutPartial() {
         // disable partial visibility states
-        epoxyVisibilityTracker.setPartialImpressionThresholdPercentage(null)
+        epoxyVisibilityTracker.partialImpressionThresholdPercentage = null
 
         val testHelper = buildTestData(10, TWO_AND_HALF_VISIBLE)
 
@@ -885,7 +885,7 @@ class EpoxyVisibilityTrackerTest {
         Robolectric.setupActivity(Activity::class.java).apply {
             setContentView(
                 EpoxyRecyclerView(this).apply {
-                    epoxyVisibilityTracker.setPartialImpressionThresholdPercentage(50)
+                    epoxyVisibilityTracker.partialImpressionThresholdPercentage = 50
                     epoxyVisibilityTracker.attach(this)
                     recyclerView = this
                     // Plug an epoxy controller

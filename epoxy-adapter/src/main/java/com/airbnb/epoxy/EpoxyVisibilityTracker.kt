@@ -52,10 +52,6 @@ class EpoxyVisibilityTracker {
 
     private var lastAdapterSeen: RecyclerView.Adapter<*>? = null
 
-    private var onChangedEnabled = true
-
-    private var partialImpressionThresholdPercentage: Int? = null
-
     /** All nested visibility trackers  */
     private val nestedTrackers: MutableMap<RecyclerView, EpoxyVisibilityTracker> = HashMap()
 
@@ -71,9 +67,7 @@ class EpoxyVisibilityTracker {
      *
      * @see OnModelVisibilityChangedListener
      */
-    fun setOnChangedEnabled(enabled: Boolean) {
-        onChangedEnabled = enabled
-    }
+    var onChangedEnabled = true
 
     /**
      * Set the threshold of percentage visible area to identify the partial impression view state.
@@ -83,11 +77,8 @@ class EpoxyVisibilityTracker {
      * [VisibilityState.PARTIAL_IMPRESSION_VISIBLE] and
      * [VisibilityState.PARTIAL_IMPRESSION_INVISIBLE] events.
      */
-    fun setPartialImpressionThresholdPercentage(
-        @IntRange(from = 0, to = 100) thresholdPercentage: Int?
-    ) {
-        partialImpressionThresholdPercentage = thresholdPercentage
-    }
+    @IntRange(from = 0, to = 100)
+    var partialImpressionThresholdPercentage: Int? = null
 
     /**
      * Attach the tracker.
@@ -293,9 +284,10 @@ class EpoxyVisibilityTracker {
     private fun processChildRecyclerViewAttached(childRecyclerView: RecyclerView) {
         // Register itself in the EpoxyVisibilityTracker. This will take care of nested list
         // tracking (ex: carousel)
-        val tracker = getTracker(childRecyclerView) ?: EpoxyVisibilityTracker().apply {
-            setPartialImpressionThresholdPercentage(partialImpressionThresholdPercentage)
-            attach(childRecyclerView)
+        val tracker = getTracker(childRecyclerView) ?: EpoxyVisibilityTracker().let { nested ->
+            nested.partialImpressionThresholdPercentage = partialImpressionThresholdPercentage
+            nested.attach(childRecyclerView)
+            nested
         }
         nestedTrackers[childRecyclerView] = tracker
     }
