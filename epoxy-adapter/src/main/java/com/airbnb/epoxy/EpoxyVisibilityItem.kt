@@ -51,9 +51,9 @@ class EpoxyVisibilityItem(adapterPosition: Int? = null) {
     private var viewVisibility = View.GONE
 
     /** Store last value for de-duping  */
-    private var lastVisibleHeightNotified = NOT_NOTIFIED
-    private var lastVisibleWidthNotified = NOT_NOTIFIED
-    private var lastVisibilityNotified = NOT_NOTIFIED
+    private var lastVisibleHeightNotified: Int? = null
+    private var lastVisibleWidthNotified: Int? = null
+    private var lastVisibilityNotified: Int? = null
 
     init {
         adapterPosition?.let {
@@ -87,9 +87,9 @@ class EpoxyVisibilityItem(adapterPosition: Int? = null) {
         visible = false
         focusedVisible = false
         adapterPosition = newAdapterPosition
-        lastVisibleHeightNotified = NOT_NOTIFIED
-        lastVisibleWidthNotified = NOT_NOTIFIED
-        lastVisibilityNotified = NOT_NOTIFIED
+        lastVisibleHeightNotified = null
+        lastVisibleWidthNotified = null
+        lastVisibilityNotified = null
     }
 
     fun handleVisible(epoxyHolder: EpoxyViewHolder, detachEvent: Boolean) {
@@ -199,9 +199,5 @@ class EpoxyVisibilityItem(adapterPosition: Int? = null) {
 
     fun shiftBy(offsetPosition: Int) {
         adapterPosition += offsetPosition
-    }
-
-    companion object {
-        private const val NOT_NOTIFIED = -1
     }
 }
