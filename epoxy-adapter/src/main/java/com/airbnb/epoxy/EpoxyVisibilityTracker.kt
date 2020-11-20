@@ -477,7 +477,7 @@ class EpoxyVisibilityTracker {
          * @return the tracker for the given [RecyclerView]. Null if no tracker was attached.
          */
         private fun getTracker(recyclerView: RecyclerView): EpoxyVisibilityTracker? {
-            return recyclerView.getTag(TAG_ID) as EpoxyVisibilityTracker
+            return recyclerView.getTag(TAG_ID) as EpoxyVisibilityTracker?
         }
 
         /**
