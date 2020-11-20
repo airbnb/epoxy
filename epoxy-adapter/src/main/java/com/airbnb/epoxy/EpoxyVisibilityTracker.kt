@@ -134,51 +134,46 @@ class EpoxyVisibilityTracker {
     fun requestVisibilityCheck() {
         processChangeEvent("requestVisibilityCheck")
     }
+
     /**
      * Process a change event.
      * @param debug: string for debug usually the source of the call
      * @param checkItemAnimator: true if it need to check if ItemAnimator is running
      */
-    /**
-     * Process a change event. It will also check the itemAnimator
-     * @param debug: string for debug usually the source of the call
-     */
     private fun processChangeEvent(debug: String, checkItemAnimator: Boolean = true) {
-        val recyclerView = attachedRecyclerView
-        if (recyclerView != null) {
-            val itemAnimator = recyclerView.itemAnimator
-            if (checkItemAnimator && itemAnimator != null) {
-                // `itemAnimatorFinishedListener.onAnimationsFinished` will process visibility check
-                // - If the animations are running `onAnimationsFinished` will be invoked on animations end.
-                // - If the animations are not running `onAnimationsFinished` will be invoked right away.
-                if (itemAnimator.isRunning(itemAnimatorFinishedListener)) {
-                    // If running process visibility now as `onAnimationsFinished` was not yet called
-                    processChangeEventWithDetachedView(null, debug)
-                }
-            } else {
+        val recyclerView = attachedRecyclerView ?: return
+        val itemAnimator = recyclerView.itemAnimator
+        if (checkItemAnimator && itemAnimator != null) {
+            // `itemAnimatorFinishedListener.onAnimationsFinished` will process visibility check
+            // - If the animations are running `onAnimationsFinished` will be invoked on animations end.
+            // - If the animations are not running `onAnimationsFinished` will be invoked right away.
+            if (itemAnimator.isRunning(itemAnimatorFinishedListener)) {
+                // If running process visibility now as `onAnimationsFinished` was not yet called
                 processChangeEventWithDetachedView(null, debug)
             }
+        } else {
+            processChangeEventWithDetachedView(null, debug)
         }
     }
 
     private fun processChangeEventWithDetachedView(detachedView: View?, debug: String) {
-        val recyclerView = attachedRecyclerView
-        if (recyclerView != null) {
 
-            // On every every events lookup for a new adapter
-            processNewAdapterIfNecessary()
+        // Only if attached
+        val recyclerView = attachedRecyclerView ?: return
 
-            // Process the detached child if any
-            detachedView?.let { processChild(it, true, debug) }
+        // On every every events lookup for a new adapter
+        processNewAdapterIfNecessary()
 
-            // Process all attached children
-            for (i in 0 until recyclerView.childCount) {
-                val child = recyclerView.getChildAt(i)
-                if (child != null && child !== detachedView) {
-                    // Is some case the detached child is still in the recycler view. Don't process it as it
-                    // was already processed.
-                    processChild(child, false, debug)
-                }
+        // Process the detached child if any
+        detachedView?.let { processChild(it, true, debug) }
+
+        // Process all attached children
+        for (i in 0 until recyclerView.childCount) {
+            val child = recyclerView.getChildAt(i)
+            if (child != null && child !== detachedView) {
+                // Is some case the detached child is still in the recycler view. Don't process it as it
+                // was already processed.
+                processChild(child, false, debug)
             }
         }
     }
@@ -208,24 +203,25 @@ class EpoxyVisibilityTracker {
      * @param eventOriginForDebug a debug strings used for logs
      */
     private fun processChild(child: View, detachEvent: Boolean, eventOriginForDebug: String) {
-        val recyclerView = attachedRecyclerView
-        if (recyclerView != null) {
-            // Preemptive check for child's parent validity to prevent `IllegalArgumentException` in
-            // `getChildViewHolder`.
-            val isParentValid = child.parent == null || child.parent === recyclerView
-            val holder = if (isParentValid) recyclerView.getChildViewHolder(child) else null
-            if (holder is EpoxyViewHolder) {
-                val changed = processVisibilityEvents(
-                    recyclerView,
-                    holder,
-                    detachEvent,
-                    eventOriginForDebug
-                )
-                if (changed) {
-                    if (child is RecyclerView) {
-                        val tracker = nestedTrackers[child]
-                        tracker?.processChangeEvent("parent")
-                    }
+
+        // Only if attached
+        val recyclerView = attachedRecyclerView ?: return
+
+        // Preemptive check for child's parent validity to prevent `IllegalArgumentException` in
+        // `getChildViewHolder`.
+        val isParentValid = child.parent == null || child.parent === recyclerView
+        val holder = if (isParentValid) recyclerView.getChildViewHolder(child) else null
+        if (holder is EpoxyViewHolder) {
+            val changed = processVisibilityEvents(
+                recyclerView,
+                holder,
+                detachEvent,
+                eventOriginForDebug
+            )
+            if (changed) {
+                if (child is RecyclerView) {
+                    val tracker = nestedTrackers[child]
+                    tracker?.processChangeEvent("parent")
                 }
             }
         }
