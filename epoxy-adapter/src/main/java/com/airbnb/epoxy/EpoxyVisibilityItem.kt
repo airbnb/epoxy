@@ -20,8 +20,10 @@ import androidx.recyclerview.widget.RecyclerView
  * only.
  */
 @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
-class EpoxyVisibilityItem {
+class EpoxyVisibilityItem(adapterPosition: Int) {
+
     private val localVisibleRect = Rect()
+
     var adapterPosition = RecyclerView.NO_POSITION
         private set
 
@@ -53,8 +55,7 @@ class EpoxyVisibilityItem {
     private var lastVisibleWidthNotified = NOT_NOTIFIED
     private var lastVisibilityNotified = NOT_NOTIFIED
 
-    constructor() {}
-    constructor(adapterPosition: Int) {
+    init {
         reset(adapterPosition)
     }
 
