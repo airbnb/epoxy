@@ -251,13 +251,9 @@ class EpoxyVisibilityTracker {
         if (DEBUG_LOG) {
             Log.d(
                 TAG,
-                String.format(
-                    "%s.processVisibilityEvents %s, %s, %s",
-                    eventOriginForDebug,
-                    System.identityHashCode(epoxyHolder),
-                    detachEvent,
-                    epoxyHolder.adapterPosition
-                )
+                "$eventOriginForDebug.processVisibilityEvents " +
+                    "${System.identityHashCode(epoxyHolder)}, " +
+                    "$detachEvent, ${epoxyHolder.adapterPosition}"
             )
         }
         val itemView = epoxyHolder.itemView
@@ -384,7 +380,7 @@ class EpoxyVisibilityTracker {
                 return
             }
             if (DEBUG_LOG) {
-                Log.d(TAG, String.format("onItemRangeInserted(%d, %d)", positionStart, itemCount))
+                Log.d(TAG, "onItemRangeInserted($positionStart, $itemCount)")
             }
             for (item in visibilityIdToItems) {
                 if (item.adapterPosition >= positionStart) {
@@ -403,7 +399,7 @@ class EpoxyVisibilityTracker {
                 return
             }
             if (DEBUG_LOG) {
-                Log.d(TAG, String.format("onItemRangeRemoved(%d, %d)", positionStart, itemCount))
+                Log.d(TAG, "onItemRangeRemoved($positionStart, $itemCount)")
             }
             for (item in visibilityIdToItems) {
                 if (item.adapterPosition >= positionStart) {
@@ -434,10 +430,7 @@ class EpoxyVisibilityTracker {
                 return
             }
             if (DEBUG_LOG) {
-                Log.d(
-                    TAG,
-                    String.format("onItemRangeMoved(%d, %d, %d)", fromPosition, toPosition, 1)
-                )
+                Log.d(TAG, "onItemRangeMoved($fromPosition, $fromPosition, 1)")
             }
             for (item in visibilityIdToItems) {
                 val position = item.adapterPosition
