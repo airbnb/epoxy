@@ -114,7 +114,7 @@ class EpoxyVisibilityTracker {
     /**
      * The tracker is storing visibility states internally and is using if to send events, only the
      * difference is sent. Use this method to clear the states and thus regenerate the visibility
-     * events. This may be useful when you change the adapter on the [ ]
+     * events. This may be useful when you change the adapter on the [RecyclerView].
      */
     fun clearVisibilityStates() {
         // Clear our visibility items
