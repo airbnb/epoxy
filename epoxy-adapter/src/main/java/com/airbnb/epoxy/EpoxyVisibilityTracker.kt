@@ -33,8 +33,8 @@ class EpoxyVisibilityTracker {
     private val itemAnimatorFinishedListener =
         RecyclerView.ItemAnimator.ItemAnimatorFinishedListener {
             processChangeEvent(
-                "ItemAnimatorFinishedListener.onAnimationsFinished", /* don't check item animator to prevent recursion */
-                false
+                "ItemAnimatorFinishedListener.onAnimationsFinished", 
+                /* don't check item animator to prevent recursion */ false
             )
         }
 
