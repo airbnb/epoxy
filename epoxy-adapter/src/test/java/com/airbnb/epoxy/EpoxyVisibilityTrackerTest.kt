@@ -1089,8 +1089,9 @@ private fun List<Int>.description(): String {
     val builder = StringBuilder("[")
     forEachIndexed { index, state ->
         builder.append(state.description())
-        builder.append(if (index < size - 1) "," else "]")
+        builder.append(if (index < size - 1) "," else "")
     }
+    builder.append("]")
     return builder.toString()
 }
 
