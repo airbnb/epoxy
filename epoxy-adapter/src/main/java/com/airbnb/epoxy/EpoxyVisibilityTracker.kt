@@ -11,8 +11,7 @@ import java.util.ArrayList
 import java.util.HashMap
 
 /**
- * A simple way to track visibility events on [com.airbnb.epoxy.EpoxyModel] within a [ ].
- *
+ * A simple way to track visibility events on [com.airbnb.epoxy.EpoxyModel].
  *
  * [EpoxyVisibilityTracker] works with any [androidx.recyclerview.widget.RecyclerView]
  * backed by an Epoxy controller. Once attached the events will be forwarded to the Epoxy model (or
@@ -27,13 +26,14 @@ import java.util.HashMap
  * @see OnModelVisibilityStateChangedListener
  */
 class EpoxyVisibilityTracker {
+
     /**
      * Used to listen to [RecyclerView.ItemAnimator] ending animations.
      */
     private val itemAnimatorFinishedListener =
         RecyclerView.ItemAnimator.ItemAnimatorFinishedListener {
             processChangeEvent(
-                "ItemAnimatorFinishedListener.onAnimationsFinished", 
+                "ItemAnimatorFinishedListener.onAnimationsFinished",
                 /* don't check item animator to prevent recursion */ false
             )
         }
@@ -43,20 +43,24 @@ class EpoxyVisibilityTracker {
     private val visibilityIdToItems: MutableList<EpoxyVisibilityItem> = ArrayList()
 
     /** listener used to process scroll, layout and attach events  */
-    private val listener: Listener = Listener()
+    private val listener = Listener()
 
     /** listener used to process data events  */
     private val observer = DataObserver()
+
     private var attachedRecyclerView: RecyclerView? = null
+
     private var lastAdapterSeen: RecyclerView.Adapter<*>? = null
+
     private var onChangedEnabled = true
+
     private var partialImpressionThresholdPercentage: Int? = null
 
     /** All nested visibility trackers  */
     private val nestedTrackers: MutableMap<RecyclerView, EpoxyVisibilityTracker> = HashMap()
 
     /** This flag is for optimizing the process on detach. If detach is from data changed then it
-     * need to re-process all views, else no need (ex: scroll).  */
+     * need to re-process all views, else no need (ex: scroll). */
     private var visibleDataChanged = false
 
     /**
@@ -141,7 +145,10 @@ class EpoxyVisibilityTracker {
      * @param checkItemAnimator: true if it need to check if ItemAnimator is running
      */
     private fun processChangeEvent(debug: String, checkItemAnimator: Boolean = true) {
+
+        // Only if attached
         val recyclerView = attachedRecyclerView ?: return
+
         val itemAnimator = recyclerView.itemAnimator
         if (checkItemAnimator && itemAnimator != null) {
             // `itemAnimatorFinishedListener.onAnimationsFinished` will process visibility check
@@ -179,7 +186,7 @@ class EpoxyVisibilityTracker {
     }
 
     /**
-     * If there is a new adapter on the attached RecyclerView it will resister the data observer and
+     * If there is a new adapter on the attached RecyclerView it will register the data observer and
      * clear the current visibility states
      */
     private fun processNewAdapterIfNecessary() {
@@ -436,14 +443,14 @@ class EpoxyVisibilityTracker {
                     visibleDataChanged = true
                 } else if (fromPosition < toPosition) {
                     // Item will be moved down in the list
-                    if (position > fromPosition && position <= toPosition) {
+                    if (position in (fromPosition + 1)..toPosition) {
                         // Item is between the moved from and to indexes, it should move up
                         item.shiftBy(-1)
                         visibleDataChanged = true
                     }
                 } else if (fromPosition > toPosition) {
                     // Item will be moved up in the list
-                    if (position >= toPosition && position < fromPosition) {
+                    if (position in toPosition until fromPosition) {
                         // Item is between the moved to and from indexes, it should move down
                         item.shiftBy(1)
                         visibleDataChanged = true
