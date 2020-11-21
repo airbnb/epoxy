@@ -42,6 +42,9 @@ class MainActivity : AppCompatActivity() {
                 coloredSquareView {
                     id("coloredSquareView 1")
                     color(Color.DKGRAY)
+                    onVisibilityStateChanged { model, _, visibilityState ->
+                        Log.d(TAG, "$model -> $visibilityState")
+                    }
                 }
 
                 coloredSquareView {
@@ -52,6 +55,20 @@ class MainActivity : AppCompatActivity() {
                 coloredSquareView {
                     id("coloredSquareView 3")
                     color(Color.LTGRAY)
+                }
+
+                carouselNoSnapBuilder {
+                    id("nested carousel")
+                    val lastPage = 10
+                    for (i in 0 until lastPage) {
+                        carouselItemCustomView {
+                            id("nested carousel $i")
+                            title("Page $i / $lastPage")
+                            onVisibilityStateChanged { model, _, visibilityState ->
+                                Log.d(TAG, "pos: $i ${model.javaClass} -> $visibilityState")
+                            }
+                        }
+                    }
                 }
             }
 

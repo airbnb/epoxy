@@ -208,20 +208,75 @@ class EpoxyVisibilityTracker {
         // Preemptive check for child's parent validity to prevent `IllegalArgumentException` in
         // `getChildViewHolder`.
         val isParentValid = child.parent == null || child.parent === recyclerView
-        val holder = if (isParentValid) recyclerView.getChildViewHolder(child) else null
-        if (holder is EpoxyViewHolder) {
-            val changed = processVisibilityEvents(
-                recyclerView,
-                holder,
-                detachEvent,
-                eventOriginForDebug
-            )
-            if (changed) {
-                if (child is RecyclerView) {
-                    val tracker = nestedTrackers[child]
-                    tracker?.processChangeEvent("parent")
+        val viewHolder = if (isParentValid) recyclerView.getChildViewHolder(child) else null
+        if (viewHolder is EpoxyViewHolder) {
+            val epoxyHolder = viewHolder.holder
+            processChild(child, detachEvent, eventOriginForDebug, viewHolder)
+            if (epoxyHolder is ModelGroupHolder) {
+                processModelGroupChildren(epoxyHolder, detachEvent, eventOriginForDebug)
+            }
+        }
+    }
+
+    /**
+     * Loop through the children of the model group and process visibility events on each one in
+     * relation to the model group's layout. This will attach or detach trackers to any nested
+     * [RecyclerView]s.
+     *
+     * @param epoxyHolder         the [ModelGroupHolder] with children to process
+     * @param detachEvent         true if the child was just detached
+     * @param eventOriginForDebug a debug strings used for logs
+     */
+    private fun processModelGroupChildren(
+        epoxyHolder: ModelGroupHolder,
+        detachEvent: Boolean,
+        eventOriginForDebug: String
+    ) {
+        // Iterate through models in the group and process each of them instead of the group
+        for (groupChildHolder in epoxyHolder.viewHolders) {
+            // Since the group is likely using a ViewGroup other than a RecyclerView we need to
+            // handle the potential of a nested RecyclerView.
+            if (groupChildHolder.itemView is RecyclerView) {
+                if (detachEvent) {
+                    processChildRecyclerViewDetached(groupChildHolder.itemView)
+                } else {
+                    processChildRecyclerViewAttached(groupChildHolder.itemView)
                 }
             }
+            processChild(
+                groupChildHolder.itemView,
+                detachEvent,
+                eventOriginForDebug,
+                groupChildHolder
+            )
+        }
+    }
+
+    /**
+     * Process visibility events for a view and propagate to a nested tracker if the view is a
+     * [RecyclerView].
+     *
+     * @param child               the view to process for visibility event
+     * @param detachEvent         true if the child was just detached
+     * @param eventOriginForDebug a debug strings used for logs
+     * @param viewHolder          the view holder for the child view
+     */
+    private fun processChild(
+        child: View,
+        detachEvent: Boolean,
+        eventOriginForDebug: String,
+        viewHolder: EpoxyViewHolder
+    ) {
+        val recyclerView = attachedRecyclerView ?: return
+        val changed = processVisibilityEvents(
+            recyclerView,
+            viewHolder,
+            detachEvent,
+            eventOriginForDebug
+        )
+        if (changed && child is RecyclerView) {
+            val tracker = nestedTrackers[child]
+            tracker?.processChangeEvent("parent")
         }
     }
 
