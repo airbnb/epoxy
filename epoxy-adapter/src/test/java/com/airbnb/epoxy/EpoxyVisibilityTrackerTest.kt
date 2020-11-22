@@ -8,7 +8,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.airbnb.epoxy.EpoxyVisibilityTracker.DEBUG_LOG
+import com.airbnb.epoxy.EpoxyVisibilityTracker.Companion.DEBUG_LOG
 import com.airbnb.epoxy.VisibilityState.FOCUSED_VISIBLE
 import com.airbnb.epoxy.VisibilityState.FULL_IMPRESSION_VISIBLE
 import com.airbnb.epoxy.VisibilityState.INVISIBLE
@@ -168,7 +168,7 @@ class EpoxyVisibilityTrackerTest {
     @Test
     fun testDataAttachedToRecyclerView_WithoutPartial() {
         // disable partial visibility states
-        epoxyVisibilityTracker.setPartialImpressionThresholdPercentage(null)
+        epoxyVisibilityTracker.partialImpressionThresholdPercentage = null
 
         val testHelper = buildTestData(10, TWO_AND_HALF_VISIBLE)
 
@@ -885,7 +885,7 @@ class EpoxyVisibilityTrackerTest {
         Robolectric.setupActivity(Activity::class.java).apply {
             setContentView(
                 EpoxyRecyclerView(this).apply {
-                    epoxyVisibilityTracker.setPartialImpressionThresholdPercentage(50)
+                    epoxyVisibilityTracker.partialImpressionThresholdPercentage = 50
                     epoxyVisibilityTracker.attach(this)
                     recyclerView = this
                     // Plug an epoxy controller
@@ -1089,8 +1089,9 @@ private fun List<Int>.description(): String {
     val builder = StringBuilder("[")
     forEachIndexed { index, state ->
         builder.append(state.description())
-        builder.append(if (index < size - 1) "," else "]")
+        builder.append(if (index < size - 1) "," else "")
     }
+    builder.append("]")
     return builder.toString()
 }
 
