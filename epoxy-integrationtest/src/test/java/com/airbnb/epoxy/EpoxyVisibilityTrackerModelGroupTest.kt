@@ -53,17 +53,6 @@ class EpoxyVisibilityTrackerModelGroupTest {
         ids = 0
     }
 
-    private fun nextAssertHelper() = VisibilityAssertHelper(ids++)
-
-    private fun withModels(buildModels: EpoxyController.() -> Unit) {
-        activityRule.scenario.onActivity {
-            recyclerView.withModels {
-                buildModels.invoke(this)
-            }
-            shadowOf(Looper.getMainLooper()).idle()
-        }
-    }
-
     @Test
     fun testGroupInitiallyVisible_full() {
         val groupHelper = nextAssertHelper()
@@ -775,5 +764,18 @@ class EpoxyVisibilityTrackerModelGroupTest {
                 VisibilityState.FULL_IMPRESSION_VISIBLE
             )
         )
+    }
+
+    /** Get a [VisibilityAssertHelper] using an auto-incrementing ID. */
+    private fun nextAssertHelper() = VisibilityAssertHelper(ids++)
+
+    /** Sets the models in the [recyclerView]. */
+    private fun withModels(buildModels: EpoxyController.() -> Unit) {
+        activityRule.scenario.onActivity {
+            recyclerView.withModels {
+                buildModels.invoke(this)
+            }
+            shadowOf(Looper.getMainLooper()).idle()
+        }
     }
 }
