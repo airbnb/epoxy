@@ -439,6 +439,55 @@ class EpoxyVisibilityTrackerModelGroupTest {
     }
 
     @Test
+    fun testRemoveModelFromGroup() {
+        val itemHeight = recyclerView.measuredHeight / 3
+        val groupHelper = nextAssertHelper()
+        val nestedHelper = nextAssertHelper()
+        val toRemoveHelper = nextAssertHelper()
+        withModels {
+            trackerTestModel("firstModel", itemHeight, helper = nextAssertHelper())
+            trackerTestModelGroup("group", groupHelper) {
+                layout(R.layout.vertical_linear_group)
+                setModels(
+                    TrackerTestModel("innerModel", itemHeight, helper = nestedHelper),
+                    TrackerTestModel("toRemove", itemHeight, helper = toRemoveHelper)
+                )
+            }
+        }
+
+        // Reset the existing helpers to test what happens when a model is added
+        groupHelper.reset()
+        nestedHelper.reset()
+        toRemoveHelper.reset()
+        withModels {
+            trackerTestModel("firstModel", itemHeight, helper = nextAssertHelper())
+            trackerTestModelGroup("group", groupHelper) {
+                layout(R.layout.vertical_linear_group)
+                setModels(
+                    TrackerTestModel("innerModel", itemHeight, helper = nestedHelper)
+                )
+            }
+        }
+
+        // Group only has a visible height change as other attributes didn't change
+        groupHelper.assert(
+            visibleHeight = itemHeight,
+            percentVisibleHeight = 100f,
+            visible = false,
+            partialImpression = false,
+            fullImpression = false,
+            visitedStates = IntArray(0)
+        )
+
+        // Existing nested model doesn't have visibility changes because there was no size change
+        nestedHelper.assertDefault()
+
+        // Removed model will have no visited states because the model group does not have a
+        // reference to it anymore for visibility changes.
+        toRemoveHelper.assertDefault()
+    }
+
+    @Test
     fun testGroupWithCarousel() {
         epoxyVisibilityTracker.partialImpressionThresholdPercentage = 50
         val groupHelper = nextAssertHelper()

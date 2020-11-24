@@ -17,6 +17,11 @@ import java.util.HashMap
  * backed by an Epoxy controller. Once attached the events will be forwarded to the Epoxy model (or
  * to the Epoxy view when using annotations).
  *
+ * Note that support for visibility events on a [EpoxyModelGroup] is somewhat limited. Only model
+ * additions will receive visibility events. Models that are removed from the group will not receive
+ * events (e.g. [VisibilityState.INVISIBLE]) because the model group does not keep a reference,
+ * nor does it get notified of model removals.
+ *
  * @see OnVisibilityChanged
  *
  * @see OnVisibilityStateChanged
