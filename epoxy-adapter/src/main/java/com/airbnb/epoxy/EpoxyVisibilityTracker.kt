@@ -281,8 +281,7 @@ class EpoxyVisibilityTracker {
             eventOriginForDebug
         )
         if (changed && child is RecyclerView) {
-            val tracker = nestedTrackers[child]
-            tracker?.processChangeEvent("parent")
+            nestedTrackers[child]?.processChangeEvent("parent")
         }
     }
 
