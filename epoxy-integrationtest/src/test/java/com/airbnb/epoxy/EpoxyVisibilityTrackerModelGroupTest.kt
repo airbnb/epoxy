@@ -311,7 +311,6 @@ class EpoxyVisibilityTrackerModelGroupTest {
                 VisibilityState.VISIBLE,
                 VisibilityState.PARTIAL_IMPRESSION_VISIBLE
             )
-
         )
     }
 
@@ -444,7 +443,7 @@ class EpoxyVisibilityTrackerModelGroupTest {
             }
         }
 
-        // Reset the existing helpers to test what happens when a model is added
+        // Reset the existing helpers to test what happens when a model is removed
         groupHelper.reset()
         nestedHelper.reset()
         toRemoveHelper.reset()
@@ -474,6 +473,177 @@ class EpoxyVisibilityTrackerModelGroupTest {
         // Removed model will have no visited states because the model group does not have a
         // reference to it anymore for visibility changes.
         toRemoveHelper.assertDefault()
+    }
+
+    @Test
+    fun testModelVisibility_existingHiddenModel() {
+        val itemHeight = recyclerView.measuredHeight / 3
+        val groupHelper = nextAssertHelper()
+        val nestedHelper = nextAssertHelper()
+        val hiddenHelper = nextAssertHelper()
+        withModels {
+            trackerTestModel("firstModel", itemHeight, helper = nextAssertHelper())
+            trackerTestModelGroup("group", groupHelper) {
+                layout(R.layout.vertical_linear_group)
+                setModels(
+                    TrackerTestModel("innerModel", itemHeight, helper = nestedHelper),
+                    TrackerTestModel("toHide", itemHeight, helper = hiddenHelper).hide()
+                )
+            }
+        }
+
+        groupHelper.assert(
+            visibleHeight = itemHeight,
+            percentVisibleHeight = 100f,
+            visible = true,
+            partialImpression = false,
+            fullImpression = true,
+            visitedStates = intArrayOf(
+                VisibilityState.VISIBLE,
+                VisibilityState.FOCUSED_VISIBLE,
+                VisibilityState.FULL_IMPRESSION_VISIBLE
+            )
+        )
+        nestedHelper.assert(
+            visibleHeight = itemHeight,
+            percentVisibleHeight = 100f,
+            visible = true,
+            partialImpression = false,
+            fullImpression = true,
+            visitedStates = intArrayOf(
+                VisibilityState.VISIBLE,
+                VisibilityState.FOCUSED_VISIBLE,
+                VisibilityState.FULL_IMPRESSION_VISIBLE
+            )
+        )
+        // Hidden model is not initially traversed
+        hiddenHelper.assert(
+            visibleHeight = 0,
+            percentVisibleHeight = 0f,
+            visible = false,
+            partialImpression = false,
+            fullImpression = false,
+            visitedStates = IntArray(0)
+        )
+    }
+
+    @Test
+    fun testModelVisibility_hideModel() {
+        val itemHeight = recyclerView.measuredHeight / 3
+        val groupHelper = nextAssertHelper()
+        val nestedHelper = nextAssertHelper()
+        val toHideHelper = nextAssertHelper()
+        withModels {
+            trackerTestModel("firstModel", itemHeight, helper = nextAssertHelper())
+            trackerTestModelGroup("group", groupHelper) {
+                layout(R.layout.vertical_linear_group)
+                setModels(
+                    TrackerTestModel("innerModel", itemHeight, helper = nestedHelper),
+                    TrackerTestModel("toHide", itemHeight, helper = toHideHelper)
+                )
+            }
+        }
+
+        // Reset the existing helpers to test what happens when a model is hidden
+        groupHelper.reset()
+        nestedHelper.reset()
+        toHideHelper.reset()
+        withModels {
+            trackerTestModel("firstModel", itemHeight, helper = nextAssertHelper())
+            trackerTestModelGroup("group", groupHelper) {
+                layout(R.layout.vertical_linear_group)
+                setModels(
+                    TrackerTestModel("innerModel", itemHeight, helper = nestedHelper),
+                    TrackerTestModel("toHide", itemHeight, helper = toHideHelper).hide()
+                )
+            }
+        }
+
+        // Group only has a visible height change as other attributes didn't change
+        groupHelper.assert(
+            visibleHeight = itemHeight,
+            percentVisibleHeight = 100f,
+            visible = false,
+            partialImpression = false,
+            fullImpression = false,
+            visitedStates = IntArray(0)
+        )
+
+        // Existing nested model doesn't have visibility changes because there was no size change
+        nestedHelper.assertDefault()
+
+        // Hidden model receives appropriate visibility changes
+        toHideHelper.assert(
+            visibleHeight = 0,
+            percentVisibleHeight = 0f,
+            visible = false,
+            partialImpression = false,
+            fullImpression = false,
+            visitedStates = intArrayOf(
+                VisibilityState.INVISIBLE,
+                VisibilityState.UNFOCUSED_VISIBLE
+            )
+        )
+    }
+
+    @Test
+    fun testModelVisibility_showModel() {
+        val itemHeight = recyclerView.measuredHeight / 3
+        val groupHelper = nextAssertHelper()
+        val nestedHelper = nextAssertHelper()
+        val toShowHelper = nextAssertHelper()
+        withModels {
+            trackerTestModel("firstModel", itemHeight, helper = nextAssertHelper())
+            trackerTestModelGroup("group", groupHelper) {
+                layout(R.layout.vertical_linear_group)
+                setModels(
+                    TrackerTestModel("innerModel", itemHeight, helper = nestedHelper),
+                    TrackerTestModel("toShow", itemHeight, helper = toShowHelper).hide()
+                )
+            }
+        }
+
+        // Reset the existing helpers to test what happens when a hidden model is shown
+        groupHelper.reset()
+        nestedHelper.reset()
+        toShowHelper.reset()
+        withModels {
+            trackerTestModel("firstModel", itemHeight, helper = nextAssertHelper())
+            trackerTestModelGroup("group", groupHelper) {
+                layout(R.layout.vertical_linear_group)
+                setModels(
+                    TrackerTestModel("innerModel", itemHeight, helper = nestedHelper),
+                    TrackerTestModel("toShow", itemHeight, helper = toShowHelper)
+                )
+            }
+        }
+
+        // Group only has a visible height change as other attributes didn't change
+        groupHelper.assert(
+            visibleHeight = itemHeight * 2,
+            percentVisibleHeight = 100f,
+            visible = false,
+            partialImpression = false,
+            fullImpression = false,
+            visitedStates = IntArray(0)
+        )
+
+        // Existing nested model doesn't have visibility changes because there was no size change
+        nestedHelper.assertDefault()
+
+        // Shown model receives appropriate visibility changes
+        toShowHelper.assert(
+            visibleHeight = itemHeight,
+            percentVisibleHeight = 100f,
+            visible = true,
+            partialImpression = false,
+            fullImpression = true,
+            visitedStates = intArrayOf(
+                VisibilityState.VISIBLE,
+                VisibilityState.FOCUSED_VISIBLE,
+                VisibilityState.FULL_IMPRESSION_VISIBLE
+            )
+        )
     }
 
     @Test

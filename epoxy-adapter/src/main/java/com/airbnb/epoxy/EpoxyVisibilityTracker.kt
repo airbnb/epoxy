@@ -216,9 +216,9 @@ class EpoxyVisibilityTracker {
         val viewHolder = if (isParentValid) recyclerView.getChildViewHolder(child) else null
         if (viewHolder is EpoxyViewHolder) {
             val epoxyHolder = viewHolder.holder
-            processChild(child, detachEvent, eventOriginForDebug, viewHolder)
+            processChild(recyclerView, child, detachEvent, eventOriginForDebug, viewHolder)
             if (epoxyHolder is ModelGroupHolder) {
-                processModelGroupChildren(epoxyHolder, detachEvent, eventOriginForDebug)
+                processModelGroupChildren(recyclerView, epoxyHolder, detachEvent, eventOriginForDebug)
             }
         }
     }
@@ -233,6 +233,7 @@ class EpoxyVisibilityTracker {
      * @param eventOriginForDebug a debug strings used for logs
      */
     private fun processModelGroupChildren(
+        recyclerView: RecyclerView,
         epoxyHolder: ModelGroupHolder,
         detachEvent: Boolean,
         eventOriginForDebug: String
@@ -250,6 +251,7 @@ class EpoxyVisibilityTracker {
                 }
             }
             processChild(
+                recyclerView,
                 groupChildHolder.itemView,
                 detachEvent,
                 eventOriginForDebug,
@@ -268,12 +270,12 @@ class EpoxyVisibilityTracker {
      * @param viewHolder          the view holder for the child view
      */
     private fun processChild(
+        recyclerView: RecyclerView,
         child: View,
         detachEvent: Boolean,
         eventOriginForDebug: String,
         viewHolder: EpoxyViewHolder
     ) {
-        val recyclerView = attachedRecyclerView ?: return
         val changed = processVisibilityEvents(
             recyclerView,
             viewHolder,
