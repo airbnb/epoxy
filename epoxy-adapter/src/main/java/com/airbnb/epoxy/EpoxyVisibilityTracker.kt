@@ -17,7 +17,7 @@ import java.util.HashMap
  * backed by an Epoxy controller. Once attached the events will be forwarded to the Epoxy model (or
  * to the Epoxy view when using annotations).
  *
- * Note that support for visibility events on a [EpoxyModelGroup] is somewhat limited. Only model
+ * Note that support for visibility events on an [EpoxyModelGroup] is somewhat limited. Only model
  * additions will receive visibility events. Models that are removed from the group will not receive
  * events (e.g. [VisibilityState.INVISIBLE]) because the model group does not keep a reference,
  * nor does it get notified of model removals.
@@ -239,8 +239,9 @@ class EpoxyVisibilityTracker {
     ) {
         // Iterate through models in the group and process each of them instead of the group
         for (groupChildHolder in epoxyHolder.viewHolders) {
-            // Since the group is likely using a ViewGroup other than a RecyclerView we need to
-            // handle the potential of a nested RecyclerView.
+            // Since the group is likely using a ViewGroup other than a RecyclerView, handle the
+            // potential of a nested RecyclerView. This cannot be done through the normal flow
+            // without recursively searching through the view children.
             if (groupChildHolder.itemView is RecyclerView) {
                 if (detachEvent) {
                     processChildRecyclerViewDetached(groupChildHolder.itemView)
