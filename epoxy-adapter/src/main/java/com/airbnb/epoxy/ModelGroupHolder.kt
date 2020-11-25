@@ -13,7 +13,7 @@ class ModelGroupHolder(
     val viewHolders = ArrayList<EpoxyViewHolder>(4)
 
     /** Use parent pool or create a local pool */
-    private val viewPool = parentViewPool ?: LocalGroupRecycledViewPool()
+    val viewPool = parentViewPool ?: LocalGroupRecycledViewPool()
 
     /**
      * Get the root view group (aka
