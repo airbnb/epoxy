@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.LayoutRes;
@@ -71,10 +70,11 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
   private Boolean shouldSaveViewState = null;
 
   /**
-   * The pool to be used to recycle view in the group, it usually correspond to the recycler view.
+   * The pool for recycling within the group. Looked up in the parent view hierarchy if a RecyclerView
+   * is found. Else, if not found, it remains null.
    */
-  @NonNull
-  private RecycledViewPool viewPool = new LocalGroupRecycledViewPool();
+  @Nullable
+  private RecycledViewPool parentViewPool = null;
 
   /**
    * @param layoutRes The layout to use with these models.
@@ -134,11 +134,10 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
 
   @Override
   protected View buildView(@NonNull ViewGroup parent) {
-    if (viewPool == null) {
-      viewPool = ModelGroupHolder.findViewPool(parent, viewPool);
+    if (parentViewPool == null) {
+      parentViewPool = ModelGroupHolder.findViewPool(parent);
     }
-    View group = super.buildView(parent);
-    return group;
+    return super.buildView(parent);
   }
 
   protected void addModel(@NonNull EpoxyModel<?> model) {
@@ -294,7 +293,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
 
   @Override
   protected final ModelGroupHolder createNewHolder() {
-    return new ModelGroupHolder(viewPool);
+    return new ModelGroupHolder(parentViewPool);
   }
 
   @Override

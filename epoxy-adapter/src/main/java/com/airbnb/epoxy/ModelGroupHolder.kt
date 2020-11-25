@@ -8,11 +8,12 @@ import com.airbnb.viewmodeladapter.R
 import java.util.ArrayList
 
 class ModelGroupHolder(
-    val viewPool: RecyclerView.RecycledViewPool
+    parentViewPool: RecyclerView.RecycledViewPool?
 ) : EpoxyHolder() {
     val viewHolders = ArrayList<EpoxyViewHolder>(4)
 
-    private var viewPoolInitialized = false
+    /** Use parent pool or create a local pool */
+    private val viewPool = parentViewPool ?: LocalGroupRecycledViewPool()
 
     /**
      * Get the root view group (aka
@@ -187,10 +188,7 @@ class ModelGroupHolder(
          * new [LocalGroupRecycledViewPool].
          */
         @JvmStatic
-        fun findViewPool(
-            view: ViewGroup,
-            defaultValue: RecyclerView.RecycledViewPool
-        ): RecyclerView.RecycledViewPool {
+        fun findViewPool(view: ViewGroup): RecyclerView.RecycledViewPool? {
             var viewPool: RecyclerView.RecycledViewPool? = null
             while (viewPool == null) {
                 viewPool = if (view is RecyclerView) {
@@ -198,10 +196,10 @@ class ModelGroupHolder(
                 } else {
                     val parent = view.parent
                     if (parent is ViewGroup) {
-                        findViewPool(parent, defaultValue)
+                        findViewPool(parent)
                     } else {
-                        // This model group is is not in a RecyclerView, use default value.
-                        defaultValue
+                        // This model group is is not in a RecyclerView
+                        null
                     }
                 }
             }
