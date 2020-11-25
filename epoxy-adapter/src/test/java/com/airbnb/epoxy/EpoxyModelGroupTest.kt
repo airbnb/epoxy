@@ -186,6 +186,16 @@ class EpoxyModelGroupTest(val useViewStubs: Boolean) {
         }
     }
 
+    @Test
+    fun modelGroupHolderUseSameViewPoolThanRecyclerView() {
+        TODO("implements")
+    }
+
+    @Test
+    fun modelGroupHolderUseLocalRecyclerViewPool() {
+        TODO("implements")
+    }
+
     private fun createFrameLayoutGroup(modelCount: Int): EpoxyModelGroup {
         val models = (0 until modelCount).map { NestedModelFrameLayout().id(it) }
         return if (useViewStubs) ViewStubsGroupModel(models) else LinerLayoutGroupModel(models)
