@@ -7,11 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.viewmodeladapter.R
 import java.util.ArrayList
 
-class ModelGroupHolder : EpoxyHolder() {
+class ModelGroupHolder(
+    val viewPool: RecyclerView.RecycledViewPool
+) : EpoxyHolder() {
     val viewHolders = ArrayList<EpoxyViewHolder>(4)
 
     private var viewPoolInitialized = false
-    private lateinit var viewPool: RecyclerView.RecycledViewPool
 
     /**
      * Get the root view group (aka
@@ -143,11 +144,6 @@ class ModelGroupHolder : EpoxyHolder() {
 
     private fun getViewHolder(parent: ViewGroup, model: EpoxyModel<*>): EpoxyViewHolder {
         val viewType = ViewTypeManager.getViewType(model)
-        if (!viewPoolInitialized) {
-            // Re-use the pool from parent
-            viewPool = findViewPool(parent)
-            viewPoolInitialized = true
-        }
         val recycledView = viewPool.getRecycledView(viewType)
 
         return recycledView as? EpoxyViewHolder
@@ -190,7 +186,11 @@ class ModelGroupHolder : EpoxyHolder() {
          * Find a [RecyclerView.RecycledViewPool] on the closest parent. If not found it will create a
          * new [LocalGroupRecycledViewPool].
          */
-        private fun findViewPool(view: ViewGroup): RecyclerView.RecycledViewPool {
+        @JvmStatic
+        fun findViewPool(
+            view: ViewGroup,
+            defaultValue: RecyclerView.RecycledViewPool
+        ): RecyclerView.RecycledViewPool {
             var viewPool: RecyclerView.RecycledViewPool? = null
             while (viewPool == null) {
                 viewPool = if (view is RecyclerView) {
@@ -198,10 +198,10 @@ class ModelGroupHolder : EpoxyHolder() {
                 } else {
                     val parent = view.parent
                     if (parent is ViewGroup) {
-                        findViewPool(parent)
+                        findViewPool(parent, defaultValue)
                     } else {
-                        // This model group is is not in a RecyclerView. We can create a local pool.
-                        LocalGroupRecycledViewPool()
+                        // This model group is is not in a RecyclerView, use default value.
+                        defaultValue
                     }
                 }
             }

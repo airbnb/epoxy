@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewStub;
 
 import java.util.ArrayList;
@@ -8,11 +9,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView.RecycledViewPool;
 
 /**
  * An {@link EpoxyModel} that contains other models, and allows you to combine those models in
@@ -68,6 +71,12 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
   private Boolean shouldSaveViewState = null;
 
   /**
+   * The pool to be used to recycle view in the group, it usually correspond to the recycler view.
+   */
+  @NonNull
+  private RecycledViewPool viewPool = new LocalGroupRecycledViewPool();
+
+  /**
    * @param layoutRes The layout to use with these models.
    * @param models    The models that will be used to bind the views in the given layout.
    */
@@ -121,6 +130,15 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
   protected EpoxyModelGroup(@LayoutRes int layoutRes) {
     this();
     layout(layoutRes);
+  }
+
+  @Override
+  protected View buildView(@NonNull ViewGroup parent) {
+    if (viewPool == null) {
+      viewPool = ModelGroupHolder.findViewPool(parent, viewPool);
+    }
+    View group = super.buildView(parent);
+    return group;
   }
 
   protected void addModel(@NonNull EpoxyModel<?> model) {
@@ -276,7 +294,7 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
 
   @Override
   protected final ModelGroupHolder createNewHolder() {
-    return new ModelGroupHolder();
+    return new ModelGroupHolder(viewPool);
   }
 
   @Override
