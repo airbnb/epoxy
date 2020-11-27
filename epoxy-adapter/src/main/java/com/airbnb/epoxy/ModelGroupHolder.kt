@@ -2,14 +2,19 @@ package com.airbnb.epoxy
 
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewParent
 import android.view.ViewStub
+import androidx.annotation.VisibleForTesting
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.viewmodeladapter.R
 import java.util.ArrayList
 
-class ModelGroupHolder : EpoxyHolder() {
+class ModelGroupHolder(parent: ViewParent) : EpoxyHolder() {
     val viewHolders = ArrayList<EpoxyViewHolder>(4)
-    private lateinit var poolReference: PoolReference
+
+    /** Use parent pool or create a local pool */
+    @VisibleForTesting
+    val viewPool = findViewPool(parent) ?: LocalGroupRecycledViewPool()
 
     /**
      * Get the root view group (aka
@@ -35,7 +40,6 @@ class ModelGroupHolder : EpoxyHolder() {
 
         rootView = itemView
         childContainer = findChildContainer(rootView)
-        poolReference = ACTIVITY_RECYCLER_POOL.getPool(itemView.context) { UnboundedViewPool() }
 
         stubs = if (childContainer.childCount != 0) {
             createViewStubData(childContainer)
@@ -142,7 +146,7 @@ class ModelGroupHolder : EpoxyHolder() {
 
     private fun getViewHolder(parent: ViewGroup, model: EpoxyModel<*>): EpoxyViewHolder {
         val viewType = ViewTypeManager.getViewType(model)
-        val recycledView = poolReference.viewPool.getRecycledView(viewType)
+        val recycledView = viewPool.getRecycledView(viewType)
 
         return recycledView as? EpoxyViewHolder
             ?: HELPER_ADAPTER.createViewHolder(
@@ -162,7 +166,6 @@ class ModelGroupHolder : EpoxyHolder() {
             removeAndRecycleView(viewHolders.size - 1)
         }
 
-        poolReference.clearIfDestroyed()
         boundGroup = null
     }
 
@@ -175,13 +178,30 @@ class ModelGroupHolder : EpoxyHolder() {
 
         val viewHolder = viewHolders.removeAt(modelPosition)
         viewHolder.unbind()
-        poolReference.viewPool.putRecycledView(viewHolder)
+        viewPool.putRecycledView(viewHolder)
     }
 
     companion object {
 
         private val HELPER_ADAPTER = HelperAdapter()
-        private val ACTIVITY_RECYCLER_POOL = ActivityRecyclerPool()
+
+        private fun findViewPool(view: ViewParent): RecyclerView.RecycledViewPool? {
+            var viewPool: RecyclerView.RecycledViewPool? = null
+            while (viewPool == null) {
+                viewPool = if (view is RecyclerView) {
+                    view.recycledViewPool
+                } else {
+                    val parent = view.parent
+                    if (parent is ViewParent) {
+                        findViewPool(parent)
+                    } else {
+                        // This model group is is not in a RecyclerView
+                        null
+                    }
+                }
+            }
+            return viewPool
+        }
     }
 }
 
@@ -218,6 +238,11 @@ private class ViewStubData(
         viewGroup.removeView(view)
     }
 }
+
+/**
+ * Local pool to the [ModelGroupHolder]
+ */
+private class LocalGroupRecycledViewPool : RecyclerView.RecycledViewPool()
 
 /**
  * A viewholder's viewtype can only be set internally in an adapter when the viewholder
