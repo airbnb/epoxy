@@ -1102,10 +1102,15 @@ class GeneratedModelWriter(
             return
         }
 
-        createHolderMethod = createHolderMethod.toBuilder()
-            .returns(modelClassInfo.modelType)
-            .addStatement("return new \$T()", modelClassInfo.modelType)
-            .build()
+        createHolderMethod = with(createHolderMethod.toBuilder()) {
+            returns(modelClassInfo.modelType)
+//            if (modelClassInfo.modelType.hasViewParentConstructor()) { TODO implements
+//                addStatement("return new \$T(parent)", modelClassInfo.modelType)
+//            } else {
+                addStatement("return new \$T()", modelClassInfo.modelType)
+//            }
+            build()
+        }
 
         methods.add(createHolderMethod)
     }
