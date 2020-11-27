@@ -1,5 +1,7 @@
 package com.airbnb.epoxy.preloadersample
 
+import android.view.View
+import android.view.ViewParent
 import android.widget.ImageView
 import android.widget.TextView
 import com.airbnb.epoxy.EpoxyAttribute
@@ -30,9 +32,9 @@ abstract class ImageModel : EpoxyModelWithHolder<ImageHolder>() {
     }
 }
 
-class ImageHolder : KotlinHolder(), Preloadable {
+class ImageHolder(parent: ViewParent) : KotlinHolder(), Preloadable {
     val image by bind<ImageView>(R.id.image_view)
     val text by bind<TextView>(R.id.text_view)
-    val glide by lazy { Glide.with(image.context) }
+    val glide = Glide.with((parent as View).context)
     override val viewsToPreload by lazy { listOf(image) }
 }
