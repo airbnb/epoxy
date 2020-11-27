@@ -98,7 +98,7 @@ public abstract class BaseEpoxyAdapter
   public EpoxyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     EpoxyModel<?> model = viewTypeManager.getModelForViewType(this, viewType);
     View view = model.buildView(parent);
-    return new EpoxyViewHolder(view, model.shouldSaveViewState());
+    return new EpoxyViewHolder(parent, view, model.shouldSaveViewState());
   }
 
   @Override

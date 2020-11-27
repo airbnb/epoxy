@@ -1092,6 +1092,10 @@ class GeneratedModelWriter(
         )
             .addAnnotation(Override::class.java)
             .addModifiers(Modifier.PROTECTED)
+            .addParameter(
+                ClassName.get("android.view", "ViewParent"),
+                "parent"
+            )
             .build()
 
         if (implementsMethod(originalClassElement, createHolderMethod, types, elements)) {

@@ -1,6 +1,7 @@
 package com.airbnb.epoxy.kotlinsample.helpers
 
 import android.view.View
+import android.view.ViewParent
 import androidx.viewbinding.ViewBinding
 import com.airbnb.epoxy.EpoxyHolder
 import com.airbnb.epoxy.EpoxyModelWithHolder
@@ -18,7 +19,7 @@ abstract class ViewBindingEpoxyModelWithHolder<in T : ViewBinding> :
 
     abstract fun T.bind()
 
-    override fun createNewHolder(): ViewBindingHolder {
+    override fun createNewHolder(parent: ViewParent): ViewBindingHolder {
         return ViewBindingHolder(this::class.java)
     }
 }

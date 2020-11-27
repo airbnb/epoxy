@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.view.View;
+import android.view.ViewParent;
 
 import com.airbnb.epoxy.ViewHolderState.ViewState;
 import com.airbnb.epoxy.VisibilityState.Visibility;
@@ -19,10 +20,12 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
   private List<Object> payloads;
   private EpoxyHolder epoxyHolder;
   @Nullable ViewHolderState.ViewState initialViewState;
+  private ViewParent parent;
 
-  public EpoxyViewHolder(View view, boolean saveInitialState) {
+  public EpoxyViewHolder(ViewParent parent, View view, boolean saveInitialState) {
     super(view);
 
+    this.parent = parent;
     if (saveInitialState) {
       // We save the initial state of the view when it is created so that we can reset this initial
       // state before a model is bound for the first time. Otherwise the view may carry over
@@ -43,7 +46,7 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     this.payloads = payloads;
 
     if (epoxyHolder == null && model instanceof EpoxyModelWithHolder) {
-      epoxyHolder = ((EpoxyModelWithHolder) model).createNewHolder();
+      epoxyHolder = ((EpoxyModelWithHolder) model).createNewHolder(parent);
       epoxyHolder.bindView(itemView);
     }
 

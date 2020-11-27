@@ -235,7 +235,7 @@ private class HelperAdapter : RecyclerView.Adapter<EpoxyViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpoxyViewHolder {
-        return EpoxyViewHolder(model!!.buildView(parent), model!!.shouldSaveViewState())
+        return EpoxyViewHolder(parent, model!!.buildView(parent), model!!.shouldSaveViewState())
     }
 
     override fun onBindViewHolder(holder: EpoxyViewHolder, position: Int) {
