@@ -85,10 +85,10 @@ class PagedDataModelCacheTest {
                 pagedDataModelCache.submitData(it)
             }
         }
-        //advance in time to create first page of data
+        // advance in time to create first page of data
         testDispatcher.advanceTimeBy(DEFAULT_DELAY)
 
-        //wait for pagedDataModelCache submits data
+        // wait for pagedDataModelCache submits data
         delay(2000)
 
         assertModelDummyItems(items.subList(0, INITIAL_LOAD_SIZE))
@@ -96,7 +96,7 @@ class PagedDataModelCacheTest {
         pagedDataModelCache.loadAround(INITIAL_LOAD_SIZE - 1)
         assertModelDummyItems(items.subList(0, INITIAL_LOAD_SIZE))
         MatcherAssert.assertThat(rebuildCounter, CoreMatchers.`is`(0))
-        //advance in time to create second page of data
+        // advance in time to create second page of data
         testDispatcher.advanceTimeBy(DEFAULT_DELAY)
         delay(2000)
         assertModelDummyItems(items)
