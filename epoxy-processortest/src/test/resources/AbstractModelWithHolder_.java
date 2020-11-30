@@ -1,5 +1,6 @@
 package com.airbnb.epoxy;
 
+import android.view.ViewParent;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import java.lang.CharSequence;
@@ -201,7 +202,7 @@ public class AbstractModelWithHolder_ extends AbstractModelWithHolder implements
   }
 
   @Override
-  protected AbstractModelWithHolder.Holder createNewHolder() {
+  protected AbstractModelWithHolder.Holder createNewHolder(ViewParent parent) {
     return new AbstractModelWithHolder.Holder();
   }
 
