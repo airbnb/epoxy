@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.view.View;
+import android.view.ViewParent;
 
 import androidx.annotation.NonNull;
 
@@ -9,6 +10,14 @@ import androidx.annotation.NonNull;
  * pattern when binding to a model.
  */
 public abstract class EpoxyHolder {
+
+  public EpoxyHolder(@NonNull ViewParent parent) {
+    this();
+  }
+
+  public EpoxyHolder() {
+  }
+
   /**
    * Called when this holder is created, with the view that it should hold. You can use this
    * opportunity to find views by id, and do any other initialization you need. This is called only

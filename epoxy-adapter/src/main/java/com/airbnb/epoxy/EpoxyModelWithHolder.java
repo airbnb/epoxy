@@ -1,5 +1,7 @@
 package com.airbnb.epoxy;
 
+import android.view.ViewParent;
+
 import com.airbnb.epoxy.VisibilityState.Visibility;
 
 import java.util.List;
@@ -22,7 +24,7 @@ public abstract class EpoxyModelWithHolder<T extends EpoxyHolder> extends EpoxyM
   }
 
   /** This should return a new instance of your {@link com.airbnb.epoxy.EpoxyHolder} class. */
-  protected abstract T createNewHolder();
+  protected abstract T createNewHolder(@NonNull ViewParent parent);
 
   @Override
   public void bind(@NonNull T holder) {

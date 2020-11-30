@@ -13,6 +13,7 @@ import com.airbnb.epoxy.TextProp
 import com.airbnb.epoxy.processor.GeneratedModelInfo.Companion.RESET_METHOD
 import com.airbnb.epoxy.processor.GeneratedModelInfo.Companion.buildParamSpecs
 import com.airbnb.epoxy.processor.Utils.isSubtype
+import com.squareup.javapoet.ClassName
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
@@ -369,6 +370,17 @@ class Memoizer(
                     // Also check the class hierarchy
                     implementsModelCollector(superClassElement)
                 } ?: false
+            }
+        }
+    }
+
+    private val hasViewParentConstructorMap = mutableMapOf<Name, Boolean>()
+    fun hasViewParentConstructor(classElement: TypeElement): Boolean {
+        return synchronized(typeMap) {
+            hasViewParentConstructorMap.getOrPut(classElement.qualifiedName) {
+                getClassConstructors(classElement).filter {
+                    it.params.size == 1 && it.params[0].type == ClassName.get("android.view", "ViewParent")
+                }.isNotEmpty()
             }
         }
     }

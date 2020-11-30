@@ -1076,6 +1076,8 @@ class GeneratedModelWriter(
     /**
      * If the model is a holder and doesn't implement the "createNewHolder" method we can generate a
      * default implementation by getting the class type and creating a new instance of it.
+     *
+     * If the holder class have a constructor that accept the parent it will invoke it.
      */
     private fun addCreateHolderMethodIfNeeded(
         modelClassInfo: GeneratedModelInfo,
@@ -1092,16 +1094,28 @@ class GeneratedModelWriter(
         )
             .addAnnotation(Override::class.java)
             .addModifiers(Modifier.PROTECTED)
+            .addParameter(
+                ClassName.get("android.view", "ViewParent"),
+                "parent"
+            )
             .build()
 
         if (implementsMethod(originalClassElement, createHolderMethod, types, elements)) {
             return
         }
 
-        createHolderMethod = createHolderMethod.toBuilder()
-            .returns(modelClassInfo.modelType)
-            .addStatement("return new \$T()", modelClassInfo.modelType)
-            .build()
+        createHolderMethod = with(createHolderMethod.toBuilder()) {
+            returns(modelClassInfo.modelType)
+            val modelTypeElement = (modelClassInfo.modelType as? ClassName)?.asTypeElement(elements)
+            if (modelTypeElement != null &&
+                modelClassInfo.memoizer.hasViewParentConstructor(modelTypeElement)
+            ) {
+                addStatement("return new \$T(parent)", modelClassInfo.modelType)
+            } else {
+                addStatement("return new \$T()", modelClassInfo.modelType)
+            }
+            build()
+        }
 
         methods.add(createHolderMethod)
     }

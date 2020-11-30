@@ -1,5 +1,6 @@
 package com.airbnb.epoxy
 
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -61,7 +62,7 @@ class UnboundedViewPoolTests {
      */
     private class RvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            EpoxyViewHolder(parent, false)
+            EpoxyViewHolder(parent, View(parent.context), false)
 
         override fun getItemCount() = 0
 

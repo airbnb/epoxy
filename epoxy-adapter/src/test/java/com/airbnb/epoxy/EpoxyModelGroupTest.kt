@@ -42,7 +42,8 @@ class EpoxyModelGroupTest(val useViewStubs: Boolean) {
 
     private fun bind(modelGroup: EpoxyModelGroup, previousGroup: EpoxyModelGroup? = null) {
         if (topLevelHolder == null) {
-            topLevelHolder = EpoxyViewHolder(modelGroup.buildView(recyclerView), false)
+            topLevelHolder =
+                EpoxyViewHolder(recyclerView, modelGroup.buildView(recyclerView), false)
         }
         topLevelHolder!!.bind(modelGroup, previousGroup, emptyList(), 0)
     }

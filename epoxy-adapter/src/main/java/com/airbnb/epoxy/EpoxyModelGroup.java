@@ -1,6 +1,7 @@
 package com.airbnb.epoxy;
 
 import android.view.View;
+import android.view.ViewParent;
 import android.view.ViewStub;
 
 import java.util.ArrayList;
@@ -275,8 +276,8 @@ public class EpoxyModelGroup extends EpoxyModelWithHolder<ModelGroupHolder> {
   }
 
   @Override
-  protected final ModelGroupHolder createNewHolder() {
-    return new ModelGroupHolder();
+  protected final ModelGroupHolder createNewHolder(@NonNull ViewParent parent) {
+    return new ModelGroupHolder(parent);
   }
 
   @Override
