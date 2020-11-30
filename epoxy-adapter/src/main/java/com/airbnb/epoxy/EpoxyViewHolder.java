@@ -20,6 +20,8 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
   private List<Object> payloads;
   private EpoxyHolder epoxyHolder;
   @Nullable ViewHolderState.ViewState initialViewState;
+
+  // Once the EpoxyHolder is created parent will be set to null.
   private ViewParent parent;
 
   public EpoxyViewHolder(ViewParent parent, View view, boolean saveInitialState) {
@@ -48,6 +50,7 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     if (epoxyHolder == null && model instanceof EpoxyModelWithHolder) {
       epoxyHolder = ((EpoxyModelWithHolder) model).createNewHolder(parent);
       epoxyHolder.bindView(itemView);
+      parent = null;
     }
 
     if (model instanceof GeneratedModel) {
