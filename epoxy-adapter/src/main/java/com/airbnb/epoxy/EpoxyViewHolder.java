@@ -50,8 +50,9 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     if (epoxyHolder == null && model instanceof EpoxyModelWithHolder) {
       epoxyHolder = ((EpoxyModelWithHolder) model).createNewHolder(parent);
       epoxyHolder.bindView(itemView);
-      parent = null;
     }
+    // Safe to set to null as it is only used for createNewHolder method
+    parent = null;
 
     if (model instanceof GeneratedModel) {
       // The generated method will enforce that only a properly typed listener can be set
