@@ -1,10 +1,7 @@
 package com.airbnb.epoxy
 
-import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import android.os.Build
-import androidx.core.view.ViewCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -13,11 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import java.lang.ref.WeakReference
 import java.util.ArrayList
 
-internal class ActivityRecyclerPool {
+internal class LifecycleOwnerRecyclerPool {
 
     /**
-     * Store one unique pool per activity. They are cleared out when activities are destroyed, so this
-     * only needs to hold pools for active activities.
+     * Store one unique pool per lifecycle owner. They are cleared out when lifecycles are destroyed,
+     * so this only needs to hold pools for active lifecycles.
      */
     private val pools = ArrayList<PoolReference>(5)
 
@@ -40,9 +37,9 @@ internal class ActivityRecyclerPool {
                     poolToUse = poolReference
                     // finish iterating to remove any old contexts
                 }
-                poolReference.context.isActivityDestroyed() -> {
-                    // A pool from a different activity that was destroyed.
-                    // Clear the pool references to allow the activity to be GC'd
+                poolReference.context.isLifecycleDestroyed() -> {
+                    // A pool from a different lifecycle owner that was destroyed.
+                    // Clear the pool references to allow the lifecycle owner to be GC'd
                     poolReference.viewPool.clear()
                     iterator.remove()
                 }
@@ -59,7 +56,7 @@ internal class ActivityRecyclerPool {
     }
 
     fun clearIfDestroyed(pool: PoolReference) {
-        if (pool.context.isActivityDestroyed()) {
+        if (pool.context.isLifecycleDestroyed()) {
             pool.viewPool.clear()
             pools.remove(pool)
         }
@@ -81,7 +78,7 @@ internal class ActivityRecyclerPool {
 internal class PoolReference(
     context: Context,
     val viewPool: RecyclerView.RecycledViewPool,
-    private val parent: ActivityRecyclerPool
+    private val parent: LifecycleOwnerRecyclerPool
 ) : LifecycleObserver {
     private val contextReference: WeakReference<Context> = WeakReference(context)
 
@@ -92,28 +89,23 @@ internal class PoolReference(
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun onContextDestroyed() {
+    fun onLifecycleDestroyed() {
         clearIfDestroyed()
     }
 }
 
-internal fun Context?.isActivityDestroyed(): Boolean {
+internal fun Context?.isLifecycleDestroyed(): Boolean {
     if (this == null) {
         return true
     }
 
-    if (this !is Activity) {
-        return (this as? ContextWrapper)?.baseContext?.isActivityDestroyed() ?: false
+    if (this !is LifecycleOwner) {
+        return (this as? ContextWrapper)?.baseContext?.isLifecycleDestroyed() ?: false
     }
 
-    if (isFinishing) {
+    if (lifecycle.currentState >= Lifecycle.State.DESTROYED) {
         return true
     }
 
-    return if (Build.VERSION.SDK_INT >= 17) {
-        isDestroyed
-    } else {
-        // Use this as a proxy for being destroyed on older devices
-        !ViewCompat.isAttachedToWindow(window.decorView)
-    }
+    return false
 }
