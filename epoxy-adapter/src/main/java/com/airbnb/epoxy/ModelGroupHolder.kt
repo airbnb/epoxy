@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.viewmodeladapter.R
 import java.util.ArrayList
 
-class ModelGroupHolder(parent: ViewParent) : EpoxyHolder() {
+class ModelGroupHolder(private val modelGroupParent: ViewParent) : EpoxyHolder() {
     val viewHolders = ArrayList<EpoxyViewHolder>(4)
 
     /** Use parent pool or create a local pool */
     @VisibleForTesting
-    val viewPool = findViewPool(parent) ?: LocalGroupRecycledViewPool()
+    val viewPool = findViewPool(modelGroupParent)
 
     /**
      * Get the root view group (aka
@@ -150,6 +150,7 @@ class ModelGroupHolder(parent: ViewParent) : EpoxyHolder() {
 
         return recycledView as? EpoxyViewHolder
             ?: HELPER_ADAPTER.createViewHolder(
+                modelGroupParent,
                 model,
                 parent,
                 viewType
@@ -185,7 +186,7 @@ class ModelGroupHolder(parent: ViewParent) : EpoxyHolder() {
 
         private val HELPER_ADAPTER = HelperAdapter()
 
-        private fun findViewPool(view: ViewParent): RecyclerView.RecycledViewPool? {
+        private fun findViewPool(view: ViewParent): RecyclerView.RecycledViewPool {
             var viewPool: RecyclerView.RecycledViewPool? = null
             while (viewPool == null) {
                 viewPool = if (view is RecyclerView) {
@@ -196,7 +197,7 @@ class ModelGroupHolder(parent: ViewParent) : EpoxyHolder() {
                         findViewPool(parent)
                     } else {
                         // This model group is is not in a RecyclerView
-                        null
+                        LocalGroupRecycledViewPool()
                     }
                 }
             }
@@ -251,16 +252,24 @@ private class LocalGroupRecycledViewPool : RecyclerView.RecycledViewPool()
 private class HelperAdapter : RecyclerView.Adapter<EpoxyViewHolder>() {
 
     private var model: EpoxyModel<*>? = null
+    private var modelGroupParent: ViewParent? = null
 
-    fun createViewHolder(model: EpoxyModel<*>, parent: ViewGroup, viewType: Int): EpoxyViewHolder {
+    fun createViewHolder(
+        modelGroupParent: ViewParent,
+        model: EpoxyModel<*>,
+        parent: ViewGroup,
+        viewType: Int
+    ): EpoxyViewHolder {
         this.model = model
+        this.modelGroupParent = modelGroupParent
         val viewHolder = createViewHolder(parent, viewType)
         this.model = null
+        this.modelGroupParent = null
         return viewHolder
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpoxyViewHolder {
-        return EpoxyViewHolder(parent, model!!.buildView(parent), model!!.shouldSaveViewState())
+        return EpoxyViewHolder(modelGroupParent, model!!.buildView(parent), model!!.shouldSaveViewState())
     }
 
     override fun onBindViewHolder(holder: EpoxyViewHolder, position: Int) {
