@@ -80,7 +80,7 @@ internal class PagedDataModelCache<T : Any>(
 
         override fun onRemoved(position: Int, count: Int) = synchronizedWithCache {
             assertUpdateCallbacksAllowed()
-            (0 until count).forEach {
+            repeat(count) {
                 modelCache.removeAt(position)
             }
             rebuildCallback()
