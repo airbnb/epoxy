@@ -1,5 +1,15 @@
-#
+# 4.3.0 (Dec 1, 2020)
+- ModelGroupHolder get recycle pool from parent (#1097)
 - Add support for `EpoxyModelGroup` in the `EpoxyVisibilityTracker` (#1091)
+- Convert EpoxyVisibilityTracker code to Kotlin (#1090)
+
+## Breaking Changes
+Note that due to the conversion of EpoxyVisibilityTracker to kotlin you now need to access `EpoxyVisibilityTracker.partialImpressionThresholdPercentage` as a property
+`epoxyVisibilityTracker.setPartialImpressionThresholdPercentage(value)` -> `epoxyVisibilityTracker.partialImpressionThresholdPercentage = value`
+
+Also, the ModelGroupHolder improvement required the `ModelGroupHolder#createNewHolder` function to change its signature to accept a `ViewParent` parameter.
+
+If you override `createNewHolder()` anywhere you will need to change it to `createNewHolder(@NonNull ViewParent parent)`
 
 # 4.2.0 (Nov 11, 2020)
 - Add notify model changed method (#1063)
