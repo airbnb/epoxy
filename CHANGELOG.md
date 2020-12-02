@@ -1,3 +1,6 @@
+# 4.3.1 (Dec 2, 2020)
+- Fix ANR and view pool resolution in nested group (#1101)
+
 # 4.3.0 (Dec 1, 2020)
 - ModelGroupHolder get recycle pool from parent (#1097)
 - Add support for `EpoxyModelGroup` in the `EpoxyVisibilityTracker` (#1091)
