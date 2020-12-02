@@ -14,7 +14,7 @@ class ModelGroupHolder(parent: ViewParent) : EpoxyHolder() {
 
     /** Use parent pool or create a local pool */
     @VisibleForTesting
-    val viewPool = findViewPool(parent) ?: LocalGroupRecycledViewPool()
+    val viewPool = findViewPool(modelGroupParent)
 
     /**
      * Get the root view group (aka
@@ -185,7 +185,7 @@ class ModelGroupHolder(parent: ViewParent) : EpoxyHolder() {
 
         private val HELPER_ADAPTER = HelperAdapter()
 
-        private fun findViewPool(view: ViewParent): RecyclerView.RecycledViewPool? {
+        private fun findViewPool(view: ViewParent): RecyclerView.RecycledViewPool {
             var viewPool: RecyclerView.RecycledViewPool? = null
             while (viewPool == null) {
                 viewPool = if (view is RecyclerView) {
@@ -196,7 +196,7 @@ class ModelGroupHolder(parent: ViewParent) : EpoxyHolder() {
                         findViewPool(parent)
                     } else {
                         // This model group is is not in a RecyclerView
-                        null
+                        LocalGroupRecycledViewPool()
                     }
                 }
             }
