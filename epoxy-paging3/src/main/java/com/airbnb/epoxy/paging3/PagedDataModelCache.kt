@@ -72,7 +72,7 @@ internal class PagedDataModelCache<T : Any>(
 
         override fun onInserted(position: Int, count: Int) = synchronizedWithCache {
             assertUpdateCallbacksAllowed()
-            (0 until count).forEach {
+            repeat(count) {
                 modelCache.add(position, null)
             }
             rebuildCallback()
