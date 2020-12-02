@@ -50,6 +50,18 @@ class EpoxyModelGroupRecyclingTest {
                     id("1")
                     layout(R.layout.vertical_linear_group)
                     onBind(assertOnModelBound)
+
+                    group {
+                        id("1.1")
+                        layout(R.layout.vertical_linear_group)
+                        onBind(assertOnModelBound)
+                    }
+
+                    group {
+                        id("1.1.1")
+                        layout(R.layout.vertical_linear_group)
+                        onBind(assertOnModelBound)
+                    }
                 }
             },
             buildModels2 = {
@@ -60,7 +72,7 @@ class EpoxyModelGroupRecyclingTest {
                 }
             }
         )
-        Assert.assertEquals(2, modelsBound)
+        Assert.assertEquals(4, modelsBound)
     }
 
     /**
@@ -88,6 +100,18 @@ class EpoxyModelGroupRecyclingTest {
                     id("1")
                     layout(R.layout.vertical_linear_group)
                     onBind(assertOnModelBound1)
+
+                    group {
+                        id("1.1")
+                        layout(R.layout.vertical_linear_group)
+                        onBind(assertOnModelBound1)
+
+                        group {
+                            id("1.1.1")
+                            layout(R.layout.vertical_linear_group)
+                            onBind(assertOnModelBound1)
+                        }
+                    }
                 }
             },
             buildModels2 = {
@@ -98,7 +122,7 @@ class EpoxyModelGroupRecyclingTest {
                 }
             }
         )
-        Assert.assertEquals("2 models should have been bound", 2, modelsBound)
+        Assert.assertEquals(4, modelsBound)
     }
 
     /** Sets the models in the [recyclerView1] and [recyclerView2]. */
