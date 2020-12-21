@@ -24,6 +24,7 @@ public @interface ModelView {
    */
   enum Size {
     NONE,
+    MANUAL,
     WRAP_WIDTH_WRAP_HEIGHT,
     WRAP_WIDTH_MATCH_HEIGHT,
     MATCH_WIDTH_WRAP_HEIGHT,

@@ -17,6 +17,7 @@ import com.airbnb.epoxy.kotlinsample.models.coloredSquareView
 import com.airbnb.epoxy.kotlinsample.models.decoratedLinearGroup
 import com.airbnb.epoxy.kotlinsample.models.itemCustomView
 import com.airbnb.epoxy.kotlinsample.models.itemEpoxyHolder
+import com.airbnb.epoxy.kotlinsample.models.itemTitleTextView
 import com.airbnb.epoxy.kotlinsample.models.itemViewBindingEpoxyHolder
 
 class MainActivity : AppCompatActivity() {
@@ -34,6 +35,11 @@ class MainActivity : AppCompatActivity() {
         epoxyVisibilityTracker.attach(recyclerView)
 
         recyclerView.withModels {
+
+            itemTitleTextView {
+                id("textViewExampleView")
+                title("This is an Kotlin Example")
+            }
 
             group {
                 id("epoxyModelGroupDsl")
