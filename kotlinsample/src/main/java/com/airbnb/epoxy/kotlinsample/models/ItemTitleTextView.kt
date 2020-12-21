@@ -26,6 +26,5 @@ class ItemTitleTextView @JvmOverloads constructor(
     @TextProp
     fun setTitle(title: CharSequence?) {
         text = title
-        android.R.layout.simple_list_item_1
     }
 }
