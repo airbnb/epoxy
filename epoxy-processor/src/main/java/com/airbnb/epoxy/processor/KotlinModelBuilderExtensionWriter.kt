@@ -78,10 +78,6 @@ internal class KotlinModelBuilderExtensionWriter(
         val constructorIsNotPublic =
             constructor != null && Modifier.PUBLIC !in constructor.modifiers
 
-        // Kotlin cannot directly reference a class with a $ in the name. It must be wrapped in ticks (``)
-        val useTicksAroundModelName = model.generatedName.simpleName().contains("$")
-        val tick = if (useTicksAroundModelName) "`" else ""
-
         val initializerLambda = LambdaTypeName.get(
             receiver = getBuilderInterfaceTypeName(model).toKPoet(),
             returnType = KClassNames.KOTLIN_UNIT
@@ -112,7 +108,7 @@ internal class KotlinModelBuilderExtensionWriter(
 
             addStatement("add(")
             beginControlFlow(
-                "$tick%T$tick(${params.joinToString(", ") { it.name }}).apply",
+                "%T(${params.joinToString(", ") { it.name }}).apply",
                 modelClass
             )
             addStatement("modelInitializer()")
