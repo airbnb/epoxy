@@ -174,6 +174,8 @@ internal class PagedDataModelCache<T : Any>(
     }
 
     private fun triggerLoadAround(position: Int) {
-        asyncDiffer.getItem(position)
+        if (asyncDiffer.itemCount > 0) {
+            asyncDiffer.getItem(position.coerceAtMost(asyncDiffer.itemCount - 1))
+        }
     }
 }
