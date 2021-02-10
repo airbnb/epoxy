@@ -180,8 +180,8 @@ abstract class GeneratedModelInfo(val memoizer: Memoizer) {
         for (attribute in attributes) {
             if (attribute.isRequired ||
                 attribute.codeToSetDefault.isEmpty && !hasDefaultKotlinValue(
-                    attribute
-                )
+                        attribute
+                    )
             ) {
                 continue
             }

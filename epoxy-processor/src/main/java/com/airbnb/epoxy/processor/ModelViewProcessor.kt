@@ -165,9 +165,9 @@ class ModelViewProcessor : BaseProcessorWithPackageConfigs() {
                     if (prop is ExecutableElement &&
                         prop.parametersThreadSafe.isEmpty() &&
                         info.viewElement.findOverload(
-                            prop,
-                            1
-                        )?.hasAnyAnnotation(modelPropAnnotations) == true
+                                prop,
+                                1
+                            )?.hasAnyAnnotation(modelPropAnnotations) == true
                     ) {
                         return@map null
                     }

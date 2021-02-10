@@ -288,11 +288,11 @@ internal object Utils {
                     continue
                 }
                 if (!areParamsTheSame(
-                    methodElement,
-                    method,
-                    typeUtils,
-                    elements
-                )
+                        methodElement,
+                        method,
+                        typeUtils,
+                        elements
+                    )
                 ) {
                     continue
                 }
@@ -369,13 +369,13 @@ internal object Utils {
             // to figure out the base model type. We just look for the first type that is a view or
             // view holder.
             if (isSubtypeOfType(
-                superTypeArgument,
-                ANDROID_VIEW_TYPE
-            ) ||
-                isSubtypeOfType(
                     superTypeArgument,
-                    EPOXY_HOLDER_TYPE
-                )
+                    ANDROID_VIEW_TYPE
+                ) ||
+                isSubtypeOfType(
+                        superTypeArgument,
+                        EPOXY_HOLDER_TYPE
+                    )
             ) {
                 return superTypeArgument
             }
@@ -395,8 +395,8 @@ internal object Utils {
         // Verify method modifiers.
         val modifiers = fieldElement.modifiersThreadSafe
         if (modifiers.contains(Modifier.PRIVATE) && !skipPrivateFieldCheck || modifiers.contains(
-            Modifier.STATIC
-        )
+                Modifier.STATIC
+            )
         ) {
             logger.logError(
                 "%s annotations must not be on private or static fields. (class: %s, field: %s)",

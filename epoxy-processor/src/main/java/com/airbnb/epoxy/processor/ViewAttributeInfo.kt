@@ -324,8 +324,8 @@ class ViewAttributeInfo(
         }
 
         if (options.contains(Option.GenerateStringOverloads) && !isAssignable(
-            getTypeMirror(CharSequence::class.java, elements), typeMirror, types
-        )
+                getTypeMirror(CharSequence::class.java, elements), typeMirror, types
+            )
         ) {
             logger
                 .logError(
