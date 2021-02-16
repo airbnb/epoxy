@@ -3,6 +3,7 @@ package com.airbnb.epoxy.paging3
 import android.os.Handler
 import android.os.Looper
 import androidx.paging.AsyncPagingDataDiffer
+import androidx.paging.CombinedLoadStates
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
@@ -161,6 +162,22 @@ internal class PagedDataModelCache<T : Any>(
         modelBuildingHandler.post {
             clearModelsSynchronized()
         }
+    }
+
+    fun retry() {
+        asyncDiffer.retry()
+    }
+
+    fun refresh() {
+        asyncDiffer.refresh()
+    }
+
+    fun addLoadStateListener(listener: (CombinedLoadStates) -> Unit) {
+        asyncDiffer.addLoadStateListener(listener)
+    }
+
+    fun removeLoadStateListener(listener: (CombinedLoadStates) -> Unit) {
+        asyncDiffer.removeLoadStateListener(listener)
     }
 
     @Synchronized

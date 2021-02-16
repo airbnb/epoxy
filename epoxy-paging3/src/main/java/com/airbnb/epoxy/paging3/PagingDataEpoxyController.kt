@@ -2,7 +2,13 @@ package com.airbnb.epoxy.paging3
 
 import android.annotation.SuppressLint
 import android.os.Handler
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
+import androidx.paging.LoadType
+import androidx.paging.LoadType.REFRESH
 import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.RemoteMediator
 import androidx.recyclerview.widget.DiffUtil
 import com.airbnb.epoxy.EpoxyAsyncUtil
 import com.airbnb.epoxy.EpoxyController
@@ -97,6 +103,47 @@ abstract class PagingDataEpoxyController<T : Any>(
      */
     open suspend fun submitData(pagingData: PagingData<T>) {
         modelCache.submitData(pagingData)
+    }
+
+    /**
+     * Retry any failed load requests that would result in a [LoadState.Error] update to this
+     * [PagingDataEpoxyController]
+     *
+     * [LoadState.Error] can be generated from two types of load requests:
+     *  * [PagingSource.load] returning [PagingSource.LoadResult.Error]
+     *  * [RemoteMediator.load] returning [RemoteMediator.MediatorResult.Error]
+     */
+    fun retry() {
+        modelCache.retry()
+    }
+
+    /**
+     * Refresh the data presented by this [PagingDataEpoxyController].
+     *
+     * [refresh] triggers the creation of a new [PagingData] with a new instance of [PagingSource]
+     * to represent an updated snapshot of the backing dataset. If a [RemoteMediator] is set,
+     * calling [refresh] will also trigger a call to [RemoteMediator.load] with [LoadType] [REFRESH]
+     * to allow [RemoteMediator] to check for updates to the dataset backing [PagingSource].
+     */
+    fun refresh() {
+        modelCache.refresh()
+    }
+
+    /**
+     * Add a [CombinedLoadStates] listener to observe the loading state of the current [PagingData].
+     *
+     * As new [PagingData] generations are submitted and displayed, the listener will be notified to
+     * reflect the current [CombinedLoadStates].
+     */
+    fun addLoadStateListener(listener: (CombinedLoadStates) -> Unit) {
+        modelCache.addLoadStateListener(listener)
+    }
+
+    /**
+     * Remove a previously registered [CombinedLoadStates] listener.
+     */
+    fun removeLoadStateListener(listener: (CombinedLoadStates) -> Unit) {
+        modelCache.removeLoadStateListener(listener)
     }
 
     companion object {
