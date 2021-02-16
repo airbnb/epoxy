@@ -32,13 +32,13 @@ abstract class PagingDataEpoxyController<T : Any>(
      * The notify thread of your PagedList (from setNotifyExecutor in the pagingData Builder) must be
      * the same as this thread. Otherwise Epoxy will crash.
      */
-    modelBuildingHandler: Handler = EpoxyAsyncUtil.getAsyncBackgroundHandler(),
+    modelBuildingHandler: Handler = defaultModelBuildingHandler,
     /**
      * The handler to use when calculating the diff between built model lists.
      * By default this uses the main thread, but you can use
      * [EpoxyAsyncUtil.getAsyncBackgroundHandler] to do diffing in the background.
      */
-    diffingHandler: Handler = EpoxyAsyncUtil.getAsyncBackgroundHandler(),
+    diffingHandler: Handler = defaultDiffingHandler,
     /**
      * [PagingDataEpoxyController] uses an [DiffUtil.ItemCallback] to detect changes between
      * [PagingData]s. By default, it relies on simple object equality but you can provide a custom
