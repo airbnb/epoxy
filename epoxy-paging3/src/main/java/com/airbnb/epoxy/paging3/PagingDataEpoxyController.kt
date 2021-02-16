@@ -10,6 +10,19 @@ import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyViewHolder
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 
+/**
+ * An [EpoxyController] that can work with a [PagingData].
+ *
+ * Internally, it caches the model for each item in the [PagingData]. You must override
+ * [buildItemModel] method to build the model for the given item. Since [PagingData] might include
+ * `null` items if placeholders are enabled, this method needs to handle `null` values in the list.
+ *
+ * By default, the model for each item is added  to the model list. To change this behavior (to
+ * filter items or inject extra items), you can override [addModels] function and manually add built
+ * models.
+ *
+ * @param T The type of the item in the [PagingData].
+ */
 @ObsoleteCoroutinesApi
 abstract class PagingDataEpoxyController<T : Any>(
     /**
