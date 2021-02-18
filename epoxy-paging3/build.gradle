@@ -22,6 +22,7 @@ dependencies {
   testImplementation rootProject.deps.junit
   testImplementation rootProject.deps.robolectric
   testImplementation rootProject.deps.mockito
+  testImplementation rootProject.deps.kotlinCoroutinesTest
   androidTestImplementation rootProject.deps.junit
   androidTestImplementation rootProject.deps.androidArchCoreTesting
   androidTestImplementation rootProject.deps.androidTestRunner
