@@ -140,8 +140,8 @@ class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
         }
 
         if (configManager.requiresAbstractModels(classElement) && !classElement.modifiersThreadSafe.contains(
-            Modifier.ABSTRACT
-        )
+                Modifier.ABSTRACT
+            )
         ) {
             logger
                 .logError(

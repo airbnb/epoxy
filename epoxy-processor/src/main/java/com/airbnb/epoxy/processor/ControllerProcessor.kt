@@ -84,10 +84,10 @@ class ControllerProcessor : BaseProcessorWithPackageConfigs() {
                 }
                 val otherControllerModelFields: Set<ControllerModelField> = controllerInfo.modelsImmutable
                 if (Utils.belongToTheSamePackage(
-                    thisClass,
-                    otherClass,
-                    elementUtils
-                )
+                        thisClass,
+                        otherClass,
+                        elementUtils
+                    )
                 ) {
                     value.addModels(otherControllerModelFields)
                 } else {

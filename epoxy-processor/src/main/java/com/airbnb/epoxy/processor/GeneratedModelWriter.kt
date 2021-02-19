@@ -1203,11 +1203,11 @@ class GeneratedModelWriter(
 
         // If the base method is already implemented don't bother checking for the payload method
         if (implementsMethod(
-            info.superClassElement,
-            bindVariablesMethod,
-            types,
-            elements
-        )
+                info.superClassElement,
+                bindVariablesMethod,
+                types,
+                elements
+            )
         ) {
             return emptyList()
         }
@@ -1682,7 +1682,7 @@ class GeneratedModelWriter(
             .addStatement(
                 attribute.setterCode(),
                 if (hasMultipleParams)
-                (attribute as MultiParamAttribute).valueToSetOnAttribute
+                    (attribute as MultiParamAttribute).valueToSetOnAttribute
                 else
                     paramName
             )
