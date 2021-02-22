@@ -1,6 +1,6 @@
 # 4.4.0 (Feb 18, 2021)
 - Support for Paging3 (#1126) (Thanks to @osipxd and @anhanh11001!)
--Update KotlinPoet to 1.7.2 (#1117)
+- Update KotlinPoet to 1.7.2 (#1117)
 
 # 4.3.1 (Dec 2, 2020)
 - Fix ANR and view pool resolution in nested group (#1101)
