@@ -58,7 +58,8 @@ class GeneratedModelWriter(
     asyncable: Asyncable
 ) {
 
-    val modelInterfaceWriter = ModelBuilderInterfaceWriter(filer, types, asyncable)
+    val modelInterfaceWriter = ModelBuilderInterfaceWriter(filer, types, asyncable, configManager,
+        elements)
 
     open class BuilderHooks {
         open fun beforeFinalBuild(builder: TypeSpec.Builder) {}

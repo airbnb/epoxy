@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap
 import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
+import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
 const val MODEL_BUILDER_INTERFACE_SUFFIX = "Builder"
@@ -24,7 +25,9 @@ const val MODEL_BUILDER_INTERFACE_SUFFIX = "Builder"
 class ModelBuilderInterfaceWriter(
     private val filer: Filer,
     val types: Types,
-    val asyncable: Asyncable
+    val asyncable: Asyncable,
+    val configManager: ConfigManager,
+    val elements: Elements
 ) : Asyncable by asyncable {
 
     private val viewInterfacesToGenerate = ConcurrentHashMap<ClassName, InterfaceDetails>()
@@ -156,7 +159,11 @@ class ModelBuilderInterfaceWriter(
                 }
             }
 
-            JavaFile.builder(interfaceName.packageName(), interfaceSpec)
+            val implementingViewTpeElement = details.implementingViews.firstOrNull()
+            val packageName = implementingViewTpeElement?.let {
+                configManager.getModelViewConfig(it)?.rClass?.packageName()
+            } ?: interfaceName.packageName()
+            JavaFile.builder(packageName, interfaceSpec)
                 .build()
                 .writeSynchronized(filer)
         }
