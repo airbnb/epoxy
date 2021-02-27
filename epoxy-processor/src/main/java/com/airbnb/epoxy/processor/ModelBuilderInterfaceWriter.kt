@@ -159,7 +159,7 @@ class ModelBuilderInterfaceWriter(
                 }
             }
 
-            val implementingViewTpeElement = details.implementingViews.firstOrNull()
+            val implementingViewTypeElement = details.implementingViews.firstOrNull()
             val packageName = implementingViewTpeElement?.let {
                 configManager.getModelViewConfig(it)?.rClass?.packageName()
             } ?: interfaceName.packageName()
