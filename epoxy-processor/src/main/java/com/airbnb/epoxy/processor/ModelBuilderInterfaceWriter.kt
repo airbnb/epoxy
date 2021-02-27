@@ -160,7 +160,7 @@ class ModelBuilderInterfaceWriter(
             }
 
             val implementingViewTypeElement = details.implementingViews.firstOrNull()
-            val packageName = implementingViewTpeElement?.let {
+            val packageName = implementingViewTypeElement?.let {
                 configManager.getModelViewConfig(it)?.rClass?.packageName()
             } ?: interfaceName.packageName()
             JavaFile.builder(packageName, interfaceSpec)
