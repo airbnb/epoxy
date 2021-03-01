@@ -1,3 +1,6 @@
+# 4.4.2 (Mar 1, 2021)
+- Updated package name of the model class generated for an interface
+
 # 4.4.1 (Feb 22, 2021)
 - Support for Paging3 (#1126) (Thanks to @osipxd and @anhanh11001!)
 - Update KotlinPoet to 1.7.2 (#1117)
