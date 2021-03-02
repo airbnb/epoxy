@@ -49,7 +49,7 @@ class ModelViewInfo(
     private val generatedModelSuffix: String
 
     /** All interfaces the view implements that have at least one prop set by the interface. */
-    private val viewInterfaces: List<TypeElement>
+    val viewInterfaces: List<TypeElement>
 
     val viewAttributes: List<ViewAttributeInfo>
         get() = attributeInfo.filterIsInstance<ViewAttributeInfo>()
