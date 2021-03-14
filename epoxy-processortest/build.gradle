@@ -14,7 +14,7 @@ android {
 
     javaCompileOptions {
       annotationProcessorOptions {
-        includeCompileClasspath false
+//        includeCompileClasspath false
       }
     }
   }
@@ -38,7 +38,7 @@ android {
     enabled = true
   }
 
-  defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
+//  defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 }
 
 dependencies {
@@ -65,23 +65,10 @@ dependencies {
 
   kapt rootProject.deps.autoValue
 
-  testImplementation files(getRuntimeJar())
-  testImplementation files(Jvm.current().getToolsJar())
-  testImplementation rootProject.deps.googleTestingCompile
-}
 
-static def getRuntimeJar() {
-  try {
-    final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile()
-    File runtimeJar = new File(javaBase, "lib/rt.jar")
-    if (runtimeJar.exists()) {
-      return runtimeJar
-    }
-    runtimeJar = new File(javaBase, "jre/lib/rt.jar")
-    return runtimeJar.exists() ? runtimeJar : null
-  } catch (IOException e) {
-    throw new RuntimeException(e)
-  }
+  testImplementation files("libs/rt.jar")
+  testImplementation files("libs/tools.jar")
+  testImplementation rootProject.deps.googleTestingCompile
 }
 
 // Java files in the "resources" folder are not included in the build for some reason (seems like source files are skipped?)

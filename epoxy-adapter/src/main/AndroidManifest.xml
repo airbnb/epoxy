@@ -1,5 +1,66 @@
-<manifest package="com.airbnb.viewmodeladapter">
+<manifest package="com.airbnb.viewmodeladapter"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <application/>
+    <application />
+
+    <instrumentation
+        android:name=".CarouselTest"
+        android:targetPackage="com.airbnb.epoxy" />
+
+    <instrumentation
+        android:name=".DifferCorrectnessTest"
+        android:targetPackage="com.airbnb.epoxy" />
+
+    <instrumentation
+        android:name=".DifferNotifyTest"
+        android:targetPackage="com.airbnb.epoxy" />
+
+    <instrumentation
+        android:name=".DiffPayloadTest"
+        android:targetPackage="com.airbnb.epoxy" />
+
+    <instrumentation
+        android:name=".EpoxyAdapterTest"
+        android:targetPackage="com.airbnb.epoxy" />
+
+    <instrumentation
+        android:name=".EpoxyControllerTest"
+        android:targetPackage="com.airbnb.epoxy" />
+
+    <instrumentation
+        android:name=".EpoxyModelGroupTest"
+        android:targetPackage="com.airbnb.epoxy" />
+
+    <instrumentation
+        android:name=".EpoxyRecyclerViewTest"
+        android:targetPackage="com.airbnb.epoxy" />
+
+    <instrumentation
+        android:name=".EpoxyVisibilityTrackerNestedTest"
+        android:targetPackage="com.airbnb.epoxy" />
+
+    <instrumentation
+        android:name=".EpoxyVisibilityTrackerTest"
+        android:targetPackage="com.airbnb.epoxy" />
+
+    <instrumentation
+        android:name=".ModelListTest"
+        android:targetPackage="com.airbnb.epoxy" />
+
+    <instrumentation
+        android:name=".TypedEpoxyControllerTest"
+        android:targetPackage="com.airbnb.epoxy" />
+
+    <instrumentation
+        android:name=".UnboundedViewPoolTests"
+        android:targetPackage="com.airbnb.epoxy" />
+
+    <instrumentation
+        android:name=".UpdateOpHelperTest"
+        android:targetPackage="com.airbnb.epoxy" />
+
+    <instrumentation
+        android:name=".ViewTypeManagerIntegrationTest"
+        android:targetPackage="com.airbnb.epoxy" />
 
 </manifest>

@@ -6,7 +6,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import com.airbnb.paris.StyleApplierUtils;
 import com.airbnb.paris.styles.Style;
-import com.airbnb.viewmodeladapter.R;
+import com.airbnb.epoxy.R;
 import java.lang.AssertionError;
 import java.lang.CharSequence;
 import java.lang.IllegalStateException;

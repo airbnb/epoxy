@@ -19,7 +19,7 @@ android {
 dependencies {
   implementation rootProject.deps.kotlin
 
-  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$KOTLIN_COROUTINES_VERSION"
+  implementation rootProject.deps.kotlinCoroutines
   implementation "androidx.room:room-common:$ANDROIDX_ROOM"
   implementation "androidx.room:room-runtime:$ANDROIDX_ROOM"
   implementation "androidx.paging:paging-common:$ANDROIDX_PAGING"
@@ -32,12 +32,12 @@ dependencies {
   implementation project(':epoxy-annotations')
   kapt project(':epoxy-processor')
 
-  implementation "androidx.appcompat:appcompat:$ANDROIDX_APPCOMPAT"
+  implementation rootProject.deps.androidAppcompat
 
   implementation "androidx.lifecycle:lifecycle-runtime:$ANDROIDX_RUNTIME"
   implementation "androidx.lifecycle:lifecycle-extensions:$ANDROIDX_RUNTIME"
 
-  testImplementation 'junit:junit:4.12'
+  testImplementation rootProject.deps.junit
   androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha2', {
     exclude group: 'com.android.support', module: 'support-annotations'
   })

@@ -54,19 +54,33 @@ dependencies {
   testImplementation rootProject.deps.junit
   testImplementation rootProject.deps.robolectric
   testImplementation files(getRuntimeJar())
-  testImplementation files(Jvm.current().getToolsJar())
+//  testImplementation files(Jvm.current().getToolsJar())
 }
 
 static def getRuntimeJar() {
   try {
     final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile()
-    File runtimeJar = new File(javaBase, "lib/rt.jar")
+    File runtimeJar = new File(javaBase, "lib/modules")
     if (runtimeJar.exists()) {
       return runtimeJar
     }
-    runtimeJar = new File(javaBase, "jre/lib/rt.jar")
+    runtimeJar = new File(javaBase, "jre/lib/modules")
     return runtimeJar.exists() ? runtimeJar : null
   } catch (IOException e) {
     throw new RuntimeException(e)
   }
 }
+
+//static def getToolsJar() {
+//  try {
+//    final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile()
+//    File runtimeJar = new File(javaBase, "lib/tools.jar")
+//    if (runtimeJar.exists()) {
+//      return runtimeJar
+//    }
+//    runtimeJar = new File(javaBase, "jre/lib/tools.jar")
+//    return runtimeJar.exists() ? runtimeJar : null
+//  } catch (IOException e) {
+//    throw new RuntimeException(e)
+//  }
+//}
