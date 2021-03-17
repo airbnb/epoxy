@@ -49,7 +49,7 @@ class ModelViewInfo(
     private val generatedModelSuffix: String
 
     /** All interfaces the view implements that have at least one prop set by the interface. */
-    private val viewInterfaces: List<TypeElement>
+    val viewInterfaces: List<TypeElement>
 
     val viewAttributes: List<ViewAttributeInfo>
         get() = attributeInfo.filterIsInstance<ViewAttributeInfo>()
@@ -103,14 +103,6 @@ class ModelViewInfo(
         annotations.addAll(
             viewElement.buildAnnotationSpecs { DEPRECATED == it.simpleName() }
         )
-    }
-
-    /** We generate an interface on the model to represent each interface on the view.
-     * This lets models with the same view interface be grouped together. */
-    val generatedViewInterfaceNames: List<ClassName> by lazy {
-        viewInterfaces.map {
-            ClassName.get(it).appendToName("Model_")
-        }
     }
 
     fun Element.kotlinMetadata(): KotlinClassMetadata? {
