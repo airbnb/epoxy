@@ -51,9 +51,11 @@ class ModelBuilderInterfaceWriter(
 
             if (modelInfo is ModelViewInfo) {
                 modelInfo.viewInterfaces.forEach {
-                    val packageName = configManager.getModelViewConfig(modelInfo.viewElement)?.rClass?.packageName() ?:
-                    elements.getPackageOf(it).qualifiedName.toString()
-                    val viewInterface = ClassName.get(it).setPackage(packageName).appendToName("Model_")
+                    val packageName =
+                        configManager.getModelViewConfig(modelInfo.viewElement)?.rClass?.packageName()
+                            ?: elements.getPackageOf(it).qualifiedName.toString()
+                    val viewInterface =
+                        ClassName.get(it).setPackage(packageName).appendToName("Model_")
                     addSuperinterface(viewInterface)
 
                     // Store the subset of methods common to all interface implementations so we
