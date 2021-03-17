@@ -105,14 +105,6 @@ class ModelViewInfo(
         )
     }
 
-    /** We generate an interface on the model to represent each interface on the view.
-     * This lets models with the same view interface be grouped together. */
-    val generatedViewInterfaceNames: List<ClassName> by lazy {
-        viewInterfaces.map {
-            ClassName.get(it).appendToName("Model_")
-        }
-    }
-
     fun Element.kotlinMetadata(): KotlinClassMetadata? {
         // https://github.com/JetBrains/kotlin/tree/master/libraries/kotlinx-metadata/jvm
         val kotlinMetadataAnnotation = getAnnotation<Metadata>() ?: return null
