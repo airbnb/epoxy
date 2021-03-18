@@ -1,3 +1,6 @@
+# 4.4.3 (Mar 17, 2021)
+- Fixed interface model related regression introduced in the previous release.
+
 # 4.4.2 (Mar 1, 2021)
 - Updated package name of the model class generated for an interface
 
