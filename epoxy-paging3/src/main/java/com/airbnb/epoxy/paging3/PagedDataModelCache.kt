@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.CombinedLoadStates
+import androidx.paging.ItemSnapshotList
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
@@ -178,6 +179,10 @@ internal class PagedDataModelCache<T : Any>(
 
     fun removeLoadStateListener(listener: (CombinedLoadStates) -> Unit) {
         asyncDiffer.removeLoadStateListener(listener)
+    }
+
+    fun snapshot(): ItemSnapshotList<T> {
+        return asyncDiffer.snapshot()
     }
 
     @Synchronized
