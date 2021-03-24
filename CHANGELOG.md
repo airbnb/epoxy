@@ -1,3 +1,6 @@
+# 4.4.4 (Mar 24, 2021)
+- Provide support for snapshot() function in PagingDataEpoxyController (#1144)
+
 # 4.4.3 (Mar 17, 2021)
 - Fixed interface model related regression introduced in the previous release.
 
