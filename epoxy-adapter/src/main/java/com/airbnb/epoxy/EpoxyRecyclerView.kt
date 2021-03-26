@@ -248,7 +248,7 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
         }
 
         setRecycledViewPool(
-            ACTIVITY_RECYCLER_POOL.getPool(
+            LIFECYCLE_OWNER_RECYCLER_POOL.getPool(
                 context
             ) { createViewPool() }.viewPool
         )
@@ -627,7 +627,7 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
         // Views in the pool hold context references which can keep the activity from being GC'd,
         // plus they can hold significant memory resources. We should clear it asap after the pool
         // is no longer needed - the main signal we use for this is that the activity is destroyed.
-        if (context.isActivityDestroyed()) {
+        if (context.isLifecycleDestroyed()) {
             recycledViewPool.clear()
         }
     }
@@ -636,9 +636,9 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
         private const val DEFAULT_ADAPTER_REMOVAL_DELAY_MS = 2000
 
         /**
-         * Store one unique pool per activity. They are cleared out when activities are destroyed, so this
-         * only needs to hold pools for active activities.
+         * Store one unique pool per [androidx.lifecycle.LifecycleOwner]. They are cleared out when
+         * lifecycles is destroyed, so this only needs to hold pools for active lifecycles.
          */
-        private val ACTIVITY_RECYCLER_POOL = ActivityRecyclerPool()
+        private val LIFECYCLE_OWNER_RECYCLER_POOL = LifecycleOwnerRecyclerPool()
     }
 }
