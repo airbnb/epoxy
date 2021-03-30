@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            epoxyInterop{
+            EpoxyInterop {
                 TextView(this).apply {
                     text = "Android Widget TextView"
                 }

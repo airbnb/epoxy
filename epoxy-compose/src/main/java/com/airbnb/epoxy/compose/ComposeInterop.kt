@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.viewinterop.AndroidView
 
 @Composable
-fun epoxyInterop(callback: () -> View) {
+fun EpoxyInterop(callback: () -> View) {
     AndroidView(
         factory = { _ ->
             callback()
