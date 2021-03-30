@@ -2,7 +2,7 @@
 buildscript {
 
   ext.KOTLIN_VERSION = "1.4.30"
-  ext.ANDROID_PLUGIN_VERSION = '7.0.0-alpha09'
+  ext.ANDROID_PLUGIN_VERSION = '7.0.0-alpha12'
   ext.compose_version = '1.0.0-beta01'
 
   repositories {
