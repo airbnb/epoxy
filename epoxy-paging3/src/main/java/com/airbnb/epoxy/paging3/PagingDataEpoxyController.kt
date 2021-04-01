@@ -155,6 +155,17 @@ abstract class PagingDataEpoxyController<T : Any>(
         return modelCache.snapshot()
     }
 
+    /**
+     * Requests a model build that will run for every model, including the ones created for the paged
+     * list.
+     *
+     * Clears the current model cache to make sure that happens.
+     */
+    fun requestForcedModelBuild() {
+        modelCache.clearModels()
+        requestModelBuild()
+    }
+
     companion object {
         /**
          * [PagingDataEpoxyController] calculates a diff on top of the PagingData to check which
