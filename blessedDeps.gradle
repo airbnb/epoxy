@@ -19,6 +19,7 @@ rootProject.ext.ANDROIDX_RECYCLERVIEW = "1.1.0"
 rootProject.ext.ANDROIDX_MATERIAL = "1.0.0"
 rootProject.ext.ANDROIDX_APPCOMPAT = "1.0.0"
 rootProject.ext.ANDROIDX_CARDVIEW = "1.0.0"
+rootProject.ext.ANDROIDX_CORE_KTX = "1.0.0"
 rootProject.ext.ANDROIDX_LEGACY = "1.0.0"
 rootProject.ext.ANDROIDX_PAGING = "2.0.0"
 rootProject.ext.ANDROIDX_PAGING3 = "3.0.0-alpha13"
@@ -61,6 +62,7 @@ rootProject.ext.deps = [
     androidRuntime         : "com.google.android:android:$ANDROID_RUNTIME_VERSION",
     androidAppcompat       : "androidx.appcompat:appcompat:$ANDROIDX_APPCOMPAT",
     androidCardView        : "androidx.cardview:cardview:$ANDROIDX_CARDVIEW",
+    androidCoreKtx         : "androidx.core:core-ktx:$ANDROIDX_CARDVIEW",
     androidDesignLibrary   : "com.google.android.material:material:$ANDROIDX_MATERIAL",
     androidRecyclerView    : "androidx.recyclerview:recyclerview:$ANDROIDX_RECYCLERVIEW",
     androidPagingComponent : "androidx.paging:paging-runtime:$ANDROIDX_PAGING",
