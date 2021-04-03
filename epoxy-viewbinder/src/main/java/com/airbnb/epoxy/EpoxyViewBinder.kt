@@ -5,12 +5,14 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IdRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import com.example.epoxy_viewbinder.R
 
@@ -221,9 +223,36 @@ internal var View.viewHolder: EpoxyViewHolder?
 fun Fragment.epoxyView(
     @IdRes viewId: Int,
     initializer: LifecycleAwareEpoxyViewBinder.() -> Unit,
-    modelProvider: EpoxyController.() -> Unit
+    modelProvider: EpoxyController.() -> Unit,
+    useVisibilityTracking: Boolean = false
 ) = lazy {
-    return@lazy LifecycleAwareEpoxyViewBinder(this, viewId, modelProvider).apply(initializer)
+    return@lazy LifecycleAwareEpoxyViewBinder(
+        viewLifecycleOwner,
+        { view },
+        viewId,
+        modelProvider,
+        useVisibilityTracking = useVisibilityTracking
+    ).apply(initializer)
+}
+
+/**
+ * Shortcut for creating a [LifecycleAwareEpoxyViewBinder] in a lazy way.
+ *
+ * @param viewId resource ID for the view to replace. This should be an [EpoxyViewStub].
+ */
+fun AppCompatActivity.epoxyView(
+    @IdRes viewId: Int,
+    initializer: LifecycleAwareEpoxyViewBinder.() -> Unit,
+    modelProvider: EpoxyController.() -> Unit,
+    useVisibilityTracking: Boolean = false
+) = lazy {
+    return@lazy LifecycleAwareEpoxyViewBinder(
+        this,
+        { findViewById(android.R.id.content) },
+        viewId,
+        modelProvider,
+        useVisibilityTracking = useVisibilityTracking
+    ).apply(initializer)
 }
 
 /**
@@ -237,13 +266,21 @@ fun Fragment.optionalEpoxyView(
     @IdRes viewId: Int,
     modelProvider: EpoxyController.() -> Unit,
     initializer: (LifecycleAwareEpoxyViewBinder.() -> Unit)? = null,
-    fallbackToNameLookup: Boolean = false
+    fallbackToNameLookup: Boolean = false,
+    useVisibilityTracking: Boolean = false
 ) = lazy {
     val view = view ?: error("Fragment view has not been created")
     // View id is not present, we just return null in that case.
     if (view.maybeFindViewByIdName<View>(viewId, fallbackToNameLookup) == null) return@lazy null
 
-    return@lazy LifecycleAwareEpoxyViewBinder(this, viewId, modelProvider, fallbackToNameLookup).apply { initializer?.invoke(this) }
+    return@lazy LifecycleAwareEpoxyViewBinder(
+        viewLifecycleOwner,
+        { view },
+        viewId,
+        modelProvider,
+        fallbackToNameLookup = fallbackToNameLookup,
+        useVisibilityTracking = useVisibilityTracking
+    ).apply { initializer?.invoke(this) }
 }
 
 /**
@@ -256,7 +293,8 @@ fun Fragment.optionalEpoxyView(
  * receiver. If no model is added the view will be hidden.
  */
 class LifecycleAwareEpoxyViewBinder(
-    private val fragment: Fragment,
+    private val lifecycleOwner: LifecycleOwner,
+    private val rootView: (() -> View?),
     @IdRes private val viewId: Int,
     private val modelProvider: EpoxyController.() -> Unit,
     private val fallbackToNameLookup: Boolean = false,
@@ -274,18 +312,18 @@ class LifecycleAwareEpoxyViewBinder(
     val view: View
         get() {
             if (lazyView == null) {
-                val fragmentView = fragment.view ?: error("Fragment view is not created")
-                lazyView = fragmentView.maybeFindViewByIdName(viewId, fallbackToNameLookup)
+                val nonNullRootView = rootView() ?: error("Fragment view is not created")
+                lazyView = nonNullRootView.maybeFindViewByIdName(viewId, fallbackToNameLookup)
                     ?: error(
                         "View could not be found, fallbackToNameLookup: $fallbackToNameLookup," +
-                            " view id name: ${fragmentView.resources.getResourceEntryName(viewId)}"
+                            " view id name: ${nonNullRootView.resources.getResourceEntryName(viewId)}"
                     )
                 // There's not yet a way to enforce EpoxyViewStub usage so notify in Bugsnag so we can manually fix.
                 if (lazyView !is EpoxyViewStub) {
                     viewBinder.onExceptionSwallowed(
                         IllegalStateException(
                             "View binder should be using EpoxyViewStub. " +
-                                "View ID: ${fragmentView.resources.getResourceName(viewId)}"
+                                "View ID: ${nonNullRootView.resources.getResourceName(viewId)}"
                         )
                     )
                 }
@@ -295,7 +333,7 @@ class LifecycleAwareEpoxyViewBinder(
                 // the reference again.
                 // We MUST register the observer again each time the view is created because the fragment's viewLifecycleOwner
                 // is updated to a new instance for each new fragment view.
-                fragment.viewLifecycleOwner.lifecycle.addObserver(this)
+                lifecycleOwner.lifecycle.addObserver(this)
             }
 
             return lazyView!!
@@ -306,12 +344,10 @@ class LifecycleAwareEpoxyViewBinder(
     }
 
     fun invalidate() {
-        lazyView = if (useVisibilityTracking) {
-            viewBinder.replaceView(view, modelProvider).also {
+        lazyView = viewBinder.replaceView(view, modelProvider).also {
+            if (useVisibilityTracking) {
                 visibilityTracker.attach(it)
             }
-        } else {
-            viewBinder.replaceView(view, modelProvider)
         }
     }
 
