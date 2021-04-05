@@ -104,7 +104,7 @@ internal class KotlinModelBuilderExtensionWriter(
             }
 
             addModifiers(KModifier.INLINE)
-            if (constructorIsNotPublic) addModifiers(KModifier.INTERNAL)
+            addModifiers(if (constructorIsNotPublic) KModifier.INTERNAL else KModifier.PUBLIC)
 
             addStatement("add(")
             beginControlFlow(
