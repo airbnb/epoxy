@@ -1,4 +1,4 @@
-package com.airbnb.epoxy.compose
+package com.airbnb.epoxy
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
