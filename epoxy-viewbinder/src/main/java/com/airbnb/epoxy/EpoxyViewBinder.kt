@@ -258,6 +258,26 @@ fun AppCompatActivity.epoxyView(
 /**
  * Shortcut for creating a [LifecycleAwareEpoxyViewBinder] in a lazy way.
  *
+ * @param viewId resource ID for the view to replace. This should be an [EpoxyViewStub].
+ */
+fun ViewGroup.epoxyView(
+    @IdRes viewId: Int,
+    initializer: LifecycleAwareEpoxyViewBinder.() -> Unit,
+    modelProvider: EpoxyController.() -> Unit,
+    useVisibilityTracking: Boolean = false
+) = lazy {
+    return@lazy LifecycleAwareEpoxyViewBinder(
+        (this.context as? LifecycleOwner) ?: error("LifecycleOwner required as view's context "),
+        { this },
+        viewId,
+        modelProvider,
+        useVisibilityTracking = useVisibilityTracking
+    ).apply(initializer)
+}
+
+/**
+ * Shortcut for creating a [LifecycleAwareEpoxyViewBinder] in a lazy way.
+ *
  * If the returned view binder is null it means that the view could not be found.
  *
  * @param viewId resource ID for the view to replace. This should be an [EpoxyViewStub].
