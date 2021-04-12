@@ -150,6 +150,10 @@ class ModelBuilderInterfaceWriter(
                             returns(interfaceName)
                         }
                     }
+                        // For cache consistency of generated files make sure these are sorted.
+                        // Methods may have the same name due to overloads, so also sorting by
+                        // hashcode.
+                        .sortedWith(compareBy({ it.name }, { it.hashCode() }))
                 )
 
                 details.implementingViews.forEach {
