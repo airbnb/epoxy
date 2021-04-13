@@ -5,7 +5,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IdRes
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ComponentActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
@@ -220,7 +220,7 @@ internal var View.viewHolder: EpoxyViewHolder?
  *
  * @param viewId resource ID for the view to replace. This should be an [EpoxyViewStub].
  */
-fun AppCompatActivity.epoxyView(
+fun ComponentActivity.epoxyView(
     @IdRes viewId: Int,
     initializer: LifecycleAwareEpoxyViewBinder.() -> Unit,
     modelProvider: EpoxyController.() -> Unit,
@@ -264,7 +264,7 @@ fun ViewGroup.epoxyView(
  *
  * @param viewId resource ID for the view to replace. This should be an [EpoxyViewStub].
  */
-fun AppCompatActivity.optionalEpoxyView(
+fun ComponentActivity.optionalEpoxyView(
     @IdRes viewId: Int,
     initializer: LifecycleAwareEpoxyViewBinder.() -> Unit = { },
     modelProvider: EpoxyController.() -> Unit,
@@ -320,7 +320,7 @@ fun ViewGroup.optionalEpoxyView(
     return@lazy epoxyViewInternal(viewId, initializer, modelProvider, useVisibilityTracking)
 }
 
-private fun AppCompatActivity.epoxyViewInternal(
+private fun ComponentActivity.epoxyViewInternal(
     @IdRes viewId: Int,
     initializer: LifecycleAwareEpoxyViewBinder.() -> Unit,
     modelProvider: EpoxyController.() -> Unit,
