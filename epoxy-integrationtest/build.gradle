@@ -48,9 +48,11 @@ dependencies {
   implementation project(':epoxy-annotations')
   implementation project(':epoxy-databinding')
   implementation project(':epoxy-paging')
+  implementation project(':epoxy-viewbinder')
 
   kapt project(':epoxy-processor')
 
+  testImplementation rootProject.deps.androidAppcompat
   testImplementation rootProject.deps.robolectric
   testImplementation rootProject.deps.junit
   testImplementation rootProject.deps.mockito
