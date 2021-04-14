@@ -42,6 +42,7 @@ android {
 
 dependencies {
   implementation rootProject.deps.kotlin
+  implementation rootProject.deps.androidAppcompat
   implementation rootProject.deps.androidRecyclerView
   implementation rootProject.deps.androidPagingComponent
   implementation project(':epoxy-adapter')
@@ -52,7 +53,6 @@ dependencies {
 
   kapt project(':epoxy-processor')
 
-  testImplementation rootProject.deps.androidAppcompat
   testImplementation rootProject.deps.robolectric
   testImplementation rootProject.deps.junit
   testImplementation rootProject.deps.mockito
