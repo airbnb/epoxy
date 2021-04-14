@@ -1,3 +1,9 @@
+# 4.5.0 (April 13, 2021)
+- Fix generated code consistency in builder interfaces (#1166)
+- Provided support to invalidate `modelCache` in `PagingDataEpoxyController` (#1161)
+- Explicitly add public modifier (#1162)
+- Unwrap context to find parent activity in order to share viewpool when using Hilt (#1157)
+
 # 4.4.4 (Mar 24, 2021)
 - Provide support for snapshot() function in PagingDataEpoxyController (#1144)
 
