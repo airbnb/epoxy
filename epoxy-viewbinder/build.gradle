@@ -18,9 +18,10 @@ dependencies {
   implementation rootProject.deps.androidAppcompat
   implementation rootProject.deps.androidCoreKtx
   implementation rootProject.deps.androidRecyclerView
-  api project(':epoxy-annotations')
   api project(':epoxy-adapter')
+  api project(':epoxy-annotations')
 
+  testImplementation rootProject.deps.androidTestCore
   testImplementation rootProject.deps.junit
   testImplementation rootProject.deps.robolectric
   testImplementation rootProject.deps.mockito
