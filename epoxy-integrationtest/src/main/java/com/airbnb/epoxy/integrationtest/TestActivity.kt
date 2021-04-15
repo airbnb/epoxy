@@ -1,8 +1,8 @@
 package com.airbnb.epoxy.integrationtest
 
-import androidx.core.app.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 
 /**
  * Empty activity used for view testing.
  */
-class TestActivity : ComponentActivity()
+class TestActivity : AppCompatActivity()
