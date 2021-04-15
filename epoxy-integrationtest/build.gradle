@@ -42,12 +42,14 @@ android {
 
 dependencies {
   implementation rootProject.deps.kotlin
+  implementation rootProject.deps.androidAppcompat
   implementation rootProject.deps.androidRecyclerView
   implementation rootProject.deps.androidPagingComponent
   implementation project(':epoxy-adapter')
   implementation project(':epoxy-annotations')
   implementation project(':epoxy-databinding')
   implementation project(':epoxy-paging')
+  implementation project(':epoxy-viewbinder')
 
   kapt project(':epoxy-processor')
 
