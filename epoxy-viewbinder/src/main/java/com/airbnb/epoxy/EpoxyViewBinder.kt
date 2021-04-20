@@ -14,7 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
-import com.example.epoxy_viewbinder.R
+import com.airbnb.epoxy.viewbinder.R
 
 /**
  * A helper to allow binding EpoxyModels to views outside of a RecyclerView.
