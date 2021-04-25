@@ -21,7 +21,7 @@ import com.airbnb.epoxy.viewbinder.R
  *
  * This is helpful in two cases:
  * 1. You want to dynamically insert a view (of unknown or dynamic type) into a layout
- * 2. You have a predefined view in a layout and you want to update it's data functionally with an
+ * 2. You have a predefined view in a layout and you want to update its data functionally with an
  * EpoxyModel
  */
 class EpoxyViewBinder : EpoxyController() {
@@ -36,7 +36,7 @@ class EpoxyViewBinder : EpoxyController() {
 
     internal override fun addInternal(modelToAdd: EpoxyModel<*>) {
         require(tempModel == null) {
-            "A model was already added to the EpoxyController. Only one should be added. "
+            "A model was already added to the EpoxyController. Only one should be added."
         }
         interceptor?.intercept(listOf(modelToAdd))
         // Don't call super to avoid epoxy complaining that we are not in a buildModels call
@@ -59,7 +59,7 @@ class EpoxyViewBinder : EpoxyController() {
      * Bind the model to the view.
      * - If the model is null, the view will be hidden.
      * - If the view has previously been bound to another model, a partial bind will be done to only
-     * update the props that have changed.
+     * update the properties that have changed.
      */
     fun <T : View> bind(view: T, model: EpoxyModel<T>?) {
         val newModel = model ?: run {
@@ -84,8 +84,7 @@ class EpoxyViewBinder : EpoxyController() {
     /**
      * Replaces an existing view if it exists, else creates a new view. This is similar to
      * [replaceView] but it does not add the view to the parent [ViewGroup]. This allows for custom
-     * layout handling (e.g. adding constraints for a
-     * [androidx.constraintlayout.widget.ConstraintLayout]).
+     * layout handling (e.g. adding constraints for a ConstraintLayout).
      *
      * If the previous view is the same view type then it is reused. The new view is set to have the
      * same ID as the old view if it exists. If not then a new ID is generated.
@@ -229,16 +228,11 @@ class EpoxyViewBinder : EpoxyController() {
 }
 
 /**
- * Shortcut for getting/setting an [EpoxyViewHolder] on a [View]'s tag.
- */
-internal var View.viewHolder: EpoxyViewHolder?
-    set(value) = setTag(R.id.epoxy_view_binder, value)
-    get() = getTag(R.id.epoxy_view_binder) as EpoxyViewHolder?
-
-/**
- * Shortcut for creating a [LifecycleAwareEpoxyViewBinder] in a lazy way.
+ * Shortcut for creating a [LifecycleAwareEpoxyViewBinder] in a lazy way. 
+ * See [LifecycleAwareEpoxyViewBinder] for pass-through parameter documentation.
  *
- * @param viewId resource ID for the view to replace. This should be an [EpoxyViewStub].
+ * @param initializer a lambda that is run directly after instantiation of the
+ * [LifecycleAwareEpoxyViewBinder].
  */
 fun ComponentActivity.epoxyView(
     @IdRes viewId: Int,
@@ -251,8 +245,10 @@ fun ComponentActivity.epoxyView(
 
 /**
  * Shortcut for creating a [LifecycleAwareEpoxyViewBinder] in a lazy way.
+ * See [LifecycleAwareEpoxyViewBinder] for pass-through parameter documentation.
  *
- * @param viewId resource ID for the view to replace. This should be an [EpoxyViewStub].
+ * @param initializer a lambda that is run directly after instantiation of the
+ * [LifecycleAwareEpoxyViewBinder].
  */
 fun Fragment.epoxyView(
     @IdRes viewId: Int,
@@ -265,8 +261,10 @@ fun Fragment.epoxyView(
 
 /**
  * Shortcut for creating a [LifecycleAwareEpoxyViewBinder] in a lazy way.
+ * See [LifecycleAwareEpoxyViewBinder] for pass-through parameter documentation.
  *
- * @param viewId resource ID for the view to replace. This should be an [EpoxyViewStub].
+ * @param initializer a lambda that is run directly after instantiation of the
+ * [LifecycleAwareEpoxyViewBinder].
  */
 fun ViewGroup.epoxyView(
     @IdRes viewId: Int,
@@ -279,8 +277,11 @@ fun ViewGroup.epoxyView(
 
 /**
  * Shortcut for creating a [LifecycleAwareEpoxyViewBinder] in a lazy way.
+ * See [LifecycleAwareEpoxyViewBinder] for pass-through parameter documentation.
  *
- * @param viewId resource ID for the view to replace. This should be an [EpoxyViewStub].
+ * @param initializer a lambda that is run directly after instantiation of the
+ * [LifecycleAwareEpoxyViewBinder].
+ *
  * @return a view binder or null if a view with the [viewId] could not be found.
  */
 fun ComponentActivity.optionalEpoxyView(
@@ -299,16 +300,19 @@ fun ComponentActivity.optionalEpoxyView(
 
 /**
  * Shortcut for creating a [LifecycleAwareEpoxyViewBinder] in a lazy way.
+ * See [LifecycleAwareEpoxyViewBinder] for pass-through parameter documentation.
  *
- * @param viewId resource ID for the view to replace. This should be an [EpoxyViewStub].
+ * @param initializer a lambda that is run directly after instantiation of the
+ * [LifecycleAwareEpoxyViewBinder].
+ *
  * @return a view binder or null if a view with the [viewId] could not be found.
  */
 fun Fragment.optionalEpoxyView(
     @IdRes viewId: Int,
     useVisibilityTracking: Boolean = false,
     fallbackToNameLookup: Boolean = false,
-    modelProvider: EpoxyController.() -> Unit,
-    initializer: (LifecycleAwareEpoxyViewBinder.() -> Unit) = { }
+    initializer: (LifecycleAwareEpoxyViewBinder.() -> Unit) = { },
+    modelProvider: EpoxyController.() -> Unit
 ) = lazy {
     val view = view ?: error("Fragment view has not been created")
     // View id is not present, we just return null in that case.
@@ -319,8 +323,11 @@ fun Fragment.optionalEpoxyView(
 
 /**
  * Shortcut for creating a [LifecycleAwareEpoxyViewBinder] in a lazy way.
+ * See [LifecycleAwareEpoxyViewBinder] for pass-through parameter documentation.
  *
- * @param viewId resource ID for the view to replace. This should be an [EpoxyViewStub].
+ * @param initializer a lambda that is run directly after instantiation of the
+ * [LifecycleAwareEpoxyViewBinder].
+ * 
  * @return a view binder or null if a view with the [viewId] could not be found.
  */
 fun ViewGroup.optionalEpoxyView(
@@ -388,7 +395,10 @@ private fun ViewGroup.epoxyViewInternal(
  * @param useVisibilityTracking true to get visibility callbacks using a partial impression
  * percentage threshold of 100%, false to not track view visibility. See
  * [EpoxyViewBinderVisibilityTracker] for more information.
- * @param fallbackToNameLookup
+ * @param fallbackToNameLookup true to also include searching by the entry name 
+ * ([Resources.getResourceEntryName]) should the [viewId] not be found. Useful for dynamic features
+ * as it's possible the generated ID is not the same should the same view ID exist in both the base
+ * APK and the dynamic feature.
  * @param modelProvider a lambda for building the [EpoxyModel]. It expects a single model to be
  * added to the controller receiver. If no model is added the view will be hidden.
  */
@@ -428,10 +438,10 @@ class LifecycleAwareEpoxyViewBinder(
                     )
                 }
 
-                // We register this for view lifecycle callbacks so that we can clear the view when it is destroyed.
-                // This both prevents a memory leak, and ensures that if the view is recreated we know we must look up
-                // the reference again.
-                // We MUST register the observer again each time the view is created because the fragment's viewLifecycleOwner
+                // Register this for view lifecycle callbacks so that it can clear the view when it
+                // is destroyed. This both prevents a memory leak, and ensures that if the view is
+                // recreated it can look up the reference again. This MUST register the observer
+                // again each time the view is created because the fragment's viewLifecycleOwner
                 // is updated to a new instance for each new fragment view.
                 lifecycleOwner.lifecycle.addObserver(this)
             }
@@ -466,67 +476,3 @@ class LifecycleAwareEpoxyViewBinder(
         }
     }
 }
-
-/**
- * Finds a view with the resource ID using [ViewGroup.findViewById]. Should a view _not_ be found
- * and the [fallbackToNameLookup] is true, then this recursively iterates through all children and
- * tries to find a match based on [View.idName]. This is useful if using dynamic features. For
- * example, if there is a layout provided by a dynamic feature module with an ID for a view, and a
- * module in the base apk that also uses that same view ID, the ID resource will be different but
- * the name will be the same.
- */
-@PublishedApi
-internal inline fun <reified V : View> View.maybeFindViewByIdName(
-    id: Int,
-    fallbackToNameLookup: Boolean
-): V? =
-    findViewById(id) ?: run {
-        if (!fallbackToNameLookup || id == -1) return@run null
-
-        try {
-            resources?.getResourceEntryName(id)
-        } catch (e: Resources.NotFoundException) {
-            Log.e("TODO", "Id not found in ${this::class}, fallbackToNameLookup: $fallbackToNameLookup, error message: ${e.localizedMessage}")
-//            throwOrNotify("Id not found in ${this::class}, fallbackToNameLookup: $fallbackToNameLookup, error message: ${e.localizedMessage}")
-            null
-        }?.let { idName ->
-            findViewByIdName(this, idName)
-        }
-    }
-
-@PublishedApi
-internal inline fun <reified V : View> findViewByIdName(view: View, idName: String): V? {
-    // The view instance check is not necessary but is done to avoid looking up id name for all
-    // views as an optimization
-    if (view is V && view.idName == idName) return view
-
-    if (view is ViewGroup) {
-        return view.allRecursiveChildren.filterIsInstance<V>()
-            .firstOrNull { it.idName == idName }
-    }
-
-    return null
-}
-
-/**
- * Use [Resources.getResourceEntryName] to get the name of the ID from the resource ID. Returns
- * null if the View's ID is -1 or does not exist.
- */
-@PublishedApi
-internal val View.idName: String?
-    get() = try {
-        if (id != -1) resources?.getResourceEntryName(id) else null
-    } catch (e: Resources.NotFoundException) {
-        null
-    }
-
-/**
- * Returns every child view nested at all layers inside this ViewGroup.
- */
-@PublishedApi
-internal val ViewGroup.allRecursiveChildren: Sequence<View>
-    get() {
-        return children.flatMap {
-            sequenceOf(it) + if (it is ViewGroup) it.allRecursiveChildren else emptySequence()
-        }
-    }
