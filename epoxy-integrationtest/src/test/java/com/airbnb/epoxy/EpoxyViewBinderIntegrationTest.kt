@@ -300,6 +300,34 @@ class EpoxyViewBinderIntegrationTest {
         // Not setting an exception handler should not cause a crash
     }
 
+    @Test
+    fun testModelUpdate() {
+        var initializedValue = 0
+        var displayedValue = 5
+        activityRule.scenario.onActivity {
+            val frameLayout = FrameLayout(it)
+            val stubId = addViewBinderContainer(frameLayout)
+            it.setContentView(frameLayout)
+
+            val binder by it.epoxyView(
+                stubId,
+                initializer = { initializedValue = 1 },
+                modelProvider = {
+                    model {
+                        id(1)
+                        value(displayedValue)
+                    }
+                }
+            )
+            binder.invalidate()
+            displayedValue = 10
+            binder.invalidate()
+
+            onView(withText("10")).check(matches(isDisplayed()))
+            assertEquals(1, initializedValue)
+        }
+    }
+
     /** Creates and adds a simple model with a text view showing the text "5". */
     private fun EpoxyController.buildTestBinderModel() {
         model {
