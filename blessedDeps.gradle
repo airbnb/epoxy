@@ -64,7 +64,7 @@ rootProject.ext.deps = [
     androidRuntime         : "com.google.android:android:$ANDROID_RUNTIME_VERSION",
     androidAppcompat       : "androidx.appcompat:appcompat:$ANDROIDX_APPCOMPAT",
     androidCardView        : "androidx.cardview:cardview:$ANDROIDX_CARDVIEW",
-    androidCoreKtx         : "androidx.core:core-ktx:$ANDROIDX_CARDVIEW",
+    androidCoreKtx         : "androidx.core:core-ktx:$ANDROIDX_CORE_KTX",
     androidDesignLibrary   : "com.google.android.material:material:$ANDROIDX_MATERIAL",
     androidEspressoCore    : "androidx.test.espresso:espresso-core:$ANDROIDX_ESPRESSO_CORE",
     androidFragmentTesting : "androidx.fragment:fragment-testing:$ANDROIDX_FRAGMENT_TESTING",

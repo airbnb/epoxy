@@ -21,7 +21,6 @@ import org.junit.Assert.assertNull
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.IllegalStateException
 
 @RunWith(AndroidJUnit4::class)
 class EpoxyViewBinderIntegrationTest {
