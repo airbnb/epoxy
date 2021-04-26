@@ -1,23 +1,21 @@
 package com.airbnb.epoxy
 
 import android.content.res.Resources
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IdRes
 import androidx.core.app.ComponentActivity
 import androidx.core.view.ViewCompat
-import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
-import com.airbnb.epoxy.viewbinder.R
 
 /**
- * A helper to allow binding EpoxyModels to views outside of a RecyclerView.
+ * A helper to allow binding EpoxyModels to views outside of a RecyclerView. It is recommended to
+ * use the extension functions [epoxyView] and [optionalEpoxyView] on Activity/Fragment/View Groups.
  *
  * This is helpful in two cases:
  * 1. You want to dynamically insert a view (of unknown or dynamic type) into a layout
@@ -430,10 +428,14 @@ class LifecycleAwareEpoxyViewBinder(
                     )
                 // Propagate an error if a non EpoxyViewStub is used
                 if (lazyView !is EpoxyViewStub) {
+                    val resourceNameWithFallback = try {
+                        nonNullRootView.resources.getResourceName(viewId)
+                    } catch (e: Resources.NotFoundException) {
+                        "$viewId (name not found)"
+                    }
                     viewBinder.onExceptionSwallowed(
                         IllegalStateException(
-                            "View binder should be using EpoxyViewStub. " +
-                                "View ID: ${nonNullRootView.resources.getResourceName(viewId)}"
+                            "View binder should be using EpoxyViewStub. View ID: $resourceNameWithFallback"
                         )
                     )
                 }

@@ -12,6 +12,7 @@ import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.airbnb.epoxy.EpoxyViewBinder
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
@@ -44,13 +45,6 @@ class EpoxyViewBinderTest {
     }
 
     @Test
-    fun unbindWithoutBindWillNoOp() {
-        epoxyViewBinder.unbind(view)
-
-        // Won't crash because we are no-op if no model is bound
-    }
-
-    @Test
     fun bindWithView() {
         epoxyViewBinder.replaceView(view, viewModel)
 
@@ -63,12 +57,17 @@ class EpoxyViewBinderTest {
     }
 
     @Test
-    fun unbindWithViewBound() {
-        epoxyViewBinder.replaceView(view, viewModel)
-        epoxyViewBinder.unbind(currentView)
+    fun bindWithView_usingModelProvider() {
+        epoxyViewBinder.replaceView(view) {
+            viewModel.addTo(this)
+        }
 
-        // View is unbound from EpoxyModel
-        assertNull(viewModel.boundView)
+        // Old view is removed from parent
+        assertNull(view.parent)
+        // A new view is added
+        assertEquals(viewGroup, currentView.parent)
+        // New view is bound to EpoxyModel
+        assertEquals(currentView, viewModel.boundView)
     }
 
     @Test
@@ -84,12 +83,101 @@ class EpoxyViewBinderTest {
     }
 
     @Test
+    fun bindWithViewHolder_usingModelProvider() {
+        epoxyViewBinder.replaceView(view) {
+            viewHolderModel.addTo(this)
+        }
+
+        // Old view is removed from parent
+        assertNull(view.parent)
+        // A new view is added
+        assertEquals(viewGroup, currentView.parent)
+        // New view is bound to ViewHolder
+        assertEquals(currentView, viewHolderModel.boundHolder?.boundView)
+    }
+
+    @Test
+    fun bindWithViewGroup() {
+        val newView = epoxyViewBinder.replaceOrCreateView(viewGroup, view, viewModel)
+
+        // Old view is retained as it doesn't have a model bound to it
+        assertNotNull(view.parent)
+        assertEquals(viewGroup, currentView.parent)
+        // A new view is added
+        assertEquals(2, viewGroup.childCount)
+        assertEquals(viewGroup, newView.parent)
+        // New view is bound to EpoxyModel
+        assertEquals(newView, viewModel.boundView)
+    }
+
+    @Test
+    fun bindWithViewGroup_modelUpdate() {
+        epoxyViewBinder.replaceView(view, viewModel)
+        val newViewModel = EpoxyModelMock()
+        val newView = epoxyViewBinder.replaceOrCreateView(viewGroup, currentView, newViewModel)
+
+        // No new view added and current view is still in the layout
+        assertEquals(1, viewGroup.childCount)
+        assertEquals(viewGroup, currentView.parent)
+        assertEquals(currentView, newView)
+        assertEquals(currentView, newViewModel.boundView)
+    }
+
+    @Test
+    fun unbindWithoutBindWillNoOp() {
+        epoxyViewBinder.unbind(view)
+
+        // Won't crash because we are no-op if no model is bound
+    }
+
+    @Test
+    fun unbindWithViewBound() {
+        epoxyViewBinder.replaceView(view, viewModel)
+        epoxyViewBinder.unbind(currentView)
+
+        // View is unbound from EpoxyModel
+        assertNull(viewModel.boundView)
+    }
+
+    @Test
     fun unbindWithViewHolderBound() {
         epoxyViewBinder.replaceView(view, viewHolderModel)
         epoxyViewBinder.unbind(currentView)
 
         // Holder is unbound from Model
         assertNull(viewHolderModel.boundHolder)
+    }
+
+    @Test
+    fun insertInto() {
+        epoxyViewBinder.insertInto(viewGroup) {
+            viewModel.addTo(this)
+        }
+
+        // Old view is removed from parent
+        assertNull(view.parent)
+        // A new view is added
+        assertEquals(viewGroup, currentView.parent)
+        // New view is bound to EpoxyModel
+        assertEquals(currentView, viewModel.boundView)
+    }
+
+    @Test
+    fun insertInto_noModelAddedClearsContainer() {
+        epoxyViewBinder.insertInto(viewGroup) { }
+
+        // Old view is removed from parent
+        assertNull(view.parent)
+        assertEquals(0, viewGroup.childCount)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun insertInto_tooManyChildren() {
+        viewGroup.addView(View(context))
+
+        epoxyViewBinder.insertInto(viewGroup) {
+            viewModel.addTo(this)
+        }
     }
 }
 
@@ -103,11 +191,14 @@ private class EpoxyHolderMock : EpoxyHolder() {
 private class EpoxyModelMock : EpoxyModel<View>() {
     var boundView: View? = null
 
-    override fun getDefaultLayout() = throw UnsupportedOperationException("No default layout")
+    override fun getDefaultLayout() = 1
 
     override fun buildView(parent: ViewGroup) = createView()
 
-    override fun bind(view: View) { boundView = view }
+    override fun bind(view: View) {
+        boundView = view
+    }
+
     override fun unbind(view: View) {
         if (boundView == view) {
             boundView = null
@@ -118,7 +209,7 @@ private class EpoxyModelMock : EpoxyModel<View>() {
 private class EpoxyModelWithHolderMock : EpoxyModelWithHolder<EpoxyHolderMock>() {
     var boundHolder: EpoxyHolderMock? = null
 
-    override fun getDefaultLayout() = throw UnsupportedOperationException("No default layout")
+    override fun getDefaultLayout() = 2
 
     override fun buildView(parent: ViewGroup) = createView()
 
