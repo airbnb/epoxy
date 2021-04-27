@@ -16,7 +16,7 @@ import java.util.HashMap
  * A simple way to track visibility events on [EpoxyModel] within an [EpoxyViewBinder].
  *
  * [EpoxyViewBinderVisibilityTracker] works with any [View]
- * backed by an Epoxy controller. Once attached the events will be forwarded to the Epoxy model (or
+ * backed by an EpoxyModel. Once attached the events will be forwarded to the Epoxy model (or
  * to the Epoxy view when using annotations).
  *
  * **There are a few exceptions where events are not forwarded:**

@@ -420,7 +420,7 @@ class LifecycleAwareEpoxyViewBinder(
     val view: View
         get() {
             if (lazyView == null) {
-                val nonNullRootView = rootView() ?: error("Fragment view is not created")
+                val nonNullRootView = rootView() ?: error("Root view is not created")
                 lazyView = nonNullRootView.maybeFindViewByIdName(viewId, fallbackToNameLookup)
                     ?: error(
                         "View could not be found, fallbackToNameLookup: $fallbackToNameLookup," +
