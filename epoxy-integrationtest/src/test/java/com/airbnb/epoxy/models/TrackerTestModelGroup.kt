@@ -3,6 +3,7 @@ package com.airbnb.epoxy.models
 import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyModelGroup
+import com.airbnb.epoxy.ModelCollector
 import com.airbnb.epoxy.ModelGroupHolder
 import com.airbnb.epoxy.VisibilityState
 import com.airbnb.epoxy.utils.VisibilityAssertHelper
@@ -64,12 +65,13 @@ internal class TrackerTestModelGroup(
 /**
  * Helper function to create a [TrackerTestModelGroup] and add it to the [EpoxyController].
  */
-internal fun EpoxyController.trackerTestModelGroup(
+internal fun ModelCollector.trackerTestModelGroup(
     debugTag: String,
     helper: VisibilityAssertHelper,
     modelInitializer: (TrackerTestModelGroup.() -> Unit)? = null
 ) {
-    TrackerTestModelGroup(debugTag, helper)
-        .apply { modelInitializer?.invoke(this) }
-        .addTo(this)
+    add(
+        TrackerTestModelGroup(debugTag, helper)
+            .apply { modelInitializer?.invoke(this) }
+    )
 }

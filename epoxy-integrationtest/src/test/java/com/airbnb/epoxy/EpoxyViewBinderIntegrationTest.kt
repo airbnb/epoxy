@@ -226,31 +226,11 @@ class EpoxyViewBinderIntegrationTest {
         }
     }
 
-    @Test
-    fun testInterceptor() {
-        var modelCount = -1
-        activityRule.scenario.onActivity {
-            val frameLayout = FrameLayout(it)
-            val stubId = addViewBinderContainer(frameLayout)
-            it.setContentView(frameLayout)
-
-            val binder by it.epoxyView(
-                stubId,
-                initializer = { },
-                modelProvider = { buildTestBinderModel() }
-            )
-            binder.addInterceptor { models -> modelCount = models.size }
-            binder.invalidate()
-            onView(withText("5")).check(matches(isDisplayed()))
-            assertEquals(1, modelCount)
-        }
-    }
-
     @Test(expected = IllegalStateException::class)
     fun testNotAnEpoxyViewStub() {
-        EpoxyController.setGlobalExceptionHandler { _, exception ->
+        EpoxyViewBinder.globalExceptionHandler = { _, exception ->
             // Reset back to a no-op handler
-            EpoxyController.setGlobalExceptionHandler { _, _ -> }
+            EpoxyViewBinder.globalExceptionHandler = { _, _ -> }
             throw exception
         }
         activityRule.scenario.onActivity {
@@ -329,7 +309,7 @@ class EpoxyViewBinderIntegrationTest {
     }
 
     /** Creates and adds a simple model with a text view showing the text "5". */
-    private fun EpoxyController.buildTestBinderModel() {
+    private fun ModelCollector.buildTestBinderModel() {
         model {
             id(1)
             value(5)

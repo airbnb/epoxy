@@ -15,15 +15,14 @@ import java.util.HashMap
 /**
  * A simple way to track visibility events on [EpoxyModel] within an [EpoxyViewBinder].
  *
- * [EpoxyViewBinderVisibilityTracker] works with any [View]
- * backed by an EpoxyModel. Once attached the events will be forwarded to the Epoxy model (or
- * to the Epoxy view when using annotations).
+ * [EpoxyViewBinderVisibilityTracker] works with any [View] backed by an [EpoxyModel]. Once attached
+ * the events will be forwarded to the Epoxy model (or to the Epoxy view when using annotations).
  *
  * **There are a few exceptions where events are not forwarded:**
- *  * If a model is replaced with a model of the same class a new impression will not be logged. This is due to the
- *  view being the same instance and no insight into view holder changes.
- *  * View binders in scrollable views will only forward the initial visibility state. New events will not be emitted
- *  on scroll actions. This is due to not knowing when the outer view scrolls.
+ *  * If a model is replaced with a model of the same class a new impression will not be logged.
+ *  This is due to the view being the same instance and no insight into view holder changes.
+ *  * View binders in scrollable views will only forward the initial visibility state. New events
+ *  will not be emitted on scroll actions. This is due to not knowing when the outer view scrolls.
  */
 class EpoxyViewBinderVisibilityTracker {
 
@@ -50,8 +49,9 @@ class EpoxyViewBinderVisibilityTracker {
     private val nestedTrackers: MutableMap<RecyclerView, EpoxyVisibilityTracker> = HashMap()
 
     /**
-     * The threshold of percentage visible area to identify the partial impression view state. This is in the range
-     * of [0..100] and defaults to `null`, which disables [VisibilityState.PARTIAL_IMPRESSION_VISIBLE] and
+     * The threshold of percentage visible area to identify the partial impression view state. This
+     * is in the range of [0..100] and defaults to `null`, which disables
+     * [VisibilityState.PARTIAL_IMPRESSION_VISIBLE] and
      * [VisibilityState.PARTIAL_IMPRESSION_INVISIBLE] events.
      */
     @setparam:IntRange(from = 0, to = 100)
@@ -60,7 +60,7 @@ class EpoxyViewBinderVisibilityTracker {
     /**
      * Attaches the tracker.
      *
-     * @param view The view that the EpoxyController is driving.
+     * @param view The view that is backed by an [EpoxyModel].
      */
     fun attach(view: View) {
         if (attachedView !== view) {
@@ -70,9 +70,9 @@ class EpoxyViewBinderVisibilityTracker {
         attachedView = view
         attachedListener = Listener(view)
 
-        // When reattaching the view, process the children even if the view instance is the same. Since the view could
-        // have been recycled to be bound to another model, make sure the callback is happening on the appropriate
-        // model instance.
+        // When reattaching the view, process the children even if the view instance is the same.
+        // Since the view could have been recycled to be bound to another model, make sure the
+        // callback is happening on the appropriate model instance.
         processChild(view, false, "attach")
         (view as? RecyclerView)?.let {
             processChildRecyclerViewAttached(it)
@@ -176,7 +176,8 @@ class EpoxyViewBinderVisibilityTracker {
     }
 
     /**
-     * Call this method every time something related to ui changes (visibility, screen position, etc)
+     * Call this method every time something related to the UI changes
+     * (visibility, screen position, etc).
      *
      * @param epoxyHolder the view holder for the view.
      * @return true if changed

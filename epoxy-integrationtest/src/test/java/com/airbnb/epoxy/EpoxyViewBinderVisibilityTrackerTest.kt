@@ -1,5 +1,6 @@
 package com.airbnb.epoxy
 
+import android.content.Context
 import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
@@ -540,7 +541,7 @@ class EpoxyViewBinderVisibilityTrackerTest {
             val itemHeight = scrollView.measuredHeight / 2
             val itemWidth = (scrollView.measuredWidth / 1.5).roundToInt()
             it.withModel(itemHeight) {
-                CarouselModel_().apply {
+                add(CarouselModel_().apply {
                     id("carousel")
                     paddingDp(0)
                     models(
@@ -565,7 +566,7 @@ class EpoxyViewBinderVisibilityTrackerTest {
                             )
                         )
                     )
-                }.addTo(this)
+                })
             }
 
             helper1.assert(
@@ -610,7 +611,7 @@ class EpoxyViewBinderVisibilityTrackerTest {
             val itemHeight = scrollView.measuredHeight / 2
             val itemWidth = (scrollView.measuredWidth / 1.5).roundToInt()
             val binder = it.withModel(itemHeight) {
-                CarouselModel_().apply {
+                add(CarouselModel_().apply {
                     id("carousel")
                     paddingDp(0)
                     models(
@@ -635,7 +636,7 @@ class EpoxyViewBinderVisibilityTrackerTest {
                             )
                         )
                     )
-                }.addTo(this)
+                })
             }
 
             // Scroll so last carousel model is fully visible
@@ -705,7 +706,7 @@ class EpoxyViewBinderVisibilityTrackerTest {
      */
     private fun TestActivity.withModel(
         stubHeight: Int,
-        modelProvider: EpoxyController.() -> Unit
+        modelProvider: ModelCollector.(Context) -> Unit
     ): LifecycleAwareEpoxyViewBinder {
         val viewBinderContainer = EpoxyViewStub(this)
         viewBinderContainer.layoutParams =
@@ -716,10 +717,7 @@ class EpoxyViewBinderVisibilityTrackerTest {
         val binder by epoxyView(
             viewBinderContainer.id,
             useVisibilityTracking = true,
-            initializer = { },
-            {
-                modelProvider(this)
-            }
+            modelProvider = { modelProvider(this@withModel) }
         )
 
         binder.invalidate()

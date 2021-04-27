@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyModelWithView
+import com.airbnb.epoxy.ModelCollector
 import com.airbnb.epoxy.VisibilityState
 import com.airbnb.epoxy.utils.VisibilityAssertHelper
 import com.airbnb.epoxy.utils.VisibilityAssertHelper.Companion.description
@@ -60,14 +61,15 @@ internal class TrackerTestModel(
 /**
  * Helper function to create a [TrackerTestModel] and add it to the [EpoxyController].
  */
-internal fun EpoxyController.trackerTestModel(
+internal fun ModelCollector.trackerTestModel(
     debugTag: String,
     itemHeight: Int,
     itemWidth: Int = FrameLayout.LayoutParams.MATCH_PARENT,
     helper: VisibilityAssertHelper,
     modelInitializer: (TrackerTestModel.() -> Unit)? = null
 ) {
-    TrackerTestModel(debugTag, itemHeight, itemWidth, helper)
-        .apply { modelInitializer?.invoke(this) }
-        .addTo(this)
+    add(
+        TrackerTestModel(debugTag, itemHeight, itemWidth, helper)
+            .apply { modelInitializer?.invoke(this) }
+    )
 }
