@@ -541,32 +541,34 @@ class EpoxyViewBinderVisibilityTrackerTest {
             val itemHeight = scrollView.measuredHeight / 2
             val itemWidth = (scrollView.measuredWidth / 1.5).roundToInt()
             it.withModel(itemHeight) {
-                add(CarouselModel_().apply {
-                    id("carousel")
-                    paddingDp(0)
-                    models(
-                        listOf(
-                            TrackerTestModel(
-                                "carouselItem1",
-                                itemHeight = itemHeight,
-                                itemWidth = itemWidth,
-                                helper = helper1
-                            ),
-                            TrackerTestModel(
-                                "carouselItem1",
-                                itemHeight = itemHeight,
-                                itemWidth = itemWidth,
-                                helper = helper2
-                            ),
-                            TrackerTestModel(
-                                "carouselItem1",
-                                itemHeight = itemHeight,
-                                itemWidth = itemWidth,
-                                helper = helper3
+                add(
+                    CarouselModel_().apply {
+                        id("carousel")
+                        paddingDp(0)
+                        models(
+                            listOf(
+                                TrackerTestModel(
+                                    "carouselItem1",
+                                    itemHeight = itemHeight,
+                                    itemWidth = itemWidth,
+                                    helper = helper1
+                                ),
+                                TrackerTestModel(
+                                    "carouselItem1",
+                                    itemHeight = itemHeight,
+                                    itemWidth = itemWidth,
+                                    helper = helper2
+                                ),
+                                TrackerTestModel(
+                                    "carouselItem1",
+                                    itemHeight = itemHeight,
+                                    itemWidth = itemWidth,
+                                    helper = helper3
+                                )
                             )
                         )
-                    )
-                })
+                    }
+                )
             }
 
             helper1.assert(
@@ -611,32 +613,34 @@ class EpoxyViewBinderVisibilityTrackerTest {
             val itemHeight = scrollView.measuredHeight / 2
             val itemWidth = (scrollView.measuredWidth / 1.5).roundToInt()
             val binder = it.withModel(itemHeight) {
-                add(CarouselModel_().apply {
-                    id("carousel")
-                    paddingDp(0)
-                    models(
-                        listOf(
-                            TrackerTestModel(
-                                "carouselItem1",
-                                itemHeight = itemHeight,
-                                itemWidth = itemWidth,
-                                helper = helper1
-                            ),
-                            TrackerTestModel(
-                                "carouselItem1",
-                                itemHeight = itemHeight,
-                                itemWidth = itemWidth,
-                                helper = helper2
-                            ),
-                            TrackerTestModel(
-                                "carouselItem1",
-                                itemHeight = itemHeight,
-                                itemWidth = itemWidth,
-                                helper = helper3
+                add(
+                    CarouselModel_().apply {
+                        id("carousel")
+                        paddingDp(0)
+                        models(
+                            listOf(
+                                TrackerTestModel(
+                                    "carouselItem1",
+                                    itemHeight = itemHeight,
+                                    itemWidth = itemWidth,
+                                    helper = helper1
+                                ),
+                                TrackerTestModel(
+                                    "carouselItem1",
+                                    itemHeight = itemHeight,
+                                    itemWidth = itemWidth,
+                                    helper = helper2
+                                ),
+                                TrackerTestModel(
+                                    "carouselItem1",
+                                    itemHeight = itemHeight,
+                                    itemWidth = itemWidth,
+                                    helper = helper3
+                                )
                             )
                         )
-                    )
-                })
+                    }
+                )
             }
 
             // Scroll so last carousel model is fully visible

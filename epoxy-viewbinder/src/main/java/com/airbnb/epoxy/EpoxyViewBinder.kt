@@ -424,7 +424,7 @@ private fun ViewGroup.epoxyViewInternal(
     initializer: LifecycleAwareEpoxyViewBinder.() -> Unit,
     modelProvider: ModelCollector.(Context) -> Unit
 ) = LifecycleAwareEpoxyViewBinder(
-    (this.context.getContextForSharedViewPool() as? LifecycleOwner)
+    (this.context.unwrapContextForLifecycle() as? LifecycleOwner)
         ?: error("LifecycleOwner required as view's context "),
     { this },
     viewId,
@@ -434,11 +434,11 @@ private fun ViewGroup.epoxyViewInternal(
 ).apply(initializer)
 
 /**
- * Attempts to find this view's parent Activity in order to share the view pool. If this view's
+ * Attempts to find this view's parent Activity in order to find its lifecycle owner. If this view's
  * `context` is a ContextWrapper it will continually unwrap it until it finds the Activity. If
  * no Activity is found it will return the the view's context.
  */
-private fun Context.getContextForSharedViewPool(): Context {
+private fun Context.unwrapContextForLifecycle(): Context {
     var workingContext = this
     while (workingContext is ContextWrapper) {
         if (workingContext is Activity) {
