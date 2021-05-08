@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.EpoxyVisibilityTracker
+import com.airbnb.epoxy.epoxyView
 import com.airbnb.epoxy.group
 import com.airbnb.epoxy.kotlinsample.helpers.carouselNoSnapBuilder
 import com.airbnb.epoxy.kotlinsample.models.ItemDataClass
@@ -22,9 +23,30 @@ import com.airbnb.epoxy.kotlinsample.models.itemViewBindingEpoxyHolder
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: EpoxyRecyclerView
 
+    private val viewBinder by epoxyView(
+        viewId = R.id.epoxy_view_stub,
+        initializer = { },
+        modelProvider = {
+            itemCustomView {
+                id("view binder")
+                color(Color.BLACK)
+                title("Epoxy view outside of the RecyclerView")
+                onVisibilityStateChanged { _, _, visibilityState ->
+                    Log.d(TAG, "ViewBinder -> $visibilityState")
+                }
+                listener { _ ->
+                    Toast.makeText(this@MainActivity, "ViewBinder clicked", Toast.LENGTH_LONG).show()
+                }
+            }
+        },
+        useVisibilityTracking = true
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity)
+
+        viewBinder.invalidate()
 
         recyclerView = findViewById(R.id.recycler_view)
 
