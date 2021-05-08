@@ -59,7 +59,7 @@ class EpoxyViewBinderTest {
     @Test
     fun bindWithView_usingModelProvider() {
         epoxyViewBinder.replaceView(view) {
-            viewModel.addTo(this)
+            add(viewModel)
         }
 
         // Old view is removed from parent
@@ -85,7 +85,7 @@ class EpoxyViewBinderTest {
     @Test
     fun bindWithViewHolder_usingModelProvider() {
         epoxyViewBinder.replaceView(view) {
-            viewHolderModel.addTo(this)
+            add(viewHolderModel)
         }
 
         // Old view is removed from parent
@@ -103,9 +103,9 @@ class EpoxyViewBinderTest {
         // Old view is retained as it doesn't have a model bound to it
         assertNotNull(view.parent)
         assertEquals(viewGroup, currentView.parent)
-        // A new view is added
-        assertEquals(2, viewGroup.childCount)
-        assertEquals(viewGroup, newView.parent)
+        // No new view is added
+        assertEquals(1, viewGroup.childCount)
+        assertNull(newView.parent)
         // New view is bound to EpoxyModel
         assertEquals(newView, viewModel.boundView)
     }
@@ -151,7 +151,7 @@ class EpoxyViewBinderTest {
     @Test
     fun insertInto() {
         epoxyViewBinder.insertInto(viewGroup) {
-            viewModel.addTo(this)
+            add(viewModel)
         }
 
         // Old view is removed from parent
@@ -176,7 +176,7 @@ class EpoxyViewBinderTest {
         viewGroup.addView(View(context))
 
         epoxyViewBinder.insertInto(viewGroup) {
-            viewModel.addTo(this)
+            add(viewModel)
         }
     }
 }
