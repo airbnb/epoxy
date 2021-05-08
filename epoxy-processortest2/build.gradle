@@ -7,6 +7,11 @@ android {
     minSdkVersion rootProject.MIN_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
   }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
 dependencies {

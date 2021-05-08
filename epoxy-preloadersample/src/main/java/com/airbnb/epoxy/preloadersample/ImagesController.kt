@@ -12,7 +12,7 @@ class ImagesController(private val isPreloading: Boolean) : TypedEpoxyController
                 id("image_id_$url")
                 imageUrl(url)
                 text("Image Number: $index")
-                preloading(isPreloading)
+                preloading(this@ImagesController.isPreloading)
             }
         }
     }
