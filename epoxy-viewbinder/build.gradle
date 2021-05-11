@@ -11,6 +11,10 @@ android {
     targetSdkVersion rootProject.TARGET_SDK_VERSION
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
+
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_1_8.toString()
+  }
 }
 
 dependencies {
