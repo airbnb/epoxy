@@ -1,5 +1,6 @@
 package com.airbnb.epoxy.processor
 
+import com.airbnb.epoxy.EpoxyBuildScope
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
@@ -81,6 +82,7 @@ class ModelBuilderInterfaceWriter(
             addModifiers(Modifier.PUBLIC)
             addTypeVariables(modelInfo.typeVariables)
             addMethods(interfaceMethods)
+            addAnnotation(EpoxyBuildScope::class.java)
 
             if (modelInfo.memoizer.implementsModelCollector(modelInfo.superClassElement)) {
                 // If the model implements "ModelCollector" we want the builder too

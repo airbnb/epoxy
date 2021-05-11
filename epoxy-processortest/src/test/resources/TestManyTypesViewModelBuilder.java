@@ -16,6 +16,7 @@ import java.lang.Object;
 import java.lang.String;
 import java.util.List;
 
+@EpoxyBuildScope
 public interface TestManyTypesViewModelBuilder {
   TestManyTypesViewModelBuilder onBind(
       OnModelBoundListener<TestManyTypesViewModel_, TestManyTypesView> listener);

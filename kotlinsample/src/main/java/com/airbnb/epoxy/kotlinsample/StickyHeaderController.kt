@@ -22,14 +22,14 @@ class StickyHeaderController(
                     id("sticky-header $i")
                     title("Sticky header $i")
                     listener {
-                        Toast.makeText(context, "clicked", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@StickyHeaderController.context, "clicked", Toast.LENGTH_LONG).show()
                     }
                 }
                 else -> itemEpoxyHolder {
                     id("view holder $i")
                     title("this is a View Holder item")
                     listener {
-                        Toast.makeText(context, "clicked", Toast.LENGTH_LONG)
+                        Toast.makeText(this@StickyHeaderController.context, "clicked", Toast.LENGTH_LONG)
                             .show()
                     }
                 }

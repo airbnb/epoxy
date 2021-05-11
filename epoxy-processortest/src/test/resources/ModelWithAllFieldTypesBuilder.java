@@ -16,6 +16,7 @@ import java.lang.Short;
 import java.lang.String;
 import java.util.List;
 
+@EpoxyBuildScope
 public interface ModelWithAllFieldTypesBuilder {
   ModelWithAllFieldTypesBuilder onBind(
       OnModelBoundListener<ModelWithAllFieldTypes_, Object> listener);
