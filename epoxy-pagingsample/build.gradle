@@ -39,8 +39,8 @@ dependencies {
 
   implementation "androidx.appcompat:appcompat:$ANDROIDX_APPCOMPAT"
 
-  implementation "androidx.lifecycle:lifecycle-runtime:$ANDROIDX_RUNTIME"
-  implementation "androidx.lifecycle:lifecycle-extensions:$ANDROIDX_RUNTIME"
+  implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$ANDROIDX_RUNTIME"
+  implementation "androidx.activity:activity-ktx:1.2.3"
 
   testImplementation 'junit:junit:4.12'
   androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha2', {
