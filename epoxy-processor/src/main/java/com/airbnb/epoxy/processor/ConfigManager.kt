@@ -30,6 +30,7 @@ class ConfigManager internal constructor(
     private val disableGenerateReset: Boolean
     private val disableGenerateGetters: Boolean
     private val disableGenerateBuilderOverloads: Boolean
+    val disableDslMarker: Boolean
     val logTimings: Boolean
     val enableCoroutines: Boolean
 
@@ -90,6 +91,12 @@ class ConfigManager internal constructor(
         disableGenerateBuilderOverloads = getBooleanOption(
             options,
             PROCESSOR_OPTION_DISABLE_GENERATE_BUILDER_OVERLOADS,
+            defaultValue = false
+        )
+
+        disableDslMarker = getBooleanOption(
+            options,
+            PROCESSOR_OPTION_DISABLE_DLS_MARKER,
             defaultValue = false
         )
     }
@@ -270,6 +277,7 @@ class ConfigManager internal constructor(
     }
 
     companion object {
+        const val PROCESSOR_OPTION_DISABLE_DLS_MARKER = "epoxyDisableDslMarker"
         const val PROCESSOR_OPTION_DISABLE_GENERATE_RESET = "epoxyDisableGenerateReset"
         const val PROCESSOR_OPTION_DISABLE_GENERATE_GETTERS = "epoxyDisableGenerateGetters"
         const val PROCESSOR_OPTION_DISABLE_GENERATE_BUILDER_OVERLOADS =

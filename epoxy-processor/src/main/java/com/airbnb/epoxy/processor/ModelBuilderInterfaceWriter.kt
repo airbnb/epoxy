@@ -82,7 +82,9 @@ class ModelBuilderInterfaceWriter(
             addModifiers(Modifier.PUBLIC)
             addTypeVariables(modelInfo.typeVariables)
             addMethods(interfaceMethods)
-            addAnnotation(EpoxyBuildScope::class.java)
+            if (!configManager.disableDslMarker) {
+                addAnnotation(EpoxyBuildScope::class.java)
+            }
 
             if (modelInfo.memoizer.implementsModelCollector(modelInfo.superClassElement)) {
                 // If the model implements "ModelCollector" we want the builder too

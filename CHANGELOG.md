@@ -1,3 +1,18 @@
+# 4.6.1 (May 13, 2021)
+Adds "epoxyDisableDslMarker" annotation processor flag which you can use to delay migration to the model building scope DLSMarker introduced in 4.6.0 if it is a large breaking change for your project.
+
+Note that this only applies to your project modules that you apply it to, and does not apply to the handful of models that ship with the Epoxy library (like the Carousel or `group` builder).
+
+For example:
+```groovy
+project.android.buildTypes.all { buildType ->
+    buildType.javaCompileOptions.annotationProcessorOptions.arguments =
+            [
+                    epoxyDisableDslMarker     : "true",
+            ]
+}
+```
+
 # 4.6.0 (May 12, 2021)
 - View Binder Support (#1175) Bind epoxy models to views outside of a RecyclerView.
 
