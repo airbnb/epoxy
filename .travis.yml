@@ -1,6 +1,10 @@
 language: android
 
 android:
+  licenses:
+    - 'android-sdk-preview-license-.+'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
   components:
   - tools
   - platform-tools
@@ -13,10 +17,6 @@ android:
   - extra-google-google_play_services
   - extra-android-m2repository
   - extra-google-m2repository
-  licenses:
-    - android-sdk-preview-license-.+
-    - android-sdk-license-.+
-    - google-gdk-license-.+
 
 before_install:
   - yes | sdkmanager "platforms;android-30"
