@@ -18,6 +18,10 @@ android:
     - android-sdk-license-.+
     - google-gdk-license-.+
 
+before_install:
+  - yes | sdkmanager "platforms;android-30"
+  - yes | sdkmanager "build-tools;30.0.2"
+
 jdk:
 - oraclejdk11
 
