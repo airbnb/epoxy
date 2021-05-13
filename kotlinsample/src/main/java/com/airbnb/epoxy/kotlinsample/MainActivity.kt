@@ -45,7 +45,9 @@ class MainActivity : AppCompatActivity() {
         epoxyVisibilityTracker.partialImpressionThresholdPercentage = 75
         epoxyVisibilityTracker.attach(recyclerView)
 
-        recyclerView.adapter = MainController(this).adapter
+        val controller = MainController(this)
+        recyclerView.adapter = controller.adapter
+        controller.requestModelBuild()
     }
 
     companion object {
