@@ -13,6 +13,10 @@ android:
   - extra-google-google_play_services
   - extra-android-m2repository
   - extra-google-m2repository
+  licenses:
+    - android-sdk-preview-license-.+
+    - android-sdk-license-.+
+    - google-gdk-license-.+
 
 jdk:
 - oraclejdk11
