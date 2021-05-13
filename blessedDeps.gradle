@@ -22,7 +22,7 @@ rootProject.ext.ANDROIDX_DATABINDING_ADAPTERS = "3.2.1"
 rootProject.ext.ANDROIDX_DATABINDING_COMPILER = "3.2.1"
 rootProject.ext.ANDROIDX_DATABINDING_LIBRARY = "3.2.1"
 rootProject.ext.ANDROIDX_ESPRESSO_CORE = "3.3.0"
-rootProject.ext.ANDROIDX_FRAGMENT_TESTING= "1.3.3"
+rootProject.ext.ANDROIDX_FRAGMENT_TESTING = "1.3.3"
 rootProject.ext.ANDROIDX_LEGACY = "1.0.0"
 rootProject.ext.ANDROIDX_MATERIAL = "1.3.0"
 rootProject.ext.ANDROIDX_PAGING = "2.0.0"
@@ -43,6 +43,7 @@ rootProject.ext.INCAP_VERSION = "0.3"
 rootProject.ext.JUNIT_VERSION = "4.13.1"
 rootProject.ext.KOTLIN_COROUTINES_TEST_VERSION = "1.4.1"
 rootProject.ext.KOTLIN_COROUTINES_VERSION = "1.3.9"
+rootProject.ext.KOTLINX_METADATA = "0.3.0"
 rootProject.ext.LOTTIE_VERSION = "2.8.0"
 rootProject.ext.MOCKITO_VERSION = "3.7.7"
 rootProject.ext.PARIS_VERSION = "1.7.3"
@@ -77,6 +78,7 @@ rootProject.ext.deps = [
     junit                  : "junit:junit:$JUNIT_VERSION",
     kotlinCoroutines       : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$KOTLIN_COROUTINES_VERSION",
     kotlinCoroutinesTest   : "org.jetbrains.kotlinx:kotlinx-coroutines-test:$KOTLIN_COROUTINES_TEST_VERSION",
+    kotlinxMetadata        : "org.jetbrains.kotlinx:kotlinx-metadata-jvm:$KOTLINX_METADATA",
     lottie                 : "com.airbnb.android:lottie:$LOTTIE_VERSION",
     mockito                : "org.mockito:mockito-core:$MOCKITO_VERSION",
     mockito_inline         : "org.mockito:mockito-inline:$MOCKITO_VERSION",

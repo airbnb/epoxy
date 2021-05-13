@@ -20,7 +20,7 @@ dependencies {
     implementation deps.squareJavaPoet
     implementation deps.squareKotlinPoet
     implementation deps.androidAnnotations
-    implementation "org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.2.0"
+    implementation rootProject.deps.kotlinxMetadata
     implementation rootProject.deps.kotlinCoroutines
 
     /** Provides the sun javac tools for looking up the R class trees. */

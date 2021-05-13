@@ -1,4 +1,4 @@
-wpackage com.airbnb.epoxy
+package com.airbnb.epoxy
 
 import com.airbnb.epoxy.processor.ControllerProcessor
 import com.airbnb.epoxy.processor.DataBindingProcessor
