@@ -1,3 +1,12 @@
+# 4.6.0 (May 12, 2021)
+- View Binder Support (#1175) Bind epoxy models to views outside of a RecyclerView.
+
+### Potentially Breaking
+- Use kotlin dsl marker for model building receivers (#1180)
+
+This change uses Kotlin's DSL marker annotation to enforce proper usage of model building extension
+functions. You may now need to change some references in your model building code to explicitly reference properties with `this`.
+
 # 4.5.0 (April 13, 2021)
 - Fix generated code consistency in builder interfaces (#1166)
 - Provided support to invalidate `modelCache` in `PagingDataEpoxyController` (#1161)
