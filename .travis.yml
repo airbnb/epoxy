@@ -18,10 +18,6 @@ android:
   - extra-android-m2repository
   - extra-google-m2repository
 
-before_install:
-  - yes | sdkmanager "platforms;android-30"
-  - yes | sdkmanager "build-tools;30.0.2"
-
 jdk:
 - oraclejdk11
 
