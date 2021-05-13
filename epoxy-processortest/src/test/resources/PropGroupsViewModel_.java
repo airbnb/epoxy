@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -13,7 +14,8 @@ import java.lang.String;
 import java.util.BitSet;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements GeneratedModel<PropGroupsView>, PropGroupsViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(14);
 
@@ -26,64 +28,78 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
   private OnModelVisibilityChangedListener<PropGroupsViewModel_, PropGroupsView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
   /**
-   * Bitset index: 0 */
+   * Bitset index: 0
+   */
   @Nullable
   private CharSequence something_CharSequence = (CharSequence) null;
 
   /**
-   * Bitset index: 1 */
+   * Bitset index: 1
+   */
   private int something_Int = 0;
 
   /**
-   * Bitset index: 2 */
+   * Bitset index: 2
+   */
   @NonNull
   private CharSequence somethingElse_CharSequence;
 
   /**
-   * Bitset index: 3 */
+   * Bitset index: 3
+   */
   private int somethingElse_Int = 0;
 
   /**
-   * Bitset index: 4 */
+   * Bitset index: 4
+   */
   private int primitive_Int = 0;
 
   /**
-   * Bitset index: 5 */
+   * Bitset index: 5
+   */
   private long primitive_Long = 0L;
 
   /**
-   * Bitset index: 6 */
+   * Bitset index: 6
+   */
   private int primitiveWithDefault_Int = 0;
 
   /**
-   * Bitset index: 7 */
+   * Bitset index: 7
+   */
   private long primitiveWithDefault_Long = PropGroupsView.DEFAULT_PRIMITIVE;
 
   /**
-   * Bitset index: 8 */
+   * Bitset index: 8
+   */
   private long primitiveAndObjectGroupWithPrimitiveDefault_Long = PropGroupsView.DEFAULT_PRIMITIVE;
 
   /**
-   * Bitset index: 9 */
+   * Bitset index: 9
+   */
   @NonNull
   private CharSequence primitiveAndObjectGroupWithPrimitiveDefault_CharSequence;
 
   /**
-   * Bitset index: 10 */
+   * Bitset index: 10
+   */
   private long oneThing_Long = 0L;
 
   /**
-   * Bitset index: 11 */
+   * Bitset index: 11
+   */
   @NonNull
   private CharSequence anotherThing_CharSequence;
 
   /**
-   * Bitset index: 12 */
+   * Bitset index: 12
+   */
   @NonNull
   private String requiredGroup_String;
 
   /**
-   * Bitset index: 13 */
+   * Bitset index: 13
+   */
   @NonNull
   private CharSequence requiredGroup_CharSequence;
 
@@ -292,7 +308,8 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public PropGroupsViewModel_ onBind(
       OnModelBoundListener<PropGroupsViewModel_, PropGroupsView> listener) {
     onMutation();
@@ -314,7 +331,8 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public PropGroupsViewModel_ onUnbind(
       OnModelUnboundListener<PropGroupsViewModel_, PropGroupsView> listener) {
     onMutation();
@@ -647,8 +665,8 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
   }
 
   @Override
-  public PropGroupsViewModel_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public PropGroupsViewModel_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -659,32 +677,33 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
   }
 
   @Override
-  public PropGroupsViewModel_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public PropGroupsViewModel_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public PropGroupsViewModel_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public PropGroupsViewModel_ id(@Nullable CharSequence key, @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public PropGroupsViewModel_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public PropGroupsViewModel_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public PropGroupsViewModel_ layout(@LayoutRes int arg0) {
-    super.layout(arg0);
+  public PropGroupsViewModel_ layout(@LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
-  public PropGroupsViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+  public PropGroupsViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -855,3 +874,4 @@ public class PropGroupsViewModel_ extends EpoxyModel<PropGroupsView> implements 
     return totalSpanCount;
   }
 }
+

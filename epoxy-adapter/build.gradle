@@ -39,7 +39,6 @@ dependencies {
   implementation rootProject.deps.androidAnnotations
   implementation rootProject.deps.androidRecyclerView
   implementation rootProject.deps.androidDesignLibrary
-  implementation rootProject.deps.kotlin
   api project(':epoxy-annotations')
 
   kapt project(':epoxy-processor')

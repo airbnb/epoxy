@@ -41,7 +41,6 @@ android {
 }
 
 dependencies {
-  implementation rootProject.deps.kotlin
   implementation rootProject.deps.androidAppcompat
   implementation rootProject.deps.androidFragmentTesting
   implementation rootProject.deps.androidPagingComponent

@@ -112,7 +112,6 @@ class ModelViewInfo(
         val header = KotlinClassHeader(
             kind = kotlinMetadataAnnotation.kind,
             metadataVersion = kotlinMetadataAnnotation.metadataVersion,
-            bytecodeVersion = kotlinMetadataAnnotation.bytecodeVersion,
             data1 = kotlinMetadataAnnotation.data1,
             data2 = kotlinMetadataAnnotation.data2,
             extraString = kotlinMetadataAnnotation.extraString,

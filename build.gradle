@@ -2,7 +2,7 @@
 buildscript {
 
   ext.KOTLIN_VERSION = "1.5.0"
-  ext.ANDROID_PLUGIN_VERSION = '4.1.3'
+  ext.ANDROID_PLUGIN_VERSION = '4.2.0'
 
   repositories {
     google()
@@ -50,28 +50,15 @@ subprojects { project ->
   }
 }
 
-def isCi() {
-  project.hasProperty('CI') && CI.equals('true')
+def isNonStable = { String version ->
+  def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.toUpperCase().contains(it) }
+  def regex = /^[0-9,.v-]+(-r)?$/
+  return !stableKeyword && !(version ==~ regex)
 }
 
-def isReleaseBuild() {
-  return !VERSION_NAME.contains("SNAPSHOT")
-}
-
-def getReleaseRepositoryUrl() {
-  return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL
-      : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-}
-
-def getSnapshotRepositoryUrl() {
-  return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL
-      : "https://oss.sonatype.org/content/repositories/snapshots/"
-}
-
-def getRepositoryUsername() {
-  return hasProperty('NEXUS_USERNAME') ? NEXUS_USERNAME : ""
-}
-
-def getRepositoryPassword() {
-  return hasProperty('NEXUS_PASSWORD') ? NEXUS_PASSWORD : ""
+tasks.named("dependencyUpdates").configure {
+  // disallow release candidates as upgradable versions from stable versions
+  rejectVersionIf {
+    isNonStable(it.candidate.version) && !isNonStable(it.currentVersion)
+  }
 }

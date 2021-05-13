@@ -1,5 +1,3 @@
-import org.gradle.internal.jvm.Jvm
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
@@ -45,7 +43,6 @@ dependencies {
   implementation project(':epoxy-adapter')
   implementation project(':epoxy-modelfactory')
   implementation rootProject.deps.paris
-  implementation rootProject.deps.kotlin
   implementation rootProject.deps.androidRecyclerView
 
   kapt project(':epoxy-processor')
@@ -58,20 +55,6 @@ dependencies {
   testImplementation rootProject.deps.googleTestingCompile
   testImplementation rootProject.deps.junit
   testImplementation rootProject.deps.robolectric
-  testImplementation files(getRuntimeJar())
-  testImplementation files(Jvm.current().getToolsJar())
-}
-
-static def getRuntimeJar() {
-  try {
-    final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile()
-    File runtimeJar = new File(javaBase, "lib/rt.jar")
-    if (runtimeJar.exists()) {
-      return runtimeJar
-    }
-    runtimeJar = new File(javaBase, "jre/lib/rt.jar")
-    return runtimeJar.exists() ? runtimeJar : null
-  } catch (IOException e) {
-    throw new RuntimeException(e)
-  }
+  testImplementation files(rootProject.file("libs/rt.jar"))
+  testImplementation files(rootProject.file("libs/tools.jar"))
 }

@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import android.content.Context;
@@ -19,7 +20,8 @@ import java.util.BitSet;
 import javax.annotation.Nullable;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildView> implements GeneratedModel<TestFieldPropChildView>, TestFieldPropChildViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(2);
 
@@ -32,7 +34,8 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   private OnModelVisibilityChangedListener<TestFieldPropChildViewModel_, TestFieldPropChildView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
   /**
-   * Bitset index: 0 */
+   * Bitset index: 0
+   */
   private StringAttributeData textValue_StringAttributeData =  new StringAttributeData();
 
   @Nullable
@@ -105,7 +108,8 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public TestFieldPropChildViewModel_ onBind(
       OnModelBoundListener<TestFieldPropChildViewModel_, TestFieldPropChildView> listener) {
     onMutation();
@@ -128,7 +132,8 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public TestFieldPropChildViewModel_ onUnbind(
       OnModelUnboundListener<TestFieldPropChildViewModel_, TestFieldPropChildView> listener) {
     onMutation();
@@ -242,7 +247,8 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   }
 
   /**
-   * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
+   * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set
+   */
   public TestFieldPropChildViewModel_ value(
       @Nullable final OnModelClickListener<TestFieldPropChildViewModel_, TestFieldPropChildView> value) {
     onMutation();
@@ -278,8 +284,8 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable Number... arg0) {
-    super.id(arg0);
+  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -290,34 +296,33 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable CharSequence arg0) {
-    super.id(arg0);
+  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable CharSequence arg0,
-      @androidx.annotation.Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable CharSequence key,
+      @androidx.annotation.Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable CharSequence arg0,
-      long arg1) {
-    super.id(arg0, arg1);
+  public TestFieldPropChildViewModel_ id(@androidx.annotation.Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public TestFieldPropChildViewModel_ layout(@LayoutRes int arg0) {
+  public TestFieldPropChildViewModel_ layout(@LayoutRes int layoutRes) {
     throw new UnsupportedOperationException("Layout resources are unsupported with programmatic views.");
   }
 
   @Override
   public TestFieldPropChildViewModel_ spanSizeOverride(
-      @androidx.annotation.Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @androidx.annotation.Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -416,3 +421,4 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
     return totalSpanCount;
   }
 }
+

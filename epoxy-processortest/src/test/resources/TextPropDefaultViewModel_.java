@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import android.content.Context;
@@ -16,7 +17,8 @@ import java.lang.String;
 import java.util.BitSet;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> implements GeneratedModel<TextPropDefaultView>, TextPropDefaultViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(2);
 
@@ -29,7 +31,8 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   private OnModelVisibilityChangedListener<TextPropDefaultViewModel_, TextPropDefaultView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
   /**
-   * Bitset index: 0 */
+   * Bitset index: 0
+   */
   private StringAttributeData textWithDefault_StringAttributeData =  new StringAttributeData(R.string.string_resource_value);
 
   private StringAttributeData nullableTextWithDefault_StringAttributeData =  new StringAttributeData(R.string.string_resource_value);
@@ -88,7 +91,8 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public TextPropDefaultViewModel_ onBind(
       OnModelBoundListener<TextPropDefaultViewModel_, TextPropDefaultView> listener) {
     onMutation();
@@ -110,7 +114,8 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public TextPropDefaultViewModel_ onUnbind(
       OnModelUnboundListener<TextPropDefaultViewModel_, TextPropDefaultView> listener) {
     onMutation();
@@ -288,8 +293,8 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   }
 
   @Override
-  public TextPropDefaultViewModel_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public TextPropDefaultViewModel_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -300,33 +305,34 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
   }
 
   @Override
-  public TextPropDefaultViewModel_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public TextPropDefaultViewModel_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public TextPropDefaultViewModel_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public TextPropDefaultViewModel_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public TextPropDefaultViewModel_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public TextPropDefaultViewModel_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public TextPropDefaultViewModel_ layout(@LayoutRes int arg0) {
-    super.layout(arg0);
+  public TextPropDefaultViewModel_ layout(@LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
   public TextPropDefaultViewModel_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -425,3 +431,4 @@ public class TextPropDefaultViewModel_ extends EpoxyModel<TextPropDefaultView> i
     return totalSpanCount;
   }
 }
+

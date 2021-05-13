@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import android.view.ViewGroup;
@@ -11,7 +12,8 @@ import java.lang.String;
 import java.lang.UnsupportedOperationException;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropModelPropView> implements GeneratedModel<TestFieldPropModelPropView>, TestFieldPropModelPropViewModelBuilder {
   private OnModelBoundListener<TestFieldPropModelPropViewModel_, TestFieldPropModelPropView> onModelBoundListener_epoxyGeneratedModel;
 
@@ -82,7 +84,8 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public TestFieldPropModelPropViewModel_ onBind(
       OnModelBoundListener<TestFieldPropModelPropViewModel_, TestFieldPropModelPropView> listener) {
     onMutation();
@@ -104,7 +107,8 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public TestFieldPropModelPropViewModel_ onUnbind(
       OnModelUnboundListener<TestFieldPropModelPropViewModel_, TestFieldPropModelPropView> listener) {
     onMutation();
@@ -178,8 +182,8 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
   }
 
   @Override
-  public TestFieldPropModelPropViewModel_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public TestFieldPropModelPropViewModel_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -190,33 +194,33 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
   }
 
   @Override
-  public TestFieldPropModelPropViewModel_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public TestFieldPropModelPropViewModel_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public TestFieldPropModelPropViewModel_ id(@Nullable CharSequence arg0,
-      @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public TestFieldPropModelPropViewModel_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public TestFieldPropModelPropViewModel_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public TestFieldPropModelPropViewModel_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public TestFieldPropModelPropViewModel_ layout(@LayoutRes int arg0) {
+  public TestFieldPropModelPropViewModel_ layout(@LayoutRes int layoutRes) {
     throw new UnsupportedOperationException("Layout resources are unsupported with programmatic views.");
   }
 
   @Override
   public TestFieldPropModelPropViewModel_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -308,3 +312,4 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
     return totalSpanCount;
   }
 }
+

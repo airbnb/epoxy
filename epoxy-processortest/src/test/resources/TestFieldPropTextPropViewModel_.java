@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import android.content.Context;
@@ -18,7 +19,8 @@ import java.lang.UnsupportedOperationException;
 import java.util.BitSet;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTextPropView> implements GeneratedModel<TestFieldPropTextPropView>, TestFieldPropTextPropViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
@@ -31,7 +33,8 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
   private OnModelVisibilityChangedListener<TestFieldPropTextPropViewModel_, TestFieldPropTextPropView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
   /**
-   * Bitset index: 0 */
+   * Bitset index: 0
+   */
   private StringAttributeData value_StringAttributeData =  new StringAttributeData();
 
   @Override
@@ -96,7 +99,8 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public TestFieldPropTextPropViewModel_ onBind(
       OnModelBoundListener<TestFieldPropTextPropViewModel_, TestFieldPropTextPropView> listener) {
     onMutation();
@@ -118,7 +122,8 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public TestFieldPropTextPropViewModel_ onUnbind(
       OnModelUnboundListener<TestFieldPropTextPropViewModel_, TestFieldPropTextPropView> listener) {
     onMutation();
@@ -239,8 +244,8 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
   }
 
   @Override
-  public TestFieldPropTextPropViewModel_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public TestFieldPropTextPropViewModel_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -251,33 +256,33 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
   }
 
   @Override
-  public TestFieldPropTextPropViewModel_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public TestFieldPropTextPropViewModel_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public TestFieldPropTextPropViewModel_ id(@Nullable CharSequence arg0,
-      @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public TestFieldPropTextPropViewModel_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public TestFieldPropTextPropViewModel_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public TestFieldPropTextPropViewModel_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public TestFieldPropTextPropViewModel_ layout(@LayoutRes int arg0) {
+  public TestFieldPropTextPropViewModel_ layout(@LayoutRes int layoutRes) {
     throw new UnsupportedOperationException("Layout resources are unsupported with programmatic views.");
   }
 
   @Override
   public TestFieldPropTextPropViewModel_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -370,3 +375,4 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
     return totalSpanCount;
   }
 }
+

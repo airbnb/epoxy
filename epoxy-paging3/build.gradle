@@ -9,7 +9,7 @@ android {
   defaultConfig {
     minSdkVersion rootProject.MIN_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
   compileOptions {
@@ -19,7 +19,6 @@ android {
 }
 
 dependencies {
-  implementation rootProject.deps.kotlin
   api rootProject.deps.androidPaging3Component
   api project(':epoxy-annotations')
   api project(':epoxy-adapter')

@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -19,7 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldTypes implements GeneratedModel<Object>, ModelWithAllPrivateFieldTypesBuilder {
   private OnModelBoundListener<ModelWithAllPrivateFieldTypes_, Object> onModelBoundListener_epoxyGeneratedModel;
 
@@ -58,7 +60,8 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelWithAllPrivateFieldTypes_ onBind(
       OnModelBoundListener<ModelWithAllPrivateFieldTypes_, Object> listener) {
     onMutation();
@@ -80,7 +83,8 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelWithAllPrivateFieldTypes_ onUnbind(
       OnModelUnboundListener<ModelWithAllPrivateFieldTypes_, Object> listener) {
     onMutation();
@@ -354,8 +358,8 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   @Override
-  public ModelWithAllPrivateFieldTypes_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public ModelWithAllPrivateFieldTypes_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -366,34 +370,34 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
   }
 
   @Override
-  public ModelWithAllPrivateFieldTypes_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public ModelWithAllPrivateFieldTypes_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public ModelWithAllPrivateFieldTypes_ id(@Nullable CharSequence arg0,
-      @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public ModelWithAllPrivateFieldTypes_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public ModelWithAllPrivateFieldTypes_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public ModelWithAllPrivateFieldTypes_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public ModelWithAllPrivateFieldTypes_ layout(@LayoutRes int arg0) {
-    super.layout(arg0);
+  public ModelWithAllPrivateFieldTypes_ layout(@LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
   public ModelWithAllPrivateFieldTypes_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -596,3 +600,4 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
         "}" + super.toString();
   }
 }
+

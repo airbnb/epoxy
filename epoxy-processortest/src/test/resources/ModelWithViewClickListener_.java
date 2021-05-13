@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import android.view.View;
@@ -10,7 +11,8 @@ import java.lang.Override;
 import java.lang.String;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class ModelWithViewClickListener_ extends ModelWithViewClickListener implements GeneratedModel<Object>, ModelWithViewClickListenerBuilder {
   private OnModelBoundListener<ModelWithViewClickListener_, Object> onModelBoundListener_epoxyGeneratedModel;
 
@@ -49,7 +51,8 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelWithViewClickListener_ onBind(
       OnModelBoundListener<ModelWithViewClickListener_, Object> listener) {
     onMutation();
@@ -71,7 +74,8 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelWithViewClickListener_ onUnbind(
       OnModelUnboundListener<ModelWithViewClickListener_, Object> listener) {
     onMutation();
@@ -123,7 +127,8 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   }
 
   /**
-   * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
+   * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set
+   */
   public ModelWithViewClickListener_ clickListener(
       final OnModelClickListener<ModelWithViewClickListener_, Object> clickListener) {
     onMutation();
@@ -153,8 +158,8 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   }
 
   @Override
-  public ModelWithViewClickListener_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public ModelWithViewClickListener_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -165,34 +170,34 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
   }
 
   @Override
-  public ModelWithViewClickListener_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public ModelWithViewClickListener_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(@Nullable CharSequence arg0,
-      @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public ModelWithViewClickListener_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public ModelWithViewClickListener_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public ModelWithViewClickListener_ layout(@LayoutRes int arg0) {
-    super.layout(arg0);
+  public ModelWithViewClickListener_ layout(@LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
   public ModelWithViewClickListener_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -273,3 +278,4 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
         "}" + super.toString();
   }
 }
+

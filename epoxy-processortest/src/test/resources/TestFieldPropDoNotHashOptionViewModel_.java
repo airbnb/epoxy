@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import android.view.View;
@@ -16,7 +17,8 @@ import java.lang.UnsupportedOperationException;
 import java.util.BitSet;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestFieldPropDoNotHashOptionView> implements GeneratedModel<TestFieldPropDoNotHashOptionView>, TestFieldPropDoNotHashOptionViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
 
@@ -29,7 +31,8 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
   private OnModelVisibilityChangedListener<TestFieldPropDoNotHashOptionViewModel_, TestFieldPropDoNotHashOptionView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
   /**
-   * Bitset index: 0 */
+   * Bitset index: 0
+   */
   @NonNull
   private View.OnClickListener value_OnClickListener;
 
@@ -95,7 +98,8 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public TestFieldPropDoNotHashOptionViewModel_ onBind(
       OnModelBoundListener<TestFieldPropDoNotHashOptionViewModel_, TestFieldPropDoNotHashOptionView> listener) {
     onMutation();
@@ -117,7 +121,8 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public TestFieldPropDoNotHashOptionViewModel_ onUnbind(
       OnModelUnboundListener<TestFieldPropDoNotHashOptionViewModel_, TestFieldPropDoNotHashOptionView> listener) {
     onMutation();
@@ -170,7 +175,8 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
   }
 
   /**
-   * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
+   * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set
+   */
   public TestFieldPropDoNotHashOptionViewModel_ value(
       @NonNull final OnModelClickListener<TestFieldPropDoNotHashOptionViewModel_, TestFieldPropDoNotHashOptionView> value) {
     assignedAttributes_epoxyGeneratedModel.set(0);
@@ -211,8 +217,8 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
   }
 
   @Override
-  public TestFieldPropDoNotHashOptionViewModel_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public TestFieldPropDoNotHashOptionViewModel_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -223,33 +229,33 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
   }
 
   @Override
-  public TestFieldPropDoNotHashOptionViewModel_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public TestFieldPropDoNotHashOptionViewModel_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public TestFieldPropDoNotHashOptionViewModel_ id(@Nullable CharSequence arg0,
-      @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public TestFieldPropDoNotHashOptionViewModel_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public TestFieldPropDoNotHashOptionViewModel_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public TestFieldPropDoNotHashOptionViewModel_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public TestFieldPropDoNotHashOptionViewModel_ layout(@LayoutRes int arg0) {
+  public TestFieldPropDoNotHashOptionViewModel_ layout(@LayoutRes int layoutRes) {
     throw new UnsupportedOperationException("Layout resources are unsupported with programmatic views.");
   }
 
   @Override
   public TestFieldPropDoNotHashOptionViewModel_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -342,3 +348,4 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
     return totalSpanCount;
   }
 }
+

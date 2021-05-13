@@ -37,7 +37,7 @@ project.android.buildTypes.all { buildType ->
                     requireAbstractEpoxyModels  : "true",
                     implicitlyAddAutoModels     : "true",
                     logEpoxyTimings     : "false",
-                    enableParallelEpoxyProcessing     : "true",
+                    enableParallelEpoxyProcessing     : "false",
             ]
 }
 
@@ -50,7 +50,6 @@ dependencies {
     implementation rootProject.deps.paris
     kapt rootProject.deps.parisProcessor
 
-    implementation rootProject.deps.kotlin
     implementation rootProject.deps.androidCardView
     implementation rootProject.deps.androidRecyclerView
     implementation rootProject.deps.androidAppcompat
