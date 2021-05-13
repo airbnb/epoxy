@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -13,7 +14,8 @@ import java.lang.String;
 import java.util.BitSet;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> implements GeneratedModel<PropDefaultsView>, PropDefaultsViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(6);
 
@@ -29,7 +31,8 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   private CharSequence defaultsToNull_CharSequence = (CharSequence) null;
 
   /**
-   * Bitset index: 1 */
+   * Bitset index: 1
+   */
   @NonNull
   private CharSequence noDefaultSoItIsRequired_CharSequence;
 
@@ -117,7 +120,8 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public PropDefaultsViewModel_ onBind(
       OnModelBoundListener<PropDefaultsViewModel_, PropDefaultsView> listener) {
     onMutation();
@@ -139,7 +143,8 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public PropDefaultsViewModel_ onUnbind(
       OnModelUnboundListener<PropDefaultsViewModel_, PropDefaultsView> listener) {
     onMutation();
@@ -301,8 +306,8 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   }
 
   @Override
-  public PropDefaultsViewModel_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public PropDefaultsViewModel_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -313,33 +318,34 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
   }
 
   @Override
-  public PropDefaultsViewModel_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public PropDefaultsViewModel_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public PropDefaultsViewModel_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public PropDefaultsViewModel_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public PropDefaultsViewModel_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public PropDefaultsViewModel_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public PropDefaultsViewModel_ layout(@LayoutRes int arg0) {
-    super.layout(arg0);
+  public PropDefaultsViewModel_ layout(@LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
   public PropDefaultsViewModel_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -462,3 +468,4 @@ public class PropDefaultsViewModel_ extends EpoxyModel<PropDefaultsView> impleme
     return totalSpanCount;
   }
 }
+

@@ -9,12 +9,11 @@ android {
   defaultConfig {
     minSdkVersion rootProject.MIN_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 }
 
 dependencies {
-  implementation rootProject.deps.kotlin
   implementation rootProject.deps.androidAppcompat
   implementation rootProject.deps.androidCoreKtx
   implementation rootProject.deps.androidRecyclerView

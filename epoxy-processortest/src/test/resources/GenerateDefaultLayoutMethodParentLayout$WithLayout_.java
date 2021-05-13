@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -9,7 +10,8 @@ import java.lang.Override;
 import java.lang.String;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class GenerateDefaultLayoutMethodParentLayout$WithLayout_ extends GenerateDefaultLayoutMethodParentLayout.WithLayout implements GeneratedModel<Object>, GenerateDefaultLayoutMethodParentLayout_WithLayoutBuilder {
   private OnModelBoundListener<GenerateDefaultLayoutMethodParentLayout$WithLayout_, Object> onModelBoundListener_epoxyGeneratedModel;
 
@@ -48,7 +50,8 @@ public class GenerateDefaultLayoutMethodParentLayout$WithLayout_ extends Generat
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public GenerateDefaultLayoutMethodParentLayout$WithLayout_ onBind(
       OnModelBoundListener<GenerateDefaultLayoutMethodParentLayout$WithLayout_, Object> listener) {
     onMutation();
@@ -70,7 +73,8 @@ public class GenerateDefaultLayoutMethodParentLayout$WithLayout_ extends Generat
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public GenerateDefaultLayoutMethodParentLayout$WithLayout_ onUnbind(
       OnModelUnboundListener<GenerateDefaultLayoutMethodParentLayout$WithLayout_, Object> listener) {
     onMutation();
@@ -128,8 +132,8 @@ public class GenerateDefaultLayoutMethodParentLayout$WithLayout_ extends Generat
   }
 
   @Override
-  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -140,35 +144,35 @@ public class GenerateDefaultLayoutMethodParentLayout$WithLayout_ extends Generat
   }
 
   @Override
-  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(@Nullable CharSequence arg0,
-      @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(@Nullable CharSequence arg0,
-      long arg1) {
-    super.id(arg0, arg1);
+  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ id(@Nullable CharSequence key,
+      long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ layout(@LayoutRes int arg0) {
-    super.layout(arg0);
+  public GenerateDefaultLayoutMethodParentLayout$WithLayout_ layout(@LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
   public GenerateDefaultLayoutMethodParentLayout$WithLayout_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -249,3 +253,4 @@ public class GenerateDefaultLayoutMethodParentLayout$WithLayout_ extends Generat
         "}" + super.toString();
   }
 }
+

@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import android.os.AsyncTask;
@@ -20,7 +21,8 @@ import java.lang.ref.WeakReference;
 import java.util.Objects;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> implements GeneratedModel<ModelViewWithParis>, ModelViewWithParisModelBuilder {
   private static final Style DEFAULT_PARIS_STYLE = new ModelViewWithParisStyleApplier.StyleBuilder().addDefault().build();
 
@@ -124,7 +126,8 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelViewWithParisModel_ onBind(
       OnModelBoundListener<ModelViewWithParisModel_, ModelViewWithParis> listener) {
     onMutation();
@@ -146,7 +149,8 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelViewWithParisModel_ onUnbind(
       OnModelUnboundListener<ModelViewWithParisModel_, ModelViewWithParis> listener) {
     onMutation();
@@ -268,8 +272,8 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
   }
 
   @Override
-  public ModelViewWithParisModel_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public ModelViewWithParisModel_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -280,32 +284,33 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
   }
 
   @Override
-  public ModelViewWithParisModel_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public ModelViewWithParisModel_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public ModelViewWithParisModel_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public ModelViewWithParisModel_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public ModelViewWithParisModel_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public ModelViewWithParisModel_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public ModelViewWithParisModel_ layout(@LayoutRes int arg0) {
+  public ModelViewWithParisModel_ layout(@LayoutRes int layoutRes) {
     throw new UnsupportedOperationException("Layout resources are unsupported with programmatic views.");
   }
 
   @Override
   public ModelViewWithParisModel_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -403,3 +408,4 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
     return totalSpanCount;
   }
 }
+

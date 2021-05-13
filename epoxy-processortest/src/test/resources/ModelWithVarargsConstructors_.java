@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -10,7 +11,8 @@ import java.lang.String;
 import java.util.Arrays;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors implements GeneratedModel<Object>, ModelWithVarargsConstructorsBuilder {
   private OnModelBoundListener<ModelWithVarargsConstructors_, Object> onModelBoundListener_epoxyGeneratedModel;
 
@@ -53,7 +55,8 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelWithVarargsConstructors_ onBind(
       OnModelBoundListener<ModelWithVarargsConstructors_, Object> listener) {
     onMutation();
@@ -75,7 +78,8 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelWithVarargsConstructors_ onUnbind(
       OnModelUnboundListener<ModelWithVarargsConstructors_, Object> listener) {
     onMutation();
@@ -153,8 +157,8 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
   }
 
   @Override
-  public ModelWithVarargsConstructors_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public ModelWithVarargsConstructors_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -165,34 +169,34 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
   }
 
   @Override
-  public ModelWithVarargsConstructors_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public ModelWithVarargsConstructors_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public ModelWithVarargsConstructors_ id(@Nullable CharSequence arg0,
-      @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public ModelWithVarargsConstructors_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public ModelWithVarargsConstructors_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public ModelWithVarargsConstructors_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public ModelWithVarargsConstructors_ layout(@LayoutRes int arg0) {
-    super.layout(arg0);
+  public ModelWithVarargsConstructors_ layout(@LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
   public ModelWithVarargsConstructors_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -279,3 +283,4 @@ public class ModelWithVarargsConstructors_ extends ModelWithVarargsConstructors 
         "}" + super.toString();
   }
 }
+

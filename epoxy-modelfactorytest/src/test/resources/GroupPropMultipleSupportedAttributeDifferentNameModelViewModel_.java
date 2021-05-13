@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -12,7 +13,8 @@ import java.lang.String;
 import java.util.BitSet;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ extends EpoxyModel<GroupPropMultipleSupportedAttributeDifferentNameModelView> implements GeneratedModel<GroupPropMultipleSupportedAttributeDifferentNameModelView>, GroupPropMultipleSupportedAttributeDifferentNameModelViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(2);
 
@@ -25,12 +27,14 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
   private OnModelVisibilityChangedListener<GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_, GroupPropMultipleSupportedAttributeDifferentNameModelView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
   /**
-   * Bitset index: 0 */
+   * Bitset index: 0
+   */
   @NonNull
   private String titleString_String;
 
   /**
-   * Bitset index: 1 */
+   * Bitset index: 1
+   */
   private int titleInt_Int = 0;
 
   @Override
@@ -100,7 +104,8 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ onBind(
       OnModelBoundListener<GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_, GroupPropMultipleSupportedAttributeDifferentNameModelView> listener) {
     onMutation();
@@ -122,7 +127,8 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ onUnbind(
       OnModelUnboundListener<GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_, GroupPropMultipleSupportedAttributeDifferentNameModelView> listener) {
     onMutation();
@@ -224,8 +230,8 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
 
   @Override
   public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ id(
-      @Nullable Number... arg0) {
-    super.id(arg0);
+      @Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -237,36 +243,36 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
 
   @Override
   public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ id(
-      @Nullable CharSequence arg0) {
-    super.id(arg0);
+      @Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
   public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ id(
-      @Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+      @Nullable CharSequence key, @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
   public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ id(
-      @Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+      @Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
   public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ layout(
-      @LayoutRes int arg0) {
-    super.layout(arg0);
+      @LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
   public GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -377,3 +383,4 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
     return totalSpanCount;
   }
 }
+

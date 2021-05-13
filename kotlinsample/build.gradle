@@ -28,7 +28,6 @@ android {
 }
 
 dependencies {
-  implementation rootProject.deps.kotlin
   implementation rootProject.deps.androidRecyclerView
   implementation rootProject.deps.androidAppcompat
   implementation project(':epoxy-databinding')

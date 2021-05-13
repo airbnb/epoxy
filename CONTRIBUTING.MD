@@ -6,4 +6,6 @@ We have a code style setting for the project (checkstyle for Java, ktlint for Ko
 
 Also, run `./gradlew check` locally to make sure that style checks and tests pass.
 
-If you update the model annotation processor you may find the `update_processor_test_resources.rb` script very useful for updating the existing tests with your changes.
+If you update the model annotation processor you may find the `UpdateProcessorTestResults.kt` script very useful for updating the existing tests with your changes. (run it with kscript)
+ - Run ./gradlew testDebug first to get test failures, then run `kscript UpdateProcessorTestResources.kt` to updates sources
+ - You may have to repeat this cycle several times for all tests to be updated.

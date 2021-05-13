@@ -1,5 +1,3 @@
-import org.gradle.internal.jvm.Jvm
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
@@ -42,7 +40,6 @@ android {
 }
 
 dependencies {
-  implementation rootProject.deps.kotlin
   implementation rootProject.deps.androidRecyclerView
   implementation project(':epoxy-annotations')
   implementation project(':epoxy-adapter')
@@ -65,23 +62,9 @@ dependencies {
 
   kapt rootProject.deps.autoValue
 
-  testImplementation files(getRuntimeJar())
-  testImplementation files(Jvm.current().getToolsJar())
+  testImplementation files(rootProject.file("libs/rt.jar"))
+  testImplementation files(rootProject.file("libs/tools.jar"))
   testImplementation rootProject.deps.googleTestingCompile
-}
-
-static def getRuntimeJar() {
-  try {
-    final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile()
-    File runtimeJar = new File(javaBase, "lib/rt.jar")
-    if (runtimeJar.exists()) {
-      return runtimeJar
-    }
-    runtimeJar = new File(javaBase, "jre/lib/rt.jar")
-    return runtimeJar.exists() ? runtimeJar : null
-  } catch (IOException e) {
-    throw new RuntimeException(e)
-  }
 }
 
 // Java files in the "resources" folder are not included in the build for some reason (seems like source files are skipped?)

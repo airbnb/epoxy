@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import android.content.Context;
@@ -17,7 +18,8 @@ import java.util.BitSet;
 import java.util.List;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverloadsView> implements GeneratedModel<TestStringOverloadsView>, TestStringOverloadsViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(3);
 
@@ -30,16 +32,19 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
   private OnModelVisibilityChangedListener<TestStringOverloadsViewModel_, TestStringOverloadsView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
   /**
-   * Bitset index: 0 */
+   * Bitset index: 0
+   */
   private StringAttributeData title_StringAttributeData =  new StringAttributeData();
 
   /**
-   * Bitset index: 1 */
+   * Bitset index: 1
+   */
   @Nullable
   private List<CharSequence> title_List = (List<CharSequence>) null;
 
   /**
-   * Bitset index: 2 */
+   * Bitset index: 2
+   */
   private StringAttributeData titleViaValueShortcut_StringAttributeData =  new StringAttributeData();
 
   @Override
@@ -115,7 +120,8 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public TestStringOverloadsViewModel_ onBind(
       OnModelBoundListener<TestStringOverloadsViewModel_, TestStringOverloadsView> listener) {
     onMutation();
@@ -137,7 +143,8 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public TestStringOverloadsViewModel_ onUnbind(
       OnModelUnboundListener<TestStringOverloadsViewModel_, TestStringOverloadsView> listener) {
     onMutation();
@@ -340,8 +347,8 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
   }
 
   @Override
-  public TestStringOverloadsViewModel_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public TestStringOverloadsViewModel_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -352,34 +359,34 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
   }
 
   @Override
-  public TestStringOverloadsViewModel_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public TestStringOverloadsViewModel_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public TestStringOverloadsViewModel_ id(@Nullable CharSequence arg0,
-      @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public TestStringOverloadsViewModel_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public TestStringOverloadsViewModel_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public TestStringOverloadsViewModel_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public TestStringOverloadsViewModel_ layout(@LayoutRes int arg0) {
-    super.layout(arg0);
+  public TestStringOverloadsViewModel_ layout(@LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
   public TestStringOverloadsViewModel_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -484,3 +491,4 @@ public class TestStringOverloadsViewModel_ extends EpoxyModel<TestStringOverload
     return totalSpanCount;
   }
 }
+
