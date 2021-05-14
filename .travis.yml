@@ -1,19 +1,27 @@
 language: android
 
 android:
+  licenses:
+    - 'android-sdk-preview-license-.+'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
   components:
   - tools
   - platform-tools
-  - build-tools-28.0.3
-  - build-tools-29.0.2
+  - build-tools-30.0.2
   - android-28
   - android-29
+  - android-30
   - extra-google-google_play_services
   - extra-android-m2repository
   - extra-google-m2repository
 
+before_install:
+  - mkdir "$ANDROID_HOME/licenses" || true
+  - echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROID_HOME/licenses/android-sdk-license"
+
 jdk:
-- oraclejdk8
+- oraclejdk11
 
 branches:
   except:

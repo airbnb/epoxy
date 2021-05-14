@@ -4,29 +4,31 @@ apply plugin: 'kotlin-kapt'
 apply plugin: "com.vanniktech.maven.publish"
 
 android {
-    compileSdkVersion rootProject.COMPILE_SDK_VERSION
+  compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
-    defaultConfig {
-        minSdkVersion rootProject.MIN_SDK_VERSION
-        targetSdkVersion rootProject.TARGET_SDK_VERSION
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
+  defaultConfig {
+    minSdkVersion rootProject.MIN_SDK_VERSION
+    targetSdkVersion rootProject.TARGET_SDK_VERSION
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
 dependencies {
-    implementation rootProject.deps.kotlin
+  implementation rootProject.deps.glide
 
-    // transitive to make ./gradlew check work
-    implementation  (rootProject.deps.glide) { transitive = false }
+  api project(':epoxy-annotations')
+  api project(':epoxy-adapter')
 
-    api project(':epoxy-annotations')
-    api project(':epoxy-adapter')
+  implementation rootProject.deps.androidRecyclerView
 
-    implementation rootProject.deps.androidRecyclerView
+  androidTestImplementation rootProject.deps.junit
+  androidTestImplementation rootProject.deps.androidArchCoreTesting
+  androidTestImplementation rootProject.deps.androidTestRunner
 
-    androidTestImplementation rootProject.deps.junit
-    androidTestImplementation rootProject.deps.androidArchCoreTesting
-    androidTestImplementation rootProject.deps.androidTestRunner
-
-    kaptAndroidTest project(":epoxy-processor")
+  kaptAndroidTest project(":epoxy-processor")
 }

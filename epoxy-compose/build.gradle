@@ -41,14 +41,13 @@ android {
 }
 
 dependencies {
-  implementation rootProject.deps.kotlin
   api project(':epoxy-annotations')
   api project(':epoxy-adapter')
   kapt project(':epoxy-processor')
 
-  implementation "androidx.compose.ui:ui:$compose_version"
-  implementation "androidx.compose.material:material:$compose_version"
-  implementation "androidx.compose.ui:ui-tooling:$compose_version"
+  implementation "androidx.compose.ui:ui:$COMPOSE_VERSION"
+  implementation "androidx.compose.material:material:$COMPOSE_VERSION"
+  implementation "androidx.compose.ui:ui-tooling:$COMPOSE_VERSION"
   implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0'
   implementation 'androidx.activity:activity-compose:1.3.0-alpha03'
   implementation 'androidx.core:core-ktx:1.3.2'

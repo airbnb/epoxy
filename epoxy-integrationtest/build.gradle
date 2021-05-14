@@ -41,13 +41,15 @@ android {
 }
 
 dependencies {
-  implementation rootProject.deps.kotlin
-  implementation rootProject.deps.androidRecyclerView
+  implementation rootProject.deps.androidAppcompat
+  implementation rootProject.deps.androidFragmentTesting
   implementation rootProject.deps.androidPagingComponent
+  implementation rootProject.deps.androidRecyclerView
   implementation project(':epoxy-adapter')
   implementation project(':epoxy-annotations')
   implementation project(':epoxy-databinding')
   implementation project(':epoxy-paging')
+  implementation project(':epoxy-viewbinder')
 
   kapt project(':epoxy-processor')
 
@@ -57,9 +59,7 @@ dependencies {
   testImplementation rootProject.deps.mockito_inline
   testImplementation rootProject.deps.androidTestCore
   testImplementation rootProject.deps.androidTestExtJunitKtx
-  testImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha2', {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
+  testImplementation rootProject.deps.androidEspressoCore
 }
 
 repositories {

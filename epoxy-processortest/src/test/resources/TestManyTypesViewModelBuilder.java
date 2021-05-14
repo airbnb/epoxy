@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import android.view.View;
@@ -16,6 +17,7 @@ import java.lang.Object;
 import java.lang.String;
 import java.util.List;
 
+@EpoxyBuildScope
 public interface TestManyTypesViewModelBuilder {
   TestManyTypesViewModelBuilder onBind(
       OnModelBoundListener<TestManyTypesViewModel_, TestManyTypesView> listener);
@@ -72,18 +74,19 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder id(long id);
 
-  TestManyTypesViewModelBuilder id(@Nullable Number... arg0);
+  TestManyTypesViewModelBuilder id(@Nullable Number... ids);
 
   TestManyTypesViewModelBuilder id(long id1, long id2);
 
-  TestManyTypesViewModelBuilder id(@Nullable CharSequence arg0);
+  TestManyTypesViewModelBuilder id(@Nullable CharSequence key);
 
-  TestManyTypesViewModelBuilder id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1);
+  TestManyTypesViewModelBuilder id(@Nullable CharSequence key, @Nullable CharSequence... otherKeys);
 
-  TestManyTypesViewModelBuilder id(@Nullable CharSequence arg0, long arg1);
+  TestManyTypesViewModelBuilder id(@Nullable CharSequence key, long id);
 
-  TestManyTypesViewModelBuilder layout(@LayoutRes int arg0);
+  TestManyTypesViewModelBuilder layout(@LayoutRes int layoutRes);
 
   TestManyTypesViewModelBuilder spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback);
 }
+

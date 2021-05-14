@@ -1,6 +1,8 @@
 package com.airbnb.epoxy
 
+import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.ViewGroup
@@ -249,9 +251,25 @@ open class EpoxyRecyclerView @JvmOverloads constructor(
 
         setRecycledViewPool(
             ACTIVITY_RECYCLER_POOL.getPool(
-                context
+                getContextForSharedViewPool()
             ) { createViewPool() }.viewPool
         )
+    }
+
+    /**
+     * Attempts to find this view's parent Activity in order to share the view pool. If this view's
+     * `context` is a ContextWrapper it will continually unwrap it until it finds the Activity. If
+     * no Activity is found it will return the the view's context.
+     */
+    private fun getContextForSharedViewPool(): Context {
+        var workingContext = this.context
+        while (workingContext is ContextWrapper) {
+            if (workingContext is Activity) {
+                return workingContext
+            }
+            workingContext = workingContext.baseContext
+        }
+        return this.context
     }
 
     /**

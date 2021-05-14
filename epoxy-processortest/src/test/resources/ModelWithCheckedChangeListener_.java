@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import android.widget.CompoundButton;
@@ -10,7 +11,8 @@ import java.lang.Override;
 import java.lang.String;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class ModelWithCheckedChangeListener_ extends ModelWithCheckedChangeListener implements GeneratedModel<Object>, ModelWithCheckedChangeListenerBuilder {
   private OnModelBoundListener<ModelWithCheckedChangeListener_, Object> onModelBoundListener_epoxyGeneratedModel;
 
@@ -49,7 +51,8 @@ public class ModelWithCheckedChangeListener_ extends ModelWithCheckedChangeListe
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelWithCheckedChangeListener_ onBind(
       OnModelBoundListener<ModelWithCheckedChangeListener_, Object> listener) {
     onMutation();
@@ -71,7 +74,8 @@ public class ModelWithCheckedChangeListener_ extends ModelWithCheckedChangeListe
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelWithCheckedChangeListener_ onUnbind(
       OnModelUnboundListener<ModelWithCheckedChangeListener_, Object> listener) {
     onMutation();
@@ -123,7 +127,8 @@ public class ModelWithCheckedChangeListener_ extends ModelWithCheckedChangeListe
   }
 
   /**
-   * Set a checked change listener that will provide the parent view, model, value, and adapter position of the checked view. This will clear the normal CompoundButton.OnCheckedChangeListener if one has been set */
+   * Set a checked change listener that will provide the parent view, model, value, and adapter position of the checked view. This will clear the normal CompoundButton.OnCheckedChangeListener if one has been set
+   */
   public ModelWithCheckedChangeListener_ checkedListener(
       final OnModelCheckedChangeListener<ModelWithCheckedChangeListener_, Object> checkedListener) {
     onMutation();
@@ -154,8 +159,8 @@ public class ModelWithCheckedChangeListener_ extends ModelWithCheckedChangeListe
   }
 
   @Override
-  public ModelWithCheckedChangeListener_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public ModelWithCheckedChangeListener_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -166,34 +171,34 @@ public class ModelWithCheckedChangeListener_ extends ModelWithCheckedChangeListe
   }
 
   @Override
-  public ModelWithCheckedChangeListener_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public ModelWithCheckedChangeListener_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public ModelWithCheckedChangeListener_ id(@Nullable CharSequence arg0,
-      @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public ModelWithCheckedChangeListener_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public ModelWithCheckedChangeListener_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public ModelWithCheckedChangeListener_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public ModelWithCheckedChangeListener_ layout(@LayoutRes int arg0) {
-    super.layout(arg0);
+  public ModelWithCheckedChangeListener_ layout(@LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
   public ModelWithCheckedChangeListener_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -274,3 +279,4 @@ public class ModelWithCheckedChangeListener_ extends ModelWithCheckedChangeListe
         "}" + super.toString();
   }
 }
+

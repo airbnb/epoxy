@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import android.view.View;
@@ -21,7 +22,8 @@ import java.util.BitSet;
 import java.util.List;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> implements GeneratedModel<AllTypesModelView>, AllTypesModelViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(15);
 
@@ -36,17 +38,20 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   private boolean booleanValue_Boolean = false;
 
   /**
-   * Bitset index: 1 */
+   * Bitset index: 1
+   */
   @NonNull
   private Boolean boxedBooleanValue_Boolean;
 
   /**
-   * Bitset index: 2 */
+   * Bitset index: 2
+   */
   @NonNull
   private CharSequence charSequenceValue_CharSequence;
 
   /**
-   * Bitset index: 3 */
+   * Bitset index: 3
+   */
   @NonNull
   private Double boxedDoubleValue_Double;
 
@@ -56,26 +61,30 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   private int drawableRes_Int = 0;
 
   /**
-   * Bitset index: 6 */
+   * Bitset index: 6
+   */
   @NonNull
   private List<? extends EpoxyModel<?>> epoxyModelList_List;
 
   private int intValue_Int = 0;
 
   /**
-   * Bitset index: 8 */
+   * Bitset index: 8
+   */
   @NonNull
   private Integer boxedIntValue_Integer;
 
   private long longValue_Long = 0L;
 
   /**
-   * Bitset index: 10 */
+   * Bitset index: 10
+   */
   @NonNull
   private Long boxedLongValue_Long;
 
   /**
-   * Bitset index: 11 */
+   * Bitset index: 11
+   */
   @NonNull
   private View.OnClickListener onClickListener_OnClickListener;
 
@@ -83,12 +92,14 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   private int rawRes_Int = 0;
 
   /**
-   * Bitset index: 13 */
+   * Bitset index: 13
+   */
   @NonNull
   private String stringValue_String;
 
   /**
-   * Bitset index: 14 */
+   * Bitset index: 14
+   */
   @NonNull
   private List<String> stringList_List;
 
@@ -235,7 +246,8 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public AllTypesModelViewModel_ onBind(
       OnModelBoundListener<AllTypesModelViewModel_, AllTypesModelView> listener) {
     onMutation();
@@ -257,7 +269,8 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public AllTypesModelViewModel_ onUnbind(
       OnModelUnboundListener<AllTypesModelViewModel_, AllTypesModelView> listener) {
     onMutation();
@@ -506,7 +519,8 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   }
 
   /**
-   * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
+   * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set
+   */
   public AllTypesModelViewModel_ onClickListener(
       @NonNull final OnModelClickListener<AllTypesModelViewModel_, AllTypesModelView> onClickListener) {
     assignedAttributes_epoxyGeneratedModel.set(11);
@@ -603,8 +617,8 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   }
 
   @Override
-  public AllTypesModelViewModel_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public AllTypesModelViewModel_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -615,33 +629,34 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
   }
 
   @Override
-  public AllTypesModelViewModel_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public AllTypesModelViewModel_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public AllTypesModelViewModel_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public AllTypesModelViewModel_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public AllTypesModelViewModel_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public AllTypesModelViewModel_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public AllTypesModelViewModel_ layout(@LayoutRes int arg0) {
-    super.layout(arg0);
+  public AllTypesModelViewModel_ layout(@LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
   public AllTypesModelViewModel_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -871,3 +886,4 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     return totalSpanCount;
   }
 }
+

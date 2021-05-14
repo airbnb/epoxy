@@ -20,15 +20,20 @@ android {
   viewBinding {
     enabled = true
   }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
 dependencies {
-  implementation rootProject.deps.kotlin
   implementation rootProject.deps.androidRecyclerView
   implementation rootProject.deps.androidAppcompat
   implementation project(':epoxy-databinding')
   implementation project(':epoxy-adapter')
   implementation project(':epoxy-annotations')
+  implementation project(':epoxy-viewbinder')
 
   kapt project(':epoxy-processor')
   kaptTest project(":epoxy-processor")

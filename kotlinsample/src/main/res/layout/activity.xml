@@ -4,6 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <com.airbnb.epoxy.EpoxyViewStub
+        android:id="@+id/epoxy_view_stub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

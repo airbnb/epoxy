@@ -1,5 +1,6 @@
 package com.airbnb.epoxy.processor
 
+import com.airbnb.epoxy.EpoxyBuildScope
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
@@ -50,7 +51,12 @@ class ModelBuilderInterfaceWriter(
             val interfaceMethods = getInterfaceMethods(modelInfo, methods, interfaceName)
 
             if (modelInfo is ModelViewInfo) {
-                modelInfo.generatedViewInterfaceNames.forEach { viewInterface ->
+                modelInfo.viewInterfaces.forEach { it ->
+                    val packageName =
+                        configManager.getModelViewConfig(modelInfo.viewElement)?.rClass?.packageName()
+                            ?: elements.getPackageOf(it).qualifiedName.toString()
+                    val viewInterface =
+                        ClassName.get(it).appendToName("Model_").setPackage(packageName)
                     addSuperinterface(viewInterface)
 
                     // Store the subset of methods common to all interface implementations so we
@@ -76,6 +82,9 @@ class ModelBuilderInterfaceWriter(
             addModifiers(Modifier.PUBLIC)
             addTypeVariables(modelInfo.typeVariables)
             addMethods(interfaceMethods)
+            if (!configManager.disableDslMarker) {
+                addAnnotation(EpoxyBuildScope::class.java)
+            }
 
             if (modelInfo.memoizer.implementsModelCollector(modelInfo.superClassElement)) {
                 // If the model implements "ModelCollector" we want the builder too
@@ -145,6 +154,10 @@ class ModelBuilderInterfaceWriter(
                             returns(interfaceName)
                         }
                     }
+                        // For cache consistency of generated files make sure these are sorted.
+                        // Methods may have the same name due to overloads, so also sorting by
+                        // hashcode.
+                        .sortedWith(compareBy({ it.name }, { it.hashCode() }))
                 )
 
                 details.implementingViews.forEach {

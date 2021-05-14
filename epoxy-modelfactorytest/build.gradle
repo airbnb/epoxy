@@ -1,5 +1,3 @@
-import org.gradle.internal.jvm.Jvm
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
@@ -14,6 +12,11 @@ android {
   }
 
   testOptions.unitTests.includeAndroidResources = true
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
 configurations.all { strategy ->
@@ -40,7 +43,6 @@ dependencies {
   implementation project(':epoxy-adapter')
   implementation project(':epoxy-modelfactory')
   implementation rootProject.deps.paris
-  implementation rootProject.deps.kotlin
   implementation rootProject.deps.androidRecyclerView
 
   kapt project(':epoxy-processor')
@@ -53,34 +55,6 @@ dependencies {
   testImplementation rootProject.deps.googleTestingCompile
   testImplementation rootProject.deps.junit
   testImplementation rootProject.deps.robolectric
-  testImplementation files(getRuntimeJar())
-//  testImplementation files(Jvm.current().getToolsJar())
+  testImplementation files(rootProject.file("libs/rt.jar"))
+  testImplementation files(rootProject.file("libs/tools.jar"))
 }
-
-static def getRuntimeJar() {
-  try {
-    final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile()
-    File runtimeJar = new File(javaBase, "lib/modules")
-    if (runtimeJar.exists()) {
-      return runtimeJar
-    }
-    runtimeJar = new File(javaBase, "jre/lib/modules")
-    return runtimeJar.exists() ? runtimeJar : null
-  } catch (IOException e) {
-    throw new RuntimeException(e)
-  }
-}
-
-//static def getToolsJar() {
-//  try {
-//    final File javaBase = new File(System.getProperty("java.home")).getCanonicalFile()
-//    File runtimeJar = new File(javaBase, "lib/tools.jar")
-//    if (runtimeJar.exists()) {
-//      return runtimeJar
-//    }
-//    runtimeJar = new File(javaBase, "jre/lib/tools.jar")
-//    return runtimeJar.exists() ? runtimeJar : null
-//  } catch (IOException e) {
-//    throw new RuntimeException(e)
-//  }
-//}

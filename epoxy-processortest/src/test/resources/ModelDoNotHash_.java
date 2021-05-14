@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -9,7 +10,8 @@ import java.lang.Override;
 import java.lang.String;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class ModelDoNotHash_ extends ModelDoNotHash implements GeneratedModel<Object>, ModelDoNotHashBuilder {
   private OnModelBoundListener<ModelDoNotHash_, Object> onModelBoundListener_epoxyGeneratedModel;
 
@@ -48,7 +50,8 @@ public class ModelDoNotHash_ extends ModelDoNotHash implements GeneratedModel<Ob
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelDoNotHash_ onBind(OnModelBoundListener<ModelDoNotHash_, Object> listener) {
     onMutation();
     this.onModelBoundListener_epoxyGeneratedModel = listener;
@@ -69,7 +72,8 @@ public class ModelDoNotHash_ extends ModelDoNotHash implements GeneratedModel<Ob
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelDoNotHash_ onUnbind(OnModelUnboundListener<ModelDoNotHash_, Object> listener) {
     onMutation();
     this.onModelUnboundListener_epoxyGeneratedModel = listener;
@@ -156,8 +160,8 @@ public class ModelDoNotHash_ extends ModelDoNotHash implements GeneratedModel<Ob
   }
 
   @Override
-  public ModelDoNotHash_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public ModelDoNotHash_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -168,32 +172,33 @@ public class ModelDoNotHash_ extends ModelDoNotHash implements GeneratedModel<Ob
   }
 
   @Override
-  public ModelDoNotHash_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public ModelDoNotHash_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public ModelDoNotHash_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public ModelDoNotHash_ id(@Nullable CharSequence key, @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public ModelDoNotHash_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public ModelDoNotHash_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public ModelDoNotHash_ layout(@LayoutRes int arg0) {
-    super.layout(arg0);
+  public ModelDoNotHash_ layout(@LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
-  public ModelDoNotHash_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+  public ModelDoNotHash_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -282,3 +287,4 @@ public class ModelDoNotHash_ extends ModelDoNotHash implements GeneratedModel<Ob
         "}" + super.toString();
   }
 }
+

@@ -8,7 +8,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,7 +33,7 @@ class PagingSampleActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = pagingController.adapter
 
-        val viewModel = ViewModelProviders.of(this).get(ActivityViewModel::class.java)
+        val viewModel = ViewModelProvider(this).get(ActivityViewModel::class.java)
         viewModel.pagedList.observe(
             this,
             Observer {

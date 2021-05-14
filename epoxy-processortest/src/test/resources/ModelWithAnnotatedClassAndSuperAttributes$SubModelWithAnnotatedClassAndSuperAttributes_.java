@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -9,7 +10,8 @@ import java.lang.Override;
 import java.lang.String;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ extends ModelWithAnnotatedClassAndSuperAttributes.SubModelWithAnnotatedClassAndSuperAttributes implements GeneratedModel<Object>, ModelWithAnnotatedClassAndSuperAttributes_SubModelWithAnnotatedClassAndSuperAttributesBuilder {
   private OnModelBoundListener<ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_, Object> onModelBoundListener_epoxyGeneratedModel;
 
@@ -48,7 +50,8 @@ public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClas
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ onBind(
       OnModelBoundListener<ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_, Object> listener) {
     onMutation();
@@ -70,7 +73,8 @@ public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClas
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ onUnbind(
       OnModelUnboundListener<ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_, Object> listener) {
     onMutation();
@@ -141,8 +145,8 @@ public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClas
 
   @Override
   public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ id(
-      @Nullable Number... arg0) {
-    super.id(arg0);
+      @Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -155,36 +159,36 @@ public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClas
 
   @Override
   public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ id(
-      @Nullable CharSequence arg0) {
-    super.id(arg0);
+      @Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
   public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ id(
-      @Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+      @Nullable CharSequence key, @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
   public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ id(
-      @Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+      @Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
   public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ layout(
-      @LayoutRes int arg0) {
-    super.layout(arg0);
+      @LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
   public ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClassAndSuperAttributes_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -269,3 +273,4 @@ public class ModelWithAnnotatedClassAndSuperAttributes$SubModelWithAnnotatedClas
         "}" + super.toString();
   }
 }
+

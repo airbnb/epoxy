@@ -1,3 +1,39 @@
+# 4.6.1 (May 13, 2021)
+Adds "epoxyDisableDslMarker" annotation processor flag which you can use to delay migration to the model building scope DLSMarker introduced in 4.6.0 if it is a large breaking change for your project.
+
+Note that this only applies to your project modules that you apply it to, and does not apply to the handful of models that ship with the Epoxy library (like the Carousel or `group` builder).
+
+For example:
+```groovy
+project.android.buildTypes.all { buildType ->
+    buildType.javaCompileOptions.annotationProcessorOptions.arguments =
+            [
+                    epoxyDisableDslMarker     : "true",
+            ]
+}
+```
+
+# 4.6.0 (May 12, 2021)
+- View Binder Support (#1175) Bind epoxy models to views outside of a RecyclerView.
+
+### Potentially Breaking
+- Use kotlin dsl marker for model building receivers (#1180)
+
+This change uses Kotlin's DSL marker annotation to enforce proper usage of model building extension
+functions. You may now need to change some references in your model building code to explicitly reference properties with `this`.
+
+# 4.5.0 (April 13, 2021)
+- Fix generated code consistency in builder interfaces (#1166)
+- Provided support to invalidate `modelCache` in `PagingDataEpoxyController` (#1161)
+- Explicitly add public modifier (#1162)
+- Unwrap context to find parent activity in order to share viewpool when using Hilt (#1157)
+
+# 4.4.4 (Mar 24, 2021)
+- Provide support for snapshot() function in PagingDataEpoxyController (#1144)
+
+# 4.4.3 (Mar 17, 2021)
+- Fixed interface model related regression introduced in the previous release.
+
 # 4.4.2 (Mar 1, 2021)
 - Updated package name of the model class generated for an interface
 

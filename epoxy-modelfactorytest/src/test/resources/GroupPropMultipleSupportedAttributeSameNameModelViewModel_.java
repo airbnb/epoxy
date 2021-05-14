@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -12,7 +13,8 @@ import java.lang.String;
 import java.util.BitSet;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class GroupPropMultipleSupportedAttributeSameNameModelViewModel_ extends EpoxyModel<GroupPropMultipleSupportedAttributeSameNameModelView> implements GeneratedModel<GroupPropMultipleSupportedAttributeSameNameModelView>, GroupPropMultipleSupportedAttributeSameNameModelViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(2);
 
@@ -25,12 +27,14 @@ public class GroupPropMultipleSupportedAttributeSameNameModelViewModel_ extends 
   private OnModelVisibilityChangedListener<GroupPropMultipleSupportedAttributeSameNameModelViewModel_, GroupPropMultipleSupportedAttributeSameNameModelView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
   /**
-   * Bitset index: 0 */
+   * Bitset index: 0
+   */
   @NonNull
   private String titleString_String;
 
   /**
-   * Bitset index: 1 */
+   * Bitset index: 1
+   */
   private int titleInt_Int = 0;
 
   @Override
@@ -100,7 +104,8 @@ public class GroupPropMultipleSupportedAttributeSameNameModelViewModel_ extends 
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public GroupPropMultipleSupportedAttributeSameNameModelViewModel_ onBind(
       OnModelBoundListener<GroupPropMultipleSupportedAttributeSameNameModelViewModel_, GroupPropMultipleSupportedAttributeSameNameModelView> listener) {
     onMutation();
@@ -122,7 +127,8 @@ public class GroupPropMultipleSupportedAttributeSameNameModelViewModel_ extends 
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public GroupPropMultipleSupportedAttributeSameNameModelViewModel_ onUnbind(
       OnModelUnboundListener<GroupPropMultipleSupportedAttributeSameNameModelViewModel_, GroupPropMultipleSupportedAttributeSameNameModelView> listener) {
     onMutation();
@@ -223,8 +229,8 @@ public class GroupPropMultipleSupportedAttributeSameNameModelViewModel_ extends 
   }
 
   @Override
-  public GroupPropMultipleSupportedAttributeSameNameModelViewModel_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public GroupPropMultipleSupportedAttributeSameNameModelViewModel_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -235,36 +241,36 @@ public class GroupPropMultipleSupportedAttributeSameNameModelViewModel_ extends 
   }
 
   @Override
-  public GroupPropMultipleSupportedAttributeSameNameModelViewModel_ id(
-      @Nullable CharSequence arg0) {
-    super.id(arg0);
+  public GroupPropMultipleSupportedAttributeSameNameModelViewModel_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public GroupPropMultipleSupportedAttributeSameNameModelViewModel_ id(@Nullable CharSequence arg0,
-      @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public GroupPropMultipleSupportedAttributeSameNameModelViewModel_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public GroupPropMultipleSupportedAttributeSameNameModelViewModel_ id(@Nullable CharSequence arg0,
-      long arg1) {
-    super.id(arg0, arg1);
+  public GroupPropMultipleSupportedAttributeSameNameModelViewModel_ id(@Nullable CharSequence key,
+      long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public GroupPropMultipleSupportedAttributeSameNameModelViewModel_ layout(@LayoutRes int arg0) {
-    super.layout(arg0);
+  public GroupPropMultipleSupportedAttributeSameNameModelViewModel_ layout(
+      @LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
   public GroupPropMultipleSupportedAttributeSameNameModelViewModel_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -375,3 +381,4 @@ public class GroupPropMultipleSupportedAttributeSameNameModelViewModel_ extends 
     return totalSpanCount;
   }
 }
+

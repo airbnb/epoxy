@@ -206,7 +206,15 @@ public abstract class EpoxyModelTouchCallback<T extends EpoxyModel>
       float dX, float dY, int actionState, boolean isCurrentlyActive) {
     super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
-    EpoxyModel<?> model = viewHolder.getModel();
+    EpoxyModel<?> model;
+    // It’s possible for a touch helper to still draw if the item is being removed, which means it
+    // has technically be unbound by that point. getModel will throw an exception in this case.
+    try {
+      model = viewHolder.getModel();
+    } catch (IllegalStateException ignored) {
+      return;
+    }
+
     if (!isTouchableModel(model)) {
       throw new IllegalStateException(
           "A model was selected that is not a valid target: " + model.getClass());

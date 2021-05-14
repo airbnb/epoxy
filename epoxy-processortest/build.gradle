@@ -1,5 +1,3 @@
-import org.gradle.internal.jvm.Jvm
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
@@ -14,7 +12,7 @@ android {
 
     javaCompileOptions {
       annotationProcessorOptions {
-//        includeCompileClasspath false
+        includeCompileClasspath false
       }
     }
   }
@@ -38,11 +36,10 @@ android {
     enabled = true
   }
 
-//  defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
+  defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 }
 
 dependencies {
-  implementation rootProject.deps.kotlin
   implementation rootProject.deps.androidRecyclerView
   implementation project(':epoxy-annotations')
   implementation project(':epoxy-adapter')
@@ -65,9 +62,8 @@ dependencies {
 
   kapt rootProject.deps.autoValue
 
-
-  testImplementation files("libs/rt.jar")
-  testImplementation files("libs/tools.jar")
+  testImplementation files(rootProject.file("libs/rt.jar"))
+  testImplementation files(rootProject.file("libs/tools.jar"))
   testImplementation rootProject.deps.googleTestingCompile
 }
 

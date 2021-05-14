@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import android.view.View;
@@ -10,7 +11,8 @@ import java.lang.Override;
 import java.lang.String;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelView> implements GeneratedModel<CallbackPropModelView>, CallbackPropModelViewModelBuilder {
   private OnModelBoundListener<CallbackPropModelViewModel_, CallbackPropModelView> onModelBoundListener_epoxyGeneratedModel;
 
@@ -69,7 +71,8 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public CallbackPropModelViewModel_ onBind(
       OnModelBoundListener<CallbackPropModelViewModel_, CallbackPropModelView> listener) {
     onMutation();
@@ -92,7 +95,8 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public CallbackPropModelViewModel_ onUnbind(
       OnModelUnboundListener<CallbackPropModelViewModel_, CallbackPropModelView> listener) {
     onMutation();
@@ -144,7 +148,8 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
   }
 
   /**
-   * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
+   * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set
+   */
   public CallbackPropModelViewModel_ onClickListener(
       @Nullable final OnModelClickListener<CallbackPropModelViewModel_, CallbackPropModelView> onClickListener) {
     onMutation();
@@ -181,8 +186,8 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
   }
 
   @Override
-  public CallbackPropModelViewModel_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public CallbackPropModelViewModel_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -193,34 +198,34 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
   }
 
   @Override
-  public CallbackPropModelViewModel_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public CallbackPropModelViewModel_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public CallbackPropModelViewModel_ id(@Nullable CharSequence arg0,
-      @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public CallbackPropModelViewModel_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public CallbackPropModelViewModel_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public CallbackPropModelViewModel_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public CallbackPropModelViewModel_ layout(@LayoutRes int arg0) {
-    super.layout(arg0);
+  public CallbackPropModelViewModel_ layout(@LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
   public CallbackPropModelViewModel_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -321,3 +326,4 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
     return totalSpanCount;
   }
 }
+

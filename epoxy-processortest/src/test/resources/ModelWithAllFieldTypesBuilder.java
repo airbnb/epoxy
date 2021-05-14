@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -16,6 +17,7 @@ import java.lang.Short;
 import java.lang.String;
 import java.util.List;
 
+@EpoxyBuildScope
 public interface ModelWithAllFieldTypesBuilder {
   ModelWithAllFieldTypesBuilder onBind(
       OnModelBoundListener<ModelWithAllFieldTypes_, Object> listener);
@@ -73,18 +75,19 @@ public interface ModelWithAllFieldTypesBuilder {
 
   ModelWithAllFieldTypesBuilder id(long id);
 
-  ModelWithAllFieldTypesBuilder id(@Nullable Number... arg0);
+  ModelWithAllFieldTypesBuilder id(@Nullable Number... ids);
 
   ModelWithAllFieldTypesBuilder id(long id1, long id2);
 
-  ModelWithAllFieldTypesBuilder id(@Nullable CharSequence arg0);
+  ModelWithAllFieldTypesBuilder id(@Nullable CharSequence key);
 
-  ModelWithAllFieldTypesBuilder id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1);
+  ModelWithAllFieldTypesBuilder id(@Nullable CharSequence key, @Nullable CharSequence... otherKeys);
 
-  ModelWithAllFieldTypesBuilder id(@Nullable CharSequence arg0, long arg1);
+  ModelWithAllFieldTypesBuilder id(@Nullable CharSequence key, long id);
 
-  ModelWithAllFieldTypesBuilder layout(@LayoutRes int arg0);
+  ModelWithAllFieldTypesBuilder layout(@LayoutRes int layoutRes);
 
   ModelWithAllFieldTypesBuilder spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback);
 }
+

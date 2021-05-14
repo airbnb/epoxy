@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import android.view.View;
@@ -14,7 +15,8 @@ import java.lang.String;
 import java.util.BitSet;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements GeneratedModel<DoNotHashView>, DoNotHashViewModelBuilder {
   private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(3);
 
@@ -27,17 +29,20 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   private OnModelVisibilityChangedListener<DoNotHashViewModel_, DoNotHashView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
   /**
-   * Bitset index: 0 */
+   * Bitset index: 0
+   */
   @NonNull
   private CharSequence title_CharSequence;
 
   /**
-   * Bitset index: 1 */
+   * Bitset index: 1
+   */
   @NonNull
   private View.OnClickListener clickListener_OnClickListener;
 
   /**
-   * Bitset index: 2 */
+   * Bitset index: 2
+   */
   @NonNull
   private CharSequence normalProp_CharSequence;
 
@@ -106,7 +111,8 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public DoNotHashViewModel_ onBind(
       OnModelBoundListener<DoNotHashViewModel_, DoNotHashView> listener) {
     onMutation();
@@ -128,7 +134,8 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public DoNotHashViewModel_ onUnbind(
       OnModelUnboundListener<DoNotHashViewModel_, DoNotHashView> listener) {
     onMutation();
@@ -200,7 +207,8 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   }
 
   /**
-   * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set */
+   * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set
+   */
   public DoNotHashViewModel_ clickListener(
       @NonNull final OnModelClickListener<DoNotHashViewModel_, DoNotHashView> clickListener) {
     assignedAttributes_epoxyGeneratedModel.set(1);
@@ -261,8 +269,8 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   }
 
   @Override
-  public DoNotHashViewModel_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public DoNotHashViewModel_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -273,32 +281,33 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
   }
 
   @Override
-  public DoNotHashViewModel_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public DoNotHashViewModel_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public DoNotHashViewModel_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public DoNotHashViewModel_ id(@Nullable CharSequence key, @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public DoNotHashViewModel_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public DoNotHashViewModel_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public DoNotHashViewModel_ layout(@LayoutRes int arg0) {
-    super.layout(arg0);
+  public DoNotHashViewModel_ layout(@LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
-  public DoNotHashViewModel_ spanSizeOverride(@Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+  public DoNotHashViewModel_ spanSizeOverride(
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -403,3 +412,4 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
     return totalSpanCount;
   }
 }
+

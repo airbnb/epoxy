@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,122 @@ public class EpoxyAdapterTest {
     testAdapter.addModel(new TestModel());
     verify(observer).onItemRangeInserted(1, 1);
     assertEquals(2, testAdapter.models.size());
+    checkDifferState();
+  }
+
+  @Test
+  public void testAddModels() {
+    List<TestModel> list = new ArrayList<>();
+    list.add(new TestModel());
+    list.add(new TestModel());
+
+    testAdapter.addModels(list);
+    verify(observer).onItemRangeInserted(0, 2);
+    assertEquals(2, testAdapter.models.size());
+
+    List<TestModel> list2 = new ArrayList<>();
+    list2.add(new TestModel());
+    list2.add(new TestModel());
+    testAdapter.addModels(list2);
+    verify(observer).onItemRangeInserted(2, 2);
+    assertEquals(4, testAdapter.models.size());
+
+    checkDifferState();
+  }
+
+  @Test
+  public void testAddModelsVarArgs() {
+    testAdapter.addModels(new TestModel(), new TestModel());
+    verify(observer).onItemRangeInserted(0, 2);
+    assertEquals(2, testAdapter.models.size());
+
+    testAdapter.addModels(new TestModel(), new TestModel());
+    verify(observer).onItemRangeInserted(2, 2);
+    assertEquals(4, testAdapter.models.size());
+
+    checkDifferState();
+  }
+
+  @Test
+  public void testNotifyModelChanged() {
+    TestModel testModel = new TestModel();
+    testAdapter.addModels(testModel);
+    testAdapter.notifyModelChanged(testModel);
+    verify(observer).onItemRangeChanged(0, 1, null);
+
+    checkDifferState();
+  }
+
+  @Test
+  public void testNotifyModelChangedWithPayload() {
+    Object payload = new Object();
+    TestModel testModel = new TestModel();
+    testAdapter.addModels(testModel);
+    testAdapter.notifyModelChanged(testModel, payload);
+    verify(observer).onItemRangeChanged(0, 1, payload);
+
+    checkDifferState();
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testInsertModelBeforeThrowsForInvalidModel() {
+    testAdapter.insertModelBefore(new TestModel(), new TestModel());
+  }
+
+  @Test()
+  public void testInsertModelBefore() {
+    TestModel firstModel = new TestModel();
+    testAdapter.addModels(firstModel);
+    testAdapter.insertModelBefore(new TestModel(), firstModel);
+
+    verify(observer, times(2)).onItemRangeInserted(0, 1);
+    assertEquals(2, testAdapter.models.size());
+    assertEquals(firstModel, testAdapter.models.get(1));
+
+    checkDifferState();
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testInsertModelAfterThrowsForInvalidModel() {
+    testAdapter.insertModelAfter(new TestModel(), new TestModel());
+  }
+
+  @Test()
+  public void testInsertModelAfter() {
+    TestModel firstModel = new TestModel();
+    testAdapter.addModels(firstModel);
+    testAdapter.insertModelAfter(new TestModel(), firstModel);
+
+    verify(observer).onItemRangeInserted(1, 1);
+    assertEquals(2, testAdapter.models.size());
+    assertEquals(firstModel, testAdapter.models.get(0));
+
+    checkDifferState();
+  }
+
+  @Test
+  public void testRemoveModels() {
+    TestModel testModel = new TestModel();
+    testAdapter.addModels(testModel);
+
+    testAdapter.removeModel(testModel);
+    verify(observer).onItemRangeRemoved(0, 1);
+    assertEquals(0, testAdapter.models.size());
+
+    checkDifferState();
+  }
+
+  @Test
+  public void testRemoveAllModels() {
+    for (int i = 0; i < 10; i++) {
+      TestModel model = new TestModel();
+      testAdapter.addModels(model);
+    }
+
+    testAdapter.removeAllModels();
+    verify(observer).onItemRangeRemoved(0, 10);
+    assertEquals(0, testAdapter.models.size());
+
     checkDifferState();
   }
 

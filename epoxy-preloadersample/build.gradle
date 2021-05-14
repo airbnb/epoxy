@@ -13,23 +13,26 @@ android {
     versionCode 1
     versionName "1.0"
 
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
   buildFeatures {
     viewBinding true
   }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
 dependencies {
-  implementation rootProject.deps.kotlin
 
   implementation project(':epoxy-adapter')
   implementation project(':epoxy-glide-preloader')
   kapt project(':epoxy-processor')
 
-  // transitive to make ./gradlew check work
-  implementation  (rootProject.deps.glide)
+  implementation rootProject.deps.glide
 
   implementation rootProject.deps.androidRecyclerView
   implementation rootProject.deps.androidCardView

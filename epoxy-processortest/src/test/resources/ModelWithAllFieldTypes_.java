@@ -1,3 +1,4 @@
+
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -19,7 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements GeneratedModel<Object>, ModelWithAllFieldTypesBuilder {
   private OnModelBoundListener<ModelWithAllFieldTypes_, Object> onModelBoundListener_epoxyGeneratedModel;
 
@@ -58,7 +60,8 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelWithAllFieldTypes_ onBind(
       OnModelBoundListener<ModelWithAllFieldTypes_, Object> listener) {
     onMutation();
@@ -80,7 +83,8 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
    * The listener will contribute to this model's hashCode state per the {@link
    * com.airbnb.epoxy.EpoxyAttribute.Option#DoNotHash} rules.
    * <p>
-   * You may clear the listener by setting a null value, or by calling {@link #reset()} */
+   * You may clear the listener by setting a null value, or by calling {@link #reset()}
+   */
   public ModelWithAllFieldTypes_ onUnbind(
       OnModelUnboundListener<ModelWithAllFieldTypes_, Object> listener) {
     onMutation();
@@ -348,8 +352,8 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   @Override
-  public ModelWithAllFieldTypes_ id(@Nullable Number... arg0) {
-    super.id(arg0);
+  public ModelWithAllFieldTypes_ id(@Nullable Number... ids) {
+    super.id(ids);
     return this;
   }
 
@@ -360,33 +364,34 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
   }
 
   @Override
-  public ModelWithAllFieldTypes_ id(@Nullable CharSequence arg0) {
-    super.id(arg0);
+  public ModelWithAllFieldTypes_ id(@Nullable CharSequence key) {
+    super.id(key);
     return this;
   }
 
   @Override
-  public ModelWithAllFieldTypes_ id(@Nullable CharSequence arg0, @Nullable CharSequence... arg1) {
-    super.id(arg0, arg1);
+  public ModelWithAllFieldTypes_ id(@Nullable CharSequence key,
+      @Nullable CharSequence... otherKeys) {
+    super.id(key, otherKeys);
     return this;
   }
 
   @Override
-  public ModelWithAllFieldTypes_ id(@Nullable CharSequence arg0, long arg1) {
-    super.id(arg0, arg1);
+  public ModelWithAllFieldTypes_ id(@Nullable CharSequence key, long id) {
+    super.id(key, id);
     return this;
   }
 
   @Override
-  public ModelWithAllFieldTypes_ layout(@LayoutRes int arg0) {
-    super.layout(arg0);
+  public ModelWithAllFieldTypes_ layout(@LayoutRes int layoutRes) {
+    super.layout(layoutRes);
     return this;
   }
 
   @Override
   public ModelWithAllFieldTypes_ spanSizeOverride(
-      @Nullable EpoxyModel.SpanSizeOverrideCallback arg0) {
-    super.spanSizeOverride(arg0);
+      @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback) {
+    super.spanSizeOverride(spanSizeCallback);
     return this;
   }
 
@@ -589,3 +594,4 @@ public class ModelWithAllFieldTypes_ extends ModelWithAllFieldTypes implements G
         "}" + super.toString();
   }
 }
+

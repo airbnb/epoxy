@@ -3,6 +3,7 @@ package com.airbnb.epoxy.paging3
 import android.annotation.SuppressLint
 import android.os.Handler
 import androidx.paging.CombinedLoadStates
+import androidx.paging.ItemSnapshotList
 import androidx.paging.LoadState
 import androidx.paging.LoadType
 import androidx.paging.LoadType.REFRESH
@@ -144,6 +145,25 @@ abstract class PagingDataEpoxyController<T : Any>(
      */
     fun removeLoadStateListener(listener: (CombinedLoadStates) -> Unit) {
         modelCache.removeLoadStateListener(listener)
+    }
+
+    /**
+     * Returns a new [ItemSnapshotList] representing the currently presented items, including any
+     * placeholders if they are enabled.
+     */
+    fun snapshot(): ItemSnapshotList<T> {
+        return modelCache.snapshot()
+    }
+
+    /**
+     * Requests a model build that will run for every model, including the ones created for the paged
+     * list.
+     *
+     * Clears the current model cache to make sure that happens.
+     */
+    fun requestForcedModelBuild() {
+        modelCache.clearModels()
+        requestModelBuild()
     }
 
     companion object {
