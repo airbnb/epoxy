@@ -22,9 +22,11 @@ fun EpoxyController.composableInterop(
     id: String,
     composeFunction: @Composable () -> Unit
 ) {
-    add(ComposeEpoxyModel(composeFunction).apply {
-        id(id)
-    })
+    add(
+        ComposeEpoxyModel(composeFunction).apply {
+            id(id)
+        }
+    )
 }
 
 @Composable
