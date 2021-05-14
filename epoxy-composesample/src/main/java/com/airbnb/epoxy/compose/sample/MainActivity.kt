@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,7 +16,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.epoxy.EpoxyRecyclerView
+import com.airbnb.epoxy.ExpoxyInterop
 import com.airbnb.epoxy.composableInterop
+import com.airbnb.epoxy.compose.sample.epoxyviews.HeaderViewModel_
 import com.airbnb.epoxy.compose.sample.epoxyviews.headerView
 
 class MainActivity : ComponentActivity() {
@@ -37,8 +40,8 @@ class MainActivity : ComponentActivity() {
                     id = "compose_text_$i",
                     composeFunction = {
                         ShowCaption(
-                            modifier =
-                            Modifier.background(color = Color.Blue)
+                            modifier = Modifier
+                                .background(color = Color.Yellow)
                                 .padding(16.dp)
                         )
                     }
@@ -49,15 +52,18 @@ class MainActivity : ComponentActivity() {
                     composeFunction = { NewsStory() }
                 )
             }
-
-
         }
 
         composeView.setContent {
-            Text("Testing epoxy in Composable")
-//            headerView {
-//                setTitle("title")
-//            }
+            Text(text = "Testing Epoxy in Composable")
+            LazyColumn {
+                items(100) { index ->
+                    ExpoxyInterop<HeaderViewModel_> {
+                        id("id_header_view_model_$index")
+                        title("Epoxy model in compose $index")
+                    }
+                }
+            }
         }
     }
 }
@@ -67,7 +73,7 @@ class MainActivity : ComponentActivity() {
 fun ShowCaption(modifier: Modifier = Modifier) {
     Text(
         text = "Caption coming from composable",
-        color = Color.Yellow,
+        color = Color.DarkGray,
         modifier = modifier
     )
 }

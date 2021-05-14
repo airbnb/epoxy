@@ -4,10 +4,7 @@ import android.content.Context
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
-import com.airbnb.epoxy.ModelProp.Option
-
 import com.airbnb.epoxy.TextProp
 import com.airbnb.epoxy.compose.sample.R
 import com.airbnb.paris.annotations.Style
@@ -31,17 +28,18 @@ class HeaderView(context: Context?) : LinearLayout(context) {
 
     @TextProp(defaultRes = R.string.app_name)
     fun setTitle(title: CharSequence?) {
-        this.title?.setText(title)
+        println("Aniket, title: $title, this.title: ${this.title}")
+        this.title?.text = title
     }
 
-    @ModelProp(options = [Option.GenerateStringOverloads])
+    @TextProp
     fun setCaption(caption: CharSequence?) {
-        this.caption?.setText(caption)
+        this.caption?.text = caption
     }
 
     companion object {
         @Style(isDefault = true)
-        val headerStyle = headerViewStyle {
+        val headerStyle: com.airbnb.paris.styles.Style = headerViewStyle {
             layoutWidth(ViewGroup.LayoutParams.MATCH_PARENT)
             layoutHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
         }

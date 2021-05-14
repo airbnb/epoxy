@@ -1,8 +1,11 @@
 package com.airbnb.epoxy
 
+import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.viewinterop.AndroidView
 
 class ComposeEpoxyModel(
     private val composeFunction: @Composable () -> Unit
@@ -22,4 +25,19 @@ fun EpoxyController.composableInterop(
     add(ComposeEpoxyModel(composeFunction).apply {
         id(id)
     })
+}
+
+@Composable
+inline fun <reified T : EpoxyModel<*>> ExpoxyInterop(crossinline modelBuilder: T.() -> Unit) {
+    val model = T::class.java.newInstance().apply(modelBuilder)
+
+    AndroidView(
+        factory = { context ->
+            FrameLayout(context).apply {
+                addView((model.buildView(this)))
+            }
+        },
+    ) { view ->
+        (model as EpoxyModel<View>).bind(view.getChildAt(0))
+    }
 }

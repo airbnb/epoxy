@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 @EpoxyModelClass
 public abstract class AbstractEpoxyModelWithView extends EpoxyModelWithView<View> {
   @Override
-  protected View buildView(@NonNull ViewGroup parent) {
+  public View buildView(@NonNull ViewGroup parent) {
     return new View(parent.getContext());
   }
 }
