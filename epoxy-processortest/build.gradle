@@ -9,12 +9,6 @@ android {
     // Using 16 here as it is the minimum version of Paris, which we are restricted to.
     minSdkVersion 16
     targetSdkVersion rootProject.TARGET_SDK_VERSION
-
-    javaCompileOptions {
-      annotationProcessorOptions {
-        includeCompileClasspath false
-      }
-    }
   }
 
   compileOptions {
@@ -35,8 +29,6 @@ android {
   dataBinding {
     enabled = true
   }
-
-  defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 }
 
 dependencies {
