@@ -56,7 +56,7 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
   }
 
   @Override
-  protected ModelViewWithParis buildView(ViewGroup parent) {
+  public ModelViewWithParis buildView(ViewGroup parent) {
     ModelViewWithParis v = new ModelViewWithParis(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;

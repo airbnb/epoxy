@@ -51,7 +51,7 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
   }
 
   @Override
-  protected TestFieldPropDoNotHashOptionView buildView(ViewGroup parent) {
+  public TestFieldPropDoNotHashOptionView buildView(ViewGroup parent) {
     TestFieldPropDoNotHashOptionView v = new TestFieldPropDoNotHashOptionView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;

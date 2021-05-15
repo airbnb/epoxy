@@ -63,7 +63,7 @@ public class StyleableModelViewModel_ extends EpoxyModel<StyleableModelView> imp
   }
 
   @Override
-  protected StyleableModelView buildView(ViewGroup parent) {
+  public StyleableModelView buildView(ViewGroup parent) {
     StyleableModelView v = new StyleableModelView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;

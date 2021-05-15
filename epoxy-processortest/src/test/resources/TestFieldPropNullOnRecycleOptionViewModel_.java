@@ -39,7 +39,7 @@ public class TestFieldPropNullOnRecycleOptionViewModel_ extends EpoxyModel<TestF
   }
 
   @Override
-  protected TestFieldPropNullOnRecycleOptionView buildView(ViewGroup parent) {
+  public TestFieldPropNullOnRecycleOptionView buildView(ViewGroup parent) {
     TestFieldPropNullOnRecycleOptionView v = new TestFieldPropNullOnRecycleOptionView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;

@@ -37,7 +37,7 @@ public class AutoLayoutModelViewModel_ extends EpoxyModel<AutoLayoutModelView> i
   }
 
   @Override
-  protected AutoLayoutModelView buildView(ViewGroup parent) {
+  public AutoLayoutModelView buildView(ViewGroup parent) {
     AutoLayoutModelView v = new AutoLayoutModelView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;

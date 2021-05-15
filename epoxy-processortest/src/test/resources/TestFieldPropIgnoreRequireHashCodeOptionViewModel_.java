@@ -51,7 +51,7 @@ public class TestFieldPropIgnoreRequireHashCodeOptionViewModel_ extends EpoxyMod
   }
 
   @Override
-  protected TestFieldPropIgnoreRequireHashCodeOptionView buildView(ViewGroup parent) {
+  public TestFieldPropIgnoreRequireHashCodeOptionView buildView(ViewGroup parent) {
     TestFieldPropIgnoreRequireHashCodeOptionView v = new TestFieldPropIgnoreRequireHashCodeOptionView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;

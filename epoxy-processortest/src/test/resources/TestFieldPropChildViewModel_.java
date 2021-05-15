@@ -56,7 +56,7 @@ public class TestFieldPropChildViewModel_ extends EpoxyModel<TestFieldPropChildV
   }
 
   @Override
-  protected TestFieldPropChildView buildView(ViewGroup parent) {
+  public TestFieldPropChildView buildView(ViewGroup parent) {
     TestFieldPropChildView v = new TestFieldPropChildView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;
