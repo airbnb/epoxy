@@ -49,6 +49,7 @@ dependencies {
   implementation project(':epoxy-databinding')
   implementation project(':epoxy-adapter')
   implementation project(':epoxy-annotations')
+  implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
   kapt project(':epoxy-processor')
 
   implementation rootProject.deps.androidAppcompat

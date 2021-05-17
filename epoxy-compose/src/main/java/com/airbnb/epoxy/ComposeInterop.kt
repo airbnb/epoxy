@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.viewinterop.AndroidView
 
@@ -30,7 +31,11 @@ fun EpoxyController.composableInterop(
 }
 
 @Composable
-inline fun <reified T : EpoxyModel<*>> ExpoxyInterop(crossinline modelBuilder: T.() -> Unit) {
+inline fun <reified T : EpoxyModel<*>> ExpoxyInterop(
+    crossinline modelBuilder: T.() -> Unit,
+    index: Int = 1,
+    modifier: Modifier = Modifier
+) {
     val model = T::class.java.newInstance().apply(modelBuilder)
 
     AndroidView(
@@ -39,6 +44,7 @@ inline fun <reified T : EpoxyModel<*>> ExpoxyInterop(crossinline modelBuilder: T
                 addView((model.buildView(this)))
             }
         },
+        modifier = modifier,
     ) { view ->
         (model as EpoxyModel<View>).bind(view.getChildAt(0))
     }

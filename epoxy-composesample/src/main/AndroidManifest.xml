@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Epoxy">
         <activity
+            android:name=".ComposableInteropActivity"
+            android:exported="true" />
+        <activity
+            android:name=".EpoxyInteropActivity"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
