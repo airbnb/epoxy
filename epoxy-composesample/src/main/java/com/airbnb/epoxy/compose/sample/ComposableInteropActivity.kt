@@ -53,8 +53,9 @@ class ComposableInteropActivity : ComponentActivity() {
 @Composable
 @Preview
 fun NewsStory() {
-    Column(modifier = Modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Column(
+        modifier = Modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Image(
             painter = painterResource(id = R.drawable.header),
