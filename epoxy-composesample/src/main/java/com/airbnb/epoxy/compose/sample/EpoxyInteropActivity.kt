@@ -33,14 +33,12 @@ class EpoxyInteropActivity : ComponentActivity() {
                 LazyColumn {
                     items(100) { index ->
                         ExpoxyInterop<HeaderViewModel_>(
-                            modelBuilder = {
-                                id("id_header_view_model", index.toLong())
-                                title("Epoxy model in compose $index")
-                                showImage(true)
-                            },
                             modifier = Modifier.fillMaxWidth(),
-                            index = index
-                        )
+                        ) {
+                            id("id_header_view_model", index.toLong())
+                            title("Epoxy model in compose $index")
+                            showImage(true)
+                        }
                     }
                 }
             }

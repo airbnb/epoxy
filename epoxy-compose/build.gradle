@@ -5,16 +5,13 @@ plugins {
 }
 
 android {
-  compileSdkVersion 30
+  compileSdkVersion rootProject.COMPOSE_COMPILE_SDK_VERSION
   buildToolsVersion "30.0.3"
 
   defaultConfig {
-    minSdkVersion 21
-    targetSdkVersion 30
-    versionCode 1
-    versionName "1.0"
+    minSdkVersion rootProject.COMPOSE_MIN_SDK_VERSION
+    targetSdkVersion rootProject.COMPOSE_TARGET_SDK_VERSION
 
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     consumerProguardFiles "consumer-rules.pro"
   }
 
@@ -32,9 +29,6 @@ android {
     jvmTarget = '1.8'
     useIR = true
   }
-  kotlinOptions {
-    jvmTarget = '1.8'
-  }
   buildFeatures {
     compose true
   }
@@ -43,18 +37,13 @@ android {
 dependencies {
   api project(':epoxy-annotations')
   api project(':epoxy-adapter')
-  kapt project(':epoxy-processor')
 
-  implementation "androidx.compose.ui:ui:$COMPOSE_VERSION"
-  implementation "androidx.compose.material:material:$COMPOSE_VERSION"
-  implementation "androidx.compose.ui:ui-tooling:$COMPOSE_VERSION"
-  implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0'
-  implementation 'androidx.activity:activity-compose:1.3.0-alpha03'
-  implementation 'androidx.core:core-ktx:1.3.2'
-  implementation 'androidx.appcompat:appcompat:1.2.0'
-  implementation 'com.google.android.material:material:1.3.0'
-
-  testImplementation 'junit:junit:4.+'
-  androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-  androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+  implementation rootProject.deps.composeUi
+  implementation rootProject.deps.composeMaterial
+  implementation rootProject.deps.activityCompose
+  implementation rootProject.deps.composeUiTooling
+  implementation rootProject.deps.androidCoreKtx
+  implementation rootProject.deps.androidAppcompat
+  implementation rootProject.deps.androidDesignLibrary
+  implementation rootProject.deps.androidLifecycleRuntimeKtx
 }

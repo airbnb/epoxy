@@ -19,7 +19,7 @@ class ComposeEpoxyModel(
     }
 }
 
-fun EpoxyController.composableInterop(
+fun ModelCollector.composableInterop(
     id: String,
     composeFunction: @Composable () -> Unit
 ) {
@@ -32,9 +32,8 @@ fun EpoxyController.composableInterop(
 
 @Composable
 inline fun <reified T : EpoxyModel<*>> ExpoxyInterop(
+    modifier: Modifier = Modifier,
     crossinline modelBuilder: T.() -> Unit,
-    index: Int = 1,
-    modifier: Modifier = Modifier
 ) {
     val model = T::class.java.newInstance().apply(modelBuilder)
 

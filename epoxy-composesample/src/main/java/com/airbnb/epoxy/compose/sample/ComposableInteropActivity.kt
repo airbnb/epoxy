@@ -34,17 +34,13 @@ class ComposableInteropActivity : ComponentActivity() {
             }
 
             for (i in 0..100) {
-                composableInterop(
-                    id = "compose_text_$i",
-                    composeFunction = {
-                        ShowCaption("Caption coming from composabl")
-                    }
-                )
+                composableInterop(id = "compose_text_$i") {
+                    ShowCaption("Caption coming from composable")
+                }
 
-                composableInterop(
-                    id = "news_$i",
-                    composeFunction = { NewsStory() }
-                )
+                composableInterop(id = "news_$i") {
+                    NewsStory()
+                }
             }
         }
     }
