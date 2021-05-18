@@ -42,7 +42,7 @@ public abstract class EpoxyModelWithView<T extends View> extends EpoxyModel<T> {
    * @param parent The parent ViewGroup that the returned view will be added to.
    */
   @Override
-  protected abstract T buildView(@NonNull ViewGroup parent);
+  public abstract T buildView(@NonNull ViewGroup parent);
 
   @Override
   protected final int getDefaultLayout() {

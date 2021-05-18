@@ -39,7 +39,7 @@ public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPro
   }
 
   @Override
-  protected TestFieldPropCallbackPropView buildView(ViewGroup parent) {
+  public TestFieldPropCallbackPropView buildView(ViewGroup parent) {
     TestFieldPropCallbackPropView v = new TestFieldPropCallbackPropView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;

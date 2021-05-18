@@ -28,7 +28,7 @@ public class ViewTypeManagerIntegrationTest {
 
   static class TestModel extends EpoxyModelWithView<View> {
     @Override
-    protected View buildView(@NonNull ViewGroup parent) {
+    public View buildView(@NonNull ViewGroup parent) {
       return new FrameLayout(ApplicationProvider.getApplicationContext());
     }
   }

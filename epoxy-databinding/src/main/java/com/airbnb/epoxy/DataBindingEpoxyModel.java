@@ -37,7 +37,7 @@ import androidx.databinding.ViewDataBinding;
 public abstract class DataBindingEpoxyModel extends EpoxyModelWithHolder<DataBindingHolder> {
 
   @Override
-  protected View buildView(@NonNull ViewGroup parent) {
+  public View buildView(@NonNull ViewGroup parent) {
     LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
     ViewDataBinding binding = DataBindingUtil.inflate(layoutInflater, getViewType(), parent, false);
     View view = binding.getRoot();

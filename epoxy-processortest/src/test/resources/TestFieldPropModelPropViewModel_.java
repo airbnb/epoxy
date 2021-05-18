@@ -37,7 +37,7 @@ public class TestFieldPropModelPropViewModel_ extends EpoxyModel<TestFieldPropMo
   }
 
   @Override
-  protected TestFieldPropModelPropView buildView(ViewGroup parent) {
+  public TestFieldPropModelPropView buildView(ViewGroup parent) {
     TestFieldPropModelPropView v = new TestFieldPropModelPropView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;

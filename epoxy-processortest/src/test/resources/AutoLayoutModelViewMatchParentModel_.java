@@ -37,7 +37,7 @@ public class AutoLayoutModelViewMatchParentModel_ extends EpoxyModel<AutoLayoutM
   }
 
   @Override
-  protected AutoLayoutModelViewMatchParent buildView(ViewGroup parent) {
+  public AutoLayoutModelViewMatchParent buildView(ViewGroup parent) {
     AutoLayoutModelViewMatchParent v = new AutoLayoutModelViewMatchParent(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.MATCH_PARENT, ViewGroup.MarginLayoutParams.MATCH_PARENT));
     return v;

@@ -1,0 +1,60 @@
+plugins {
+  id 'com.android.application'
+  id 'kotlin-android'
+}
+apply plugin: 'kotlin-kapt'
+
+android {
+  compileSdkVersion rootProject.COMPOSE_COMPILE_SDK_VERSION
+  buildToolsVersion "30.0.3"
+
+  defaultConfig {
+    applicationId "com.airbnb.epoxy.compose.sample"
+    minSdkVersion rootProject.COMPOSE_MIN_SDK_VERSION
+    targetSdkVersion rootProject.COMPOSE_TARGET_SDK_VERSION
+    versionCode 1
+    versionName "1.0"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  kotlinOptions {
+    jvmTarget = '1.8'
+    useIR = true
+  }
+  buildFeatures {
+    compose true
+  }
+  composeOptions {
+    kotlinCompilerExtensionVersion COMPOSE_VERSION
+  }
+}
+
+dependencies {
+  implementation project(':epoxy-compose')
+  implementation project(':epoxy-databinding')
+  implementation project(':epoxy-adapter')
+  implementation project(':epoxy-annotations')
+  implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+  kapt project(':epoxy-processor')
+  implementation 'com.jakewharton:butterknife:10.2.3'
+  kapt 'com.jakewharton:butterknife-compiler:10.2.3'
+
+  implementation rootProject.deps.androidAppcompat
+  implementation rootProject.deps.androidDesignLibrary
+  implementation rootProject.deps.paris
+  implementation rootProject.deps.composeUi
+  implementation rootProject.deps.androidCoreKtx
+  implementation rootProject.deps.composeMaterial
+  implementation rootProject.deps.activityCompose
+  implementation rootProject.deps.composeUiTooling
+  kapt rootProject.deps.parisProcessor
+}

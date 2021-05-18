@@ -52,7 +52,7 @@ public class TestFieldPropTextPropViewModel_ extends EpoxyModel<TestFieldPropTex
   }
 
   @Override
-  protected TestFieldPropTextPropView buildView(ViewGroup parent) {
+  public TestFieldPropTextPropView buildView(ViewGroup parent) {
     TestFieldPropTextPropView v = new TestFieldPropTextPropView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;

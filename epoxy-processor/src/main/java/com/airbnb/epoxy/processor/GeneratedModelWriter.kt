@@ -464,7 +464,7 @@ class GeneratedModelWriter(
             buildMethod("buildView") {
                 addAnnotation(Override::class.java)
                 addParameter(ClassNames.ANDROID_VIEW_GROUP, "parent")
-                addModifiers(PROTECTED)
+                addModifiers(PUBLIC)
                 returns(modelInfo.modelType)
                 addStatement(
                     "\$T v = new \$T(parent.getContext())", modelInfo.modelType,

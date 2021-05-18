@@ -37,7 +37,7 @@ public class ModelViewSuperClassModel_ extends EpoxyModel<ModelViewSuperClass> i
   }
 
   @Override
-  protected ModelViewSuperClass buildView(ViewGroup parent) {
+  public ModelViewSuperClass buildView(ViewGroup parent) {
     ModelViewSuperClass v = new ModelViewSuperClass(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.MATCH_PARENT, ViewGroup.MarginLayoutParams.MATCH_PARENT));
     return v;

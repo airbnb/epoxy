@@ -52,7 +52,7 @@ public class TestFieldPropGenerateStringOverloadsOptionViewModel_ extends EpoxyM
   }
 
   @Override
-  protected TestFieldPropGenerateStringOverloadsOptionView buildView(ViewGroup parent) {
+  public TestFieldPropGenerateStringOverloadsOptionView buildView(ViewGroup parent) {
     TestFieldPropGenerateStringOverloadsOptionView v = new TestFieldPropGenerateStringOverloadsOptionView(parent.getContext());
     v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
     return v;

@@ -6,6 +6,10 @@ apply plugin: "com.vanniktech.maven.publish"
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
+  kotlinOptions {
+    jvmTarget = "1.8"
+  }
+
   defaultConfig {
     minSdkVersion rootProject.MIN_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
