@@ -5,12 +5,11 @@ plugins {
 }
 
 android {
-  compileSdkVersion rootProject.COMPOSE_COMPILE_SDK_VERSION
-  buildToolsVersion "30.0.3"
+  compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
   defaultConfig {
     minSdkVersion rootProject.COMPOSE_MIN_SDK_VERSION
-    targetSdkVersion rootProject.COMPOSE_TARGET_SDK_VERSION
+    targetSdkVersion rootProject.TARGET_SDK_VERSION
 
     consumerProguardFiles "consumer-rules.pro"
   }
