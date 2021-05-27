@@ -1,0 +1,71 @@
+plugins {
+  id 'com.android.application'
+  id 'kotlin-android'
+}
+apply plugin: 'kotlin-kapt'
+
+android {
+  compileSdkVersion rootProject.COMPILE_SDK_VERSION
+
+  defaultConfig {
+    applicationId "com.airbnb.epoxy.compose.sample"
+    minSdkVersion rootProject.COMPOSE_MIN_SDK_VERSION
+    targetSdkVersion rootProject.TARGET_SDK_VERSION
+    versionCode 1
+    versionName "1.0"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  kotlinOptions {
+    jvmTarget = '1.8'
+    useIR = true
+  }
+  buildFeatures {
+    dataBinding true
+    compose true
+  }
+  composeOptions {
+    kotlinCompilerExtensionVersion COMPOSE_VERSION
+  }
+}
+
+dependencies {
+  implementation 'androidx.appcompat:appcompat:1.2.0'
+//  implementation 'com.google.android.material:material:1.3.0'
+//  implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+  implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+  implementation 'com.airbnb.android:mavericks:2.2.0'
+
+
+
+
+
+  implementation project(':epoxy-compose')
+  implementation project(':epoxy-databinding')
+  implementation project(':epoxy-adapter')
+  implementation project(':epoxy-annotations')
+  implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+  kapt project(':epoxy-processor')
+  implementation 'com.jakewharton:butterknife:10.2.3'
+  kapt 'com.jakewharton:butterknife-compiler:10.2.3'
+
+  implementation rootProject.deps.androidAppcompat
+  implementation rootProject.deps.androidDesignLibrary
+  implementation rootProject.deps.paris
+  implementation rootProject.deps.composeUi
+  implementation rootProject.deps.androidCoreKtx
+  implementation rootProject.deps.composeMaterial
+  implementation rootProject.deps.activityCompose
+  implementation rootProject.deps.composeUiTooling
+  kapt rootProject.deps.parisProcessor
+}

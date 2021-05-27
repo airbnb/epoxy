@@ -31,7 +31,7 @@ fun ModelCollector.composableInterop(
 }
 
 @Composable
-inline fun <reified T : EpoxyModel<*>> ExpoxyInterop(
+inline fun <reified T : EpoxyModel<*>> EpoxyInterop(
     modifier: Modifier = Modifier,
     crossinline modelBuilder: T.() -> Unit,
 ) {
