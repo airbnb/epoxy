@@ -8,8 +8,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_layout, MyFragment())
-            .commit()
+        if (!commit) {
+            commit = true
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, MyFragment())
+                .commit()
+        }
+    }
+
+    companion object {
+        var commit = false
     }
 }
