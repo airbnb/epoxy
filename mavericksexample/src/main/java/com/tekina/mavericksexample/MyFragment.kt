@@ -91,7 +91,7 @@ class MyEpoxyController(private val viewModel: HelloWorldViewModel) :
     override fun buildModels(data: HelloWorldState?) {
         withState(viewModel) {
             it.counter.forEachIndexed { index, counterValue ->
-                composableInterop(index.toString()) {
+                composableInterop("$index") {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
@@ -120,6 +120,7 @@ class MyEpoxyController(private val viewModel: HelloWorldViewModel) :
         val counterValue by helloViewModel.collectAsState {
             it.counter.get(index)
         }
+        println("MavericksSample Composable function TextFromCompose index: $index")
 
         ClickableText(
             text = annotatedString(
