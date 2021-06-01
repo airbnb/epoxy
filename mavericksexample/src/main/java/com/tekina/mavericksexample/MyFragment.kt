@@ -5,8 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material.Text
+import androidx.lifecycle.ViewTreeLifecycleOwner
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.TypedEpoxyController
+import com.airbnb.epoxy.composableInterop
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.MavericksViewModel
@@ -67,19 +70,28 @@ class MyEpoxyController(private val viewModel: HelloWorldViewModel) :
     TypedEpoxyController<HelloWorldState>() {
 
     override fun buildModels(data: HelloWorldState?) {
-        withState(viewModel) {
-            it.counter.forEachIndexed { index, counterValue ->
-                headerView {
-                    id(index)
-                    data?.apply {
-                        title("$counterValue")
-                    }
 
-                    clickListener { _ ->
-                        this@MyEpoxyController.viewModel.increase(index)
-                    }
-                }
-            }
+        composableInterop("test") {
+            Text(text = "composableInterop")
         }
+
+//        withState(viewModel) {
+//            it.counter.forEachIndexed { index, counterValue ->
+//                composableInterop(index.toString()) {
+//                    Text(text = "Text from composable interop ${data?.counter?.get(counterValue) ?: "empty"}")
+//                }
+
+//                headerView {
+//                    id(index)
+//                    data?.apply {
+//                        title("Text from normal epoxy model: $counterValue")
+//                    }
+//
+//                    clickListener { _ ->
+//                        this@MyEpoxyController.viewModel.increase(index)
+//                    }
+//                }
+//            }
+//        }
     }
 }
