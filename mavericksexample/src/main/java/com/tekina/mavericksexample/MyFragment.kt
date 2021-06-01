@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -20,6 +22,8 @@ import com.airbnb.epoxy.composableInterop
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.MavericksViewModel
+import com.airbnb.mvrx.compose.collectAsState
+import com.airbnb.mvrx.compose.mavericksViewModel
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.tekina.mavericksexample.epoxyviews.headerView
@@ -92,18 +96,7 @@ class MyEpoxyController(private val viewModel: HelloWorldViewModel) :
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        ClickableText(
-                            text = annotatedString(
-                                "Text from composable interop ${
-                                    data?.counter?.get(
-                                        counterValue
-                                    ) ?: "empty"
-                                }"
-                            ),
-                            onClick = { _ ->
-                                this@MyEpoxyController.viewModel.increase(index)
-                            }
-                        )
+                        TextFromCompose(index)
                     }
                 }
 
@@ -119,5 +112,22 @@ class MyEpoxyController(private val viewModel: HelloWorldViewModel) :
                 }
             }
         }
+    }
+
+    @Composable
+    fun TextFromCompose(index: Int) {
+        val helloViewModel: HelloWorldViewModel = mavericksViewModel()
+        val counterValue by helloViewModel.collectAsState {
+            it.counter.get(index)
+        }
+
+        ClickableText(
+            text = annotatedString(
+                "Text from composable interop ${counterValue}"
+            ),
+            onClick = { _ ->
+                this@MyEpoxyController.viewModel.increase(index)
+            }
+        )
     }
 }
