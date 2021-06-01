@@ -5,8 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.material.Text
-import androidx.lifecycle.ViewTreeLifecycleOwner
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.epoxy.composableInterop
@@ -69,29 +76,48 @@ class MyFragment : Fragment(R.layout.fragment_my), MavericksView {
 class MyEpoxyController(private val viewModel: HelloWorldViewModel) :
     TypedEpoxyController<HelloWorldState>() {
 
-    override fun buildModels(data: HelloWorldState?) {
-
-        composableInterop("test") {
-            Text(text = "composableInterop")
+    private fun annotatedString(str: String) = buildAnnotatedString {
+        withStyle(
+            style = SpanStyle(fontWeight = FontWeight.Bold)
+        ) {
+            append(str)
         }
+    }
 
-//        withState(viewModel) {
-//            it.counter.forEachIndexed { index, counterValue ->
-//                composableInterop(index.toString()) {
-//                    Text(text = "Text from composable interop ${data?.counter?.get(counterValue) ?: "empty"}")
-//                }
+    override fun buildModels(data: HelloWorldState?) {
+        withState(viewModel) {
+            it.counter.forEachIndexed { index, counterValue ->
+                composableInterop(index.toString()) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        ClickableText(
+                            text = annotatedString(
+                                "Text from composable interop ${
+                                    data?.counter?.get(
+                                        counterValue
+                                    ) ?: "empty"
+                                }"
+                            ),
+                            onClick = { _ ->
+                                this@MyEpoxyController.viewModel.increase(index)
+                            }
+                        )
+                    }
+                }
 
-//                headerView {
-//                    id(index)
-//                    data?.apply {
-//                        title("Text from normal epoxy model: $counterValue")
-//                    }
-//
-//                    clickListener { _ ->
-//                        this@MyEpoxyController.viewModel.increase(index)
-//                    }
-//                }
-//            }
-//        }
+                headerView {
+                    id(index)
+                    data?.apply {
+                        title("Text from normal epoxy model: $counterValue")
+                    }
+
+                    clickListener { _ ->
+                        this@MyEpoxyController.viewModel.increase(index)
+                    }
+                }
+            }
+        }
     }
 }
