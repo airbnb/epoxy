@@ -85,7 +85,7 @@ abstract class EpoxyTouchHelperCallback : ItemTouchHelper.Callback() {
         dropTargets: List<RecyclerView.ViewHolder>,
         curX: Int,
         curY: Int
-    ): EpoxyViewHolder = chooseDropTarget(
+    ): EpoxyViewHolder? = chooseDropTarget(
         selected as EpoxyViewHolder,
         dropTargets as List<EpoxyViewHolder>,
         curX,
@@ -100,8 +100,8 @@ abstract class EpoxyTouchHelperCallback : ItemTouchHelper.Callback() {
         dropTargets: List<EpoxyViewHolder>,
         curX: Int,
         curY: Int
-    ): EpoxyViewHolder =
-        super.chooseDropTarget(selected, dropTargets, curX, curY) as EpoxyViewHolder
+    ): EpoxyViewHolder? =
+        super.chooseDropTarget(selected, dropTargets, curX, curY) as? EpoxyViewHolder
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int): Unit =
         onSelectedChanged(viewHolder as EpoxyViewHolder?, actionState)
