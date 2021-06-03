@@ -135,6 +135,16 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
+                itemCustomView {
+                    id("custom view $i")
+                    color(Color.MAGENTA)
+                    title("Open Drag and Dropt activity")
+                    listener { _ ->
+                        Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
+                        startActivity(Intent(this@MainActivity, DragAndDropActivity::class.java))
+                    }
+                }
+
                 itemEpoxyHolder {
                     id("view holder $i")
                     title("this is a View Holder item")
