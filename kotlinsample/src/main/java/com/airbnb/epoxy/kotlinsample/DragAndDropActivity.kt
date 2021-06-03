@@ -10,7 +10,6 @@ import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.EpoxyTouchHelper
 import com.airbnb.epoxy.TypedEpoxyController
-import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
 
 class DragAndDropActivity : AppCompatActivity() {
     private lateinit var recyclerView: EpoxyRecyclerView
