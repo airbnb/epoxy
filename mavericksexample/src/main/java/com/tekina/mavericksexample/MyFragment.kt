@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -22,8 +21,6 @@ import com.airbnb.epoxy.composableInterop
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.MavericksViewModel
-import com.airbnb.mvrx.compose.collectAsState
-import com.airbnb.mvrx.compose.mavericksViewModel
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.tekina.mavericksexample.epoxyviews.headerView
@@ -52,12 +49,6 @@ class MyFragment : Fragment(R.layout.fragment_my), MavericksView {
 
     private val controller: MyEpoxyController by lazy { MyEpoxyController(viewModel) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        controller.onRestoreInstanceState(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -65,11 +56,6 @@ class MyFragment : Fragment(R.layout.fragment_my), MavericksView {
         findViewById<EpoxyRecyclerView>(R.id.epoxyRecyclerView).apply {
             setController(controller)
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        controller.onSaveInstanceState(outState)
     }
 
     override fun invalidate() = withState(viewModel) {
@@ -89,45 +75,35 @@ class MyEpoxyController(private val viewModel: HelloWorldViewModel) :
     }
 
     override fun buildModels(data: HelloWorldState?) {
-        withState(viewModel) {
-            it.counter.forEachIndexed { index, counterValue ->
-                composableInterop("$index") {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        TextFromCompose(index)
-                    }
-                }
-
-                headerView {
-                    id(index)
-                    data?.apply {
-                        title("Text from normal epoxy model: $counterValue")
-                    }
-
-                    clickListener { _ ->
+        data?.counter?.forEachIndexed { index, counterValue ->
+            composableInterop("$index") {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    TextFromCompose(counterValue) {
                         this@MyEpoxyController.viewModel.increase(index)
                     }
+                }
+            }
+
+            headerView {
+                id(index)
+                title("Text from normal epoxy model: $counterValue")
+
+                clickListener { _ ->
+                    this@MyEpoxyController.viewModel.increase(index)
                 }
             }
         }
     }
 
     @Composable
-    fun TextFromCompose(index: Int) {
-        val helloViewModel: HelloWorldViewModel = mavericksViewModel()
-        val counterValue by helloViewModel.collectAsState {
-            it.counter.get(index)
-        }
-        println("MavericksSample Composable function TextFromCompose index: $index")
-
+    fun TextFromCompose(counterValue: Int, onClick: () -> Unit) {
         ClickableText(
-            text = annotatedString(
-                "Text from composable interop ${counterValue}"
-            ),
-            onClick = { _ ->
-                this@MyEpoxyController.viewModel.increase(index)
+            text = annotatedString("Text from composable interop $counterValue"),
+            onClick = {
+                onClick()
             }
         )
     }
