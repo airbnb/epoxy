@@ -1,4 +1,4 @@
-package com.airbnb.epoxy.sample
+package com.airbnb.epoxy.composeinterop.maverickssample
 
 import android.app.Application
 import com.airbnb.mvrx.Mavericks

@@ -1,4 +1,4 @@
-package com.tekina.mavericksexample
+package com.airbnb.epoxy.composeinterop.maverickssample
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -18,12 +18,12 @@ import androidx.compose.ui.text.withStyle
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.epoxy.composableInterop
+import com.airbnb.epoxy.composeinterop.maverickssample.epoxyviews.headerView
 import com.airbnb.mvrx.MavericksState
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.tekina.mavericksexample.epoxyviews.headerView
 
 data class HelloWorldState(
     val counter: List<Int> = List(100) { it },

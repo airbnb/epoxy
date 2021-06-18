@@ -1,4 +1,4 @@
-package com.tekina.mavericksexample.epoxyviews
+package com.airbnb.epoxy.composeinterop.maverickssample.epoxyviews
 
 import android.content.Context
 import android.view.View
@@ -15,7 +15,7 @@ import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.extensions.headerViewStyle
 import com.airbnb.paris.extensions.layoutHeight
 import com.airbnb.paris.extensions.layoutWidth
-import com.tekina.mavericksexample.R
+import com.airbnb.epoxy.composeinterop.maverickssample.R
 
 @Styleable // Dynamic styling via the Paris library
 @ModelView(saveViewState = true)
