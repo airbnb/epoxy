@@ -1,7 +1,6 @@
 package com.airbnb.epoxy.composeinterop.maverickssample
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.fragment.app.Fragment
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.epoxy.composableInterop
@@ -50,7 +50,8 @@ class MyFragment : Fragment(R.layout.fragment_my), MavericksView {
     private val controller: MyEpoxyController by lazy { MyEpoxyController(viewModel) }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View = inflater.inflate(R.layout.fragment_my, container, false).apply {
         findViewById<EpoxyRecyclerView>(R.id.epoxyRecyclerView).apply {
