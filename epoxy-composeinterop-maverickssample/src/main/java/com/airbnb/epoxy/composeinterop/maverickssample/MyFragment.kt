@@ -77,7 +77,10 @@ class MyEpoxyController(private val viewModel: HelloWorldViewModel) :
 
     override fun buildModels(data: HelloWorldState?) {
         data?.counter?.forEachIndexed { index, counterValue ->
-            composableInterop("$index") {
+            composableInterop(
+                id = "$index",
+                keys = arrayOf(counterValue),
+            ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center

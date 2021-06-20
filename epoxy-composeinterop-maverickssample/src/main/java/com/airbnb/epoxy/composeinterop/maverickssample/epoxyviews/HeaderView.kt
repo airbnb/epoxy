@@ -34,7 +34,6 @@ class HeaderView(context: Context?) : LinearLayout(context) {
 
     @TextProp(defaultRes = R.string.app_name)
     fun setTitle(title: CharSequence?) {
-        println("MavericksSample, Updating EpoxyModel title $title")
         this.title?.text = title
     }
 
