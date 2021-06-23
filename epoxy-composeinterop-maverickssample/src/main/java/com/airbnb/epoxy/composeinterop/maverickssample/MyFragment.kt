@@ -25,12 +25,12 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 
-data class HelloWorldState(
+data class CounterState(
     val counter: List<Int> = List(100) { it },
 ) : MavericksState
 
-class HelloWorldViewModel(initialState: HelloWorldState) :
-    MavericksViewModel<HelloWorldState>(initialState) {
+class HelloWorldViewModel(initialState: CounterState) :
+    MavericksViewModel<CounterState>(initialState) {
 
     fun increase(index: Int) {
         withState { state ->
@@ -65,7 +65,7 @@ class MyFragment : Fragment(R.layout.fragment_my), MavericksView {
 }
 
 class MyEpoxyController(private val viewModel: HelloWorldViewModel) :
-    TypedEpoxyController<HelloWorldState>() {
+    TypedEpoxyController<CounterState>() {
 
     private fun annotatedString(str: String) = buildAnnotatedString {
         withStyle(
@@ -75,8 +75,8 @@ class MyEpoxyController(private val viewModel: HelloWorldViewModel) :
         }
     }
 
-    override fun buildModels(data: HelloWorldState?) {
-        data?.counter?.forEachIndexed { index, counterValue ->
+    override fun buildModels(state: CounterState) {
+        state.counter.forEachIndexed { index, counterValue ->
             composableInterop("$index") {
                 Row(
                     modifier = Modifier.fillMaxWidth(),

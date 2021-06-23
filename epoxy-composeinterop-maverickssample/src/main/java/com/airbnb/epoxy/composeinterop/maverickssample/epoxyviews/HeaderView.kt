@@ -20,9 +20,9 @@ import com.airbnb.paris.extensions.layoutWidth
 @Styleable // Dynamic styling via the Paris library
 @ModelView(saveViewState = true)
 class HeaderView(context: Context?) : LinearLayout(context) {
-    private var title: TextView? = null
-    private var caption: TextView? = null
-    private var image: ImageView? = null
+    private var title: TextView
+    private var caption: TextView
+    private var image: ImageView
 
     init {
         inflate(getContext(), R.layout.header_view, this)
@@ -34,23 +34,22 @@ class HeaderView(context: Context?) : LinearLayout(context) {
 
     @TextProp(defaultRes = R.string.app_name)
     fun setTitle(title: CharSequence?) {
-        println("MavericksSample, Updating EpoxyModel title $title")
-        this.title?.text = title
+        this.title.text = title
     }
 
     @TextProp
     fun setCaption(caption: CharSequence?) {
-        this.caption?.text = caption
+        this.caption.text = caption
     }
 
     @ModelProp
     fun setShowImage(isVisible: Boolean) {
-        image?.visibility = if (isVisible) View.VISIBLE else View.GONE
+        image.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
     @CallbackProp
     fun setClickListener(listener: OnClickListener?) {
-        this.title?.setOnClickListener(listener)
+        this.title.setOnClickListener(listener)
     }
 
     companion object {
