@@ -1,3 +1,6 @@
+# 4.6.2 (June 11, 2021)
+Fix Drag n Drop not working in 4.6.1 (#1195)
+
 # 4.6.1 (May 13, 2021)
 Adds "epoxyDisableDslMarker" annotation processor flag which you can use to delay migration to the model building scope DLSMarker introduced in 4.6.0 if it is a large breaking change for your project.
 

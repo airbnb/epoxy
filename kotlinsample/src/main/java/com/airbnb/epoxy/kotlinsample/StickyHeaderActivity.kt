@@ -1,6 +1,7 @@
 package com.airbnb.epoxy.kotlinsample
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.stickyheader.StickyHeaderLinearLayoutManager
@@ -15,6 +16,8 @@ class StickyHeaderActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity)
+
+        findViewById<View>(R.id.epoxy_view_stub)?.visibility = View.GONE
 
         recyclerView = findViewById(R.id.recycler_view)
 

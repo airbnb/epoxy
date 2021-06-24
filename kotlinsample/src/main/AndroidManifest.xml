@@ -17,6 +17,7 @@
         </activity>
 
         <activity android:name=".StickyHeaderActivity"/>
+        <activity android:name=".DragAndDropActivity"/>
     </application>
 
 </manifest>
