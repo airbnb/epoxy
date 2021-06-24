@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.airbnb.epoxy.ExpoxyInterop
+import com.airbnb.epoxy.EpoxyInterop
 import com.airbnb.epoxy.compose.sample.epoxyviews.HeaderViewModel_
 
 class EpoxyInteropActivity : ComponentActivity() {
@@ -32,7 +32,7 @@ class EpoxyInteropActivity : ComponentActivity() {
 
                 LazyColumn {
                     items(100) { index ->
-                        ExpoxyInterop<HeaderViewModel_>(
+                        EpoxyInterop<HeaderViewModel_>(
                             modifier = Modifier.fillMaxWidth(),
                         ) {
                             id("id_header_view_model", index.toLong())
