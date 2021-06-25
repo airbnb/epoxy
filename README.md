@@ -162,6 +162,43 @@ A `HeaderModel_` class is generated that subclasses HeaderModel and implements t
 
 [More Details](https://github.com/airbnb/epoxy/wiki/ViewHolder-Models)
 
+#### From ViewBinding
+
+If you use ViewBinding in your project, you have two ways to create a model that can use your \*Binding class:
+1. Using annotation processing (like examples above)
+```kotlin
+@EpoxyModelClass(layout = R.layout.view_binding_holder_item)
+abstract class ItemViewBindingEpoxyHolder : ViewBindingEpoxyModelWithHolder<ViewBindingHolderItemBinding>() {
+
+    @EpoxyAttribute lateinit var listener: () -> Unit
+    @EpoxyAttribute lateinit var title: String
+
+    override fun ViewBindingHolderItemBinding.bind() {
+        title.text = this@ItemViewBindingEpoxyHolder.title
+        title.setOnClickListener { listener() }
+    }
+}
+``` 
+where [ViewBindingEpoxyModelWithHolder](https://github.com/airbnb/epoxy/blob/master/kotlinsample/src/main/java/com/airbnb/epoxy/kotlinsample/helpers/ViewBindingEpoxyModelWithHolder.kt) - base class special for this case 
+
+2. Using data class
+```kotlin
+// This does not require annotations or annotation processing.
+// The data class is required to generated equals/hashcode which Epoxy needs for diffing.
+// Views are easily declared via property delegates
+data class ItemViewBindingDataClass(
+    val title: String
+) : ViewBindingKotlinModel<DataClassViewBindingItemBinding>(R.layout.data_class_view_binding_item) {
+
+    override fun DataClassViewBindingItemBinding.bind() {
+        title.text = this@ItemViewBindingDataClass.title
+    }
+    
+}
+```
+where [ViewBindingKotlinModel](https://github.com/airbnb/epoxy/blob/master/kotlinsample/src/main/java/com/airbnb/epoxy/kotlinsample/helpers/ViewBindingKotlinModel.kt) - base class special for this case
+
+
 ### Using your models in a controller
 
 A controller defines what items should be shown in the RecyclerView, by adding the corresponding models in the desired order.
@@ -184,9 +221,9 @@ public class PhotoController extends Typed2EpoxyController<List<Photo>, Boolean>
 
       for (Photo photo : photos) {
         new PhotoModel()
-           .id(photo.id())
-           .url(photo.url())
-           .addTo(this);
+            .id(photo.id())
+            .url(photo.url())
+            .addTo(this);
       }
 
       loaderModel
@@ -196,6 +233,7 @@ public class PhotoController extends Typed2EpoxyController<List<Photo>, Boolean>
 ```
 
 #### Or with Kotlin
+
 An extension function is generated for each model so we can write this:
 ```kotlin
 class PhotoController : Typed2EpoxyController<List<Photo>, Boolean>() {
@@ -218,7 +256,31 @@ class PhotoController : Typed2EpoxyController<List<Photo>, Boolean>() {
     }
 }
 ```
+or, if you use data class models:
+```kotlin
+class PhotoController : Typed2EpoxyController<List<Photo>, Boolean>() {
 
+    override fun buildModels(photos: List<Photo>, loadingMore: Boolean) {
+        // Since data classes do not use code generation, there's no extension generated here, 
+        // call EpoxyModel::addTo explicitly
+        headerModel(
+            title = "My Photos",
+            description = "My album description"
+        )
+            .id("header")
+            .addTo(this)
+
+        photos.forEach {
+            photoViewModel(url = it.url())
+                .id(it.id())
+                .addTo(this)
+        }
+        
+        loaderModel()
+            .addIf(loadingMore, this);
+    }
+}
+```
 ### Integrating with RecyclerView
 
 Get the backing adapter off the EpoxyController to set up your RecyclerView:
