@@ -9,22 +9,47 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.viewinterop.AndroidView
 
 class ComposeEpoxyModel(
-    private val composeFunction: @Composable () -> Unit
+    vararg val keys: Any,
+    private val composeFunction: @Composable () -> Unit,
 ) : EpoxyModelWithView<ComposeView>() {
+
     override fun buildView(parent: ViewGroup): ComposeView = ComposeView(parent.context)
 
     override fun bind(view: ComposeView) {
         super.bind(view)
         view.setContent(composeFunction)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other === this) return true
+        if (other !is ComposeEpoxyModel) return false
+        if (this.hashCode() != other.hashCode()) return false
+
+        for (i in keys.indices) {
+            if (keys[i] != other.keys[i]) return false
+        }
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var code = super.hashCode()
+
+        keys.forEach {
+            code = 31 * code + it.hashCode()
+        }
+
+        return code
+    }
 }
 
 fun ModelCollector.composableInterop(
     id: String,
+    vararg keys: Any,
     composeFunction: @Composable () -> Unit
 ) {
     add(
-        ComposeEpoxyModel(composeFunction).apply {
+        ComposeEpoxyModel(keys, composeFunction = composeFunction).apply {
             id(id)
         }
     )
