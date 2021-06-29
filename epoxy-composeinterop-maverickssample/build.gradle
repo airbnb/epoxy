@@ -1,8 +1,8 @@
 plugins {
   id 'com.android.application'
   id 'kotlin-android'
+  id 'kotlin-kapt'
 }
-apply plugin: 'kotlin-kapt'
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION

@@ -9,9 +9,9 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.viewinterop.AndroidView
 
 class ComposeEpoxyModel(
-    private val composeFunction: @Composable () -> Unit
+    vararg val keys: Any,
+    private val composeFunction: @Composable () -> Unit,
 ) : EpoxyModelWithView<ComposeView>() {
-    private lateinit var keys: Array<Any>
 
     override fun buildView(parent: ViewGroup): ComposeView = ComposeView(parent.context)
 
@@ -41,13 +41,6 @@ class ComposeEpoxyModel(
 
         return code
     }
-
-    /**
-     * This key will contribute to calculate hashcode & equals
-     * */
-    fun keys(vararg keys: Any) {
-        this.keys = arrayOf(*keys)
-    }
 }
 
 fun ModelCollector.composableInterop(
@@ -56,9 +49,8 @@ fun ModelCollector.composableInterop(
     composeFunction: @Composable () -> Unit
 ) {
     add(
-        ComposeEpoxyModel(composeFunction).apply {
+        ComposeEpoxyModel(keys, composeFunction = composeFunction).apply {
             id(id)
-            keys(*keys)
         }
     )
 }
