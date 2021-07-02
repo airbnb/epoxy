@@ -15,7 +15,6 @@ import com.airbnb.epoxy.EpoxyAsyncUtil
 import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyViewHolder
-import kotlinx.coroutines.ObsoleteCoroutinesApi
 
 /**
  * An [EpoxyController] that can work with a [PagingData].
@@ -30,7 +29,6 @@ import kotlinx.coroutines.ObsoleteCoroutinesApi
  *
  * @param T The type of the item in the [PagingData].
  */
-@ObsoleteCoroutinesApi
 abstract class PagingDataEpoxyController<T : Any>(
     /**
      * The handler to use for building models. By default this uses the main thread, but you can use
