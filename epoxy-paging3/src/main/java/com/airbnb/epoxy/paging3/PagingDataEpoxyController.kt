@@ -15,6 +15,7 @@ import com.airbnb.epoxy.EpoxyAsyncUtil
 import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyViewHolder
+import kotlinx.coroutines.flow.Flow
 
 /**
  * An [EpoxyController] that can work with a [PagingData].
@@ -62,6 +63,15 @@ abstract class PagingDataEpoxyController<T : Any>(
         itemDiffCallback = itemDiffCallback,
         modelBuildingHandler = modelBuildingHandler
     )
+
+    /**
+     * A hot [Flow] of [CombinedLoadStates] that emits a snapshot whenever the loading state of the
+     * current [PagingData] changes.
+     *
+     * This flow is conflated, so it buffers the last update to [CombinedLoadStates] and
+     * immediately delivers the current load states on collection.
+     */
+    val loadStateFlow: Flow<CombinedLoadStates> = modelCache.loadStateFlow
 
     final override fun buildModels() {
         addModels(modelCache.getModels())
