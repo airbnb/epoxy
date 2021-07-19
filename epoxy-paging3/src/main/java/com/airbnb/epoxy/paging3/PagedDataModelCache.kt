@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
 import com.airbnb.epoxy.EpoxyModel
 import kotlinx.coroutines.android.asCoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 
 /**
  * A pagingData stream wrapper that caches models built for each item. It tracks changes in paged Data and caches
@@ -121,6 +122,8 @@ internal class PagedDataModelCache<T : Any>(
         mainDispatcher = dispatcher,
         workerDispatcher = dispatcher
     )
+
+    val loadStateFlow: Flow<CombinedLoadStates> get() = asyncDiffer.loadStateFlow
 
     @Synchronized
     suspend fun submitData(pagingData: PagingData<T>) {
