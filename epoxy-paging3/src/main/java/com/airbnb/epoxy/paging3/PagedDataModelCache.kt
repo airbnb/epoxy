@@ -123,7 +123,7 @@ internal class PagedDataModelCache<T : Any>(
         workerDispatcher = dispatcher
     )
 
-    val loadStateFlow: Flow<CombinedLoadStates> = asyncDiffer.loadStateFlow
+    val loadStateFlow: Flow<CombinedLoadStates> get() = asyncDiffer.loadStateFlow
 
     @Synchronized
     suspend fun submitData(pagingData: PagingData<T>) {

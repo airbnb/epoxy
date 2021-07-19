@@ -71,7 +71,7 @@ abstract class PagingDataEpoxyController<T : Any>(
      * This flow is conflated, so it buffers the last update to [CombinedLoadStates] and
      * immediately delivers the current load states on collection.
      */
-    val loadStateFlow: Flow<CombinedLoadStates> = modelCache.loadStateFlow
+    val loadStateFlow: Flow<CombinedLoadStates> get() = modelCache.loadStateFlow
 
     final override fun buildModels() {
         addModels(modelCache.getModels())
