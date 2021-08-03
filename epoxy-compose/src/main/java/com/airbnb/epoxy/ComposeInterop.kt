@@ -23,13 +23,8 @@ class ComposeEpoxyModel(
     override fun equals(other: Any?): Boolean {
         if (other === this) return true
         if (other !is ComposeEpoxyModel) return false
-        if (this.hashCode() != other.hashCode()) return false
 
-        for (i in keys.indices) {
-            if (keys[i] != other.keys[i]) return false
-        }
-
-        return true
+        return keys.contentEquals(other.keys)
     }
 
     override fun hashCode(): Int {
@@ -40,6 +35,11 @@ class ComposeEpoxyModel(
         }
 
         return code
+    }
+
+    override fun unbind(view: ComposeView) {
+        super.unbind(view)
+        view.disposeComposition()
     }
 }
 
