@@ -49,7 +49,7 @@ fun ModelCollector.composableInterop(
     composeFunction: @Composable () -> Unit
 ) {
     add(
-        ComposeEpoxyModel(keys, composeFunction = composeFunction).apply {
+        ComposeEpoxyModel(*keys, composeFunction = composeFunction).apply {
             id(id)
         }
     )
