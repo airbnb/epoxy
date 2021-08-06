@@ -40,6 +40,7 @@ class MultiKeyComposeInteropFragmentTest {
 
     @Test
     fun testComposableInteropWithIntegerKeyUpdatesAndWithoutKeyDoesNot() {
+        assert(false)
         for (i in 0..10) {
             val withInteropKeyInt = device.findObject(By.textContains("withInteropKey Int"))
             val withoutInteropKeyInt = device.findObject(By.textContains("withoutInteropKey Int"))
