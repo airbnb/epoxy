@@ -44,7 +44,7 @@ class HelloWorldViewModel(initialState: CounterState) :
     }
 }
 
-class MyFragment : Fragment(R.layout.fragment_my), MavericksView {
+class ComposeInteropListFragmnet : Fragment(R.layout.fragment_my), MavericksView {
     private val viewModel by fragmentViewModel(HelloWorldViewModel::class)
 
     private val controller: MyEpoxyController by lazy { MyEpoxyController(viewModel) }
