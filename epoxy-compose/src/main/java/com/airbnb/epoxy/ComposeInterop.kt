@@ -28,6 +28,11 @@ class ComposeEpoxyModel(
         super.unbind(view)
         view.disposeComposition()
     }
+
+    override fun onViewDetachedFromWindow(view: ComposeView) {
+        super.onViewDetachedFromWindow(view)
+        view.disposeComposition()
+    }
 }
 
 fun ModelCollector.composableInterop(
