@@ -27,7 +27,7 @@ class MultiKeyComposeInteropFragmentTest {
     @Test
     fun testComposableInteropWithIntegerKeyUpdatesAndWithoutKeyDoesNot() {
         for (i in 0..10) {
-            waitUntil("withoutInteropKey Int: 0, recomposingCount: 1")
+            waitUntil("withoutIdddd")
             waitUntil("withInteropKey Int: $i, recomposingCount: ${i + 1}")
 
             composeTestRule.onNodeWithText(text = "withoutInteropKey Int: 0, recomposingCount: 1")
