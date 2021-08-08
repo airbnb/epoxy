@@ -1,15 +1,10 @@
 package com.airbnb.epoxy.composeinterop.maverickssample
 
-import android.content.Context
-import android.content.Intent
-import androidx.test.core.app.ApplicationProvider
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.rule.ActivityTestRule
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.Until
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,56 +12,41 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class MultiKeyComposeInteropFragmentTest {
     @get:Rule
-    var activityTestRule = ActivityTestRule(MainActivity::class.java)
+    val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    private lateinit var device: UiDevice
+    @Test
+    fun testComposableInInteropUsingMutableStateUpdatesEvenWithoutKey() {
+        for (i in 0..10) {
+            waitUntil("withoutInteropKey mutableState: $i, recomposingCount: ${i + 1}")
 
-    @Before
-    fun setUp() {
-        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-
-        // Launch the app
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        val intent = context.packageManager.getLaunchIntentForPackage(BASIC_SAMPLE_PACKAGE)?.apply {
-            // Clear out any previous instances
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            composeTestRule.onNodeWithText(text = "withoutInteropKey mutableState: $i, recomposingCount: ${i + 1}")
+                .performClick()
         }
-        context.startActivity(intent)
-
-        device.wait(Until.hasObject(By.pkg(BASIC_SAMPLE_PACKAGE).depth(0)), LAUNCH_TIMEOUT)
-        val isVisible = Until.findObject(By.textContains("withInteropKey Int"))
-        device.wait(isVisible, LAUNCH_TIMEOUT)
     }
 
     @Test
     fun testComposableInteropWithIntegerKeyUpdatesAndWithoutKeyDoesNot() {
-        assert(false)
         for (i in 0..10) {
-            val withInteropKeyInt = device.findObject(By.textContains("withInteropKey Int"))
-            val withoutInteropKeyInt = device.findObject(By.textContains("withoutInteropKey Int"))
+            waitUntil("withoutInteropKey Int: 0, recomposingCount: 1")
+            waitUntil("withInteropKey Int: $i, recomposingCount: ${i + 1}")
 
-            assert(withoutInteropKeyInt.text == "withoutInteropKey Int: 0")
-            assert(withInteropKeyInt.text == "withInteropKey Int: $i")
-
-            withInteropKeyInt.click()
+            composeTestRule.onNodeWithText(text = "withoutInteropKey Int: 0, recomposingCount: 1")
+                .performClick()
         }
     }
 
     @Test
     fun testComposableInteropWithStringKeyUpdatesAndWithoutKeyDoesNot() {
-        var stringToMatch = ""
+        var str = ""
 
         for (i in 0..10) {
-            val withInteropKeyInt = device.findObject(By.textContains("withInteropKey String"))
-            val withoutInteropKeyInt =
-                device.findObject(By.textContains("withoutInteropKey String"))
+            waitUntil("withoutInteropKey String: , recomposingCount: 1")
+            waitUntil("withInteropKey String: $str, recomposingCount: ${i + 1}")
 
-            assert(withoutInteropKeyInt.text == "withoutInteropKey String: ")
-            assert(withInteropKeyInt.text == "withInteropKey String: $stringToMatch")
+            composeTestRule.onNodeWithText(text = "withoutInteropKey String: , recomposingCount: 1")
+                .performClick()
 
-            stringToMatch += "#"
-
-            withoutInteropKeyInt.click()
+            str += "#"
         }
     }
 
@@ -75,39 +55,35 @@ class MultiKeyComposeInteropFragmentTest {
         val list = mutableListOf<Int>()
 
         for (i in 0..10) {
-            val withInteropKeyList = device.findObject(By.textContains("withInteropKey List"))
-            val withoutInteropKeyList = device.findObject(By.textContains("withoutInteropKey List"))
+            waitUntil("withoutInteropKey List: [], recomposingCount: 1")
+            waitUntil("withInteropKey List: $list, recomposingCount: ${i + 1}")
 
-            assert(withoutInteropKeyList.text == "withoutInteropKey List: []")
-            assert(withInteropKeyList.text == "withInteropKey List: $list")
+            composeTestRule.onNodeWithText(text = "withoutInteropKey List: [], recomposingCount: 1")
+                .performClick()
 
             list.add(1)
-
-            withoutInteropKeyList.click()
         }
     }
 
     @Test
     fun testComposableInteropWithDataClassKeyUpdatesAndWithoutKeyDoesNot() {
-        val listInDataClass = mutableListOf<Int>()
+        val list = mutableListOf<Int>()
 
         for (i in 0..10) {
-            val withInteropKeyDataClass =
-                device.findObject(By.textContains("withInteropKey DataClass: DataClassKey"))
-            val withoutInteropKeyDataClass =
-                device.findObject(By.textContains("withoutInteropKey DataClass: DataClassKey"))
+            waitUntil("withoutInteropKey DataClass: DataClassKey(listInDataClass=[]), recomposingCount: 1")
+            waitUntil("withInteropKey DataClass: DataClassKey(listInDataClass=$list), recomposingCount: ${i + 1}")
 
-            assert(withoutInteropKeyDataClass.text == "withoutInteropKey DataClass: DataClassKey(listInDataClass=[])")
-            assert(withInteropKeyDataClass.text == "withInteropKey DataClass: DataClassKey(listInDataClass=$listInDataClass)")
+            composeTestRule.onNodeWithText(text = "withoutInteropKey DataClass: DataClassKey(listInDataClass=[]), recomposingCount: 1")
+                .performClick()
 
-            listInDataClass.add(2)
-
-            withoutInteropKeyDataClass.click()
+            list.add(2)
         }
     }
 
-    companion object {
-        private const val LAUNCH_TIMEOUT = 10000L
-        private const val BASIC_SAMPLE_PACKAGE = "com.airbnb.epoxy.composeinterop.maverickssample"
+    private fun waitUntil(text: String) {
+        composeTestRule.waitUntil {
+            composeTestRule.onAllNodesWithText(text)
+                .fetchSemanticsNodes().isNotEmpty()
+        }
     }
 }

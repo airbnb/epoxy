@@ -72,8 +72,6 @@ dependencies {
   androidTestImplementation rootProject.deps.androidTestExtJunitKtx
   androidTestImplementation rootProject.deps.androidRules
   androidTestImplementation rootProject.deps.androidRunner
-  androidTestImplementation rootProject.deps.hamcrestLibrary
-  androidTestImplementation rootProject.deps.uiautomator
   androidTestImplementation "androidx.compose.ui:ui-test-junit4:$COMPOSE_VERSION"
-
+  debugImplementation("androidx.compose.ui:ui-test-manifest:$COMPOSE_VERSION")
 }
