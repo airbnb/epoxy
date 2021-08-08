@@ -51,7 +51,7 @@ rootProject.ext.PARIS_VERSION = "1.7.3"
 rootProject.ext.ROBOLECTRIC_VERSION = "4.5.1"
 rootProject.ext.SQUARE_JAVAPOET_VERSION = "1.13.0"
 rootProject.ext.SQUARE_KOTLINPOET_VERSION = "1.8.0"
-rootProject.ext.COMPOSE_VERSION = "1.0.0-beta06"
+rootProject.ext.COMPOSE_VERSION = "1.0.0-beta07"
 rootProject.ext.COMPOSE_ACTIVITY_VERSION = "1.3.0-alpha07"
 rootProject.ext.KOTLINX_LIFECYCLE_RUNTIME_VERSION = "2.3.0"
 
