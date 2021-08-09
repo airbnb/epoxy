@@ -22,16 +22,18 @@ android:
   - platform-tools
   - tools
   - build-tools-30.0.2
+  - android-21
   - android-28
   - android-29
   - android-30
   - extra-google-google_play_services
   - extra-android-m2repository
   - extra-google-m2repository
-  - sys-img-armeabi-v7a-android-25
   - build-tools-29.0.3
   - android-26
   - sys-img-x86-android-26
+  - sys-img-armeabi-v7a-android-21
+  - sys-img-armeabi-v7a-android-25
   - sys-img-armeabi-v7a-google_apis-25
   - sys-img-x86-android-31
   - extra
@@ -39,7 +41,7 @@ android:
 
 before_script:
   - android list targets
-  - echo no | android create avd --force -n test -t android-25 --abi armeabi-v7a
+  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
   - emulator -avd test -no-skin -no-window &
   - android-wait-for-emulator # depends on boot animation so do not add -no-boot-anim to the emulator
   - adb shell input keyevent 82 &
