@@ -24,12 +24,28 @@ android:
   - sys-img-armeabi-v7a-google_apis-25
   - sys-img-x86-android-31
   - sys-img-armeabi-v7a-android-
+
 before_install:
   - mkdir "$ANDROID_HOME/licenses" || true
   - echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> "$ANDROID_HOME/licenses/android-sdk-license"
 
 jdk:
   - oraclejdk11
+
+install:
+  # Install the rest of tools (e.g., avdmanager)
+  - sdkmanager tools
+  - sdkmanager emulator
+  # Install the system image
+  - sdkmanager "system-images;android-24;default;armeabi-v7a"
+  # Create and start emulator for the script. Meant to race the install task.
+  - echo no | avdmanager create avd --force -n test -k "system-images;android-24;default;armeabi-v7a"
+  # HACK: work around https://issuetracker.google.com/issues/145622251 by adding "-gpu swiftshader_indirect"
+  - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window -gpu swiftshader_indirect &
+  # build the tests
+  - ./gradlew clean assembleAndroidTest --continue --stacktrace --parallel
 
 branches:
   except:
@@ -47,19 +63,11 @@ before_script:
 #  - echo no | android create avd --force -n test -t android-26 --abi x86
   - echo no | android create avd --force -n test -t android-25 --abi google_apis/armeabi-v7a
   - QEMU_AUDIO_DRV=none emulator -avd test -no-window &
-  - android-wait-for-emulator
-  - sleep 180
-  - echo "waiting 1"
-  - adb shell input keyevent 82 &
-  - sleep 180
-  - echo "waiting 2"
-  - adb shell input keyevent 82 &
-  - sleep 180
-  - echo "waiting 3"
-  - adb shell input keyevent 82 &
 
 script:
-  - ./gradlew check connectedCheck --stacktrace
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
+  - ./gradlew connectedCheck --stacktrace
 
 cache:
   directories:
