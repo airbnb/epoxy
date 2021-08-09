@@ -1,8 +1,5 @@
 language: android
 jdk: oraclejdk11
-dist: trusty
-os:
-  - linux
 
 branches:
   except:
@@ -41,23 +38,12 @@ android:
   - sys-img-x86-android-26
   - sys-img-armeabi-v7a-google_apis-25
   - sys-img-x86-android-31
-  - sys-img-armeabi-v7a-android-
-
-before_install:
-  - mkdir "$ANDROID_HOME/licenses" || true
-  - echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROID_HOME/licenses/android-sdk-license"
-  - echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-  - echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> "$ANDROID_HOME/licenses/android-sdk-license"
-  - yes | sdkmanager tools
-  - yes | sdkmanager "platform-tools"
-  - echo y | sdkmanager --channel=3 "emulator"
-  - yes | sdkmanager "build-tools;30.0.2"
-  - yes | sdkmanager "system-images;android-26;default;x86_64"
-  - echo no | avdmanager create avd --force -n test -k "system-images;android-26;default;x86_64"
-    -c 100M
-  - "$ANDROID_HOME/emulator/emulator -avd test -skin 1920x1080 -no-audio -no-window -no-accel -no-snapshot -qemu -m 2048 &"
+  - extra
+  - add-on
 
 before_script:
+  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
+  - emulator -avd test -no-skin -no-window &
   - android-wait-for-emulator # depends on boot animation so do not add -no-boot-anim to the emulator
   - adb shell input keyevent 82 &
   - adb shell settings put secure long_press_timeout 1500
