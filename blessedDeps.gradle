@@ -35,7 +35,7 @@ rootProject.ext.ANDROIDX_VERSIONED_PARCELABLE = "1.1.1"
 rootProject.ext.ANDROID_ARCH_TESTING = "2.1.0"
 rootProject.ext.ANDROID_DATA_BINDING = "1.3.1"
 rootProject.ext.ANDROID_RUNTIME_VERSION = "4.1.1.4"
-rootProject.ext.ANDROID_TEST_RUNNER = "1.3.0"
+rootProject.ext.ANDROID_TEST_RUNNER = "1.4.0"
 rootProject.ext.ASSERTJ_VERSION = "1.7.1"
 rootProject.ext.AUTO_VALUE_VERSION = "1.7.4"
 rootProject.ext.GLIDE_VERSION = "4.12.0"
@@ -54,7 +54,6 @@ rootProject.ext.SQUARE_KOTLINPOET_VERSION = "1.8.0"
 rootProject.ext.COMPOSE_VERSION = "1.0.0-beta07"
 rootProject.ext.COMPOSE_ACTIVITY_VERSION = "1.3.0-alpha07"
 rootProject.ext.KOTLINX_LIFECYCLE_RUNTIME_VERSION = "2.3.0"
-rootProject.ext.ANDROIDX_TEST_VERSION = "1.4.0"
 rootProject.ext.HAMCREST_VERSION = "2.2"
 rootProject.ext.UI_AUTOMATOR_VERSION = "2.2.0"
 
@@ -72,11 +71,10 @@ rootProject.ext.deps = [
     androidPaging3Component   : "androidx.paging:paging-runtime:$ANDROIDX_PAGING3",
     androidPagingComponent    : "androidx.paging:paging-runtime:$ANDROIDX_PAGING",
     androidRecyclerView       : "androidx.recyclerview:recyclerview:$ANDROIDX_RECYCLERVIEW",
-    androidRules              : "androidx.test:rules:$ANDROIDX_TEST_VERSION",
-    androidRunner             : "androidx.test:runner:$ANDROIDX_TEST_VERSION",
     androidRuntime            : "com.google.android:android:$ANDROID_RUNTIME_VERSION",
     androidTestCore           : "androidx.test:core:1.3.0",
     androidTestExtJunitKtx    : "androidx.test.ext:junit-ktx:1.1.2",
+    androidTestRules          : "androidx.test:rules:$ANDROID_TEST_RUNNER",
     androidTestRunner         : "androidx.test:runner:$ANDROID_TEST_RUNNER",
     assertj                   : "org.assertj:assertj-core:$ASSERTJ_VERSION",
     autoValue                 : "com.google.auto.value:auto-value:$AUTO_VALUE_VERSION",
