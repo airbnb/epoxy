@@ -21,6 +21,9 @@ android:
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
   components:
+  - tools
+  - platform-tools
+  - tools
   - build-tools-30.0.2
   - android-28
   - android-29
