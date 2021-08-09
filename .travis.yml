@@ -1,4 +1,17 @@
 language: android
+jdk: oraclejdk11
+dist: trusty
+
+branches:
+  except:
+    - gh-pages
+
+notifications:
+  email: false
+
+env:
+  global:
+    - ADB_INSTALL_TIMEOUT=8
 
 android:
   licenses:
@@ -30,39 +43,19 @@ before_install:
   - echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROID_HOME/licenses/android-sdk-license"
   - echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
   - echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> "$ANDROID_HOME/licenses/android-sdk-license"
-
-jdk:
-  - oraclejdk11
-
-install:
-  # Install the rest of tools (e.g., avdmanager)
-  - sdkmanager tools
-  - sdkmanager emulator
-  # Install the system image
-  - sdkmanager "system-images;android-24;default;armeabi-v7a"
-  # Create and start emulator for the script. Meant to race the install task.
-  - echo no | avdmanager create avd --force -n test -k "system-images;android-24;default;armeabi-v7a"
-  # HACK: work around https://issuetracker.google.com/issues/145622251 by adding "-gpu swiftshader_indirect"
-  - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window -gpu swiftshader_indirect &
-  # build the tests
-  - ./gradlew clean assembleAndroidTest --continue --stacktrace --parallel
-
-branches:
-  except:
-  - gh-pages
-
-notifications:
-  email: false
-
-env:
-  global:
-    - ADB_INSTALL_TIMEOUT=8
+  - yes | sdkmanager tools
+  - yes | sdkmanager "platform-tools"
+  - echo y | sdkmanager --channel=3 "emulator"
+  - yes | sdkmanager "build-tools;30.0.2"
+  - yes | sdkmanager "system-images;android-26;default;x86_64"
+  - echo no | avdmanager create avd --force -n test -k "system-images;android-26;default;x86_64"
+    -c 100M
+  - "$ANDROID_HOME/emulator/emulator -avd test -skin 1920x1080 -no-audio -no-window -no-accel -no-snapshot -qemu -m 2048 &"
 
 before_script:
-  - android list targets
-#  - echo no | android create avd --force -n test -t android-26 --abi x86
-  - echo no | android create avd --force -n test -t android-25 --abi google_apis/armeabi-v7a
-  - QEMU_AUDIO_DRV=none emulator -avd test -no-window &
+  - android-wait-for-emulator # depends on boot animation so do not add -no-boot-anim to the emulator
+  - adb shell input keyevent 82 &
+  - adb shell settings put secure long_press_timeout 1500
 
 script:
   - android-wait-for-emulator
