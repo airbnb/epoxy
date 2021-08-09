@@ -1,6 +1,8 @@
 language: android
 jdk: oraclejdk11
 dist: trusty
+os:
+  - linux
 
 branches:
   except:
