@@ -9,8 +9,21 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.viewinterop.AndroidView
 
+/**
+ * An epoxy viewModal that can inflate a Composable function
+ * The keys parameter is responsible for recomposition of the composable function in epoxy.
+ * Make sure the class of the object passed in as keys, have equals implemented, that is
+ * their equality can be checked.
+ *
+ * However if your composeFunction relies on mutableState to describe your UI,
+ * then passing in key as parameter is not needed.
+ *
+ * @param keys              variable number of arguments that are responsible for
+ * @param composeFunction   The composable function to display in epoxy
+ */
 class ComposeEpoxyModel(
-    private val composeFunction: @Composable () -> Unit
+    vararg val keys: Any,
+    private val composeFunction: @Composable () -> Unit,
 ) : EpoxyModelWithView<ComposeView>() {
 
     override fun buildView(parent: ViewGroup): ComposeView = ComposeView(parent.context).apply {
@@ -22,6 +35,23 @@ class ComposeEpoxyModel(
     override fun bind(view: ComposeView) {
         super.bind(view)
         view.setContent(composeFunction)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other === this) return true
+        if (other !is ComposeEpoxyModel) return false
+
+        return keys.contentEquals(other.keys)
+    }
+
+    override fun hashCode(): Int {
+        var code = super.hashCode()
+
+        keys.forEach {
+            code = 31 * code + it.hashCode()
+        }
+
+        return code
     }
 
     override fun unbind(view: ComposeView) {
@@ -37,10 +67,11 @@ class ComposeEpoxyModel(
 
 fun ModelCollector.composableInterop(
     id: String,
+    vararg keys: Any,
     composeFunction: @Composable () -> Unit
 ) {
     add(
-        ComposeEpoxyModel(composeFunction).apply {
+        ComposeEpoxyModel(*keys, composeFunction = composeFunction).apply {
             id(id)
         }
     )
