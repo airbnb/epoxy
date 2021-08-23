@@ -19,6 +19,13 @@ abstract class ViewBindingEpoxyModelWithHolder<in T : ViewBinding> :
 
     abstract fun T.bind()
 
+    @Suppress("UNCHECKED_CAST")
+    override fun unbind(holder: ViewBindingHolder) {
+        (holder.viewBinding as T).unbind()
+    }
+
+    open fun T.unbind() {}
+
     override fun createNewHolder(parent: ViewParent): ViewBindingHolder {
         return ViewBindingHolder(this::class.java)
     }
