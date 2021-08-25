@@ -101,15 +101,7 @@ public abstract class EpoxyModel<T> {
    * Hook that is called before {@link #bind(Object)}. This is similar to
    * {@link GeneratedModel#handlePreBind(EpoxyViewHolder, Object, int)}, but is intended for
    * subclasses of EpoxyModel to hook into rather than for generated code to hook into.
-   * Overriding prebind is useful to capture state before the view changes, e.g. for animations.
-   */
-  public void prebind(@NonNull T view) {
-
-  }
-
-  /**
-   * Similar to {@link #prebind(Object)}, but provides a non null model which was previously bound
-   * to this view. This will only be called if the model is used with an {@link EpoxyController}.
+   * Overriding preBind is useful to capture state before the view changes, e.g. for animations.
    *
    * @param previouslyBoundModel This is a model with the same id that was previously bound. You can
    *                             compare this previous model with the current one to see exactly
@@ -138,8 +130,8 @@ public abstract class EpoxyModel<T> {
    *                             process, and follows the same general conditions for all
    *                             recyclerview change payloads.
    */
-  public void prebind(@NonNull T view, @NonNull EpoxyModel<?> previouslyBoundModel) {
-    prebind(view);
+  public void preBind(@NonNull T view, @Nullable EpoxyModel<?> previouslyBoundModel) {
+
   }
 
   /**
