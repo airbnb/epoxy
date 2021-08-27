@@ -98,6 +98,43 @@ public abstract class EpoxyModel<T> {
   }
 
   /**
+   * Hook that is called before {@link #bind(Object)}. This is similar to
+   * {@link GeneratedModel#handlePreBind(EpoxyViewHolder, Object, int)}, but is intended for
+   * subclasses of EpoxyModel to hook into rather than for generated code to hook into.
+   * Overriding preBind is useful to capture state before the view changes, e.g. for animations.
+   *
+   * @param previouslyBoundModel This is a model with the same id that was previously bound. You can
+   *                             compare this previous model with the current one to see exactly
+   *                             what changed.
+   *                             <p>
+   *                             This model and the previously bound model are guaranteed to have
+   *                             the same id, but will not necessarily be of the same type depending
+   *                             on your implementation of {@link EpoxyController#buildModels()}.
+   *                             With common usage patterns of Epoxy they should be the same type,
+   *                             and will only differ if you are using different model classes with
+   *                             the same id.
+   *                             <p>
+   *                             Comparing the newly bound model with the previous model allows you
+   *                             to be more intelligent when binding your view. This may help you
+   *                             optimize view binding, or make it easier to work with animations.
+   *                             <p>
+   *                             If the new model and the previous model have the same view type
+   *                             (given by {@link EpoxyModel#getViewType()}), and if you are using
+   *                             the default ReyclerView item animator, the same view will be
+   *                             reused. This means that you only need to update the view to reflect
+   *                             the data that changed. If you are using a custom item animator then
+   *                             the view will be the same if the animator returns true in
+   *                             canReuseUpdatedViewHolder.
+   *                             <p>
+   *                             This previously bound model is taken as a payload from the diffing
+   *                             process, and follows the same general conditions for all
+   *                             recyclerview change payloads.
+   */
+  public void preBind(@NonNull T view, @Nullable EpoxyModel<?> previouslyBoundModel) {
+
+  }
+
+  /**
    * Binds the current data to the given view. You should bind all fields including unset/empty
    * fields to ensure proper recycling.
    */

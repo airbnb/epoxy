@@ -60,6 +60,9 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
       ((GeneratedModel) model).handlePreBind(this, objectToBind(), position);
     }
 
+    // noinspection unchecked
+    model.preBind(objectToBind(), previouslyBoundModel);
+
     if (previouslyBoundModel != null) {
       // noinspection unchecked
       model.bind(objectToBind(), previouslyBoundModel);
