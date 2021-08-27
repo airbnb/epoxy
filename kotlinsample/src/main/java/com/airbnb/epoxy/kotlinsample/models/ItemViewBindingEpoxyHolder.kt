@@ -16,4 +16,9 @@ abstract class ItemViewBindingEpoxyHolder : ViewBindingEpoxyModelWithHolder<View
         title.text = this@ItemViewBindingEpoxyHolder.title
         title.setOnClickListener { listener() }
     }
+
+    override fun ViewBindingHolderItemBinding.unbind() {
+        // Don't leak listeners as this view goes back to the view pool
+        title.setOnClickListener(null)
+    }
 }
