@@ -3,6 +3,7 @@ plugins {
   id 'kotlin-android'
   id 'kotlin-kapt'
 }
+apply plugin: "com.vanniktech.maven.publish"
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
@@ -38,7 +39,6 @@ dependencies {
   api project(':epoxy-adapter')
 
   implementation rootProject.deps.composeUi
-  implementation rootProject.deps.composeMaterial
   implementation rootProject.deps.activityCompose
   implementation rootProject.deps.composeUiTooling
   implementation rootProject.deps.androidCoreKtx
