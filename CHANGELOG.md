@@ -1,3 +1,8 @@
+# 4.6.3 (September 11, 2021)
+- Add EpoxyModel#preBind hook(#1225)
+- Add unbind extension to ItemViewBindingEpoxyHolder (#1223)
+- Add missing loadStateFlow to PagingDataEpoxyController (#1209)
+
 # 4.6.2 (June 11, 2021)
 Fix Drag n Drop not working in 4.6.1 (#1195)
 
