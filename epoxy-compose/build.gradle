@@ -3,6 +3,7 @@ plugins {
   id 'kotlin-android'
   id 'kotlin-kapt'
 }
+apply plugin: "com.vanniktech.maven.publish"
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
