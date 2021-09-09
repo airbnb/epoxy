@@ -40,7 +40,6 @@ dependencies {
 
   implementation rootProject.deps.composeUi
   implementation rootProject.deps.activityCompose
-  implementation rootProject.deps.composeUiTooling
   implementation rootProject.deps.androidCoreKtx
   implementation rootProject.deps.androidAppcompat
   implementation rootProject.deps.androidDesignLibrary
