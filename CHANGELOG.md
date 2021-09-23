@@ -1,3 +1,6 @@
+# 4.6.4 (September 23, 2021)
+- Clean up dependency for the experimental epoxy module
+
 # 4.6.3 (September 11, 2021)
 - Add EpoxyModel#preBind hook(#1225)
 - Add unbind extension to ItemViewBindingEpoxyHolder (#1223)
