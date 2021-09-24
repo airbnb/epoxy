@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.viewinterop.AndroidView
 
 /**
- * An epoxy viewModal that can inflate a Composable function
+ * An epoxy viewModel that can inflate a Composable function
  * The keys parameter is responsible for recomposition of the composable function in epoxy.
  * Make sure the class of the object passed in as keys, have equals implemented, that is
  * their equality can be checked.
