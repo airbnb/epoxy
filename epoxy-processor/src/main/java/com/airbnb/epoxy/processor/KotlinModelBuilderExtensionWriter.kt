@@ -106,14 +106,15 @@ internal class KotlinModelBuilderExtensionWriter(
             addModifiers(KModifier.INLINE)
             addModifiers(if (constructorIsNotPublic) KModifier.INTERNAL else KModifier.PUBLIC)
 
-            addStatement("add(")
+            addStatement("val model = ")
             beginControlFlow(
                 "%T(${params.joinToString(", ") { it.name }}).apply",
                 modelClass
             )
             addStatement("modelInitializer()")
             endControlFlow()
-            addStatement(")")
+
+            addStatement("add(model)")
 
             model.originatingElements().forEach {
                 addOriginatingElement(it)
