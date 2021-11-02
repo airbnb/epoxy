@@ -1,4 +1,4 @@
-package com.airbnb.epoxy.processor
+package com.airbnb.epoxy.processor.resourcescanning
 
 import com.airbnb.epoxy.processor.ClassNames.ANDROID_R
 import com.squareup.javapoet.ClassName
@@ -17,6 +17,8 @@ class ResourceValue {
     val value: Int
     val code: CodeBlock
     val qualified: Boolean
+    val resourceType: String? get() = className?.simpleName()
+    val rClass: ClassName? get() = className?.topLevelClassName()
 
     constructor(value: Int) {
         this.value = value
@@ -67,4 +69,6 @@ class ResourceValue {
     }
 
     fun debugDetails(): String = code.toString()
+
+    fun isStringResource(): Boolean = resourceType == "string"
 }

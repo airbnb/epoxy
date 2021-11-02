@@ -1,18 +1,26 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XFieldElement
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XRoundEnv
+import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
+import com.google.devtools.ksp.processing.SymbolProcessor
+import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
+import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 import java.util.LinkedHashMap
 import java.util.concurrent.ConcurrentHashMap
-import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.element.Element
-import javax.lang.model.element.Modifier
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
 import kotlin.reflect.KClass
+
+class EpoxyProcessorProvider : SymbolProcessorProvider {
+    override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
+        return EpoxyProcessor(environment)
+    }
+}
 
 /**
  * Looks for [EpoxyAttribute] annotations and generates a subclass for all classes that have
@@ -22,7 +30,9 @@ import kotlin.reflect.KClass
  * reduces their usefulness and doesn't make as much sense to support.
  */
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.AGGREGATING)
-class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
+class EpoxyProcessor @JvmOverloads constructor(
+    kspEnvironment: SymbolProcessorEnvironment? = null
+) : BaseProcessorWithPackageConfigs(kspEnvironment) {
 
     override val usesPackageEpoxyConfig: Boolean = true
     override val usesModelViewConfig: Boolean = false
@@ -33,23 +43,37 @@ class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
         EpoxyAttribute::class
     )
 
-    override suspend fun processRound(roundEnv: RoundEnvironment, roundNumber: Int) {
-        super.processRound(roundEnv, roundNumber)
-        val modelClassMap = ConcurrentHashMap<TypeElement, GeneratedModelInfo>()
+    override fun processRound(
+        environment: XProcessingEnv,
+        round: XRoundEnv,
+        memoizer: Memoizer,
+        timer: Timer,
+        roundNumber: Int
+    ): List<XElement> {
+        super.processRound(environment, round, memoizer, timer, roundNumber)
+        val modelClassMap = ConcurrentHashMap<XTypeElement, GeneratedModelInfo>()
 
-        roundEnv.getElementsAnnotatedWith(EpoxyAttribute::class)
-            .map("Find EpoxyAttribute class") { annotatedElement ->
-                annotatedElement to getOrCreateTargetClass(
-                    modelClassMap,
-                    annotatedElement.enclosingElement as TypeElement
-                )
+        round.getElementsAnnotatedWith(EpoxyAttribute::class)
+            .filterIsInstance<XFieldElement>()
+            .also {
+                timer.markStepCompleted("get epoxy attributes")
             }
-            .map("Build EpoxyAttribute") { (attribute, targetClass) ->
+            .mapNotNull { annotatedElement ->
+                getOrCreateTargetClass(
+                    modelClassMap,
+                    annotatedElement.enclosingElement as XTypeElement,
+                    memoizer
+                )?.let {
+                    annotatedElement to it
+                }
+            }
+            .also {
+                timer.markStepCompleted("parse controller classes")
+            }
+            .map { (attribute, targetClass) ->
                 buildAttributeInfo(
                     attribute,
                     logger,
-                    typeUtils,
-                    elementUtils,
                     memoizer
                 ) to targetClass
             }.forEach { (attributeInfo, targetClass) ->
@@ -59,37 +83,56 @@ class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
                 targetClass.addAttribute(attributeInfo)
             }
 
-        roundEnv.getElementsAnnotatedWith(EpoxyModelClass::class)
-            .map("Process EpoxyModelClass") { clazz ->
-                getOrCreateTargetClass(modelClassMap, clazz as TypeElement)
-            }
+        timer.markStepCompleted("build attribute info")
 
-        addAttributesFromOtherModules(modelClassMap)
+        round.getElementsAnnotatedWith(EpoxyModelClass::class)
+            .filterIsInstance<XTypeElement>()
+            .also {
+                timer.markStepCompleted("get model classes")
+            }
+            .map { clazz ->
+                getOrCreateTargetClass(modelClassMap, clazz, memoizer)
+            }
+        timer.markStepCompleted("build target class models")
+
+        if (isKsp()) {
+            modelClassMap.values
+                .filterIsInstance<BasicGeneratedModelInfo>()
+                .mapNotNull { it.boundObjectTypeElement }
+                .filter { !it.validate() }
+                .let { invalidModelTypes ->
+                    timer.markStepCompleted("validate symbols")
+                    if (invalidModelTypes.isNotEmpty()) {
+                        return invalidModelTypes
+                    }
+                }
+        }
+
+        addAttributesFromOtherModules(modelClassMap, memoizer)
+        timer.markStepCompleted("add attributes from other modules")
 
         updateClassesForInheritance(modelClassMap)
+        timer.markStepCompleted("update classes for inheritance")
 
         val modelInfos = modelClassMap.values
 
-        val styleableModels = modelInfos.map("Check for styleable") { modelInfo ->
-            if (modelInfo is BasicGeneratedModelInfo &&
-                modelInfo.superClassElement.getAnnotation<EpoxyModelClass>()?.layout == 0 &&
-                modelInfo.boundObjectTypeElement?.hasStyleableAnnotation(elementUtils) == true
-            ) {
-                modelInfo
-            } else {
-                null
+        val styleableModels = modelInfos
+            .filterIsInstance<BasicGeneratedModelInfo>()
+            .filter { modelInfo ->
+                modelInfo.superClassElement.getAnnotation(EpoxyModelClass::class)?.value?.layout == 0 &&
+                    modelInfo.boundObjectTypeElement?.hasStyleableAnnotation() == true
             }
-        }
+        timer.markStepCompleted("check for styleable models")
 
         styleableModelsToWrite.addAll(styleableModels)
 
-        modelInfos.minus(styleableModels).map("Write model") {
-            writeModel(it)
+        modelInfos.minus(styleableModels).mapNotNull {
+            writeModel(it, memoizer)
         }
 
-        styleableModelsToWrite.map("Write styleable model") { modelInfo ->
-            if (tryAddStyleBuilderAttribute(modelInfo, elementUtils, typeUtils)) {
-                writeModel(modelInfo)
+        styleableModelsToWrite.mapNotNull { modelInfo ->
+            if (tryAddStyleBuilderAttribute(modelInfo, environment, memoizer)) {
+                writeModel(modelInfo, memoizer)
                 modelInfo
             } else {
                 null
@@ -98,61 +141,65 @@ class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
             .let { styleableModelsToWrite.removeAll(it) }
 
         generatedModels.addAll(modelClassMap.values)
+        timer.markStepCompleted("write models")
+
+        return emptyList()
     }
 
-    private fun writeModel(modelInfo: GeneratedModelInfo) {
-        modelWriter.generateClassForModel(
+    private fun writeModel(modelInfo: GeneratedModelInfo, memoizer: Memoizer) {
+        createModelWriter(memoizer).generateClassForModel(
             modelInfo,
             originatingElements = modelInfo.originatingElements()
         )
     }
 
     private fun getOrCreateTargetClass(
-        modelClassMap: MutableMap<TypeElement, GeneratedModelInfo>,
-        classElement: TypeElement
-    ): GeneratedModelInfo = synchronizedByElement(classElement) {
+        modelClassMap: MutableMap<XTypeElement, GeneratedModelInfo>,
+        classElement: XTypeElement,
+        memoizer: Memoizer,
+    ): GeneratedModelInfo? {
         modelClassMap[classElement]?.let { return it }
 
-        val isFinal = classElement.modifiersThreadSafe.contains(Modifier.FINAL)
+        val isFinal = classElement.isFinal()
         if (isFinal) {
             logger.logError(
                 "Class with %s annotations cannot be final: %s",
-                EpoxyAttribute::class.java.simpleName, classElement.simpleName
+                EpoxyAttribute::class.java.simpleName, classElement.name
             )
         }
 
         // Nested classes must be static
-        if (classElement.nestingKind.isNested) {
-            if (!classElement.modifiersThreadSafe.contains(Modifier.STATIC)) {
+        if (classElement.enclosingTypeElement != null) {
+            if (!classElement.isStatic()) {
                 logger.logError(
                     "Nested model classes must be static. (class: %s)",
-                    classElement.simpleName
+                    classElement.name
                 )
+                return null
             }
         }
 
-        if (!Utils.isEpoxyModel(classElement.asType())) {
+        if (!classElement.isEpoxyModel(memoizer)) {
             logger.logError(
+                classElement,
                 "Class with %s annotations must extend %s (%s)",
                 EpoxyAttribute::class.java.simpleName, Utils.EPOXY_MODEL_TYPE,
-                classElement.simpleName
+                classElement.name
             )
+            return null
         }
 
-        if (configManager.requiresAbstractModels(classElement) && !classElement.modifiersThreadSafe.contains(
-                Modifier.ABSTRACT
-            )
+        if (configManager.requiresAbstractModels(classElement) && !classElement.isAbstract()
         ) {
             logger
                 .logError(
+                    classElement,
                     "Epoxy model class must be abstract (%s)",
-                    classElement.simpleName
+                    classElement.name
                 )
         }
 
         val generatedModelInfo = BasicGeneratedModelInfo(
-            elementUtils,
-            typeUtils,
             classElement,
             logger,
             memoizer
@@ -167,14 +214,17 @@ class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
      * classes are already found if they are in the same module since the processor will pick them up
      * with the rest of the annotations.
      */
-    private suspend fun addAttributesFromOtherModules(modelClassMap: Map<TypeElement, GeneratedModelInfo>) {
+    private fun addAttributesFromOtherModules(
+        modelClassMap: Map<XTypeElement, GeneratedModelInfo>,
+        memoizer: Memoizer,
+    ) {
         modelClassMap.entries.forEach("addAttributesFromOtherModules") { (currentEpoxyModel, generatedModelInfo) ->
             // We add just the attribute info to the class in our module. We do NOT want to
             // generate a class for the super class EpoxyModel in the other module since one
             // will be created when that module is processed. If we make one as well there will
             // be a duplicate (causes proguard errors and is just wrong).
             memoizer.getInheritedEpoxyAttributes(
-                currentEpoxyModel.superclass.ensureLoaded(),
+                currentEpoxyModel.superType!!,
                 generatedModelInfo.generatedName.packageName(),
                 logger,
                 includeSuperClass = { superClassElement ->
@@ -194,23 +244,22 @@ class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
      * One caveat is that if a sub class is in a different package than its super class we can't
      * include attributes that are package private, otherwise the generated class won't compile.
      */
-    private suspend fun updateClassesForInheritance(
-        helperClassMap: Map<TypeElement, GeneratedModelInfo>
+    private fun updateClassesForInheritance(
+        helperClassMap: Map<XTypeElement, GeneratedModelInfo>
     ) {
         helperClassMap.forEach("updateClassesForInheritance") { thisModelClass, generatedModelInfo ->
-            thisModelClass.ensureLoaded()
 
             val otherClasses = LinkedHashMap(helperClassMap)
             otherClasses.remove(thisModelClass)
 
             otherClasses
                 .filter { (otherClass, _) ->
-                    Utils.isSubtype(thisModelClass, otherClass, typeUtils)
+                    thisModelClass.isSubTypeOf(otherClass)
                 }
                 .forEach { (otherClass, modelInfo) ->
                     val otherAttributes = modelInfo.attributeInfoImmutable
 
-                    if (Utils.belongToTheSamePackage(thisModelClass, otherClass, elementUtils)) {
+                    if (thisModelClass.isInSamePackageAs(otherClass)) {
                         generatedModelInfo.addAttributes(otherAttributes)
                     } else {
                         otherAttributes
@@ -223,10 +272,8 @@ class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
 
     companion object {
         fun buildAttributeInfo(
-            attribute: Element,
+            attribute: XFieldElement,
             logger: Logger,
-            typeUtils: Types,
-            elementUtils: Elements,
             memoizer: Memoizer
         ): AttributeInfo {
             Utils.validateFieldAccessibleViaGeneratedCode(
@@ -235,7 +282,7 @@ class EpoxyProcessor : BaseProcessorWithPackageConfigs() {
                 logger,
                 skipPrivateFieldCheck = true
             )
-            return BaseModelAttributeInfo(attribute, typeUtils, elementUtils, logger, memoizer)
+            return BaseModelAttributeInfo(attribute, logger, memoizer)
         }
     }
 }

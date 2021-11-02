@@ -205,7 +205,7 @@ fun FileSpec.writeSynchronized(filer: Filer) {
     }
 }
 
-suspend fun RoundEnvironment.getElementsAnnotatedWith(
+fun RoundEnvironment.getElementsAnnotatedWith(
     logger: Logger,
     annotation: KClass<out Annotation>
 ): Set<Element> {

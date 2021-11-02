@@ -1,5 +1,12 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XArrayType
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XType
+import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.isVoid
+import androidx.room.compiler.processing.isVoidObject
 import com.airbnb.epoxy.AfterPropsSet
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.EpoxyAttribute
@@ -12,197 +19,215 @@ import com.airbnb.epoxy.OnVisibilityStateChanged
 import com.airbnb.epoxy.TextProp
 import com.airbnb.epoxy.processor.GeneratedModelInfo.Companion.RESET_METHOD
 import com.airbnb.epoxy.processor.GeneratedModelInfo.Companion.buildParamSpecs
-import com.airbnb.epoxy.processor.Utils.isSubtype
-import com.squareup.javapoet.ClassName
-import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.Modifier
-import javax.lang.model.element.Name
-import javax.lang.model.element.Parameterizable
-import javax.lang.model.element.TypeElement
-import javax.lang.model.element.VariableElement
-import javax.lang.model.type.ExecutableType
-import javax.lang.model.type.TypeKind
-import javax.lang.model.type.TypeMirror
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
+import com.airbnb.epoxy.processor.Utils.EPOXY_CONTROLLER_TYPE
+import com.airbnb.epoxy.processor.Utils.EPOXY_HOLDER_TYPE
+import com.airbnb.epoxy.processor.Utils.VIEW_CHECKED_CHANGE_LISTENER_TYPE
+import com.airbnb.epoxy.processor.Utils.VIEW_CLICK_LISTENER_TYPE
+import com.airbnb.epoxy.processor.Utils.VIEW_LONG_CLICK_LISTENER_TYPE
+import com.airbnb.epoxy.processor.resourcescanning.ResourceScanner
+import com.airbnb.epoxy.processor.resourcescanning.getFieldWithReflection
+import com.airbnb.epoxy.processor.resourcescanning.getFieldWithReflectionOrNull
+import com.google.devtools.ksp.getDeclaredFunctions
+import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSType
+import com.squareup.javapoet.ArrayTypeName
+import com.squareup.javapoet.TypeName
+import kotlin.reflect.KClass
 
 class Memoizer(
-    val types: Types,
-    val elements: Elements,
+    val environment: XProcessingEnv,
     val logger: Logger
 ) {
 
+    val isKsp: Boolean get() = environment.backend == XProcessingEnv.Backend.KSP
+
+    val androidViewType: XType by lazy {
+        environment.requireType(Utils.ANDROID_VIEW_TYPE)
+    }
+
     val epoxyModelClassAnnotation by lazy { EpoxyModelClass::class.className() }
 
-    val epoxyDataBindingModelBaseClass: TypeElement by lazy {
-        Utils.getElementByName(
-            ClassNames.EPOXY_DATA_BINDING_MODEL,
-            elements,
-            types
-        )
+    val generatedModelType: XType by lazy {
+        environment.requireType("com.airbnb.epoxy.GeneratedModel")
     }
 
-    val parisStyleType by lazy {
-        getTypeMirror(ClassNames.PARIS_STYLE, elements, types)
+    val viewOnClickListenerType: XType by lazy {
+        environment.requireType(VIEW_CLICK_LISTENER_TYPE)
+    }
+    val viewOnLongClickListenerType: XType by lazy {
+        environment.requireType(VIEW_LONG_CLICK_LISTENER_TYPE)
+    }
+    val viewOnCheckChangedType: XType by lazy {
+        environment.requireType(VIEW_CHECKED_CHANGE_LISTENER_TYPE)
     }
 
-    val epoxyModelClassElementUntyped by lazy {
-        Utils.getElementByName(
-            ClassNames.EPOXY_MODEL_UNTYPED,
-            elements,
-            types
-        )
+    val charSequenceType: XType by lazy {
+        environment.requireType(CharSequence::class)
     }
 
-    val viewType: TypeMirror by lazy {
-        getTypeMirror(ClassNames.ANDROID_VIEW, elements, types)
+    val charSequenceNullableType: XType by lazy {
+        environment.requireType(CharSequence::class).makeNullable()
     }
 
-    private val methodsReturningClassType = mutableMapOf<Name, Set<MethodInfo>>()
+    val iterableType: XType by lazy {
+        environment.requireType(Iterable::class)
+    }
 
-    fun getMethodsReturningClassType(classType: TypeMirror): Set<MethodInfo> =
-        synchronized(methodsReturningClassType) {
-            val classElement = types.asElement(classType) as TypeElement
-            methodsReturningClassType.getOrPut(classElement.qualifiedName) {
+    val stringAttributeType: XType by lazy {
+        environment.requireType(ClassNames.EPOXY_STRING_ATTRIBUTE_DATA)
+    }
 
-                classType.ensureLoaded()
+    val epoxyDataBindingModelBaseClass: XTypeElement? by lazy {
+        environment.findTypeElement(ClassNames.EPOXY_DATA_BINDING_MODEL)
+    }
 
-                val superClassType = classElement.superclass
-                superClassType.ensureLoaded()
-                // Check for base Object class
-                if (superClassType.kind == TypeKind.NONE) return@getOrPut emptySet()
+    val parisStyleType: XType by lazy {
+        environment.requireType(ClassNames.PARIS_STYLE)
+    }
 
-                val methodInfos: List<MethodInfo> =
-                    classElement.enclosedElementsThreadSafe.mapNotNull { subElement ->
-                        val modifiers: Set<Modifier> = subElement.modifiers
-                        if (subElement.kind !== ElementKind.METHOD ||
-                            modifiers.contains(Modifier.PRIVATE) ||
-                            modifiers.contains(Modifier.FINAL) ||
-                            modifiers.contains(Modifier.STATIC)
-                        ) {
-                            return@mapNotNull null
-                        }
+    val epoxyModelClassElementUntyped: XTypeElement by lazy {
+        environment.requireTypeElement(ClassNames.EPOXY_MODEL_UNTYPED)
+    }
 
-                        val methodReturnType = (subElement.asType() as ExecutableType).returnType
-                        if (methodReturnType != classType && !isSubtype(
-                                classType,
-                                methodReturnType,
-                                types
-                            )
-                        ) {
-                            return@mapNotNull null
-                        }
+    val epoxyModelCollectorType: XType by lazy {
+        environment.requireType(ClassNames.MODEL_COLLECTOR)
+    }
 
-                        val castedSubElement = subElement as ExecutableElement
-                        val params: List<VariableElement> = castedSubElement.parametersThreadSafe
-                        val methodName = subElement.getSimpleName().toString()
-                        if (methodName == RESET_METHOD && params.isEmpty()) {
-                            return@mapNotNull null
-                        }
-                        val isEpoxyAttribute =
-                            castedSubElement.getAnnotation<EpoxyAttribute>() != null
+    val epoxyControllerType: XType by lazy {
+        environment.requireType(EPOXY_CONTROLLER_TYPE)
+    }
 
-                        MethodInfo(
-                            methodName,
-                            modifiers,
-                            buildParamSpecs(params),
-                            castedSubElement.isVarArgsThreadSafe,
-                            isEpoxyAttribute,
-                            castedSubElement
-                        )
+    val epoxyModelWithHolderTypeUntyped: XType by lazy {
+        environment.requireType(ClassNames.EPOXY_MODEL_WITH_HOLDER_UNTYPED)
+    }
+
+    val epoxyHolderType: XType by lazy {
+        environment.requireType(EPOXY_HOLDER_TYPE)
+    }
+
+    val viewType: XType by lazy {
+        environment.requireType(ClassNames.ANDROID_VIEW)
+    }
+
+    private val methodsReturningClassType = mutableMapOf<String, Set<MethodInfo>>()
+
+    fun getMethodsReturningClassType(classType: XType, memoizer: Memoizer): Set<MethodInfo> {
+        val classElement = classType.typeElement!!
+        return methodsReturningClassType.getOrPut(classElement.qualifiedName) {
+
+            val methodInfos: List<MethodInfo> =
+                classElement.getDeclaredMethods().mapNotNull { subElement ->
+
+                    if (subElement.isPrivate() || subElement.isFinal() || subElement.isStatic()) {
+                        return@mapNotNull null
                     }
 
-                // Note: Adding super type methods second preserves any overloads in the base
-                // type that may have changes (ie, a new return type or annotation), since
-                // Set.plus only adds items that don't already exist.
-                methodInfos.toSet() + getMethodsReturningClassType(superClassType)
-            }
+                    val methodReturnType = subElement.returnType
+                    if (!methodReturnType.isSameType(classType) &&
+                        !classType.isSubTypeOf(methodReturnType)
+                    ) {
+                        return@mapNotNull null
+                    }
+
+                    val methodName = subElement.name
+                    if (methodName == RESET_METHOD && subElement.parameters.isEmpty()) {
+                        return@mapNotNull null
+                    }
+                    val isEpoxyAttribute = subElement.hasAnnotation(EpoxyAttribute::class)
+
+                    MethodInfo(
+                        methodName,
+                        // Javapoet needs the javax modifiers to create the MethodSpec, so we
+                        // manually create them. These are the only options after returning
+                        // from checking the other modifiers
+                        subElement.javacModifiers,
+                        buildParamSpecs(subElement.parameters, memoizer),
+                        subElement.isVarArgs(),
+                        isEpoxyAttribute,
+                        subElement
+                    )
+                }
+
+            // Note: Adding super type methods second preserves any overloads in the base
+            // type that may have changes (ie, a new return type or annotation), since
+            // Set.plus only adds items that don't already exist.
+            val superClassType = classElement.superType ?: return@getOrPut emptySet()
+            methodInfos.toSet() + getMethodsReturningClassType(superClassType, memoizer)
         }
+    }
 
     private val classConstructors =
-        mutableMapOf<Name, List<GeneratedModelInfo.ConstructorInfo>>()
+        mutableMapOf<String, List<GeneratedModelInfo.ConstructorInfo>>()
 
     /**
      * Get information about constructors of the original class so we can duplicate them in the
      * generated class and call through to super with the proper parameters
      */
-    fun getClassConstructors(classElement: TypeElement): List<GeneratedModelInfo.ConstructorInfo> =
-        synchronized(classConstructors) {
-            classConstructors.getOrPut(classElement.qualifiedName) {
+    fun getClassConstructors(
+        classElement: XTypeElement,
+        memoizer: Memoizer
+    ): List<GeneratedModelInfo.ConstructorInfo> {
+        return classConstructors.getOrPut(classElement.qualifiedName) {
 
-                classElement
-                    .enclosedElementsThreadSafe
-                    .filter { subElement ->
-                        subElement.kind == ElementKind.CONSTRUCTOR &&
-                            !subElement.modifiersThreadSafe.contains(Modifier.PRIVATE)
-                    }
-                    .map { subElement ->
-                        val constructor = subElement as ExecutableElement
-                        val params: List<VariableElement> = constructor.parametersThreadSafe
+            classElement
+                .getConstructors()
+                .map { xConstructorElement ->
 
-                        GeneratedModelInfo.ConstructorInfo(
-                            subElement.modifiersThreadSafe,
-                            buildParamSpecs(params),
-                            constructor.isVarArgsThreadSafe
-                        )
-                    }
-            }
-        }
-
-    private val validatedViewModelBaseElements = mutableMapOf<Name, TypeElement?>()
-    fun validateViewModelBaseClass(
-        baseModelType: TypeMirror,
-        logger: Logger,
-        viewName: Name
-    ): TypeElement? =
-        synchronized(validatedViewModelBaseElements) {
-            val baseModelElement = types.asElement(baseModelType) as TypeElement
-            validatedViewModelBaseElements.getOrPut(baseModelElement.qualifiedName) {
-
-                baseModelType.ensureLoaded()
-                if (!Utils.isEpoxyModel(baseModelType)) {
-                    logger.logError(
-                        "The base model provided to an %s must extend EpoxyModel, but was %s (%s).",
-                        ModelView::class.java.simpleName, baseModelType, viewName
+                    GeneratedModelInfo.ConstructorInfo(
+                        xConstructorElement.javacModifiers,
+                        buildParamSpecs(xConstructorElement.parameters, memoizer),
+                        xConstructorElement.isVarArgs()
                     )
-                    null
-                } else if (!validateSuperClassIsTypedCorrectly(baseModelElement)) {
-                    logger.logError(
-                        "The base model provided to an %s must have View as its type (%s).",
-                        ModelView::class.java.simpleName, viewName
-                    )
-                    null
-                } else {
-                    baseModelElement
                 }
+        }
+    }
+
+    private val validatedViewModelBaseElements = mutableMapOf<String, XTypeElement?>()
+    fun validateViewModelBaseClass(
+        baseModelType: XType,
+        logger: Logger,
+        viewName: String
+    ): XTypeElement? {
+        val baseModelElement = baseModelType.typeElement!!
+        return validatedViewModelBaseElements.getOrPut(baseModelElement.qualifiedName) {
+
+            if (!baseModelType.isEpoxyModel(this)) {
+                logger.logError(
+                    baseModelElement,
+                    "The base model provided to an %s must extend EpoxyModel, but was %s (%s).",
+                    ModelView::class.java.simpleName, baseModelType, viewName
+                )
+                null
+            } else if (!validateSuperClassIsTypedCorrectly(baseModelElement)) {
+                logger.logError(
+                    baseModelElement,
+                    "The base model provided to an %s must have View as its type (%s).",
+                    ModelView::class.java.simpleName, viewName
+                )
+                null
+            } else {
+                baseModelElement
             }
         }
+    }
 
     /** The super class that our generated model extends from must have View as its only type.  */
-    private fun validateSuperClassIsTypedCorrectly(classType: TypeElement): Boolean {
-        val classElement = classType as? Parameterizable ?: return false
+    private fun validateSuperClassIsTypedCorrectly(classType: XTypeElement): Boolean {
+        val typeParameters = classType.type.typeArguments
 
-        val typeParameters = classElement.typeParametersThreadSafe
-        if (typeParameters.size != 1) {
-            // TODO: (eli_hart 6/15/17) It should be valid to have multiple or no types as long as they
-            // are correct, but that should be a rare case
-            return false
-        }
+        // TODO: (eli_hart 6/15/17) It should be valid to have multiple or no types as long as they
+        // are correct, but that should be a rare case
+        val typeParam = typeParameters.singleOrNull() ?: return false
 
-        val typeParam = typeParameters[0]
-        val bounds = typeParam.bounds
-        if (bounds.isEmpty()) {
-            // Any type is allowed, so View wil work
-            return true
-        }
-
-        val typeMirror = bounds[0]
-        return Utils.isAssignable(viewType, typeMirror, types) || types.isSubtype(
-            typeMirror,
-            viewType
-        )
+        // Any type is allowed, so View wil work
+        return typeParam.isObjectOrAny() ||
+            // If there is no bound then a View will work
+            typeParam.extendsBound() == null ||
+            // if the bound is Any, then that is fine too.
+            // For some reason this case is different in KSP and needs to be checked for.
+            typeParam.extendsBound()?.typeElement?.type?.isObjectOrAny() == true ||
+            typeParam.isSubTypeOf(viewType)
     }
 
     /**
@@ -210,15 +235,14 @@ class Memoizer(
      * attribute info for them.
      */
     fun getInheritedEpoxyAttributes(
-        originatingSuperClassType: TypeMirror,
+        originatingSuperClassType: XType,
         modelPackage: String,
         logger: Logger,
-        includeSuperClass: (TypeElement) -> Boolean = { true }
+        includeSuperClass: (XTypeElement) -> Boolean = { true }
     ): List<AttributeInfo> {
         val result = mutableListOf<AttributeInfo>()
 
-        var currentSuperClassElement: TypeElement? =
-            (types.asElement(originatingSuperClassType) as TypeElement).ensureLoaded()
+        var currentSuperClassElement: XTypeElement? = originatingSuperClassType.typeElement
 
         while (currentSuperClassElement != null) {
             val superClassAttributes = getEpoxyAttributesOnElement(
@@ -237,7 +261,7 @@ class Memoizer(
                 }
             }
 
-            currentSuperClassElement = currentSuperClassElement.superClassElement(types)
+            currentSuperClassElement = currentSuperClassElement.superType?.typeElement
         }
 
         return result
@@ -248,150 +272,185 @@ class Memoizer(
         val superClassAttributes: List<AttributeInfo>
     )
 
-    private val inheritedEpoxyAttributes = mutableMapOf<Name, SuperClassAttributes?>()
+    private val inheritedEpoxyAttributes = mutableMapOf<String, SuperClassAttributes?>()
 
     private fun getEpoxyAttributesOnElement(
-        classElement: TypeElement,
+        classElement: XTypeElement,
         logger: Logger
     ): SuperClassAttributes? {
-        return synchronized(inheritedEpoxyAttributes) {
-            inheritedEpoxyAttributes.getOrPut(classElement.qualifiedName) {
-                if (!Utils.isEpoxyModel(classElement.asType())) {
-                    null
-                } else {
-                    val attributes = classElement
-                        .enclosedElementsThreadSafe
-                        .filter { it.getAnnotationThreadSafe(EpoxyAttribute::class.java) != null }
-                        .map {
-                            EpoxyProcessor.buildAttributeInfo(
-                                it,
-                                logger,
-                                types,
-                                elements,
-                                memoizer = this
-                            )
-                        }
-
-                    SuperClassAttributes(
-                        superClassPackage = elements.getPackageOf(
-                            classElement
-                        ).qualifiedName.toString(),
-                        superClassAttributes = attributes
-                    )
-                }
-            }
-        }
-    }
-
-    class SuperViewAnnotations(
-        val viewPackageName: Name,
-        val annotatedElements: Map<Class<out Annotation>, List<ViewElement>>
-    )
-
-    class ViewElement(
-        val element: Element,
-        val isPackagePrivate: Boolean,
-        val attributeInfo: Lazy<ViewAttributeInfo>
-    ) {
-        val simpleName: String by lazy {
-            element.simpleName.toString()
-        }
-    }
-
-    private val annotationsOnSuperView = mutableMapOf<Name, SuperViewAnnotations>()
-
-    fun getAnnotationsOnViewSuperClass(
-        superViewElement: TypeElement,
-        logger: Logger,
-        resourceProcessor: ResourceProcessor
-    ): SuperViewAnnotations {
-        return synchronized(annotationsOnSuperView) {
-            annotationsOnSuperView.getOrPut(superViewElement.qualifiedName) {
-
-                val viewPackageName = elements.getPackageOf(superViewElement).qualifiedName
-                val annotatedElements =
-                    mutableMapOf<Class<out Annotation>, MutableList<ViewElement>>()
-
-                superViewElement.enclosedElementsThreadSafe.forEach { element ->
-                    val isPackagePrivate by lazy { Utils.isFieldPackagePrivate(element) }
-
-                    viewModelAnnotations.forEach { annotation ->
-                        if (element.getAnnotationThreadSafe(annotation) != null) {
-                            annotatedElements
-                                .getOrPut(annotation) { mutableListOf() }
-                                .add(
-                                    ViewElement(
-                                        element = element,
-                                        isPackagePrivate = isPackagePrivate,
-                                        attributeInfo = lazy {
-                                            ViewAttributeInfo(
-                                                viewElement = superViewElement,
-                                                viewPackage = viewPackageName.toString(),
-                                                hasDefaultKotlinValue = false,
-                                                viewAttributeElement = element,
-                                                types = types,
-                                                elements = elements,
-                                                logger = logger,
-                                                resourceProcessor = resourceProcessor,
-                                                memoizer = this
-                                            )
-                                        }
-                                    )
-                                )
-                        }
+        return inheritedEpoxyAttributes.getOrPut(classElement.qualifiedName) {
+            if (!classElement.isEpoxyModel(this)) {
+                null
+            } else {
+                val attributes = classElement
+                    .getDeclaredFields()
+                    .filter { it.hasAnnotation(EpoxyAttribute::class) }
+                    .map {
+                        EpoxyProcessor.buildAttributeInfo(
+                            it,
+                            logger,
+                            memoizer = this
+                        )
                     }
-                }
 
-                SuperViewAnnotations(
-                    viewPackageName,
-                    annotatedElements
+                SuperClassAttributes(
+                    superClassPackage = classElement.packageName,
+                    superClassAttributes = attributes
                 )
             }
         }
     }
 
-    private val typeMap = mutableMapOf<String, Type>()
-    fun getType(typeMirror: TypeMirror): Type {
-        return synchronized(typeMap) {
-            val typeMirrorAsString = typeMirror.ensureLoaded().toString()
-            typeMap.getOrPut(typeMirrorAsString) {
-                Type(typeMirror, typeMirrorAsString)
+    class SuperViewAnnotations(
+        val viewPackageName: String,
+        val annotatedElements: Map<KClass<out Annotation>, List<ViewElement>>
+    )
+
+    class ViewElement(
+        val element: XElement,
+        val isPackagePrivate: Boolean,
+        val attributeInfo: Lazy<ViewAttributeInfo>
+    ) {
+        val simpleName: String by lazy {
+            element.expectName
+        }
+    }
+
+    private val annotationsOnSuperView = mutableMapOf<String, SuperViewAnnotations>()
+
+    fun getAnnotationsOnViewSuperClass(
+        superViewElement: XTypeElement,
+        logger: Logger,
+        resourceProcessor: ResourceScanner
+    ): SuperViewAnnotations {
+        return annotationsOnSuperView.getOrPut(superViewElement.qualifiedName) {
+
+            val viewPackageName = superViewElement.packageName
+            val annotatedElements =
+                mutableMapOf<KClass<out Annotation>, MutableList<ViewElement>>()
+
+            viewModelAnnotations.forEach { annotation ->
+                superViewElement.getElementsAnnotatedWith(annotation).forEach { element ->
+                    val isPackagePrivate by lazy { Utils.isFieldPackagePrivate(element) }
+                    annotatedElements
+                        .getOrPut(annotation) { mutableListOf() }
+                        .add(
+                            ViewElement(
+                                element = element,
+                                isPackagePrivate = isPackagePrivate,
+                                attributeInfo = lazy {
+                                    ViewAttributeInfo(
+                                        viewElement = superViewElement,
+                                        viewPackage = viewPackageName,
+                                        hasDefaultKotlinValue = false,
+                                        viewAttributeElement = element,
+                                        logger = logger,
+                                        resourceProcessor = resourceProcessor,
+                                        memoizer = this
+                                    )
+                                }
+                            )
+                        )
+                }
+            }
+
+            SuperViewAnnotations(
+                viewPackageName,
+                annotatedElements
+            )
+        }
+    }
+
+    private val typeMap = mutableMapOf<XType, Type>()
+    fun getType(xType: XType): Type {
+        return typeMap.getOrPut(xType) { Type(xType, this) }
+    }
+
+    private val implementsModelCollectorMap = mutableMapOf<String, Boolean>()
+    fun implementsModelCollector(classElement: XTypeElement): Boolean {
+        return implementsModelCollectorMap.getOrPut(classElement.qualifiedName) {
+            classElement.getSuperInterfaceElements().any {
+                it.type.isEpoxyModelCollector(this)
+            } || classElement.superType?.typeElement?.let { superClassElement ->
+                // Also check the class hierarchy
+                implementsModelCollector(superClassElement)
+            } ?: false
+        }
+    }
+
+    private val hasViewParentConstructorMap = mutableMapOf<String, Boolean>()
+    fun hasViewParentConstructor(classElement: XTypeElement): Boolean {
+        return hasViewParentConstructorMap.getOrPut(classElement.qualifiedName) {
+            getClassConstructors(classElement, this).any {
+                it.params.size == 1 && it.params[0].type == ClassNames.VIEW_PARENT
             }
         }
     }
 
-    private val implementsModelCollectorMap = mutableMapOf<Name, Boolean>()
-    fun implementsModelCollector(classElement: TypeElement): Boolean {
-        return synchronized(typeMap) {
-            implementsModelCollectorMap.getOrPut(classElement.qualifiedName) {
-                classElement.interfaces.any {
-                    it.toString() == ClassNames.MODEL_COLLECTOR.toString()
-                } || classElement.superClassElement(types)?.let { superClassElement ->
-                    // Also check the class hierarchy
-                    implementsModelCollector(superClassElement)
-                } ?: false
+    private val typeNameMap = mutableMapOf<XType, TypeName>()
+    fun typeNameWithWorkaround(xType: XType): TypeName {
+        if (!isKsp) return xType.typeName
+
+        return typeNameMap.getOrPut(xType) {
+            // The different subtypes of KSType do different things.
+            if (xType is XArrayType) {
+                return@getOrPut ArrayTypeName.of(xType.componentType.typeNameWithWorkaround(this))
             }
+
+            val original = xType.typeName
+            if (original.isPrimitive || (xType.isVoidObject() || xType.isVoid())) return@getOrPut original
+
+            when (xType.javaClass.simpleName) {
+                // not sure if type arguments are correct to handle differently, so leaving the original
+                // implementation
+                "KspTypeArgumentType" -> return@getOrPut original
+            }
+
+            // Handle the "DefaultKspType", which is the main case we are trying to patch.
+            val ksType =
+                xType.getFieldWithReflectionOrNull<KSType>("ksType") ?: return@getOrPut original
+            // always box these. For primitives, typeName might return the primitive type but if we
+            // wanted it to be a primitive, we would've resolved it to [KspPrimitiveType].
+            val env = xType.getFieldWithReflection<XProcessingEnv>("env")
+            val resolver = env.getFieldWithReflection<Resolver>("_resolver")
+            ksType.typeName(resolver).tryBox()
         }
     }
 
-    private val hasViewParentConstructorMap = mutableMapOf<Name, Boolean>()
-    fun hasViewParentConstructor(classElement: TypeElement): Boolean {
-        return synchronized(typeMap) {
-            hasViewParentConstructorMap.getOrPut(classElement.qualifiedName) {
-                getClassConstructors(classElement).filter {
-                    it.params.size == 1 && it.params[0].type == ClassName.get("android.view", "ViewParent")
-                }.isNotEmpty()
+    private val lightMethodsMap = mutableMapOf<XTypeElement, List<MethodInfoLight>>()
+
+    /**
+     * A function more efficient way to get basic information about elements, without type resolution.
+     */
+    fun getDeclaredMethodsLight(element: XTypeElement): List<MethodInfoLight> {
+        return lightMethodsMap.getOrPut(element) {
+            if (isKsp) {
+                element.getFieldWithReflection<KSClassDeclaration>("declaration")
+                    .getDeclaredFunctions()
+                    .map {
+                        MethodInfoLight(
+                            name = it.simpleName.asString(),
+                            docComment = it.docString
+                        )
+                    }.toList()
+            } else {
+                element.getDeclaredMethods().map {
+                    MethodInfoLight(
+                        name = it.name,
+                        docComment = it.docComment
+                    )
+                }
             }
         }
     }
 }
 
 private val viewModelAnnotations = listOf(
-    ModelProp::class.java,
-    TextProp::class.java,
-    CallbackProp::class.java,
-    AfterPropsSet::class.java,
-    OnVisibilityChanged::class.java,
-    OnVisibilityStateChanged::class.java,
-    OnViewRecycled::class.java
+    ModelProp::class,
+    TextProp::class,
+    CallbackProp::class,
+    AfterPropsSet::class,
+    OnVisibilityChanged::class,
+    OnVisibilityStateChanged::class,
+    OnViewRecycled::class
 )

@@ -1,30 +1,26 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.epoxy.processor.ClassNames.EPOXY_DATA_BINDING_HOLDER
 import com.airbnb.epoxy.processor.ClassNames.EPOXY_DATA_BINDING_MODEL
-import com.airbnb.epoxy.processor.Utils.getElementByNameNullable
+import com.airbnb.epoxy.processor.resourcescanning.ResourceValue
 import com.squareup.javapoet.ClassName
-import javax.lang.model.element.Element
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
 
 internal class DataBindingModelInfo(
-    private val typeUtils: Types,
-    private val elementUtils: Elements,
     val layoutResource: ResourceValue,
     val moduleName: String,
     private val layoutPrefix: String = "",
     val enableDoNotHash: Boolean,
-    val annotatedElement: Element,
+    val annotatedElement: XElement,
     memoizer: Memoizer
 ) : GeneratedModelInfo(memoizer) {
     private val dataBindingClassName: ClassName
 
-    private var dataBindingClassElement: TypeElement? = null
+    private var dataBindingClassElement: XTypeElement? = null
         get() {
             if (field == null) {
-                field = getElementByNameNullable(dataBindingClassName, elementUtils, typeUtils)
+                field = memoizer.environment.findTypeElement(dataBindingClassName)
             }
             return field
         }
@@ -32,7 +28,7 @@ internal class DataBindingModelInfo(
     init {
         dataBindingClassName = getDataBindingClassNameForResource(layoutResource, moduleName)
 
-        superClassElement = memoizer.epoxyDataBindingModelBaseClass
+        superClassElement = memoizer.epoxyDataBindingModelBaseClass ?: error("Epoxy Databinding library not found")
         superClassName = EPOXY_DATA_BINDING_MODEL
         generatedName = buildGeneratedModelName()
         parameterizedGeneratedName = generatedName
@@ -47,16 +43,16 @@ internal class DataBindingModelInfo(
      * for it.
      * @return the databinding element if it was successfully parsed, null otherwise.
      */
-    fun parseDataBindingClass(): TypeElement? {
+    fun parseDataBindingClass(logger: Logger): XTypeElement? {
         // This databinding class won't exist until the second round of annotation processing since
         // it is generated in the first round.
         val dataBindingClassElement = this.dataBindingClassElement ?: return null
-        val hashCodeValidator = HashCodeValidator(typeUtils, elementUtils)
+        val hashCodeValidator = HashCodeValidator(memoizer.environment, memoizer, logger)
 
-        dataBindingClassElement.executableElements()
+        dataBindingClassElement.getDeclaredMethods()
             .filter { Utils.isSetterMethod(it) }
             .map {
-                DataBindingAttributeInfo(this, it, hashCodeValidator)
+                DataBindingAttributeInfo(this, it, hashCodeValidator, memoizer)
             }
             .filter { it.fieldName !in FIELD_NAME_BLACKLIST }
             .let {

@@ -1,8 +1,10 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.XVariableElement
 import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.processor.Utils.buildEpoxyException
-import com.airbnb.epoxy.processor.Utils.isSubtypeOfType
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.ParameterSpec
@@ -10,14 +12,11 @@ import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeVariableName
 import java.util.ArrayList
 import java.util.LinkedHashSet
-import javax.lang.model.element.Element
 import javax.lang.model.element.Modifier
-import javax.lang.model.element.TypeElement
-import javax.lang.model.element.VariableElement
 
 abstract class GeneratedModelInfo(val memoizer: Memoizer) {
 
-    lateinit var superClassElement: TypeElement
+    lateinit var superClassElement: XTypeElement
     lateinit var superClassName: TypeName
     lateinit var parameterizedGeneratedName: TypeName
     lateinit var generatedName: ClassName
@@ -66,28 +65,28 @@ abstract class GeneratedModelInfo(val memoizer: Memoizer) {
      * The elements that influence the generation of this model.
      * eg base model class for @EpoxyModelClass, view class for @ModelView, etc
      */
-    fun originatingElements(): List<Element> {
+    fun originatingElements(): List<XElement> {
         return listOfNotNull(styleBuilderInfo?.styleBuilderElement)
             .plus(additionalOriginatingElements())
     }
 
-    open fun additionalOriginatingElements(): List<Element> = emptyList()
+    open fun additionalOriginatingElements(): List<XElement> = emptyList()
 
     /**
      * Get information about constructors of the original class so we can duplicate them in the
      * generated class and call through to super with the proper parameters
      */
-    fun getClassConstructors(classElement: TypeElement?): List<ConstructorInfo> {
-        return memoizer.getClassConstructors(classElement!!)
+    fun getClassConstructors(classElement: XTypeElement): List<ConstructorInfo> {
+        return memoizer.getClassConstructors(classElement, memoizer)
     }
 
     /**
      * Get information about methods returning class type of the original class so we can duplicate
      * them in the generated class for chaining purposes
      */
-    fun collectMethodsReturningClassType(superModelClass: TypeElement) {
+    fun collectMethodsReturningClassType(superModelClass: XTypeElement) {
         methodsReturningClassType
-            .addAll(memoizer.getMethodsReturningClassType(superModelClass.asType()))
+            .addAll(memoizer.getMethodsReturningClassType(superModelClass.type, memoizer))
     }
 
     @Synchronized
@@ -154,7 +153,7 @@ abstract class GeneratedModelInfo(val memoizer: Memoizer) {
      * model.
      */
     val isSuperClassAlsoGenerated: Boolean
-        get() = isSubtypeOfType(superClassElement.asType(), "com.airbnb.epoxy.GeneratedModel<?>")
+        get() = superClassElement.type.isSubTypeOf(memoizer.generatedModelType)
 
     data class ConstructorInfo internal constructor(
         val modifiers: Set<Modifier>,
@@ -263,19 +262,8 @@ abstract class GeneratedModelInfo(val memoizer: Memoizer) {
         const val GENERATED_CLASS_NAME_SUFFIX = "_"
         const val GENERATED_MODEL_SUFFIX = "Model$GENERATED_CLASS_NAME_SUFFIX"
 
-        fun buildParamSpecs(params: List<VariableElement>): List<ParameterSpec> {
-            val result: MutableList<ParameterSpec> = ArrayList()
-            for (param in params) {
-                val builder = ParameterSpec.builder(
-                    param.asType().typeNameSynchronized(),
-                    param.simpleName.toString()
-                )
-                for (annotation in param.annotationMirrorsThreadSafe) {
-                    builder.addAnnotation(AnnotationSpec.get(annotation))
-                }
-                result.add(builder.build())
-            }
-            return result
+        fun buildParamSpecs(params: List<XVariableElement>, memoizer: Memoizer): List<ParameterSpec> {
+            return params.map { it.toParameterSpec(memoizer) }
         }
 
         private fun hasDefaultKotlinValue(attribute: AttributeInfo): Boolean {

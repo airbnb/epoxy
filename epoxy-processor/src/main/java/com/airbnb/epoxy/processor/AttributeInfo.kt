@@ -1,14 +1,13 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XType
 import com.airbnb.epoxy.processor.Type.TypeEnum
-import com.airbnb.epoxy.processor.Utils.isSubtypeOfType
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.TypeName
-import javax.lang.model.type.TypeMirror
 
-abstract class AttributeInfo : Comparable<AttributeInfo> {
+abstract class AttributeInfo(val memoizer: Memoizer) : Comparable<AttributeInfo> {
 
     lateinit var fieldName: String
         protected set
@@ -16,12 +15,12 @@ abstract class AttributeInfo : Comparable<AttributeInfo> {
     lateinit var type: Type
         private set
 
-    lateinit var typeMirror: TypeMirror
+    lateinit var xType: XType
         private set
 
-    protected fun setTypeMirror(typeMirror: TypeMirror, memoizer: Memoizer) {
-        this.typeMirror = typeMirror
-        type = memoizer.getType(typeMirror)
+    protected fun setXType(xType: XType, memoizer: Memoizer) {
+        this.xType = xType
+        type = memoizer.getType(xType)
     }
 
     lateinit var rootClass: String
@@ -42,7 +41,8 @@ abstract class AttributeInfo : Comparable<AttributeInfo> {
             // Do not include Kotlin lambdas in toString because there is a bug where they sometimes
             // crash.
             // see https://github.com/airbnb/epoxy/issues/455
-            return isSubtypeOfType(typeMirror, "kotlin.Function<?>")
+            // Avoid type lookup as it is expensive in KSP, so just check for the functions package.
+            return "kotlin.jvm.functions" in typeName.toString()
         }
 
     var generateSetter: Boolean = false

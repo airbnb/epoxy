@@ -1,3 +1,16 @@
+# 5.0.0
+This adds support for Kotlin Symbol Processing, while maintaining backwards compatibility with java annotation processing via the xprocessing library from Room.
+
+This includes a major version bump to 5.0.0 because there may be slight behavior differences with KSP, especially for generic types in generated code. For example, if you previously had an epoxy attribute in java source code with a raw type it may now appear in the generated code with a wildcard type, which may require tweaking the type that is passed to the model.
+
+Additionally, some type checking was improved, for example more accurate validation of proper equals and hashcode implementations.
+
+To use Epoxy with KSP, simply apply it with the ksp gradle plugin instead of kapt (https://github.com/google/ksp/blob/main/docs/quickstart.md). See the new epoxy-kspsample module for an example.
+
+Note that unfortunately the databinding processor does NOT support KSP, simply because Android databinding itself uses KAPT and KSP cannot currently depend on KAPT sources. The code changes are in place to enable KSP with databinding once the databinding plugin from Android supports KSP (although this is unlikely) - alternatively it may be possible to configure the KSP plugin to run after KAPT and depend on its outputs (you're on your own if you want to try that).
+
+Also, parallel processing support was removed because it is not compatible with KSP.
+
 # 4.6.4 (September 23, 2021)
 - Clean up dependency for the experimental epoxy module
 

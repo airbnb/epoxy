@@ -19,9 +19,23 @@ configurations.all { strategy ->
 dependencies {
     implementation deps.squareJavaPoet
     implementation deps.squareKotlinPoet
+    implementation deps.kotlinPoetJavaInterop
+    implementation deps.kotlinPoetKspInterop
     implementation deps.androidAnnotations
     implementation rootProject.deps.kotlinxMetadata
     implementation rootProject.deps.kotlinCoroutines
+    implementation rootProject.deps.ksp
+
+    // only including this so we can see sources, but we don't actually want to ship it in the library
+    // as it can cause issues with backwards compatibility.
+    testImplementation rootProject.deps.kspImpl
+
+    // Compiler needed to resolve resource references in annotations
+    implementation "org.jetbrains.kotlin:kotlin-compiler-embeddable:$KOTLIN_VERSION"
+    implementation rootProject.deps.xProcessing
+
+    testImplementation rootProject.deps.xProcessingTesting
+    testImplementation "io.strikt:strikt-core:0.31.0"
 
     /** Provides the sun javac tools for looking up the R class trees. */
     compileOnly files(rootProject.file("libs/rt.jar"))
@@ -35,4 +49,15 @@ dependencies {
     kapt deps.incapProcessor
 
     testImplementation rootProject.deps.junit
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+        freeCompilerArgs += "-Xopt-in=kotlin.contracts.ExperimentalContracts"
+        freeCompilerArgs += "-Xopt-in=androidx.room.compiler.processing.ExperimentalProcessingApi"
+        freeCompilerArgs += "-Xopt-in=com.squareup.kotlinpoet.javapoet.KotlinPoetJavaPoetPreview"
+        freeCompilerArgs += "-Xopt-in=com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview"
+    }
 }

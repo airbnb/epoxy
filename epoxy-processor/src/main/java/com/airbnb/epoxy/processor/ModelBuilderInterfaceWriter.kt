@@ -1,5 +1,10 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XFiler
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.addOriginatingElement
+import androidx.room.compiler.processing.writeTo
 import com.airbnb.epoxy.EpoxyBuildScope
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.JavaFile
@@ -8,11 +13,7 @@ import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import java.util.concurrent.ConcurrentHashMap
-import javax.annotation.processing.Filer
 import javax.lang.model.element.Modifier
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
 
 const val MODEL_BUILDER_INTERFACE_SUFFIX = "Builder"
 
@@ -24,17 +25,16 @@ const val MODEL_BUILDER_INTERFACE_SUFFIX = "Builder"
  * We can also hide the setters that are legacy from usage with EpoxyAdapter.
  */
 class ModelBuilderInterfaceWriter(
-    private val filer: Filer,
-    val types: Types,
+    private val filer: XFiler,
+    private val environment: XProcessingEnv,
     val asyncable: Asyncable,
     val configManager: ConfigManager,
-    val elements: Elements
 ) : Asyncable by asyncable {
 
     private val viewInterfacesToGenerate = ConcurrentHashMap<ClassName, InterfaceDetails>()
 
     data class InterfaceDetails(
-        val implementingViews: Set<TypeElement> = emptySet(),
+        val implementingViews: Set<XTypeElement> = emptySet(),
         val methodsOnInterface: Set<MethodDetails> = emptySet()
     )
 
@@ -51,12 +51,16 @@ class ModelBuilderInterfaceWriter(
             val interfaceMethods = getInterfaceMethods(modelInfo, methods, interfaceName)
 
             if (modelInfo is ModelViewInfo) {
+                addOriginatingElement(modelInfo.viewElement)
+
                 modelInfo.viewInterfaces.forEach { it ->
+                    addOriginatingElement(it)
+
                     val packageName =
                         configManager.getModelViewConfig(modelInfo.viewElement)?.rClass?.packageName()
-                            ?: elements.getPackageOf(it).qualifiedName.toString()
+                            ?: it.packageName
                     val viewInterface =
-                        ClassName.get(it).appendToName("Model_").setPackage(packageName)
+                        it.className.appendToName("Model_").setPackage(packageName)
                     addSuperinterface(viewInterface)
 
                     // Store the subset of methods common to all interface implementations so we
@@ -96,7 +100,7 @@ class ModelBuilderInterfaceWriter(
 
         JavaFile.builder(modelInfo.generatedName.packageName(), modelInterface)
             .build()
-            .writeSynchronized(filer)
+            .writeTo(filer, mode = XFiler.Mode.Aggregating)
 
         return getBuilderInterfaceTypeName(modelInfo)
     }
@@ -135,7 +139,7 @@ class ModelBuilderInterfaceWriter(
     /**
      * We need to gather information about all of the view interfaces first, and then write the interface classes.
      */
-    suspend fun writeFilesForViewInterfaces() {
+    fun writeFilesForViewInterfaces() {
         // For each interface we figure out which methods to add to it by getting the largest subset of props supported by all models with the interface.
         // This approach has a few advantages:
         // 1. Easily inherit TextProp and other overloads
@@ -178,7 +182,7 @@ class ModelBuilderInterfaceWriter(
             } ?: interfaceName.packageName()
             JavaFile.builder(packageName, interfaceSpec)
                 .build()
-                .writeSynchronized(filer)
+                .writeTo(filer, mode = XFiler.Mode.Aggregating)
         }
 
         viewInterfacesToGenerate.clear()

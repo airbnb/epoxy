@@ -1,81 +1,109 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XFiler
+import androidx.room.compiler.processing.XMessager
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XRoundEnv
 import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_DISABLE_GENERATE_BUILDER_OVERLOADS
 import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_DISABLE_GENERATE_GETTERS
 import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_DISABLE_GENERATE_RESET
 import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_DISABLE_KOTLIN_EXTENSION_GENERATION
-import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_ENABLE_PARALLEL
 import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_IMPLICITLY_ADD_AUTO_MODELS
 import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_LOG_TIMINGS
 import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS
 import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_REQUIRE_HASHCODE
 import com.airbnb.epoxy.processor.ConfigManager.Companion.PROCESSOR_OPTION_VALIDATE_MODEL_USAGE
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
+import com.airbnb.epoxy.processor.resourcescanning.JavacResourceScanner
+import com.airbnb.epoxy.processor.resourcescanning.KspResourceScanner
+import com.airbnb.epoxy.processor.resourcescanning.ResourceScanner
+import com.airbnb.epoxy.processor.resourcescanning.getFieldWithReflectionOrNull
+import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.processing.SymbolProcessor
+import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
+import com.google.devtools.ksp.symbol.KSAnnotated
 import javax.annotation.processing.AbstractProcessor
-import javax.annotation.processing.Filer
-import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
+import javax.tools.Diagnostic
 import kotlin.reflect.KClass
 
-abstract class BaseProcessor : AbstractProcessor(), Asyncable {
+abstract class BaseProcessor(val kspEnvironment: SymbolProcessorEnvironment? = null) :
+    AbstractProcessor(),
+    Asyncable,
+    SymbolProcessor {
 
-    lateinit var messager: Messager
-    lateinit var elementUtils: Elements
-    lateinit var typeUtils: Types
-    lateinit var filer: Filer
-    lateinit var configManager: ConfigManager
-    lateinit var resourceProcessor: ResourceProcessor
+    val processorName = this@BaseProcessor::class.java.simpleName
+
+    lateinit var environment: XProcessingEnv
+        private set
+
+    val messager: XMessager
+        get() = environment.messager
+
+    val filer: XFiler
+        get() = environment.filer
+
+    private lateinit var options: Map<String, String>
+
+    private var roundNumber = 1
+    fun isKsp(): Boolean = kspEnvironment != null
+
+    init {
+        if (kspEnvironment != null) {
+            options = kspEnvironment.options
+            initOptions(kspEnvironment.options)
+        }
+    }
+
+    val configManager: ConfigManager by lazy {
+        ConfigManager(options, environment)
+    }
+    val resourceProcessor: ResourceScanner by lazy {
+        if (kspEnvironment != null) {
+            KspResourceScanner(environmentProvider = { environment })
+        } else {
+            JavacResourceScanner(
+                processingEnv = processingEnv,
+                environmentProvider = { environment }
+            )
+        }
+    }
+
+    /**
+     * Unified place to handle any compiler processor options that are passed to either javac processor or KSP processor,
+     * before any rounds are processed.
+     */
+    open fun initOptions(options: Map<String, String>) {}
 
     val dataBindingModuleLookup by lazy {
         DataBindingModuleLookup(
-            elementUtils,
-            typeUtils,
+            environment,
             logger,
             resourceProcessor
         )
     }
 
-    val modelWriter by lazy {
-        GeneratedModelWriter(
+    fun createModelWriter(memoizer: Memoizer): GeneratedModelWriter {
+        return GeneratedModelWriter(
             filer,
-            typeUtils,
+            environment,
             logger,
             resourceProcessor,
             configManager,
             dataBindingModuleLookup,
-            elementUtils,
-            this
+            this,
+            memoizer
         )
     }
-
-    val memoizer by lazy { Memoizer(typeUtils, elementUtils, logger) }
 
     private val kotlinExtensionWriter: KotlinModelBuilderExtensionWriter by lazy {
         KotlinModelBuilderExtensionWriter(filer, this)
     }
 
     override val logger by lazy { Logger(messager, configManager.logTimings) }
-
-    val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
-        logger.logError(exception)
-    }
-
-    override val coroutineScope: CoroutineScope =
-        CoroutineScope(Dispatchers.Default + coroutineExceptionHandler + SupervisorJob())
-
-    override val coroutinesEnabled: Boolean
-        get() = configManager.enableCoroutines
 
     val generatedModels: MutableList<GeneratedModelInfo> = mutableListOf()
 
@@ -93,7 +121,6 @@ abstract class BaseProcessor : AbstractProcessor(), Asyncable {
         PROCESSOR_OPTION_REQUIRE_HASHCODE,
         PROCESSOR_OPTION_DISABLE_KOTLIN_EXTENSION_GENERATION,
         PROCESSOR_OPTION_LOG_TIMINGS,
-        PROCESSOR_OPTION_ENABLE_PARALLEL,
         PROCESSOR_OPTION_DISABLE_GENERATE_RESET,
         PROCESSOR_OPTION_DISABLE_GENERATE_GETTERS,
         PROCESSOR_OPTION_DISABLE_GENERATE_BUILDER_OVERLOADS
@@ -102,68 +129,165 @@ abstract class BaseProcessor : AbstractProcessor(), Asyncable {
     override fun init(processingEnv: ProcessingEnvironment) {
         super.init(processingEnv)
 
-        filer = processingEnv.filer
-        messager = processingEnv.messager
-        elementUtils = processingEnv.elementUtils
-        typeUtils = processingEnv.typeUtils
-        configManager = ConfigManager(processingEnv.options, elementUtils, typeUtils)
-        synchronizationEnabled = configManager.enableCoroutines
-        resourceProcessor = ResourceProcessor(processingEnv, logger, elementUtils, typeUtils)
+        environment = XProcessingEnv.create(processingEnv)
+        options = processingEnv.options
+        initOptions(processingEnv.options)
     }
 
-    private var roundNumber = 1
+    final override fun process(
+        resolver: Resolver
+    ): List<KSAnnotated> {
+        val roundNumber = roundNumber++
+        val timer = Timer("$processorName round $roundNumber")
+        timer.start()
+
+        val kspEnvironment = requireNotNull(kspEnvironment)
+        environment = XProcessingEnv.create(
+            kspEnvironment.options,
+            resolver,
+            kspEnvironment.codeGenerator,
+            kspEnvironment.logger
+        )
+        return processRoundInternal(
+            environment,
+            XRoundEnv.create(environment),
+            timer,
+            roundNumber
+        )
+            .mapNotNull { xElement ->
+                xElement.run {
+                    // All xprocessing implementations are internal so we need to use reflection :(
+                    // KspElement class uses the "declaration property for its original element.
+                    getFieldWithReflectionOrNull<KSAnnotated>("declaration")
+                } ?: run {
+                    messager.printMessage(
+                        Diagnostic.Kind.WARNING,
+                        "Unable to get symbol for deferred element $xElement"
+                    )
+                    null
+                }
+            }.also {
+                if (configManager.logTimings) {
+                    timer.finishAndPrint(messager)
+                }
+            }
+    }
 
     final override fun process(
         annotations: Set<TypeElement?>,
         roundEnv: RoundEnvironment
-    ): Boolean = runBlocking(Dispatchers.Default) {
-        try {
-            logger.measure("Process Round: $roundNumber") {
-                processRound(roundEnv, roundNumber++)
-            }
-        } catch (e: Exception) {
-            logger.logError(e)
-        }
+    ): Boolean {
+        val roundNumber = roundNumber++
+        val timer = Timer("$processorName round $roundNumber")
+        timer.start()
+
+        processRoundInternal(
+            environment,
+            XRoundEnv.create(environment, roundEnv),
+            timer,
+            roundNumber
+        )
 
         if (roundEnv.processingOver()) {
-            val processorName = this@BaseProcessor::class.java.simpleName
-            // We wait until the very end to log errors so that all the generated classes are still
-            // created.
-            // Otherwise the compiler error output is clogged with lots of errors from the generated
-            // classes  not existing, which makes it hard to see the actual errors.
-            logger.measure("validateAttributesImplementHashCode") {
-                validateAttributesImplementHashCode(generatedModels)
-            }
+            finish()
+            timer.markStepCompleted("finish")
+        }
 
-            logger.writeExceptions()
-
-            if (!configManager.disableKotlinExtensionGeneration()) {
-                logger.measure("generateKotlinExtensions") {
-                    // TODO: Potentially generate a single file per model to allow for an isolating processor
-                    kotlinExtensionWriter.generateExtensionsForModels(
-                        generatedModels,
-                        processorName
-                    )
-                }
-            }
-
-            logger.printTimings(processorName)
+        if (configManager.logTimings) {
+            timer.finishAndPrint(messager)
         }
 
         // Let any other annotation processors use our annotations if they want to
-        false
+        return false
     }
 
-    protected abstract suspend fun processRound(roundEnv: RoundEnvironment, roundNumber: Int)
+    final override fun finish() {
+        // We wait until the very end to log errors so that all the generated classes are still
+        // created.
+        // Otherwise the compiler error output is clogged with lots of errors from the generated
+        // classes  not existing, which makes it hard to see the actual errors.
+        logger.writeExceptions()
+    }
 
-    private suspend fun validateAttributesImplementHashCode(
+    private fun processRoundInternal(
+        environment: XProcessingEnv,
+        round: XRoundEnv,
+        timer: Timer,
+        roundNumber: Int
+    ): List<XElement> {
+        // Memoizer should not be used across rounds because KSP symbols are not valid
+        // for reuse.
+        val memoizer = Memoizer(environment, logger)
+
+        val deferredElements: List<XElement> = try {
+            tryOrPrintError<List<XElement>?> {
+                timer.markStepCompleted("round initialization")
+                processRound(environment, round, memoizer, timer, roundNumber)
+            } ?: emptyList()
+        } catch (e: Exception) {
+            logger.logError(e)
+            emptyList()
+        }
+
+        // Validate items after, so if any fail we've generated as much of the models
+        // as possible to avoid weird errors.
+        // Note that we have to be VERY careful referencing symbols across rounds
+        // as they types can rely on === checks and instances may not be the same,
+        // so behavior may break in strange ways.
+        // So we do this check now, instead of waiting for "finish", and then clear
+        // the models.
+        validateAttributesImplementHashCode(memoizer, generatedModels)
+        timer.markStepCompleted("validateAttributesImplementHashCode")
+
+        if (!configManager.disableKotlinExtensionGeneration()) {
+            // TODO: Potentially generate a single file per model to allow for an isolating processor
+            kotlinExtensionWriter.generateExtensionsForModels(
+                generatedModels,
+                processorName
+            )
+            timer.markStepCompleted("generateKotlinExtensions")
+        }
+
+        generatedModels.clear()
+
+        return deferredElements
+    }
+
+    private inline fun <T> tryOrPrintError(block: () -> T): T? {
+        @Suppress("Detekt.TooGenericExceptionCaught")
+        return try {
+            block()
+        } catch (e: Throwable) {
+            // Errors thrown from within KSP can get lost, making the root cause of an issue hidden.
+            // This helps to surface all thrown errors.
+            messager.printMessage(Diagnostic.Kind.ERROR, e.stackTraceToString())
+            null
+        }
+    }
+
+    protected abstract fun processRound(
+        environment: XProcessingEnv,
+        round: XRoundEnv,
+        /**
+         * A memoizer to help cache types looked up in this round. Note that KSP must NOT use
+         * symbols across rounds, so this memoizer should only be used during this round.
+         */
+        memoizer: Memoizer,
+        timer: Timer,
+        roundNumber: Int,
+    ): List<XElement>
+
+    private fun validateAttributesImplementHashCode(
+        memoizer: Memoizer,
         generatedClasses: Collection<GeneratedModelInfo>
-    ) = coroutineScope {
-        val hashCodeValidator = HashCodeValidator(typeUtils, elementUtils)
+    ) {
+        if (generatedClasses.isEmpty()) return
+
+        val hashCodeValidator = HashCodeValidator(environment, memoizer, logger)
 
         generatedClasses
             .flatMap { it.attributeInfo }
-            .map("validateAttributeInfo") { attributeInfo ->
+            .mapNotNull { attributeInfo ->
                 if (configManager.requiresHashCode(attributeInfo) &&
                     attributeInfo.useInHash &&
                     !attributeInfo.ignoreRequireHashCode
@@ -171,9 +295,5 @@ abstract class BaseProcessor : AbstractProcessor(), Asyncable {
                     hashCodeValidator.validate(attributeInfo)
                 }
             }
-    }
-
-    suspend fun RoundEnvironment.getElementsAnnotatedWith(annotation: KClass<out Annotation>): Set<Element> {
-        return getElementsAnnotatedWith(logger, annotation)
     }
 }
