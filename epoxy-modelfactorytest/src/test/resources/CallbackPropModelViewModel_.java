@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import android.view.View;
@@ -326,4 +325,3 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
     return totalSpanCount;
   }
 }
-

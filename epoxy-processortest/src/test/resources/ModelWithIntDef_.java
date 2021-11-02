@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy.models;
 
 import androidx.annotation.LayoutRes;
@@ -11,6 +10,7 @@ import com.airbnb.epoxy.OnModelBoundListener;
 import com.airbnb.epoxy.OnModelUnboundListener;
 import com.airbnb.epoxy.OnModelVisibilityChangedListener;
 import com.airbnb.epoxy.OnModelVisibilityStateChangedListener;
+import com.airbnb.epoxy.models.ModelWithIntDef.MyType;
 import java.lang.CharSequence;
 import java.lang.Number;
 import java.lang.Object;
@@ -131,13 +131,13 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
     return this;
   }
 
-  public ModelWithIntDef_ type(@ModelWithIntDef.MyType int type) {
+  public ModelWithIntDef_ type(@MyType int type) {
     onMutation();
     super.type = type;
     return this;
   }
 
-  @ModelWithIntDef.MyType
+  @MyType
   public int type() {
     return type;
   }
@@ -268,4 +268,3 @@ public class ModelWithIntDef_ extends ModelWithIntDef implements GeneratedModel<
         "}" + super.toString();
   }
 }
-

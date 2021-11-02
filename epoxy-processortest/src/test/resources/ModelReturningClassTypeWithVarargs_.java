@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -274,4 +273,3 @@ public class ModelReturningClassTypeWithVarargs_ extends ModelReturningClassType
         "}" + super.toString();
   }
 }
-

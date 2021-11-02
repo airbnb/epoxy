@@ -2,10 +2,7 @@ package com.airbnb.epoxy
 
 import com.airbnb.epoxy.ProcessorTestUtils.assertGeneration
 import com.airbnb.epoxy.ProcessorTestUtils.assertGenerationError
-import com.airbnb.epoxy.ProcessorTestUtils.processors
-import com.google.common.truth.Truth.assert_
 import com.google.testing.compile.JavaFileObjects
-import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import org.junit.Test
 import javax.tools.JavaFileObject
 
@@ -35,6 +32,149 @@ class ViewProcessorTest {
     @Test
     fun manyTypes() {
         assertGeneration("TestManyTypesView.java", "TestManyTypesViewModel_.java")
+    }
+
+    @Test
+    fun manyTypes_kapt() {
+        assertGeneration(
+            inputFiles = listOf(
+                "ViewProcessorTest/testManyTypes/TestManyTypesView.kt",
+            ),
+            generatedFileNames = listOf(
+                "ViewProcessorTest/testManyTypes/TestManyTypesViewModel_.java",
+                "ViewProcessorTest/testManyTypes/TestManyTypesViewModelBuilder.java",
+                "ViewProcessorTest/testManyTypes/EpoxyModelViewProcessorKotlinExtensions.kt"
+            ),
+            compilationMode = CompilationMode.KAPT
+        )
+    }
+
+    @Test
+    fun manyTypes_ksp() {
+        assertGeneration(
+            inputFiles = listOf(
+                "ViewProcessorTest/testManyTypes/TestManyTypesView.kt",
+            ),
+            generatedFileNames = listOf(
+                "ViewProcessorTest/testManyTypes/TestManyTypesViewModel_.java",
+                "ViewProcessorTest/testManyTypes/TestManyTypesViewModelBuilder.java",
+                "ViewProcessorTest/testManyTypes/EpoxyModelViewProcessorKotlinExtensions.kt"
+            ),
+            compilationMode = CompilationMode.KSP
+        )
+    }
+
+    @Test
+    fun inheritingAttributesWorksCorrectly_ksp() {
+        assertGeneration(
+            inputFiles = listOf(
+                "ViewProcessorTest/inheritingAttributesWorksCorrectly/SourceView.kt",
+            ),
+            generatedFileNames = listOf(
+                "ViewProcessorTest/inheritingAttributesWorksCorrectly/SourceViewModel_.java",
+                "ViewProcessorTest/inheritingAttributesWorksCorrectly/SourceViewModelBuilder.java",
+            ),
+            compilationMode = CompilationMode.KSP
+        )
+    }
+
+    @Test
+    fun inheritingAttributesWorksCorrectly_kapt() {
+        assertGeneration(
+            inputFiles = listOf(
+                "ViewProcessorTest/inheritingAttributesWorksCorrectly/SourceView.kt",
+            ),
+            generatedFileNames = listOf(
+                "ViewProcessorTest/inheritingAttributesWorksCorrectly/SourceViewModel_.java",
+                "ViewProcessorTest/inheritingAttributesWorksCorrectly/SourceViewModelBuilder.java",
+            ),
+            compilationMode = CompilationMode.KAPT
+        )
+    }
+
+    @Test
+    fun inheritingAttributesWorksCorrectlyJavaSources_ksp() {
+        assertGeneration(
+            inputFiles = listOf(
+                "ViewProcessorTest/inheritingAttributesWorksCorrectlyJavaSources/SourceView.kt",
+                "ViewProcessorTest/inheritingAttributesWorksCorrectlyJavaSources/AirEpoxyModel.java",
+            ),
+            generatedFileNames = listOf(
+                "ViewProcessorTest/inheritingAttributesWorksCorrectlyJavaSources/SourceViewModel_.java",
+                "ViewProcessorTest/inheritingAttributesWorksCorrectlyJavaSources/SourceViewModelBuilder.java",
+            ),
+            compilationMode = CompilationMode.KSP
+        )
+    }
+
+    @Test
+    fun inheritingAttributesWorksCorrectlyJavaClassPath_ksp() {
+        assertGeneration(
+            inputFiles = listOf(
+                "ViewProcessorTest/inheritingAttributesWorksCorrectlyJavaClassPath/SourceView.kt",
+            ),
+            generatedFileNames = listOf(
+                "ViewProcessorTest/inheritingAttributesWorksCorrectlyJavaClassPath/SourceViewModel_.java",
+                "ViewProcessorTest/inheritingAttributesWorksCorrectlyJavaClassPath/SourceViewModelBuilder.java",
+            ),
+            compilationMode = CompilationMode.KSP
+        )
+    }
+
+    @Test
+    fun inheritingAttributesWorksCorrectlyJavaClassPath_kapt() {
+        assertGeneration(
+            inputFiles = listOf(
+                "ViewProcessorTest/inheritingAttributesWorksCorrectlyJavaClassPath/SourceView.kt",
+            ),
+            generatedFileNames = listOf(
+                "ViewProcessorTest/inheritingAttributesWorksCorrectlyJavaClassPath/SourceViewModel_.java",
+                "ViewProcessorTest/inheritingAttributesWorksCorrectlyJavaClassPath/SourceViewModelBuilder.java",
+            ),
+            compilationMode = CompilationMode.KAPT
+        )
+    }
+
+    @Test
+    fun wildcardHandling_ksp() {
+        assertGeneration(
+            inputFiles = listOf(
+                "ViewProcessorTest/wildcardHandling/SourceView.kt",
+            ),
+            generatedFileNames = listOf(
+                "ViewProcessorTest/wildcardHandling/SourceViewModel_.java",
+                "ViewProcessorTest/wildcardHandling/SourceViewModelBuilder.java",
+            ),
+            compilationMode = CompilationMode.KSP
+        )
+    }
+
+    @Test
+    fun annotationsAreCopied_ksp() {
+        assertGeneration(
+            inputFiles = listOf(
+                "ViewProcessorTest/annotationsAreCopied/SourceView.kt",
+            ),
+            generatedFileNames = listOf(
+                "ViewProcessorTest/annotationsAreCopied/SourceViewModel_.java",
+                "ViewProcessorTest/annotationsAreCopied/SourceViewModelBuilder.java",
+            ),
+            compilationMode = CompilationMode.KSP
+        )
+    }
+
+    @Test
+    fun annotationsAreCopied_kapt() {
+        assertGeneration(
+            inputFiles = listOf(
+                "ViewProcessorTest/annotationsAreCopied/SourceView.kt",
+            ),
+            generatedFileNames = listOf(
+                "ViewProcessorTest/annotationsAreCopied/SourceViewModel_.java",
+                "ViewProcessorTest/annotationsAreCopied/SourceViewModelBuilder.java",
+            ),
+            compilationMode = CompilationMode.KAPT
+        )
     }
 
     @Test
@@ -78,8 +218,20 @@ class ViewProcessorTest {
     }
 
     @Test
-    fun defaults_throwsForPrivateValue() {
-        assertGenerationError("PropDefaultsView_throwsForPrivateValue.java", "final")
+    fun defaults_throwsForPrivateValue_kapt() {
+        assertGenerationError(
+            "PropDefaultsView_throwsForPrivateValue.java",
+            "final",
+            compilationMode = CompilationMode.KAPT
+        )
+    }
+
+    @Test
+    fun defaults_kspDoesNotThrowForPrivateValue() {
+        assertGeneration(
+            sourceFileNames = listOf("PropDefaultsView_throwsForPrivateValue.java"),
+            compilationMode = CompilationMode.KSP
+        )
     }
 
     @Test
@@ -142,9 +294,16 @@ class ViewProcessorTest {
     @Test
     fun onVisibilityChanged_throwsIfInvalidParams() {
         assertGenerationError(
-            "OnVisibilityChangedView_throwsIfInvalidParams.java",
-            "must have parameter types [FLOAT, FLOAT, INT, INT], " +
-                "found: [BOOLEAN, BOOLEAN, INT, INT] (method: onVisibilityChanged)"
+            inputFile = "OnVisibilityChangedView_throwsIfInvalidParams.java",
+            errorMessage = "Methods annotated with Class must have parameter types [float, float, int, int], found: [Boolean, Boolean, Int, Int] (method: onVisibilityChanged)",
+            compilationMode = CompilationMode.KSP
+        )
+
+        assertGenerationError(
+            inputFile = "OnVisibilityChangedView_throwsIfInvalidParams.java",
+            errorMessage = "must have parameter types [float, float, int, int], found: " +
+                "[boolean, boolean, int, int] (method: onVisibilityChanged)",
+            compilationMode = CompilationMode.JavaAP
         )
     }
 
@@ -183,8 +342,15 @@ class ViewProcessorTest {
     @Test
     fun onVisibilityStateChanged_throwsIfInvalidParams() {
         assertGenerationError(
-            "OnVisibilityStateChangedView_throwsIfInvalidParams.java",
-            "must have parameter types [INT], found: [BOOLEAN] (method: onVisibilityStateChanged)"
+            inputFile = "OnVisibilityStateChangedView_throwsIfInvalidParams.java",
+            errorMessage = "must have parameter types [int], found: [boolean] (method: onVisibilityStateChanged)",
+            compilationMode = CompilationMode.JavaAP
+        )
+
+        assertGenerationError(
+            inputFile = "OnVisibilityStateChangedView_throwsIfInvalidParams.java",
+            errorMessage = "must have parameter types [int], found: [Boolean] (method: onVisibilityStateChanged)",
+            compilationMode = CompilationMode.KSP
         )
     }
 
@@ -265,13 +431,10 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource("BaseModelViewModel_.java".patchResource())
-
-        assert_().about(javaSources())
-            .that(listOf(baseModel, model))
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel)
+        assertGeneration(
+            sources = listOf(baseModel, model),
+            generatedFileObjects = listOf(generatedModel)
+        )
     }
 
     @Test
@@ -294,7 +457,7 @@ class ViewProcessorTest {
         assertGeneration(
             sourceFileNames = listOf("BaseModelView.java"),
             sourceObjects = listOf(baseModel),
-            generatedFileNames = listOf("BaseModelViewWithSuperDiffBindModel_.java")
+            generatedFileNames = listOf("baseModelWithDiffBind/BaseModelViewModel_.java")
         )
     }
 
@@ -316,14 +479,12 @@ class ViewProcessorTest {
         )
 
         val generatedModel =
-            JavaFileObjects.forResource("BaseModelWithAttributeViewModel_.java".patchResource())
+            JavaFileObjects.forResource("baseModelWithAttribute/BaseModelViewModel_.java".patchResource())
 
-        assert_().about(javaSources())
-            .that(listOf(baseModel, model))
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel)
+        assertGeneration(
+            sources = listOf(baseModel, model),
+            generatedFileObjects = listOf(generatedModel)
+        )
     }
 
     @Test
@@ -359,13 +520,10 @@ class ViewProcessorTest {
                     "}\n"
             )
 
-        assert_().about(javaSources())
-            .that(listOf(baseModel, model))
-            .processedWith(processors())
-            .failsToCompile()
-            .withErrorContaining(
-                "The base model provided to an ModelView must extend EpoxyModel"
-            )
+        assertGenerationError(
+            sources = listOf(baseModel, model),
+            errorMessage = "The base model provided to an ModelView must extend EpoxyModel"
+        )
     }
 
     @Test
@@ -419,15 +577,13 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource(
-            "BaseModelFromPackageConfigViewModel_.java".patchResource()
+            "baseModelFromPackageConfig/BaseModelViewModel_.java".patchResource()
         )
 
-        assert_().about(javaSources())
-            .that(listOf(baseModel, model, configClass, R))
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel)
+        assertGeneration(
+            sources = listOf(baseModel, model, configClass, R),
+            generatedFileObjects = listOf(generatedModel)
+        )
     }
 
     @Test
@@ -484,15 +640,13 @@ class ViewProcessorTest {
             )
 
         val generatedModel = JavaFileObjects.forResource(
-            "BaseModelOverridesPackageConfigViewModel_.java".patchResource()
+            "baseModelFromPackageConfigIsOverriddenByViewSetting/BaseModelViewModel_.java".patchResource()
         )
 
-        assert_().about(javaSources())
-            .that(listOf(baseModel, model, configClass, R))
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel)
+        assertGeneration(
+            sources = listOf(baseModel, model, configClass, R),
+            generatedFileObjects = listOf(generatedModel)
+        )
     }
 
     @Test
@@ -523,13 +677,10 @@ class ViewProcessorTest {
             """.trimIndent()
         )
 
-        assert_().about(javaSources())
-            .that(listOf(baseModel, model, configClass, R))
-            .processedWith(processors())
-            .failsToCompile()
-            .withErrorContaining(
-                "The base model provided to an ModelView must extend EpoxyModel"
-            )
+        assertGenerationError(
+            sources = listOf(baseModel, model, configClass, R),
+            errorMessage = "The base model provided to an ModelView must extend EpoxyModel"
+        )
     }
 
     @Test
@@ -555,12 +706,10 @@ class ViewProcessorTest {
             "RLayoutInViewModelAnnotationWorksViewModel_.java".patchResource()
         )
 
-        assert_().about(javaSources())
-            .that(listOf(model, R))
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel)
+        assertGeneration(
+            sources = listOf(model, R),
+            generatedFileObjects = listOf(generatedModel)
+        )
     }
 
     @Test
@@ -611,12 +760,10 @@ class ViewProcessorTest {
             "DefaultPackageLayoutPatternViewModel_.java".patchResource()
         )
 
-        assert_().about(javaSources())
-            .that(listOf(model, configClass, R))
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel)
+        assertGeneration(
+            sources = listOf(model, configClass, R),
+            generatedFileObjects = listOf(generatedModel)
+        )
     }
 
     @Test
@@ -678,12 +825,10 @@ class ViewProcessorTest {
             "DefaultPackageLayoutPatternViewModel_.java".patchResource()
         )
 
-        assert_().about(javaSources())
-            .that(listOf(model, configClass, R2, R))
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel)
+        assertGeneration(
+            sources = listOf(model, configClass, R2, R),
+            generatedFileObjects = listOf(generatedModel)
+        )
     }
 
     @Test
@@ -735,12 +880,10 @@ class ViewProcessorTest {
             "CustomPackageLayoutPatternViewModel_.java".patchResource()
         )
 
-        assert_().about(javaSources())
-            .that(listOf(model, configClass, R))
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel)
+        assertGeneration(
+            sources = listOf(model, configClass, R),
+            generatedFileObjects = listOf(generatedModel)
+        )
     }
 
     @Test
@@ -793,12 +936,10 @@ class ViewProcessorTest {
             "LayoutOverloadsViewModel_.java".patchResource()
         )
 
-        assert_().about(javaSources())
-            .that(listOf(model, configClass, R))
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel)
+        assertGeneration(
+            sources = listOf(model, configClass, R),
+            generatedFileObjects = listOf(generatedModel)
+        )
     }
 
     @Test
@@ -861,12 +1002,10 @@ class ViewProcessorTest {
         val generatedModel =
             JavaFileObjects.forResource("TestAfterBindPropsViewModel_.java".patchResource())
 
-        assert_().about(javaSources())
-            .that(listOf(model, superModel))
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel)
+        assertGeneration(
+            sources = listOf(model, superModel),
+            generatedFileObjects = listOf(generatedModel)
+        )
     }
 
     @Test
@@ -887,12 +1026,10 @@ class ViewProcessorTest {
         val generatedModel =
             JavaFileObjects.forResource("TextPropDefaultViewModel_.java".patchResource())
 
-        assert_().about(javaSources())
-            .that(listOf(model, R))
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel)
+        assertGeneration(
+            sources = listOf(model, R),
+            generatedFileObjects = listOf(generatedModel)
+        )
     }
 
     @Test
@@ -900,11 +1037,10 @@ class ViewProcessorTest {
         val model = JavaFileObjects
             .forResource("TextPropDefaultView_throwsForNonStringRes.java".patchResource())
 
-        assert_().about(javaSources())
-            .that(listOf(model, R))
-            .processedWith(processors())
-            .failsToCompile()
-            .withErrorContaining("requires a string resource")
+        assertGenerationError(
+            listOf(model, R),
+            "@TextProp value for defaultRes must be a String resource"
+        )
     }
 
     @Test
@@ -1002,8 +1138,20 @@ class ViewProcessorTest {
     }
 
     @Test
-    fun testFieldPropThrowsIfPrivate() {
-        assertGenerationError("TestFieldPropThrowsIfPrivateView.java", "private")
+    fun testFieldPropThrowsIfPrivate_kapt() {
+        assertGenerationError(
+            "TestFieldPropThrowsIfPrivateView.java",
+            "private",
+            compilationMode = CompilationMode.KAPT
+        )
+    }
+
+    @Test
+    fun testFieldPropNotThrowsIfPrivate_ksp() {
+        assertGeneration(
+            sourceFileNames = listOf("PropDefaultsView_throwsForPrivateValue.java"),
+            compilationMode = CompilationMode.KSP
+        )
     }
 
     @Test
@@ -1025,22 +1173,74 @@ class ViewProcessorTest {
     }
 
     @Test
-    fun testStyleableView() {
+    fun testStyleableView_kapt() {
         val configClass: JavaFileObject = JavaFileObjects
             .forSourceLines(
-                "com.airbnb.epoxy.package-info",
-                "@ParisConfig(rClass = R.class)\n" +
-                    "package com.airbnb.epoxy;\n" +
+                "com.airbnb.epoxy.Config",
+                "package com.airbnb.epoxy;\n" +
                     "\n" +
                     "import com.airbnb.paris.annotations.ParisConfig;\n" +
-                    "import com.airbnb.epoxy.R;\n"
+                    "import com.airbnb.epoxy.R;\n" +
+
+                    "@ParisConfig(rClass = R.class)\n" +
+                    "class Config {}"
             )
 
         assertGeneration(
             inputFile = "ModelViewWithParis.java",
             generatedFile = "ModelViewWithParisModel_.java",
             useParis = true,
-            helperObjects = listOf(configClass, R)
+            helperObjects = listOf(configClass, R),
+            compilationMode = CompilationMode.KAPT
+        )
+    }
+
+    @Test
+    fun testStyleableView_ksp() {
+        val configClass: JavaFileObject = JavaFileObjects
+            .forSourceLines(
+                "com.airbnb.epoxy.Config",
+                "package com.airbnb.epoxy;\n" +
+                    "\n" +
+                    "import com.airbnb.paris.annotations.ParisConfig;\n" +
+                    "import com.airbnb.epoxy.R;\n" +
+
+                    "@ParisConfig(rClass = R.class)\n" +
+                    "class Config {}"
+            )
+
+        assertGeneration(
+            inputFile = "ModelViewWithParis.java",
+            generatedFile = "ModelViewWithParisModel_.java",
+            useParis = true,
+            helperObjects = listOf(configClass, R),
+            compilationMode = CompilationMode.KSP,
+            // the generated paris references are reported as errors even though they are properly generated
+            // after processing.
+            ignoreCompilationError = true
+        )
+    }
+
+    @Test
+    fun testStyleableViewKotlinSources_ksp() {
+        val configClass: JavaFileObject = JavaFileObjects
+            .forSourceLines(
+                "com.airbnb.epoxy.Config",
+                "package com.airbnb.epoxy;\n" +
+                    "\n" +
+                    "import com.airbnb.paris.annotations.ParisConfig;\n" +
+                    "import com.airbnb.epoxy.R;\n" +
+
+                    "@ParisConfig(rClass = R.class)\n" +
+                    "class Config {}"
+            )
+
+        assertGeneration(
+            inputFile = "ViewProcessorTest/testStyleableViewKotlinSources/ModelViewWithParis.kt",
+            generatedFile = "ViewProcessorTest/testStyleableViewKotlinSources/ModelViewWithParisModel_.java",
+            useParis = true,
+            helperObjects = listOf(configClass, R),
+            compilationMode = CompilationMode.KSP,
         )
     }
 

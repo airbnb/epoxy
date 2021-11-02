@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import android.view.ViewParent;
@@ -270,4 +269,3 @@ public class AbstractModelWithHolder_ extends AbstractModelWithHolder implements
         "}" + super.toString();
   }
 }
-

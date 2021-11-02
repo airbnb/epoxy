@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -260,4 +259,3 @@ public class ModelWithSuper_ extends ModelWithSuper implements GeneratedModel<Ob
         "}" + super.toString();
   }
 }
-

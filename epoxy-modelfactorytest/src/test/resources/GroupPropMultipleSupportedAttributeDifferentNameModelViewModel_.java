@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -383,4 +382,3 @@ public class GroupPropMultipleSupportedAttributeDifferentNameModelViewModel_ ext
     return totalSpanCount;
   }
 }
-

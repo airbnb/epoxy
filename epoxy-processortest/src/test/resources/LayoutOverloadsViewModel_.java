@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -279,4 +278,3 @@ public class LayoutOverloadsViewModel_ extends EpoxyModel<LayoutOverloadsView> i
     return totalSpanCount;
   }
 }
-

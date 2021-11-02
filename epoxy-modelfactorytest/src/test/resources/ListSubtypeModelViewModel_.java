@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -317,4 +316,3 @@ public class ListSubtypeModelViewModel_ extends EpoxyModel<ListSubtypeModelView>
     return totalSpanCount;
   }
 }
-

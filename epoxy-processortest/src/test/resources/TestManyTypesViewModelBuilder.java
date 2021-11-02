@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import android.view.View;
@@ -16,6 +15,8 @@ import java.lang.Number;
 import java.lang.Object;
 import java.lang.String;
 import java.util.List;
+import java.util.Map;
+import kotlin.jvm.functions.Function3;
 
 @EpoxyBuildScope
 public interface TestManyTypesViewModelBuilder {
@@ -35,6 +36,9 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder nullableStringValue(@Nullable String nullableStringValue);
 
+  TestManyTypesViewModelBuilder function(
+      @NonNull Function3<Integer, Integer, Integer, Integer> function);
+
   TestManyTypesViewModelBuilder intValue(int intValue);
 
   TestManyTypesViewModelBuilder intValueWithAnnotation(@StringRes int intValueWithAnnotation);
@@ -52,11 +56,15 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder boolValue(boolean boolValue);
 
+  TestManyTypesViewModelBuilder models(@NonNull List<? extends EpoxyModel<?>> models);
+
   TestManyTypesViewModelBuilder booleanValue(@NonNull Boolean booleanValue);
 
   TestManyTypesViewModelBuilder arrayValue(@NonNull String[] arrayValue);
 
   TestManyTypesViewModelBuilder listValue(@NonNull List<String> listValue);
+
+  TestManyTypesViewModelBuilder mapValue(@NonNull Map<Integer, ?> mapValue);
 
   TestManyTypesViewModelBuilder clickListener(
       @NonNull final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener);
@@ -89,4 +97,3 @@ public interface TestManyTypesViewModelBuilder {
   TestManyTypesViewModelBuilder spanSizeOverride(
       @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback);
 }
-

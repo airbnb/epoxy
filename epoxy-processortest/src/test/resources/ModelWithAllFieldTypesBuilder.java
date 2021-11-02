@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -90,4 +89,3 @@ public interface ModelWithAllFieldTypesBuilder {
   ModelWithAllFieldTypesBuilder spanSizeOverride(
       @Nullable EpoxyModel.SpanSizeOverrideCallback spanSizeCallback);
 }
-

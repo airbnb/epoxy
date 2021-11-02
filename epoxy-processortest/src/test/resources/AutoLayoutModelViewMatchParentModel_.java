@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import android.view.ViewGroup;
@@ -311,4 +310,3 @@ public class AutoLayoutModelViewMatchParentModel_ extends EpoxyModel<AutoLayoutM
     return totalSpanCount;
   }
 }
-

@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -124,8 +123,18 @@ public class ModelWithFinalField_ extends ModelWithFinalField implements Generat
     return this;
   }
 
-  public int valueInt() {
-    return valueInt;
+  public int finalValueInt() {
+    return finalValueInt;
+  }
+
+  public ModelWithFinalField_ nonFinalValueInt(int nonFinalValueInt) {
+    onMutation();
+    super.nonFinalValueInt = nonFinalValueInt;
+    return this;
+  }
+
+  public int nonFinalValueInt() {
+    return nonFinalValueInt;
   }
 
   @Override
@@ -201,6 +210,7 @@ public class ModelWithFinalField_ extends ModelWithFinalField implements Generat
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
+    super.nonFinalValueInt = 0;
     super.reset();
     return this;
   }
@@ -229,7 +239,10 @@ public class ModelWithFinalField_ extends ModelWithFinalField implements Generat
     if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((valueInt != that.valueInt)) {
+    if ((finalValueInt != that.finalValueInt)) {
+      return false;
+    }
+    if ((nonFinalValueInt != that.nonFinalValueInt)) {
       return false;
     }
     return true;
@@ -242,15 +255,16 @@ public class ModelWithFinalField_ extends ModelWithFinalField implements Generat
     _result = 31 * _result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
     _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    _result = 31 * _result + valueInt;
+    _result = 31 * _result + finalValueInt;
+    _result = 31 * _result + nonFinalValueInt;
     return _result;
   }
 
   @Override
   public String toString() {
     return "ModelWithFinalField_{" +
-        "valueInt=" + valueInt +
+        "finalValueInt=" + finalValueInt +
+        ", nonFinalValueInt=" + nonFinalValueInt +
         "}" + super.toString();
   }
 }
-

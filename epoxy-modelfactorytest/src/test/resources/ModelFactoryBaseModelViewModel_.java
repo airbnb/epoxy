@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -326,4 +325,3 @@ public class ModelFactoryBaseModelViewModel_ extends EpoxyModel<ModelFactoryBase
     return totalSpanCount;
   }
 }
-

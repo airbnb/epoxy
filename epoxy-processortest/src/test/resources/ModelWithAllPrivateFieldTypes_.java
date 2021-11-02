@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -600,4 +599,3 @@ public class ModelWithAllPrivateFieldTypes_ extends ModelWithAllPrivateFieldType
         "}" + super.toString();
   }
 }
-

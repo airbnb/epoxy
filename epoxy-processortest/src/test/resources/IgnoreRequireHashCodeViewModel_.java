@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import android.view.View;
@@ -335,4 +334,3 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
     return totalSpanCount;
   }
 }
-

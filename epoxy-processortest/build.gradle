@@ -45,7 +45,7 @@ dependencies {
   kapt project(':epoxy-processor')
   // Need to include the processor directly as well since we create an instance of it in code for testing
   implementation project(':epoxy-processor')
-
+  implementation rootProject.deps.ksp
 
   implementation rootProject.deps.paris
   kapt rootProject.deps.parisProcessor
@@ -57,6 +57,9 @@ dependencies {
   testImplementation files(rootProject.file("libs/rt.jar"))
   testImplementation files(rootProject.file("libs/tools.jar"))
   testImplementation rootProject.deps.googleTestingCompile
+  testImplementation "io.github.java-diff-utils:java-diff-utils:4.5"
+  testImplementation "io.strikt:strikt-core:0.31.0"
+  testImplementation rootProject.deps.kotlinCompileTesting
 }
 
 // Java files in the "resources" folder are not included in the build for some reason (seems like source files are skipped?)

@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -263,4 +262,3 @@ public class ModelWithFieldAnnotation_ extends ModelWithFieldAnnotation implemen
         "}" + super.toString();
   }
 }
-

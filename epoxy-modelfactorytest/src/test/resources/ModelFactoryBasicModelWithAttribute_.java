@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -271,4 +270,3 @@ public class ModelFactoryBasicModelWithAttribute_ extends ModelFactoryBasicModel
     return model;
   }
 }
-

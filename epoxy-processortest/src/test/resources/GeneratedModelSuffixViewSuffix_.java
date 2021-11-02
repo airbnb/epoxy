@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -269,4 +268,3 @@ public class GeneratedModelSuffixViewSuffix_ extends EpoxyModel<GeneratedModelSu
     return totalSpanCount;
   }
 }
-
