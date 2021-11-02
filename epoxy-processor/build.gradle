@@ -26,9 +26,9 @@ dependencies {
     implementation rootProject.deps.kotlinCoroutines
     implementation rootProject.deps.ksp
 
-    // only including this so we can see sources, but we don't actually want to ship it in the library
-    // as it can cause issues with backwards compatibility.
-    testImplementation rootProject.deps.kspImpl
+    // we shouldn't be including this technically, as it can cause issues with backwards compatibility,
+    // but we use it for custom parsing of kotlin files to do resource scanning :(
+    implementation rootProject.deps.kspImpl
 
     // Compiler needed to resolve resource references in annotations
     implementation "org.jetbrains.kotlin:kotlin-compiler-embeddable:$KOTLIN_VERSION"
