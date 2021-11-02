@@ -8,14 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
-    }
 
-    fun onComposableInteropClicked(view: View) {
-        startActivity(Intent(this, ComposableInteropActivity::class.java))
-    }
+        findViewById<View>(R.id.button).setOnClickListener {
+            startActivity(Intent(this, ComposableInteropActivity::class.java))
+        }
 
-    fun onEpoxyInteropClicked(view: View) {
-        startActivity(Intent(this, EpoxyInteropActivity::class.java))
+        findViewById<View>(R.id.button2).setOnClickListener {
+            startActivity(Intent(this, EpoxyInteropActivity::class.java))
+        }
     }
 }
