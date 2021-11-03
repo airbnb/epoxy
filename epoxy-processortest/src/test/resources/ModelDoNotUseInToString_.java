@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -292,4 +291,3 @@ public class ModelDoNotUseInToString_ extends ModelDoNotUseInToString implements
         "}" + super.toString();
   }
 }
-

@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import android.widget.CompoundButton;
@@ -279,4 +278,3 @@ public class ModelWithCheckedChangeListener_ extends ModelWithCheckedChangeListe
         "}" + super.toString();
   }
 }
-

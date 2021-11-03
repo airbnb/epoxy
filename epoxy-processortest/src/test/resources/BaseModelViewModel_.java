@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -319,4 +318,3 @@ public class BaseModelViewModel_ extends TestBaseModel<BaseModelView> implements
     return totalSpanCount;
   }
 }
-

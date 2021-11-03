@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -253,4 +252,3 @@ public class GenerateDefaultLayoutMethodParentLayout$WithLayout_ extends Generat
         "}" + super.toString();
   }
 }
-

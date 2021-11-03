@@ -12,7 +12,9 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.LONG
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.SHORT
+import com.squareup.kotlinpoet.STAR
 import com.squareup.kotlinpoet.UNIT
+import com.squareup.kotlinpoet.WildcardTypeName
 import javax.lang.model.element.Modifier
 
 typealias JavaClassName = com.squareup.javapoet.ClassName
@@ -126,12 +128,14 @@ fun JavaClassName.setPackage(packageName: String) =
     JavaClassName.get(packageName, simpleName(), *simpleNames().drop(1).toTypedArray())!!
 
 // Does not support transferring annotations
-fun JavaWildcardTypeName.toKPoet() =
-    if (!lowerBounds.isEmpty()) {
+fun JavaWildcardTypeName.toKPoet(): WildcardTypeName {
+    return if (lowerBounds.isNotEmpty()) {
         KotlinWildcardTypeName.consumerOf(lowerBounds.first().toKPoet())
-    } else {
-        KotlinWildcardTypeName.producerOf(upperBounds.first().toKPoet())
+    } else when (val upperBound = upperBounds[0]) {
+        TypeName.OBJECT -> STAR
+        else -> KotlinWildcardTypeName.producerOf(upperBound.toKPoet())
     }
+}
 
 // Does not support transferring annotations
 fun JavaParametrizedTypeName.toKPoet() =
@@ -164,7 +168,7 @@ fun JavaArrayTypeName.toKPoet(): KotlinTypeName {
 
 // Does not support transferring annotations
 fun JavaTypeVariableName.toKPoet() = KotlinTypeVariableName.invoke(
-    name,
+    if (name == "?") "*" else name,
     *bounds.toKPoet().toTypedArray()
 )
 
@@ -208,6 +212,7 @@ fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
 
     return KotlinParameterSpec.builder(
         paramName,
+        // Not using built in javapoet interop because of bug https://github.com/square/kotlinpoet/issues/1181
         type.toKPoet(nullable),
         *modifiers.toKModifier().toTypedArray()
     ).apply {
@@ -218,10 +223,7 @@ fun JavaParameterSpec.toKPoet(): KotlinParameterSpec {
     }.build()
 }
 
-fun Iterable<JavaParameterSpec>.toKParams() = map { it.toKPoet() }
-
-fun Iterable<Modifier>.toKModifier(): List<KModifier> =
-    map { it.toKModifier() }.filter { it != null }.map { it!! }
+fun Iterable<Modifier>.toKModifier(): List<KModifier> = mapNotNull { it.toKModifier() }
 
 fun Modifier.toKModifier() = when (this) {
     Modifier.PUBLIC -> KModifier.PUBLIC

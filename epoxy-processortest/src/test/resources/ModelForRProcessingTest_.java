@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -268,4 +267,3 @@ public class ModelForRProcessingTest_ extends ModelForRProcessingTest implements
         "}" + super.toString();
   }
 }
-

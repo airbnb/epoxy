@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -287,4 +286,3 @@ public class ModelDoNotHash_ extends ModelDoNotHash implements GeneratedModel<Ob
         "}" + super.toString();
   }
 }
-

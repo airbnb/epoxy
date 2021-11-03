@@ -3,10 +3,7 @@ package com.airbnb.epoxy
 import com.airbnb.epoxy.ProcessorTestUtils.assertGeneration
 import com.airbnb.epoxy.ProcessorTestUtils.assertGenerationError
 import com.airbnb.epoxy.ProcessorTestUtils.checkFileCompiles
-import com.airbnb.epoxy.ProcessorTestUtils.processors
-import com.google.common.truth.Truth
 import com.google.testing.compile.JavaFileObjects
-import com.google.testing.compile.JavaSourceSubjectFactory
 import junit.framework.Assert
 import org.junit.Test
 
@@ -50,18 +47,21 @@ class ModelProcessorTest {
         val generatedSubClassModel =
             JavaFileObjects.forResource("ModelWithSuperAttributes\$SubModelWithSuperAttributes_.java".patchResource())
 
-        Truth.assert_()
-            .about(JavaSourceSubjectFactory.javaSource())
-            .that(model)
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel, generatedSubClassModel)
+        assertGeneration(
+            sources = listOf(model),
+            generatedFileObjects = listOf(generatedModel, generatedSubClassModel)
+        )
     }
 
     @Test
     fun testModelWithType() {
-        assertGeneration("ModelWithType.java", "ModelWithType_.java")
+        assertGeneration(
+            "ModelWithType.java",
+            "ModelWithType_.java",
+            // The generics in the model don't seem to work with KSP/Kotlin. It isn't a real/good
+            // use case anyway, so don't care about supporting it.
+            compilationMode = CompilationMode.JavaAP
+        )
     }
 
     @Test
@@ -86,7 +86,12 @@ class ModelProcessorTest {
 
     @Test
     fun testModelWithPrivateClassFails() {
-        assertGenerationError("ModelWithPrivateInnerClass.java", "private classes")
+        assertGenerationError(
+            "ModelWithPrivateInnerClass.java",
+            "private classes",
+            // KSP bug prevents us from testing this case https://github.com/google/ksp/issues/622
+            compilationMode = CompilationMode.JavaAP
+        )
     }
 
     @Test
@@ -101,12 +106,17 @@ class ModelProcessorTest {
 
     @Test
     fun testModelAsInnerClassFails() {
-        assertGenerationError("ModelAsInnerClass.java", "Nested classes")
+        assertGenerationError("ModelAsInnerClass.java", "Nested model classes must be static")
     }
 
     @Test
     fun testModelWithIntDefAnnotation() {
-        assertGeneration("ModelWithIntDef.java", "ModelWithIntDef_.java")
+        assertGeneration(
+            "ModelWithIntDef.java",
+            "ModelWithIntDef_.java",
+            // Throws NPE in KSP due to https://github.com/google/ksp/issues/622
+            compilationMode = CompilationMode.JavaAP
+        )
     }
 
     @Test
@@ -119,11 +129,9 @@ class ModelProcessorTest {
         val model = JavaFileObjects
             .forResource("ModelWithAbstractClass.java".patchResource())
 
-        Truth.assert_()
-            .about(JavaSourceSubjectFactory.javaSource())
-            .that(model)
-            .processedWith(processors())
-            .compilesWithoutError()
+        assertGeneration(
+            sources = listOf(model)
+        )
 
         // We don't generate subclasses if the model is abstract unless it has a class annotation.
         val modelNotGenerated: Boolean = try {
@@ -145,6 +153,24 @@ class ModelProcessorTest {
     }
 
     @Test
+    fun testKotlinModel_kapt() {
+        assertGeneration(
+            "ModelProcessorTest/testKotlinModel/Model.kt",
+            "ModelProcessorTest/testKotlinModel/Model_.java",
+            compilationMode = CompilationMode.KAPT
+        )
+    }
+
+    @Test
+    fun testKotlinModel_ksp() {
+        assertGeneration(
+            "ModelProcessorTest/testKotlinModel/Model.kt",
+            "ModelProcessorTest/testKotlinModel/Model_.java",
+            compilationMode = CompilationMode.KSP
+        )
+    }
+
+    @Test
     fun testModelWithAnnotatedClassAndSuperClass() {
         val model = JavaFileObjects
             .forResource("ModelWithAnnotatedClassAndSuperAttributes.java".patchResource())
@@ -158,13 +184,12 @@ class ModelProcessorTest {
                     "WithAnnotatedClassAndSuperAttributes_.java"
                 ).patchResource()
         )
-        Truth.assert_()
-            .about(JavaSourceSubjectFactory.javaSource())
-            .that(model)
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedModel, generatedSubClassModel)
+        assertGeneration(
+            sources = listOf(model),
+            generatedFileObjects = listOf(generatedModel, generatedSubClassModel),
+            // Throws NPE in KSP due to https://github.com/google/ksp/issues/622
+            compilationMode = CompilationMode.JavaAP
+        )
     }
 
     @Test
@@ -187,12 +212,37 @@ class ModelProcessorTest {
 
     @Test
     fun testModelWithVarargsConstructors() {
-        assertGeneration("ModelWithVarargsConstructors.java", "ModelWithVarargsConstructors_.java")
+        assertGeneration(
+            "ModelWithVarargsConstructors.java",
+            "ModelWithVarargsConstructors_.java",
+            // The kotlin extension generation doesn't actually work with vararg constructors.
+            // it's a bug we're not trying to support, so just make sure this works with the originally
+            // intended legacy java.
+            compilationMode = CompilationMode.JavaAP
+        )
     }
 
     @Test
     fun testModelWithHolderGeneratesNewHolderMethod() {
-        assertGeneration("AbstractModelWithHolder.java", "AbstractModelWithHolder_.java")
+        assertGeneration(
+            "AbstractModelWithHolder.java",
+            "AbstractModelWithHolder_.java",
+            // The nested static holder class results in KSP seeing it as an "Error" type during processing
+            // for some reason (seems like a bug?). There doesn't seem to be a way to defer the
+            // symbol the way we access it via a type param does not give the underlying KSAnnotated
+            // element. The separate test with kotlin sources works fine, so workaround is to write
+            // the holder classes in kotlin if needed.
+            compilationMode = CompilationMode.JavaAP
+        )
+    }
+
+    @Test
+    fun testModelWithHolderGeneratesNewHolderMethod_kotlin() {
+        assertGeneration(
+            "testModelWithHolderGeneratesNewHolderMethod/AbstractModelWithHolder.kt",
+            "testModelWithHolderGeneratesNewHolderMethod/AbstractModelWithHolder_.java",
+            compilationMode = CompilationMode.KSP
+        )
     }
 
     @Test
@@ -219,13 +269,10 @@ class ModelProcessorTest {
         val generatedWithLayoutModel =
             JavaFileObjects.forResource("GenerateDefaultLayoutMethodParentLayout\$WithLayout_.java".patchResource())
 
-        Truth.assert_()
-            .about(JavaSourceSubjectFactory.javaSource())
-            .that(model)
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedNoLayoutModel, generatedWithLayoutModel)
+        assertGeneration(
+            sources = listOf(model),
+            generatedFileObjects = listOf(generatedNoLayoutModel, generatedWithLayoutModel)
+        )
     }
 
     @Test
@@ -242,16 +289,14 @@ class ModelProcessorTest {
         val generatedWithLayoutModel =
             JavaFileObjects.forResource("GenerateDefaultLayoutMethodNextParentLayout\$WithLayout_.java".patchResource())
 
-        Truth.assert_()
-            .about(JavaSourceSubjectFactory.javaSource())
-            .that(model)
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(
-                generatedNoLayoutModel, generatedStillNoLayoutModel,
+        assertGeneration(
+            sources = listOf(model),
+            generatedFileObjects = listOf(
+                generatedNoLayoutModel,
+                generatedStillNoLayoutModel,
                 generatedWithLayoutModel
             )
+        )
     }
 
     @Test
@@ -275,13 +320,10 @@ class ModelProcessorTest {
         val generatedNoLayoutModel = JavaFileObjects
             .forResource("ModelWithViewLongClickListener_.java".patchResource())
 
-        Truth.assert_()
-            .about(JavaSourceSubjectFactory.javaSource())
-            .that(model)
-            .processedWith(processors())
-            .compilesWithoutError()
-            .and()
-            .generatesSources(generatedNoLayoutModel)
+        assertGeneration(
+            sources = listOf(model),
+            generatedFileObjects = listOf(generatedNoLayoutModel)
+        )
     }
 
     @Test
@@ -412,7 +454,7 @@ class ModelProcessorTest {
     fun generatedEpoxyModelGroup() {
         assertGeneration(
             "EpoxyModelGroupWithAnnotations.java",
-            "EpoxyModelGroupWithAnnotations_.java"
+            "EpoxyModelGroupWithAnnotations_.java",
         )
     }
 
@@ -420,7 +462,7 @@ class ModelProcessorTest {
     fun generatedEpoxyModelWithView() {
         assertGeneration(
             "AbstractEpoxyModelWithView.java",
-            "AbstractEpoxyModelWithViewModel_.java"
+            "AbstractEpoxyModelWithView_.java"
         )
     }
 }

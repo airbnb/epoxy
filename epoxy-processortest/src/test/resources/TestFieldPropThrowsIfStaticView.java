@@ -11,7 +11,7 @@ import com.airbnb.epoxy.ModelView;
 @ModelView(autoLayout = ModelView.Size.WRAP_WIDTH_WRAP_HEIGHT)
 
 public class TestFieldPropThrowsIfStaticView extends View {
-  @ModelProp private String value;
+  @ModelProp public static String value;
 
   public TestFieldPropThrowsIfStaticView(Context context) {
     super(context);

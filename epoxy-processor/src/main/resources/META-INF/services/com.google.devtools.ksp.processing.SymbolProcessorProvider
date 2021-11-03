@@ -1,0 +1,4 @@
+com.airbnb.epoxy.processor.EpoxyProcessorProvider
+com.airbnb.epoxy.processor.ControllerProcessorProvider
+com.airbnb.epoxy.processor.DataBindingProcessorProvider
+com.airbnb.epoxy.processor.ModelViewProcessorProvider

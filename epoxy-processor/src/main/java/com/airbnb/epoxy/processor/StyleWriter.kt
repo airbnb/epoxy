@@ -1,12 +1,13 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XProcessingEnv
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterSpec
 import java.util.Objects
 import javax.lang.model.element.Element
 import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
 
 internal fun addStyleApplierCode(
     methodBuilder: MethodSpec.Builder,
@@ -69,10 +70,16 @@ internal fun Element.hasStyleableAnnotation(elements: Elements) = annotationMirr
             elements.getPackageOf(it).qualifiedName.contains("paris")
     }
 
+internal fun XElement.hasStyleableAnnotation(): Boolean {
+    return getAllAnnotations().any {
+        it.name == "Styleable" && it.qualifiedName.contains("paris")
+    }
+}
+
 internal fun tryAddStyleBuilderAttribute(
     styleableModel: GeneratedModelInfo,
-    elements: Elements,
-    types: Types
+    processingEnv: XProcessingEnv,
+    memoizer: Memoizer
 ): Boolean {
     // if style applier is generated
     val viewClass = (styleableModel.modelType as? ClassName) ?: return false
@@ -82,17 +89,15 @@ internal fun tryAddStyleBuilderAttribute(
         "StyleBuilder"
     )
 
-    val styleBuilderElement =
-        getTypeMirrorNullable(styleBuilderClassName, elements, types) ?: return false
+    val styleBuilderElement = processingEnv.findTypeElement(styleBuilderClassName) ?: return false
 
     styleableModel.setStyleable(
         ParisStyleAttributeInfo(
             modelInfo = styleableModel,
-            elements = elements,
-            types = types,
             packageName = viewClass.packageName(),
             styleBuilderClassName = styleBuilderClassName,
-            styleBuilderElement = types.asElement(styleBuilderElement)
+            styleBuilderElement = styleBuilderElement,
+            memoizer = memoizer
         )
     )
     return true

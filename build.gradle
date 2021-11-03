@@ -1,12 +1,14 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
 
-  ext.KOTLIN_VERSION = "1.4.32"
-  ext.ANDROID_PLUGIN_VERSION = '7.0.0'
+  ext.KOTLIN_VERSION = "1.5.31"
+  ext.ANDROID_PLUGIN_VERSION = '7.0.3'
+  ext.KSP_VERSION = '1.5.31-1.0.0'
 
   repositories {
     google()
     mavenCentral()
+    gradlePluginPortal()
     jcenter()
   }
   dependencies {
@@ -22,6 +24,7 @@ buildscript {
 
 plugins {
   id 'com.github.ben-manes.versions' version '0.38.0'
+  id "com.google.devtools.ksp" version "$KSP_VERSION"
 }
 
 allprojects {

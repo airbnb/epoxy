@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -300,4 +299,3 @@ public class NullOnRecycleViewModel_ extends EpoxyModel<NullOnRecycleView> imple
     return totalSpanCount;
   }
 }
-

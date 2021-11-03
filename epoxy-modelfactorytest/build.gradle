@@ -49,9 +49,13 @@ dependencies {
 
   // Need to include the processors directly since we create an instance of it in code for testing
   testImplementation project(':epoxy-processor')
+  testImplementation rootProject.deps.ksp
   testImplementation rootProject.deps.parisProcessor
 
   testImplementation project(':epoxy-processortest')
+  testImplementation "io.github.java-diff-utils:java-diff-utils:4.5"
+  testImplementation rootProject.deps.kotlinCompileTesting
+  testImplementation "io.strikt:strikt-core:0.31.0"
   testImplementation rootProject.deps.googleTestingCompile
   testImplementation rootProject.deps.junit
   testImplementation rootProject.deps.robolectric

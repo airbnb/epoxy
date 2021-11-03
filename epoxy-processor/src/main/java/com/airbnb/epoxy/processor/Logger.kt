@@ -1,14 +1,15 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XMessager
 import com.airbnb.epoxy.processor.Utils.buildEpoxyException
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.util.Collections
 import java.util.Stack
-import javax.annotation.processing.Messager
 import javax.tools.Diagnostic
 
-class Logger(val messager: Messager, val logTimings: Boolean) {
+class Logger(val messager: XMessager, val logTimings: Boolean) {
 
     private val timings = mutableListOf<Timing>()
     private val currentTimingBlocks = Stack<MutableList<Timing>>()
@@ -18,10 +19,21 @@ class Logger(val messager: Messager, val logTimings: Boolean) {
 
     fun writeExceptions() {
         loggedExceptions.forEach {
-            messager.printMessage(
-                Diagnostic.Kind.ERROR,
-                it.javaClass.simpleName + ": " + it.localizedMessage + "\n" + it.stackTraceString()
-            )
+            val element = (it as? EpoxyProcessorException)?.element
+            val msg = "${it.javaClass.simpleName}: ${it.localizedMessage}\n${it.stackTraceString()}"
+
+            if (element != null) {
+                messager.printMessage(
+                    kind = Diagnostic.Kind.ERROR,
+                    msg = msg,
+                    element = element
+                )
+            } else {
+                messager.printMessage(
+                    kind = Diagnostic.Kind.ERROR,
+                    msg = msg,
+                )
+            }
         }
     }
 
@@ -49,6 +61,14 @@ class Logger(val messager: Messager, val logTimings: Boolean) {
         logError(buildEpoxyException(msg, *args))
     }
 
+    fun logError(element: XElement, msg: String, vararg args: Any) {
+        logError(buildEpoxyException(element, msg, *args))
+    }
+
+    fun logError(msg: String, element: XElement) {
+        logError(EpoxyProcessorException(msg, element = element))
+    }
+
     /**
      * Errors are logged and saved until after classes are generating. Otherwise if we throw
      * immediately the models are not generated which leads to lots of other compiler errors which
@@ -69,11 +89,11 @@ class Logger(val messager: Messager, val logTimings: Boolean) {
         messager.printMessage(Diagnostic.Kind.NOTE, "$message\n ")
     }
 
-    suspend fun <T> measure(
+    fun <T> measure(
         name: String,
         numItems: Int? = null,
         isParallel: Boolean? = null,
-        block: suspend () -> T
+        block: () -> T
     ): T {
         if (!logTimings) return block()
         currentTimingBlocks.add(mutableListOf())
@@ -99,7 +119,7 @@ class Logger(val messager: Messager, val logTimings: Boolean) {
         if (!logTimings) return
 
         val timingString = timings.joinToString(nesting = 1)
-        val totalDuration = timings.sumBy { it.durationMs.toInt() }
+        val totalDuration = timings.sumOf { it.durationMs.toInt() }
         warn(
             "$processorName completed in $totalDuration ms:\n$timingString\n "
         )

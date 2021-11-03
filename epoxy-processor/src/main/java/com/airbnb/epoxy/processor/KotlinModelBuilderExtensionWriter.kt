@@ -1,5 +1,8 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XFiler
+import androidx.room.compiler.processing.addOriginatingElement
+import androidx.room.compiler.processing.writeTo
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
@@ -7,22 +10,22 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeVariableName
-import javax.annotation.processing.Filer
+import com.squareup.kotlinpoet.javapoet.toKTypeName
 import javax.lang.model.element.Modifier
 
 internal class KotlinModelBuilderExtensionWriter(
-    val filer: Filer,
+    val filer: XFiler,
     asyncable: Asyncable
 ) : Asyncable by asyncable {
 
-    suspend fun generateExtensionsForModels(
+    fun generateExtensionsForModels(
         generatedModels: List<GeneratedModelInfo>,
         processorName: String
     ) {
         generatedModels
             .filter { it.shouldGenerateModel }
             .groupBy { it.generatedName.packageName() }
-            .map("generateExtensionsForModels") { packageName, models ->
+            .mapNotNull("generateExtensionsForModels") { packageName, models ->
                 buildExtensionFile(
                     packageName,
                     models,
@@ -30,7 +33,7 @@ internal class KotlinModelBuilderExtensionWriter(
                 )
             }.forEach("writeExtensionsForModels", parallel = false) {
                 // Cannot be done in parallel since filer is not thread safe
-                it.writeSynchronized(filer)
+                it.writeTo(filer, mode = XFiler.Mode.Aggregating)
             }
     }
 
@@ -79,21 +82,21 @@ internal class KotlinModelBuilderExtensionWriter(
             constructor != null && Modifier.PUBLIC !in constructor.modifiers
 
         val initializerLambda = LambdaTypeName.get(
-            receiver = getBuilderInterfaceTypeName(model).toKPoet(),
+            receiver = getBuilderInterfaceTypeName(model).toKTypeName(),
             returnType = KClassNames.KOTLIN_UNIT
         )
 
         FunSpec.builder(getMethodName(model)).run {
-            receiver(ClassNames.MODEL_COLLECTOR.toKPoet())
+            receiver(ClassNames.MODEL_COLLECTOR.toKTypeName())
             val params = constructor?.params ?: listOf()
-            addParameters(params.toKParams())
+            addParameters(params.map { it.toKPoet() })
 
             addParameter(
                 "modelInitializer",
                 initializerLambda
             )
 
-            val modelClass = model.parameterizedGeneratedName.toKPoet()
+            val modelClass = model.parameterizedGeneratedName.toKTypeName()
             if (modelClass is ParameterizedTypeName) {
                 // We expect the type arguments to be of type TypeVariableName
                 // Otherwise we can't get bounds information off of it and can't do much

@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import android.content.Context;
@@ -380,4 +379,3 @@ public class TestFieldPropGenerateStringOverloadsOptionViewModel_ extends EpoxyM
     return totalSpanCount;
   }
 }
-

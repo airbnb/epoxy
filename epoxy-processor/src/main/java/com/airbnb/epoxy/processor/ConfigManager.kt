@@ -1,25 +1,22 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XRoundEnv
+import androidx.room.compiler.processing.XType
+import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.epoxy.PackageEpoxyConfig
 import com.airbnb.epoxy.PackageModelViewConfig
 import com.airbnb.epoxy.processor.PackageConfigSettings.Companion.create
 import com.airbnb.epoxy.processor.PackageConfigSettings.Companion.forDefaults
-import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.element.Element
-import javax.lang.model.element.PackageElement
-import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeMirror
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
 
 /** Manages configuration settings for different packages.  */
 class ConfigManager internal constructor(
     options: Map<String, String>,
-    private val elementUtils: Elements,
-    private val typeUtils: Types
+    private val environment: XProcessingEnv,
 ) {
-    val packageEpoxyConfigElements: MutableList<Element> = mutableListOf()
-    val packageModelViewConfigElements: MutableList<Element> = mutableListOf()
+    val packageEpoxyConfigElements: MutableList<XElement> = mutableListOf()
+    val packageModelViewConfigElements: MutableList<XElement> = mutableListOf()
     private val configurationMap: MutableMap<String, PackageConfigSettings> = mutableMapOf()
     private val modelViewNamingMap: MutableMap<String, PackageModelViewSettings?> = mutableMapOf()
     private val validateModelUsage: Boolean
@@ -32,7 +29,6 @@ class ConfigManager internal constructor(
     private val disableGenerateBuilderOverloads: Boolean
     val disableDslMarker: Boolean
     val logTimings: Boolean
-    val enableCoroutines: Boolean
 
     init {
         validateModelUsage = getBooleanOption(
@@ -70,12 +66,6 @@ class ConfigManager internal constructor(
             defaultValue = false
         )
 
-        enableCoroutines = getBooleanOption(
-            options,
-            PROCESSOR_OPTION_ENABLE_PARALLEL,
-            defaultValue = false
-        )
-
         disableGenerateReset = getBooleanOption(
             options,
             PROCESSOR_OPTION_DISABLE_GENERATE_RESET,
@@ -101,77 +91,79 @@ class ConfigManager internal constructor(
         )
     }
 
-    fun processPackageEpoxyConfig(roundEnv: RoundEnvironment): List<Exception> {
+    fun processPackageEpoxyConfig(roundEnv: XRoundEnv): List<Exception> {
         val errors = mutableListOf<Exception>()
 
-        for (element in roundEnv.getElementsAnnotatedWith(PackageEpoxyConfig::class.java)) {
-            packageEpoxyConfigElements.add(element)
-            val packageName = elementUtils.getPackageOf(element).qualifiedName.toString()
-            if (configurationMap.containsKey(packageName)) {
-                errors.add(
-                    Utils.buildEpoxyException(
-                        "Only one Epoxy configuration annotation is allowed per package (%s)",
-                        packageName
+        roundEnv.getElementsAnnotatedWith(PackageEpoxyConfig::class)
+            .filterIsInstance<XTypeElement>()
+            .forEach { element ->
+                packageEpoxyConfigElements.add(element)
+                val packageName = element.packageName
+                if (configurationMap.containsKey(packageName)) {
+                    errors.add(
+                        Utils.buildEpoxyException(
+                            "Only one Epoxy configuration annotation is allowed per package (%s)",
+                            packageName
+                        )
                     )
-                )
-                continue
+                    return@forEach
+                }
+                val annotation = element.getAnnotation(PackageEpoxyConfig::class)!!
+                configurationMap[packageName] = create(annotation)
             }
-            val annotation = element.getAnnotation<PackageEpoxyConfig>()!!
-            configurationMap[packageName] = create(annotation)
-        }
 
         return errors
     }
 
-    fun processPackageModelViewConfig(roundEnv: RoundEnvironment): List<Exception> {
+    fun processPackageModelViewConfig(roundEnv: XRoundEnv): List<Exception> {
         val errors = mutableListOf<Exception>()
 
-        for (element in roundEnv.getElementsAnnotatedWith(PackageModelViewConfig::class.java)) {
-            packageModelViewConfigElements.add(element)
-            val packageName = elementUtils.getPackageOf(element).qualifiedName.toString()
-            if (modelViewNamingMap.containsKey(packageName)) {
-                errors.add(
-                    Utils.buildEpoxyException(
-                        "Only one %s annotation is allowed per package (%s)",
-                        PackageModelViewConfig::class.java.simpleName,
-                        packageName
+        roundEnv.getElementsAnnotatedWith(PackageModelViewConfig::class)
+            .filterIsInstance<XTypeElement>()
+            .forEach { element ->
+                packageModelViewConfigElements.add(element)
+                val packageName = element.packageName
+                if (modelViewNamingMap.containsKey(packageName)) {
+                    errors.add(
+                        Utils.buildEpoxyException(
+                            "Only one %s annotation is allowed per package (%s)",
+                            PackageModelViewConfig::class.java.simpleName,
+                            packageName
+                        )
                     )
-                )
-                continue
-            }
-            val rClassName = Utils.getClassParamFromAnnotation(
-                element,
-                PackageModelViewConfig::class.java,
-                "rClass",
-                typeUtils
-            )
-            if (rClassName == null) {
-                errors.add(
-                    Utils.buildEpoxyException(
-                        "Unable to get R class details from annotation %s (package: %s)",
-                        PackageModelViewConfig::class.java.simpleName,
-                        packageName
+                    return@forEach
+                }
+                val annotation = element.requireAnnotation(PackageModelViewConfig::class)
+
+                val rClassName = annotation.getAsType("rClass")?.typeElement
+                if (rClassName == null) {
+                    errors.add(
+                        Utils.buildEpoxyException(
+                            element,
+                            "Unable to get R class details from annotation %s (package: %s)",
+                            PackageModelViewConfig::class.java.simpleName,
+                            packageName
+                        )
                     )
-                )
-                continue
-            }
-            val rLayoutClassString = rClassName.reflectionName()
-            if (!rLayoutClassString.endsWith(".R") &&
-                !rLayoutClassString.endsWith(".R2")
-            ) {
-                errors.add(
-                    Utils.buildEpoxyException(
-                        "Invalid R class in %s. Was '%s' (package: %s)",
-                        PackageModelViewConfig::class.java.simpleName,
-                        rLayoutClassString,
-                        packageName
+                    return@forEach
+                }
+                val rLayoutClassString = rClassName.className.reflectionName()
+                if (!rLayoutClassString.endsWith(".R") &&
+                    !rLayoutClassString.endsWith(".R2")
+                ) {
+                    errors.add(
+                        Utils.buildEpoxyException(
+                            element,
+                            "Invalid R class in %s. Was '%s' (package: %s)",
+                            PackageModelViewConfig::class.java.simpleName,
+                            rLayoutClassString,
+                            packageName
+                        )
                     )
-                )
-                continue
+                    return@forEach
+                }
+                modelViewNamingMap[packageName] = PackageModelViewSettings(rClassName, annotation)
             }
-            val annotation = element.getAnnotation<PackageModelViewConfig>()!!
-            modelViewNamingMap[packageName] = PackageModelViewSettings(rClassName, annotation)
-        }
 
         return errors
     }
@@ -189,7 +181,7 @@ class ConfigManager internal constructor(
         // Legacy models can choose whether they want to require it
     }
 
-    fun requiresAbstractModels(classElement: TypeElement): Boolean {
+    fun requiresAbstractModels(classElement: XTypeElement): Boolean {
         return (
             globalRequireAbstractModels ||
                 getConfigurationForElement(classElement).requireAbstractModels
@@ -199,7 +191,7 @@ class ConfigManager internal constructor(
     fun implicitlyAddAutoModels(controller: ControllerClassInfo): Boolean {
         return (
             globalImplicitlyAddAutoModels ||
-                getConfigurationForElement(controller.controllerClassElement).implicitlyAddAutoModels
+                getConfigurationForPackage(controller.classPackage).implicitlyAddAutoModels
             )
     }
 
@@ -222,8 +214,8 @@ class ConfigManager internal constructor(
         return getModelViewConfig(modelViewInfo.viewElement)
     }
 
-    fun getModelViewConfig(viewElement: Element): PackageModelViewSettings? {
-        val packageName = elementUtils.getPackageOf(viewElement).qualifiedName.toString()
+    fun getModelViewConfig(viewElement: XTypeElement): PackageModelViewSettings? {
+        val packageName = viewElement.packageName
         return getObjectFromPackageMap(
             modelViewNamingMap,
             packageName,
@@ -231,15 +223,15 @@ class ConfigManager internal constructor(
         )
     }
 
-    fun getDefaultBaseModel(viewElement: TypeElement): TypeMirror? {
+    fun getDefaultBaseModel(viewElement: XTypeElement): XType? {
         return getModelViewConfig(viewElement)?.defaultBaseModel
     }
 
-    fun includeAlternateLayoutsForViews(viewElement: TypeElement): Boolean {
+    fun includeAlternateLayoutsForViews(viewElement: XTypeElement): Boolean {
         return getModelViewConfig(viewElement)?.includeAlternateLayouts ?: false
     }
 
-    fun generatedModelSuffix(viewElement: TypeElement): String {
+    fun generatedModelSuffix(viewElement: XTypeElement): String {
         return getModelViewConfig(viewElement)?.generatedModelSuffix
             ?: GeneratedModelInfo.GENERATED_MODEL_SUFFIX
     }
@@ -259,16 +251,11 @@ class ConfigManager internal constructor(
             ?: disableGenerateGetters
     }
 
-    private fun getConfigurationForElement(element: Element): PackageConfigSettings {
-        return getConfigurationForPackage(elementUtils.getPackageOf(element))
+    private fun getConfigurationForElement(element: XTypeElement): PackageConfigSettings {
+        return getConfigurationForPackage(element.packageName)
     }
 
-    private fun getConfigurationForPackage(packageElement: PackageElement): PackageConfigSettings {
-        val packageName = packageElement.qualifiedName.toString()
-        return getConfigurationForPackage(packageName)
-    }
-
-    private fun getConfigurationForPackage(packageName: String): PackageConfigSettings {
+    fun getConfigurationForPackage(packageName: String): PackageConfigSettings {
         return getObjectFromPackageMap(
             configurationMap,
             packageName,
@@ -283,7 +270,6 @@ class ConfigManager internal constructor(
         const val PROCESSOR_OPTION_DISABLE_GENERATE_BUILDER_OVERLOADS =
             "epoxyDisableGenerateOverloads"
         const val PROCESSOR_OPTION_LOG_TIMINGS = "logEpoxyTimings"
-        const val PROCESSOR_OPTION_ENABLE_PARALLEL = "enableParallelEpoxyProcessing"
         const val PROCESSOR_OPTION_VALIDATE_MODEL_USAGE = "validateEpoxyModelUsage"
         const val PROCESSOR_OPTION_REQUIRE_HASHCODE = "requireHashCodeInEpoxyModels"
         const val PROCESSOR_OPTION_REQUIRE_ABSTRACT_MODELS = "requireAbstractEpoxyModels"

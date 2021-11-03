@@ -42,6 +42,7 @@ dependencies {
   api project(':epoxy-annotations')
 
   kapt project(':epoxy-processor')
+  kaptTest project(':epoxy-processor')
 
   testImplementation rootProject.deps.junit
   testImplementation rootProject.deps.robolectric

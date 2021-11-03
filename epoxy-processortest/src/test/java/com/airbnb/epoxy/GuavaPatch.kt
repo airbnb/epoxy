@@ -12,3 +12,10 @@ import java.net.URL
  */
 fun String.patchResource(): URL =
     File("build/intermediates/sourceFolderJavaResources/debug/$this").toURI().toURL()
+
+fun File.unpatchResource(): File = File(
+    canonicalPath.replace(
+        "build/intermediates/sourceFolderJavaResources/debug/",
+        "src/test/resources/"
+    )
+)

@@ -66,7 +66,7 @@ class FromModelPropertiesTest {
 
     @Test
     fun getDrawableRes() {
-        val drawableRes = R.drawable.abc_ic_star_black_48dp
+        val drawableRes = android.R.drawable.alert_dark_frame
         val model =
             TestModelPropertiesViewModel_.from(
                 TestModelProperties(

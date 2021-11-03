@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import android.view.View;
@@ -412,4 +411,3 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
     return totalSpanCount;
   }
 }
-

@@ -1,11 +1,8 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XTypeElement
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
-import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
 
 const val BUILDER_STYLE_METHOD_PREFIX = "add"
 const val PARIS_DEFAULT_STYLE_CONSTANT_NAME = "DEFAULT_PARIS_STYLE"
@@ -19,12 +16,11 @@ fun weakReferenceFieldForStyle(styleName: String) = "parisStyleReference_$styleN
  */
 class ParisStyleAttributeInfo(
     modelInfo: GeneratedModelInfo,
-    val elements: Elements,
-    val types: Types,
     packageName: String,
     styleBuilderClassName: ClassName,
-    val styleBuilderElement: Element
-) : AttributeInfo() {
+    val styleBuilderElement: XTypeElement,
+    memoizer: Memoizer
+) : AttributeInfo(memoizer) {
 
     val styles: List<ParisStyle>
     val styleApplierClass: ClassName
@@ -34,7 +30,7 @@ class ParisStyleAttributeInfo(
         fieldName = PARIS_STYLE_ATTR_NAME
         rootClass = modelInfo.generatedName.simpleName()
         this.packageName = packageName
-        setTypeMirror(modelInfo.memoizer.parisStyleType, modelInfo.memoizer)
+        setXType(modelInfo.memoizer.parisStyleType, modelInfo.memoizer)
         styleBuilderClass = styleBuilderClassName
         ignoreRequireHashCode = true
         isGenerated = true
@@ -48,20 +44,18 @@ class ParisStyleAttributeInfo(
         codeToSetDefault.explicit = CodeBlock.of(PARIS_DEFAULT_STYLE_CONSTANT_NAME)
     }
 
-    private fun findStyleNames(styleBuilderElement: Element): List<ParisStyle> {
+    private fun findStyleNames(styleBuilderElement: XTypeElement): List<ParisStyle> {
         return styleBuilderElement
-            .enclosedElementsThreadSafe
+            .getDeclaredMethodsLight(memoizer)
             .filter {
-                it.kind == ElementKind.METHOD &&
-                    it.simpleName.startsWith(BUILDER_STYLE_METHOD_PREFIX)
+                it.name.startsWith(BUILDER_STYLE_METHOD_PREFIX)
             }
             .map {
-                val name = it.simpleName
-                    .toString()
+                val name = it.name
                     .removePrefix(BUILDER_STYLE_METHOD_PREFIX)
                     .lowerCaseFirstLetter()
 
-                ParisStyle(name, elements.getDocComment(it))
+                ParisStyle(name, it.docComment)
             }
     }
 }

@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -737,4 +736,3 @@ public class DataBindingModelWithAllFieldTypes_ extends DataBindingModelWithAllF
         "}" + super.toString();
   }
 }
-

@@ -1,16 +1,20 @@
 package com.airbnb.epoxy.processor
 
-import com.airbnb.epoxy.processor.ClassNames.EPOXY_STRING_ATTRIBUTE_DATA_REFLECTION_NAME
+import androidx.room.compiler.processing.XType
+import androidx.room.compiler.processing.isInt
+import androidx.room.compiler.processing.isLong
+import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
-import javax.lang.model.type.TypeKind
-import javax.lang.model.type.TypeMirror
+import com.squareup.javapoet.WildcardTypeName
 
 /**
  * This helps to memoize the look up of a type's information.
  */
-class Type(val typeMirror: TypeMirror, val typeMirrorAsString: String) {
-    val typeName: TypeName by lazy { typeMirror.typeNameSynchronized() }
-    val typeEnum: TypeEnum by lazy { TypeEnum.from(typeMirror, typeMirrorAsString) }
+class Type(val xType: XType, memoizer: Memoizer) {
+    val typeName: TypeName by lazy {
+        xType.typeNameWithWorkaround(memoizer)
+    }
+    val typeEnum: TypeEnum by lazy { TypeEnum.from(xType, typeName, memoizer) }
 
     enum class TypeEnum {
         StringOrCharSequence,
@@ -27,37 +31,42 @@ class Type(val typeMirror: TypeMirror, val typeMirrorAsString: String) {
         Unknown;
 
         companion object {
-            fun from(typeMirror: TypeMirror, typeMirrorAsString: String): TypeEnum {
-                typeMirror.ensureLoaded()
+            fun from(xType: XType, typeName: TypeName, memoizer: Memoizer): TypeEnum {
 
-                val kindMatch = when (typeMirror.kind) {
-                    TypeKind.BOOLEAN -> Boolean
-                    TypeKind.INT -> Int
-                    TypeKind.LONG -> Long
-                    TypeKind.DOUBLE -> Double
-                    else -> null
-                }
+                return when {
+                    xType.isInt() -> Int
+                    xType.isLong() -> Long
+                    xType.typeName == TypeName.BOOLEAN || xType.typeName == TypeName.BOOLEAN.box() -> Boolean
+                    xType.typeName == TypeName.DOUBLE || xType.typeName == TypeName.DOUBLE.box() -> Double
+                    xType.isTypeOf(CharSequence::class) || xType.isTypeOf(String::class) -> StringOrCharSequence
+                    xType.typeName == ClassNames.EPOXY_STRING_ATTRIBUTE_DATA -> StringAttributeData
+                    // Use raw types so that nullability is ignored, as we don't care about that for
+                    // the purposes of this type checking.
+                    xType.rawType == memoizer.viewOnClickListenerType.rawType -> ViewClickListener
+                    xType.rawType == memoizer.viewOnLongClickListenerType.rawType -> ViewLongClickListener
+                    xType.rawType == memoizer.viewOnCheckChangedType.rawType -> ViewCheckedChangeListener
 
-                return kindMatch ?: when (typeMirrorAsString) {
-                    "java.lang.CharSequence", "java.lang.String" -> StringOrCharSequence
-                    "java.lang.Boolean" -> Boolean
-                    "java.lang.Integer" -> Int
-                    "java.lang.Long" -> Long
-                    "java.lang.Double" -> Double
-                    EPOXY_STRING_ATTRIBUTE_DATA_REFLECTION_NAME -> StringAttributeData
-                    Utils.VIEW_CLICK_LISTENER_TYPE -> ViewClickListener
-                    Utils.VIEW_LONG_CLICK_LISTENER_TYPE -> ViewLongClickListener
-                    Utils.VIEW_CHECKED_CHANGE_LISTENER_TYPE -> ViewCheckedChangeListener
-                    stringListType -> StringList
-                    epoxyModelListType -> EpoxyModelList
+                    xType.isList() -> {
+                        val listType = xType.typeArguments.singleOrNull()
+                        when {
+                            listType?.isTypeOf(String::class) == true -> StringList
+                            typeName == listOfGenericEpoxyModelType -> EpoxyModelList
+                            else -> Unknown
+                        }
+                    }
                     else -> Unknown
                 }
             }
-
-            private val epoxyModelListType = "? extends ${Utils.EPOXY_MODEL_TYPE}".asListType()
-            private val stringListType = String::class.java.canonicalName.asListType()
-
-            private fun String.asListType() = "java.util.List<$this>"
         }
     }
 }
+
+private val listOfGenericEpoxyModelType = ParameterizedTypeName.get(
+    ClassNames.LIST,
+    WildcardTypeName.subtypeOf(
+        ParameterizedTypeName.get(
+            ClassNames.EPOXY_MODEL_UNTYPED,
+            WildcardTypeName.subtypeOf(TypeName.OBJECT)
+        )
+    )
+)

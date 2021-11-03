@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import android.view.View;
@@ -348,4 +347,3 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
     return totalSpanCount;
   }
 }
-

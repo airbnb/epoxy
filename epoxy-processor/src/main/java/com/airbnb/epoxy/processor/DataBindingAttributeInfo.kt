@@ -1,21 +1,22 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XMethodElement
 import com.airbnb.epoxy.processor.Utils.removeSetPrefix
-import javax.lang.model.element.ExecutableElement
 
 internal class DataBindingAttributeInfo(
     modelInfo: DataBindingModelInfo,
-    setterMethod: ExecutableElement,
-    hashCodeValidator: HashCodeValidator
-) : AttributeInfo() {
+    setterMethod: XMethodElement,
+    hashCodeValidator: HashCodeValidator,
+    memoizer: Memoizer
+) : AttributeInfo(memoizer) {
 
     init {
-        fieldName = removeSetPrefix(setterMethod.simpleName.toString())
-        setTypeMirror(setterMethod.parametersThreadSafe[0].asType(), modelInfo.memoizer)
+        fieldName = removeSetPrefix(setterMethod.name)
+        setXType(setterMethod.parameters[0].type, modelInfo.memoizer)
         rootClass = modelInfo.generatedName.simpleName()
         packageName = modelInfo.generatedName.packageName()
         useInHash = !modelInfo.enableDoNotHash ||
-            hashCodeValidator.implementsHashCodeAndEquals(typeMirror)
+            hashCodeValidator.implementsHashCodeAndEquals(xType)
         ignoreRequireHashCode = true
         generateSetter = true
         generateGetter = true

@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -13,7 +12,10 @@ import java.lang.String;
 /**
  * Generated file. Do not modify!
  */
-@Deprecated
+@Deprecated(
+    since = "",
+    forRemoval = false
+)
 public class ModelWithAnnotation_ extends ModelWithAnnotation implements GeneratedModel<Object>, ModelWithAnnotationBuilder {
   private OnModelBoundListener<ModelWithAnnotation_, Object> onModelBoundListener_epoxyGeneratedModel;
 
@@ -246,4 +248,3 @@ public class ModelWithAnnotation_ extends ModelWithAnnotation implements Generat
         "}" + super.toString();
   }
 }
-

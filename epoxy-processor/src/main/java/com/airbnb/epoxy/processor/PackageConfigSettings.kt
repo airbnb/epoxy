@@ -1,5 +1,6 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XAnnotationBox
 import com.airbnb.epoxy.PackageEpoxyConfig
 
 /**
@@ -19,10 +20,10 @@ class PackageConfigSettings private constructor(
             PackageEpoxyConfig.IMPLICITLY_ADD_AUTO_MODELS_DEFAULT
         )
 
-        fun create(configAnnotation: PackageEpoxyConfig) = PackageConfigSettings(
-            configAnnotation.requireHashCode,
-            configAnnotation.requireAbstractModels,
-            configAnnotation.implicitlyAddAutoModels
+        fun create(configAnnotation: XAnnotationBox<PackageEpoxyConfig>) = PackageConfigSettings(
+            configAnnotation.value.requireHashCode,
+            configAnnotation.value.requireAbstractModels,
+            configAnnotation.value.implicitlyAddAutoModels
         )
     }
 }

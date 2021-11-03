@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import android.view.View;
@@ -886,4 +885,3 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
     return totalSpanCount;
   }
 }
-

@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -270,4 +269,3 @@ public class ModelWithConstructors_ extends ModelWithConstructors implements Gen
         "}" + super.toString();
   }
 }
-

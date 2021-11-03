@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -246,4 +245,3 @@ public class ModelWithAbstractClassAndAnnotation_ extends ModelWithAbstractClass
         "}" + super.toString();
   }
 }
-

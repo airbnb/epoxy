@@ -1,8 +1,8 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XMethodElement
 import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.TypeName
-import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.Modifier
 
 data class MethodInfo(
@@ -11,7 +11,7 @@ data class MethodInfo(
     val params: List<ParameterSpec>,
     val varargs: Boolean,
     val isEpoxyAttribute: Boolean,
-    val methodElement: ExecutableElement
+    val methodElement: XMethodElement
 ) {
     private val paramTypes: List<TypeName> get() = params.map { it.type }
 

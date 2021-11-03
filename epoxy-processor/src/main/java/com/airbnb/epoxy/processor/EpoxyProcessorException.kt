@@ -1,4 +1,9 @@
 package com.airbnb.epoxy.processor
 
-internal class EpoxyProcessorException(message: String, cause: Throwable? = null) :
-    RuntimeException(message, cause)
+import androidx.room.compiler.processing.XElement
+
+internal class EpoxyProcessorException(
+    message: String,
+    cause: Throwable? = null,
+    val element: XElement? = null
+) : RuntimeException(message, cause)

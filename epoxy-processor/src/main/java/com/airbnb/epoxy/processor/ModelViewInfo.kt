@@ -1,29 +1,25 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XAnnotationBox
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XMethodElement
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.isVoid
+import androidx.room.compiler.processing.isVoidObject
 import com.airbnb.epoxy.ModelView
+import com.airbnb.epoxy.processor.resourcescanning.ResourceScanner
+import com.airbnb.epoxy.processor.resourcescanning.ResourceValue
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.ParameterizedTypeName
-import kotlinx.metadata.Flag.ValueParameter.DECLARES_DEFAULT_VALUE
-import kotlinx.metadata.KmFunction
-import kotlinx.metadata.jvm.KotlinClassHeader
-import kotlinx.metadata.jvm.KotlinClassMetadata
 import java.util.Collections
-import javax.lang.model.element.Element
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.Modifier
-import javax.lang.model.element.TypeElement
-import javax.lang.model.type.DeclaredType
-import javax.lang.model.type.TypeMirror
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
 
 class ModelViewInfo(
-    val viewElement: TypeElement,
-    val typeUtils: Types,
-    val elements: Elements,
+    val viewElement: XTypeElement,
+    private val environment: XProcessingEnv,
     val logger: Logger,
     private val configManager: ConfigManager,
-    private val resourceProcessor: ResourceProcessor,
+    private val resourceProcessor: ResourceScanner,
     memoizer: Memoizer
 ) : GeneratedModelInfo(memoizer) {
 
@@ -31,25 +27,15 @@ class ModelViewInfo(
     val visibilityStateChangedMethodNames = Collections.synchronizedSet(mutableSetOf<String>())
     val visibilityChangedMethodNames = Collections.synchronizedSet(mutableSetOf<String>())
     val afterPropsSetMethodNames = Collections.synchronizedSet(mutableSetOf<String>())
-    private val viewAnnotation: ModelView = viewElement.getAnnotation<ModelView>()!!
-    val kotlinMetadata: KotlinClassMetadata? = viewElement.kotlinMetadata()
-
-    val functionsWithSingleDefaultParameter: List<KmFunction> =
-        (kotlinMetadata as? KotlinClassMetadata.Class)
-            ?.toKmClass()
-            ?.functions
-            ?.filter {
-                val param = it.valueParameters.singleOrNull()
-                param != null && DECLARES_DEFAULT_VALUE(param.flags)
-            }
-            ?: emptyList()
+    private val viewAnnotation: XAnnotationBox<ModelView> =
+        viewElement.requireAnnotation(ModelView::class)
 
     val saveViewState: Boolean
     val fullSpanSize: Boolean
     private val generatedModelSuffix: String
 
     /** All interfaces the view implements that have at least one prop set by the interface. */
-    val viewInterfaces: List<TypeElement>
+    val viewInterfaces: List<XTypeElement>
 
     val viewAttributes: List<ViewAttributeInfo>
         get() = attributeInfo.filterIsInstance<ViewAttributeInfo>()
@@ -57,16 +43,16 @@ class ModelViewInfo(
     init {
         superClassElement = lookUpSuperClassElement()
         this.superClassName = ParameterizedTypeName
-            .get(ClassName.get(superClassElement), viewElement.asType().typeNameSynchronized())
+            .get(superClassElement.className, viewElement.type.typeNameWithWorkaround(memoizer))
 
         generatedModelSuffix = configManager.generatedModelSuffix(viewElement)
-        generatedName = buildGeneratedModelName(viewElement, elements)
+        generatedName = buildGeneratedModelName(viewElement)
         // We don't have any type parameters on our generated model
         this.parameterizedGeneratedName = generatedName
-        shouldGenerateModel = Modifier.ABSTRACT !in viewElement.modifiersThreadSafe
+        shouldGenerateModel = !viewElement.isAbstract()
 
         if (
-            superClassElement.simpleName.toString() != ClassNames.EPOXY_MODEL_UNTYPED.simpleName()
+            superClassElement.name != ClassNames.EPOXY_MODEL_UNTYPED.simpleName()
         ) {
             // If the view has a custom base model then we copy any custom constructors on it
             constructors.addAll(getClassConstructors(superClassElement))
@@ -75,94 +61,75 @@ class ModelViewInfo(
         collectMethodsReturningClassType(superClassElement)
 
         // The bound type is the type of this view
-        modelType = viewElement.asType().typeNameSynchronized()
+        modelType = viewElement.type.typeName
 
-        saveViewState = viewAnnotation.saveViewState
-        layoutParams = viewAnnotation.autoLayout
-        fullSpanSize = viewAnnotation.fullSpan
+        saveViewState = viewAnnotation.value.saveViewState
+        layoutParams = viewAnnotation.value.autoLayout
+        fullSpanSize = viewAnnotation.value.fullSpan
         includeOtherLayoutOptions = configManager.includeAlternateLayoutsForViews(viewElement)
 
-        val methodsOnView = viewElement.executableElements()
+        val methodsOnView = viewElement.getDeclaredMethods()
         viewInterfaces = viewElement
-            .interfaces
-            .filterIsInstance<DeclaredType>()
-            .map { it.asElement().ensureLoaded() }
-            .filterIsInstance<TypeElement>()
+            .getSuperInterfaceElements()
             .filter { interfaceElement ->
                 // Only include the interface if the view has one of the interface methods annotated with a prop annotation
+                val interfaceMethods = interfaceElement.getDeclaredMethods()
                 methodsOnView.any { viewMethod ->
-                    viewMethod.hasAnyAnnotation(ModelViewProcessor.modelPropAnnotations) &&
-                        interfaceElement.executableElements().any { interfaceMethod ->
+                    viewMethod.hasAnyOf(*ModelViewProcessor.modelPropAnnotationsArray) &&
+                        interfaceMethods.any { interfaceMethod ->
                             // To keep this simple we only compare name and ignore parameters, should be close enough
-                            viewMethod.simpleName.toString() == interfaceMethod.simpleName.toString()
+                            viewMethod.name == interfaceMethod.name
                         }
                 }
             }
 
         // Pass deprecated annotations on to the generated model
         annotations.addAll(
-            viewElement.buildAnnotationSpecs { DEPRECATED == it.simpleName() }
+            viewElement.buildAnnotationSpecs({ DEPRECATED == it.simpleName() }, memoizer)
         )
     }
 
-    fun Element.kotlinMetadata(): KotlinClassMetadata? {
-        // https://github.com/JetBrains/kotlin/tree/master/libraries/kotlinx-metadata/jvm
-        val kotlinMetadataAnnotation = getAnnotation<Metadata>() ?: return null
-
-        val header = KotlinClassHeader(
-            kind = kotlinMetadataAnnotation.kind,
-            metadataVersion = kotlinMetadataAnnotation.metadataVersion,
-            data1 = kotlinMetadataAnnotation.data1,
-            data2 = kotlinMetadataAnnotation.data2,
-            extraString = kotlinMetadataAnnotation.extraString,
-            packageName = kotlinMetadataAnnotation.packageName,
-            extraInt = kotlinMetadataAnnotation.extraInt
-        )
-
-        return KotlinClassMetadata.read(header)
-    }
-
-    private fun lookUpSuperClassElement(): TypeElement {
-        val classToExtend: TypeMirror = typeMirror { viewAnnotation.baseModelClass }
-            ?.takeIf { !it.isVoidClass() }
+    private fun lookUpSuperClassElement(): XTypeElement {
+        val classToExtend = viewAnnotation.getAsType("baseModelClass")
+            ?.takeIf { !it.isVoidObject() && !it.isVoid() }
             ?: configManager.getDefaultBaseModel(viewElement)
             ?: return memoizer.epoxyModelClassElementUntyped
 
         val superElement =
-            memoizer.validateViewModelBaseClass(classToExtend, logger, viewElement.simpleName)
+            memoizer.validateViewModelBaseClass(classToExtend, logger, viewElement.name)
 
         return superElement ?: memoizer.epoxyModelClassElementUntyped
     }
 
     private fun buildGeneratedModelName(
-        viewElement: TypeElement,
-        elementUtils: Elements
+        viewElement: XTypeElement,
     ): ClassName {
-        val packageName = elementUtils.getPackageOf(viewElement).qualifiedName.toString()
+        val packageName = viewElement.packageName
 
-        var className = viewElement.simpleName.toString()
+        var className = viewElement.name
         className += generatedModelSuffix
 
         return ClassName.get(packageName, className)
     }
 
-    fun buildProp(prop: Element): ViewAttributeInfo {
+    fun buildProp(prop: XElement): ViewAttributeInfo {
 
         val hasDefaultKotlinValue = checkIsSetterWithSingleDefaultParam(prop)
 
         // Since our generated code is java we need jvmoverloads so that a no arg
         // version of the function is generated. However, the JvmOverloads annotation
-        // is stripped when generating the java code so we can't check it directly.
+        // is stripped when generating the java code so we can't check it directly (but it is available in KSP).
         // Instead, we verify that a no arg function of the same name exists
         val hasNoArgEquivalent = hasDefaultKotlinValue &&
-            prop is ExecutableElement &&
-            viewElement.hasOverload(prop, 0)
+            prop is XMethodElement &&
+            (prop.hasAnnotation(JvmOverloads::class) || viewElement.hasOverload(prop, 0))
 
         if (hasDefaultKotlinValue && !hasNoArgEquivalent) {
             logger.logError(
+                prop,
                 "Model view function with default argument must be annotated with @JvmOverloads: %s#%s",
-                viewElement.simpleName,
-                prop.simpleName
+                viewElement.name,
+                prop
             )
         }
 
@@ -171,8 +138,6 @@ class ModelViewInfo(
             viewPackage = generatedName.packageName(),
             hasDefaultKotlinValue = hasDefaultKotlinValue && hasNoArgEquivalent,
             viewAttributeElement = prop,
-            types = typeUtils,
-            elements = elements,
             logger = logger,
             resourceProcessor = resourceProcessor,
             memoizer = memoizer
@@ -195,11 +160,12 @@ class ModelViewInfo(
         afterPropsSetMethodNames.add(methodName)
     }
 
-    fun getLayoutResource(resourceProcessor: ResourceProcessor): ResourceValue {
-        val annotation = viewElement.getAnnotation<ModelView>()!!
-        val layoutValue = annotation.defaultLayout
+    fun getLayoutResource(resourceProcessor: ResourceScanner): ResourceValue {
+        val annotation = viewElement.requireAnnotation(ModelView::class)
+        val layoutValue = annotation.value.defaultLayout
         if (layoutValue != 0) {
-            return resourceProcessor.getLayoutInAnnotation(viewElement, ModelView::class.java)
+            return resourceProcessor.getResourceValue(ModelView::class, viewElement, "defaultLayout")
+                ?: error("ModelView default layout not found for $viewElement")
         }
 
         val modelViewConfig = configManager.getModelViewConfig(viewElement)
@@ -208,37 +174,13 @@ class ModelViewInfo(
             return modelViewConfig.getNameForView(viewElement)
         }
 
-        logger.logError("Unable to get layout resource for view %s", viewElement.simpleName)
+        logger.logError(viewElement, "UnabletypeNameWorkaround to get layout resource for view %s", viewElement.name)
         return ResourceValue(0)
     }
 
-    private fun checkIsSetterWithSingleDefaultParam(element: Element): Boolean {
-        if (element !is ExecutableElement) return false
-
-        // Given an element representing a function we want to find the corresponding function information
-        // in the kotlin metadata of this class. We do this by searching for a function matching the same
-        // name, param count, param name, and param type.
-        // This assumes the param count we're looking for is 1 since this is an epoxy setter.
-        val parameters = element.parametersThreadSafe
-        require(parameters.size == 1) { "Expected function $element to have exactly 1 parameter" }
-
-        val targetFunctionName = element.simpleName.toString()
-        val functionsWithSameName = functionsWithSingleDefaultParameter
-            .filter { it.name == targetFunctionName }
-
-        if (functionsWithSameName.isEmpty()) return false
-
-        val param = parameters.single()
-        val paramName = param.simpleName.toString()
-
-        return functionsWithSameName.any { kmFunction ->
-            val kmParam = kmFunction.valueParameters.singleOrNull() ?: return@any false
-            // We don't check type, since it is hard to compare cross platform, like
-            // kotlin.Int vs java.lang.Integer. Also, if there is a zero param setter of the
-            // same name then we don't need to use a type to call it and can assume it is the
-            // no arg equivalent.
-            kmParam.name == paramName
-        }
+    private fun checkIsSetterWithSingleDefaultParam(element: XElement): Boolean {
+        if (element !is XMethodElement) return false
+        return element.parameters.singleOrNull()?.hasDefaultValue == true
     }
 
     override fun additionalOriginatingElements() = listOf(viewElement)

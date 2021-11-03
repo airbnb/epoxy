@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import android.view.View;
@@ -278,4 +277,3 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
         "}" + super.toString();
   }
 }
-

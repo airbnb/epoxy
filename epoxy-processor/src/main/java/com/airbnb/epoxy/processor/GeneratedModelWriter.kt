@@ -1,15 +1,20 @@
 package com.airbnb.epoxy.processor
 
 import androidx.annotation.LayoutRes
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XFiler
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.addOriginatingElement
+import androidx.room.compiler.processing.writeTo
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.processor.ClassNames.ANDROID_ASYNC_TASK
 import com.airbnb.epoxy.processor.ClassNames.EPOXY_MODEL_PROPERTIES
 import com.airbnb.epoxy.processor.ClassNames.PARIS_STYLE
 import com.airbnb.epoxy.processor.Utils.implementsMethod
-import com.airbnb.epoxy.processor.Utils.isDataBindingModel
-import com.airbnb.epoxy.processor.Utils.isEpoxyModel
-import com.airbnb.epoxy.processor.Utils.isEpoxyModelWithHolder
+import com.airbnb.epoxy.processor.resourcescanning.ResourceScanner
+import com.airbnb.epoxy.processor.resourcescanning.ResourceValue
 import com.squareup.javapoet.ArrayTypeName
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
@@ -35,31 +40,26 @@ import java.util.ArrayList
 import java.util.Arrays
 import java.util.BitSet
 import java.util.Objects
-import javax.annotation.processing.Filer
-import javax.lang.model.element.Element
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.Modifier.FINAL
 import javax.lang.model.element.Modifier.PRIVATE
 import javax.lang.model.element.Modifier.PROTECTED
 import javax.lang.model.element.Modifier.PUBLIC
 import javax.lang.model.element.Modifier.STATIC
-import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
 
 class GeneratedModelWriter(
-    private val filer: Filer,
-    private val types: Types,
+    private val filer: XFiler,
+    private val environment: XProcessingEnv,
     private val logger: Logger,
-    private val resourceProcessor: ResourceProcessor,
+    private val resourceProcessor: ResourceScanner,
     private val configManager: ConfigManager,
     private val dataBindingModuleLookup: DataBindingModuleLookup,
-    private val elements: Elements,
-    asyncable: Asyncable
+    asyncable: Asyncable,
+    private val memoizer: Memoizer
 ) {
 
     val modelInterfaceWriter =
-        ModelBuilderInterfaceWriter(filer, types, asyncable, configManager, elements)
+        ModelBuilderInterfaceWriter(filer, environment, asyncable, configManager)
 
     open class BuilderHooks {
         open fun beforeFinalBuild(builder: TypeSpec.Builder) {}
@@ -112,13 +112,13 @@ class GeneratedModelWriter(
         }
     }
 
-    suspend fun writeFilesForViewInterfaces() {
+    fun writeFilesForViewInterfaces() {
         modelInterfaceWriter.writeFilesForViewInterfaces()
     }
 
     fun generateClassForModel(
         info: GeneratedModelInfo,
-        originatingElements: List<Element>,
+        originatingElements: List<XElement>,
         builderHooks: BuilderHooks? = null
     ) {
         if (!info.shouldGenerateModel) {
@@ -169,7 +169,7 @@ class GeneratedModelWriter(
 
         JavaFile.builder(generatedModelName.packageName(), modelClass)
             .build()
-            .writeSynchronized(filer)
+            .writeTo(filer, mode = XFiler.Mode.Aggregating)
     }
 
     private fun generateOtherLayoutOptions(info: GeneratedModelInfo): Iterable<MethodSpec> {
@@ -388,7 +388,8 @@ class GeneratedModelWriter(
     private fun generateConstructors(info: GeneratedModelInfo): Iterable<MethodSpec> {
         return info.constructors.map {
             buildConstructor {
-                addModifiers(it.modifiers)
+                // Final is not allowed on java constructors, but ksp can add it, so we remove it
+                addModifiers(it.modifiers.minus(FINAL))
                 addParameters(it.params)
                 varargs(it.varargs)
 
@@ -825,7 +826,7 @@ class GeneratedModelWriter(
         // EpoxyModel implementation which calls normal "bind". Doing that would force a full
         // bind!!! So we mustn't do that. So, we only call the super diff binding if we think
         // it's a custom implementation.
-        if (modelImplementsBindWithDiff(classInfo.superClassElement, build(), types, elements)) {
+        if (modelImplementsBindWithDiff(classInfo.superClassElement, build(), environment)) {
             addStatement(
                 "super.bind(\$L, \$L)",
                 boundObjectParam.name,
@@ -880,7 +881,9 @@ class GeneratedModelWriter(
             preBindBuilder
                 .beginControlFlow(
                     "if (!\$T.equals(\$L, \$L.getTag(\$T.id.epoxy_saved_view_style)))",
-                    Objects::class.java, PARIS_STYLE_ATTR_NAME, boundObjectParam.name,
+                    Objects::class.java,
+                    PARIS_STYLE_ATTR_NAME,
+                    boundObjectParam.name,
                     ClassNames.EPOXY_R
                 )
                 .beginControlFlow(
@@ -894,7 +897,8 @@ class GeneratedModelWriter(
                     "\$T.assertSameAttributes(new \$T(\$L), \$L, \$L)",
                     ClassNames.PARIS_STYLE_UTILS,
                     modelInfo.styleBuilderInfo!!.styleApplierClass,
-                    boundObjectParam.name, PARIS_STYLE_ATTR_NAME,
+                    boundObjectParam.name,
+                    PARIS_STYLE_ATTR_NAME,
                     PARIS_DEFAULT_STYLE_CONSTANT_NAME
                 )
                 .endControlFlow()
@@ -949,7 +953,8 @@ class GeneratedModelWriter(
                 .returns(modelInfo.parameterizedGeneratedName)
                 .addParameter(parameterizedBuilderCallbackType, "builderCallback")
                 .addStatement(
-                    "\$T builder = new \$T()", styleBuilderClass,
+                    "\$T builder = new \$T()",
+                    styleBuilderClass,
                     styleBuilderClass
                 )
                 .addStatement("builderCallback.buildStyle(builder.addDefault())")
@@ -1086,7 +1091,7 @@ class GeneratedModelWriter(
     ) {
 
         val originalClassElement = modelClassInfo.superClassElement
-        if (!isEpoxyModelWithHolder(originalClassElement)) {
+        if (!originalClassElement.type.isEpoxyModelWithHolder(memoizer)) {
             return
         }
 
@@ -1101,13 +1106,13 @@ class GeneratedModelWriter(
             )
             .build()
 
-        if (implementsMethod(originalClassElement, createHolderMethod, types, elements)) {
+        if (implementsMethod(originalClassElement, createHolderMethod, environment)) {
             return
         }
 
         createHolderMethod = with(createHolderMethod.toBuilder()) {
             returns(modelClassInfo.modelType)
-            val modelTypeElement = (modelClassInfo.modelType as? ClassName)?.asTypeElement(elements)
+            val modelTypeElement = modelClassInfo.modelType?.let { environment.findTypeElement(it) }
             if (modelTypeElement != null &&
                 modelClassInfo.memoizer.hasViewParentConstructor(modelTypeElement)
             ) {
@@ -1162,7 +1167,7 @@ class GeneratedModelWriter(
         }
 
         val superClassElement = modelInfo.superClassElement
-        if (implementsMethod(superClassElement, buildDefaultLayoutMethodBase(), types, elements)) {
+        if (implementsMethod(superClassElement, buildDefaultLayoutMethodBase(), environment)) {
             return null
         }
 
@@ -1179,7 +1184,7 @@ class GeneratedModelWriter(
         }
 
         return resourceProcessor
-            .getLayoutInAnnotation(modelClassWithAnnotation, EpoxyModelClass::class.java)
+            .getResourceValue(EpoxyModelClass::class, modelClassWithAnnotation, "layout")
     }
 
     /**
@@ -1188,7 +1193,7 @@ class GeneratedModelWriter(
      * variables that changed.
      */
     private fun generateDataBindingMethodsIfNeeded(info: GeneratedModelInfo): Iterable<MethodSpec> {
-        if (!isDataBindingModel(info.superClassElement)) {
+        if (!info.superClassElement.type.isDataBindingEpoxyModel(memoizer)) {
             return emptyList()
         }
 
@@ -1206,8 +1211,7 @@ class GeneratedModelWriter(
         if (implementsMethod(
                 info.superClassElement,
                 bindVariablesMethod,
-                types,
-                elements
+                environment
             )
         ) {
             return emptyList()
@@ -1277,24 +1281,24 @@ class GeneratedModelWriter(
     /**
      * Looks for [EpoxyModelClass] annotation in the original class and his parents.
      */
-    private fun findSuperClassWithClassAnnotation(classElement: TypeElement): TypeElement? {
-        if (!isEpoxyModel(classElement)) {
+    private fun findSuperClassWithClassAnnotation(classElement: XTypeElement): XTypeElement? {
+        if (!classElement.isEpoxyModel(memoizer)) {
             return null
         }
 
-        val annotation = classElement.getAnnotation<EpoxyModelClass>()
+        val annotation = classElement.getAnnotation(EpoxyModelClass::class)
             // This is an error. The model must have an EpoxyModelClass annotation
             // since getDefaultLayout is not implemented
             ?: return null
 
         val layoutRes: Int
         try {
-            layoutRes = annotation.layout
+            layoutRes = annotation.value.layout
         } catch (e: AnnotationTypeMismatchException) {
             logger.logError(
                 "Invalid layout value in %s annotation. (class: %s). %s: %s",
                 EpoxyModelClass::class.java,
-                classElement.simpleName,
+                classElement.name,
                 e.javaClass.simpleName,
                 e.message ?: ""
             )
@@ -1307,7 +1311,7 @@ class GeneratedModelWriter(
 
         // This model did not specify a layout in its EpoxyModelClass annotation,
         // but its superclass might
-        classElement.superClassElement(types)
+        classElement.superType?.typeElement
             ?.let { superClass ->
                 findSuperClassWithClassAnnotation(superClass)
             }
@@ -1316,10 +1320,11 @@ class GeneratedModelWriter(
             }
 
         logger.logError(
+            classElement,
             "Model must specify a valid layout resource in the %s annotation. " +
                 "(class: %s)",
             EpoxyModelClass::class.java.simpleName,
-            classElement.simpleName
+            classElement.name
         )
 
         return null
@@ -1759,7 +1764,7 @@ class GeneratedModelWriter(
         modelInfo: GeneratedModelInfo
     ) {
         // The epoxy-modelfactory module must be present to enable this functionality
-        if (!elements.isTypeLoaded(EPOXY_MODEL_PROPERTIES)) {
+        if (!environment.isTypeLoaded(EPOXY_MODEL_PROPERTIES)) {
             return
         }
 
@@ -1844,8 +1849,8 @@ class GeneratedModelWriter(
 
                     val jsonGetterName = when {
                         attributeInfo.isBoolean -> "getBoolean"
-                        attributeInfo.isCharSequenceOrString
-                            || attributeInfo.isStringAttributeData -> "getString"
+                        attributeInfo.isCharSequenceOrString ||
+                            attributeInfo.isStringAttributeData -> "getString"
                         attributeInfo.isDouble -> "getDouble"
                         attributeInfo.isDrawableRes -> "getDrawableRes"
                         attributeInfo.isEpoxyModelList -> "getEpoxyModelList"
@@ -2083,27 +2088,25 @@ class GeneratedModelWriter(
         fun addOnMutationCall(method: MethodSpec.Builder) = method.addStatement("onMutation()")!!
 
         fun modelImplementsBindWithDiff(
-            clazz: TypeElement,
+            clazz: XTypeElement,
             bindWithDiffMethod: MethodSpec,
-            types: Types,
-            elements: Elements
+            environment: XProcessingEnv
         ): Boolean {
             val methodOnClass = Utils.getMethodOnClass(
                 clazz,
                 bindWithDiffMethod,
-                types,
-                elements
+                environment
             ) ?: return false
 
-            if (Modifier.ABSTRACT in methodOnClass.modifiersThreadSafe) {
+            if (methodOnClass.isAbstract()) {
                 return false
             }
 
-            val enclosingElement = methodOnClass.enclosingElement as TypeElement
+            val enclosingElement = methodOnClass.enclosingElement as XTypeElement
 
             // As long as the implementation is not on the base EpoxyModel we consider it a custom
             // implementation
-            return enclosingElement.qualifiedName.toString() != Utils.UNTYPED_EPOXY_MODEL_TYPE
+            return enclosingElement.qualifiedName != Utils.UNTYPED_EPOXY_MODEL_TYPE
         }
     }
 }

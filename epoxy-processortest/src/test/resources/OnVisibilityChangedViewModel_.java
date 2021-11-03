@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -318,4 +317,3 @@ public class OnVisibilityChangedViewModel_ extends EpoxyModel<OnVisibilityChange
     return totalSpanCount;
   }
 }
-

@@ -1,11 +1,12 @@
 package com.airbnb.epoxy;
 
 public class ModelWithFinalField extends EpoxyModel<Object> {
-  @EpoxyAttribute final int valueInt;
+  @EpoxyAttribute final int finalValueInt;
+  @EpoxyAttribute int nonFinalValueInt;
 
   public ModelWithFinalField(long id, int valueInt) {
     super(id);
-    this.valueInt = valueInt;
+    this.finalValueInt = valueInt;
   }
 
   @Override

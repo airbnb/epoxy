@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -311,4 +310,3 @@ public class GridSpanCountViewModel_ extends EpoxyModel<GridSpanCountView> imple
         "}" + super.toString();
   }
 }
-

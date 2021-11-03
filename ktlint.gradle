@@ -7,7 +7,7 @@ configurations {
 }
 
 dependencies {
-  ktlint "com.pinterest:ktlint:0.41.0"
+  ktlint "com.pinterest:ktlint:0.42.1"
   // additional 3rd party ruleset(s) can be specified here
   // just add them to the classpath (e.g. ktlint 'groupId:artifactId:version') and
   // ktlint will pick them up
@@ -17,7 +17,7 @@ task ktlint(type: JavaExec, group: "verification") {
   description = "Check Kotlin code style."
   classpath = configurations.ktlint
   main = "com.pinterest.ktlint.Main"
-  args "src/**/*.kt"
+  args "src/**/*.kt", "!src/**/resources/**"
   // to generate report in checkstyle format prepend following args:
   // "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
   // see https://github.com/pinterest/ktlint#usage for more
@@ -27,5 +27,5 @@ task ktlintFormat(type: JavaExec, group: "formatting") {
   description = "Fix Kotlin code style deviations."
   classpath = configurations.ktlint
   main = "com.pinterest.ktlint.Main"
-  args "-F", "src/**/*.kt"
+  args "-F", "src/**/*.kt", "!src/**/resources/**"
 }

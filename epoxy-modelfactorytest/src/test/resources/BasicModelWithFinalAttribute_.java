@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -255,4 +254,3 @@ public class BasicModelWithFinalAttribute_ extends BasicModelWithFinalAttribute 
         "}" + super.toString();
   }
 }
-

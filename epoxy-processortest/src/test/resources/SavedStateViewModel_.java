@@ -1,4 +1,3 @@
-
 package com.airbnb.epoxy;
 
 import androidx.annotation.LayoutRes;
@@ -320,4 +319,3 @@ public class SavedStateViewModel_ extends EpoxyModel<SavedStateView> implements 
     return totalSpanCount;
   }
 }
-

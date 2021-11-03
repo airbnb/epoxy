@@ -1,7 +1,18 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XFieldElement
+import androidx.room.compiler.processing.XFiler
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XRoundEnv
+import androidx.room.compiler.processing.XTypeElement
+import androidx.room.compiler.processing.addOriginatingElement
+import androidx.room.compiler.processing.writeTo
 import com.airbnb.epoxy.AutoModel
 import com.airbnb.epoxy.processor.ClassNames.EPOXY_MODEL_UNTYPED
+import com.google.devtools.ksp.processing.SymbolProcessor
+import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
+import com.google.devtools.ksp.processing.SymbolProcessorProvider
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.JavaFile
@@ -14,17 +25,21 @@ import net.ltgt.gradle.incap.IncrementalAnnotationProcessor
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType
 import java.util.ArrayList
 import java.util.LinkedHashMap
-import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.element.Element
 import javax.lang.model.element.Modifier
-import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeKind
 import kotlin.reflect.KClass
+
+class ControllerProcessorProvider : SymbolProcessorProvider {
+    override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
+        return ControllerProcessor(environment)
+    }
+}
 
 // TODO: This could be an isolating processor except that the PackageEpoxyConfig annotation
 // can change the `implicitlyAddAutoModels` setting.
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.AGGREGATING)
-class ControllerProcessor : BaseProcessorWithPackageConfigs() {
+class ControllerProcessor @JvmOverloads constructor(
+    kspEnvironment: SymbolProcessorEnvironment? = null
+) : BaseProcessorWithPackageConfigs(kspEnvironment) {
     override val usesPackageEpoxyConfig: Boolean = true
     override val usesModelViewConfig: Boolean = false
 
@@ -32,34 +47,56 @@ class ControllerProcessor : BaseProcessorWithPackageConfigs() {
         AutoModel::class
     )
 
-    override suspend fun processRound(roundEnv: RoundEnvironment, roundNumber: Int) {
-        super.processRound(roundEnv, roundNumber)
-        val controllerClassMap: MutableMap<TypeElement, ControllerClassInfo> = LinkedHashMap()
+    private val classNameToInfo = mutableMapOf<ClassName, ControllerClassInfo>()
 
-        for (modelFieldElement in roundEnv.getElementsAnnotatedWith(AutoModel::class)) {
+    override fun processRound(
+        environment: XProcessingEnv,
+        round: XRoundEnv,
+        memoizer: Memoizer,
+        timer: Timer,
+        roundNumber: Int
+    ): List<XElement> {
+        super.processRound(environment, round, memoizer, timer, roundNumber)
+
+        // JavaAP and KAPT can correct error types and still figure out when the type is a generated
+        // model that doesn't exist yet. KSP needs to defer those symbols though, and only process
+        // them once the class is available.
+        val (validFields, invalidFields) = round.getElementsAnnotatedWith(AutoModel::class)
+            .filterIsInstance<XFieldElement>()
+            .partition { !isKsp() || it.validate() }
+
+        timer.markStepCompleted("get automodel fields")
+
+        validFields.forEach { field ->
+            val classElement =
+                field.enclosingTypeElement ?: error("Field $field should be used inside a class")
+            val targetClassInfo = getOrCreateTargetClass(classElement, memoizer)
             try {
-                addFieldToControllerClass(modelFieldElement, controllerClassMap)
+                targetClassInfo.addModel(buildFieldInfo(targetClassInfo, field, memoizer))
             } catch (e: Exception) {
                 logger.logError(e)
             }
         }
 
-        try {
-            updateClassesForInheritance(controllerClassMap)
-        } catch (e: Exception) {
-            logger.logError(e)
+        timer.markStepCompleted("parse field info")
+
+        // Need to wait until all fields are valid until we can write files, because:
+        // 1. multiple fields in the same class are aggregated
+        // 2. across classes we need to handle inheritance
+        if (invalidFields.isEmpty()) {
+            try {
+                updateClassesForInheritance(environment, classNameToInfo)
+            } catch (e: Exception) {
+                logger.logError(e)
+            }
+            timer.markStepCompleted("lookup inheritance details")
+
+            generateJava(classNameToInfo)
+            classNameToInfo.clear()
+            timer.markStepCompleted("write automodel helpers")
         }
 
-        generateJava(controllerClassMap)
-    }
-
-    private fun addFieldToControllerClass(
-        modelField: Element,
-        controllerClassMap: MutableMap<TypeElement, ControllerClassInfo>
-    ) {
-        val controllerClassElement = modelField.enclosingElement as TypeElement
-        val controllerClass = getOrCreateTargetClass(controllerClassMap, controllerClassElement)
-        controllerClass.addModel(buildFieldInfo(controllerClass, modelField))
+        return invalidFields
     }
 
     /**
@@ -71,29 +108,30 @@ class ControllerProcessor : BaseProcessorWithPackageConfigs() {
      * include auto models that are package private, otherwise the generated class won't compile.
      */
     private fun updateClassesForInheritance(
-        controllerClassMap: Map<TypeElement, ControllerClassInfo>
+        environment: XProcessingEnv,
+        controllerClassMap: MutableMap<ClassName, ControllerClassInfo>
     ) {
-        for ((thisClass, value) in controllerClassMap) {
-            val otherClasses: MutableMap<TypeElement, ControllerClassInfo> =
+        for ((thisClassName, thisClassInfo) in controllerClassMap) {
+            // Need to look up the types now instead of storing them because if we processed the
+            // fields across multiple rounds the stored types cannot be compared.
+            val thisClassType = environment.requireType(thisClassName)
+            val otherClasses: MutableMap<ClassName, ControllerClassInfo> =
                 LinkedHashMap(controllerClassMap)
 
-            otherClasses.remove(thisClass)
-            for ((otherClass, controllerInfo) in otherClasses) {
-                if (!Utils.isSubtype(thisClass, otherClass, typeUtils)) {
+            otherClasses.remove(thisClassName)
+            for ((otherClassName, otherClassInfo) in otherClasses) {
+                val otherClassType = environment.requireType(otherClassName)
+                if (!thisClassType.isSubTypeOf(otherClassType)) {
                     continue
                 }
-                val otherControllerModelFields: Set<ControllerModelField> = controllerInfo.modelsImmutable
-                if (Utils.belongToTheSamePackage(
-                        thisClass,
-                        otherClass,
-                        elementUtils
-                    )
-                ) {
-                    value.addModels(otherControllerModelFields)
+                val otherControllerModelFields: Set<ControllerModelField> =
+                    otherClassInfo.modelsImmutable
+                if (thisClassInfo.classPackage == thisClassInfo.classPackage) {
+                    thisClassInfo.addModels(otherControllerModelFields)
                 } else {
                     for (controllerModelField in otherControllerModelFields) {
                         if (!controllerModelField.packagePrivate) {
-                            value.addModel(controllerModelField)
+                            thisClassInfo.addModel(controllerModelField)
                         }
                     }
                 }
@@ -102,53 +140,51 @@ class ControllerProcessor : BaseProcessorWithPackageConfigs() {
     }
 
     private fun getOrCreateTargetClass(
-        controllerClassMap: MutableMap<TypeElement, ControllerClassInfo>,
-        controllerClassElement: TypeElement
-    ): ControllerClassInfo {
-        if (!Utils.isController(controllerClassElement)) {
+        controllerClassElement: XTypeElement,
+        memoizer: Memoizer
+    ): ControllerClassInfo = classNameToInfo.getOrPut(controllerClassElement.className) {
+        if (!controllerClassElement.isEpoxyController(memoizer)) {
             logger.logError(
+                controllerClassElement,
                 "Class with %s annotations must extend %s (%s)",
                 AutoModel::class.java.simpleName,
                 Utils.EPOXY_CONTROLLER_TYPE,
-                controllerClassElement.simpleName
+                controllerClassElement.name
             )
         }
-        var controllerClassInfo = controllerClassMap[controllerClassElement]
-        if (controllerClassInfo == null) {
-            controllerClassInfo =
-                ControllerClassInfo(elementUtils, controllerClassElement, resourceProcessor)
-            controllerClassMap[controllerClassElement] = controllerClassInfo
-        }
-        return controllerClassInfo
+
+        ControllerClassInfo(controllerClassElement, resourceProcessor, memoizer)
     }
 
     private fun buildFieldInfo(
-        controllerClass: ControllerClassInfo,
-        modelFieldElement: Element
+        classElement: ControllerClassInfo,
+        modelFieldElement: XFieldElement,
+        memoizer: Memoizer
     ): ControllerModelField {
         Utils.validateFieldAccessibleViaGeneratedCode(
-            modelFieldElement,
-            AutoModel::class.java,
-            logger
+            fieldElement = modelFieldElement,
+            annotationClass = AutoModel::class.java,
+            logger = logger,
         )
-        val fieldName = modelFieldElement.simpleName.toString()
-        val fieldType = modelFieldElement.asType()
+        val fieldName = modelFieldElement.name
+        val fieldType = modelFieldElement.type
 
-        val modelTypeName = if (fieldType.kind != TypeKind.ERROR) {
+        val modelTypeName = if (!fieldType.isError()) {
             // If the field is a generated Epoxy model then the class won't have been generated
             // yet and it won't have type info. If the type can't be found that we assume it is
             // a generated model and is ok.
-            if (!Utils.isEpoxyModel(fieldType)) {
+            if (!fieldType.isEpoxyModel(memoizer)) {
                 logger.logError(
+                    modelFieldElement,
                     "Fields with %s annotations must be of type %s (%s#%s)",
                     AutoModel::class.java.simpleName,
                     Utils.EPOXY_MODEL_TYPE,
-                    modelFieldElement.enclosingElement.simpleName,
-                    modelFieldElement.simpleName
+                    modelFieldElement.enclosingElement.expectName,
+                    modelFieldElement.name
                 )
             }
 
-            modelFieldElement.asType().typeNameSynchronized()
+            fieldType.typeNameWithWorkaround(memoizer)
         } else {
             // We only have the simple name of the model, since it isn't generated yet.
             // We can find the FQN by looking in imports. Imports aren't actually directly accessible
@@ -156,12 +192,11 @@ class ControllerProcessor : BaseProcessorWithPackageConfigs() {
 
             val simpleName = fieldType.toString()
 
-            val packageName = controllerClass
-                .imports
+            val packageName = classElement.imports
                 .firstOrNull { it.endsWith(simpleName) }
                 ?.substringBeforeLast(".$simpleName")
                 // With no import we assume the model is in the same package as the controller
-                ?: controllerClass.generatedClassName.packageName()
+                ?: classElement.classPackage
 
             ClassName.get(packageName, simpleName)
         }
@@ -173,10 +208,10 @@ class ControllerProcessor : BaseProcessorWithPackageConfigs() {
         )
     }
 
-    private fun generateJava(controllerClassMap: Map<TypeElement, ControllerClassInfo>) {
-        for ((_, value) in controllerClassMap) {
+    private fun generateJava(controllerClassMap: MutableMap<ClassName, ControllerClassInfo>) {
+        for ((_, classInfo) in controllerClassMap) {
             try {
-                generateHelperClassForController(value)
+                generateHelperClassForController(classInfo)
             } catch (e: Exception) {
                 logger.logError(e)
             }
@@ -210,7 +245,7 @@ class ControllerProcessor : BaseProcessorWithPackageConfigs() {
                 addMethod(buildSaveModelsForNextValidationMethod(controllerInfo))
             }
 
-            addOriginatingElement(controllerInfo.controllerClassElement)
+            addOriginatingElement(controllerInfo.originatingElement)
 
             // Package configs can be used to change the implicit auto add option.
             originatingConfigElements().forEach { configElement ->
@@ -220,7 +255,7 @@ class ControllerProcessor : BaseProcessorWithPackageConfigs() {
 
         JavaFile.builder(controllerInfo.generatedClassName.packageName(), classSpec)
             .build()
-            .writeSynchronized(filer)
+            .writeTo(filer, mode = XFiler.Mode.Aggregating)
     }
 
     private fun buildConstructor(controllerInfo: ControllerClassInfo): MethodSpec {

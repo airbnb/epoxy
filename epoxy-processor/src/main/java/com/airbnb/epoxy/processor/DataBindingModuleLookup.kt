@@ -1,20 +1,18 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XProcessingEnv
+import androidx.room.compiler.processing.XTypeElement
+import com.airbnb.epoxy.processor.resourcescanning.ResourceScanner
 import com.squareup.javapoet.ClassName
-import javax.lang.model.element.Element
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
 import kotlin.math.min
 
 class DataBindingModuleLookup(
-    private val elements: Elements,
-    private val types: Types,
+    private val environment: XProcessingEnv,
     private val logger: Logger,
-    private val resourceProcessor: ResourceProcessor
+    private val resourceProcessor: ResourceScanner
 ) {
-    fun getModuleName(element: Element): String {
-        val packageOf = elements.getPackageOf(element)
-        val packageName = packageOf.qualifiedName.toString()
+    fun getModuleName(element: XTypeElement): String {
+        val packageName = element.packageName
 
         // First we try to get the module name by looking at what R classes were found when processing
         // layout annotations. This may find nothing if no layouts were given as annotation params
@@ -90,7 +88,7 @@ class DataBindingModuleLookup(
         var moduleName = ""
         for (i in packageNameParts.indices) {
             moduleName += packageNameParts[i]
-            val rClass = Utils.getElementByNameNullable("$moduleName.R", elements, types)
+            val rClass = environment.findType("$moduleName.R")
             moduleName += if (rClass != null) {
                 return moduleName
             } else {

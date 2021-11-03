@@ -1,28 +1,24 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.processing.XElement
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
-import javax.lang.model.element.Element
 import javax.lang.model.element.Modifier
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
 
 /**
  * Used for writing the java code for models generated with @ModelView.
  */
 internal class ModelViewWriter(
     private val modelWriter: GeneratedModelWriter,
-    val types: Types,
-    val elements: Elements,
     asyncable: Asyncable
 ) : Asyncable by asyncable {
 
-    suspend fun writeModels(
+    fun writeModels(
         models: List<ModelViewInfo>,
-        originatingConfigElements: List<Element>
+        originatingConfigElements: List<XElement>
     ) {
         models.forEach("Write model view classes") { modelInfo ->
             modelWriter.generateClassForModel(
@@ -315,7 +311,7 @@ internal class ModelViewWriter(
             attr.viewAttributeName,
             when {
                 usingDefaultArg -> ""
-                setToNull -> attr.typeMirror
+                setToNull -> attr.typeName
                 else -> getValueToSetOnView(attr, objectName)
             }
         ).build()
