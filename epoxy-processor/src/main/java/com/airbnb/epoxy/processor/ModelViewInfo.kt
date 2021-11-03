@@ -30,12 +30,6 @@ class ModelViewInfo(
     private val viewAnnotation: XAnnotationBox<ModelView> =
         viewElement.requireAnnotation(ModelView::class)
 
-    val functionsWithSingleDefaultParameter: List<XMethodElement> =
-        viewElement.getDeclaredMethods().filter {
-            val param = it.parameters.singleOrNull()
-            param != null && param.hasDefaultValue
-        }
-
     val saveViewState: Boolean
     val fullSpanSize: Boolean
     private val generatedModelSuffix: String
@@ -186,29 +180,7 @@ class ModelViewInfo(
 
     private fun checkIsSetterWithSingleDefaultParam(element: XElement): Boolean {
         if (element !is XMethodElement) return false
-
-        // Given an element representing a function we want to find the corresponding function information
-        // in the kotlin metadata of this class. We do this by searching for a function matching the same
-        // name, param count, param name, and param type.
-        // This assumes the param count we're looking for is 1 since this is an epoxy setter.
-        val parameters = element.parameters
-        require(parameters.size == 1) { "Expected function $element to have exactly 1 parameter" }
-
-        val targetFunctionName = element.name
-        val functionsWithSameName = functionsWithSingleDefaultParameter
-            .filter { it.name == targetFunctionName }
-
-        if (functionsWithSameName.isEmpty()) return false
-
-        val param = parameters.single()
-
-        return functionsWithSameName.any { function ->
-            // We don't check type, since it is hard to compare cross platform, like
-            // kotlin.Int vs java.lang.Integer. Also, if there is a zero param setter of the
-            // same name then we don't need to use a type to call it and can assume it is the
-            // no arg equivalent.
-            function.parameters.single().name == param.name
-        }
+        return element.parameters.singleOrNull()?.hasDefaultValue == true
     }
 
     override fun additionalOriginatingElements() = listOf(viewElement)
