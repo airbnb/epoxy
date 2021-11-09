@@ -573,6 +573,14 @@ class ModelViewProcessor @JvmOverloads constructor(
                     // We don't want the attribute from the super class replacing an attribute in the
                     // subclass if the subclass overrides it, since the subclass definition could include
                     // different annotation parameter settings, or we could end up with duplicates
+
+                    // If an annotated prop method has a default value it will also have @JvmOverloads
+                    // so java source in KAPT sees both a zero param and and 1 param method. We just
+                    // ignore the empty param version.
+                    if (it.element is XMethodElement && it.element.parameters.size != 1) {
+                        return@forEachElementWithAnnotation
+                    }
+
                     view.addAttributeIfNotExists(it.attributeInfo.value)
                 }
 

@@ -44,5 +44,10 @@ open class BaseView(context: Context) : View(context) {
     @ModelProp
     fun baseViewProp(prop: Int) {
     }
+
+    @JvmOverloads
+    @ModelProp
+    fun baseViewPropWithDefaultParamValue(prop: Int = 0) {
+    }
 }
 

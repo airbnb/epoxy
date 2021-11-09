@@ -22,6 +22,8 @@ public interface SourceViewModelBuilder {
 
   SourceViewModelBuilder baseViewProp(int baseViewProp);
 
+  SourceViewModelBuilder baseViewPropWithDefaultParamValue(int baseViewPropWithDefaultParamValue);
+
   SourceViewModelBuilder showDividerWithSetter(@Nullable Boolean showDividerWithSetter);
 
   SourceViewModelBuilder showDividerWithOverriddenMethod(boolean showDivider);
