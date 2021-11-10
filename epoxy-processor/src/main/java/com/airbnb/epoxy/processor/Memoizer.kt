@@ -331,13 +331,12 @@ class Memoizer(
 
             viewModelAnnotations.forEach { annotation ->
                 superViewElement.getElementsAnnotatedWith(annotation).forEach { element ->
-                    val isPackagePrivate by lazy { Utils.isFieldPackagePrivate(element) }
                     annotatedElements
                         .getOrPut(annotation) { mutableListOf() }
                         .add(
                             ViewElement(
                                 element = element,
-                                isPackagePrivate = isPackagePrivate,
+                                isPackagePrivate = Utils.isFieldPackagePrivate(element),
                                 attributeInfo = lazy {
                                     ViewAttributeInfo(
                                         viewElement = superViewElement,

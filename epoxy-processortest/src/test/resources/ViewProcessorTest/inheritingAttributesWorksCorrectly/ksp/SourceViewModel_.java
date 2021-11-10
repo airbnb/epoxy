@@ -28,6 +28,8 @@ public class SourceViewModel_ extends AirEpoxyModel<SourceView> implements Gener
 
   private int baseViewProp_Int = 0;
 
+  private int baseViewPropWithDefaultParamValue_Int = 0;
+
   public SourceViewModel_() {
     super();
   }
@@ -60,6 +62,7 @@ public class SourceViewModel_ extends AirEpoxyModel<SourceView> implements Gener
   public void bind(final SourceView object) {
     super.bind(object);
     object.setSectionId(sectionId_String);
+    object.baseViewPropWithDefaultParamValue(baseViewPropWithDefaultParamValue_Int);
     object.baseViewProp(baseViewProp_Int);
   }
 
@@ -74,6 +77,10 @@ public class SourceViewModel_ extends AirEpoxyModel<SourceView> implements Gener
 
     if ((sectionId_String != null ? !sectionId_String.equals(that.sectionId_String) : that.sectionId_String != null)) {
       object.setSectionId(sectionId_String);
+    }
+
+    if ((baseViewPropWithDefaultParamValue_Int != that.baseViewPropWithDefaultParamValue_Int)) {
+      object.baseViewPropWithDefaultParamValue(baseViewPropWithDefaultParamValue_Int);
     }
 
     if ((baseViewProp_Int != that.baseViewProp_Int)) {
@@ -199,6 +206,21 @@ public class SourceViewModel_ extends AirEpoxyModel<SourceView> implements Gener
     return baseViewProp_Int;
   }
 
+  /**
+   * <i>Optional</i>: Default value is 0
+   *
+   * @see BaseView#baseViewPropWithDefaultParamValue(int)
+   */
+  public SourceViewModel_ baseViewPropWithDefaultParamValue(int baseViewPropWithDefaultParamValue) {
+    onMutation();
+    this.baseViewPropWithDefaultParamValue_Int = baseViewPropWithDefaultParamValue;
+    return this;
+  }
+
+  public int baseViewPropWithDefaultParamValue() {
+    return baseViewPropWithDefaultParamValue_Int;
+  }
+
   public SourceViewModel_ showDividerWithSetter(@Nullable Boolean showDividerWithSetter) {
     onMutation();
     super.setShowDividerWithSetter(showDividerWithSetter);
@@ -301,6 +323,7 @@ public class SourceViewModel_ extends AirEpoxyModel<SourceView> implements Gener
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     this.sectionId_String = (String) null;
     this.baseViewProp_Int = 0;
+    this.baseViewPropWithDefaultParamValue_Int = 0;
     super.setShowDivider(null);
     super.setShowDividerWithSetter(null);
     super.reset();
@@ -337,6 +360,9 @@ public class SourceViewModel_ extends AirEpoxyModel<SourceView> implements Gener
     if ((baseViewProp_Int != that.baseViewProp_Int)) {
       return false;
     }
+    if ((baseViewPropWithDefaultParamValue_Int != that.baseViewPropWithDefaultParamValue_Int)) {
+      return false;
+    }
     if ((getShowDivider() != null ? !getShowDivider().equals(that.getShowDivider()) : that.getShowDivider() != null)) {
       return false;
     }
@@ -355,6 +381,7 @@ public class SourceViewModel_ extends AirEpoxyModel<SourceView> implements Gener
     _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     _result = 31 * _result + (sectionId_String != null ? sectionId_String.hashCode() : 0);
     _result = 31 * _result + baseViewProp_Int;
+    _result = 31 * _result + baseViewPropWithDefaultParamValue_Int;
     _result = 31 * _result + (getShowDivider() != null ? getShowDivider().hashCode() : 0);
     _result = 31 * _result + (getShowDividerWithSetter() != null ? getShowDividerWithSetter().hashCode() : 0);
     return _result;
@@ -365,6 +392,7 @@ public class SourceViewModel_ extends AirEpoxyModel<SourceView> implements Gener
     return "SourceViewModel_{" +
         "sectionId_String=" + sectionId_String +
         ", baseViewProp_Int=" + baseViewProp_Int +
+        ", baseViewPropWithDefaultParamValue_Int=" + baseViewPropWithDefaultParamValue_Int +
         ", showDivider=" + getShowDivider() +
         ", showDividerWithSetter=" + getShowDividerWithSetter() +
         "}" + super.toString();
