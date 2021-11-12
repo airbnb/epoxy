@@ -2,8 +2,8 @@ plugins {
   id 'com.android.application'
   id 'kotlin-android'
 }
-//apply plugin: 'com.google.devtools.ksp'
-apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.devtools.ksp'
+//apply plugin: 'kotlin-kapt'
 
 android {
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
@@ -47,10 +47,10 @@ project.android.buildTypes.all { buildType ->
 dependencies {
   implementation project(':epoxy-adapter')
   implementation project(':epoxy-annotations')
-//  ksp project(':epoxy-processor')
-//  ksp rootProject.deps.parisProcessor
-  kapt project(':epoxy-processor')
-  kapt rootProject.deps.parisProcessor
+  ksp project(':epoxy-processor')
+  ksp rootProject.deps.parisProcessor
+//  kapt project(':epoxy-processor')
+//  kapt rootProject.deps.parisProcessor
 
   implementation rootProject.deps.androidAppcompat
   implementation rootProject.deps.androidDesignLibrary
