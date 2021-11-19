@@ -160,7 +160,7 @@ internal class HashCodeValidator(
         // removing annotations and compile time generation) the annotation lookup no longer works.
         // Instead, assume that if a type is abstract then it has a runtime implementation the properly
         // implements equals/hashcode.
-        if (element.isAbstract()) return true
+        if (element.isAbstract() && !element.isInterface()) return true
 
         // Only works for classes in the module since AutoValue has a retention of Source so it is
         // discarded after compilation.
