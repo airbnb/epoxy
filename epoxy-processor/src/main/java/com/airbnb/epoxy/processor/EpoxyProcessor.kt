@@ -122,13 +122,12 @@ class EpoxyProcessor @JvmOverloads constructor(
                 modelInfo.superClassElement.getAnnotation(EpoxyModelClass::class)?.value?.layout == 0 &&
                     modelInfo.boundObjectTypeElement?.hasStyleableAnnotation() == true
             }
+            .toSet()
         timer.markStepCompleted("check for styleable models")
 
         styleableModelsToWrite.addAll(styleableModels)
 
-        modelInfos.minus(styleableModels).mapNotNull {
-            writeModel(it, memoizer)
-        }
+        modelInfos.minus(styleableModels).map { writeModel(it, memoizer) }
 
         styleableModelsToWrite.mapNotNull { modelInfo ->
             if (tryAddStyleBuilderAttribute(modelInfo, environment, memoizer)) {
