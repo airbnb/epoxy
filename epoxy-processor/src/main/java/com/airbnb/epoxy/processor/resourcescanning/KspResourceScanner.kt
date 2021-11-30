@@ -6,7 +6,6 @@ import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.epoxy.processor.containingPackage
 import com.airbnb.epoxy.processor.resourcescanning.KspResourceScanner.ImportMatch.Normal
 import com.airbnb.epoxy.processor.resourcescanning.KspResourceScanner.ImportMatch.TypeAlias
-import com.google.devtools.ksp.containingFile
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.impl.java.KSAnnotationJavaImpl
@@ -182,17 +181,24 @@ class KspResourceScanner(environmentProvider: () -> XProcessingEnv) :
                     packageName
                 )
 
+                if (references.isEmpty()) {
+                    // This property isn't used for resources, so return early.
+                    // It may still have non resource values, so don't continue to collect those.
+                    return emptyList()
+                }
+
                 val values = (ksValueArgument.value as? Iterable<*>)?.toList() ?: listOf(
                     ksValueArgument.value
                 )
 
+                val propertyName = ksValueArgument.name?.asString()
                 if (values.size != references.size) {
-                    error("Resource reference count does not match value count. Resources: $references values: $values annotation: $annotationEntry")
+                    error("Resource reference count does not match value count. Resources: $references values: $values annotation: ${annotation.shortName.asString()} property: $propertyName")
                 }
 
                 values.zip(references).map { (value, resourceReference) ->
                     AnnotationWithReferenceValue(
-                        name = ksValueArgument.name?.asString(),
+                        name = propertyName,
                         value = value,
                         reference = resourceReference
                     )
