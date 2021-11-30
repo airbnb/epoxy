@@ -241,7 +241,7 @@ class ModelViewProcessor @JvmOverloads constructor(
                     info.viewElement.findOverload(
                             prop,
                             1
-                        )?.hasAnyOf(*modelPropAnnotationsArray) == true
+                        )?.hasAnyAnnotation(*modelPropAnnotationsArray) == true
                 ) {
                     return@mapNotNull null
                 }
