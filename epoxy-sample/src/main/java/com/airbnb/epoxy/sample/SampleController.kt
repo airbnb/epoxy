@@ -28,43 +28,43 @@ class SampleController(private val callbacks: AdapterCallbacks) :
     @AutoModel
     lateinit var header: HeaderViewModel_
 
-    @AutoModel
-    lateinit var addButton: ButtonBindingModel_
-
-    @AutoModel
-    lateinit var clearButton: ButtonBindingModel_
-
-    @AutoModel
-    lateinit var shuffleButton: ButtonBindingModel_
-
-    @AutoModel
-    lateinit var changeColorsButton: ButtonBindingModel_
+//    @AutoModel
+//    lateinit var addButton: ButtonBindingModel_
+//
+//    @AutoModel
+//    lateinit var clearButton: ButtonBindingModel_
+//
+//    @AutoModel
+//    lateinit var shuffleButton: ButtonBindingModel_
+//
+//    @AutoModel
+//    lateinit var changeColorsButton: ButtonBindingModel_
 
     override fun buildModels(carousels: List<CarouselData>) {
-        header
-            .title(R.string.epoxy)
-            .caption(R.string.header_subtitle)
-        // "addTo" is not needed since implicit adding is enabled
-        // (https://github.com/airbnb/epoxy/wiki/Epoxy-Controller#implicit-adding)
-        addButton
-            .textRes(R.string.button_add)
-            .clickListener { model: ButtonBindingModel_?, parentView: DataBindingHolder?, clickedView: View?, position: Int -> callbacks.onAddCarouselClicked() }
-        clearButton
-            .textRes(R.string.button_clear)
-            .clickListener { v: View? -> callbacks.onClearCarouselsClicked() }
-            .addIf(carousels.size > 0, this)
-        shuffleButton
-            .textRes(R.string.button_shuffle)
-            .clickListener { v: View? -> callbacks.onShuffleCarouselsClicked() }
-            .addIf(carousels.size > 1, this)
-        changeColorsButton
-            .textRes(R.string.button_change)
-            .clickListener { v: View? -> callbacks.onChangeAllColorsClicked() }
-            .addIf(carousels.size > 0, this)
-        for (i in carousels.indices) {
-            val carousel = carousels[i]
-            add(CarouselModelGroup(carousel, callbacks))
-        }
+//        header
+//            .title(R.string.epoxy)
+//            .caption(R.string.header_subtitle)
+//        // "addTo" is not needed since implicit adding is enabled
+//        // (https://github.com/airbnb/epoxy/wiki/Epoxy-Controller#implicit-adding)
+//        addButton
+//            .textRes(R.string.button_add)
+//            .clickListener { model: ButtonBindingModel_?, parentView: DataBindingHolder?, clickedView: View?, position: Int -> callbacks.onAddCarouselClicked() }
+//        clearButton
+//            .textRes(R.string.button_clear)
+//            .clickListener { v: View? -> callbacks.onClearCarouselsClicked() }
+//            .addIf(carousels.size > 0, this)
+//        shuffleButton
+//            .textRes(R.string.button_shuffle)
+//            .clickListener { v: View? -> callbacks.onShuffleCarouselsClicked() }
+//            .addIf(carousels.size > 1, this)
+//        changeColorsButton
+//            .textRes(R.string.button_change)
+//            .clickListener { v: View? -> callbacks.onChangeAllColorsClicked() }
+//            .addIf(carousels.size > 0, this)
+//        for (i in carousels.indices) {
+//            val carousel = carousels[i]
+//            add(CarouselModelGroup(carousel, callbacks))
+//        }
     }
 
     override fun onExceptionSwallowed(exception: RuntimeException) {
