@@ -154,7 +154,7 @@ internal class PagedListModelCache<T : Any>(
                     // looks like AsyncPagedListDiffer in 1.x ignores the config.
                     // Reflection to the rescue.
                     val mainThreadExecutorField =
-                        AsyncPagedListDiffer::class.java.getDeclaredField("mMainThreadExecutor")
+                        AsyncPagedListDiffer::class.java.getDeclaredField("mainThreadExecutor")
                     mainThreadExecutorField.isAccessible = true
                     mainThreadExecutorField.set(
                         this,
