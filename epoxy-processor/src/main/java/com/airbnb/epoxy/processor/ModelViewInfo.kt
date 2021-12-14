@@ -174,7 +174,7 @@ class ModelViewInfo(
             return modelViewConfig.getNameForView(viewElement)
         }
 
-        logger.logError(viewElement, "UnabletypeNameWorkaround to get layout resource for view %s", viewElement.name)
+        logger.logError(viewElement, "Unable to get layout resource for view %s", viewElement.name)
         return ResourceValue(0)
     }
 

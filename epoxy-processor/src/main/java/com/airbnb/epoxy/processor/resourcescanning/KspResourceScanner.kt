@@ -184,7 +184,7 @@ class KspResourceScanner(environmentProvider: () -> XProcessingEnv) :
                 if (references.isEmpty()) {
                     // This property isn't used for resources, so return early.
                     // It may still have non resource values, so don't continue to collect those.
-                    return emptyList()
+                    return@flatMap emptyList()
                 }
 
                 val values = (ksValueArgument.value as? Iterable<*>)?.toList() ?: listOf(
