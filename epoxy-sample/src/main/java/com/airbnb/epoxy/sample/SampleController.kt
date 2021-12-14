@@ -1,11 +1,8 @@
 package com.airbnb.epoxy.sample
 
-import android.view.View
 import com.airbnb.epoxy.AutoModel
-import com.airbnb.epoxy.DataBindingEpoxyModel.DataBindingHolder
 import com.airbnb.epoxy.EpoxyAsyncUtil
 import com.airbnb.epoxy.TypedEpoxyController
-import com.airbnb.epoxy.sample.models.CarouselModelGroup
 import com.airbnb.epoxy.sample.views.HeaderViewModel_
 
 class SampleController(private val callbacks: AdapterCallbacks) :
