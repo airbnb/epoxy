@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.psi.KtDotQualifiedExpression
 import org.jetbrains.kotlin.psi.KtExpression
 import org.jetbrains.kotlin.psi.KtSimpleNameExpression
 import org.jetbrains.kotlin.psi.ValueArgument
+import java.util.regex.PatternSyntaxException
 import kotlin.reflect.KClass
 
 class KspResourceScanner(environmentProvider: () -> XProcessingEnv) :
@@ -402,7 +403,13 @@ class KspResourceScanner(environmentProvider: () -> XProcessingEnv) :
             packageName: String
         ): ImportMatch {
             // Match something like "com.airbnb.paris.test.R2 as typeAliasedR"
-            val typeAliasRegex = Regex("(.*)\\s+as\\s+$annotationReferencePrefix\$")
+            val typeAliasRegex = try {
+                Regex("(.*)\\s+as\\s+$annotationReferencePrefix\$")
+            } catch (e: PatternSyntaxException) {
+                // Provide more information in this case so we can better debug https://github.com/airbnb/epoxy/issues/1265
+                throw IllegalStateException("Failed to create regex for resource reference '$annotationReferencePrefix'", e)
+            }
+
             return importedNames.firstNotNullOfOrNull { importedName ->
 
                 when {
