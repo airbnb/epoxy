@@ -15,7 +15,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 21
-          target: 21
+          target: default
           arch: armeabi-v7a
           emulator-options: -no-skin -no-window
           script: ./gradlew :epoxy-composeinterop-maverickssample:connectedDebugAndroidTest --stacktrace
