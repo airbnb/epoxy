@@ -9,6 +9,11 @@ jobs:
     steps:
       - name: Checkout epoxy
         uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        name: Setting up Java 11
+        with:
+          distribution: liberica
+          java-version: '11'
       - name: Build / Unit tests / Lint
         run: "./gradlew check --stacktrace"
       - name: Run UI Tests
