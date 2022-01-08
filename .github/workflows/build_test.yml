@@ -19,6 +19,7 @@ jobs:
       - name: Run UI Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
+          emulator-build: 7425822
           api-level: 21
           target: default
           arch: arm64-v8a
