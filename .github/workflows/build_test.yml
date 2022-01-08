@@ -5,7 +5,7 @@ on:
   pull_request:
 jobs:
   build-test:
-    runs-on: macos-10.11
+    runs-on: macos-11
     steps:
       - name: Checkout epoxy
         uses: actions/checkout@v2
