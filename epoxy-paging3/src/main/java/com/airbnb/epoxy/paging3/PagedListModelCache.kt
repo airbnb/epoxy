@@ -48,7 +48,7 @@ import java.util.concurrent.Executor
  * that thread we allow a special case of cache modification when a new list is being submitted,
  * and all cache access is marked with @Synchronize to ensure safety when this happens.
  */
-internal class PagedListModelCache<T : Any>(
+class PagedListModelCache<T : Any>(
     private val modelBuilder: (itemIndex: Int, item: T?) -> EpoxyModel<*>,
     private val rebuildCallback: () -> Unit,
     private val itemDiffCallback: DiffUtil.ItemCallback<T>,

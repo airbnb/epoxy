@@ -53,7 +53,7 @@ abstract class PagingDataEpoxyController<T : Any>(
     itemDiffCallback: DiffUtil.ItemCallback<T> = DEFAULT_ITEM_DIFF_CALLBACK as DiffUtil.ItemCallback<T>
 ) : EpoxyController(modelBuildingHandler, diffingHandler) {
     // this is where we keep the already built models
-    private val modelCache = PagedDataModelCache(
+    val modelCache = PagedDataModelCache(
         modelBuilder = { pos, item ->
             buildItemModel(pos, item)
         },
