@@ -32,7 +32,7 @@ import kotlinx.coroutines.flow.Flow
  * that thread we allow a special case of cache modification when a new list is being submitted,
  * and all cache access is marked with @Synchronize to ensure safety when this happens.
  */
-internal class PagedDataModelCache<T : Any>(
+class PagedDataModelCache<T : Any>(
     private val modelBuilder: (itemIndex: Int, item: T?) -> EpoxyModel<*>,
     private val rebuildCallback: () -> Unit,
     itemDiffCallback: DiffUtil.ItemCallback<T>,
