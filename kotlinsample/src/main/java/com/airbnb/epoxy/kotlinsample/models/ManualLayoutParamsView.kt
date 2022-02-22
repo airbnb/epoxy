@@ -8,7 +8,7 @@ import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.TextProp
 
 @ModelView(autoLayout = ModelView.Size.MANUAL)
-class ItemTitleTextView @JvmOverloads constructor(
+class ManualLayoutParamsView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0

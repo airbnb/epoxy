@@ -17,8 +17,8 @@ import com.airbnb.epoxy.kotlinsample.models.coloredSquareView
 import com.airbnb.epoxy.kotlinsample.models.decoratedLinearGroup
 import com.airbnb.epoxy.kotlinsample.models.itemCustomView
 import com.airbnb.epoxy.kotlinsample.models.itemEpoxyHolder
-import com.airbnb.epoxy.kotlinsample.models.itemTitleTextView
 import com.airbnb.epoxy.kotlinsample.models.itemViewBindingEpoxyHolder
+import com.airbnb.epoxy.kotlinsample.models.manualLayoutParamsView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: EpoxyRecyclerView
@@ -36,9 +36,9 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView.withModels {
 
-            itemTitleTextView {
-                id("textViewExampleView")
-                title("This is an Kotlin Example")
+            manualLayoutParamsView {
+                id("manualLayoutParams")
+                title("This is a ModelView using ManualLayoutParams")
             }
 
             group {
