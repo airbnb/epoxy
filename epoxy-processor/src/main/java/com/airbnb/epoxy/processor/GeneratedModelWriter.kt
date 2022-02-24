@@ -478,7 +478,7 @@ class GeneratedModelWriter(
                 } ?: run {
                     beginControlFlow("if (v.getLayoutParams() == null)")
                         .addStatement(
-                            "throw new \$T(\"Layout params is required set for Size.MANUAL\")",
+                            "throw new \$T(\"Layout params is required to be set for Size.MANUAL\")",
                             NullPointerException::class.java
                         )
                         .endControlFlow()

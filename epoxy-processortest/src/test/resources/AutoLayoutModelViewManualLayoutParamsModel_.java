@@ -39,7 +39,7 @@ public class AutoLayoutModelViewManualLayoutParamsModel_ extends EpoxyModel<Auto
   protected AutoLayoutModelViewManualLayoutParams buildView(ViewGroup parent) {
     AutoLayoutModelViewManualLayoutParams v = new AutoLayoutModelViewManualLayoutParams(parent.getContext());
     if (v.getLayoutParams() == null) {
-      throw new NullPointerException("Layout params is required set for Size.MANUAL");
+      throw new NullPointerException("Layout params is required to be set for Size.MANUAL");
     }
     return v;
   }

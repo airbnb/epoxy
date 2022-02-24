@@ -20,8 +20,10 @@ public @interface ModelView {
   /**
    * Use with {@link #autoLayout()} to declare what layout parameters should be used to size your
    * view when it is added to a RecyclerView. This maps to the LayoutParams options {@code
-   * layout_width} and {@code layout_height}. If you want to set the LayoutParams manually, you can use
-   * {@link Size#MANUAL} and set it in the ModelView's constructor.
+   * layout_width} and {@code layout_height}. If you want to set the LayoutParams manually, you can
+   * use {@link Size#MANUAL} and set the params in the View's constructor when it is initialized (a
+   * runtime exception will be thrown if layout params are not set during view instantiation when
+   * MANUAL is used).
    */
   enum Size {
     NONE,
