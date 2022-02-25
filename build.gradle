@@ -1,9 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
 
-  ext.KOTLIN_VERSION = "1.5.31"
+  ext.KOTLIN_VERSION = "1.6.10"
   ext.ANDROID_PLUGIN_VERSION = '7.0.3'
-  ext.KSP_VERSION = '1.5.31-1.0.0'
+  ext.KSP_VERSION = '1.6.10-1.0.2'
 
   repositories {
     google()
@@ -18,7 +18,7 @@ buildscript {
     // ./gradlew clean uploadArchives --no-daemon --no-parallel
     classpath 'com.vanniktech:gradle-maven-publish-plugin:0.14.2'
     // Dokka is needed on classpath for vanniktech publish plugin
-    classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.4.30"
+    classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.5.31"
   }
 }
 
@@ -49,6 +49,24 @@ subprojects { project ->
   afterEvaluate {
     if (project.tasks.findByName('check')) {
       check.dependsOn('ktlint')
+    }
+
+    if (project.extensions.findByType(com.android.build.gradle.LibraryExtension.class) != null) {
+      project.android.libraryVariants.all { variant ->
+        def outputFolder = new File("build/generated/ksp/${variant.name}/kotlin")
+        variant.addJavaSourceFoldersToModel(outputFolder)
+        android.sourceSets.getAt(variant.name).java {
+          srcDir(outputFolder)
+        }
+      }
+    } else if (project.extensions.findByType(com.android.build.gradle.AbstractAppExtension.class) != null) {
+      project.android.applicationVariants.all { variant ->
+        def outputFolder = new File("build/generated/ksp/${variant.name}/kotlin")
+        variant.addJavaSourceFoldersToModel(outputFolder)
+        android.sourceSets.getAt(variant.name).java {
+          srcDir(outputFolder)
+        }
+      }
     }
   }
 }
