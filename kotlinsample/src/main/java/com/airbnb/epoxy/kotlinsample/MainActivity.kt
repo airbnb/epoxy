@@ -19,6 +19,7 @@ import com.airbnb.epoxy.kotlinsample.models.decoratedLinearGroup
 import com.airbnb.epoxy.kotlinsample.models.itemCustomView
 import com.airbnb.epoxy.kotlinsample.models.itemEpoxyHolder
 import com.airbnb.epoxy.kotlinsample.models.itemViewBindingEpoxyHolder
+import com.airbnb.epoxy.kotlinsample.models.manualLayoutParamsView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: EpoxyRecyclerView
@@ -56,6 +57,11 @@ class MainActivity : AppCompatActivity() {
         epoxyVisibilityTracker.attach(recyclerView)
 
         recyclerView.withModels {
+
+            manualLayoutParamsView {
+                id("manualLayoutParams")
+                title("This is a ModelView using ManualLayoutParams")
+            }
 
             group {
                 id("epoxyModelGroupDsl")

@@ -1072,6 +1072,14 @@ class ViewProcessorTest {
     }
 
     @Test
+    fun testAutoLayoutManualLayoutParams() {
+        assertGeneration(
+            "AutoLayoutModelViewManualLayoutParams.java",
+            "AutoLayoutModelViewManualLayoutParamsModel_.java"
+        )
+    }
+
+    @Test
     fun testModelViewInheritsFromSuperClass() {
         assertViewsHaveModelsGenerated(
             "ModelViewSuperClass.java",

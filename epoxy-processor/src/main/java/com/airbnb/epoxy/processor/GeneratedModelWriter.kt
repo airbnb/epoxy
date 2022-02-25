@@ -472,12 +472,19 @@ class GeneratedModelWriter(
                     modelInfo.modelType
                 )
 
-                val (layoutWidth, layoutHeight) = getLayoutDimensions(modelInfo)
-
-                addStatement(
-                    "v.setLayoutParams(new \$T(\$L, \$L))",
-                    ClassNames.ANDROID_MARGIN_LAYOUT_PARAMS, layoutWidth, layoutHeight
-                )
+                getLayoutDimensions(modelInfo)?.let { (layoutWidth, layoutHeight) ->
+                    addStatement(
+                        "v.setLayoutParams(new \$T(\$L, \$L))",
+                        ClassNames.ANDROID_MARGIN_LAYOUT_PARAMS, layoutWidth, layoutHeight
+                    )
+                } ?: run {
+                    beginControlFlow("if (v.getLayoutParams() == null)")
+                        .addStatement(
+                            "throw new \$T(\"Layout params is required to be set for Size.MANUAL\")",
+                            NullPointerException::class.java
+                        )
+                        .endControlFlow()
+                }
 
                 addStatement("return v")
             }
@@ -486,12 +493,13 @@ class GeneratedModelWriter(
         return methods
     }
 
-    private fun getLayoutDimensions(modelInfo: GeneratedModelInfo): Pair<CodeBlock, CodeBlock> {
+    private fun getLayoutDimensions(modelInfo: GeneratedModelInfo): Pair<CodeBlock, CodeBlock>? {
         val matchParent = CodeBlock.of("\$T.MATCH_PARENT", ClassNames.ANDROID_MARGIN_LAYOUT_PARAMS)
         val wrapContent = CodeBlock.of("\$T.WRAP_CONTENT", ClassNames.ANDROID_MARGIN_LAYOUT_PARAMS)
 
         // Returns a pair of width to height
         return when (modelInfo.layoutParams) {
+            ModelView.Size.MANUAL -> null
             ModelView.Size.WRAP_WIDTH_MATCH_HEIGHT -> wrapContent to matchParent
             ModelView.Size.MATCH_WIDTH_MATCH_HEIGHT -> matchParent to matchParent
             // This will be used for Styleable views as the default
