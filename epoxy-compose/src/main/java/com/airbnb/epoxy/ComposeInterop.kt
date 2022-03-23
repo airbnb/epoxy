@@ -1,5 +1,6 @@
 package com.airbnb.epoxy
 
+import android.util.SparseArray
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -25,6 +26,19 @@ class ComposeEpoxyModel(
     vararg val keys: Any,
     private val composeFunction: @Composable () -> Unit,
 ) : EpoxyModelWithView<ComposeView>() {
+
+    private val keyedTags by lazy { SparseArray<Any>() }
+
+    /**
+     * add tag to this epoxy model
+     */
+    fun addTag(key: Int, tag: Any) {
+        keyedTags.put(key, tag)
+    }
+
+    fun tag(key: Int): Any? {
+        return keyedTags.get(key)
+    }
 
     override fun buildView(parent: ViewGroup): ComposeView = ComposeView(parent.context).apply {
         setViewCompositionStrategy(
