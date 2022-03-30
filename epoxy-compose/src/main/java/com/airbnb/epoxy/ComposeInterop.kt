@@ -27,7 +27,7 @@ class ComposeEpoxyModel(
     private val composeFunction: @Composable () -> Unit,
 ) : EpoxyModelWithView<ComposeView>() {
 
-    private val keyedTags by lazy { SparseArray<Any>() }
+    private val keyedTags by lazy { SparseArray<Any>(2) }
 
     /**
      * add tag to this epoxy model
