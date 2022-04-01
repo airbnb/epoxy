@@ -75,7 +75,7 @@ class ModelViewInfo(
                 // Only include the interface if the view has one of the interface methods annotated with a prop annotation
                 val interfaceMethods = interfaceElement.getDeclaredMethods()
                 methodsOnView.any { viewMethod ->
-                    viewMethod.hasAnyOf(*ModelViewProcessor.modelPropAnnotationsArray) &&
+                    viewMethod.hasAnyAnnotation(*ModelViewProcessor.modelPropAnnotationsArray) &&
                         interfaceMethods.any { interfaceMethod ->
                             // To keep this simple we only compare name and ignore parameters, should be close enough
                             viewMethod.name == interfaceMethod.name

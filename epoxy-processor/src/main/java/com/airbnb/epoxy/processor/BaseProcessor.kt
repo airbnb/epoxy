@@ -35,7 +35,7 @@ abstract class BaseProcessor(val kspEnvironment: SymbolProcessorEnvironment? = n
     Asyncable,
     SymbolProcessor {
 
-    val processorName = this@BaseProcessor::class.java.simpleName
+    private val processorName: String = this@BaseProcessor::class.java.simpleName
 
     lateinit var environment: XProcessingEnv
         private set
@@ -287,7 +287,7 @@ abstract class BaseProcessor(val kspEnvironment: SymbolProcessorEnvironment? = n
 
         generatedClasses
             .flatMap { it.attributeInfo }
-            .mapNotNull { attributeInfo ->
+            .map { attributeInfo ->
                 if (configManager.requiresHashCode(attributeInfo) &&
                     attributeInfo.useInHash &&
                     !attributeInfo.ignoreRequireHashCode

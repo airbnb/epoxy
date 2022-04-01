@@ -239,9 +239,9 @@ class ModelViewProcessor @JvmOverloads constructor(
                 if (prop is XMethodElement &&
                     prop.parameters.isEmpty() &&
                     info.viewElement.findOverload(
-                            prop,
-                            1
-                        )?.hasAnyOf(*modelPropAnnotationsArray) == true
+                        prop,
+                        1
+                    )?.hasAnyAnnotation(*modelPropAnnotationsArray) == true
                 ) {
                     return@mapNotNull null
                 }
@@ -468,23 +468,24 @@ class ModelViewProcessor @JvmOverloads constructor(
         classTypes: List<XTypeElement>,
         memoizer: Memoizer
     ) {
-        classTypes.getElementsAnnotatedWith(OnVisibilityChanged::class).mapNotNull { visibilityMethod ->
-            if (!validateVisibilityChangedElement(visibilityMethod, memoizer)) {
-                return@mapNotNull null
-            }
+        classTypes.getElementsAnnotatedWith(OnVisibilityChanged::class)
+            .mapNotNull { visibilityMethod ->
+                if (!validateVisibilityChangedElement(visibilityMethod, memoizer)) {
+                    return@mapNotNull null
+                }
 
-            val info = getModelInfoForPropElement(visibilityMethod)
-            if (info == null) {
-                logger.logError(
-                    visibilityMethod,
-                    "%s annotation can only be used in classes annotated with %s",
-                    OnVisibilityChanged::class.java, ModelView::class.java
-                )
-                return@mapNotNull null
-            }
+                val info = getModelInfoForPropElement(visibilityMethod)
+                if (info == null) {
+                    logger.logError(
+                        visibilityMethod,
+                        "%s annotation can only be used in classes annotated with %s",
+                        OnVisibilityChanged::class.java, ModelView::class.java
+                    )
+                    return@mapNotNull null
+                }
 
-            visibilityMethod.expectName to info
-        }.forEach { (methodName, modelInfo) ->
+                visibilityMethod.expectName to info
+            }.forEach { (methodName, modelInfo) ->
             // Do this after, synchronously, to preserve function ordering in the view.
             // If there are multiple functions with this annotation this allows them
             // to be called in predictable order from top to bottom of the class, which
@@ -658,7 +659,10 @@ class ModelViewProcessor @JvmOverloads constructor(
         )
     }
 
-    private fun validateVisibilityChangedElement(visibilityMethod: XElement, memoizer: Memoizer): Boolean {
+    private fun validateVisibilityChangedElement(
+        visibilityMethod: XElement,
+        memoizer: Memoizer
+    ): Boolean {
         contract {
             returns(true) implies (visibilityMethod is XMethodElement)
         }
@@ -667,7 +671,12 @@ class ModelViewProcessor @JvmOverloads constructor(
             visibilityMethod,
             OnVisibilityChanged::class.java,
             4,
-            checkTypeParameters = listOf(TypeName.FLOAT, TypeName.FLOAT, TypeName.INT, TypeName.INT),
+            checkTypeParameters = listOf(
+                TypeName.FLOAT,
+                TypeName.FLOAT,
+                TypeName.INT,
+                TypeName.INT
+            ),
             memoizer = memoizer
         )
     }

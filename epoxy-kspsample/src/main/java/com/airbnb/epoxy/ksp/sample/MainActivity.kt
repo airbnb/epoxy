@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.ksp.sample.epoxyviews.headerView
+import com.airbnb.epoxy.ksp.sample.epoxyviews.footerView
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,6 +15,10 @@ class MainActivity : AppCompatActivity() {
             headerView {
                 id("header")
                 title("Hello World")
+            }
+            footerView {
+                id("footer")
+                text("footer")
             }
         }
     }

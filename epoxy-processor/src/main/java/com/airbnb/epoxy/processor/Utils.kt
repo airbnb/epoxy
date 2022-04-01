@@ -45,7 +45,7 @@ internal object Utils {
     @JvmStatic
     @Throws(EpoxyProcessorException::class)
     fun throwError(msg: String?, vararg args: Any?) {
-        throw EpoxyProcessorException(String.format(msg!!, *args))
+        throw EpoxyProcessorException(msg!!.format(*args))
     }
 
     @JvmStatic
@@ -53,7 +53,7 @@ internal object Utils {
         msg: String?,
         vararg args: Any?
     ): EpoxyProcessorException {
-        return EpoxyProcessorException(String.format(msg!!, *args))
+        return EpoxyProcessorException(msg!!.format(*args))
     }
 
     fun buildEpoxyException(
@@ -62,7 +62,7 @@ internal object Utils {
         vararg args: Any?
     ): EpoxyProcessorException {
         return EpoxyProcessorException(
-            message = String.format(msg!!, *args),
+            message = msg!!.format(*args),
             element = element
         )
     }
@@ -157,7 +157,7 @@ internal object Utils {
      * Returns the type of the Epoxy model.
      *
      * Eg for "class MyModel extends EpoxyModel<TextView>" it would return TextView.
-     </TextView> */
+    </TextView> */
     fun getEpoxyObjectType(
         clazz: XTypeElement,
         memoizer: Memoizer
@@ -285,7 +285,7 @@ internal object Utils {
     fun capitalizeFirstLetter(original: String?): String? {
         return if (original == null || original.isEmpty()) {
             original
-        } else original.substring(0, 1).toUpperCase() + original.substring(1)
+        } else original.substring(0, 1).uppercase() + original.substring(1)
     }
 
     @JvmStatic
@@ -303,11 +303,11 @@ internal object Utils {
         return if (!PATTERN_STARTS_WITH_SET.matcher(string).matches()) {
             string
         } else string[3].toString()
-            .toLowerCase() + string.substring(4)
+            .lowercase() + string.substring(4)
     }
 
     fun toSnakeCase(s: String): String {
-        return s.replace("([^_A-Z])([A-Z])".toRegex(), "$1_$2").toLowerCase()
+        return s.replace("([^_A-Z])([A-Z])".toRegex(), "$1_$2").lowercase()
     }
 
     fun getDefaultValue(attributeType: TypeName): String {
