@@ -125,13 +125,15 @@ public final class EpoxyControllerAdapter extends BaseEpoxyAdapter implements Re
   @Override
   public void onViewAttachedToWindow(@NonNull EpoxyViewHolder holder) {
     super.onViewAttachedToWindow(holder);
-    epoxyController.onViewAttachedToWindow(holder, holder.getModel());
+    executeWhenInflated(holder,
+        () -> epoxyController.onViewAttachedToWindow(holder, holder.getModel()));
   }
 
   @Override
   public void onViewDetachedFromWindow(@NonNull EpoxyViewHolder holder) {
     super.onViewDetachedFromWindow(holder);
-    epoxyController.onViewDetachedFromWindow(holder, holder.getModel());
+    executeWhenInflated(holder,
+        () -> epoxyController.onViewDetachedFromWindow(holder, holder.getModel()));
   }
 
   @Override

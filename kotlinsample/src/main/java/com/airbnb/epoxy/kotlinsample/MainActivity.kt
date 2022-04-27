@@ -13,6 +13,7 @@ import com.airbnb.epoxy.group
 import com.airbnb.epoxy.kotlinsample.helpers.carouselNoSnapBuilder
 import com.airbnb.epoxy.kotlinsample.models.ItemDataClass
 import com.airbnb.epoxy.kotlinsample.models.ItemViewBindingDataClass
+import com.airbnb.epoxy.kotlinsample.models.asyncItemCustomView
 import com.airbnb.epoxy.kotlinsample.models.carouselItemCustomView
 import com.airbnb.epoxy.kotlinsample.models.coloredSquareView
 import com.airbnb.epoxy.kotlinsample.models.decoratedLinearGroup
@@ -141,10 +142,30 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
+                asyncItemCustomView {
+                    id("custom view $i")
+                    color(Color.GREEN)
+                    title("Async Row - Open sticky header activity")
+                    listener { _ ->
+                        Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
+                        startActivity(Intent(this@MainActivity, StickyHeaderActivity::class.java))
+                    }
+                }
+
                 itemCustomView {
                     id("custom view $i")
                     color(Color.MAGENTA)
                     title("Open Drag and Dropt activity")
+                    listener { _ ->
+                        Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
+                        startActivity(Intent(this@MainActivity, DragAndDropActivity::class.java))
+                    }
+                }
+
+                asyncItemCustomView {
+                    id("custom view $i")
+                    color(Color.MAGENTA)
+                    title("Async Row - Open Drag and Dropt activity")
                     listener { _ ->
                         Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_LONG).show()
                         startActivity(Intent(this@MainActivity, DragAndDropActivity::class.java))

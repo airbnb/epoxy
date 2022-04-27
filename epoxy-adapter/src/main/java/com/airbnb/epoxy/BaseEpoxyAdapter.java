@@ -108,6 +108,11 @@ public abstract class BaseEpoxyAdapter
 
   @Override
   public void onBindViewHolder(EpoxyViewHolder holder, int position, List<Object> payloads) {
+    executeWhenInflated(holder,
+        () -> onBindViewHolderInternal(holder, holder.getBindingAdapterPosition(), payloads));
+  }
+
+  private void onBindViewHolderInternal(EpoxyViewHolder holder, int position, List<Object> payloads) {
     EpoxyModel<?> modelToShow = getModelForPosition(position);
 
     EpoxyModel<?> previouslyBoundModel = null;
@@ -209,15 +214,19 @@ public abstract class BaseEpoxyAdapter
   @CallSuper
   @Override
   public void onViewAttachedToWindow(EpoxyViewHolder holder) {
-    //noinspection unchecked,rawtypes
-    ((EpoxyModel) holder.getModel()).onViewAttachedToWindow(holder.objectToBind());
+    executeWhenInflated(holder,
+        () ->
+            //noinspection unchecked,rawtypes
+            ((EpoxyModel) holder.getModel()).onViewAttachedToWindow(holder.objectToBind()));
   }
 
   @CallSuper
   @Override
   public void onViewDetachedFromWindow(EpoxyViewHolder holder) {
-    //noinspection unchecked,rawtypes
-    ((EpoxyModel) holder.getModel()).onViewDetachedFromWindow(holder.objectToBind());
+    executeWhenInflated(holder,
+        () ->
+            //noinspection unchecked,rawtypes
+            ((EpoxyModel) holder.getModel()).onViewDetachedFromWindow(holder.objectToBind()));
   }
 
   public void onSaveInstanceState(Bundle outState) {
@@ -339,4 +348,12 @@ public abstract class BaseEpoxyAdapter
   }
 
   //endregion
+
+  protected void executeWhenInflated(EpoxyViewHolder holder, Runnable runnable) {
+    if (holder.itemView instanceof AsyncFrameLayout) {
+      ((AsyncFrameLayout)holder.itemView).executeWhenInflated(runnable);
+    } else {
+      runnable.run();
+    }
+  }
 }
