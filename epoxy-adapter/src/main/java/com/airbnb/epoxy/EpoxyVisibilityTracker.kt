@@ -204,7 +204,7 @@ class EpoxyVisibilityTracker {
      * @param eventOriginForDebug a debug strings used for logs
      */
     private fun processChild(child: View, detachEvent: Boolean, eventOriginForDebug: String) {
-        if (child is AsyncFrameLayout) {
+        if (child is AsyncInflatedView) {
             child.executeWhenInflated {
                 processChildInternal(child, detachEvent, eventOriginForDebug)
             }
