@@ -350,8 +350,8 @@ public abstract class BaseEpoxyAdapter
   //endregion
 
   protected void executeWhenInflated(EpoxyViewHolder holder, Runnable runnable) {
-    if (holder.itemView instanceof AsyncFrameLayout) {
-      ((AsyncFrameLayout)holder.itemView).executeWhenInflated(runnable);
+    if (holder.itemView instanceof AsyncInflatedView) {
+      ((AsyncInflatedView)holder.itemView).executeWhenInflated(runnable);
     } else {
       runnable.run();
     }
