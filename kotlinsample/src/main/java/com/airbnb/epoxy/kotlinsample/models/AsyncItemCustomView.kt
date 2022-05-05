@@ -134,6 +134,7 @@ class AsyncItemCustomView @JvmOverloads constructor(
 
     @OnViewRecycled
     fun clear() {
+        onRecycle()
         onVisibilityEventDrawable.reset()
     }
 

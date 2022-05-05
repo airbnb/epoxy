@@ -1,7 +1,13 @@
 package com.airbnb.epoxy
 
 /**
- * Interface to support Async layout inflation with EPoxy
+ * Interface to support Async layout inflation with Epoxy
+ * This is useful if we want to inflate views asyncronously, thereby improving the first layout time
+ *
+ * For example, let's say you have a page with first view as a header and then a video. The recycler
+ * view will inflate both views before showing the first frame. Since video is a heavy view and take
+ * a longer time to inflate, we can inflate it asyncronously and improve the time taken to show the
+ * first frame.
  */
 interface AsyncInflatedView {
     /**
@@ -29,7 +35,7 @@ interface AsyncInflatedView {
     }
 
     /**
-     * executeWhenInflated method is called by EPoxy to execute a runnable that depend on the
+     * executeWhenInflated method is called by Epoxy to execute a runnable that depend on the
      * inflated view. If the view is already inflated, the runnable will immediately run,
      * otherwise it is added to the list of pending runnables.
      */
@@ -39,5 +45,13 @@ interface AsyncInflatedView {
         } else {
             pendingRunnables.add(runnable)
         }
+    }
+
+    /**
+     * onViewRecycled method that MUST be called when the view is recycled. It clears pending
+     * runnable It runs all pending runnables waiting for view inflation.
+     */
+    fun onViewRecycled() {
+        pendingRunnables.clear()
     }
 }
