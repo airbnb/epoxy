@@ -23,7 +23,7 @@ interface AsyncInflatedView {
     var pendingRunnables : ArrayList<Runnable>
 
     /**
-     * onInflationComplete method that MUST be called after the view is asyncronously inflated.
+     * onInflationComplete method MUST be called after the view is asyncronously inflated.
      * It runs all pending runnables waiting for view inflation.
      */
     fun onInflationComplete() {
@@ -48,7 +48,7 @@ interface AsyncInflatedView {
     }
 
     /**
-     * onViewRecycled method that MUST be called when the view is recycled. It clears pending
+     * onViewRecycled method MUST be called when the view is recycled. It clears pending
      * runnable It runs all pending runnables waiting for view inflation.
      */
     fun onViewRecycled() {
