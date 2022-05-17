@@ -14,13 +14,13 @@ interface AsyncInflatedView {
      * isInflated flag is set to true once the async inflation is completed.
      * It is used to run any methods/runnables that requires the view to be inflated.
      */
-    var isInflated : Boolean
+    var isInflated: Boolean
 
     /**
      * pendingRunnables keep a list of runnables, in order, that are waiting for the view to be
      * inflated.
      */
-    var pendingRunnables : ArrayList<Runnable>
+    var pendingRunnables: ArrayList<Runnable>
 
     /**
      * onInflationComplete method MUST be called after the view is asyncronously inflated.
