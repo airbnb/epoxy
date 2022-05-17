@@ -5,11 +5,11 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
-import android.widget.FrameLayout
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.asynclayoutinflater.view.AsyncLayoutInflater
 import com.airbnb.epoxy.AfterPropsSet
+import com.airbnb.epoxy.AsyncFrameLayout
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
@@ -19,8 +19,6 @@ import com.airbnb.epoxy.OnVisibilityStateChanged
 import com.airbnb.epoxy.TextProp
 import com.airbnb.epoxy.VisibilityState
 import com.airbnb.epoxy.kotlinsample.R
-import androidx.asynclayoutinflater.view.AsyncLayoutInflater
-import com.airbnb.epoxy.AsyncFrameLayout
 
 // The ModelView annotation is used on Views to have models generated from those views.
 // This is pretty straightforward with Kotlin, but properties need some special handling.
