@@ -6,7 +6,6 @@ import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.epoxy.processor.containingPackage
 import com.airbnb.epoxy.processor.resourcescanning.KspResourceScanner.ImportMatch.Normal
 import com.airbnb.epoxy.processor.resourcescanning.KspResourceScanner.ImportMatch.TypeAlias
-import com.google.devtools.ksp.containingFile
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.impl.java.KSAnnotationJavaImpl
@@ -25,6 +24,7 @@ import org.jetbrains.kotlin.psi.KtDotQualifiedExpression
 import org.jetbrains.kotlin.psi.KtExpression
 import org.jetbrains.kotlin.psi.KtSimpleNameExpression
 import org.jetbrains.kotlin.psi.ValueArgument
+import java.util.regex.PatternSyntaxException
 import kotlin.reflect.KClass
 
 class KspResourceScanner(environmentProvider: () -> XProcessingEnv) :
@@ -182,17 +182,24 @@ class KspResourceScanner(environmentProvider: () -> XProcessingEnv) :
                     packageName
                 )
 
+                if (references.isEmpty()) {
+                    // This property isn't used for resources, so return early.
+                    // It may still have non resource values, so don't continue to collect those.
+                    return@flatMap emptyList()
+                }
+
                 val values = (ksValueArgument.value as? Iterable<*>)?.toList() ?: listOf(
                     ksValueArgument.value
                 )
 
+                val propertyName = ksValueArgument.name?.asString()
                 if (values.size != references.size) {
-                    error("Resource reference count does not match value count. Resources: $references values: $values annotation: $annotationEntry")
+                    error("Resource reference count does not match value count. Resources: $references values: $values annotation: ${annotation.shortName.asString()} property: $propertyName")
                 }
 
                 values.zip(references).map { (value, resourceReference) ->
                     AnnotationWithReferenceValue(
-                        name = ksValueArgument.name?.asString(),
+                        name = propertyName,
                         value = value,
                         reference = resourceReference
                     )
@@ -396,7 +403,13 @@ class KspResourceScanner(environmentProvider: () -> XProcessingEnv) :
             packageName: String
         ): ImportMatch {
             // Match something like "com.airbnb.paris.test.R2 as typeAliasedR"
-            val typeAliasRegex = Regex("(.*)\\s+as\\s+$annotationReferencePrefix\$")
+            val typeAliasRegex = try {
+                Regex("(.*)\\s+as\\s+$annotationReferencePrefix\$")
+            } catch (e: PatternSyntaxException) {
+                // Provide more information in this case so we can better debug https://github.com/airbnb/epoxy/issues/1265
+                throw IllegalStateException("Failed to create regex for resource reference '$annotationReferencePrefix'", e)
+            }
+
             return importedNames.firstNotNullOfOrNull { importedName ->
 
                 when {

@@ -383,7 +383,11 @@ class ViewAttributeInfo(
     ) {
         for (xAnnotation in paramElement.getAllAnnotations()) {
 
-            if (xAnnotation.name in ModelViewProcessor.modelPropAnnotationSimpleNames) {
+            if (xAnnotation.name in ModelViewProcessor.modelPropAnnotationSimpleNames ||
+                // Doesn't make sense for suppressed warnings on the original member to be
+                // carried over to the generated code.
+                xAnnotation.name == "SuppressWarnings"
+            ) {
                 continue
             }
 
@@ -468,10 +472,16 @@ class ViewAttributeInfo(
         }
 
         if (viewAttributeTypeName == ViewAttributeType.Field) {
-            builder.add("\n\n@see \$T#\$L", viewElement.type.typeNameWithWorkaround(memoizer), viewAttributeName)
+            builder.add(
+                "\n\n@see \$T#\$L",
+                viewElement.type.typeNameWithWorkaround(memoizer),
+                viewAttributeName
+            )
         } else {
             builder.add(
-                "\n\n@see \$T#\$L(\$T)", viewElement.type.typeNameWithWorkaround(memoizer), viewAttributeName,
+                "\n\n@see \$T#\$L(\$T)",
+                viewElement.type.typeNameWithWorkaround(memoizer),
+                viewAttributeName,
                 attributeTypeName
             )
         }

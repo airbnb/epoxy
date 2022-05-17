@@ -55,9 +55,9 @@ rootProject.ext.SQUARE_KOTLINPOET_VERSION = "1.10.2"
 rootProject.ext.COMPOSE_VERSION = "1.0.4"
 rootProject.ext.COMPOSE_ACTIVITY_VERSION = "1.3.1"
 rootProject.ext.KOTLINX_LIFECYCLE_RUNTIME_VERSION = "2.3.0"
-rootProject.ext.KSP_VERSION = "1.5.31-1.0.0"
-rootProject.ext.XPROCESSING_VERSION = "2.4.0-beta01"
-rootProject.ext.KOTLIN_TESTING_COMPILE_VERSION = '1.4.5'
+rootProject.ext.KSP_VERSION = "1.5.31-1.0.1"
+rootProject.ext.XPROCESSING_VERSION = "2.4.0-beta02"
+rootProject.ext.KOTLIN_TESTING_COMPILE_VERSION = '1.4.6'
 
 rootProject.ext.deps = [
     activityCompose           : "androidx.activity:activity-compose:$COMPOSE_ACTIVITY_VERSION",
