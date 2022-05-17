@@ -108,8 +108,12 @@ public abstract class BaseEpoxyAdapter
 
   @Override
   public void onBindViewHolder(EpoxyViewHolder holder, int position, List<Object> payloads) {
-    executeWhenInflated(holder,
-        () -> onBindViewHolderInternal(holder, holder.getBindingAdapterPosition(), payloads));
+    if (holder.itemView instanceof AsyncInflatedView) {
+      ((AsyncInflatedView)holder.itemView).executeWhenInflated(() ->
+          onBindViewHolderInternal(holder, holder.getBindingAdapterPosition(), payloads));
+    } else {
+      onBindViewHolderInternal(holder, holder.getBindingAdapterPosition(), payloads);
+    }
   }
 
   private void onBindViewHolderInternal(EpoxyViewHolder holder, int position, List<Object> payloads) {
@@ -214,19 +218,27 @@ public abstract class BaseEpoxyAdapter
   @CallSuper
   @Override
   public void onViewAttachedToWindow(EpoxyViewHolder holder) {
-    executeWhenInflated(holder,
-        () ->
-            //noinspection unchecked,rawtypes
-            ((EpoxyModel) holder.getModel()).onViewAttachedToWindow(holder.objectToBind()));
+    if (holder.itemView instanceof AsyncInflatedView) {
+      ((AsyncInflatedView)holder.itemView).executeWhenInflated(() ->
+          //noinspection unchecked,rawtypes
+          ((EpoxyModel) holder.getModel()).onViewAttachedToWindow(holder.objectToBind()));
+    } else {
+        //noinspection unchecked,rawtypes
+        ((EpoxyModel) holder.getModel()).onViewAttachedToWindow(holder.objectToBind());
+    }
   }
 
   @CallSuper
   @Override
   public void onViewDetachedFromWindow(EpoxyViewHolder holder) {
-    executeWhenInflated(holder,
-        () ->
-            //noinspection unchecked,rawtypes
-            ((EpoxyModel) holder.getModel()).onViewDetachedFromWindow(holder.objectToBind()));
+    if (holder.itemView instanceof AsyncInflatedView) {
+      ((AsyncInflatedView)holder.itemView).executeWhenInflated(() ->
+          //noinspection unchecked,rawtypes
+          ((EpoxyModel) holder.getModel()).onViewDetachedFromWindow(holder.objectToBind()));
+    } else {
+      //noinspection unchecked,rawtypes
+      ((EpoxyModel) holder.getModel()).onViewDetachedFromWindow(holder.objectToBind());
+    }
   }
 
   public void onSaveInstanceState(Bundle outState) {
@@ -348,12 +360,4 @@ public abstract class BaseEpoxyAdapter
   }
 
   //endregion
-
-  protected void executeWhenInflated(EpoxyViewHolder holder, Runnable runnable) {
-    if (holder.itemView instanceof AsyncInflatedView) {
-      ((AsyncInflatedView)holder.itemView).executeWhenInflated(runnable);
-    } else {
-      runnable.run();
-    }
-  }
 }
