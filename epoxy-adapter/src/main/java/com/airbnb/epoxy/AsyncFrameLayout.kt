@@ -13,8 +13,8 @@ abstract class AsyncFrameLayout @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), AsyncInflatedView {
-    override var isInflated : Boolean = false
-    override var pendingRunnables : ArrayList<Runnable> = ArrayList()
+    override var isInflated: Boolean = false
+    override var pendingRunnables: ArrayList<Runnable> = ArrayList()
 
     @OnViewRecycled
     fun onRecycle() {
