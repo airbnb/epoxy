@@ -112,7 +112,7 @@ public abstract class BaseEpoxyAdapter
       ((AsyncInflatedView)holder.itemView).executeWhenInflated(() ->
           onBindViewHolderInternal(holder, holder.getBindingAdapterPosition(), payloads));
     } else {
-      onBindViewHolderInternal(holder, holder.getBindingAdapterPosition(), payloads);
+      onBindViewHolderInternal(holder, position, payloads);
     }
   }
 
