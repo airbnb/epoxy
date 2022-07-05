@@ -245,9 +245,9 @@ class EpoxyVisibilityTracker {
             // without recursively searching through the view children.
             if (groupChildHolder.itemView is RecyclerView) {
                 if (detachEvent) {
-                    processChildRecyclerViewDetached(groupChildHolder.itemView)
+                    processChildRecyclerViewDetached(groupChildHolder.itemView as RecyclerView)
                 } else {
-                    processChildRecyclerViewAttached(groupChildHolder.itemView)
+                    processChildRecyclerViewAttached(groupChildHolder.itemView as RecyclerView)
                 }
             }
             processChild(

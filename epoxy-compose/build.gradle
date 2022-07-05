@@ -32,7 +32,7 @@ android {
     compose true
   }
   composeOptions {
-    kotlinCompilerExtensionVersion COMPOSE_VERSION
+    kotlinCompilerExtensionVersion COMPOSE_COMPILER_VERSION
   }
 }
 
