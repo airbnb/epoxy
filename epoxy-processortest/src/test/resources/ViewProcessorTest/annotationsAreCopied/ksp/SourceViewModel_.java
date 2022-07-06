@@ -18,7 +18,7 @@ import kotlin.ReplaceWith;
  */
 @Deprecated(
     message = "some message",
-    replaceWith = @ReplaceWith(imports = {}, expression = ""),
+    replaceWith = @ReplaceWith(expression = "", imports = {}),
     level = DeprecationLevel.WARNING
 )
 public class SourceViewModel_ extends EpoxyModel<SourceView> implements GeneratedModel<SourceView>, SourceViewModelBuilder {
