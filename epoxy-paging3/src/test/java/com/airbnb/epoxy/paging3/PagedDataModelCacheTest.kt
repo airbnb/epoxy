@@ -11,9 +11,12 @@ import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.Assert.assertEquals
@@ -28,10 +31,6 @@ import kotlin.coroutines.CoroutineContext
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.LEGACY)
 class PagedDataModelCacheTest {
-    /**
-     * test dispatcher used for controlling paging source
-     * */
-    private val testDispatcher = TestCoroutineDispatcher()
 
     /**
      * Simple mode builder for [DummyItem]
@@ -77,16 +76,16 @@ class PagedDataModelCacheTest {
     }
 
     @Test
-    fun partialLoad() = runBlockingTest {
+    fun partialLoad() = runTest {
         val items = createDummyItems(INITIAL_LOAD_SIZE + PAGE_SIZE)
-        val pager = createPager(testDispatcher, items)
+        val pager = createPager(this.coroutineContext, items)
         val deferred = async {
-            pager.flow.collect {
+            pager.flow.collectLatest {
                 pagedDataModelCache.submitData(it)
             }
         }
         // advance in time to create first page of data
-        testDispatcher.advanceTimeBy(DEFAULT_DELAY)
+        advanceTimeBy(DEFAULT_DELAY)
 
         // wait for pagedDataModelCache submits data
         delay(2000)
@@ -97,7 +96,7 @@ class PagedDataModelCacheTest {
         assertModelDummyItems(items.subList(0, INITIAL_LOAD_SIZE))
         MatcherAssert.assertThat(rebuildCounter, CoreMatchers.`is`(0))
         // advance in time to create second page of data
-        testDispatcher.advanceTimeBy(DEFAULT_DELAY)
+        advanceTimeBy(DEFAULT_DELAY)
         delay(2000)
         assertModelDummyItems(items)
         assertAndResetRebuildModels()
