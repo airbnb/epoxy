@@ -71,7 +71,7 @@ abstract class ResourceScanner(val environmentProvider: () -> XProcessingEnv) {
         val values = (
             xAnnotation.annotationValues
                 .firstOrNull { it.name == property }
-                ?.value as? List<Int>
+                ?.asIntList()
             )
             ?: return null
 

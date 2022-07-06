@@ -2,7 +2,7 @@ package com.airbnb.epoxy.sample
 
 import android.view.View
 import com.airbnb.epoxy.AutoModel
-import com.airbnb.epoxy.DataBindingEpoxyModel.DataBindingHolder
+import com.airbnb.epoxy.DataBindingEpoxyModel
 import com.airbnb.epoxy.EpoxyAsyncUtil
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.epoxy.sample.models.CarouselModelGroup
@@ -48,7 +48,7 @@ class SampleController(private val callbacks: AdapterCallbacks) :
         // (https://github.com/airbnb/epoxy/wiki/Epoxy-Controller#implicit-adding)
         addButton
             .textRes(R.string.button_add)
-            .clickListener { model: ButtonBindingModel_?, parentView: DataBindingHolder?, clickedView: View?, position: Int -> callbacks.onAddCarouselClicked() }
+            .clickListener { model: ButtonBindingModel_?, parentView: DataBindingEpoxyModel.DataBindingHolder?, clickedView: View?, position: Int -> callbacks.onAddCarouselClicked() }
         clearButton
             .textRes(R.string.button_clear)
             .clickListener { v: View? -> callbacks.onClearCarouselsClicked() }

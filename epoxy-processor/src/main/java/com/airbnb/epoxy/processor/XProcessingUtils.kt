@@ -1,6 +1,7 @@
 package com.airbnb.epoxy.processor
 
 import androidx.room.compiler.processing.XAnnotation
+import androidx.room.compiler.processing.XAnnotationValue
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XEnumEntry
 import androidx.room.compiler.processing.XExecutableElement
@@ -133,6 +134,9 @@ fun XAnnotation.toAnnotationSpec(memoizer: Memoizer): AnnotationSpec {
         }
         if (value is XAnnotation) {
             return addMember(memberName, "\$L", value.toAnnotationSpec(memoizer))
+        }
+        if (value is XAnnotationValue) {
+            return addMemberForValue(value.name, value.value, memoizer)
         }
         if (value is List<*>) {
             if (value.isEmpty()) {

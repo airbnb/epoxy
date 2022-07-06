@@ -17,6 +17,9 @@ class ModelsWithCustomTypes {
   @EpoxyModelClass
   abstract static class ModelWithCustomType extends BaseModelWithCustomType<ImageView> {
 
+    public ModelWithCustomType() {
+    }
+
     @Override
     protected int getDefaultLayout() {
       return 0;
@@ -24,6 +27,9 @@ class ModelsWithCustomTypes {
   }
 
   abstract static class BaseModelWithCustomType<U extends View> extends EpoxyModel<TextView> {
+
+    public BaseModelWithCustomType() {
+    }
 
     public void testMethod(U param) {
 

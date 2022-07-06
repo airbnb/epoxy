@@ -3,6 +3,7 @@ package com.airbnb.epoxy.processor
 import androidx.annotation.LayoutRes
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XFiler
+import androidx.room.compiler.processing.XMethodElement
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XTypeElement
 import androidx.room.compiler.processing.addOriginatingElement
@@ -834,7 +835,11 @@ class GeneratedModelWriter(
         // EpoxyModel implementation which calls normal "bind". Doing that would force a full
         // bind!!! So we mustn't do that. So, we only call the super diff binding if we think
         // it's a custom implementation.
-        if (modelImplementsBindWithDiff(classInfo.superClassElement, build(), environment)) {
+        if (modelImplementsBindWithDiff(
+                classInfo.superClassElement,
+                memoizer.baseBindWithDiffMethod
+            )
+        ) {
             addStatement(
                 "super.bind(\$L, \$L)",
                 boundObjectParam.name,
@@ -2097,24 +2102,16 @@ class GeneratedModelWriter(
 
         fun modelImplementsBindWithDiff(
             clazz: XTypeElement,
-            bindWithDiffMethod: MethodSpec,
-            environment: XProcessingEnv
+            baseBindWithDiffMethod: XMethodElement
         ): Boolean {
-            val methodOnClass = Utils.getMethodOnClass(
-                clazz,
-                bindWithDiffMethod,
-                environment
-            ) ?: return false
-
-            if (methodOnClass.isAbstract()) {
-                return false
+            return clazz.getAllMethods().any {
+                it.name == baseBindWithDiffMethod.name &&
+                    !it.isAbstract() &&
+                    it.overrides(
+                        other = baseBindWithDiffMethod,
+                        owner = clazz
+                    )
             }
-
-            val enclosingElement = methodOnClass.enclosingElement as XTypeElement
-
-            // As long as the implementation is not on the base EpoxyModel we consider it a custom
-            // implementation
-            return enclosingElement.qualifiedName != Utils.UNTYPED_EPOXY_MODEL_TYPE
         }
     }
 }

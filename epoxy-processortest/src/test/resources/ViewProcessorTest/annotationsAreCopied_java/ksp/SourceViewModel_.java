@@ -1,27 +1,23 @@
 package com.airbnb.epoxy;
 
-import android.view.ViewGroup;
 import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import java.lang.CharSequence;
+import java.lang.IllegalArgumentException;
+import java.lang.IllegalStateException;
 import java.lang.Number;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import java.lang.UnsupportedOperationException;
-import kotlin.Deprecated;
-import kotlin.DeprecationLevel;
-import kotlin.ReplaceWith;
+import java.util.BitSet;
 
 /**
  * Generated file. Do not modify!
  */
-@Deprecated(
-    message = "some message",
-    replaceWith = @ReplaceWith(expression = "", imports = {}),
-    level = DeprecationLevel.WARNING
-)
 public class SourceViewModel_ extends EpoxyModel<SourceView> implements GeneratedModel<SourceView>, SourceViewModelBuilder {
+  private final BitSet assignedAttributes_epoxyGeneratedModel = new BitSet(1);
+
   private OnModelBoundListener<SourceViewModel_, SourceView> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<SourceViewModel_, SourceView> onModelUnboundListener_epoxyGeneratedModel;
@@ -30,24 +26,19 @@ public class SourceViewModel_ extends EpoxyModel<SourceView> implements Generate
 
   private OnModelVisibilityChangedListener<SourceViewModel_, SourceView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  private int foo_Int = 0;
+  /**
+   * Bitset index: 0
+   */
+  @NonNull
+  private String sectionId_String;
 
   @Override
   public void addTo(EpoxyController controller) {
     super.addTo(controller);
     addWithDebugValidation(controller);
-  }
-
-  @Override
-  protected int getViewType() {
-    return 0;
-  }
-
-  @Override
-  public SourceView buildView(ViewGroup parent) {
-    SourceView v = new SourceView(parent.getContext());
-    v.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.MATCH_PARENT, ViewGroup.MarginLayoutParams.WRAP_CONTENT));
-    return v;
+    if (!assignedAttributes_epoxyGeneratedModel.get(0)) {
+    	throw new IllegalStateException("A value is required for sectionId");
+    }
   }
 
   @Override
@@ -59,7 +50,7 @@ public class SourceViewModel_ extends EpoxyModel<SourceView> implements Generate
   @Override
   public void bind(final SourceView object) {
     super.bind(object);
-    object.foo(foo_Int);
+    object.sectionId = sectionId_String;
   }
 
   @Override
@@ -71,8 +62,8 @@ public class SourceViewModel_ extends EpoxyModel<SourceView> implements Generate
     SourceViewModel_ that = (SourceViewModel_) previousModel;
     super.bind(object);
 
-    if ((foo_Int != that.foo_Int)) {
-      object.foo(foo_Int);
+    if ((sectionId_String != null ? !sectionId_String.equals(that.sectionId_String) : that.sectionId_String != null)) {
+      object.sectionId = sectionId_String;
     }
   }
 
@@ -164,18 +155,23 @@ public class SourceViewModel_ extends EpoxyModel<SourceView> implements Generate
   }
 
   /**
-   * <i>Optional</i>: Default value is 0
+   * <i>Required.</i>
    *
-   * @see SourceView#foo(int)
+   * @see SourceView#sectionId
    */
-  public SourceViewModel_ foo(int foo) {
+  public SourceViewModel_ sectionId(@NonNull String sectionId) {
+    if (sectionId == null) {
+      throw new IllegalArgumentException("sectionId cannot be null");
+    }
+    assignedAttributes_epoxyGeneratedModel.set(0);
     onMutation();
-    this.foo_Int = foo;
+    this.sectionId_String = sectionId;
     return this;
   }
 
-  public int foo() {
-    return foo_Int;
+  @NonNull
+  public String sectionId() {
+    return sectionId_String;
   }
 
   @Override
@@ -216,7 +212,8 @@ public class SourceViewModel_ extends EpoxyModel<SourceView> implements Generate
 
   @Override
   public SourceViewModel_ layout(@LayoutRes int p0) {
-    throw new UnsupportedOperationException("Layout resources are unsupported with programmatic views.");
+    super.layout(p0);
+    return this;
   }
 
   @Override
@@ -246,7 +243,7 @@ public class SourceViewModel_ extends EpoxyModel<SourceView> implements Generate
   @Override
   @LayoutRes
   protected int getDefaultLayout() {
-    throw new UnsupportedOperationException("Layout resources are unsupported for views created programmatically.");
+    return 1;
   }
 
   @Override
@@ -255,7 +252,8 @@ public class SourceViewModel_ extends EpoxyModel<SourceView> implements Generate
     onModelUnboundListener_epoxyGeneratedModel = null;
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
-    this.foo_Int = 0;
+    assignedAttributes_epoxyGeneratedModel.clear();
+    this.sectionId_String = null;
     super.reset();
     return this;
   }
@@ -284,7 +282,7 @@ public class SourceViewModel_ extends EpoxyModel<SourceView> implements Generate
     if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
       return false;
     }
-    if ((foo_Int != that.foo_Int)) {
+    if ((sectionId_String != null ? !sectionId_String.equals(that.sectionId_String) : that.sectionId_String != null)) {
       return false;
     }
     return true;
@@ -297,14 +295,14 @@ public class SourceViewModel_ extends EpoxyModel<SourceView> implements Generate
     _result = 31 * _result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
     _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
-    _result = 31 * _result + foo_Int;
+    _result = 31 * _result + (sectionId_String != null ? sectionId_String.hashCode() : 0);
     return _result;
   }
 
   @Override
   public String toString() {
     return "SourceViewModel_{" +
-        "foo_Int=" + foo_Int +
+        "sectionId_String=" + sectionId_String +
         "}" + super.toString();
   }
 

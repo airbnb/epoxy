@@ -2,6 +2,7 @@ package com.airbnb.epoxy.processor
 
 import androidx.room.compiler.processing.XArrayType
 import androidx.room.compiler.processing.XElement
+import androidx.room.compiler.processing.XMethodElement
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XType
 import androidx.room.compiler.processing.XTypeElement
@@ -108,6 +109,17 @@ class Memoizer(
 
     val viewType: XType by lazy {
         environment.requireType(ClassNames.ANDROID_VIEW)
+    }
+
+    val baseBindWithDiffMethod: XMethodElement by lazy {
+        epoxyModelClassElementUntyped.getDeclaredMethods()
+            .firstOrNull {
+                it.name == "bind" &&
+                    it.parameters.size == 2 &&
+                    // Second parameter in bind function is an epoxy model.
+                    it.parameters[1].type.typeElement?.name == "EpoxyModel"
+            }
+            ?: error("Unable to find bind function in epoxy model")
     }
 
     private val methodsReturningClassType = mutableMapOf<String, Set<MethodInfo>>()
@@ -222,8 +234,8 @@ class Memoizer(
 
         // Any type is allowed, so View wil work
         return typeParam.isObjectOrAny() ||
-            // If there is no bound then a View will work
-            typeParam.extendsBound() == null ||
+            // If there is no type bound then a View will work
+            typeParam.extendsBound()?.typeElement?.type == null ||
             // if the bound is Any, then that is fine too.
             // For some reason this case is different in KSP and needs to be checked for.
             typeParam.extendsBound()?.typeElement?.type?.isObjectOrAny() == true ||
