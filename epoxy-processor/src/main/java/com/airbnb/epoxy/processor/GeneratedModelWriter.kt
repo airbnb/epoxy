@@ -838,7 +838,8 @@ class GeneratedModelWriter(
         if (modelImplementsBindWithDiff(
                 classInfo.superClassElement,
                 memoizer.baseBindWithDiffMethod
-            )) {
+            )
+        ) {
             addStatement(
                 "super.bind(\$L, \$L)",
                 boundObjectParam.name,

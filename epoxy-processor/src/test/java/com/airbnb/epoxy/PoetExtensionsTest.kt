@@ -10,7 +10,6 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import javax.lang.model.element.Modifier
 
 class PoetExtensionsTest {
 
@@ -53,7 +52,7 @@ class PoetExtensionsTest {
     fun testJavaParameterSpecToKPoet() {
         val name = "android"
         val javaParameter = JavaParameterSpec.builder(
-            JavaClassName.bestGuess("java.lang.String"), name, Modifier.PRIVATE
+            JavaClassName.bestGuess("java.lang.String"), name
         )
             .addAnnotation(NonNull::class.java)
             .build()
