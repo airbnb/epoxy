@@ -141,7 +141,8 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
 
         // Current sticky header is the same as at the position. Adjust the scroll offset and reset pending scroll.
         if (stickyHeader != null && headerIndex == findHeaderIndex(stickyHeaderPosition)) {
-            val adjustedOffset = (if (offset != INVALID_OFFSET) offset else 0) + stickyHeader!!.height
+            val adjustedOffset =
+                (if (offset != INVALID_OFFSET) offset else 0) + if (orientation == RecyclerView.VERTICAL) stickyHeader!!.height else stickyHeader!!.width
             super.scrollToPositionWithOffset(position, adjustedOffset)
             return
         }
