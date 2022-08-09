@@ -3,6 +3,7 @@ package com.airbnb.epoxy
 import android.graphics.Canvas
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
 /**
  * A wrapper around [androidx.recyclerview.widget.ItemTouchHelper.Callback] to cast all
@@ -186,7 +187,7 @@ abstract class EpoxyTouchHelperCallback : ItemTouchHelper.Callback() {
     override fun onChildDrawOver(
         c: Canvas,
         recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder?,
+        viewHolder: ViewHolder,
         dX: Float,
         dY: Float,
         actionState: Int,
@@ -212,7 +213,7 @@ abstract class EpoxyTouchHelperCallback : ItemTouchHelper.Callback() {
     ): Unit = super.onChildDrawOver(
         c,
         recyclerView,
-        viewHolder,
+        viewHolder as ViewHolder,
         dX,
         dY,
         actionState,
