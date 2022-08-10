@@ -91,6 +91,8 @@ inline fun <reified T : EpoxyModel<*>> EpoxyInterop(
         },
         modifier = modifier,
     ) { view ->
-        (model as EpoxyModel<View>).bind(view.getChildAt(0))
+        val modelView = view.getChildAt(0)
+        (model as EpoxyModel<View>).bind(modelView)
+        (model as GeneratedModel<View>)?.handlePostBind(modelView, 0)
     }
 }
