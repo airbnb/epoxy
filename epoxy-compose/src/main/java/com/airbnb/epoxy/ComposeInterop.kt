@@ -7,7 +7,6 @@ import android.widget.FrameLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.viewinterop.AndroidView
 
 /**
@@ -40,11 +39,7 @@ class ComposeEpoxyModel(
         return keyedTags.get(key)
     }
 
-    override fun buildView(parent: ViewGroup): ComposeView = ComposeView(parent.context).apply {
-        setViewCompositionStrategy(
-            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
-        )
-    }
+    override fun buildView(parent: ViewGroup): ComposeView = ComposeView(parent.context)
 
     override fun bind(view: ComposeView) {
         super.bind(view)
@@ -66,16 +61,6 @@ class ComposeEpoxyModel(
         }
 
         return code
-    }
-
-    override fun unbind(view: ComposeView) {
-        super.unbind(view)
-        view.disposeComposition()
-    }
-
-    override fun onViewDetachedFromWindow(view: ComposeView) {
-        super.onViewDetachedFromWindow(view)
-        view.disposeComposition()
     }
 }
 

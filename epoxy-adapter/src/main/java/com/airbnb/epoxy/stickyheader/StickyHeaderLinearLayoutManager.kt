@@ -73,23 +73,25 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
         }
     }
 
-    override fun onSaveInstanceState(): Parcelable {
-        return SavedState(
-            superState = super.onSaveInstanceState(),
-            scrollPosition = scrollPosition,
-            scrollOffset = scrollOffset
-        )
+    override fun onSaveInstanceState(): Parcelable? {
+        return super.onSaveInstanceState()?.let {
+            SavedState(
+                superState = it,
+                scrollPosition = scrollPosition,
+                scrollOffset = scrollOffset
+            )
+        }
     }
 
-    override fun onRestoreInstanceState(state: Parcelable?) {
-        (state as? SavedState)?.let {
+    override fun onRestoreInstanceState(state: Parcelable) {
+        (state as SavedState).let {
             scrollPosition = it.scrollPosition
             scrollOffset = it.scrollOffset
             super.onRestoreInstanceState(it.superState)
         }
     }
 
-    override fun scrollVerticallyBy(dy: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State?): Int {
+    override fun scrollVerticallyBy(dy: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State): Int {
         val scrolled = restoreView { super.scrollVerticallyBy(dy, recycler, state) }
         if (scrolled != 0) {
             updateStickyHeader(recycler, false)
@@ -97,7 +99,7 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
         return scrolled
     }
 
-    override fun scrollHorizontallyBy(dx: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State?): Int {
+    override fun scrollHorizontallyBy(dx: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State): Int {
         val scrolled = restoreView { super.scrollHorizontallyBy(dx, recycler, state) }
         if (scrolled != 0) {
             updateStickyHeader(recycler, false)
@@ -505,7 +507,7 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
      */
     @Parcelize
     data class SavedState(
-        val superState: Parcelable?,
+        val superState: Parcelable,
         val scrollPosition: Int,
         val scrollOffset: Int
     ) : Parcelable
