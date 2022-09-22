@@ -69,11 +69,21 @@ fun ModelCollector.composableInterop(
     vararg keys: Any,
     composeFunction: @Composable () -> Unit
 ) {
-    add(
-        ComposeEpoxyModel(*keys, composeFunction = composeFunction).apply {
-            id(id)
-        }
-    )
+    add(generateComposeEpoxyModel(id, *keys, composeFunction = composeFunction))
+}
+
+/**
+ * [generateComposeEpoxyModel] can be used directly in cases where more control over the epoxy model
+ * is needed. Eg. When the epoxy model needs to be modified before it's added.
+ */
+fun generateComposeEpoxyModel(
+    id: String,
+    vararg keys: Any,
+    composeFunction: @Composable () -> Unit
+): ComposeEpoxyModel {
+    return ComposeEpoxyModel(*keys, composeFunction = composeFunction).apply {
+        id(id)
+    }
 }
 
 @Composable
