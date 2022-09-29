@@ -13,16 +13,17 @@ buildscript {
   dependencies {
     classpath "com.android.tools.build:gradle:$ANDROID_PLUGIN_VERSION"
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
-    // Upload with:
-    // ./gradlew clean uploadArchives --no-daemon --no-parallel
-    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.14.2'
+    // Upload with: (see RELEASING.md)
+    // ./gradlew publish
+    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.22.0'
     // Dokka is needed on classpath for vanniktech publish plugin
-    classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.5.31"
+    classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.6.10"
   }
 }
 
 plugins {
-  id 'com.github.ben-manes.versions' version '0.38.0'
+  // Run ./gradlew dependencyUpdates to see avilable version updates
+  id 'com.github.ben-manes.versions' version '0.42.0'
   id "com.google.devtools.ksp" version "$KSP_VERSION"
 }
 
