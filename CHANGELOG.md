@@ -11,6 +11,9 @@ Note that unfortunately the databinding processor does NOT support KSP, simply b
 
 Also, parallel processing support was removed because it is not compatible with KSP.
 
+We have also added easy interop with Jetpack Compose via functions in the `epoxy-composeinterop` artifact.
+See the epoxy-composesample module for example usage.
+
 # 4.6.4 (September 23, 2021)
 - Clean up dependency for the experimental epoxy module
 
