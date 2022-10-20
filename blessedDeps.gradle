@@ -27,9 +27,9 @@ rootProject.ext.ANDROIDX_FRAGMENT_TESTING = "1.3.3"
 rootProject.ext.ANDROIDX_LEGACY = "1.0.0"
 rootProject.ext.ANDROIDX_MATERIAL = "1.3.0"
 rootProject.ext.ANDROIDX_PAGING = "2.0.0"
-rootProject.ext.ANDROIDX_PAGING3 = "3.0.0"
-rootProject.ext.ANDROIDX_RECYCLERVIEW = "1.3.0-beta01"
-rootProject.ext.ANDROIDX_ROOM = "2.4.2"
+rootProject.ext.ANDROIDX_PAGING3 = "3.1.1"
+rootProject.ext.ANDROIDX_RECYCLERVIEW = "1.3.0-rc01"
+rootProject.ext.ANDROIDX_ROOM = "2.5.0-beta01"
 rootProject.ext.ANDROIDX_RUNTIME = "2.3.1"
 rootProject.ext.ANDROIDX_VERSIONED_PARCELABLE = "1.1.1"
 rootProject.ext.ANDROID_ARCH_TESTING = "2.1.0"
@@ -41,7 +41,7 @@ rootProject.ext.AUTO_VALUE_VERSION = "1.7.4"
 rootProject.ext.GLIDE_VERSION = "4.12.0"
 rootProject.ext.GOOGLE_TESTING_COMPILE_VERSION = "0.19"
 rootProject.ext.INCAP_VERSION = "0.3"
-rootProject.ext.JUNIT_VERSION = "4.13.1"
+rootProject.ext.JUNIT_VERSION = "4.13.2"
 rootProject.ext.KOTLIN_COROUTINES_VERSION = "1.6.4"
 rootProject.ext.KOTLINX_METADATA = "0.5.0"
 rootProject.ext.LOTTIE_VERSION = "2.8.0"
@@ -50,13 +50,14 @@ rootProject.ext.PARIS_VERSION = "2.0.1"
 rootProject.ext.ROBOLECTRIC_VERSION = "4.5.1"
 rootProject.ext.SQUARE_JAVAPOET_VERSION = "1.13.0"
 rootProject.ext.SQUARE_KOTLINPOET_VERSION = "1.12.0"
-rootProject.ext.COMPOSE_COMPILER_VERSION = "1.2.0"
-rootProject.ext.COMPOSE_VERSION = "1.2.1"
+rootProject.ext.COMPOSE_COMPILER_VERSION = "1.3.2"
+rootProject.ext.COMPOSE_VERSION = "1.3.0-rc01"
 rootProject.ext.COMPOSE_ACTIVITY_VERSION = "1.6.0"
-rootProject.ext.KOTLINX_LIFECYCLE_RUNTIME_VERSION = "2.3.0"
-rootProject.ext.KSP_VERSION = "1.7.0-1.0.6"
-rootProject.ext.XPROCESSING_VERSION = "2.5.0-alpha02"
+rootProject.ext.KOTLINX_LIFECYCLE_RUNTIME_VERSION = "2.5.1"
+rootProject.ext.KSP_VERSION = "1.7.20-1.0.7"
+rootProject.ext.XPROCESSING_VERSION = "2.5.0-beta01"
 rootProject.ext.KOTLIN_TESTING_COMPILE_VERSION = '1.4.9'
+rootProject.ext.LIFECYCLE_VIEWMODEL = '2.5.1'
 
 rootProject.ext.deps = [
     activityCompose           : "androidx.activity:activity-compose:$COMPOSE_ACTIVITY_VERSION",
@@ -101,11 +102,13 @@ rootProject.ext.deps = [
     squareJavaPoet            : "com.squareup:javapoet:$SQUARE_JAVAPOET_VERSION",
     squareKotlinPoet          : "com.squareup:kotlinpoet:$SQUARE_KOTLINPOET_VERSION",
     kotlinPoetJavaInterop     : "com.squareup:kotlinpoet-javapoet:$SQUARE_KOTLINPOET_VERSION",
-    kotlinPoetKspInterop     : "com.squareup:kotlinpoet-ksp:$SQUARE_KOTLINPOET_VERSION",
+    kotlinPoetKspInterop      : "com.squareup:kotlinpoet-ksp:$SQUARE_KOTLINPOET_VERSION",
     versionedParcelable       : "androidx.versionedparcelable:versionedparcelable:$ANDROIDX_VERSIONED_PARCELABLE",
     ksp                       : "com.google.devtools.ksp:symbol-processing-api:$KSP_VERSION",
     kspImpl                   : "com.google.devtools.ksp:symbol-processing:$KSP_VERSION",
     xProcessing               : "androidx.room:room-compiler-processing:$XPROCESSING_VERSION",
     xProcessingTesting        : "androidx.room:room-compiler-processing-testing:$XPROCESSING_VERSION",
     kotlinCompileTesting      : "com.github.tschuchortdev:kotlin-compile-testing-ksp:$KOTLIN_TESTING_COMPILE_VERSION",
+    lifecycleViewmodel                 : "androidx.lifecycle:lifecycle-viewmodel:$LIFECYCLE_VIEWMODEL",
+    lifecycleViewmodelKtx                 : "androidx.lifecycle:lifecycle-viewmodel-ktx:$LIFECYCLE_VIEWMODEL",
 ]

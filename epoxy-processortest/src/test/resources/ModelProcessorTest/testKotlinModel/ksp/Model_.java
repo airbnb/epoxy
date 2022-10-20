@@ -137,21 +137,6 @@ public class Model_ extends Model implements GeneratedModel<Model.Holder>, Model
     return super.getImageRes();
   }
 
-  /**
-   * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set
-   */
-  public Model_ clickListener(
-      @Nullable final OnModelClickListener<Model_, Model.Holder> clickListener) {
-    onMutation();
-    if (clickListener == null) {
-      super.setClickListener(null);
-    }
-    else {
-      super.setClickListener(new WrappedEpoxyModelClickListener(clickListener));
-    }
-    return this;
-  }
-
   public Model_ clickListener(@Nullable View.OnClickListener clickListener) {
     onMutation();
     super.setClickListener(clickListener);

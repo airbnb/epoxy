@@ -70,9 +70,6 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder listValue(@Nullable List<String> listValue);
 
-  TestManyTypesViewModelBuilder clickListener(
-      @Nullable final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener);
-
   TestManyTypesViewModelBuilder clickListener(@Nullable View.OnClickListener clickListener);
 
   TestManyTypesViewModelBuilder customClickListener(
