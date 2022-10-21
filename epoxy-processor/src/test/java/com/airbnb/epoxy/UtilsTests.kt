@@ -5,7 +5,7 @@ import androidx.room.compiler.processing.util.XTestInvocation
 import androidx.room.compiler.processing.util.runProcessorTest
 import com.airbnb.epoxy.processor.Logger
 import com.airbnb.epoxy.processor.Memoizer
-import com.airbnb.epoxy.processor.Utils
+import com.airbnb.epoxy.processor.Utils.isMap
 import com.airbnb.epoxy.processor.typeNameWithWorkaround
 import org.junit.Test
 import strikt.api.expectThat
@@ -239,7 +239,7 @@ class UtilsTests {
             val clazz = invocation.processingEnv.requireTypeElement("MyClass")
 
             val field = clazz.getDeclaredFields().single()
-            expectThat(Utils.isMapType(field.type)).isTrue()
+            expectThat(field.type.isMap(invocation.processingEnv)).isTrue()
         }
 
         val javaSource = Source.java(
@@ -257,7 +257,7 @@ class UtilsTests {
             val clazz = invocation.processingEnv.requireTypeElement("foo.MyClass")
 
             val field = clazz.getDeclaredFields().single()
-            expectThat(Utils.isMapType(field.type)).isTrue()
+            expectThat(field.type.isMap(invocation.processingEnv)).isTrue()
         }
     }
 }

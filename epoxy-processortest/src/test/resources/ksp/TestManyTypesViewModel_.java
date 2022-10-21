@@ -114,7 +114,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * Bitset index: 14
    */
   @NonNull
-  private Map<Integer, ?> mapValue_Map;
+  private Map<Integer, Integer> mapValue_Map;
 
   /**
    * Bitset index: 15
@@ -620,9 +620,9 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   /**
    * <i>Required.</i>
    *
-   * @see TestManyTypesView#setMapValue(Map<Integer, ?>)
+   * @see TestManyTypesView#setMapValue(Map<Integer, Integer>)
    */
-  public TestManyTypesViewModel_ mapValue(@NonNull Map<Integer, ?> mapValue) {
+  public TestManyTypesViewModel_ mapValue(@NonNull Map<Integer, Integer> mapValue) {
     if (mapValue == null) {
       throw new IllegalArgumentException("mapValue cannot be null");
     }
@@ -633,7 +633,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   @NonNull
-  public Map<Integer, ?> mapValue() {
+  public Map<Integer, Integer> mapValue() {
     return mapValue_Map;
   }
 

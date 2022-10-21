@@ -96,7 +96,7 @@ public class TestManyTypesView extends View {
   }
 
   @ModelProp
-  public void setMapValue(Map<Integer, ?> value) {
+  public void setMapValue(Map<Integer, Integer> value) {
 
   }
 

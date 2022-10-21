@@ -13,6 +13,7 @@ import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.ParameterSpec
 import com.squareup.javapoet.TypeName
 import java.util.regex.Pattern
+import kotlin.reflect.KClass
 
 internal object Utils {
     private val PATTERN_STARTS_WITH_SET =
@@ -72,8 +73,19 @@ internal object Utils {
         return element.isSubTypeOf(memoizer.iterableType)
     }
 
-    fun isMapType(element: XType): Boolean {
-        return element.rawType.toString().endsWith(".Map")
+    fun XType.isSet(processingEnv: XProcessingEnv): Boolean = isAssignableToRawType(processingEnv, Set::class)
+
+    fun XType.isMap(processingEnv: XProcessingEnv): Boolean = isAssignableToRawType(processingEnv, Map::class)
+
+    fun XType.isIterable(processingEnv: XProcessingEnv): Boolean = isAssignableToRawType(processingEnv, Iterable::class)
+
+    fun XType.isClass(processingEnv: XProcessingEnv): Boolean = isAssignableToRawType(processingEnv, Class::class)
+
+    fun XType.isAssignableToRawType(processingEnv: XProcessingEnv, targetClass: KClass<*>): Boolean {
+        if (this.isTypeOf(targetClass)) return true
+
+        val targetRawType = processingEnv.requireTypeElement(targetClass).type.rawType
+        return targetRawType.isAssignableFrom(this.rawType)
     }
 
     /**

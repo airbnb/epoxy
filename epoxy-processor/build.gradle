@@ -32,10 +32,13 @@ dependencies {
 
     // Compiler needed to resolve resource references in annotations
     implementation "org.jetbrains.kotlin:kotlin-compiler-embeddable:$KOTLIN_VERSION"
+    // This is included in kotlinCompileTesting, but the version can be out of date with our kotlin
+    // compiler version, so we include it to force the right version
+    testImplementation rootProject.deps.kotlinAnnotationProcessingEmbeddable
     implementation rootProject.deps.xProcessing
 
     testImplementation rootProject.deps.xProcessingTesting
-    testImplementation "io.strikt:strikt-core:0.31.0"
+    testImplementation "io.strikt:strikt-core:0.34.1"
 
     /** Provides the sun javac tools for looking up the R class trees. */
     compileOnly files(rootProject.file("libs/rt.jar"))
