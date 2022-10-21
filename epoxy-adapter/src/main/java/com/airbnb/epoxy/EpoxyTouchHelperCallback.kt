@@ -68,7 +68,7 @@ abstract class EpoxyTouchHelperCallback : ItemTouchHelper.Callback() {
     /**
      * @see getSwipeThreshold
      */
-    protected fun getSwipeThreshold(viewHolder: EpoxyViewHolder): Float =
+    protected open fun getSwipeThreshold(viewHolder: EpoxyViewHolder): Float =
         super.getSwipeThreshold(viewHolder)
 
     override fun getMoveThreshold(viewHolder: RecyclerView.ViewHolder): Float =
