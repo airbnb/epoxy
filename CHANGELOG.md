@@ -1,3 +1,8 @@
+# 5.1.0
+Updates Kotlin to 1.7.20 and KSP to 1.7.20-1.0.7, as well as the room compiler processing (xprocessing) library to 2.5.0-beta01.
+
+Also deletes the epoxy-paging artifact in favor of the newer epoxy-paging3
+
 # 5.0.0
 This adds support for Kotlin Symbol Processing, while maintaining backwards compatibility with java annotation processing via the xprocessing library from Room.
 
