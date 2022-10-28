@@ -7,8 +7,6 @@ import androidx.annotation.IdRes
 import androidx.annotation.IntRange
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.viewmodeladapter.R
-import java.util.ArrayList
-import java.util.HashMap
 
 /**
  * A simple way to track visibility events on [com.airbnb.epoxy.EpoxyModel].
@@ -206,6 +204,16 @@ open class EpoxyVisibilityTracker {
      * @param eventOriginForDebug a debug strings used for logs
      */
     private fun processChild(child: View, detachEvent: Boolean, eventOriginForDebug: String) {
+        if (child is AsyncInflatedView) {
+            child.executeWhenInflated {
+                processChildInternal(child, detachEvent, eventOriginForDebug)
+            }
+        } else {
+            processChildInternal(child, detachEvent, eventOriginForDebug)
+        }
+    }
+
+    private fun processChildInternal(child: View, detachEvent: Boolean, eventOriginForDebug: String) {
 
         // Only if attached
         val recyclerView = attachedRecyclerView ?: return
