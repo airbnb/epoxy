@@ -30,6 +30,7 @@ android {
 dependencies {
   implementation rootProject.deps.androidRecyclerView
   implementation rootProject.deps.androidAppcompat
+  implementation rootProject.deps.asyncLayoutInflater
   implementation project(':epoxy-databinding')
   implementation project(':epoxy-adapter')
   implementation project(':epoxy-annotations')
