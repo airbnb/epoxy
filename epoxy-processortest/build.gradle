@@ -57,9 +57,12 @@ dependencies {
   testImplementation files(rootProject.file("libs/rt.jar"))
   testImplementation files(rootProject.file("libs/tools.jar"))
   testImplementation rootProject.deps.googleTestingCompile
-  testImplementation "io.github.java-diff-utils:java-diff-utils:4.5"
-  testImplementation "io.strikt:strikt-core:0.31.0"
+  testImplementation "io.github.java-diff-utils:java-diff-utils:4.12"
+  testImplementation "io.strikt:strikt-core:0.34.1"
   testImplementation rootProject.deps.kotlinCompileTesting
+  // This is included in kotlinCompileTesting, but the version can be out of date with our kotlin
+  // compiler version, so we include it to force the right version
+  testImplementation rootProject.deps.kotlinAnnotationProcessingEmbeddable
 }
 
 // Java files in the "resources" folder are not included in the build for some reason (seems like source files are skipped?)

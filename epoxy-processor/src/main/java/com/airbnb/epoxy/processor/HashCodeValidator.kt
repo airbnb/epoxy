@@ -9,7 +9,7 @@ import androidx.room.compiler.processing.isEnum
 import androidx.room.compiler.processing.isEnumEntry
 import com.airbnb.epoxy.processor.Utils.getMethodOnClass
 import com.airbnb.epoxy.processor.Utils.isIterableType
-import com.airbnb.epoxy.processor.Utils.isMapType
+import com.airbnb.epoxy.processor.Utils.isMap
 import com.airbnb.epoxy.processor.Utils.throwError
 import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeName
@@ -70,7 +70,7 @@ internal class HashCodeValidator(
             return
         }
 
-        if (isMapType(xType)) {
+        if (xType.isMap(environment)) {
             // as part of ksp conversion we need to add this to maintain legacy behavior because
             // java Maps implement equals/hashcode so they are automatically approved, even
             // though we never verified the key/value type implements it. Not adding it

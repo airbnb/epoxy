@@ -64,7 +64,7 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder listValue(@NonNull List<String> listValue);
 
-  TestManyTypesViewModelBuilder mapValue(@NonNull Map<Integer, ?> mapValue);
+  TestManyTypesViewModelBuilder mapValue(@NonNull Map<Integer, Integer> mapValue);
 
   TestManyTypesViewModelBuilder clickListener(
       @NonNull final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener);

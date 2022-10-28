@@ -27,9 +27,9 @@ rootProject.ext.ANDROIDX_FRAGMENT_TESTING = "1.3.3"
 rootProject.ext.ANDROIDX_LEGACY = "1.0.0"
 rootProject.ext.ANDROIDX_MATERIAL = "1.3.0"
 rootProject.ext.ANDROIDX_PAGING = "2.0.0"
-rootProject.ext.ANDROIDX_PAGING3 = "3.0.0"
-rootProject.ext.ANDROIDX_RECYCLERVIEW = "1.3.0-beta01"
-rootProject.ext.ANDROIDX_ROOM = "2.4.2"
+rootProject.ext.ANDROIDX_PAGING3 = "3.1.1"
+rootProject.ext.ANDROIDX_RECYCLERVIEW = "1.3.0-rc01"
+rootProject.ext.ANDROIDX_ROOM = "2.5.0-beta01"
 rootProject.ext.ANDROIDX_RUNTIME = "2.3.1"
 rootProject.ext.ANDROIDX_VERSIONED_PARCELABLE = "1.1.1"
 rootProject.ext.ANDROID_ARCH_TESTING = "2.1.0"
@@ -41,7 +41,7 @@ rootProject.ext.AUTO_VALUE_VERSION = "1.7.4"
 rootProject.ext.GLIDE_VERSION = "4.12.0"
 rootProject.ext.GOOGLE_TESTING_COMPILE_VERSION = "0.19"
 rootProject.ext.INCAP_VERSION = "0.3"
-rootProject.ext.JUNIT_VERSION = "4.13.1"
+rootProject.ext.JUNIT_VERSION = "4.13.2"
 rootProject.ext.KOTLIN_COROUTINES_VERSION = "1.6.4"
 rootProject.ext.KOTLINX_METADATA = "0.5.0"
 rootProject.ext.LOTTIE_VERSION = "2.8.0"
@@ -50,62 +50,66 @@ rootProject.ext.PARIS_VERSION = "2.0.1"
 rootProject.ext.ROBOLECTRIC_VERSION = "4.5.1"
 rootProject.ext.SQUARE_JAVAPOET_VERSION = "1.13.0"
 rootProject.ext.SQUARE_KOTLINPOET_VERSION = "1.12.0"
-rootProject.ext.COMPOSE_COMPILER_VERSION = "1.2.0"
-rootProject.ext.COMPOSE_VERSION = "1.2.1"
+rootProject.ext.COMPOSE_COMPILER_VERSION = "1.3.2"
+rootProject.ext.COMPOSE_VERSION = "1.3.0-rc01"
 rootProject.ext.COMPOSE_ACTIVITY_VERSION = "1.6.0"
-rootProject.ext.KOTLINX_LIFECYCLE_RUNTIME_VERSION = "2.3.0"
-rootProject.ext.KSP_VERSION = "1.7.0-1.0.6"
-rootProject.ext.XPROCESSING_VERSION = "2.5.0-alpha02"
+rootProject.ext.KOTLINX_LIFECYCLE_RUNTIME_VERSION = "2.5.1"
+rootProject.ext.KSP_VERSION = "1.7.20-1.0.7"
+rootProject.ext.XPROCESSING_VERSION = "2.5.0-beta01"
 rootProject.ext.KOTLIN_TESTING_COMPILE_VERSION = '1.4.9'
+rootProject.ext.LIFECYCLE_VIEWMODEL = '2.5.1'
 
 rootProject.ext.deps = [
-    activityCompose           : "androidx.activity:activity-compose:$COMPOSE_ACTIVITY_VERSION",
-    androidAnnotations        : "androidx.annotation:annotation:$ANDROIDX_ANNOTATION",
-    androidAppcompat          : "androidx.appcompat:appcompat:$ANDROIDX_APPCOMPAT",
-    androidArchCoreTesting    : "androidx.arch.core:core-testing:$ANDROID_ARCH_TESTING",
-    androidCardView           : "androidx.cardview:cardview:$ANDROIDX_CARDVIEW",
-    androidCoreKtx            : "androidx.core:core-ktx:$ANDROIDX_CORE_KTX",
-    androidDesignLibrary      : "com.google.android.material:material:$ANDROIDX_MATERIAL",
-    androidEspressoCore       : "androidx.test.espresso:espresso-core:$ANDROIDX_ESPRESSO_CORE",
-    androidFragmentTesting    : "androidx.fragment:fragment-testing:$ANDROIDX_FRAGMENT_TESTING",
-    androidLifecycleRuntimeKtx: "androidx.lifecycle:lifecycle-runtime-ktx:$KOTLINX_LIFECYCLE_RUNTIME_VERSION",
-    androidPaging3Component   : "androidx.paging:paging-runtime:$ANDROIDX_PAGING3",
-    androidPagingComponent    : "androidx.paging:paging-runtime:$ANDROIDX_PAGING",
-    androidRecyclerView       : "androidx.recyclerview:recyclerview:$ANDROIDX_RECYCLERVIEW",
-    androidRuntime            : "com.google.android:android:$ANDROID_RUNTIME_VERSION",
-    androidTestCore           : "androidx.test:core:1.3.0",
-    androidTestExtJunitKtx    : "androidx.test.ext:junit-ktx:1.1.2",
-    androidTestRules          : "androidx.test:rules:$ANDROID_TEST_RUNNER",
-    androidTestRunner         : "androidx.test:runner:$ANDROID_TEST_RUNNER",
-    assertj                   : "org.assertj:assertj-core:$ASSERTJ_VERSION",
-    autoValue                 : "com.google.auto.value:auto-value:$AUTO_VALUE_VERSION",
-    composeMaterial           : "androidx.compose.material:material:$COMPOSE_VERSION",
-    composeUi                 : "androidx.compose.ui:ui:$COMPOSE_VERSION",
-    composeUiTooling          : "androidx.compose.ui:ui-tooling:$COMPOSE_VERSION",
-    dataBindingAdapters       : "androidx.databinding:databinding-adapters:$ANDROIDX_DATABINDING_ADAPTERS",
-    dataBindingLibrary        : "androidx.databinding:databinding-library:$ANDROIDX_DATABINDING_LIBRARY",
-    glide                     : "com.github.bumptech.glide:glide:$GLIDE_VERSION",
-    googleTestingCompile      : "com.google.testing.compile:compile-testing:$GOOGLE_TESTING_COMPILE_VERSION",
-    incapProcessor            : "net.ltgt.gradle.incap:incap-processor:$INCAP_VERSION",
-    incapRuntime              : "net.ltgt.gradle.incap:incap:$INCAP_VERSION",
-    junit                     : "junit:junit:$JUNIT_VERSION",
-    kotlinCoroutines          : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$KOTLIN_COROUTINES_VERSION",
-    kotlinCoroutinesTest      : "org.jetbrains.kotlinx:kotlinx-coroutines-test:$KOTLIN_COROUTINES_VERSION",
-    kotlinxMetadata           : "org.jetbrains.kotlinx:kotlinx-metadata-jvm:$KOTLINX_METADATA",
-    lottie                    : "com.airbnb.android:lottie:$LOTTIE_VERSION",
-    mockito                   : "org.mockito:mockito-core:$MOCKITO_VERSION",
-    mockito_inline            : "org.mockito:mockito-inline:$MOCKITO_VERSION",
-    paris                     : "com.airbnb.android:paris:$PARIS_VERSION",
-    parisProcessor            : "com.airbnb.android:paris-processor:$PARIS_VERSION",
-    robolectric               : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION",
-    squareJavaPoet            : "com.squareup:javapoet:$SQUARE_JAVAPOET_VERSION",
-    squareKotlinPoet          : "com.squareup:kotlinpoet:$SQUARE_KOTLINPOET_VERSION",
-    kotlinPoetJavaInterop     : "com.squareup:kotlinpoet-javapoet:$SQUARE_KOTLINPOET_VERSION",
-    kotlinPoetKspInterop     : "com.squareup:kotlinpoet-ksp:$SQUARE_KOTLINPOET_VERSION",
-    versionedParcelable       : "androidx.versionedparcelable:versionedparcelable:$ANDROIDX_VERSIONED_PARCELABLE",
-    ksp                       : "com.google.devtools.ksp:symbol-processing-api:$KSP_VERSION",
-    kspImpl                   : "com.google.devtools.ksp:symbol-processing:$KSP_VERSION",
-    xProcessing               : "androidx.room:room-compiler-processing:$XPROCESSING_VERSION",
-    xProcessingTesting        : "androidx.room:room-compiler-processing-testing:$XPROCESSING_VERSION",
-    kotlinCompileTesting      : "com.github.tschuchortdev:kotlin-compile-testing-ksp:$KOTLIN_TESTING_COMPILE_VERSION",
+    activityCompose                     : "androidx.activity:activity-compose:$COMPOSE_ACTIVITY_VERSION",
+    androidAnnotations                  : "androidx.annotation:annotation:$ANDROIDX_ANNOTATION",
+    androidAppcompat                    : "androidx.appcompat:appcompat:$ANDROIDX_APPCOMPAT",
+    androidArchCoreTesting              : "androidx.arch.core:core-testing:$ANDROID_ARCH_TESTING",
+    androidCardView                     : "androidx.cardview:cardview:$ANDROIDX_CARDVIEW",
+    androidCoreKtx                      : "androidx.core:core-ktx:$ANDROIDX_CORE_KTX",
+    androidDesignLibrary                : "com.google.android.material:material:$ANDROIDX_MATERIAL",
+    androidEspressoCore                 : "androidx.test.espresso:espresso-core:$ANDROIDX_ESPRESSO_CORE",
+    androidFragmentTesting              : "androidx.fragment:fragment-testing:$ANDROIDX_FRAGMENT_TESTING",
+    androidLifecycleRuntimeKtx          : "androidx.lifecycle:lifecycle-runtime-ktx:$KOTLINX_LIFECYCLE_RUNTIME_VERSION",
+    androidPaging3Component             : "androidx.paging:paging-runtime:$ANDROIDX_PAGING3",
+    androidPagingComponent              : "androidx.paging:paging-runtime:$ANDROIDX_PAGING",
+    androidRecyclerView                 : "androidx.recyclerview:recyclerview:$ANDROIDX_RECYCLERVIEW",
+    androidRuntime                      : "com.google.android:android:$ANDROID_RUNTIME_VERSION",
+    androidTestCore                     : "androidx.test:core:1.3.0",
+    androidTestExtJunitKtx              : "androidx.test.ext:junit-ktx:1.1.2",
+    androidTestRules                    : "androidx.test:rules:$ANDROID_TEST_RUNNER",
+    androidTestRunner                   : "androidx.test:runner:$ANDROID_TEST_RUNNER",
+    assertj                             : "org.assertj:assertj-core:$ASSERTJ_VERSION",
+    autoValue                           : "com.google.auto.value:auto-value:$AUTO_VALUE_VERSION",
+    composeMaterial                     : "androidx.compose.material:material:$COMPOSE_VERSION",
+    composeUi                           : "androidx.compose.ui:ui:$COMPOSE_VERSION",
+    composeUiTooling                    : "androidx.compose.ui:ui-tooling:$COMPOSE_VERSION",
+    dataBindingAdapters                 : "androidx.databinding:databinding-adapters:$ANDROIDX_DATABINDING_ADAPTERS",
+    dataBindingLibrary                  : "androidx.databinding:databinding-library:$ANDROIDX_DATABINDING_LIBRARY",
+    glide                               : "com.github.bumptech.glide:glide:$GLIDE_VERSION",
+    googleTestingCompile                : "com.google.testing.compile:compile-testing:$GOOGLE_TESTING_COMPILE_VERSION",
+    incapProcessor                      : "net.ltgt.gradle.incap:incap-processor:$INCAP_VERSION",
+    incapRuntime                        : "net.ltgt.gradle.incap:incap:$INCAP_VERSION",
+    junit                               : "junit:junit:$JUNIT_VERSION",
+    kotlinCoroutines                    : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$KOTLIN_COROUTINES_VERSION",
+    kotlinCoroutinesTest                : "org.jetbrains.kotlinx:kotlinx-coroutines-test:$KOTLIN_COROUTINES_VERSION",
+    kotlinxMetadata                     : "org.jetbrains.kotlinx:kotlinx-metadata-jvm:$KOTLINX_METADATA",
+    lottie                              : "com.airbnb.android:lottie:$LOTTIE_VERSION",
+    mockito                             : "org.mockito:mockito-core:$MOCKITO_VERSION",
+    mockito_inline                      : "org.mockito:mockito-inline:$MOCKITO_VERSION",
+    paris                               : "com.airbnb.android:paris:$PARIS_VERSION",
+    parisProcessor                      : "com.airbnb.android:paris-processor:$PARIS_VERSION",
+    robolectric                         : "org.robolectric:robolectric:$ROBOLECTRIC_VERSION",
+    squareJavaPoet                      : "com.squareup:javapoet:$SQUARE_JAVAPOET_VERSION",
+    squareKotlinPoet                    : "com.squareup:kotlinpoet:$SQUARE_KOTLINPOET_VERSION",
+    kotlinPoetJavaInterop               : "com.squareup:kotlinpoet-javapoet:$SQUARE_KOTLINPOET_VERSION",
+    kotlinPoetKspInterop                : "com.squareup:kotlinpoet-ksp:$SQUARE_KOTLINPOET_VERSION",
+    versionedParcelable                 : "androidx.versionedparcelable:versionedparcelable:$ANDROIDX_VERSIONED_PARCELABLE",
+    ksp                                 : "com.google.devtools.ksp:symbol-processing-api:$KSP_VERSION",
+    kspImpl                             : "com.google.devtools.ksp:symbol-processing:$KSP_VERSION",
+    xProcessing                         : "androidx.room:room-compiler-processing:$XPROCESSING_VERSION",
+    xProcessingTesting                  : "androidx.room:room-compiler-processing-testing:$XPROCESSING_VERSION",
+    kotlinCompileTesting                : "com.github.tschuchortdev:kotlin-compile-testing-ksp:$KOTLIN_TESTING_COMPILE_VERSION",
+    kotlinAnnotationProcessingEmbeddable: "org.jetbrains.kotlin:kotlin-annotation-processing-embeddable:$KOTLIN_VERSION",
+    lifecycleViewmodel                  : "androidx.lifecycle:lifecycle-viewmodel:$LIFECYCLE_VIEWMODEL",
+    lifecycleViewmodelKtx               : "androidx.lifecycle:lifecycle-viewmodel-ktx:$LIFECYCLE_VIEWMODEL",
 ]

@@ -61,4 +61,8 @@ dependencies {
   testImplementation rootProject.deps.robolectric
   testImplementation files(rootProject.file("libs/rt.jar"))
   testImplementation files(rootProject.file("libs/tools.jar"))
+
+  // This is included in kotlinCompileTesting, but the version can be out of date with our kotlin
+  // compiler version, so we include it to force the right version
+  testImplementation rootProject.deps.kotlinAnnotationProcessingEmbeddable
 }

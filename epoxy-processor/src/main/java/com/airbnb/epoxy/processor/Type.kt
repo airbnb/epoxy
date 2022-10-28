@@ -33,6 +33,8 @@ class Type(val xType: XType, memoizer: Memoizer) {
         companion object {
             fun from(xType: XType, typeName: TypeName, memoizer: Memoizer): TypeEnum {
 
+                val nonNullType by lazy { xType.makeNonNullable() }
+
                 return when {
                     xType.isInt() -> Int
                     xType.isLong() -> Long
@@ -40,11 +42,10 @@ class Type(val xType: XType, memoizer: Memoizer) {
                     xType.typeName == TypeName.DOUBLE || xType.typeName == TypeName.DOUBLE.box() -> Double
                     xType.isTypeOf(CharSequence::class) || xType.isTypeOf(String::class) -> StringOrCharSequence
                     xType.typeName == ClassNames.EPOXY_STRING_ATTRIBUTE_DATA -> StringAttributeData
-                    // Use raw types so that nullability is ignored, as we don't care about that for
-                    // the purposes of this type checking.
-                    xType.rawType == memoizer.viewOnClickListenerType.rawType -> ViewClickListener
-                    xType.rawType == memoizer.viewOnLongClickListenerType.rawType -> ViewLongClickListener
-                    xType.rawType == memoizer.viewOnCheckChangedType.rawType -> ViewCheckedChangeListener
+                    // We don't care about nullability for the purposes of type checking
+                    nonNullType == memoizer.viewOnClickListenerType -> ViewClickListener
+                    nonNullType == memoizer.viewOnLongClickListenerType -> ViewLongClickListener
+                    nonNullType == memoizer.viewOnCheckChangedType -> ViewCheckedChangeListener
 
                     xType.isList() -> {
                         val listType = xType.typeArguments.singleOrNull()
