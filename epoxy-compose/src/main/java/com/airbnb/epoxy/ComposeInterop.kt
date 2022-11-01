@@ -63,13 +63,19 @@ class ComposeEpoxyModel(
         return code
     }
 }
-
+// Provide span size if you want your view to take up more than one span in a grid
 fun ModelCollector.composableInterop(
     id: String,
     vararg keys: Any,
-    composeFunction: @Composable () -> Unit
+    spanSize: Int? = null,
+    composeFunction: @Composable () -> Unit,
 ) {
-    add(composeEpoxyModel(id, *keys, composeFunction = composeFunction))
+    val composeEpoxyModel = composeEpoxyModel(id, *keys, composeFunction = composeFunction)
+
+    if (spanSize != null) {
+        composeEpoxyModel.spanSizeOverride { _, _, _ -> spanSize }
+    }
+    add(composeEpoxyModel)
 }
 
 /**
