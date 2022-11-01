@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.epoxy.composableInterop
+import com.airbnb.epoxy.composeinterop.maverickssample.ComposeInteropGridFragment.Companion.SPAN_COUNT
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -72,7 +73,7 @@ class MyGridEpoxyController(private val viewModel: HelloWorldViewModel) :
     override fun buildModels(state: CounterState) {
         // overriding span scount to take full width in grid, default span count is 1
         state.counter.forEachIndexed { index, counterValue ->
-            composableInterop("$index", counterValue) {
+            composableInterop("$index", counterValue, spanSize = SPAN_COUNT) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
