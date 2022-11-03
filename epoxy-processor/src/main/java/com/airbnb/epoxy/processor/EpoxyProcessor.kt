@@ -95,19 +95,6 @@ class EpoxyProcessor @JvmOverloads constructor(
             }
         timer.markStepCompleted("build target class models")
 
-        if (isKsp()) {
-            modelClassMap.values
-                .filterIsInstance<BasicGeneratedModelInfo>()
-                .mapNotNull { it.boundObjectTypeElement }
-                .filter { !it.validate() }
-                .let { invalidModelTypes ->
-                    timer.markStepCompleted("validate symbols")
-                    if (invalidModelTypes.isNotEmpty()) {
-                        return invalidModelTypes
-                    }
-                }
-        }
-
         addAttributesFromOtherModules(modelClassMap, memoizer)
         timer.markStepCompleted("add attributes from other modules")
 
