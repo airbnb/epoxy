@@ -1,3 +1,6 @@
+# 5.1.1
+Remove incorrect ksp symbol validation in processing of @EpoxyModelClass
+
 # 5.1.0
 Updates Kotlin to 1.7.20 and KSP to 1.7.20-1.0.7, as well as the room compiler processing (xprocessing) library to 2.5.0-beta01.
 
