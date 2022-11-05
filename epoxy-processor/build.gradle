@@ -1,7 +1,7 @@
 
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'org.jetbrains.kotlin.kapt'
-apply plugin: "com.vanniktech.maven.publish"
+apply from: '../publishing.gradle'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

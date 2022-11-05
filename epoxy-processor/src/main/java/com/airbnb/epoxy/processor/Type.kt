@@ -43,9 +43,11 @@ class Type(val xType: XType, memoizer: Memoizer) {
                     xType.isTypeOf(CharSequence::class) || xType.isTypeOf(String::class) -> StringOrCharSequence
                     xType.typeName == ClassNames.EPOXY_STRING_ATTRIBUTE_DATA -> StringAttributeData
                     // We don't care about nullability for the purposes of type checking
-                    nonNullType == memoizer.viewOnClickListenerType -> ViewClickListener
-                    nonNullType == memoizer.viewOnLongClickListenerType -> ViewLongClickListener
-                    nonNullType == memoizer.viewOnCheckChangedType -> ViewCheckedChangeListener
+                    // Note, == does not work for type comparisons when comparing types between classpath
+                    // and compiled sources so we must use isSameType.
+                    nonNullType.isSameType(memoizer.viewOnClickListenerType) -> ViewClickListener
+                    nonNullType.isSameType(memoizer.viewOnLongClickListenerType) -> ViewLongClickListener
+                    nonNullType.isSameType(memoizer.viewOnCheckChangedType) -> ViewCheckedChangeListener
 
                     xType.isList() -> {
                         val listType = xType.typeArguments.singleOrNull()
@@ -55,6 +57,7 @@ class Type(val xType: XType, memoizer: Memoizer) {
                             else -> Unknown
                         }
                     }
+
                     else -> Unknown
                 }
             }
