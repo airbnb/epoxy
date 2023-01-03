@@ -5,7 +5,6 @@ import android.os.Handler
 import androidx.paging.CombinedLoadStates
 import androidx.paging.ItemSnapshotList
 import androidx.paging.LoadState
-import androidx.paging.LoadType
 import androidx.paging.LoadType.REFRESH
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
@@ -131,8 +130,9 @@ abstract class PagingDataEpoxyController<T : Any>(
      *
      * [refresh] triggers the creation of a new [PagingData] with a new instance of [PagingSource]
      * to represent an updated snapshot of the backing dataset. If a [RemoteMediator] is set,
-     * calling [refresh] will also trigger a call to [RemoteMediator.load] with [LoadType] [REFRESH]
-     * to allow [RemoteMediator] to check for updates to the dataset backing [PagingSource].
+     * calling [refresh] will also trigger a call to [RemoteMediator.load] with
+     * [LoadType.REFRESH][REFRESH] to allow [RemoteMediator] to check for updates to the dataset
+     * backing [PagingSource].
      */
     fun refresh() {
         modelCache.refresh()
