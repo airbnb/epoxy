@@ -648,7 +648,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
       this.clickListener_OnClickListener = null;
     }
     else {
-      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(clickListener);
+      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener<>(clickListener);
     }
     return this;
   }

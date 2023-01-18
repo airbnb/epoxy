@@ -216,7 +216,7 @@ public class DoNotHashViewModel_ extends EpoxyModel<DoNotHashView> implements Ge
       this.clickListener_OnClickListener = null;
     }
     else {
-      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(clickListener);
+      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener<>(clickListener);
     }
     return this;
   }

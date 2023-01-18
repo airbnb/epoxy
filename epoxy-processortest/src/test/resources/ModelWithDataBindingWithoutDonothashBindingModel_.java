@@ -145,7 +145,7 @@ public class ModelWithDataBindingWithoutDonothashBindingModel_ extends DataBindi
       this.clickListener = null;
     }
     else {
-      this.clickListener = new WrappedEpoxyModelClickListener(clickListener);
+      this.clickListener = new WrappedEpoxyModelClickListener<>(clickListener);
     }
     return this;
   }

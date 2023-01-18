@@ -1324,7 +1324,7 @@ class GeneratedModelWriter(
 
         // This model did not specify a layout in its EpoxyModelClass annotation,
         // but its superclass might
-        classElement.superType?.typeElement
+        classElement.superClass?.typeElement
             ?.let { superClass ->
                 findSuperClassWithClassAnnotation(superClass)
             }
@@ -1413,7 +1413,7 @@ class GeneratedModelWriter(
         setBitSetIfNeeded(classInfo, attribute, builder)
 
         val wrapperClickListenerConstructor = CodeBlock.of(
-            "new \$T(\$L)",
+            "new \$T<>(\$L)",
             ClassNames.EPOXY_WRAPPED_LISTENER,
             param.name
         )

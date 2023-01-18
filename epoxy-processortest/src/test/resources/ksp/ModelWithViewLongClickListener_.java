@@ -135,7 +135,7 @@ public class ModelWithViewLongClickListener_ extends ModelWithViewLongClickListe
       super.clickListener = null;
     }
     else {
-      super.clickListener = new WrappedEpoxyModelClickListener(clickListener);
+      super.clickListener = new WrappedEpoxyModelClickListener<>(clickListener);
     }
     return this;
   }
