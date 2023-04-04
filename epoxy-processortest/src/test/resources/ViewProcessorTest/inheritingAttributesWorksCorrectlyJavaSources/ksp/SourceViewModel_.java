@@ -3,7 +3,6 @@ package com.airbnb.epoxy;
 import android.view.ViewGroup;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
-import error.NonExistentClass;
 import java.lang.CharSequence;
 import java.lang.Number;
 import java.lang.Object;
@@ -205,10 +204,10 @@ public class SourceViewModel_ extends AirEpoxyModel<SourceView> implements Gener
    *  <p>
    *  We don't generate a getter since this class defines one, so it is accessible with just a `AirEpoxyModel` reference.
    */
-  public SourceViewModel_ numCarouselItemsShown(@Nullable NonExistentClass numCarouselItemsShown) {
+  public SourceViewModel_ numCarouselItemsShown(
+      @Nullable AirEpoxyModel.SomeType numCarouselItemsShown) {
     onMutation();
     super.numCarouselItemsShown = numCarouselItemsShown;
-    super.numCarouselItemsShown(numCarouselItemsShown);
     return this;
   }
 
