@@ -125,7 +125,6 @@ class PagedDataModelCache<T : Any>(
 
     val loadStateFlow: Flow<CombinedLoadStates> get() = asyncDiffer.loadStateFlow
 
-    @Synchronized
     suspend fun submitData(pagingData: PagingData<T>) {
         inSubmitList = true
         asyncDiffer.submitData(pagingData)

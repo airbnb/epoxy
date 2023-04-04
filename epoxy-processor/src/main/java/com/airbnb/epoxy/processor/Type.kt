@@ -46,8 +46,7 @@ class Type(val xType: XType, memoizer: Memoizer) {
                     nonNullType == memoizer.viewOnClickListenerType -> ViewClickListener
                     nonNullType == memoizer.viewOnLongClickListenerType -> ViewLongClickListener
                     nonNullType == memoizer.viewOnCheckChangedType -> ViewCheckedChangeListener
-
-                    xType.isList() -> {
+                    xType.isTypeOf(List::class) -> {
                         val listType = xType.typeArguments.singleOrNull()
                         when {
                             listType?.isTypeOf(String::class) == true -> StringList
