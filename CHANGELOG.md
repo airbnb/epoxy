@@ -1,3 +1,9 @@
+# 5.1.2
+
+Updates kotlin, ksp, and the xprocessing library.
+
+Notably, the androidx.room:room-compiler-processing library (aka xprocessing) has been updated to 2.6.0-alpha01. This version is incompatible with previous versions due to a breaking API change. All annotation processors using this library must be on the same version. Other annotation processors such as Epoxy and Paris also use xprocessing and if you use them you need to use a version of them that also uses xprocessing 2.6.0-alpha01
+
 # 5.1.1
 Remove incorrect ksp symbol validation in processing of @EpoxyModelClass
 
