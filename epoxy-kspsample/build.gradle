@@ -31,26 +31,16 @@ android {
   }
 }
 
-project.android.buildTypes.all { buildType ->
-  buildType.javaCompileOptions.annotationProcessorOptions.arguments =
-      [
-          validateEpoxyModelUsage: "true",
-          logEpoxyTimings        : "true",
-      ]
+ksp {
+  arg("logEpoxyTimings", "true")
+  arg("validateEpoxyModelUsage", "true")
 }
-
-//ksp {
-//  arg("logEpoxyTimings", "true")
-//  arg("validateEpoxyModelUsage", "true")
-//}
 
 dependencies {
   implementation project(':epoxy-adapter')
   implementation project(':epoxy-annotations')
   ksp project(':epoxy-processor')
   ksp rootProject.deps.parisProcessor
-//  kapt project(':epoxy-processor')
-//  kapt rootProject.deps.parisProcessor
 
   implementation rootProject.deps.androidAppcompat
   implementation rootProject.deps.androidDesignLibrary
