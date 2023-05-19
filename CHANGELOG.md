@@ -1,3 +1,10 @@
+# 5.1.3
+Update to kotlin 1.8.21
+Fix click listener kapt bug (#1327)
+Resolve unchecked call warning for WrappedEpoxyModelClickListener (#1337)
+Fix refresh KDoc (#1334)
+epoxy-kspsample : use ksp block to specify arguments (#1347)
+
 # 5.1.2
 
 Updates kotlin, ksp, and the xprocessing library.
