@@ -156,7 +156,7 @@ public class TestCallbackPropViewModel_ extends EpoxyModel<TestCallbackPropView>
       this.listener_OnClickListener = null;
     }
     else {
-      this.listener_OnClickListener = new WrappedEpoxyModelClickListener(listener);
+      this.listener_OnClickListener = new WrappedEpoxyModelClickListener<>(listener);
     }
     return this;
   }

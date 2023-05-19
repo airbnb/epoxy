@@ -184,7 +184,7 @@ public class TestFieldPropDoNotHashOptionViewModel_ extends EpoxyModel<TestField
       this.value_OnClickListener = null;
     }
     else {
-      this.value_OnClickListener = new WrappedEpoxyModelClickListener(value);
+      this.value_OnClickListener = new WrappedEpoxyModelClickListener<>(value);
     }
     return this;
   }

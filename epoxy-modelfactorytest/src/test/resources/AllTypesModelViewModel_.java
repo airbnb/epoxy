@@ -528,7 +528,7 @@ public class AllTypesModelViewModel_ extends EpoxyModel<AllTypesModelView> imple
       this.onClickListener_OnClickListener = null;
     }
     else {
-      this.onClickListener_OnClickListener = new WrappedEpoxyModelClickListener(onClickListener);
+      this.onClickListener_OnClickListener = new WrappedEpoxyModelClickListener<>(onClickListener);
     }
     return this;
   }

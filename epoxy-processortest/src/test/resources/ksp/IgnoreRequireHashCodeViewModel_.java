@@ -169,7 +169,7 @@ public class IgnoreRequireHashCodeViewModel_ extends EpoxyModel<IgnoreRequireHas
       this.clickListener_OnClickListener = null;
     }
     else {
-      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener(clickListener);
+      this.clickListener_OnClickListener = new WrappedEpoxyModelClickListener<>(clickListener);
     }
     return this;
   }

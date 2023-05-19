@@ -172,7 +172,7 @@ public class TestFieldPropCallbackPropViewModel_ extends EpoxyModel<TestFieldPro
       this.value_OnClickListener = null;
     }
     else {
-      this.value_OnClickListener = new WrappedEpoxyModelClickListener(value);
+      this.value_OnClickListener = new WrappedEpoxyModelClickListener<>(value);
     }
     return this;
   }

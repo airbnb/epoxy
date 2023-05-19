@@ -156,7 +156,7 @@ public class CallbackPropModelViewModel_ extends EpoxyModel<CallbackPropModelVie
       this.onClickListener_OnClickListener = null;
     }
     else {
-      this.onClickListener_OnClickListener = new WrappedEpoxyModelClickListener(onClickListener);
+      this.onClickListener_OnClickListener = new WrappedEpoxyModelClickListener<>(onClickListener);
     }
     return this;
   }

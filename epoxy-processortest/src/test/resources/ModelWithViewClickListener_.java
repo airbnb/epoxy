@@ -135,7 +135,7 @@ public class ModelWithViewClickListener_ extends ModelWithViewClickListener impl
       super.clickListener = null;
     }
     else {
-      super.clickListener = new WrappedEpoxyModelClickListener(clickListener);
+      super.clickListener = new WrappedEpoxyModelClickListener<>(clickListener);
     }
     return this;
   }

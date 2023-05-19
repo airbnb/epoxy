@@ -135,7 +135,7 @@ public class ModelWithPrivateViewClickListener_ extends ModelWithPrivateViewClic
       super.setClickListener(null);
     }
     else {
-      super.setClickListener(new WrappedEpoxyModelClickListener(clickListener));
+      super.setClickListener(new WrappedEpoxyModelClickListener<>(clickListener));
     }
     return this;
   }

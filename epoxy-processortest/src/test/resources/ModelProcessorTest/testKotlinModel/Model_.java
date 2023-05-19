@@ -146,7 +146,7 @@ public class Model_ extends Model implements GeneratedModel<Model.Holder>, Model
       super.setClickListener(null);
     }
     else {
-      super.setClickListener(new WrappedEpoxyModelClickListener(clickListener));
+      super.setClickListener(new WrappedEpoxyModelClickListener<>(clickListener));
     }
     return this;
   }
