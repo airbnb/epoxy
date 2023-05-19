@@ -48,8 +48,7 @@ class Type(val xType: XType, memoizer: Memoizer) {
                     nonNullType.isSameType(memoizer.viewOnClickListenerType) -> ViewClickListener
                     nonNullType.isSameType(memoizer.viewOnLongClickListenerType) -> ViewLongClickListener
                     nonNullType.isSameType(memoizer.viewOnCheckChangedType) -> ViewCheckedChangeListener
-
-                    xType.isList() -> {
+                    xType.isTypeOf(List::class) -> {
                         val listType = xType.typeArguments.singleOrNull()
                         when {
                             listType?.isTypeOf(String::class) == true -> StringList

@@ -143,10 +143,8 @@ abstract class BaseProcessor(val kspEnvironment: SymbolProcessorEnvironment? = n
 
         val kspEnvironment = requireNotNull(kspEnvironment)
         environment = XProcessingEnv.create(
-            kspEnvironment.options,
+            kspEnvironment,
             resolver,
-            kspEnvironment.codeGenerator,
-            kspEnvironment.logger
         )
         return processRoundInternal(
             environment,

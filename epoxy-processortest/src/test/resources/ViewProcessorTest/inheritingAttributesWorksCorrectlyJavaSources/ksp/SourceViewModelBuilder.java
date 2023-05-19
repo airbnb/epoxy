@@ -1,7 +1,6 @@
 package com.airbnb.epoxy;
 
 import androidx.annotation.Nullable;
-import error.NonExistentClass;
 import java.lang.CharSequence;
 import java.lang.Number;
 import java.lang.String;
@@ -22,7 +21,8 @@ public interface SourceViewModelBuilder {
 
   SourceViewModelBuilder baseViewProp(int baseViewProp);
 
-  SourceViewModelBuilder numCarouselItemsShown(@Nullable NonExistentClass numCarouselItemsShown);
+  SourceViewModelBuilder numCarouselItemsShown(
+      @Nullable AirEpoxyModel.SomeType numCarouselItemsShown);
 
   SourceViewModelBuilder id(long p0);
 
