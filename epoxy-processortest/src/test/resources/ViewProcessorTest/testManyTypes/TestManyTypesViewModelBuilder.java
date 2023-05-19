@@ -63,7 +63,7 @@ public interface TestManyTypesViewModelBuilder {
       @Dimension(unit = 0) int intValueWithDimenTypeAnnotation);
 
   TestManyTypesViewModelBuilder intWithMultipleAnnotations(
-      @Dimension(unit = 0) @IntRange(from = 0, to = 200) int intWithMultipleAnnotations);
+      @IntRange(from = 0, to = 200) @Dimension(unit = 0) int intWithMultipleAnnotations);
 
   TestManyTypesViewModelBuilder integerValue(int integerValue);
 

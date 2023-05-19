@@ -17,6 +17,16 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
+
+    testOptions {
+      unitTests {
+        all {
+          jvmArgs += [
+              '--add-opens', 'jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED',
+          ]
+        }
+      }
+    }
 }
 
 configurations.all { strategy ->
