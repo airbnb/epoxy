@@ -12,8 +12,8 @@ publishing {
             name = 'airbnbArtifactory'
             url = version.toString().endsWith("SNAPSHOT") ? findProperty("ARTIFACTORY_SNAPSHOT_URL") : findProperty("ARTIFACTORY_RELEASE_URL")
             credentials {
-                username = getProperty("ARTIFACTORY_USERNAME")
-                password = getProperty("ARTIFACTORY_PASSWORD")
+                username = findProperty("ARTIFACTORY_USERNAME")
+                password = findProperty("ARTIFACTORY_PASSWORD")
             }
         }
     }
