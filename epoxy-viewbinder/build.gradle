@@ -4,6 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: "com.vanniktech.maven.publish"
 
 android {
+  namespace 'com.airbnb.epoxy.viewbinder'
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
   kotlinOptions {

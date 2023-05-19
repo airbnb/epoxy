@@ -5,14 +5,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.airbnb.epoxy.DataBindingEpoxyModel.DataBindingHolder;
-import com.airbnb.epoxy.integrationtest.BuildConfig;
 import com.airbnb.epoxy.integrationtest.DatabindingTestBindingModel_;
 import com.airbnb.epoxy.integrationtest.ModelWithDataBindingBindingModel_;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 import org.robolectric.annotation.LooperMode;
 
 import java.util.Collections;

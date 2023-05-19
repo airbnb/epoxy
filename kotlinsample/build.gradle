@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-
+  namespace 'com.airbnb.epoxy.kotlinsample'
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
   defaultConfig {

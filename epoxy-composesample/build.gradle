@@ -5,6 +5,7 @@ plugins {
 apply plugin: 'kotlin-kapt'
 
 android {
+  namespace 'com.airbnb.epoxy.compose.sample'
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
   defaultConfig {

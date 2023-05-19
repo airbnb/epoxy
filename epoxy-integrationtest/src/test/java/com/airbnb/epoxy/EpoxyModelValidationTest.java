@@ -1,7 +1,6 @@
 package com.airbnb.epoxy;
 
 import com.airbnb.epoxy.EpoxyController.Interceptor;
-import com.airbnb.epoxy.integrationtest.BuildConfig;
 import com.airbnb.epoxy.integrationtest.ControllerWithAutoModel;
 import com.airbnb.epoxy.integrationtest.Model;
 import com.airbnb.epoxy.integrationtest.ModelChangesDuringBind_;
@@ -13,7 +12,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 import org.robolectric.annotation.LooperMode;
 
 import java.util.List;
@@ -246,7 +244,7 @@ public class EpoxyModelValidationTest {
 
     controller.requestModelBuild();
 
-    model.layout(R.layout.view_holder_empty_view);
+    model.layout(R.layout.view_holder_no_databinding);
   }
 
   @Test

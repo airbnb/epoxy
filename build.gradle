@@ -1,9 +1,15 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
 
+<<<<<<< Updated upstream
   ext.KOTLIN_VERSION = "1.8.10"
   ext.ANDROID_PLUGIN_VERSION = '7.4.0'
   ext.KSP_VERSION = '1.8.10-1.0.9'
+=======
+  ext.KOTLIN_VERSION = "1.8.21"
+  ext.ANDROID_PLUGIN_VERSION = '8.0.1'
+  ext.KSP_VERSION = '1.8.21-1.0.11'
+>>>>>>> Stashed changes
 
   repositories {
     google()
@@ -32,6 +38,11 @@ allprojects {
   repositories {
     google()
     mavenCentral()
+  }
+  tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+      jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
   }
 
   // Prevent javadoc task complaining about errors with kotlin files

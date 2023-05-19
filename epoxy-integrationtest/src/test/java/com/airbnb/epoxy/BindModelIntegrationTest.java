@@ -2,14 +2,12 @@ package com.airbnb.epoxy;
 
 import android.widget.TextView;
 
-import com.airbnb.epoxy.integrationtest.BuildConfig;
 import com.airbnb.epoxy.integrationtest.Model_;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 import org.robolectric.annotation.LooperMode;
 
 import java.util.ArrayList;

@@ -51,13 +51,22 @@ rootProject.ext.PARIS_VERSION = "2.0.2"
 rootProject.ext.ROBOLECTRIC_VERSION = "4.9.2"
 rootProject.ext.SQUARE_JAVAPOET_VERSION = "1.13.0"
 rootProject.ext.SQUARE_KOTLINPOET_VERSION = "1.12.0"
+<<<<<<< Updated upstream
 rootProject.ext.COMPOSE_COMPILER_VERSION = "1.4.2"
 rootProject.ext.COMPOSE_VERSION = "1.4.0"
+=======
+rootProject.ext.COMPOSE_COMPILER_VERSION = "1.4.7"
+rootProject.ext.COMPOSE_VERSION = "1.4.2"
+>>>>>>> Stashed changes
 rootProject.ext.COMPOSE_ACTIVITY_VERSION = "1.6.0"
 rootProject.ext.KOTLINX_LIFECYCLE_RUNTIME_VERSION = "2.5.1"
 rootProject.ext.XPROCESSING_VERSION = "2.6.0-alpha01"
 rootProject.ext.KOTLIN_TESTING_COMPILE_VERSION = '1.5.0'
+<<<<<<< Updated upstream
 rootProject.ext.LIFECYCLE_VIEWMODEL = '2.5.1'
+=======
+rootProject.ext.LIFECYCLE_VIEWMODEL = '2.6.1'
+>>>>>>> Stashed changes
 
 rootProject.ext.deps = [
     activityCompose                     : "androidx.activity:activity-compose:$COMPOSE_ACTIVITY_VERSION",

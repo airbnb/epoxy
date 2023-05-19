@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-
+  namespace 'com.airbnb.epoxy.integrationtest'
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
   defaultConfig {
@@ -17,11 +17,6 @@ android {
 
   dataBinding {
     enabled = true
-  }
-
-  dexOptions {
-    // Was getting this error otherwise - "Multiple dex files define Landroid/arch/core/BuildConfig"
-    preDexLibraries = false
   }
 
   testOptions {

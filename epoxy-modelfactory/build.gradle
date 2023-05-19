@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: "com.vanniktech.maven.publish"
 
 android {
+  namespace 'com.airbnb.epoxymodelfactory'
   compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
   defaultConfig {

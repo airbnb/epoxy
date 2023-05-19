@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
+    namespace 'com.airbnb.epoxy.sample'
     compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
     // For java 8 lambdas
