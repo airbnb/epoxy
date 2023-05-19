@@ -2,11 +2,11 @@ apply plugin: 'com.android.library'
 apply from: '../publishing.gradle'
 
 android {
-  compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
   defaultConfig {
     // Using 16 here as it is the minimum version of Paris, which we are restricted to.
     minSdkVersion 16
+    compileSdk rootProject.COMPILE_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
   }
 

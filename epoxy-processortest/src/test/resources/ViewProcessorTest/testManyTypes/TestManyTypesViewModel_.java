@@ -96,12 +96,12 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   )
   private int intValueWithDimenTypeAnnotation_Int = 0;
 
-  @Dimension(
-      unit = 0
-  )
   @IntRange(
       from = 0,
       to = 200
+  )
+  @Dimension(
+      unit = 0
   )
   private int intWithMultipleAnnotations_Int = 0;
 
@@ -657,18 +657,18 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * @see TestManyTypesView#setIntWithMultipleAnnotations(int)
    */
   public TestManyTypesViewModel_ intWithMultipleAnnotations(
-      @Dimension(unit = 0) @IntRange(from = 0, to = 200) int intWithMultipleAnnotations) {
+      @IntRange(from = 0, to = 200) @Dimension(unit = 0) int intWithMultipleAnnotations) {
     onMutation();
     this.intWithMultipleAnnotations_Int = intWithMultipleAnnotations;
     return this;
   }
 
-  @Dimension(
-      unit = 0
-  )
   @IntRange(
       from = 0,
       to = 200
+  )
+  @Dimension(
+      unit = 0
   )
   public int intWithMultipleAnnotations() {
     return intWithMultipleAnnotations_Int;
