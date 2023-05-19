@@ -5,9 +5,9 @@ apply plugin: 'kotlin-parcelize'
 apply from: '../publishing.gradle'
 
 android {
-  compileSdkVersion rootProject.COMPILE_SDK_VERSION
 
   defaultConfig {
+    compileSdk rootProject.COMPILE_SDK_VERSION
     minSdkVersion rootProject.MIN_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
     consumerProguardFiles 'proguard-rules.pro'
