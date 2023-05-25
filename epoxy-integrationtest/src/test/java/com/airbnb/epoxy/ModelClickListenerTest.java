@@ -116,14 +116,14 @@ public class ModelClickListenerTest {
     RecyclerView recyclerMock = mock(RecyclerView.class);
     EpoxyViewHolder holderMock = mock(EpoxyViewHolder.class);
 
-    when(holderMock.getAdapterPosition()).thenReturn(1);
+    when(holderMock.getBindingAdapterPosition()).thenReturn(1);
     doReturn(recyclerMock).when(mockedView).getParent();
     doReturn(holderMock).when(recyclerMock).findContainingViewHolder(mockedView);
     doReturn(model).when(holderMock).getModel();
 
     when(mockedView.getParent()).thenReturn(recyclerMock);
     when(recyclerMock.findContainingViewHolder(mockedView)).thenReturn(holderMock);
-    when(holderMock.getAdapterPosition()).thenReturn(1);
+    when(holderMock.getBindingAdapterPosition()).thenReturn(1);
     when(holderMock.getModel()).thenReturn(model);
 
     View parentView = mock(View.class);
@@ -175,14 +175,14 @@ public class ModelClickListenerTest {
     RecyclerView recyclerMock = mock(RecyclerView.class);
     EpoxyViewHolder holderMock = mock(EpoxyViewHolder.class);
 
-    when(holderMock.getAdapterPosition()).thenReturn(1);
+    when(holderMock.getBindingAdapterPosition()).thenReturn(1);
     doReturn(recyclerMock).when(mockedView).getParent();
     doReturn(holderMock).when(recyclerMock).findContainingViewHolder(mockedView);
     doReturn(model).when(holderMock).getModel();
 
     when(mockedView.getParent()).thenReturn(recyclerMock);
     when(recyclerMock.findContainingViewHolder(mockedView)).thenReturn(holderMock);
-    when(holderMock.getAdapterPosition()).thenReturn(1);
+    when(holderMock.getBindingAdapterPosition()).thenReturn(1);
     when(holderMock.getModel()).thenReturn(model);
 
     View parentView = mock(View.class);

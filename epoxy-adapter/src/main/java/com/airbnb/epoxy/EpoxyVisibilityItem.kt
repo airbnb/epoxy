@@ -24,7 +24,7 @@ class EpoxyVisibilityItem(adapterPosition: Int? = null) {
 
     private val localVisibleRect = Rect()
 
-    var adapterPosition = RecyclerView.NO_POSITION
+    var bindingAdapterPosition = RecyclerView.NO_POSITION
         private set
 
     @Px
@@ -86,7 +86,7 @@ class EpoxyVisibilityItem(adapterPosition: Int? = null) {
         fullyVisible = false
         visible = false
         focusedVisible = false
-        adapterPosition = newAdapterPosition
+        bindingAdapterPosition = newAdapterPosition
         lastVisibleHeightNotified = null
         lastVisibleWidthNotified = null
         lastVisibilityNotified = null
@@ -198,6 +198,6 @@ class EpoxyVisibilityItem(adapterPosition: Int? = null) {
     }
 
     fun shiftBy(offsetPosition: Int) {
-        adapterPosition += offsetPosition
+        bindingAdapterPosition += offsetPosition
     }
 }
