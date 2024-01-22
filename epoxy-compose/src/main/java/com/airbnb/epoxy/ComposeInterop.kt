@@ -126,7 +126,6 @@ inline fun composeEpoxyModel(
     modelAction.invoke(composeEpoxyModel)
 }
 
-
 @Composable
 inline fun <reified T : EpoxyModel<*>> EpoxyInterop(
     modifier: Modifier = Modifier,
