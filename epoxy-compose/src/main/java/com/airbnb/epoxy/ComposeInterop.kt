@@ -69,13 +69,28 @@ fun ModelCollector.composableInterop(
     vararg keys: Any,
     composeFunction: @Composable () -> Unit
 ) {
-    add(composeEpoxyModel(id, *keys, composeFunction = composeFunction))
+    // Note this is done to avoid ART bug in Android 12 (background https://issuetracker.google.com/issues/197818595 and
+    // https://github.com/airbnb/epoxy/issues/1199).
+    // The main objective is to have the creation of the ComposeEpoxyModel the setting of the id and the adding to the
+    // controller in the same method.
+    // Note that even this manual inlining might be spoiled by R8 outlining which, if enabled might outline the creation
+    // of the ComposeEpoxyModel and setting of the id to a separate method.
+    val composeEpoxyModel = ComposeEpoxyModel(*keys, composeFunction = composeFunction)
+    composeEpoxyModel.id(id)
+    add(composeEpoxyModel)
 }
 
 /**
  * [composeEpoxyModel] can be used directly in cases where more control over the epoxy model
  * is needed. Eg. When the epoxy model needs to be modified before it's added.
  */
+@Deprecated(
+    message = "Use composeEpoxyModel with modelAction lambda instead to avoid crash on Android 12",
+    replaceWith = ReplaceWith(
+        expression = "composeEpoxyModel(id, *keys, modelAction = modelAction, composeFunction = composeFunction)",
+        imports = ["com.airbnb.epoxy.composeEpoxyModel"]
+    )
+)
 fun composeEpoxyModel(
     id: String,
     vararg keys: Any,
@@ -85,6 +100,32 @@ fun composeEpoxyModel(
         id(id)
     }
 }
+
+/**
+ * [composeEpoxyModel] can be used directly in cases where more control over the epoxy model
+ * is needed. Eg. When the epoxy model needs to be modified before it's added.
+ *
+ * Note: This does not return the model and instead takes a modelAction lambda that can be used to
+ * add the model to the controller, or modify it before adding.
+ *
+ * This is done to avoid ART bug in Android 12 (background https://issuetracker.google.com/issues/197818595 and
+ * https://github.com/airbnb/epoxy/issues/1199).
+ * The main objective is to have the creation of the ComposeEpoxyModel the setting of the id and
+ * the adding to the controller in the same method.
+ * Note that even with this construct this might be spoiled by R8 outlining which, if enabled might
+ * outline the creation of the ComposeEpoxyModel and setting of the id to a separate method.
+ */
+inline fun composeEpoxyModel(
+    id: String,
+    vararg keys: Any,
+    noinline composeFunction: @Composable () -> Unit,
+    modelAction: (ComposeEpoxyModel) -> Unit
+) {
+    val composeEpoxyModel = ComposeEpoxyModel(*keys, composeFunction = composeFunction)
+    composeEpoxyModel.id(id)
+    modelAction.invoke(composeEpoxyModel)
+}
+
 
 @Composable
 inline fun <reified T : EpoxyModel<*>> EpoxyInterop(
