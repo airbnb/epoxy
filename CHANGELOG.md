@@ -1,3 +1,6 @@
+# 5.1.4
+Change the way the Compose interop works to avoid Android 12 bug (#1370)
+
 # 5.1.3
 Update to kotlin 1.8.21
 Fix click listener kapt bug (#1327)
