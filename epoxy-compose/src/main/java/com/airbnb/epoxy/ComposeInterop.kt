@@ -46,6 +46,11 @@ class ComposeEpoxyModel(
         view.setContent(composeFunction)
     }
 
+    override fun unbind(view: ComposeView) {
+        super.unbind(view)
+        view.disposeComposition()
+    }
+
     override fun equals(other: Any?): Boolean {
         if (other === this) return true
         if (other !is ComposeEpoxyModel) return false
