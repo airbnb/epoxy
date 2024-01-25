@@ -62,7 +62,7 @@ class WrappedEpoxyModelClickListener<T : EpoxyModel<*>, V> : OnClickListener, On
         val epoxyHolder = ListenersUtils.getEpoxyHolderForChildView(view)
             ?: error("Could not find RecyclerView holder for clicked view")
 
-        val adapterPosition = epoxyHolder.adapterPosition
+        val adapterPosition = epoxyHolder.bindingAdapterPosition
         if (adapterPosition == RecyclerView.NO_POSITION) return null
 
         val boundObject = epoxyHolder.objectToBind()

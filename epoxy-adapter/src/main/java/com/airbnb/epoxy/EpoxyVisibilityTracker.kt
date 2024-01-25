@@ -309,7 +309,7 @@ open class EpoxyVisibilityTracker {
                 TAG,
                 "$eventOriginForDebug.processVisibilityEvents " +
                     "${System.identityHashCode(epoxyHolder)}, " +
-                    "$detachEvent, ${epoxyHolder.adapterPosition}"
+                    "$detachEvent, ${epoxyHolder.bindingAdapterPosition}"
             )
         }
         val itemView = epoxyHolder.itemView
@@ -317,14 +317,14 @@ open class EpoxyVisibilityTracker {
         var vi = visibilityIdToItemMap[id]
         if (vi == null) {
             // New view discovered, assign an EpoxyVisibilityItem
-            vi = EpoxyVisibilityItem(epoxyHolder.adapterPosition)
+            vi = EpoxyVisibilityItem(epoxyHolder.bindingAdapterPosition)
             visibilityIdToItemMap.put(id, vi)
             visibilityIdToItems.add(vi)
-        } else if (epoxyHolder.adapterPosition != RecyclerView.NO_POSITION &&
-            vi.adapterPosition != epoxyHolder.adapterPosition
+        } else if (epoxyHolder.bindingAdapterPosition != RecyclerView.NO_POSITION &&
+            vi.bindingAdapterPosition != epoxyHolder.bindingAdapterPosition
         ) {
             // EpoxyVisibilityItem being re-used for a different adapter position
-            vi.reset(epoxyHolder.adapterPosition)
+            vi.reset(epoxyHolder.bindingAdapterPosition)
         }
         var changed = false
         if (vi.update(itemView, recyclerView, detachEvent)) {
@@ -438,7 +438,7 @@ open class EpoxyVisibilityTracker {
                 Log.d(TAG, "onItemRangeInserted($positionStart, $itemCount)")
             }
             for (item in visibilityIdToItems) {
-                if (item.adapterPosition >= positionStart) {
+                if (item.bindingAdapterPosition >= positionStart) {
                     visibleDataChanged = true
                     item.shiftBy(itemCount)
                 }
@@ -457,7 +457,7 @@ open class EpoxyVisibilityTracker {
                 Log.d(TAG, "onItemRangeRemoved($positionStart, $itemCount)")
             }
             for (item in visibilityIdToItems) {
-                if (item.adapterPosition >= positionStart) {
+                if (item.bindingAdapterPosition >= positionStart) {
                     visibleDataChanged = true
                     item.shiftBy(-itemCount)
                 }
@@ -488,7 +488,7 @@ open class EpoxyVisibilityTracker {
                 Log.d(TAG, "onItemRangeMoved($fromPosition, $fromPosition, 1)")
             }
             for (item in visibilityIdToItems) {
-                val position = item.adapterPosition
+                val position = item.bindingAdapterPosition
                 if (position == fromPosition) {
                     // We found the item to be moved, just swap the position.
                     item.shiftBy(toPosition - fromPosition)
