@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
  * only.
  */
 @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
-class EpoxyVisibilityItem(adapterPosition: Int? = null) {
+class EpoxyVisibilityItem(adapterPosition: Int? = null) : AggregateVisibilityState {
 
     private val localVisibleRect = Rect()
 
@@ -44,10 +44,14 @@ class EpoxyVisibilityItem(adapterPosition: Int? = null) {
 
     @Px
     private var viewportWidth = 0
-    private var partiallyVisible = false
-    private var fullyVisible = false
-    private var visible = false
-    private var focusedVisible = false
+    override var partiallyVisible = false
+        private set
+    override var fullyVisible = false
+        private set
+    override var visible = false
+        private set
+    override var focusedVisible = false
+        private set
     private var viewVisibility = View.GONE
 
     /** Store last value for de-duping  */
@@ -140,6 +144,10 @@ class EpoxyVisibilityItem(adapterPosition: Int? = null) {
                 epoxyHolder.visibilityStateChanged(VisibilityState.FULL_IMPRESSION_VISIBLE)
             }
         }
+    }
+
+    fun handleAggregateVisibleState(epoxyHolder: EpoxyViewHolder) {
+        epoxyHolder.aggregateVisibilityChanged(this)
     }
 
     fun handleChanged(epoxyHolder: EpoxyViewHolder, visibilityChangedEnabled: Boolean): Boolean {

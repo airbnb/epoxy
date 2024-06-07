@@ -338,6 +338,7 @@ open class EpoxyVisibilityTracker {
             }
             vi.handleFocus(epoxyHolder, detachEvent)
             vi.handleFullImpressionVisible(epoxyHolder, detachEvent)
+            vi.handleAggregateVisibleState(epoxyHolder)
             changed = vi.handleChanged(epoxyHolder, onChangedEnabled)
         }
         return changed

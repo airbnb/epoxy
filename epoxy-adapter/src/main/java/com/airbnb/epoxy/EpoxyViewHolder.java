@@ -103,6 +103,14 @@ public class EpoxyViewHolder extends RecyclerView.ViewHolder {
     epoxyModel.onVisibilityStateChanged(visibilityState, objectToBind());
   }
 
+  public void aggregateVisibilityChanged(
+      @NonNull AggregateVisibilityState aggregateVisibilityState
+  ) {
+    assertBound();
+    // noinspection unchecked
+    epoxyModel.onAggregateVisibilityStateChanged(aggregateVisibilityState, objectToBind());
+  }
+
   public void visibilityChanged(
       @FloatRange(from = 0.0f, to = 100.0f) float percentVisibleHeight,
       @FloatRange(from = 0.0f, to = 100.0f) float percentVisibleWidth,

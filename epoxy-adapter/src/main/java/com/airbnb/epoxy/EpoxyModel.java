@@ -211,6 +211,16 @@ public abstract class EpoxyModel<T> {
   }
 
   /**
+   * The aggregate {@link com.airbnb.epoxy.VisibilityState}s for this model that were previously
+   * sent to {@link #onVisibilityStateChanged}.
+   */
+  public void onAggregateVisibilityStateChanged(
+      @NonNull AggregateVisibilityState visibilityState,
+      @NonNull T view
+  ) {
+  }
+
+  /**
    * TODO link to the wiki
    *
    * @see OnVisibilityChanged annotation

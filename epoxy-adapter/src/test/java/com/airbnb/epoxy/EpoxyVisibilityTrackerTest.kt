@@ -958,6 +958,16 @@ class EpoxyVisibilityTrackerTest {
                     helper.fullImpression = state == FULL_IMPRESSION_VISIBLE
             }
         }
+
+        override fun onAggregateVisibilityStateChanged(
+            visibilityState: AggregateVisibilityState,
+            view: View
+        ) {
+            helper.aggregateVisibilityState.visible = visibilityState.visible
+            helper.aggregateVisibilityState.focusedVisible = visibilityState.focusedVisible
+            helper.aggregateVisibilityState.fullyVisible = visibilityState.fullyVisible
+            helper.aggregateVisibilityState.partiallyVisible = visibilityState.partiallyVisible
+        }
     }
 
     /**
@@ -975,6 +985,8 @@ class EpoxyVisibilityTrackerTest {
         var focused = false
         var partialImpression = false
         var fullImpression = false
+
+        val aggregateVisibilityState = MutableAggregateVisibilityState()
 
         fun assert(
             id: Int? = null,
@@ -1032,6 +1044,7 @@ class EpoxyVisibilityTrackerTest {
                     it,
                     this.visible
                 )
+                Assert.assertEquals(it, aggregateVisibilityState.visible)
             }
             partialImpression?.let {
                 Assert.assertEquals(
@@ -1039,6 +1052,7 @@ class EpoxyVisibilityTrackerTest {
                     it,
                     this.partialImpression
                 )
+                Assert.assertEquals(it, aggregateVisibilityState.partiallyVisible)
             }
             fullImpression?.let {
                 Assert.assertEquals(
@@ -1046,6 +1060,7 @@ class EpoxyVisibilityTrackerTest {
                     it,
                     this.fullImpression
                 )
+                Assert.assertEquals(it, aggregateVisibilityState.fullyVisible)
             }
             visitedStates?.let { assertVisited(it) }
         }
@@ -1069,6 +1084,13 @@ class EpoxyVisibilityTrackerTest {
                     )
                 }
             }
+        }
+
+        class MutableAggregateVisibilityState : AggregateVisibilityState {
+            override var partiallyVisible: Boolean = false
+            override var fullyVisible: Boolean = false
+            override var visible: Boolean = false
+            override var focusedVisible: Boolean = false
         }
     }
 }
