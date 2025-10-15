@@ -2,9 +2,11 @@ plugins {
   id 'com.android.application'
   id 'kotlin-android'
   id 'kotlin-kapt'
+  id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 android {
+  namespace 'com.airbnb.epoxy.composeinterop.maverickssample'
 
   defaultConfig {
     applicationId "com.airbnb.epoxy.composeinterop.maverickssample"
@@ -24,19 +26,9 @@ android {
     }
   }
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-  kotlinOptions {
-    jvmTarget = '1.8'
-  }
   buildFeatures {
     dataBinding true
     compose true
-  }
-  composeOptions {
-    kotlinCompilerExtensionVersion COMPOSE_COMPILER_VERSION
   }
   packagingOptions {
     exclude "**/attach_hotspot_windows.dll"
@@ -44,6 +36,10 @@ android {
     exclude "META-INF/AL2.0"
     exclude "META-INF/LGPL2.1"
   }
+}
+
+kotlin {
+  jvmToolchain(17)
 }
 
 dependencies {

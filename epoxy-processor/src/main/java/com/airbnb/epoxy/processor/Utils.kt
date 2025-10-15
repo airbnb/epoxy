@@ -297,7 +297,7 @@ internal object Utils {
     fun capitalizeFirstLetter(original: String?): String? {
         return if (original == null || original.isEmpty()) {
             original
-        } else original.substring(0, 1).toUpperCase() + original.substring(1)
+        } else original.substring(0, 1).uppercase() + original.substring(1)
     }
 
     @JvmStatic
@@ -315,11 +315,11 @@ internal object Utils {
         return if (!PATTERN_STARTS_WITH_SET.matcher(string).matches()) {
             string
         } else string[3].toString()
-            .toLowerCase() + string.substring(4)
+            .lowercase() + string.substring(4)
     }
 
     fun toSnakeCase(s: String): String {
-        return s.replace("([^_A-Z])([A-Z])".toRegex(), "$1_$2").toLowerCase()
+        return s.replace("([^_A-Z])([A-Z])".toRegex(), "$1_$2").lowercase()
     }
 
     fun getDefaultValue(attributeType: TypeName): String {

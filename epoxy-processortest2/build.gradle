@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
+  namespace 'com.airbnb.epoxy.processortest2'
 
   defaultConfig {
     minSdkVersion rootProject.MIN_SDK_VERSION
@@ -9,8 +10,8 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
   }
 }
 

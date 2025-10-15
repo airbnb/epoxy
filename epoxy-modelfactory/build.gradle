@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply from: '../publishing.gradle'
 
 android {
+  namespace 'com.airbnb.epoxymodelfactory'
 
   defaultConfig {
     // Using 16 here as it is the minimum version of Paris, which we are restricted to.
@@ -11,8 +12,8 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
   }
 }
 

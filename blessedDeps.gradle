@@ -7,9 +7,6 @@
  *  gradle file, then applying it back in as necessary.
  */
 
-rootProject.ext.JAVA_SOURCE_VERSION = JavaVersion.VERSION_1_8
-rootProject.ext.JAVA_TARGET_VERSION = JavaVersion.VERSION_1_8
-
 rootProject.ext.TARGET_SDK_VERSION = 30
 rootProject.ext.COMPILE_SDK_VERSION = 33
 rootProject.ext.MIN_SDK_VERSION = 14
@@ -44,19 +41,17 @@ rootProject.ext.GOOGLE_TESTING_COMPILE_VERSION = "0.19"
 rootProject.ext.INCAP_VERSION = "0.3"
 rootProject.ext.JUNIT_VERSION = "4.13.2"
 rootProject.ext.KOTLIN_COROUTINES_VERSION = "1.6.4"
-rootProject.ext.KOTLINX_METADATA = "0.6.0"
 rootProject.ext.LOTTIE_VERSION = "2.8.0"
 rootProject.ext.MOCKITO_VERSION = "3.7.7"
 rootProject.ext.PARIS_VERSION = "2.0.2"
 rootProject.ext.ROBOLECTRIC_VERSION = "4.9.2"
 rootProject.ext.SQUARE_JAVAPOET_VERSION = "1.13.0"
 rootProject.ext.SQUARE_KOTLINPOET_VERSION = "1.12.0"
-rootProject.ext.COMPOSE_COMPILER_VERSION = "1.4.7"
 rootProject.ext.COMPOSE_VERSION = "1.4.2"
 rootProject.ext.COMPOSE_ACTIVITY_VERSION = "1.6.0"
 rootProject.ext.KOTLINX_LIFECYCLE_RUNTIME_VERSION = "2.5.1"
-rootProject.ext.XPROCESSING_VERSION = "2.6.0-alpha01"
-rootProject.ext.KOTLIN_TESTING_COMPILE_VERSION = '1.5.0'
+rootProject.ext.XPROCESSING_VERSION = "2.8.3"
+rootProject.ext.KOTLIN_TESTING_COMPILE_VERSION = '1.6.0'
 rootProject.ext.LIFECYCLE_VIEWMODEL = '2.6.1'
 
 rootProject.ext.deps = [
@@ -92,7 +87,7 @@ rootProject.ext.deps = [
     junit                               : "junit:junit:$JUNIT_VERSION",
     kotlinCoroutines                    : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$KOTLIN_COROUTINES_VERSION",
     kotlinCoroutinesTest                : "org.jetbrains.kotlinx:kotlinx-coroutines-test:$KOTLIN_COROUTINES_VERSION",
-    kotlinxMetadata                     : "org.jetbrains.kotlinx:kotlinx-metadata-jvm:$KOTLINX_METADATA",
+    kotlinxMetadata                     : "org.jetbrains.kotlin:kotlin-metadata-jvm:$KOTLIN_VERSION",
     lottie                              : "com.airbnb.android:lottie:$LOTTIE_VERSION",
     mockito                             : "org.mockito:mockito-core:$MOCKITO_VERSION",
     mockito_inline                      : "org.mockito:mockito-inline:$MOCKITO_VERSION",

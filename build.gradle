@@ -1,9 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
 
-  ext.KOTLIN_VERSION = "1.8.21"
-  ext.ANDROID_PLUGIN_VERSION = '7.4.0'
-  ext.KSP_VERSION = '1.8.21-1.0.11'
+  ext.KOTLIN_VERSION = "2.2.21"
+  ext.ANDROID_PLUGIN_VERSION = '8.13.0'
+  ext.KSP_VERSION = '2.2.21-2.0.4'
 
   repositories {
     google()
@@ -13,6 +13,7 @@ buildscript {
   dependencies {
     classpath "com.android.tools.build:gradle:$ANDROID_PLUGIN_VERSION"
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
+    classpath "org.jetbrains.kotlin:compose-compiler-gradle-plugin:$KOTLIN_VERSION"
     // Upload with: (see RELEASING.md)
     // ./gradlew publishAllPublicationsToMavenCentral --no-configuration-cache
     classpath 'com.vanniktech:gradle-maven-publish-plugin:0.22.0'
@@ -22,7 +23,7 @@ buildscript {
 }
 
 plugins {
-  // Run ./gradlew dependencyUpdates to see avilable version updates
+  // Run ./gradlew dependencyUpdates to see available version updates
   id 'com.github.ben-manes.versions' version '0.42.0'
   id "com.google.devtools.ksp" version "$KSP_VERSION"
 }
@@ -71,7 +72,7 @@ subprojects { project ->
 }
 
 def isNonStable = { String version ->
-  def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.toUpperCase().contains(it) }
+  def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.uppercase().contains(it) }
   def regex = /^[0-9,.v-]+(-r)?$/
   return !stableKeyword && !(version ==~ regex)
 }
