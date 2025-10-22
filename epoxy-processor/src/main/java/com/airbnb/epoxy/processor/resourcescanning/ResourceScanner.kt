@@ -103,7 +103,7 @@ abstract class ResourceScanner(val environmentProvider: () -> XProcessingEnv) {
         val layoutClassName = layout.className ?: return emptyList()
 
         val rLayoutClassElement: XTypeElement =
-            environmentProvider().requireTypeElement(layoutClassName)
+            environmentProvider().requireTypeElement(layoutClassName.toString())
         val target = layout.resourceName + "_"
 
         return rLayoutClassElement

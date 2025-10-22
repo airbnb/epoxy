@@ -1,5 +1,6 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.codegen.toJavaPoet
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XRoundEnv
@@ -147,7 +148,7 @@ class ConfigManager internal constructor(
                     )
                     return@forEach
                 }
-                val rLayoutClassString = rClassName.className.reflectionName()
+                val rLayoutClassString = rClassName.asClassName().toJavaPoet().reflectionName()
                 if (!rLayoutClassString.endsWith(".R") &&
                     !rLayoutClassString.endsWith(".R2")
                 ) {

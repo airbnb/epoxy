@@ -15,6 +15,7 @@ dependencies {
     implementation rootProject.deps.kotlinxMetadata
     implementation rootProject.deps.kotlinCoroutines
     implementation rootProject.deps.ksp
+    implementation rootProject.deps.kspAaEmbeddable
 
     // we shouldn't be including this technically, as it can cause issues with backwards compatibility,
     // but we use it for custom parsing of kotlin files to do resource scanning :(

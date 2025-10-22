@@ -76,23 +76,23 @@ class Memoizer(
     }
 
     val stringAttributeType: XType by lazy {
-        environment.requireType(ClassNames.EPOXY_STRING_ATTRIBUTE_DATA)
+        environment.requireType(ClassNames.EPOXY_STRING_ATTRIBUTE_DATA.toString())
     }
 
     val epoxyDataBindingModelBaseClass: XTypeElement? by lazy {
-        environment.findTypeElement(ClassNames.EPOXY_DATA_BINDING_MODEL)
+        environment.findTypeElement(ClassNames.EPOXY_DATA_BINDING_MODEL.toString())
     }
 
     val parisStyleType: XType by lazy {
-        environment.requireType(ClassNames.PARIS_STYLE)
+        environment.requireType(ClassNames.PARIS_STYLE.toString())
     }
 
     val epoxyModelClassElementUntyped: XTypeElement by lazy {
-        environment.requireTypeElement(ClassNames.EPOXY_MODEL_UNTYPED)
+        environment.requireTypeElement(ClassNames.EPOXY_MODEL_UNTYPED.toString())
     }
 
     val epoxyModelCollectorType: XType by lazy {
-        environment.requireType(ClassNames.MODEL_COLLECTOR)
+        environment.requireType(ClassNames.MODEL_COLLECTOR.toString())
     }
 
     val epoxyControllerType: XType by lazy {
@@ -100,7 +100,7 @@ class Memoizer(
     }
 
     val epoxyModelWithHolderTypeUntyped: XType by lazy {
-        environment.requireType(ClassNames.EPOXY_MODEL_WITH_HOLDER_UNTYPED)
+        environment.requireType(ClassNames.EPOXY_MODEL_WITH_HOLDER_UNTYPED.toString())
     }
 
     val epoxyHolderType: XType by lazy {
@@ -108,7 +108,7 @@ class Memoizer(
     }
 
     val viewType: XType by lazy {
-        environment.requireType(ClassNames.ANDROID_VIEW)
+        environment.requireType(ClassNames.ANDROID_VIEW.toString())
     }
 
     val baseBindWithDiffMethod: XMethodElement by lazy {
@@ -164,7 +164,7 @@ class Memoizer(
             // Note: Adding super type methods second preserves any overloads in the base
             // type that may have changes (ie, a new return type or annotation), since
             // Set.plus only adds items that don't already exist.
-            val superClassType = classElement.superType ?: return@getOrPut emptySet()
+            val superClassType = classElement.superClass ?: return@getOrPut emptySet()
             methodInfos.toSet() + getMethodsReturningClassType(superClassType, memoizer)
         }
     }
@@ -273,7 +273,7 @@ class Memoizer(
                 }
             }
 
-            currentSuperClassElement = currentSuperClassElement.superType?.typeElement
+            currentSuperClassElement = currentSuperClassElement.superClass?.typeElement
         }
 
         return result
@@ -382,7 +382,7 @@ class Memoizer(
         return implementsModelCollectorMap.getOrPut(classElement.qualifiedName) {
             classElement.getSuperInterfaceElements().any {
                 it.type.isEpoxyModelCollector(this)
-            } || classElement.superType?.typeElement?.let { superClassElement ->
+            } || classElement.superClass?.typeElement?.let { superClassElement ->
                 // Also check the class hierarchy
                 implementsModelCollector(superClassElement)
             } ?: false

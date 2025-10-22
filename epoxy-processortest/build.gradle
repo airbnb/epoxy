@@ -6,8 +6,7 @@ android {
   namespace 'com.airbnb.epoxy.processortest'
 
   defaultConfig {
-    // Using 16 here as it is the minimum version of Paris, which we are restricted to.
-    minSdkVersion 16
+    minSdkVersion rootProject.PARIS_MIN_SDK_VERSION
     compileSdk rootProject.COMPILE_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
   }

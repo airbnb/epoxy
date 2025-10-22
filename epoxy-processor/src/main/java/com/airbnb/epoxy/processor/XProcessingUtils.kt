@@ -1,5 +1,6 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.codegen.toJavaPoet
 import androidx.room.compiler.processing.XAnnotation
 import androidx.room.compiler.processing.XAnnotationValue
 import androidx.room.compiler.processing.XElement
@@ -75,7 +76,7 @@ tailrec fun XElement.iterateClassHierarchy(
 
     classCallback(this)
 
-    val superClazz = this.superType?.typeElement
+    val superClazz = this.superClass?.typeElement
     superClazz?.iterateClassHierarchy(classCallback)
 }
 
@@ -130,7 +131,12 @@ fun XAnnotation.toAnnotationSpec(memoizer: Memoizer): AnnotationSpec {
             }
         }
         if (value is XEnumEntry) {
-            return addMember(memberName, "\$T.\$L", value.enumTypeElement.className, value.name)
+            return addMember(
+                memberName,
+                "\$T.\$L",
+                value.enclosingElement.asClassName().toJavaPoet(),
+                value.name
+            )
         }
         if (value is XAnnotation) {
             return addMember(memberName, "\$L", value.toAnnotationSpec(memoizer))

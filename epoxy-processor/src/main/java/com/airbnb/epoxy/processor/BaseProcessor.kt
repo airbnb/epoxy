@@ -285,7 +285,7 @@ abstract class BaseProcessor(val kspEnvironment: SymbolProcessorEnvironment? = n
 
         generatedClasses
             .flatMap { it.attributeInfo }
-            .mapNotNull { attributeInfo ->
+            .map { attributeInfo ->
                 if (configManager.requiresHashCode(attributeInfo) &&
                     attributeInfo.useInHash &&
                     !attributeInfo.ignoreRequireHashCode

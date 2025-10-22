@@ -1,6 +1,6 @@
 package com.airbnb.epoxy.processor
 
-import androidx.room.compiler.processing.XAnnotationBox
+import androidx.room.compiler.codegen.toJavaPoet
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XMethodElement
 import androidx.room.compiler.processing.XProcessingEnv
@@ -27,8 +27,7 @@ class ModelViewInfo(
     val visibilityStateChangedMethodNames = Collections.synchronizedSet(mutableSetOf<String>())
     val visibilityChangedMethodNames = Collections.synchronizedSet(mutableSetOf<String>())
     val afterPropsSetMethodNames = Collections.synchronizedSet(mutableSetOf<String>())
-    private val viewAnnotation: XAnnotationBox<ModelView> =
-        viewElement.requireAnnotation(ModelView::class)
+    private val viewAnnotation = viewElement.requireAnnotation(ModelView::class)
 
     val saveViewState: Boolean
     val fullSpanSize: Boolean
@@ -43,7 +42,7 @@ class ModelViewInfo(
     init {
         superClassElement = lookUpSuperClassElement()
         this.superClassName = ParameterizedTypeName
-            .get(superClassElement.className, viewElement.type.typeNameWithWorkaround(memoizer))
+            .get(superClassElement.asClassName().toJavaPoet(), viewElement.type.typeNameWithWorkaround(memoizer))
 
         generatedModelSuffix = configManager.generatedModelSuffix(viewElement)
         generatedName = buildGeneratedModelName(viewElement)
@@ -63,9 +62,9 @@ class ModelViewInfo(
         // The bound type is the type of this view
         modelType = viewElement.type.typeName
 
-        saveViewState = viewAnnotation.value.saveViewState
-        layoutParams = viewAnnotation.value.autoLayout
-        fullSpanSize = viewAnnotation.value.fullSpan
+        saveViewState = viewAnnotation.getAsBoolean("saveViewState")
+        layoutParams = ModelView.Size.valueOf(viewAnnotation.getAsEnum("autoLayout").name)
+        fullSpanSize = viewAnnotation.getAsBoolean("fullSpan")
         includeOtherLayoutOptions = configManager.includeAlternateLayoutsForViews(viewElement)
 
         val methodsOnView = viewElement.getDeclaredMethods()
@@ -162,7 +161,7 @@ class ModelViewInfo(
 
     fun getLayoutResource(resourceProcessor: ResourceScanner): ResourceValue {
         val annotation = viewElement.requireAnnotation(ModelView::class)
-        val layoutValue = annotation.value.defaultLayout
+        val layoutValue = annotation.getAsInt("defaultLayout")
         if (layoutValue != 0) {
             return resourceProcessor.getResourceValue(ModelView::class, viewElement, "defaultLayout")
                 ?: error("ModelView default layout not found for $viewElement")

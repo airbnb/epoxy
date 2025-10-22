@@ -54,9 +54,9 @@ class HeaderView(context: Context?) : LinearLayout(context) {
             if (it.isDigit()) {
                 val isEven = it.digitToInt() % 2 == 0
                 if (isEven) {
-                    title?.setTextColor(resources.getColor(R.color.design_default_color_primary))
+                    title?.setTextColor(resources.getColor(com.google.android.material.R.color.design_default_color_primary))
                 } else {
-                    title?.setTextColor(resources.getColor(R.color.design_default_color_secondary))
+                    title?.setTextColor(resources.getColor(com.google.android.material.R.color.design_default_color_secondary))
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.codegen.toJavaPoet
 import androidx.room.compiler.processing.XFiler
 import androidx.room.compiler.processing.XProcessingEnv
 import androidx.room.compiler.processing.XTypeElement
@@ -60,7 +61,7 @@ class ModelBuilderInterfaceWriter(
                         configManager.getModelViewConfig(modelInfo.viewElement)?.rClass?.packageName()
                             ?: it.packageName
                     val viewInterface =
-                        it.className.appendToName("Model_").setPackage(packageName)
+                        it.asClassName().toJavaPoet().appendToName("Model_").setPackage(packageName)
                     addSuperinterface(viewInterface)
 
                     // Store the subset of methods common to all interface implementations so we

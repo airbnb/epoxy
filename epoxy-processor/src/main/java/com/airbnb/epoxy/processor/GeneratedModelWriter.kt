@@ -1125,7 +1125,7 @@ class GeneratedModelWriter(
 
         createHolderMethod = with(createHolderMethod.toBuilder()) {
             returns(modelClassInfo.modelType)
-            val modelTypeElement = modelClassInfo.modelType?.let { environment.findTypeElement(it) }
+            val modelTypeElement = modelClassInfo.modelType?.let { environment.findTypeElement(it.toString()) }
             if (modelTypeElement != null &&
                 modelClassInfo.memoizer.hasViewParentConstructor(modelTypeElement)
             ) {
@@ -1306,7 +1306,7 @@ class GeneratedModelWriter(
 
         val layoutRes: Int
         try {
-            layoutRes = annotation.value.layout
+            layoutRes = annotation.getAsInt("layout")
         } catch (e: AnnotationTypeMismatchException) {
             logger.logError(
                 "Invalid layout value in %s annotation. (class: %s). %s: %s",

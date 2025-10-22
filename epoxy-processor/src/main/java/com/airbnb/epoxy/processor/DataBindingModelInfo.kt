@@ -20,7 +20,7 @@ internal class DataBindingModelInfo(
     private var dataBindingClassElement: XTypeElement? = null
         get() {
             if (field == null) {
-                field = memoizer.environment.findTypeElement(dataBindingClassName)
+                field = memoizer.environment.findTypeElement(dataBindingClassName.toString())
             }
             return field
         }

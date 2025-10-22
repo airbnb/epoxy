@@ -61,7 +61,6 @@ dependencies {
   testImplementation rootProject.deps.robolectric
   testImplementation rootProject.deps.junit
   testImplementation rootProject.deps.mockito
-  testImplementation rootProject.deps.mockito_inline
   testImplementation rootProject.deps.androidTestCore
   testImplementation rootProject.deps.androidTestExtJunitKtx
   testImplementation rootProject.deps.androidEspressoCore

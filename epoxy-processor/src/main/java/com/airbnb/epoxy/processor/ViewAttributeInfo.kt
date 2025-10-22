@@ -2,6 +2,7 @@ package com.airbnb.epoxy.processor
 
 import androidx.annotation.NonNull
 import androidx.annotation.Nullable
+import androidx.room.compiler.codegen.toJavaPoet
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XFieldElement
 import androidx.room.compiler.processing.XMethodElement
@@ -27,7 +28,6 @@ import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeVariableName
-import java.util.HashSet
 
 internal val NON_NULL_ANNOTATION_SPEC = AnnotationSpec.builder(NonNull::class.java).build()
 internal val NULLABLE_ANNOTATION_SPEC = AnnotationSpec.builder(Nullable::class.java).build()
@@ -70,12 +70,12 @@ class ViewAttributeInfo(
         groupKey = ""
         var defaultConstant = ""
         if (propAnnotation != null) {
-            defaultConstant = propAnnotation.value.defaultValue
-            groupKey = propAnnotation.value.group
-            options.addAll(propAnnotation.value.options)
-            options.addAll(propAnnotation.value.value)
+            defaultConstant = propAnnotation.getAsString("defaultValue")
+            groupKey = propAnnotation.getAsString("group")
+            options.addAll(propAnnotation.getAsEnumList("options").map { Option.valueOf(it.name) })
+            options.addAll(propAnnotation.getAsEnumList("value").map { Option.valueOf(it.name) })
         } else if (textAnnotation != null) {
-            val stringResValue = textAnnotation.value.defaultRes
+            val stringResValue = textAnnotation.getAsInt("defaultRes")
             if (stringResValue != 0) {
                 val stringResource = resourceProcessor.getResourceValue(
                     TextProp::class,
@@ -268,7 +268,7 @@ class ViewAttributeInfo(
                 }
             }
 
-            viewClass = viewClass.superType?.typeElement
+            viewClass = viewClass.superClass?.typeElement
         }
 
         logger.logError(
@@ -318,7 +318,7 @@ class ViewAttributeInfo(
 
         codeToSetDefault.explicit = CodeBlock.of(
             "\$T.\$L",
-            viewElement.className,
+            viewElement.asClassName().toJavaPoet(),
             constantName
         )
 
@@ -464,7 +464,8 @@ class ViewAttributeInfo(
                 }
                 else -> {
                     builder.add(
-                        "Default value is <b>{@value \$T#\$L}</b>", viewElement.className,
+                        "Default value is <b>{@value \$T#\$L}</b>",
+                        viewElement.asClassName().toJavaPoet(),
                         constantFieldNameForDefaultValue
                     )
                 }
