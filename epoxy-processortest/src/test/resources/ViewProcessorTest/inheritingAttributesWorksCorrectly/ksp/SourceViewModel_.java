@@ -233,14 +233,14 @@ public class SourceViewModel_ extends AirEpoxyModel<SourceView> implements Gener
   }
 
   @Override
-  public SourceViewModel_ showDividerWithOverriddenMethod(boolean showDivider) {
-    super.showDividerWithOverriddenMethod(showDivider);
+  public SourceViewModel_ showDivider(boolean showDivider) {
+    super.showDivider(showDivider);
     return this;
   }
 
   @Override
-  public SourceViewModel_ showDivider(boolean showDivider) {
-    super.showDivider(showDivider);
+  public SourceViewModel_ showDividerWithOverriddenMethod(boolean showDivider) {
+    super.showDividerWithOverriddenMethod(showDivider);
     return this;
   }
 

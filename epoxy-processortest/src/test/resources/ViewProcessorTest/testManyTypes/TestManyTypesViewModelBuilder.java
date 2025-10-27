@@ -7,6 +7,7 @@ import androidx.annotation.PluralsRes;
 import androidx.annotation.StringRes;
 import java.lang.Boolean;
 import java.lang.CharSequence;
+import java.lang.Exception;
 import java.lang.Integer;
 import java.lang.Number;
 import java.lang.Object;
@@ -38,15 +39,17 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder enabled(boolean enabled);
 
-  TestManyTypesViewModelBuilder stringValue(@NotNull("") String stringValue);
+  TestManyTypesViewModelBuilder stringValue(
+      @NotNull(value = "", exception = Exception.class) String stringValue);
 
   TestManyTypesViewModelBuilder functionType(
-      @NotNull("") Function2<? super String, ? super String, Integer> functionType);
+      @NotNull(value = "", exception = Exception.class) Function2<? super String, ? super String, Integer> functionType);
 
-  TestManyTypesViewModelBuilder listOfDataClass(@NotNull("") List<SomeDataClass> listOfDataClass);
+  TestManyTypesViewModelBuilder listOfDataClass(
+      @NotNull(value = "", exception = Exception.class) List<SomeDataClass> listOfDataClass);
 
   TestManyTypesViewModelBuilder listOfEnumClass(
-      @NotNull("") List<? extends SomeEnumClass> listOfEnumClass);
+      @NotNull(value = "", exception = Exception.class) List<? extends SomeEnumClass> listOfEnumClass);
 
   TestManyTypesViewModelBuilder nullableStringValue(@Nullable("") String nullableStringValue);
 
@@ -69,7 +72,8 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder boolValue(boolean boolValue);
 
-  TestManyTypesViewModelBuilder models(@NotNull("") List<? extends EpoxyModel<?>> models);
+  TestManyTypesViewModelBuilder models(
+      @NotNull(value = "", exception = Exception.class) List<? extends EpoxyModel<?>> models);
 
   TestManyTypesViewModelBuilder booleanValue(@Nullable("") Boolean booleanValue);
 

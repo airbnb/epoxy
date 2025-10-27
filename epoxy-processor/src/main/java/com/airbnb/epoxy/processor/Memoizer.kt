@@ -398,11 +398,15 @@ class Memoizer(
         }
     }
 
-    private val typeNameMap = mutableMapOf<XType, TypeName>()
+    private val typeNameMap = mutableMapOf<TypeName, TypeName>()
     fun typeNameWithWorkaround(xType: XType): TypeName {
-        if (!isKsp) return xType.typeName
+        // Use xType.typeName as the cache key instead of xType itself, because in KSP 2.0
+        // two different types with wildcards (e.g., List<CharSequence> vs List<? extends CharSequence>)
+        // can have the same equals()/hashCode() but different typeName values.
+        val originalTypeName = xType.typeName
+        if (!isKsp) return originalTypeName
 
-        return typeNameMap.getOrPut(xType) {
+        return typeNameMap.getOrPut(originalTypeName) {
             // The different subtypes of KSType do different things.
             if (xType is XArrayType) {
                 return@getOrPut ArrayTypeName.of(xType.componentType.typeNameWithWorkaround(this))

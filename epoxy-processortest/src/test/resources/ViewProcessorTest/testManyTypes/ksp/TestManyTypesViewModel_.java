@@ -39,28 +39,35 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
 
   private OnModelVisibilityChangedListener<TestManyTypesViewModel_, TestManyTypesView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
+  private int myProperty_Int = 0;
+
+  @Nullable
+  private Integer myNullableProperty_Integer = (Integer) null;
+
+  private int delegatedProperty_Int = 0;
+
   private boolean enabled_Boolean = TestManyTypesView.DEFAULT_ENABLED;
 
   /**
-   * Bitset index: 1
+   * Bitset index: 4
    */
   @NonNull
   private String stringValue_String;
 
   /**
-   * Bitset index: 2
+   * Bitset index: 5
    */
   @NonNull
   private Function2<? super String, ? super String, Integer> functionType_Function2;
 
   /**
-   * Bitset index: 3
+   * Bitset index: 6
    */
   @NonNull
   private List<SomeDataClass> listOfDataClass_List;
 
   /**
-   * Bitset index: 4
+   * Bitset index: 7
    */
   @NonNull
   private List<SomeEnumClass> listOfEnumClass_List;
@@ -71,7 +78,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   private int intValue_Int = 0;
 
   /**
-   * Bitset index: 7
+   * Bitset index: 10
    */
   private int intValueWithDefault_Int;
 
@@ -103,7 +110,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   private boolean boolValue_Boolean = false;
 
   /**
-   * Bitset index: 14
+   * Bitset index: 17
    */
   @NonNull
   private List<? extends EpoxyModel<?>> models_List;
@@ -125,30 +132,23 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
 
   private StringAttributeData title_StringAttributeData =  new StringAttributeData((CharSequence) null);
 
-  private int myProperty_Int = 0;
-
-  @Nullable
-  private Integer myNullableProperty_Integer = (Integer) null;
-
-  private int delegatedProperty_Int = 0;
-
   @Override
   public void addTo(EpoxyController controller) {
     super.addTo(controller);
     addWithDebugValidation(controller);
-    if (!assignedAttributes_epoxyGeneratedModel.get(4)) {
+    if (!assignedAttributes_epoxyGeneratedModel.get(7)) {
     	throw new IllegalStateException("A value is required for setListOfEnumClass");
     }
-    if (!assignedAttributes_epoxyGeneratedModel.get(1)) {
+    if (!assignedAttributes_epoxyGeneratedModel.get(4)) {
     	throw new IllegalStateException("A value is required for setStringValue");
     }
-    if (!assignedAttributes_epoxyGeneratedModel.get(2)) {
+    if (!assignedAttributes_epoxyGeneratedModel.get(5)) {
     	throw new IllegalStateException("A value is required for setFunctionType");
     }
-    if (!assignedAttributes_epoxyGeneratedModel.get(3)) {
+    if (!assignedAttributes_epoxyGeneratedModel.get(6)) {
     	throw new IllegalStateException("A value is required for setListOfDataClass");
     }
-    if (!assignedAttributes_epoxyGeneratedModel.get(14)) {
+    if (!assignedAttributes_epoxyGeneratedModel.get(17)) {
     	throw new IllegalStateException("A value is required for setModels");
     }
   }
@@ -178,9 +178,9 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     object.setArrayValue(arrayValue_StringArray);
     object.setClickListener(clickListener_OnClickListener);
     object.setBooleanValue(booleanValue_Boolean);
+    object.setMyProperty(myProperty_Int);
     object.setCustomClickListener(customClickListener_CustomClickListenerSubclass);
     object.setTitle(title_StringAttributeData.toString(object.getContext()));
-    object.setMyProperty(myProperty_Int);
     object.setStringValue(stringValue_String);
     object.setNullableStringValue(nullableStringValue_String);
     object.setIntValueWithAnnotation(intValueWithAnnotation_Int);
@@ -191,9 +191,10 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     object.setIntegerValue(integerValue_Int);
     object.setListValue(listValue_List);
     object.setIntValue(intValue_Int);
-    object.setListOfDataClass(listOfDataClass_List);
     object.setDelegatedProperty(delegatedProperty_Int);
-    if (assignedAttributes_epoxyGeneratedModel.get(7)) {
+    object.setListOfDataClass(listOfDataClass_List);
+    object.setMyNullableProperty(myNullableProperty_Integer);
+    if (assignedAttributes_epoxyGeneratedModel.get(10)) {
       object.setIntValueWithDefault(intValueWithDefault_Int);
     }
     else {
@@ -202,7 +203,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     object.setIntValueWithRangeAnnotation(intValueWithRangeAnnotation_Int);
     object.setBoolValue(boolValue_Boolean);
     object.setModels(models_List);
-    object.setMyNullableProperty(myNullableProperty_Integer);
   }
 
   @Override
@@ -230,16 +230,16 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
       object.setBooleanValue(booleanValue_Boolean);
     }
 
+    if ((myProperty_Int != that.myProperty_Int)) {
+      object.setMyProperty(myProperty_Int);
+    }
+
     if (((customClickListener_CustomClickListenerSubclass == null) != (that.customClickListener_CustomClickListenerSubclass == null))) {
       object.setCustomClickListener(customClickListener_CustomClickListenerSubclass);
     }
 
     if ((title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null)) {
       object.setTitle(title_StringAttributeData.toString(object.getContext()));
-    }
-
-    if ((myProperty_Int != that.myProperty_Int)) {
-      object.setMyProperty(myProperty_Int);
     }
 
     if ((stringValue_String != null ? !stringValue_String.equals(that.stringValue_String) : that.stringValue_String != null)) {
@@ -282,21 +282,25 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
       object.setIntValue(intValue_Int);
     }
 
-    if ((listOfDataClass_List != null ? !listOfDataClass_List.equals(that.listOfDataClass_List) : that.listOfDataClass_List != null)) {
-      object.setListOfDataClass(listOfDataClass_List);
-    }
-
     if ((delegatedProperty_Int != that.delegatedProperty_Int)) {
       object.setDelegatedProperty(delegatedProperty_Int);
     }
 
-    if (assignedAttributes_epoxyGeneratedModel.get(7)) {
+    if ((listOfDataClass_List != null ? !listOfDataClass_List.equals(that.listOfDataClass_List) : that.listOfDataClass_List != null)) {
+      object.setListOfDataClass(listOfDataClass_List);
+    }
+
+    if ((myNullableProperty_Integer != null ? !myNullableProperty_Integer.equals(that.myNullableProperty_Integer) : that.myNullableProperty_Integer != null)) {
+      object.setMyNullableProperty(myNullableProperty_Integer);
+    }
+
+    if (assignedAttributes_epoxyGeneratedModel.get(10)) {
       if ((intValueWithDefault_Int != that.intValueWithDefault_Int)) {
         object.setIntValueWithDefault(intValueWithDefault_Int);
       }
     }
     // A value was not set so we should use the default value, but we only need to set it if the previous model had a custom value set.
-    else if (that.assignedAttributes_epoxyGeneratedModel.get(7)) {
+    else if (that.assignedAttributes_epoxyGeneratedModel.get(10)) {
       object.setIntValueWithDefault();
     }
 
@@ -310,10 +314,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
 
     if ((models_List != null ? !models_List.equals(that.models_List) : that.models_List != null)) {
       object.setModels(models_List);
-    }
-
-    if ((myNullableProperty_Integer != null ? !myNullableProperty_Integer.equals(that.myNullableProperty_Integer) : that.myNullableProperty_Integer != null)) {
-      object.setMyNullableProperty(myNullableProperty_Integer);
     }
   }
 
@@ -407,6 +407,52 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   /**
+   * <i>Optional</i>: Default value is 0
+   *
+   * @see TestManyTypesView#setMyProperty(int)
+   */
+  public TestManyTypesViewModel_ myProperty(int myProperty) {
+    onMutation();
+    this.myProperty_Int = myProperty;
+    return this;
+  }
+
+  public int myProperty() {
+    return myProperty_Int;
+  }
+
+  /**
+   * <i>Optional</i>: Default value is (Integer) null
+   *
+   * @see TestManyTypesView#setMyNullableProperty(Integer)
+   */
+  public TestManyTypesViewModel_ myNullableProperty(@Nullable Integer myNullableProperty) {
+    onMutation();
+    this.myNullableProperty_Integer = myNullableProperty;
+    return this;
+  }
+
+  @Nullable
+  public Integer myNullableProperty() {
+    return myNullableProperty_Integer;
+  }
+
+  /**
+   * <i>Optional</i>: Default value is 0
+   *
+   * @see TestManyTypesView#setDelegatedProperty(int)
+   */
+  public TestManyTypesViewModel_ delegatedProperty(int delegatedProperty) {
+    onMutation();
+    this.delegatedProperty_Int = delegatedProperty;
+    return this;
+  }
+
+  public int delegatedProperty() {
+    return delegatedProperty_Int;
+  }
+
+  /**
    * <i>Optional</i>: Default value is <b>{@value TestManyTypesView#DEFAULT_ENABLED}</b>
    *
    * @see TestManyTypesView#setEnabled(boolean)
@@ -430,7 +476,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     if (stringValue == null) {
       throw new IllegalArgumentException("stringValue cannot be null");
     }
-    assignedAttributes_epoxyGeneratedModel.set(1);
+    assignedAttributes_epoxyGeneratedModel.set(4);
     onMutation();
     this.stringValue_String = stringValue;
     return this;
@@ -451,7 +497,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     if (functionType == null) {
       throw new IllegalArgumentException("functionType cannot be null");
     }
-    assignedAttributes_epoxyGeneratedModel.set(2);
+    assignedAttributes_epoxyGeneratedModel.set(5);
     onMutation();
     this.functionType_Function2 = functionType;
     return this;
@@ -471,7 +517,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     if (listOfDataClass == null) {
       throw new IllegalArgumentException("listOfDataClass cannot be null");
     }
-    assignedAttributes_epoxyGeneratedModel.set(3);
+    assignedAttributes_epoxyGeneratedModel.set(6);
     onMutation();
     this.listOfDataClass_List = listOfDataClass;
     return this;
@@ -491,7 +537,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     if (listOfEnumClass == null) {
       throw new IllegalArgumentException("listOfEnumClass cannot be null");
     }
-    assignedAttributes_epoxyGeneratedModel.set(4);
+    assignedAttributes_epoxyGeneratedModel.set(7);
     onMutation();
     this.listOfEnumClass_List = listOfEnumClass;
     return this;
@@ -539,7 +585,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * @see TestManyTypesView#setIntValueWithDefault(int)
    */
   public TestManyTypesViewModel_ intValueWithDefault(int intValueWithDefault) {
-    assignedAttributes_epoxyGeneratedModel.set(7);
+    assignedAttributes_epoxyGeneratedModel.set(10);
     onMutation();
     this.intValueWithDefault_Int = intValueWithDefault;
     return this;
@@ -666,7 +712,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     if (models == null) {
       throw new IllegalArgumentException("models cannot be null");
     }
-    assignedAttributes_epoxyGeneratedModel.set(14);
+    assignedAttributes_epoxyGeneratedModel.set(17);
     onMutation();
     this.models_List = models;
     return this;
@@ -829,52 +875,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
-  /**
-   * <i>Optional</i>: Default value is 0
-   *
-   * @see TestManyTypesView#setMyProperty(int)
-   */
-  public TestManyTypesViewModel_ myProperty(int myProperty) {
-    onMutation();
-    this.myProperty_Int = myProperty;
-    return this;
-  }
-
-  public int myProperty() {
-    return myProperty_Int;
-  }
-
-  /**
-   * <i>Optional</i>: Default value is (Integer) null
-   *
-   * @see TestManyTypesView#setMyNullableProperty(Integer)
-   */
-  public TestManyTypesViewModel_ myNullableProperty(@Nullable Integer myNullableProperty) {
-    onMutation();
-    this.myNullableProperty_Integer = myNullableProperty;
-    return this;
-  }
-
-  @Nullable
-  public Integer myNullableProperty() {
-    return myNullableProperty_Integer;
-  }
-
-  /**
-   * <i>Optional</i>: Default value is 0
-   *
-   * @see TestManyTypesView#setDelegatedProperty(int)
-   */
-  public TestManyTypesViewModel_ delegatedProperty(int delegatedProperty) {
-    onMutation();
-    this.delegatedProperty_Int = delegatedProperty;
-    return this;
-  }
-
-  public int delegatedProperty() {
-    return delegatedProperty_Int;
-  }
-
   @Override
   public TestManyTypesViewModel_ id(long p0) {
     super.id(p0);
@@ -954,6 +954,9 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     assignedAttributes_epoxyGeneratedModel.clear();
+    this.myProperty_Int = 0;
+    this.myNullableProperty_Integer = (Integer) null;
+    this.delegatedProperty_Int = 0;
     this.enabled_Boolean = TestManyTypesView.DEFAULT_ENABLED;
     this.stringValue_String = null;
     this.functionType_Function2 = null;
@@ -975,9 +978,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     this.clickListener_OnClickListener = (View.OnClickListener) null;
     this.customClickListener_CustomClickListenerSubclass = (CustomClickListenerSubclass) null;
     this.title_StringAttributeData =  new StringAttributeData((CharSequence) null);
-    this.myProperty_Int = 0;
-    this.myNullableProperty_Integer = (Integer) null;
-    this.delegatedProperty_Int = 0;
     super.reset();
     return this;
   }
@@ -1004,6 +1004,15 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
       return false;
     }
     if (((onModelVisibilityChangedListener_epoxyGeneratedModel == null) != (that.onModelVisibilityChangedListener_epoxyGeneratedModel == null))) {
+      return false;
+    }
+    if ((myProperty_Int != that.myProperty_Int)) {
+      return false;
+    }
+    if ((myNullableProperty_Integer != null ? !myNullableProperty_Integer.equals(that.myNullableProperty_Integer) : that.myNullableProperty_Integer != null)) {
+      return false;
+    }
+    if ((delegatedProperty_Int != that.delegatedProperty_Int)) {
       return false;
     }
     if ((enabled_Boolean != that.enabled_Boolean)) {
@@ -1069,15 +1078,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     if ((title_StringAttributeData != null ? !title_StringAttributeData.equals(that.title_StringAttributeData) : that.title_StringAttributeData != null)) {
       return false;
     }
-    if ((myProperty_Int != that.myProperty_Int)) {
-      return false;
-    }
-    if ((myNullableProperty_Integer != null ? !myNullableProperty_Integer.equals(that.myNullableProperty_Integer) : that.myNullableProperty_Integer != null)) {
-      return false;
-    }
-    if ((delegatedProperty_Int != that.delegatedProperty_Int)) {
-      return false;
-    }
     return true;
   }
 
@@ -1088,6 +1088,9 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     _result = 31 * _result + (onModelUnboundListener_epoxyGeneratedModel != null ? 1 : 0);
     _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
+    _result = 31 * _result + myProperty_Int;
+    _result = 31 * _result + (myNullableProperty_Integer != null ? myNullableProperty_Integer.hashCode() : 0);
+    _result = 31 * _result + delegatedProperty_Int;
     _result = 31 * _result + (enabled_Boolean ? 1 : 0);
     _result = 31 * _result + (stringValue_String != null ? stringValue_String.hashCode() : 0);
     _result = 31 * _result + (functionType_Function2 != null ? 1 : 0);
@@ -1109,16 +1112,16 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     _result = 31 * _result + (clickListener_OnClickListener != null ? 1 : 0);
     _result = 31 * _result + (customClickListener_CustomClickListenerSubclass != null ? 1 : 0);
     _result = 31 * _result + (title_StringAttributeData != null ? title_StringAttributeData.hashCode() : 0);
-    _result = 31 * _result + myProperty_Int;
-    _result = 31 * _result + (myNullableProperty_Integer != null ? myNullableProperty_Integer.hashCode() : 0);
-    _result = 31 * _result + delegatedProperty_Int;
     return _result;
   }
 
   @Override
   public String toString() {
     return "TestManyTypesViewModel_{" +
-        "enabled_Boolean=" + enabled_Boolean +
+        "myProperty_Int=" + myProperty_Int +
+        ", myNullableProperty_Integer=" + myNullableProperty_Integer +
+        ", delegatedProperty_Int=" + delegatedProperty_Int +
+        ", enabled_Boolean=" + enabled_Boolean +
         ", stringValue_String=" + stringValue_String +
         ", listOfDataClass_List=" + listOfDataClass_List +
         ", listOfEnumClass_List=" + listOfEnumClass_List +
@@ -1138,9 +1141,6 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
         ", clickListener_OnClickListener=" + clickListener_OnClickListener +
         ", customClickListener_CustomClickListenerSubclass=" + customClickListener_CustomClickListenerSubclass +
         ", title_StringAttributeData=" + title_StringAttributeData +
-        ", myProperty_Int=" + myProperty_Int +
-        ", myNullableProperty_Integer=" + myNullableProperty_Integer +
-        ", delegatedProperty_Int=" + delegatedProperty_Int +
         "}" + super.toString();
   }
 

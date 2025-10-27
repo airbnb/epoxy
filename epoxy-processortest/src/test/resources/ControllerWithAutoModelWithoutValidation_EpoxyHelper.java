@@ -5,7 +5,8 @@ import com.airbnb.epoxy.ControllerHelper;
 import java.lang.Override;
 
 /**
- * Generated file. Do not modify! */
+ * Generated file. Do not modify!
+ */
 public class ControllerWithAutoModelWithoutValidation_EpoxyHelper extends ControllerHelper<ControllerWithAutoModelWithoutValidation> {
   private final ControllerWithAutoModelWithoutValidation controller;
 
@@ -16,9 +17,9 @@ public class ControllerWithAutoModelWithoutValidation_EpoxyHelper extends Contro
 
   @Override
   public void resetAutoModels() {
-    controller.modelWithAttribute2 = new BasicModelWithAttribute_();
-    controller.modelWithAttribute2.id(-1);
     controller.modelWithAttribute1 = new BasicModelWithAttribute_();
-    controller.modelWithAttribute1.id(-2);
+    controller.modelWithAttribute1.id(-1);
+    controller.modelWithAttribute2 = new BasicModelWithAttribute_();
+    controller.modelWithAttribute2.id(-2);
   }
 }

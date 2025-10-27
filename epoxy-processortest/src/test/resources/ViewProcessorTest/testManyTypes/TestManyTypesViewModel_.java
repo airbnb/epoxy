@@ -10,6 +10,7 @@ import androidx.annotation.PluralsRes;
 import androidx.annotation.StringRes;
 import java.lang.Boolean;
 import java.lang.CharSequence;
+import java.lang.Exception;
 import java.lang.IllegalArgumentException;
 import java.lang.IllegalStateException;
 import java.lang.Integer;
@@ -51,25 +52,37 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   /**
    * Bitset index: 4
    */
-  @NotNull("")
+  @NotNull(
+      value = "",
+      exception = Exception.class
+  )
   private String stringValue_String;
 
   /**
    * Bitset index: 5
    */
-  @NotNull("")
+  @NotNull(
+      value = "",
+      exception = Exception.class
+  )
   private Function2<? super String, ? super String, Integer> functionType_Function2;
 
   /**
    * Bitset index: 6
    */
-  @NotNull("")
+  @NotNull(
+      value = "",
+      exception = Exception.class
+  )
   private List<SomeDataClass> listOfDataClass_List;
 
   /**
    * Bitset index: 7
    */
-  @NotNull("")
+  @NotNull(
+      value = "",
+      exception = Exception.class
+  )
   private List<? extends SomeEnumClass> listOfEnumClass_List;
 
   @Nullable("")
@@ -112,7 +125,10 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   /**
    * Bitset index: 17
    */
-  @NotNull("")
+  @NotNull(
+      value = "",
+      exception = Exception.class
+  )
   private List<? extends EpoxyModel<?>> models_List;
 
   @Nullable("")
@@ -472,7 +488,8 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setStringValue(String)
    */
-  public TestManyTypesViewModel_ stringValue(@NotNull("") String stringValue) {
+  public TestManyTypesViewModel_ stringValue(
+      @NotNull(value = "", exception = Exception.class) String stringValue) {
     if (stringValue == null) {
       throw new IllegalArgumentException("stringValue cannot be null");
     }
@@ -482,7 +499,10 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
-  @NotNull("")
+  @NotNull(
+      value = "",
+      exception = Exception.class
+  )
   public String stringValue() {
     return stringValue_String;
   }
@@ -493,7 +513,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * @see TestManyTypesView#setFunctionType(Function2<? super String, ? super String, Integer>)
    */
   public TestManyTypesViewModel_ functionType(
-      @NotNull("") Function2<? super String, ? super String, Integer> functionType) {
+      @NotNull(value = "", exception = Exception.class) Function2<? super String, ? super String, Integer> functionType) {
     if (functionType == null) {
       throw new IllegalArgumentException("functionType cannot be null");
     }
@@ -503,7 +523,10 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
-  @NotNull("")
+  @NotNull(
+      value = "",
+      exception = Exception.class
+  )
   public Function2<? super String, ? super String, Integer> functionType() {
     return functionType_Function2;
   }
@@ -513,7 +536,8 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setListOfDataClass(List<SomeDataClass>)
    */
-  public TestManyTypesViewModel_ listOfDataClass(@NotNull("") List<SomeDataClass> listOfDataClass) {
+  public TestManyTypesViewModel_ listOfDataClass(
+      @NotNull(value = "", exception = Exception.class) List<SomeDataClass> listOfDataClass) {
     if (listOfDataClass == null) {
       throw new IllegalArgumentException("listOfDataClass cannot be null");
     }
@@ -523,7 +547,10 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
-  @NotNull("")
+  @NotNull(
+      value = "",
+      exception = Exception.class
+  )
   public List<SomeDataClass> listOfDataClass() {
     return listOfDataClass_List;
   }
@@ -534,7 +561,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * @see TestManyTypesView#setListOfEnumClass(List<? extends SomeEnumClass>)
    */
   public TestManyTypesViewModel_ listOfEnumClass(
-      @NotNull("") List<? extends SomeEnumClass> listOfEnumClass) {
+      @NotNull(value = "", exception = Exception.class) List<? extends SomeEnumClass> listOfEnumClass) {
     if (listOfEnumClass == null) {
       throw new IllegalArgumentException("listOfEnumClass cannot be null");
     }
@@ -544,7 +571,10 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
-  @NotNull("")
+  @NotNull(
+      value = "",
+      exception = Exception.class
+  )
   public List<? extends SomeEnumClass> listOfEnumClass() {
     return listOfEnumClass_List;
   }
@@ -709,7 +739,8 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setModels(List<? extends EpoxyModel<?>>)
    */
-  public TestManyTypesViewModel_ models(@NotNull("") List<? extends EpoxyModel<?>> models) {
+  public TestManyTypesViewModel_ models(
+      @NotNull(value = "", exception = Exception.class) List<? extends EpoxyModel<?>> models) {
     if (models == null) {
       throw new IllegalArgumentException("models cannot be null");
     }
@@ -719,7 +750,10 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
-  @NotNull("")
+  @NotNull(
+      value = "",
+      exception = Exception.class
+  )
   public List<? extends EpoxyModel<?>> models() {
     return models_List;
   }
