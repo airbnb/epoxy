@@ -236,7 +236,6 @@ internal object ProcessorTestUtils {
             // placeholders, which differs from kapt behavior. Due to this we can't directly compare them
             // and instead maintain separate ksp expected sources.
             val generatedKspFiles = generatedFiles.map { generatedFile ->
-                generatedFile
                 File(generatedFile.parent, "/ksp/${generatedFile.name}")
                     .unpatchResource()
                     .also {
