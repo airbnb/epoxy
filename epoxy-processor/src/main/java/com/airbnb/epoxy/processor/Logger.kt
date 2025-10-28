@@ -19,22 +19,16 @@ class Logger(val messager: XMessager, val logTimings: Boolean) {
 
     fun writeExceptions() {
         loggedExceptions.forEach {
-            val element = (it as? EpoxyProcessorException)?.element
             val msg = "${it.javaClass.simpleName}: ${it.localizedMessage}\n${it.stackTraceString()}"
 
-            if (element != null) {
-                messager.printMessage(
-                    kind = Diagnostic.Kind.ERROR,
-                    msg = msg,
-                    element = element
-                )
-            } else {
-                messager.printMessage(
-                    kind = Diagnostic.Kind.ERROR,
-                    msg = msg,
-                )
-            }
+            // In KSP2, PSI elements became invalid after processing round completes.
+            // Don't pass element to messager, only include location info in the message text.
+            messager.printMessage(
+                kind = Diagnostic.Kind.ERROR,
+                msg = msg,
+            )
         }
+        loggedExceptions.clear()
     }
 
     private fun Throwable.stackTraceString(): String {
