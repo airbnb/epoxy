@@ -36,7 +36,7 @@ public class TestManyTypesView extends View {
   }
 
   @ModelProp(Option.DoNotHash)
-  void setFunction(Function3<Integer, Integer, Integer, Integer> funct) {
+  void setFunction(Function3<? super Integer, ? super Integer, ? super Integer, Integer> funct) {
 
   }
 

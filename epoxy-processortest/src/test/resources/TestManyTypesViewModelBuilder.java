@@ -37,7 +37,7 @@ public interface TestManyTypesViewModelBuilder {
   TestManyTypesViewModelBuilder nullableStringValue(@Nullable String nullableStringValue);
 
   TestManyTypesViewModelBuilder function(
-      @NonNull Function3<Integer, Integer, Integer, Integer> function);
+      @NonNull Function3<? super Integer, ? super Integer, ? super Integer, Integer> function);
 
   TestManyTypesViewModelBuilder intValue(int intValue);
 
