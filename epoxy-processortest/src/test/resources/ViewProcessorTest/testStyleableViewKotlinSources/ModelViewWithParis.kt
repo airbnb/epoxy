@@ -6,6 +6,7 @@ import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.paris.annotations.Style
 import com.airbnb.paris.annotations.Styleable
+import com.airbnb.paris.extensions.modelViewWithParisStyle
 import kotlin.properties.Delegates
 
 @Styleable
