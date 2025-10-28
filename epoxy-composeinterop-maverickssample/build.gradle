@@ -8,6 +8,10 @@ plugins {
 android {
   namespace 'com.airbnb.epoxy.composeinterop.maverickssample'
 
+  lint {
+    disable 'MutableCollectionMutableState'
+  }
+
   defaultConfig {
     applicationId "com.airbnb.epoxy.composeinterop.maverickssample"
     compileSdk rootProject.COMPILE_SDK_VERSION
