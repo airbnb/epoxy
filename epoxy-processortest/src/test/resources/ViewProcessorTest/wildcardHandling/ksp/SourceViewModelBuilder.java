@@ -20,6 +20,9 @@ public interface SourceViewModelBuilder {
   SourceViewModelBuilder keyedListener(
       @Nullable KeyedListener<?, View.OnClickListener> keyedListener);
 
+  SourceViewModelBuilder numCarouselItemsShown(
+      @Nullable AirEpoxyModel.SomeType numCarouselItemsShown);
+
   SourceViewModelBuilder id(long p0);
 
   SourceViewModelBuilder id(@Nullable Number... p0);

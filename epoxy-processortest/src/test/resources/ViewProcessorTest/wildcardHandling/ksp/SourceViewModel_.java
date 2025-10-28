@@ -14,7 +14,7 @@ import java.lang.UnsupportedOperationException;
 /**
  * Generated file. Do not modify!
  */
-public class SourceViewModel_ extends EpoxyModel<SourceView> implements GeneratedModel<SourceView>, SourceViewModelBuilder {
+public class SourceViewModel_ extends AirEpoxyModel<SourceView> implements GeneratedModel<SourceView>, SourceViewModelBuilder {
   private OnModelBoundListener<SourceViewModel_, SourceView> onModelBoundListener_epoxyGeneratedModel;
 
   private OnModelUnboundListener<SourceViewModel_, SourceView> onModelUnboundListener_epoxyGeneratedModel;
@@ -25,6 +25,10 @@ public class SourceViewModel_ extends EpoxyModel<SourceView> implements Generate
 
   @Nullable
   private KeyedListener<?, View.OnClickListener> keyedListener_KeyedListener = (KeyedListener<?, View.OnClickListener>) null;
+
+  public SourceViewModel_() {
+    super();
+  }
 
   @Override
   public void addTo(EpoxyController controller) {
@@ -175,6 +179,20 @@ public class SourceViewModel_ extends EpoxyModel<SourceView> implements Generate
     return keyedListener_KeyedListener;
   }
 
+  /**
+   * The number of items that should be shown on screen. This assumes the model is used in a horizontal RecyclerView (aka {@link Carousel}), and the
+   *  view will have its width resized so that the appropriate number of items fit on screen.
+   *  <p>
+   *  We don't generate a getter since this class defines one, so it is accessible with just a `AirEpoxyModel` reference.
+   */
+  public SourceViewModel_ numCarouselItemsShown(
+      @Nullable AirEpoxyModel.SomeType numCarouselItemsShown) {
+    onMutation();
+    super.numCarouselItemsShown = numCarouselItemsShown;
+    super.numCarouselItemsShown(numCarouselItemsShown);
+    return this;
+  }
+
   @Override
   public SourceViewModel_ id(long p0) {
     super.id(p0);
@@ -253,6 +271,8 @@ public class SourceViewModel_ extends EpoxyModel<SourceView> implements Generate
     onModelVisibilityStateChangedListener_epoxyGeneratedModel = null;
     onModelVisibilityChangedListener_epoxyGeneratedModel = null;
     this.keyedListener_KeyedListener = (KeyedListener<?, View.OnClickListener>) null;
+    super.showDivider = null;
+    super.numCarouselItemsShown = null;
     super.reset();
     return this;
   }
@@ -284,6 +304,12 @@ public class SourceViewModel_ extends EpoxyModel<SourceView> implements Generate
     if (((keyedListener_KeyedListener == null) != (that.keyedListener_KeyedListener == null))) {
       return false;
     }
+    if ((showDivider != null ? !showDivider.equals(that.showDivider) : that.showDivider != null)) {
+      return false;
+    }
+    if ((numCarouselItemsShown != null ? !numCarouselItemsShown.equals(that.numCarouselItemsShown) : that.numCarouselItemsShown != null)) {
+      return false;
+    }
     return true;
   }
 
@@ -295,6 +321,8 @@ public class SourceViewModel_ extends EpoxyModel<SourceView> implements Generate
     _result = 31 * _result + (onModelVisibilityStateChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     _result = 31 * _result + (onModelVisibilityChangedListener_epoxyGeneratedModel != null ? 1 : 0);
     _result = 31 * _result + (keyedListener_KeyedListener != null ? 1 : 0);
+    _result = 31 * _result + (showDivider != null ? showDivider.hashCode() : 0);
+    _result = 31 * _result + (numCarouselItemsShown != null ? numCarouselItemsShown.hashCode() : 0);
     return _result;
   }
 
@@ -302,6 +330,8 @@ public class SourceViewModel_ extends EpoxyModel<SourceView> implements Generate
   public String toString() {
     return "SourceViewModel_{" +
         "keyedListener_KeyedListener=" + keyedListener_KeyedListener +
+        ", showDivider=" + showDivider +
+        ", numCarouselItemsShown=" + numCarouselItemsShown +
         "}" + super.toString();
   }
 

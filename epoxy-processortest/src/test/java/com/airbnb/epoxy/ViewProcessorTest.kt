@@ -143,6 +143,7 @@ class ViewProcessorTest {
         assertGeneration(
             inputFiles = listOf(
                 "ViewProcessorTest/wildcardHandling/SourceView.kt",
+                "ViewProcessorTest/wildcardHandling/AirEpoxyModel.java",
             ),
             generatedFileNames = listOf(
                 "ViewProcessorTest/wildcardHandling/SourceViewModel_.java",
