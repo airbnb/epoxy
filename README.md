@@ -34,9 +34,9 @@ Replace the variable `$epoxyVersion` with the latest version : [![Maven Central]
 
 See the [releases page](https://github.com/airbnb/epoxy/releases) for up to date release versions and details
 
-#### Kotlin
-If you are using Kotlin you should also add
-```
+#### Kotlin with KAPT
+If you are using Kotlin with KAPT you should also add
+```groovy
 apply plugin: 'kotlin-kapt'
 
 kapt {
@@ -48,14 +48,63 @@ so that `AutoModel` annotations work properly. More information [here](https://g
 
 Also, make sure to use `kapt` instead of `annotationProcessor` in your dependencies in the `build.gradle` file.
 
+#### Kotlin with KSP (Recommended)
+KSP (Kotlin Symbol Processing) is recommended over KAPT as it is significantly faster.
+
+Add the KSP plugin to your root `build.gradle`:
+```groovy
+plugins {
+    id 'com.google.devtools.ksp' version "$KSP_VERSION" apply false
+}
+```
+
+Then apply it in your module's `build.gradle`:
+```groovy
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'com.google.devtools.ksp'
+}
+
+dependencies {
+    implementation "com.airbnb.android:epoxy:$epoxyVersion"
+    ksp "com.airbnb.android:epoxy-processor:$epoxyVersion"
+}
+```
+
+You can configure KSP processor options:
+```groovy
+ksp {
+    // Validation and debugging
+    arg("validateEpoxyModelUsage", "true")                // Validate model usage at runtime (default: true)
+    arg("logEpoxyTimings", "false")                       // Log annotation processing timings (default: false)
+
+    // Code generation options
+    arg("epoxyDisableGenerateReset", "false")             // Disable reset() method generation (default: false)
+    arg("epoxyDisableGenerateGetters", "false")           // Disable getter generation (default: false)
+    arg("epoxyDisableGenerateOverloads", "false")         // Disable builder overload generation (default: false)
+    arg("disableEpoxyKotlinExtensionGeneration", "false") // Disable Kotlin extension generation (default: false)
+    arg("epoxyDisableDslMarker", "false")                 // Disable DSL marker annotation (default: false)
+
+    // Model requirements
+    arg("requireHashCodeInEpoxyModels", "false")          // Require hashCode/equals in models (default: false)
+    arg("requireAbstractEpoxyModels", "false")            // Require abstract model classes (default: false)
+    arg("implicitlyAddAutoModels", "false")               // Auto-add models to controllers (default: false)
+}
+```
+
+**Important:** DataBinding models are **not supported** with KSP, as Android's DataBinding library itself uses KAPT. If you need DataBinding support, you must continue using KAPT. For custom views with `@ModelView` or ViewHolder models, KSP works perfectly.
+
+See the [epoxy-kspsample](https://github.com/airbnb/epoxy/tree/master/epoxy-kspsample) module for a complete working example.
+
 ## Library Projects
 If you are using layout resources in Epoxy annotations then for library projects add [Butterknife's gradle plugin](https://github.com/JakeWharton/butterknife#library-projects) to your `buildscript`.
 
-```yaml
+```groovy
 buildscript {
   repositories {
     mavenCentral()
-   }
+  }
   dependencies {
     classpath 'com.jakewharton:butterknife-gradle-plugin:10.1.0'
   }
@@ -63,7 +112,7 @@ buildscript {
 ```
 
 and then apply it in your module:
-```yaml
+```groovy
 apply plugin: 'com.android.library'
 apply plugin: 'com.jakewharton.butterknife'
 ```
