@@ -10,16 +10,12 @@ import java.lang.Override;
 import java.lang.String;
 import java.lang.UnsupportedOperationException;
 import kotlin.Deprecated;
-import kotlin.DeprecationLevel;
-import kotlin.ReplaceWith;
 
 /**
  * Generated file. Do not modify!
  */
 @Deprecated(
-    message = "some message",
-    replaceWith = @ReplaceWith(expression = "", imports = {}),
-    level = DeprecationLevel.WARNING
+    message = "some message"
 )
 public class SourceViewModel_ extends EpoxyModel<SourceView> implements GeneratedModel<SourceView>, SourceViewModelBuilder {
   private OnModelBoundListener<SourceViewModel_, SourceView> onModelBoundListener_epoxyGeneratedModel;

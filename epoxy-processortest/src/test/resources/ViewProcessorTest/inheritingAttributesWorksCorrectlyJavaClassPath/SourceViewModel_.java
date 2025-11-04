@@ -23,7 +23,7 @@ public class SourceViewModel_ extends ProcessorTest2Model<SourceView> implements
 
   private OnModelVisibilityChangedListener<SourceViewModel_, SourceView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  @Nullable("")
+  @Nullable
   private String sectionId_String = (String) null;
 
   public SourceViewModel_() {
@@ -166,13 +166,13 @@ public class SourceViewModel_ extends ProcessorTest2Model<SourceView> implements
    *
    * @see SourceView#setSectionId(String)
    */
-  public SourceViewModel_ sectionId(@Nullable("") String sectionId) {
+  public SourceViewModel_ sectionId(@Nullable String sectionId) {
     onMutation();
     this.sectionId_String = sectionId;
     return this;
   }
 
-  @Nullable("")
+  @Nullable
   public String sectionId() {
     return sectionId_String;
   }

@@ -17,7 +17,7 @@ public interface SourceViewModelBuilder {
   SourceViewModelBuilder onVisibilityChanged(
       OnModelVisibilityChangedListener<SourceViewModel_, SourceView> listener);
 
-  SourceViewModelBuilder sectionId(@Nullable("") String sectionId);
+  SourceViewModelBuilder sectionId(@Nullable String sectionId);
 
   SourceViewModelBuilder processorTest2ValueProtected(int processorTest2ValueProtected);
 

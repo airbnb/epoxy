@@ -14,10 +14,7 @@ import java.lang.UnsupportedOperationException;
 /**
  * Generated file. Do not modify!
  */
-@Deprecated(
-    since = "",
-    forRemoval = false
-)
+@Deprecated
 public class SourceViewModel_ extends EpoxyModel<SourceView> implements GeneratedModel<SourceView>, SourceViewModelBuilder {
   private OnModelBoundListener<SourceViewModel_, SourceView> onModelBoundListener_epoxyGeneratedModel;
 

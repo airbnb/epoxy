@@ -12,10 +12,7 @@ import java.lang.String;
 /**
  * Generated file. Do not modify!
  */
-@Deprecated(
-    since = "",
-    forRemoval = false
-)
+@Deprecated
 public class ModelWithAnnotation_ extends ModelWithAnnotation implements GeneratedModel<Object>, ModelWithAnnotationBuilder {
   private OnModelBoundListener<ModelWithAnnotation_, Object> onModelBoundListener_epoxyGeneratedModel;
 

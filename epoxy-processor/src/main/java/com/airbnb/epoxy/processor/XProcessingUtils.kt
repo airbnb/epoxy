@@ -174,7 +174,14 @@ fun XAnnotation.toAnnotationSpec(memoizer: Memoizer): AnnotationSpec {
         return addMember(memberName, "\$L", value)
     }
     return AnnotationSpec.builder(ClassName.get(packageName, name)).apply {
-        annotationValues.forEach { annotationValue ->
+        // Use declaredAnnotationValues instead of annotationValues to exclude default values.
+        // This ensures consistent behavior across KSP runs, as annotationValues has been observed
+        // to non-deterministically return different results in KSP (sometimes including defaults,
+        // sometimes not).
+        //
+        // This approach mirrors Room's implementation in JavaPoetExt.kt:
+        // @see androidx.room.compiler.processing.toAnnotationSpec
+        declaredAnnotationValues.forEach { annotationValue ->
             addMemberForValue(annotationValue.name, annotationValue.value, memoizer)
         }
     }.build()
