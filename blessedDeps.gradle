@@ -51,7 +51,7 @@ rootProject.ext.SQUARE_KOTLINPOET_VERSION = "1.12.0"
 rootProject.ext.COMPOSE_VERSION = "1.4.2"
 rootProject.ext.COMPOSE_ACTIVITY_VERSION = "1.6.0"
 rootProject.ext.KOTLINX_LIFECYCLE_RUNTIME_VERSION = "2.5.1"
-rootProject.ext.XPROCESSING_VERSION = "2.8.3"
+rootProject.ext.XPROCESSING_VERSION = "2.8.4"
 rootProject.ext.KOTLIN_TESTING_COMPILE_VERSION = '0.11.0'
 rootProject.ext.LIFECYCLE_VIEWMODEL = '2.6.1'
 

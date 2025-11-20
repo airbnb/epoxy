@@ -8,11 +8,12 @@ import com.airbnb.epoxy.processor.resourcescanning.KspResourceScanner.ImportMatc
 import com.airbnb.epoxy.processor.resourcescanning.KspResourceScanner.ImportMatch.TypeAlias
 import com.google.devtools.ksp.impl.symbol.java.KSAnnotationJavaImpl
 import com.google.devtools.ksp.impl.symbol.kotlin.KSAnnotationImpl
+import com.google.devtools.ksp.impl.symbol.kotlin.KSClassDeclarationImpl
+import com.google.devtools.ksp.impl.symbol.kotlin.KSFileImpl
+import com.google.devtools.ksp.impl.symbol.kotlin.KSFileJavaImpl
 import com.google.devtools.ksp.impl.symbol.kotlin.resolved.KSAnnotationResolvedImpl
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.impl.java.KSClassDeclarationJavaImpl
-import com.google.devtools.ksp.symbol.impl.kotlin.KSClassDeclarationImpl
 import com.squareup.javapoet.ClassName
 import ksp.com.intellij.psi.PsiAnnotation
 import ksp.com.intellij.psi.PsiJavaFile
@@ -24,6 +25,7 @@ import ksp.org.jetbrains.kotlin.psi.KtAnnotationEntry
 import ksp.org.jetbrains.kotlin.psi.KtCollectionLiteralExpression
 import ksp.org.jetbrains.kotlin.psi.KtDotQualifiedExpression
 import ksp.org.jetbrains.kotlin.psi.KtExpression
+import ksp.org.jetbrains.kotlin.psi.KtFile
 import ksp.org.jetbrains.kotlin.psi.KtSimpleNameExpression
 import ksp.org.jetbrains.kotlin.psi.ValueArgument
 import java.util.Locale.getDefault
@@ -75,17 +77,21 @@ class KspResourceScanner(environmentProvider: () -> XProcessingEnv) :
             classElement.getFieldWithReflection<KSClassDeclaration>("declaration")
         return when (ksClassDeclaration) {
             is KSClassDeclarationImpl -> {
-                ksClassDeclaration.ktClassOrObject
-                    .containingKtFile
-                    .importDirectives
-                    .mapNotNull { it.importPath?.toString() }
-            }
-            is KSClassDeclarationJavaImpl -> {
-                (ksClassDeclaration.psi.containingFile as? PsiJavaFile)
-                    ?.importList
-                    ?.importStatements
-                    ?.mapNotNull { it.qualifiedName }
-                    ?: emptyList()
+                when (val fileImpl = ksClassDeclaration.containingFile) {
+                    is KSFileImpl -> {
+                        fileImpl.getFieldWithReflection<KtFile>("psi")
+                            .importDirectives
+                            .mapNotNull { it.importPath?.toString() }
+                    }
+                    is KSFileJavaImpl -> {
+                        fileImpl.psi
+                            .importList
+                            ?.importStatements
+                            ?.mapNotNull { it.qualifiedName }
+                            ?: emptyList()
+                    }
+                    else -> emptyList()
+                }
             }
             else -> emptyList()
         }
@@ -468,14 +474,17 @@ inline fun <reified U> Any.getFieldWithReflection(fieldName: String): U {
         val field = this.javaClass.getDeclaredField(fieldName)
         field.isAccessible = true
         field.get(this)
-    } catch (e: NoSuchFieldException) {
+    } catch (_: NoSuchFieldException) {
         // Kotlin sometimes does not have a field backing a property, so we try a getter method
         // for it.
-        val method = this.javaClass.getMethod(
-            "get" + fieldName.replaceFirstChar {
-                if (it.isLowerCase()) it.titlecase(getDefault()) else it.toString()
-            }
-        )
+        val methodName = "get" + fieldName.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(getDefault()) else it.toString()
+        }
+        val method = try {
+            this.javaClass.getMethod(methodName)
+        } catch (_: NoSuchMethodException) {
+            this.javaClass.getDeclaredMethod(methodName)
+        }
         method.isAccessible = true
         method.invoke(this)
     }
