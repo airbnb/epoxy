@@ -3,7 +3,7 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 apply from: '../publishing.gradle'
 
 kotlin {
-  jvmToolchain(17)
+  jvmToolchain(8)
 }
 
 dependencies {
