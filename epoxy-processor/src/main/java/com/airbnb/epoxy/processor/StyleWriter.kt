@@ -89,7 +89,8 @@ internal fun tryAddStyleBuilderAttribute(
         "StyleBuilder"
     )
 
-    val styleBuilderElement = processingEnv.findTypeElement(styleBuilderClassName) ?: return false
+    val styleBuilderElement = processingEnv.findTypeElement(styleBuilderClassName.toString())
+        ?: return false
 
     styleableModel.setStyleable(
         ParisStyleAttributeInfo(

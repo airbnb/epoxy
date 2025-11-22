@@ -4,6 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply from: '../publishing.gradle'
 
 android {
+  namespace 'com.airbnb.epoxy.preloader'
 
   defaultConfig {
     compileSdk rootProject.COMPILE_SDK_VERSION
@@ -11,11 +12,10 @@ android {
     targetSdkVersion rootProject.TARGET_SDK_VERSION
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
+}
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
+kotlin {
+  jvmToolchain(11)
 }
 
 dependencies {

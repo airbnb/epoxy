@@ -72,7 +72,7 @@ class DataBindingProcessor @JvmOverloads constructor(
                 val moduleName = dataBindingModuleLookup.getModuleName(layoutsAnnotatedElement)
 
                 val enableDoNotHash =
-                    layoutsAnnotatedElement.getAnnotation(EpoxyDataBindingLayouts::class)?.value?.enableDoNotHash == true
+                    layoutsAnnotatedElement.getAnnotation(EpoxyDataBindingLayouts::class)?.getAsBoolean("enableDoNotHash") == true
 
                 layoutResources.map { resourceValue ->
                     DataBindingModelInfo(
@@ -98,16 +98,16 @@ class DataBindingProcessor @JvmOverloads constructor(
                 val patternAnnotation =
                     annotatedElement.requireAnnotation(EpoxyDataBindingPattern::class)
 
-                val layoutPrefix = patternAnnotation.value.layoutPrefix
+                val layoutPrefix = patternAnnotation.getAsString("layoutPrefix")
                 val rClassName = patternAnnotation.getAsType("rClass")?.typeElement
                     ?: return@map emptyList<DataBindingModelInfo>()
 
                 val moduleName = rClassName.packageName
                 val layoutClassName = ClassName.get(moduleName, "R", "layout")
                 val enableDoNotHash =
-                    annotatedElement.getAnnotation(EpoxyDataBindingPattern::class)?.value?.enableDoNotHash == true
+                    annotatedElement.getAnnotation(EpoxyDataBindingPattern::class)?.getAsBoolean("enableDoNotHash") == true
 
-                val rClassElement = environment.requireTypeElement(layoutClassName)
+                val rClassElement = environment.requireTypeElement(layoutClassName.toString())
 
                 rClassElement
                     .getDeclaredFields()

@@ -51,7 +51,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * Bitset index: 2
    */
   @NonNull
-  private Function3<Integer, Integer, Integer, Integer> function_Function3;
+  private Function3<? super Integer, ? super Integer, ? super Integer, Integer> function_Function3;
 
   private int intValue_Int = 0;
 
@@ -391,10 +391,10 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   /**
    * <i>Required.</i>
    *
-   * @see TestManyTypesView#setFunction(Function3<Integer, Integer, Integer, Integer>)
+   * @see TestManyTypesView#setFunction(Function3<? super Integer, ? super Integer, ? super Integer, Integer>)
    */
   public TestManyTypesViewModel_ function(
-      @NonNull Function3<Integer, Integer, Integer, Integer> function) {
+      @NonNull Function3<? super Integer, ? super Integer, ? super Integer, Integer> function) {
     if (function == null) {
       throw new IllegalArgumentException("function cannot be null");
     }
@@ -405,7 +405,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   }
 
   @NonNull
-  public Function3<Integer, Integer, Integer, Integer> function() {
+  public Function3<? super Integer, ? super Integer, ? super Integer, Integer> function() {
     return function_Function3;
   }
 

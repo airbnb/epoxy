@@ -1,5 +1,6 @@
 package com.airbnb.epoxy.processor
 
+import androidx.room.compiler.codegen.toJavaPoet
 import androidx.room.compiler.processing.XElement
 import androidx.room.compiler.processing.XFieldElement
 import androidx.room.compiler.processing.XFiler
@@ -114,13 +115,13 @@ class ControllerProcessor @JvmOverloads constructor(
         for ((thisClassName, thisClassInfo) in controllerClassMap) {
             // Need to look up the types now instead of storing them because if we processed the
             // fields across multiple rounds the stored types cannot be compared.
-            val thisClassType = environment.requireType(thisClassName)
+            val thisClassType = environment.requireType(thisClassName.toString())
             val otherClasses: MutableMap<ClassName, ControllerClassInfo> =
                 LinkedHashMap(controllerClassMap)
 
             otherClasses.remove(thisClassName)
             for ((otherClassName, otherClassInfo) in otherClasses) {
-                val otherClassType = environment.requireType(otherClassName)
+                val otherClassType = environment.requireType(otherClassName.toString())
                 if (!thisClassType.isSubTypeOf(otherClassType)) {
                     continue
                 }
@@ -142,7 +143,9 @@ class ControllerProcessor @JvmOverloads constructor(
     private fun getOrCreateTargetClass(
         controllerClassElement: XTypeElement,
         memoizer: Memoizer
-    ): ControllerClassInfo = classNameToInfo.getOrPut(controllerClassElement.className) {
+    ): ControllerClassInfo = classNameToInfo.getOrPut(
+        controllerClassElement.asClassName().toJavaPoet()
+    ) {
         if (!controllerClassElement.isEpoxyController(memoizer)) {
             logger.logError(
                 controllerClassElement,

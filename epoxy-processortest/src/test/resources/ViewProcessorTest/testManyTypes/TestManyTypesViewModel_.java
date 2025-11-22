@@ -41,7 +41,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
 
   private int myProperty_Int = 0;
 
-  @Nullable("")
+  @Nullable
   private Integer myNullableProperty_Integer = (Integer) null;
 
   private int delegatedProperty_Int = 0;
@@ -51,28 +51,28 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   /**
    * Bitset index: 4
    */
-  @NotNull("")
+  @NotNull
   private String stringValue_String;
 
   /**
    * Bitset index: 5
    */
-  @NotNull("")
+  @NotNull
   private Function2<? super String, ? super String, Integer> functionType_Function2;
 
   /**
    * Bitset index: 6
    */
-  @NotNull("")
+  @NotNull
   private List<SomeDataClass> listOfDataClass_List;
 
   /**
    * Bitset index: 7
    */
-  @NotNull("")
+  @NotNull
   private List<? extends SomeEnumClass> listOfEnumClass_List;
 
-  @Nullable("")
+  @Nullable
   private String nullableStringValue_String = (String) null;
 
   private int intValue_Int = 0;
@@ -112,22 +112,22 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
   /**
    * Bitset index: 17
    */
-  @NotNull("")
+  @NotNull
   private List<? extends EpoxyModel<?>> models_List;
 
-  @Nullable("")
+  @Nullable
   private Boolean booleanValue_Boolean = (Boolean) null;
 
-  @Nullable("")
+  @Nullable
   private String[] arrayValue_StringArray = (String[]) null;
 
-  @Nullable("")
+  @Nullable
   private List<String> listValue_List = (List<String>) null;
 
-  @Nullable("")
+  @Nullable
   private View.OnClickListener clickListener_OnClickListener = (View.OnClickListener) null;
 
-  @Nullable("")
+  @Nullable
   private CustomClickListenerSubclass customClickListener_CustomClickListenerSubclass = (CustomClickListenerSubclass) null;
 
   private StringAttributeData title_StringAttributeData =  new StringAttributeData((CharSequence) null);
@@ -426,13 +426,13 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setMyNullableProperty(Integer)
    */
-  public TestManyTypesViewModel_ myNullableProperty(@Nullable("") Integer myNullableProperty) {
+  public TestManyTypesViewModel_ myNullableProperty(@Nullable Integer myNullableProperty) {
     onMutation();
     this.myNullableProperty_Integer = myNullableProperty;
     return this;
   }
 
-  @Nullable("")
+  @Nullable
   public Integer myNullableProperty() {
     return myNullableProperty_Integer;
   }
@@ -472,7 +472,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setStringValue(String)
    */
-  public TestManyTypesViewModel_ stringValue(@NotNull("") String stringValue) {
+  public TestManyTypesViewModel_ stringValue(@NotNull String stringValue) {
     if (stringValue == null) {
       throw new IllegalArgumentException("stringValue cannot be null");
     }
@@ -482,7 +482,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
-  @NotNull("")
+  @NotNull
   public String stringValue() {
     return stringValue_String;
   }
@@ -493,7 +493,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * @see TestManyTypesView#setFunctionType(Function2<? super String, ? super String, Integer>)
    */
   public TestManyTypesViewModel_ functionType(
-      @NotNull("") Function2<? super String, ? super String, Integer> functionType) {
+      @NotNull Function2<? super String, ? super String, Integer> functionType) {
     if (functionType == null) {
       throw new IllegalArgumentException("functionType cannot be null");
     }
@@ -503,7 +503,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
-  @NotNull("")
+  @NotNull
   public Function2<? super String, ? super String, Integer> functionType() {
     return functionType_Function2;
   }
@@ -513,7 +513,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setListOfDataClass(List<SomeDataClass>)
    */
-  public TestManyTypesViewModel_ listOfDataClass(@NotNull("") List<SomeDataClass> listOfDataClass) {
+  public TestManyTypesViewModel_ listOfDataClass(@NotNull List<SomeDataClass> listOfDataClass) {
     if (listOfDataClass == null) {
       throw new IllegalArgumentException("listOfDataClass cannot be null");
     }
@@ -523,7 +523,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
-  @NotNull("")
+  @NotNull
   public List<SomeDataClass> listOfDataClass() {
     return listOfDataClass_List;
   }
@@ -534,7 +534,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * @see TestManyTypesView#setListOfEnumClass(List<? extends SomeEnumClass>)
    */
   public TestManyTypesViewModel_ listOfEnumClass(
-      @NotNull("") List<? extends SomeEnumClass> listOfEnumClass) {
+      @NotNull List<? extends SomeEnumClass> listOfEnumClass) {
     if (listOfEnumClass == null) {
       throw new IllegalArgumentException("listOfEnumClass cannot be null");
     }
@@ -544,7 +544,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
-  @NotNull("")
+  @NotNull
   public List<? extends SomeEnumClass> listOfEnumClass() {
     return listOfEnumClass_List;
   }
@@ -554,13 +554,13 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setNullableStringValue(String)
    */
-  public TestManyTypesViewModel_ nullableStringValue(@Nullable("") String nullableStringValue) {
+  public TestManyTypesViewModel_ nullableStringValue(@Nullable String nullableStringValue) {
     onMutation();
     this.nullableStringValue_String = nullableStringValue;
     return this;
   }
 
-  @Nullable("")
+  @Nullable
   public String nullableStringValue() {
     return nullableStringValue_String;
   }
@@ -709,7 +709,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setModels(List<? extends EpoxyModel<?>>)
    */
-  public TestManyTypesViewModel_ models(@NotNull("") List<? extends EpoxyModel<?>> models) {
+  public TestManyTypesViewModel_ models(@NotNull List<? extends EpoxyModel<?>> models) {
     if (models == null) {
       throw new IllegalArgumentException("models cannot be null");
     }
@@ -719,7 +719,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
     return this;
   }
 
-  @NotNull("")
+  @NotNull
   public List<? extends EpoxyModel<?>> models() {
     return models_List;
   }
@@ -729,13 +729,13 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setBooleanValue(Boolean)
    */
-  public TestManyTypesViewModel_ booleanValue(@Nullable("") Boolean booleanValue) {
+  public TestManyTypesViewModel_ booleanValue(@Nullable Boolean booleanValue) {
     onMutation();
     this.booleanValue_Boolean = booleanValue;
     return this;
   }
 
-  @Nullable("")
+  @Nullable
   public Boolean booleanValue() {
     return booleanValue_Boolean;
   }
@@ -745,13 +745,13 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setArrayValue(String[])
    */
-  public TestManyTypesViewModel_ arrayValue(@Nullable("") String[] arrayValue) {
+  public TestManyTypesViewModel_ arrayValue(@Nullable String[] arrayValue) {
     onMutation();
     this.arrayValue_StringArray = arrayValue;
     return this;
   }
 
-  @Nullable("")
+  @Nullable
   public String[] arrayValue() {
     return arrayValue_StringArray;
   }
@@ -761,13 +761,13 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setListValue(List<String>)
    */
-  public TestManyTypesViewModel_ listValue(@Nullable("") List<String> listValue) {
+  public TestManyTypesViewModel_ listValue(@Nullable List<String> listValue) {
     onMutation();
     this.listValue_List = listValue;
     return this;
   }
 
-  @Nullable("")
+  @Nullable
   public List<String> listValue() {
     return listValue_List;
   }
@@ -776,7 +776,7 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * Set a click listener that will provide the parent view, model, and adapter position of the clicked view. This will clear the normal View.OnClickListener if one has been set
    */
   public TestManyTypesViewModel_ clickListener(
-      @Nullable("") final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener) {
+      @Nullable final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener) {
     onMutation();
     if (clickListener == null) {
       this.clickListener_OnClickListener = null;
@@ -792,13 +792,13 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    *
    * @see TestManyTypesView#setClickListener(View.OnClickListener)
    */
-  public TestManyTypesViewModel_ clickListener(@Nullable("") View.OnClickListener clickListener) {
+  public TestManyTypesViewModel_ clickListener(@Nullable View.OnClickListener clickListener) {
     onMutation();
     this.clickListener_OnClickListener = clickListener;
     return this;
   }
 
-  @Nullable("")
+  @Nullable
   public View.OnClickListener clickListener() {
     return clickListener_OnClickListener;
   }
@@ -809,13 +809,13 @@ public class TestManyTypesViewModel_ extends EpoxyModel<TestManyTypesView> imple
    * @see TestManyTypesView#setCustomClickListener(CustomClickListenerSubclass)
    */
   public TestManyTypesViewModel_ customClickListener(
-      @Nullable("") CustomClickListenerSubclass customClickListener) {
+      @Nullable CustomClickListenerSubclass customClickListener) {
     onMutation();
     this.customClickListener_CustomClickListenerSubclass = customClickListener;
     return this;
   }
 
-  @Nullable("")
+  @Nullable
   public CustomClickListenerSubclass customClickListener() {
     return customClickListener_CustomClickListenerSubclass;
   }

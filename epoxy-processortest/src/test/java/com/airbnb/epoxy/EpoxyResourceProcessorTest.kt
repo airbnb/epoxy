@@ -1,7 +1,10 @@
+@file:OptIn(ExperimentalCompilerApi::class)
+
 package com.airbnb.epoxy
 
 import com.airbnb.epoxy.ProcessorTestUtils.assertGeneration
 import com.google.testing.compile.JavaFileObjects
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.Test
 
 class EpoxyResourceProcessorTest {

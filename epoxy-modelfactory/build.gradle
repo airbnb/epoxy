@@ -2,10 +2,10 @@ apply plugin: 'com.android.library'
 apply from: '../publishing.gradle'
 
 android {
+  namespace 'com.airbnb.epoxymodelfactory'
 
   defaultConfig {
-    // Using 16 here as it is the minimum version of Paris, which we are restricted to.
-    minSdkVersion 16
+    minSdkVersion rootProject.PARIS_MIN_SDK_VERSION
     compileSdk rootProject.COMPILE_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
   }

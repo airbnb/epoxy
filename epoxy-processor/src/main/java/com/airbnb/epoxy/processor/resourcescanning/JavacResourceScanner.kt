@@ -34,7 +34,7 @@ class JavacResourceScanner(
             try {
                 // Get original ProcessingEnvironment from Gradle-wrapped one or KAPT-wrapped one.
                 // In Kapt, its field is called "delegate". In Gradle's, it's called "processingEnv"
-                processingEnv.javaClass.declaredFields.mapNotNull { field ->
+                processingEnv.javaClass.declaredFields.firstNotNullOfOrNull { field ->
                     if (field.name == "delegate" || field.name == "processingEnv") {
                         field.isAccessible = true
                         val javacEnv = field[processingEnv] as ProcessingEnvironment
@@ -42,7 +42,7 @@ class JavacResourceScanner(
                     } else {
                         null
                     }
-                }.firstOrNull()
+                }
             } catch (ignored2: Throwable) {
                 null
             }

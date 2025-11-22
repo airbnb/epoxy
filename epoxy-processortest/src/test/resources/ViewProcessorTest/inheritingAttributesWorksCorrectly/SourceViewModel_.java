@@ -23,7 +23,7 @@ public class SourceViewModel_ extends AirEpoxyModel<SourceView> implements Gener
 
   private OnModelVisibilityChangedListener<SourceViewModel_, SourceView> onModelVisibilityChangedListener_epoxyGeneratedModel;
 
-  @Nullable("")
+  @Nullable
   private String sectionId_String = (String) null;
 
   private int baseViewProp_Int = 0;
@@ -180,13 +180,13 @@ public class SourceViewModel_ extends AirEpoxyModel<SourceView> implements Gener
    *
    * @see SourceView#setSectionId(String)
    */
-  public SourceViewModel_ sectionId(@Nullable("") String sectionId) {
+  public SourceViewModel_ sectionId(@Nullable String sectionId) {
     onMutation();
     this.sectionId_String = sectionId;
     return this;
   }
 
-  @Nullable("")
+  @Nullable
   public String sectionId() {
     return sectionId_String;
   }

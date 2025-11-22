@@ -65,7 +65,7 @@ internal class BasicGeneratedModelInfo(
         // methods then our generated class won't compile. If there is a EpoxyModelClass annotation
         // though we will always generate the subclass
         shouldGenerateModel = annotation != null || !superClassElement.isAbstract()
-        includeOtherLayoutOptions = annotation?.value?.useLayoutOverloads ?: false
+        includeOtherLayoutOptions = annotation?.getAsBoolean("useLayoutOverloads") ?: false
 
         annotations.addAll(
             superClassElement.buildAnnotationSpecs({

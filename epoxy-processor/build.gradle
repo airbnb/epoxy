@@ -1,16 +1,6 @@
-
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'org.jetbrains.kotlin.kapt'
 apply from: '../publishing.gradle'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
 
 configurations.all { strategy ->
     strategy.resolutionStrategy.force rootProject.deps.assertj, rootProject.deps.googleTestingCompile
@@ -25,6 +15,7 @@ dependencies {
     implementation rootProject.deps.kotlinxMetadata
     implementation rootProject.deps.kotlinCoroutines
     implementation rootProject.deps.ksp
+    implementation rootProject.deps.kspAaEmbeddable
 
     // we shouldn't be including this technically, as it can cause issues with backwards compatibility,
     // but we use it for custom parsing of kotlin files to do resource scanning :(
@@ -54,13 +45,19 @@ dependencies {
     testImplementation rootProject.deps.junit
 }
 
+kotlin {
+    jvmToolchain(11)
+}
+
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
-    kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
-        freeCompilerArgs += "-Xopt-in=kotlin.contracts.ExperimentalContracts"
-        freeCompilerArgs += "-Xopt-in=androidx.room.compiler.processing.ExperimentalProcessingApi"
-        freeCompilerArgs += "-Xopt-in=com.squareup.kotlinpoet.javapoet.KotlinPoetJavaPoetPreview"
-        freeCompilerArgs += "-Xopt-in=com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview"
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        optIn.addAll(
+            "kotlin.RequiresOptIn",
+            "kotlin.contracts.ExperimentalContracts",
+            "androidx.room.compiler.processing.ExperimentalProcessingApi",
+            "com.squareup.kotlinpoet.javapoet.KotlinPoetJavaPoetPreview",
+            "com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview"
+        )
     }
 }

@@ -18,9 +18,10 @@ import com.google.testing.compile.JavaSourcesSubject
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
-import com.tschuchort.compiletesting.kspArgs
+import com.tschuchort.compiletesting.configureKsp
+import com.tschuchort.compiletesting.kspProcessorOptions
 import com.tschuchort.compiletesting.kspSourcesDir
-import com.tschuchort.compiletesting.symbolProcessorProviders
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import strikt.api.expect
 import strikt.api.expectThat
 import strikt.assertions.contains
@@ -31,6 +32,7 @@ import java.io.File
 import javax.annotation.processing.Processor
 import javax.tools.JavaFileObject
 
+@ExperimentalCompilerApi
 internal object ProcessorTestUtils {
     @JvmStatic
     fun assertGenerationError(
@@ -234,7 +236,6 @@ internal object ProcessorTestUtils {
             // placeholders, which differs from kapt behavior. Due to this we can't directly compare them
             // and instead maintain separate ksp expected sources.
             val generatedKspFiles = generatedFiles.map { generatedFile ->
-                generatedFile
                 File(generatedFile.parent, "/ksp/${generatedFile.name}")
                     .unpatchResource()
                     .also {
@@ -374,9 +375,9 @@ internal object ProcessorTestUtils {
         useParis: Boolean = false
     ): KotlinCompilation {
         return KotlinCompilation().apply {
-            if (useKsp) {
-                symbolProcessorProviders = processorProviders(useParis)
-                kspArgs = args
+            if (useKsp) configureKsp {
+                symbolProcessorProviders += processorProviders(useParis)
+                kspProcessorOptions.putAll(args)
             } else {
                 annotationProcessors = processors(useParis)
                 kaptArgs = args

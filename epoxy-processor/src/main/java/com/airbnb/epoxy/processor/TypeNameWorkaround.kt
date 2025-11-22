@@ -92,6 +92,12 @@ private fun KSDeclaration.typeName(
     // KSP may improve that later and if not, we can improve it in Room
     // TODO: https://issuetracker.google.com/issues/168639183
     val qualified = qualifiedName?.asString() ?: return ERROR_TYPE_NAME
+
+    // Special case for kotlin.Unit - should map to kotlin.Unit, not java.lang.Void
+    if (qualified == "kotlin.Unit") {
+        return ClassName.get("kotlin", "Unit")
+    }
+
     val jvmSignature = resolver.mapToJvmSignature(this)
     if (jvmSignature != null && jvmSignature.isNotBlank()) {
         return jvmSignature.typeNameFromJvmSignature()
@@ -122,6 +128,7 @@ internal fun String.typeNameFromJvmSignature(): TypeName {
         'J' -> TypeName.LONG
         'S' -> TypeName.SHORT
         'Z' -> TypeName.BOOLEAN
+        'V' -> TypeName.VOID
         'L' -> {
             val end = lastIndexOf(";")
             check(end > 0) {

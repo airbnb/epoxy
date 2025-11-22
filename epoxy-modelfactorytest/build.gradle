@@ -3,30 +3,38 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
+  namespace 'com.airbnb.epoxy.modelfactorytest'
 
   defaultConfig {
-    // Using 16 here as it is the minimum version of Paris, which we are restricted to.
-    minSdkVersion 16
+    minSdkVersion rootProject.PARIS_MIN_SDK_VERSION
     compileSdk rootProject.COMPILE_SDK_VERSION
     targetSdkVersion rootProject.TARGET_SDK_VERSION
   }
 
   testOptions.unitTests.includeAndroidResources = true
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-
-    testOptions {
+  testOptions {
       unitTests {
         all {
-          jvmArgs += [
-              '--add-opens', 'jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED',
-          ]
+          jvmArgs(
+              '--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED',
+              '--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED',
+              '--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED',
+              '--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED',
+              '--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED',
+              '--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED',
+              '--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED',
+              '--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED',
+              '--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED',
+              '--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED'
+          )
         }
       }
     }
+}
+
+kotlin {
+  jvmToolchain(11)
 }
 
 configurations.all { strategy ->

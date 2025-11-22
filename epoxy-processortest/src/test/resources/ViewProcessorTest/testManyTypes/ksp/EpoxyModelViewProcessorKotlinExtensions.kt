@@ -5,9 +5,7 @@ package com.airbnb.epoxy
 import kotlin.Suppress
 import kotlin.Unit
 
-public inline
-    fun ModelCollector.testManyTypesView(modelInitializer: TestManyTypesViewModelBuilder.() -> Unit):
-    Unit {
+public inline fun ModelCollector.testManyTypesView(modelInitializer: TestManyTypesViewModelBuilder.() -> Unit) {
   add(
   TestManyTypesViewModel_().apply {
     modelInitializer()

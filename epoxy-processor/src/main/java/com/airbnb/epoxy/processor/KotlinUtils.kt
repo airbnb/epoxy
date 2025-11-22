@@ -47,7 +47,7 @@ private fun String.transformEachChar(
 }
 
 fun XProcessingEnv.isTypeLoaded(typeName: TypeName): Boolean {
-    return findTypeElement(typeName) != null
+    return findTypeElement(typeName.toString()) != null
 }
 
 /** Similar to the java 8 Map#merge method. */

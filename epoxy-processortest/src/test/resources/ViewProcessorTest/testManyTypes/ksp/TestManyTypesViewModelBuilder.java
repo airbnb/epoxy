@@ -30,6 +30,12 @@ public interface TestManyTypesViewModelBuilder {
   TestManyTypesViewModelBuilder onVisibilityChanged(
       OnModelVisibilityChangedListener<TestManyTypesViewModel_, TestManyTypesView> listener);
 
+  TestManyTypesViewModelBuilder myProperty(int myProperty);
+
+  TestManyTypesViewModelBuilder myNullableProperty(@Nullable Integer myNullableProperty);
+
+  TestManyTypesViewModelBuilder delegatedProperty(int delegatedProperty);
+
   TestManyTypesViewModelBuilder enabled(boolean enabled);
 
   TestManyTypesViewModelBuilder stringValue(@NonNull String stringValue);
@@ -86,12 +92,6 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder titleQuantityRes(@PluralsRes int pluralRes, int quantity,
       Object... formatArgs);
-
-  TestManyTypesViewModelBuilder myProperty(int myProperty);
-
-  TestManyTypesViewModelBuilder myNullableProperty(@Nullable Integer myNullableProperty);
-
-  TestManyTypesViewModelBuilder delegatedProperty(int delegatedProperty);
 
   TestManyTypesViewModelBuilder id(long p0);
 

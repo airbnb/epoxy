@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCompilerApi::class)
+
 package com.airbnb.epoxy
 
 import com.airbnb.epoxy.processor.ControllerProcessor
@@ -17,9 +19,10 @@ import com.google.testing.compile.JavaSourcesSubject
 import com.google.testing.compile.JavaSourcesSubjectFactory.javaSources
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
-import com.tschuchort.compiletesting.kspArgs
+import com.tschuchort.compiletesting.configureKsp
+import com.tschuchort.compiletesting.kspProcessorOptions
 import com.tschuchort.compiletesting.kspSourcesDir
-import com.tschuchort.compiletesting.symbolProcessorProviders
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import strikt.api.expect
 import strikt.api.expectThat
 import strikt.assertions.doesNotContain
@@ -116,9 +119,9 @@ internal object ProcessorTestUtils {
     ) {
         println("Using ksp: $useKsp")
         val compilation = KotlinCompilation().apply {
-            if (useKsp) {
-                symbolProcessorProviders = processorProviders()
-                kspArgs = args
+            if (useKsp) configureKsp {
+                symbolProcessorProviders += processorProviders()
+                kspProcessorOptions.putAll(args)
             } else {
                 annotationProcessors = processors(useParis)
                 kaptArgs = args

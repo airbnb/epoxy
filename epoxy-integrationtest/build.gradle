@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-
+  namespace 'com.airbnb.epoxy.integrationtest'
 
   defaultConfig {
     applicationId "com.airbnb.epoxy.integrationtest"
@@ -19,25 +19,29 @@ android {
     enabled = true
   }
 
-  dexOptions {
-    // Was getting this error otherwise - "Multiple dex files define Landroid/arch/core/BuildConfig"
-    preDexLibraries = false
-  }
-
   testOptions {
     unitTests {
       includeAndroidResources = true
+      all {
+        jvmArgs(
+            '--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED',
+            '--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED',
+            '--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED',
+            '--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED',
+            '--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED',
+            '--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED',
+            '--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED',
+            '--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED',
+            '--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED',
+            '--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED'
+        )
+      }
     }
   }
+}
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-
-  kotlinOptions {
-    jvmTarget = "1.8"
-  }
+kotlin {
+  jvmToolchain(17)
 }
 
 dependencies {
@@ -57,7 +61,6 @@ dependencies {
   testImplementation rootProject.deps.robolectric
   testImplementation rootProject.deps.junit
   testImplementation rootProject.deps.mockito
-  testImplementation rootProject.deps.mockito_inline
   testImplementation rootProject.deps.androidTestCore
   testImplementation rootProject.deps.androidTestExtJunitKtx
   testImplementation rootProject.deps.androidEspressoCore

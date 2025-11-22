@@ -26,9 +26,9 @@ public interface SourceViewModelBuilder {
 
   SourceViewModelBuilder showDividerWithSetter(@Nullable Boolean showDividerWithSetter);
 
-  SourceViewModelBuilder showDividerWithOverriddenMethod(boolean showDivider);
-
   SourceViewModelBuilder showDivider(boolean showDivider);
+
+  SourceViewModelBuilder showDividerWithOverriddenMethod(boolean showDivider);
 
   SourceViewModelBuilder id(long p0);
 

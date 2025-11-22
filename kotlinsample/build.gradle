@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
+  namespace 'com.airbnb.epoxy.kotlinsample'
 
   defaultConfig {
     applicationId "com.airbnb.epoxy.kotlinsample"
@@ -20,10 +21,10 @@ android {
     enabled = true
   }
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
+}
+
+kotlin {
+  jvmToolchain(17)
 }
 
 dependencies {

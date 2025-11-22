@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply from: '../publishing.gradle'
 
 android {
+  namespace 'com.airbnb.epoxy.databinding'
 
   defaultConfig {
     compileSdk rootProject.COMPILE_SDK_VERSION

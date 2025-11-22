@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCompilerApi::class)
+
 package com.airbnb.epoxy
 
 import com.airbnb.epoxy.ProcessorTestUtils.assertGeneration
@@ -5,6 +7,7 @@ import com.airbnb.epoxy.ProcessorTestUtils.assertGenerationError
 import com.airbnb.epoxy.ProcessorTestUtils.checkFileCompiles
 import com.google.testing.compile.JavaFileObjects
 import junit.framework.Assert
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.Test
 
 /**

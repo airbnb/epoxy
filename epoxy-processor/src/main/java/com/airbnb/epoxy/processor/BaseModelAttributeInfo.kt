@@ -1,7 +1,6 @@
 package com.airbnb.epoxy.processor
 
 import androidx.room.compiler.processing.XAnnotation
-import androidx.room.compiler.processing.XAnnotationBox
 import androidx.room.compiler.processing.XFieldElement
 import androidx.room.compiler.processing.XNullability
 import androidx.room.compiler.processing.XProcessingEnv
@@ -46,15 +45,16 @@ internal class BaseModelAttributeInfo(
         }
 
         isPackagePrivate = isFieldPackagePrivate(attribute)
-        val annotationBox: XAnnotationBox<EpoxyAttribute> =
-            attribute.requireAnnotation(EpoxyAttribute::class)
-        val options: Set<EpoxyAttribute.Option> = annotationBox.value.value.toSet()
-        validateAnnotationOptions(logger, annotationBox.value, options)
-        useInHash = annotationBox.value.hash && !options.contains(EpoxyAttribute.Option.DoNotHash)
+        val xAnnotation = attribute.requireAnnotation(EpoxyAttribute::class)
+        val options: Set<EpoxyAttribute.Option> = xAnnotation.getAsEnumList("value")
+            .map { EpoxyAttribute.Option.valueOf(it.name) }.toSet()
+        val hash = xAnnotation.getAsBoolean("hash")
+        val setter = xAnnotation.getAsBoolean("setter")
+        validateAnnotationOptions(logger, hash, setter, options)
+        useInHash = hash && !options.contains(EpoxyAttribute.Option.DoNotHash)
         ignoreRequireHashCode = options.contains(EpoxyAttribute.Option.IgnoreRequireHashCode)
         doNotUseInToString = options.contains(EpoxyAttribute.Option.DoNotUseInToString)
-        generateSetter =
-            annotationBox.value.setter && !options.contains(EpoxyAttribute.Option.NoSetter)
+        generateSetter = setter && !options.contains(EpoxyAttribute.Option.NoSetter)
         generateGetter = !options.contains(EpoxyAttribute.Option.NoGetter)
         isPrivate = attribute.isPrivate()
         if (isPrivate) {
@@ -77,12 +77,13 @@ internal class BaseModelAttributeInfo(
                 method.parameters.singleOrNull()?.type == attribute.type
         }
 
-        return hasImplementation || superType?.typeElement?.hasSuperMethod(attribute) == true
+        return hasImplementation || superClass?.typeElement?.hasSuperMethod(attribute) == true
     }
 
     private fun validateAnnotationOptions(
         logger: Logger,
-        annotation: EpoxyAttribute?,
+        hash: Boolean,
+        setter: Boolean,
         options: Set<EpoxyAttribute.Option>
     ) {
         if (options.contains(EpoxyAttribute.Option.IgnoreRequireHashCode) && options.contains(
@@ -101,7 +102,7 @@ internal class BaseModelAttributeInfo(
 
         // Don't let legacy values be mixed with the new Options values
         if (options.isNotEmpty()) {
-            if (!annotation!!.hash) {
+            if (!hash) {
                 logger.logError(
                     "Don't use hash=false in an %s if you are using options. Instead, use the" +
                         " %s option. (%s#%s)",
@@ -111,7 +112,7 @@ internal class BaseModelAttributeInfo(
                     fieldName
                 )
             }
-            if (!annotation.setter) {
+            if (!setter) {
                 logger.logError(
                     "Don't use setter=false in an %s if you are using options. Instead, use the" +
                         " %s option. (%s#%s)",
@@ -201,7 +202,9 @@ internal class BaseModelAttributeInfo(
             val targetAnnotation = annotationType.typeElement?.getAnnotation(Target::class)
 
             // Allow all target types if no target was specified on the annotation
-            val elementTypes = targetAnnotation?.value?.value ?: ElementType.values()
+            val elementTypes = targetAnnotation?.getAsEnumList("value")
+                ?.map { ElementType.valueOf(it.name) }
+                ?.toTypedArray() ?: ElementType.entries.toTypedArray()
             val annotationSpec = annotation.toAnnotationSpec(memoizer)
             if (elementTypes.contains(ElementType.PARAMETER)) {
                 setterAnnotations.add(annotationSpec)

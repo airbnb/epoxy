@@ -21,3 +21,6 @@ hs_err_pid*
 .gradle
 build/
 local.properties
+
+# Kotlin
+.kotlin

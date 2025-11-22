@@ -106,7 +106,7 @@ class EpoxyProcessor @JvmOverloads constructor(
         val styleableModels = modelInfos
             .filterIsInstance<BasicGeneratedModelInfo>()
             .filter { modelInfo ->
-                modelInfo.superClassElement.getAnnotation(EpoxyModelClass::class)?.value?.layout == 0 &&
+                modelInfo.superClassElement.getAnnotation(EpoxyModelClass::class)?.getAsInt("layout") == 0 &&
                     modelInfo.boundObjectTypeElement?.hasStyleableAnnotation() == true
             }
         timer.markStepCompleted("check for styleable models")
@@ -211,7 +211,7 @@ class EpoxyProcessor @JvmOverloads constructor(
             // will be created when that module is processed. If we make one as well there will
             // be a duplicate (causes proguard errors and is just wrong).
             memoizer.getInheritedEpoxyAttributes(
-                currentEpoxyModel.superType!!,
+                currentEpoxyModel.superClass!!,
                 generatedModelInfo.generatedName.packageName(),
                 logger,
                 includeSuperClass = { superClassElement ->

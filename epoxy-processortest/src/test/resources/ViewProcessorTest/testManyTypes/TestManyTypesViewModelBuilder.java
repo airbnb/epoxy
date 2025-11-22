@@ -32,23 +32,23 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder myProperty(int myProperty);
 
-  TestManyTypesViewModelBuilder myNullableProperty(@Nullable("") Integer myNullableProperty);
+  TestManyTypesViewModelBuilder myNullableProperty(@Nullable Integer myNullableProperty);
 
   TestManyTypesViewModelBuilder delegatedProperty(int delegatedProperty);
 
   TestManyTypesViewModelBuilder enabled(boolean enabled);
 
-  TestManyTypesViewModelBuilder stringValue(@NotNull("") String stringValue);
+  TestManyTypesViewModelBuilder stringValue(@NotNull String stringValue);
 
   TestManyTypesViewModelBuilder functionType(
-      @NotNull("") Function2<? super String, ? super String, Integer> functionType);
+      @NotNull Function2<? super String, ? super String, Integer> functionType);
 
-  TestManyTypesViewModelBuilder listOfDataClass(@NotNull("") List<SomeDataClass> listOfDataClass);
+  TestManyTypesViewModelBuilder listOfDataClass(@NotNull List<SomeDataClass> listOfDataClass);
 
   TestManyTypesViewModelBuilder listOfEnumClass(
-      @NotNull("") List<? extends SomeEnumClass> listOfEnumClass);
+      @NotNull List<? extends SomeEnumClass> listOfEnumClass);
 
-  TestManyTypesViewModelBuilder nullableStringValue(@Nullable("") String nullableStringValue);
+  TestManyTypesViewModelBuilder nullableStringValue(@Nullable String nullableStringValue);
 
   TestManyTypesViewModelBuilder intValue(int intValue);
 
@@ -69,21 +69,21 @@ public interface TestManyTypesViewModelBuilder {
 
   TestManyTypesViewModelBuilder boolValue(boolean boolValue);
 
-  TestManyTypesViewModelBuilder models(@NotNull("") List<? extends EpoxyModel<?>> models);
+  TestManyTypesViewModelBuilder models(@NotNull List<? extends EpoxyModel<?>> models);
 
-  TestManyTypesViewModelBuilder booleanValue(@Nullable("") Boolean booleanValue);
+  TestManyTypesViewModelBuilder booleanValue(@Nullable Boolean booleanValue);
 
-  TestManyTypesViewModelBuilder arrayValue(@Nullable("") String[] arrayValue);
+  TestManyTypesViewModelBuilder arrayValue(@Nullable String[] arrayValue);
 
-  TestManyTypesViewModelBuilder listValue(@Nullable("") List<String> listValue);
+  TestManyTypesViewModelBuilder listValue(@Nullable List<String> listValue);
 
   TestManyTypesViewModelBuilder clickListener(
-      @Nullable("") final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener);
+      @Nullable final OnModelClickListener<TestManyTypesViewModel_, TestManyTypesView> clickListener);
 
-  TestManyTypesViewModelBuilder clickListener(@Nullable("") View.OnClickListener clickListener);
+  TestManyTypesViewModelBuilder clickListener(@Nullable View.OnClickListener clickListener);
 
   TestManyTypesViewModelBuilder customClickListener(
-      @Nullable("") CustomClickListenerSubclass customClickListener);
+      @Nullable CustomClickListenerSubclass customClickListener);
 
   TestManyTypesViewModelBuilder title(@androidx.annotation.Nullable CharSequence title);
 

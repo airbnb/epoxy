@@ -215,7 +215,7 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
 
   /**
    *
-   *  @see ModelViewWithParis#headerStyle(error.NonExistentClass)
+   *  @see ModelViewWithParis#headerStyle(ModelViewWithParisStyleApplier.StyleBuilder)
    */
   public ModelViewWithParisModel_ withHeaderStyle() {
     Style style = parisStyleReference_header != null ? parisStyleReference_header.get() : null;
@@ -228,7 +228,7 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
 
   /**
    *
-   *  @see ModelViewWithParis#otherStyle(error.NonExistentClass)
+   *  @see ModelViewWithParis#otherStyle(ModelViewWithParisStyleApplier.StyleBuilder)
    */
   public ModelViewWithParisModel_ withOtherStyle() {
     Style style = parisStyleReference_other != null ? parisStyleReference_other.get() : null;
@@ -241,7 +241,7 @@ public class ModelViewWithParisModel_ extends EpoxyModel<ModelViewWithParis> imp
 
   /**
    *
-   *  @see ModelViewWithParis#headerStyle(error.NonExistentClass)
+   *  @see ModelViewWithParis#headerStyle(ModelViewWithParisStyleApplier.StyleBuilder)
    */
   public ModelViewWithParisModel_ withDefaultStyle() {
     Style style = parisStyleReference_default != null ? parisStyleReference_default.get() : null;

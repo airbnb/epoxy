@@ -208,6 +208,7 @@ public class SourceViewModel_ extends AirEpoxyModel<SourceView> implements Gener
       @Nullable AirEpoxyModel.SomeType numCarouselItemsShown) {
     onMutation();
     super.numCarouselItemsShown = numCarouselItemsShown;
+    super.numCarouselItemsShown(numCarouselItemsShown);
     return this;
   }
 

@@ -6,24 +6,29 @@ import androidx.room.compiler.processing.XTypeElement
 import com.airbnb.epoxy.processor.containingPackage
 import com.airbnb.epoxy.processor.resourcescanning.KspResourceScanner.ImportMatch.Normal
 import com.airbnb.epoxy.processor.resourcescanning.KspResourceScanner.ImportMatch.TypeAlias
+import com.google.devtools.ksp.impl.symbol.java.KSAnnotationJavaImpl
+import com.google.devtools.ksp.impl.symbol.kotlin.KSAnnotationImpl
+import com.google.devtools.ksp.impl.symbol.kotlin.KSClassDeclarationImpl
+import com.google.devtools.ksp.impl.symbol.kotlin.KSFileImpl
+import com.google.devtools.ksp.impl.symbol.kotlin.KSFileJavaImpl
+import com.google.devtools.ksp.impl.symbol.kotlin.resolved.KSAnnotationResolvedImpl
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.impl.java.KSAnnotationJavaImpl
-import com.google.devtools.ksp.symbol.impl.java.KSClassDeclarationJavaImpl
-import com.google.devtools.ksp.symbol.impl.kotlin.KSAnnotationImpl
-import com.google.devtools.ksp.symbol.impl.kotlin.KSClassDeclarationImpl
 import com.squareup.javapoet.ClassName
-import org.jetbrains.kotlin.com.intellij.psi.PsiAnnotation
-import org.jetbrains.kotlin.com.intellij.psi.PsiJavaFile
-import org.jetbrains.kotlin.com.intellij.psi.PsiNameValuePair
-import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.psi.KtAnnotationEntry
-import org.jetbrains.kotlin.psi.KtCollectionLiteralExpression
-import org.jetbrains.kotlin.psi.KtDotQualifiedExpression
-import org.jetbrains.kotlin.psi.KtExpression
-import org.jetbrains.kotlin.psi.KtSimpleNameExpression
-import org.jetbrains.kotlin.psi.ValueArgument
+import ksp.com.intellij.psi.PsiAnnotation
+import ksp.com.intellij.psi.PsiJavaFile
+import ksp.com.intellij.psi.PsiNameValuePair
+import ksp.org.jetbrains.kotlin.analysis.api.annotations.KaAnnotation
+import ksp.org.jetbrains.kotlin.name.FqName
+import ksp.org.jetbrains.kotlin.name.Name
+import ksp.org.jetbrains.kotlin.psi.KtAnnotationEntry
+import ksp.org.jetbrains.kotlin.psi.KtCollectionLiteralExpression
+import ksp.org.jetbrains.kotlin.psi.KtDotQualifiedExpression
+import ksp.org.jetbrains.kotlin.psi.KtExpression
+import ksp.org.jetbrains.kotlin.psi.KtFile
+import ksp.org.jetbrains.kotlin.psi.KtSimpleNameExpression
+import ksp.org.jetbrains.kotlin.psi.ValueArgument
+import java.util.Locale.getDefault
 import java.util.regex.PatternSyntaxException
 import kotlin.reflect.KClass
 
@@ -61,8 +66,8 @@ class KspResourceScanner(environmentProvider: () -> XProcessingEnv) :
         element: XElement
     ): List<AnnotationWithReferenceValue> {
         return cache.getOrPut(annotation to element) {
-            val annotationBox = element.getAnnotation(annotation) ?: return@getOrPut emptyList()
-            val ksAnnotation = annotationBox.getFieldWithReflection<KSAnnotation>("annotation")
+            val xAnnotation = element.getAnnotation(annotation) ?: return@getOrPut emptyList()
+            val ksAnnotation = xAnnotation.getFieldWithReflection<KSAnnotation>("ksAnnotated")
             processAnnotationWithResource(ksAnnotation)
         }
     }
@@ -72,17 +77,21 @@ class KspResourceScanner(environmentProvider: () -> XProcessingEnv) :
             classElement.getFieldWithReflection<KSClassDeclaration>("declaration")
         return when (ksClassDeclaration) {
             is KSClassDeclarationImpl -> {
-                ksClassDeclaration.ktClassOrObject
-                    .containingKtFile
-                    .importDirectives
-                    .mapNotNull { it.importPath?.toString() }
-            }
-            is KSClassDeclarationJavaImpl -> {
-                (ksClassDeclaration.psi.containingFile as? PsiJavaFile)
-                    ?.importList
-                    ?.importStatements
-                    ?.mapNotNull { it.qualifiedName }
-                    ?: emptyList()
+                when (val fileImpl = ksClassDeclaration.containingFile) {
+                    is KSFileImpl -> {
+                        fileImpl.getFieldWithReflection<KtFile>("psi")
+                            .importDirectives
+                            .mapNotNull { it.importPath?.toString() }
+                    }
+                    is KSFileJavaImpl -> {
+                        fileImpl.psi
+                            .importList
+                            ?.importStatements
+                            ?.mapNotNull { it.qualifiedName }
+                            ?: emptyList()
+                    }
+                    else -> emptyList()
+                }
             }
             else -> emptyList()
         }
@@ -92,12 +101,18 @@ class KspResourceScanner(environmentProvider: () -> XProcessingEnv) :
         val packageName = annotation.containingPackage.orEmpty()
         return when (annotation) {
             is KSAnnotationImpl -> processKtAnnotation(
-                annotation.ktAnnotationEntry,
+                annotation.getFieldWithReflection("ktAnnotationEntry"),
                 annotation,
                 packageName
             )
             is KSAnnotationJavaImpl -> processJavaAnnotation(
-                annotation.psi,
+                annotation.getFieldWithReflection("psi"),
+                annotation,
+                packageName
+            )
+            is KSAnnotationResolvedImpl -> processKtAnnotation(
+                annotation.getFieldWithReflection<KaAnnotation>("annotationApplication").psi as? KtAnnotationEntry
+                    ?: return emptyList(),
                 annotation,
                 packageName
             )
@@ -124,7 +139,7 @@ class KspResourceScanner(environmentProvider: () -> XProcessingEnv) :
                     value = ksValueArgument.value,
                     reference = extractJavaReferenceAnnotationArgument(
                         psiNameValue,
-                        annotation,
+                        psi,
                         packageName
                     )
                 )
@@ -133,14 +148,14 @@ class KspResourceScanner(environmentProvider: () -> XProcessingEnv) :
 
     private fun extractJavaReferenceAnnotationArgument(
         psiNameValue: PsiNameValuePair,
-        annotation: KSAnnotationJavaImpl,
+        psi: PsiAnnotation,
         packageName: String
     ): String? {
         // eg: R.layout.foo, com.example.R.layout.foo, layout.foo, etc
         return psiNameValue.value?.text?.let { annotationReference ->
             extractReferenceAnnotationArgument(annotationReference) { annotationReferencePrefix ->
                 findMatchingImportPackageJava(
-                    annotation.psi,
+                    psi,
                     annotationReference,
                     annotationReferencePrefix,
                     packageName
@@ -233,7 +248,7 @@ class KspResourceScanner(environmentProvider: () -> XProcessingEnv) :
     private fun getResourceNamesFromAnnotationExpression(expression: KtExpression): List<String> {
         return if (expression is KtCollectionLiteralExpression) {
             // annotation argument is a array of resources
-            expression.getInnerExpressions()
+            expression.innerExpressions
                 .flatMap { getResourceNamesFromAnnotationExpression(expression) }
         } else {
 
@@ -459,10 +474,17 @@ inline fun <reified U> Any.getFieldWithReflection(fieldName: String): U {
         val field = this.javaClass.getDeclaredField(fieldName)
         field.isAccessible = true
         field.get(this)
-    } catch (e: NoSuchFieldException) {
+    } catch (_: NoSuchFieldException) {
         // Kotlin sometimes does not have a field backing a property, so we try a getter method
         // for it.
-        val method = this.javaClass.getMethod("get${fieldName.capitalize()}")
+        val methodName = "get" + fieldName.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(getDefault()) else it.toString()
+        }
+        val method = try {
+            this.javaClass.getMethod(methodName)
+        } catch (_: NoSuchMethodException) {
+            this.javaClass.getDeclaredMethod(methodName)
+        }
         method.isAccessible = true
         method.invoke(this)
     }

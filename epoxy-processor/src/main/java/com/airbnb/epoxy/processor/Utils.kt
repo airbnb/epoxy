@@ -130,7 +130,7 @@ internal object Utils {
                 )
             }?.let { return it }
 
-        val superClazz = clazz.superType?.typeElement ?: return null
+        val superClazz = clazz.superClass?.typeElement ?: return null
         return getMethodOnClass(superClazz, method, environment)
     }
 
@@ -150,7 +150,7 @@ internal object Utils {
             val param2: ParameterSpec = params2[i]
             val param1Type: XRawType = param1.type.rawType
 
-            val param2Type: XRawType = environment.requireType(param2.type).rawType
+            val param2Type: XRawType = environment.requireType(param2.type.toString()).rawType
 
             // If a param is a type variable then we don't need an exact type match, it just needs to
             // be assignable
@@ -174,7 +174,7 @@ internal object Utils {
         clazz: XTypeElement,
         memoizer: Memoizer
     ): XType? {
-        val superTypeElement = clazz.superType?.typeElement ?: return null
+        val superTypeElement = clazz.superClass?.typeElement ?: return null
 
         val recursiveResult = getEpoxyObjectType(superTypeElement, memoizer)
         if (recursiveResult != null &&
@@ -189,7 +189,7 @@ internal object Utils {
 
         // Note, the "superTypeElement" loses the typing information, so we must use the
         // superType directly off the class.
-        val superTypeArguments = clazz.superType?.typeArguments ?: emptyList()
+        val superTypeArguments = clazz.superClass?.typeArguments ?: emptyList()
 
         // If there is only one type then we use that
         superTypeArguments.singleOrNull()?.let { return it }
@@ -297,7 +297,7 @@ internal object Utils {
     fun capitalizeFirstLetter(original: String?): String? {
         return if (original == null || original.isEmpty()) {
             original
-        } else original.substring(0, 1).toUpperCase() + original.substring(1)
+        } else original.substring(0, 1).uppercase() + original.substring(1)
     }
 
     @JvmStatic
@@ -315,11 +315,11 @@ internal object Utils {
         return if (!PATTERN_STARTS_WITH_SET.matcher(string).matches()) {
             string
         } else string[3].toString()
-            .toLowerCase() + string.substring(4)
+            .lowercase() + string.substring(4)
     }
 
     fun toSnakeCase(s: String): String {
-        return s.replace("([^_A-Z])([A-Z])".toRegex(), "$1_$2").toLowerCase()
+        return s.replace("([^_A-Z])([A-Z])".toRegex(), "$1_$2").lowercase()
     }
 
     fun getDefaultValue(attributeType: TypeName): String {

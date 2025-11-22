@@ -126,6 +126,7 @@ inline fun composeEpoxyModel(
     modelAction.invoke(composeEpoxyModel)
 }
 
+@Suppress("UNCHECKED_CAST")
 @Composable
 inline fun <reified T : EpoxyModel<*>> EpoxyInterop(
     modifier: Modifier = Modifier,
@@ -143,6 +144,6 @@ inline fun <reified T : EpoxyModel<*>> EpoxyInterop(
     ) { view ->
         val modelView = view.getChildAt(0)
         (model as EpoxyModel<View>).bind(modelView)
-        (model as GeneratedModel<View>)?.handlePostBind(modelView, 0)
+        (model as GeneratedModel<View>).handlePostBind(modelView, 0)
     }
 }
