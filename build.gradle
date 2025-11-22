@@ -16,7 +16,7 @@ buildscript {
     classpath "org.jetbrains.kotlin:compose-compiler-gradle-plugin:$KOTLIN_VERSION"
     // Upload with: (see RELEASING.md)
     // ./gradlew publishAllPublicationsToMavenCentral --no-configuration-cache
-    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.22.0'
+    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.35.0'
     // Dokka is needed on classpath for vanniktech publish plugin
     classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.6.10"
   }

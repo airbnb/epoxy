@@ -16,9 +16,9 @@ import java.lang.annotation.Target;
  *    int visibleHeight, int visibleWidth
  *  )`
  * <p>
- * The equivalent methods on the model is {@link com.airbnb.epoxy.EpoxyModel#onVisibilityChanged}
+ * The equivalent methods on the model is com.airbnb.epoxy.EpoxyModel#onVisibilityChanged
  * <p>
- * @see OnModelVisibilityChangedListener
+ * See also: OnModelVisibilityChangedListener
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.CLASS)

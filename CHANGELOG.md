@@ -1,3 +1,7 @@
+# 5.2.0
+
+Migrate to KSP 2 (#1393)
+
 # 5.1.4
 Change the way the Compose interop works to avoid Android 12 bug (#1370)
 
