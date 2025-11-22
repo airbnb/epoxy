@@ -13,12 +13,12 @@ import java.lang.annotation.Target;
  * `@OnVisibilityStateChanged
  * public void method(@Visibility int state)`
  * <p>
- * Possible States are declared in {@link com.airbnb.epoxy.VisibilityState}.
+ * Possible States are declared in com.airbnb.epoxy.VisibilityState.
  * <p>
  * The equivalent methods on the model is
- * {@link com.airbnb.epoxy.EpoxyModel#onVisibilityStateChanged}
+ * com.airbnb.epoxy.EpoxyModel#onVisibilityStateChanged
  * <p>
- * @see OnModelVisibilityStateChangedListener
+ * See also: OnModelVisibilityStateChangedListener
  */
 @SuppressWarnings("JavadocReference")
 @Target(ElementType.METHOD)
