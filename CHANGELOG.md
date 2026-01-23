@@ -1,3 +1,7 @@
+# 5.2.1
+
+Fix some issues in KSP2 when multiple processing rounds occur (https://github.com/airbnb/epoxy/pull/1396)
+
 # 5.2.0
 
 Migrate to KSP 2 (#1393)
