@@ -46,7 +46,7 @@ public abstract class EpoxyModelTouchCallback<T extends EpoxyModel>
 
     if (!isOtherCallbackActive && isTouchableModel(model)) {
       //noinspection unchecked
-      return getMovementFlagsForModel((T) model, viewHolder.getAdapterPosition());
+      return getMovementFlagsForModel((T) model, viewHolder.getBindingAdapterPosition());
     } else {
       return 0;
     }
@@ -72,8 +72,8 @@ public abstract class EpoxyModelTouchCallback<T extends EpoxyModel>
           "A controller must be provided in the constructor if dragging is enabled");
     }
 
-    int fromPosition = viewHolder.getAdapterPosition();
-    int toPosition = target.getAdapterPosition();
+    int fromPosition = viewHolder.getBindingAdapterPosition();
+    int toPosition = target.getBindingAdapterPosition();
     controller.moveModel(fromPosition, toPosition);
 
     EpoxyModel<?> model = viewHolder.getModel();
@@ -96,7 +96,7 @@ public abstract class EpoxyModelTouchCallback<T extends EpoxyModel>
   protected void onSwiped(EpoxyViewHolder viewHolder, int direction) {
     EpoxyModel<?> model = viewHolder.getModel();
     View view = viewHolder.itemView;
-    int position = viewHolder.getAdapterPosition();
+    int position = viewHolder.getBindingAdapterPosition();
 
     if (!isTouchableModel(model)) {
       throw new IllegalStateException(
@@ -128,11 +128,11 @@ public abstract class EpoxyModelTouchCallback<T extends EpoxyModel>
       if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
         holderBeingSwiped = viewHolder;
         //noinspection unchecked
-        onSwipeStarted((T) model, viewHolder.itemView, viewHolder.getAdapterPosition());
+        onSwipeStarted((T) model, viewHolder.itemView, viewHolder.getBindingAdapterPosition());
       } else if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
         holderBeingDragged = viewHolder;
         //noinspection unchecked
-        onDragStarted((T) model, viewHolder.itemView, viewHolder.getAdapterPosition());
+        onDragStarted((T) model, viewHolder.itemView, viewHolder.getBindingAdapterPosition());
       }
     } else if (holderBeingDragged != null) {
       //noinspection unchecked

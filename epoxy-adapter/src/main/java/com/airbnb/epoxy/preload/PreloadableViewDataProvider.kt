@@ -83,7 +83,7 @@ internal class PreloadableViewDataProvider(
                 // We need the view sizes, but viewholders can be bound without actually being laid out on screen yet
                 ViewCompat.isAttachedToWindow(it.itemView) &&
                     ViewCompat.isLaidOut(it.itemView) &&
-                    cacheKey(preloader, boundModel as T, it.adapterPosition) == cacheKey
+                    cacheKey(preloader, boundModel as T, it.bindingAdapterPosition) == cacheKey
             } else {
                 false
             }

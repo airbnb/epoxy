@@ -37,7 +37,7 @@ public class WrappedEpoxyModelCheckedChangeListener<T extends EpoxyModel<?>, V>
       return;
     }
 
-    final int adapterPosition = epoxyHolder.getAdapterPosition();
+    final int adapterPosition = epoxyHolder.getBindingAdapterPosition();
     if (adapterPosition != RecyclerView.NO_POSITION) {
       originalCheckedChangeListener
           .onChecked((T) epoxyHolder.getModel(), (V) epoxyHolder.objectToBind(), button,
