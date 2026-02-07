@@ -130,7 +130,7 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
 
         // There is no header above or the position is a header.
         val headerIndex = findHeaderIndexOrBefore(position)
-        if (headerIndex == -1 || findHeaderIndex(position) != -1) {
+        if (headerIndex == -1 || headerPositions[headerIndex] == position) {
             super.scrollToPositionWithOffset(position, offset)
             return
         }
@@ -142,7 +142,7 @@ class StickyHeaderLinearLayoutManager @JvmOverloads constructor(
         }
 
         // Current sticky header is the same as at the position. Adjust the scroll offset and reset pending scroll.
-        if (stickyHeader != null && headerIndex == findHeaderIndex(stickyHeaderPosition)) {
+        if (stickyHeader != null && headerPositions[headerIndex] == stickyHeaderPosition) {
             val adjustedOffset = (if (offset != INVALID_OFFSET) offset else 0) + stickyHeader!!.height
             super.scrollToPositionWithOffset(position, adjustedOffset)
             return
