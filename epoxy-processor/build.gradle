@@ -21,10 +21,9 @@ dependencies {
     // but we use it for custom parsing of kotlin files to do resource scanning :(
     implementation rootProject.deps.kspImpl
 
-    // Compiler needed to resolve resource references in annotations
-    implementation "org.jetbrains.kotlin:kotlin-compiler-embeddable:$KOTLIN_VERSION"
-    // This is included in kotlinCompileTesting, but the version can be out of date with our kotlin
-    // compiler version, so we include it to force the right version
+    // These are included in kotlinCompileTesting, but the version can be out of date with our kotlin
+    // compiler version, so we include them for tests to force the right version
+    testImplementation "org.jetbrains.kotlin:kotlin-compiler-embeddable:$KOTLIN_VERSION"
     testImplementation rootProject.deps.kotlinAnnotationProcessingEmbeddable
     implementation rootProject.deps.xProcessing
 
